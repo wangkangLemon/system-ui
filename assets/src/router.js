@@ -25,7 +25,7 @@ const routes = [
         name: 'index',
         component: require('./views/Index.vue')
     },
-    {   // 设置考勤方式
+    {   // 登录
         path: '/login',
         name: 'login',
         component: require('./views/login/Login.vue'),
