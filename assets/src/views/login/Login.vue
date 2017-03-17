@@ -65,6 +65,20 @@
                         width: 100%;
                     }
                 }
+                @media (max-width: 767px) {
+                    .login-header {
+                        margin-bottom: 20%;
+                        > div {
+                            width: 50%;
+                        }
+                    }
+                    .form {
+                        > * {
+                            margin-top: px2rem(60);
+                        }
+                        padding-bottom: px2rem(80);
+                    }
+                }
             }
         }
     }
@@ -74,17 +88,17 @@
     <article class="login-container">
         <section class="login-mask">
             <el-row :gutter="10" type="flex" justify="center">
-                <el-col :xs="24" :sm="13" :md="10" :lg="8" class="content">
+                <el-col :xs="23" :sm="13" :md="10" :lg="8" class="content">
                     <div class="login-header">
-                        <el-col offset="2" :span="10" class="title">
+                        <el-col :offset="2" :span="10" class="title">
                             <h1><img src="../images/logo.png" />药视通 </h1>
                             <p>登录到系统管理平台</p>
                         </el-col>
                         <i class="el-icon-d-arrow-right"></i>
                     </div>
                     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="demo-ruleForm form">
-                        <el-form-item prop="mobile">
-                            <el-input size="large" placeholder="手机号或邮箱" type="text" v-model="ruleForm2.mobile" auto-complete="off"></el-input>
+                        <el-form-item prop="account">
+                            <el-input size="large" placeholder="手机号或邮箱" type="text" v-model="ruleForm2.account" auto-complete="off"></el-input>
                         </el-form-item>
                         <el-form-item prop="checkPass">
                             <el-input size="large" placeholder="管理密码" type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
@@ -102,7 +116,7 @@
 <script lang='babel'>
     export default {
         data () {
-            var validatePass = (rule, value, callback) => {
+            var validateAccount = (rule, value, callback) => {
                 let newValue = value || ''
                 if (newValue === '') {
                     callback(new Error('请输入手机号或邮箱'))
@@ -129,12 +143,12 @@
             }
             return {
                 ruleForm2: {
-                    mobile: '',
+                    account: '',
                     checkPass: ''
                 },
                 rules2: {
-                    mobile: [
-                        { validator: validatePass, trigger: 'blur' }
+                    account: [
+                        { validator: validateAccount, trigger: 'blur' }
                     ],
                     checkPass: [
                         { validator: validatePass2, trigger: 'blur' }
