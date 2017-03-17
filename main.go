@@ -26,7 +26,17 @@ func main() {
 	}
 
 	// static file
-	app.Use(static.Static("/", "./public/", false, nil))
+	app.Use(static.Static("/", "./public", false, nil))
+
+	// 首页
+	app.Get("/", func(c *baa.Context) {
+		c.HTML(200, "index.html")
+	})
+
+	// 所有的视图页面
+	app.Get("/views/*", func(c *baa.Context) {
+		c.HTML(200, "./public/index.html")
+	})
 
 	// run
 	addr := setting.Config.MustString("http.address", "0.0.0.0")

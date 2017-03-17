@@ -4,7 +4,7 @@ const {
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const url = require('url')
-const publicPath = ''
+const publicPath = '/'
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (options = {}) => ({
@@ -13,7 +13,7 @@ module.exports = (options = {}) => ({
         index: './src/main.js'
     },
     output: {
-        path: resolve(__dirname, '../public/build'),
+        path: resolve(__dirname, '../public'),
         filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
         chunkFilename: '[id].js?[chunkhash]',
         publicPath: options.dev ? '/assets/' : publicPath

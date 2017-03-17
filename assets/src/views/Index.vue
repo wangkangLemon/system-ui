@@ -66,6 +66,7 @@
 
 
             <el-col :span="8">
+                <router-link :to="{name:'login'}">走你</router-link>
                 <i>消息</i>
                 <i>问题反馈11</i>
                 <i>huanghuixin</i>
