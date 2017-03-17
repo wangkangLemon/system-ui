@@ -1,0 +1,4 @@
+dist/*.js
+config/*.js
+vendor.js
+../../base/vue/vendor/*.js
