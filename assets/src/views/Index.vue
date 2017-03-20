@@ -118,6 +118,7 @@
             userService.login('huanghx@vodjk.com', '123456').then(ret => {
                 console.info(ret, 'index.vue')
             }).catch(err => {
+                xmview.closeTip()
                 console.info('index.vue', err)
             })
         }

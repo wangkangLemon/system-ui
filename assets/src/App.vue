@@ -11,12 +11,13 @@
     export default {
         data () {
             return {
-                fullscreenLoading: true
+                fullscreenLoading: false
             }
         },
         created () {
             xmview.setLoading = this.setLoading.bind(this)
             xmview.showTip = this.showTip.bind(this)
+            xmview.closeTip = this.closeTip.bind(this)
         },
         methods: {
             setLoading (isloading) {
@@ -28,6 +29,9 @@
                     title: title,
                     message: msg
                 })
+            },
+            closeTip () {
+                this.$notify.close()
             }
         }
     }

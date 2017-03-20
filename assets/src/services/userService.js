@@ -3,7 +3,9 @@
  */
 
 import * as api from './api'
-const host = 'http://10.1.3.228:8002'
+import config from '../utils/config'
+const host = config.apiHost
+
 export function login (username, password) {
     let url = host + '/auth/login'
     return api.post(url, {username, password}).then(ret => {
