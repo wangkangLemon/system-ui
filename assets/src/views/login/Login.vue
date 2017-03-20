@@ -88,7 +88,7 @@
     <article class="login-container">
         <section class="login-mask">
             <el-row :gutter="10" type="flex" justify="center">
-                <el-col :xs="23" :sm="13" :md="10" :lg="8" class="content">
+                <el-col :xs="23" :sm="13" :md="10" :lg="6" class="content">
                     <div class="login-header">
                         <el-col :offset="2" :span="10" class="title">
                             <h1><img src="../images/logo.png" />药视通 </h1>
@@ -114,6 +114,7 @@
 </template>
 
 <script lang='babel'>
+    import {login} from '../../services/userService'
     export default {
         data () {
             var validateAccount = (rule, value, callback) => {
@@ -160,7 +161,12 @@
             submitForm (formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        console.log(this.ruleForm2)
+                        // 请求接口
+                        login(this.ruleForm2.account, this.ruleForm2.checkPass).then((ret) => {
+                            console.log(ret)
+                        }).catch((ret) => {
+                            console.log('错误')
+                        })
                     } else {
                         console.log('error submit!!')
                         return false
