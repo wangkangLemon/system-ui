@@ -3,20 +3,31 @@
  */
 
 import authUtils from '../utils/authUtils'
-function getTimeoutPromise () {
+function getTimeoutPromise (url) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            xmview.setLoading(false)
-            xmview.showTip('error', '请求超时! 请重试')
-            reject(new Error({message: '请求超时', code: -9}))
+            // 如果该url还未处理完毕
+            if (!requestedUrls[url]) {
+                xmview.setLoading(false)
+                xmview.showTip('error', '请求超时! 请重试')
+                reject(new Error({message: '请求超时', code: -9}))
+            } else {
+                console.info('该url处理完毕', url)
+            }
+
+            // 删除这个url的引用
+            delete requestedUrls[url]
         }, 20000)
     })
 }
 
+// 请求完毕的url
+let requestedUrls = {}
 export function get (url, params, needLoading = true) {
     url = url + '?' + processParams(params)
+
     let pRequest = new Promise(function (resolve, reject) {
-        // needLoading && xmview.setLoading(true)
+        needLoading && xmview.setLoading(true)
         fetch(url, {
             method: 'GET',
             credentials: 'include', // pass cookies, for authentication
@@ -28,14 +39,15 @@ export function get (url, params, needLoading = true) {
         }).then(function (response) {
             return response.json()
         }).then(json => {
-            processCodeError(json)
+            console.info('第一次请求成功')
+            processCodeError(json, url)
             resolve(json)
         }).catch(function (ex) {
             reject(ex)
         })
     })
 
-    return Promise.race([getTimeoutPromise(), pRequest])
+    return Promise.race([getTimeoutPromise(url), pRequest])
 }
 
 export function post (url, params, needLoading = true) {
@@ -50,23 +62,25 @@ export function post (url, params, needLoading = true) {
                 'Authorization': 'Bearer ' + authUtils.getAuthToken()
             },
             body: processParams(params)
-        }).then(response => {
+        }).then(response => { // 转json
             return response.json()
-        }).then(json => {
-            processCodeError(json)
+        }).then(json => { // 拿到json数据并判断是否返回错误码
+            processCodeError(json, url)
             resolve(json)
-        }).catch(function (ex) {
+        }).catch(function (ex) { // 处理error的情况
             xmview.setLoading(false)
-            let tipCom = xmview.showTip('error', '服务器请求失败! 请重试')
-            ex.tipCom = tipCom // 提示框的实例
+            ex.tipCom = xmview.showTip('error', '服务器请求失败! 请重试')  // 提示框的实例
             reject(ex)
         })
     })
 
-    return Promise.race([getTimeoutPromise(), pRequest])
+    return Promise.race([getTimeoutPromise(url), pRequest])
 }
 
-function processCodeError (ret) {
+// 处理结果的异常和一些预处理
+function processCodeError (ret, url) {
+    requestedUrls[url] = true
+
     // 如果过期
     if (ret.code === 1102) {
         xmview.showTip('error', '登录超时,请重新登录')

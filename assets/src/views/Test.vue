@@ -1,4 +1,8 @@
-<style lang='scss' scoped rel='stylesheet/scss'></style>
+<style lang='scss' scoped rel='stylesheet/scss'>
+    .div {
+        color: red;
+    }
+</style>
 
 <template>
     <div>

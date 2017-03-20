@@ -46,7 +46,6 @@
                     }
                 }
                 .form {
-                    margin-top: px2rem(30);
                     border-radius: 5px;
                     padding: px2rem(20) 0;
                     background: rgba(0, 0, 0, 0.6);
@@ -169,9 +168,6 @@
                     ]
                 }
             }
-        },
-        created () {
-            console.info(this.$route.params, 'lloginvue')
         },
         methods: {
             submitForm (formName) {

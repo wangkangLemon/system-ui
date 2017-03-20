@@ -116,7 +116,8 @@
     export default{
         created () {
             testService.getCitys().then(ret => {
-                console.info(ret)
+                console.info(ret, 'index.vue')
+                xmview.setLoading(false)
             })
         }
     }
