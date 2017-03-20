@@ -1,9 +1,8 @@
-<style lang='scss' scoped rel="stylesheet/scss">
+<style lang='scss' scoped>
     @import "../../utils/mixins/mixins";
-
     .login-container {
-        position: absolute;
-        top: 0;
+        position: fixed;
+        top:0;
         left: 0;
         width: 100%;
         height: 100%;
@@ -11,14 +10,14 @@
         background-size: cover;
         .login-mask {
             position: absolute;
-            top: 0;
+            top:0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.3);
 
             .content {
-                margin-top: 15%;
+                margin-top: px2rem(100);
                 .login-header {
                     width: 90%;
                     margin-bottom: 15%;
@@ -49,8 +48,7 @@
                 .form {
                     margin-top: px2rem(30);
                     border-radius: 5px;
-                    padding: px2rem(40) 0;
-                    padding-top: px2rem(10);
+                    padding: px2rem(20) 0;
                     background: rgba(0, 0, 0, 0.6);
                     width: 100%;
                     display: block;
@@ -60,24 +58,29 @@
                         display: block;
                         margin: 0 auto;
                         width: 80%;
-                        margin-top: px2rem(30);
+                        margin-top: px2rem(15);
+                        &:first-of-type {
+                            margin-top: 0;
+                        }
                     }
                     .submit {
                         width: 100%;
                     }
                 }
-                @media (max-width: 767px) {
+            }
+            @media (max-width: 767px) {
+                .content {
+                    margin-top: 25%;
                     .login-header {
-                        margin-bottom: 20%;
                         > div {
                             width: 50%;
                         }
                     }
                     .form {
+                        padding: px2rem(80) 0;
                         > * {
                             margin-top: px2rem(60);
                         }
-                        padding-bottom: px2rem(80);
                     }
                 }
             }
@@ -103,8 +106,14 @@
                                       auto-complete="off"></el-input>
                         </el-form-item>
                         <el-form-item prop="checkPass">
-                            <el-input size="large" placeholder="管理密码" type="password" v-model="ruleForm2.checkPass"
-                                      auto-complete="off"></el-input>
+                            <!--<el-input size="large" placeholder="管理密码" type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>-->
+                            <div class="el-form-item">
+                                <div class="el-form-item__content">
+                                    <div class="el-input el-input--large">
+                                        <input type="password" v-model="ruleForm2.checkPass" placeholder="管理密码" @keyup.enter="submitForm('ruleForm2')" autocomplete="off" class="el-input__inner">
+                                    </div>
+                                </div>
+                            </div>
                         </el-form-item>
                         <el-form-item>
                             <el-button class="submit" type="primary" @click="submitForm('ruleForm2')">登录</el-button>
@@ -184,7 +193,6 @@
                             xmview.setLoading(false)
                         })
                     } else {
-                        console.log('error submit!!')
                         return false
                     }
                 })
