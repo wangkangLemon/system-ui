@@ -1,8 +1,9 @@
-<style lang='scss' scoped>
+<style lang='scss' scoped rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
+
     .login-container {
         position: absolute;
-        top:0;
+        top: 0;
         left: 0;
         width: 100%;
         height: 100%;
@@ -10,7 +11,7 @@
         background-size: cover;
         .login-mask {
             position: absolute;
-            top:0;
+            top: 0;
             left: 0;
             width: 100%;
             height: 100%;
@@ -91,17 +92,19 @@
                 <el-col :xs="23" :sm="13" :md="10" :lg="6" class="content">
                     <div class="login-header">
                         <el-col :offset="2" :span="10" class="title">
-                            <h1><img src="../images/logo.png" />药视通 </h1>
+                            <h1><img src="../images/logo.png"/>药视通 </h1>
                             <p>登录到系统管理平台</p>
                         </el-col>
                         <i class="el-icon-d-arrow-right"></i>
                     </div>
                     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="demo-ruleForm form">
                         <el-form-item prop="account">
-                            <el-input size="large" placeholder="手机号或邮箱" type="text" v-model="ruleForm2.account" auto-complete="off"></el-input>
+                            <el-input size="large" placeholder="手机号或邮箱" type="text" v-model="ruleForm2.account"
+                                      auto-complete="off"></el-input>
                         </el-form-item>
                         <el-form-item prop="checkPass">
-                            <el-input size="large" placeholder="管理密码" type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
+                            <el-input size="large" placeholder="管理密码" type="password" v-model="ruleForm2.checkPass"
+                                      auto-complete="off"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button class="submit" type="primary" @click="submitForm('ruleForm2')">登录</el-button>
@@ -115,6 +118,7 @@
 
 <script lang='babel'>
     import {login} from '../../services/userService'
+    import authUtils from '../../utils/authUtils'
     export default {
         data () {
             var validateAccount = (rule, value, callback) => {
@@ -149,13 +153,16 @@
                 },
                 rules2: {
                     account: [
-                        { validator: validateAccount, trigger: 'blur' }
+                        {validator: validateAccount, trigger: 'blur'}
                     ],
                     checkPass: [
-                        { validator: validatePass2, trigger: 'blur' }
+                        {validator: validatePass2, trigger: 'blur'}
                     ]
                 }
             }
+        },
+        created () {
+            console.info(this.$route.params, 'lloginvue')
         },
         methods: {
             submitForm (formName) {
@@ -163,9 +170,18 @@
                     if (valid) {
                         // 请求接口
                         login(this.ruleForm2.account, this.ruleForm2.checkPass).then((ret) => {
-                            console.log(ret)
+                            authUtils.setAuthToken(ret.auth_token)
+                            setTimeout(() => {
+                                // 判断是否需要回到上个页面
+                                if (this.$route.query.returnUrl) {
+                                    window.location.href = this.$route.query.returnUrl
+                                } else {
+                                    this.$router.replace({name: 'index'})
+                                }
+                            }, 200)
                         }).catch((ret) => {
-                            console.log('错误')
+                        }).then(() => {
+                            xmview.setLoading(false)
                         })
                     } else {
                         console.log('error submit!!')

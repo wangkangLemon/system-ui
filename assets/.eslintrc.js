@@ -30,6 +30,8 @@ module.exports = {
         'xm': true,
         'alert': true,
         'fetch': true,
-        'xmview': true
+        'xmview': true,
+        'localStorage': true,
+        'xmrouter': true
     }
 }

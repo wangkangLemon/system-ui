@@ -2,26 +2,29 @@
  * Created by huanghuixin on 2017/3/20.
  */
 
+import authUtils from '../utils/authUtils'
 function getTimeoutPromise () {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             xmview.setLoading(false)
-            xmview.showTip('error', '错误', '请求超时! 请重试')
+            xmview.showTip('error', '请求超时! 请重试')
             reject(new Error({message: '请求超时', code: -9}))
-        }, 10000)
+        }, 20000)
     })
 }
 
 export function get (url, params, needLoading = true) {
+    url = url + '?' + processParams(params)
     let pRequest = new Promise(function (resolve, reject) {
-        needLoading && xmview.setLoading(true)
+        // needLoading && xmview.setLoading(true)
         fetch(url, {
+            method: 'GET',
             credentials: 'include', // pass cookies, for authentication
             headers: {
                 'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-            },
-            body: processParams(params)
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+                'Authorization': 'Bearer ' + authUtils.getAuthToken()
+            }
         }).then(function (response) {
             return response.json()
         }).then(json => {
@@ -43,7 +46,8 @@ export function post (url, params, needLoading = true) {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+                'Authorization': 'Bearer ' + authUtils.getAuthToken()
             },
             body: processParams(params)
         }).then(response => {
@@ -52,10 +56,9 @@ export function post (url, params, needLoading = true) {
             processCodeError(json)
             resolve(json)
         }).catch(function (ex) {
-            setTimeout(() => {
-                xmview.setLoading(false)
-                xmview.showTip('error', '错误', '服务器请求失败! 请重试')
-            }, 200)
+            xmview.setLoading(false)
+            let tipCom = xmview.showTip('error', '服务器请求失败! 请重试')
+            ex.tipCom = tipCom // 提示框的实例
             reject(ex)
         })
     })
@@ -64,8 +67,13 @@ export function post (url, params, needLoading = true) {
 }
 
 function processCodeError (ret) {
-    if (ret.code >= 100) {
-        xmview.showTip('error', '错误', ret.message)
+    // 如果过期
+    if (ret.code === 1102) {
+        xmview.showTip('error', '登录超时,请重新登录')
+        // 记录当前的url
+        xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
+    } else if (ret.code >= 100) {
+        xmview.showTip('error', ret.message)
     }
 }
 

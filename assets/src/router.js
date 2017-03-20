@@ -34,10 +34,19 @@ const routes = [
             notAuth: true, //  不需要身份验证
         }
     },
+    {
+        path: '/test',
+        name: 'test',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('./views/Test.vue'))
+            })
+        }
+    }
 ]
 
 const router = new VueRouter({
-    base: '/views',
+    base: '/',
     mode: 'history',
     scrollBehavior,
     routes

@@ -17,21 +17,18 @@
         created () {
             xmview.setLoading = this.setLoading.bind(this)
             xmview.showTip = this.showTip.bind(this)
-            xmview.closeTip = this.closeTip.bind(this)
         },
         methods: {
             setLoading (isloading) {
                 this.fullscreenLoading = isloading
             },
-            showTip (type, title = '提示', msg) {
-                this.$notify({
+            // success/warning/info/error
+            showTip (type, msg, msgDuring = 2000) {
+                return this.$message({
                     type,
-                    title: title,
-                    message: msg
+                    message: msg,
+                    duration: msgDuring
                 })
-            },
-            closeTip () {
-                this.$notify.close()
             }
         }
     }

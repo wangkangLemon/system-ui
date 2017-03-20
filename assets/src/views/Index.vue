@@ -112,14 +112,11 @@
 </template>
 
 <script lang='babel'>
-    import * as userService from '../services/userService'
+    import * as testService from '../services/testService'
     export default{
         created () {
-            userService.login('huanghx@vodjk.com', '123456').then(ret => {
-                console.info(ret, 'index.vue')
-            }).catch(err => {
-                xmview.closeTip()
-                console.info('index.vue', err)
+            testService.getCitys().then(ret => {
+                console.info(ret)
             })
         }
     }
