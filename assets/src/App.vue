@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" v-loading.fullscreen.lock="fullscreenLoading">
         <transition name="fade">
             <router-view></router-view>
         </transition>
@@ -8,7 +8,29 @@
 
 <script>
     import 'element-ui/lib/theme-default/index.css'
-    export default {}
+    export default {
+        data () {
+            return {
+                fullscreenLoading: true
+            }
+        },
+        created () {
+            xmview.setLoading = this.setLoading.bind(this)
+            xmview.showTip = this.showTip.bind(this)
+        },
+        methods: {
+            setLoading (isloading) {
+                this.fullscreenLoading = isloading
+            },
+            showTip (type, title = '提示', msg) {
+                this.$notify({
+                    type,
+                    title: title,
+                    message: msg
+                })
+            }
+        }
+    }
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

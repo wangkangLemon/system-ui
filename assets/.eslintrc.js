@@ -24,10 +24,12 @@ module.exports = {
         "no-unexpected-multiline": 0,
         "no-sequences": 0,
         "comma-dangle": 0,
-        "eqeqeq" : 0
+        "eqeqeq": 0
     },
     globals: {
         'xm': true,
-        'alert': true
+        'alert': true,
+        'fetch': true,
+        'xmview': true
     }
 }

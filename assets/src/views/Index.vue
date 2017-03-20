@@ -1,4 +1,4 @@
-<style lang='scss' rel='stylesheet/scss'>
+<style lang='scss' rel='stylesheet/scss' scoped>
     @import "../utils/mixins/mixins";
 
     .index-container {
@@ -72,7 +72,6 @@
 
 
             <el-col :span="8">
-                <router-link :to="{name:'login'}">走你</router-link>
                 <i>消息</i>
                 <i>问题反馈11</i>
                 <i>huanghuixin</i>
@@ -113,5 +112,14 @@
 </template>
 
 <script lang='babel'>
-    export default{}
+    import * as userService from '../services/userService'
+    export default{
+        created () {
+            userService.login('huanghx@vodjk.com', '123456').then(ret => {
+                console.info(ret, 'index.vue')
+            }).catch(err => {
+                console.info('index.vue', err)
+            })
+        }
+    }
 </script>
