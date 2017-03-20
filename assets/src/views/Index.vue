@@ -1,4 +1,4 @@
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang='scss' rel='stylesheet/scss'>
     @import "../utils/mixins/mixins";
 
     .index-container {
@@ -38,6 +38,12 @@
             z-index: 9;
             min-height: 100%;
             position: absolute;
+
+            > div {
+                font-size: 14px;
+                color: #999;
+                margin: 12px 20px 0;
+            }
         }
 
         .right-content {
@@ -76,6 +82,7 @@
         <article class="content">
             <!--左边菜单栏-->
             <el-menu default-active="2" class="left-menu-container">
+                <div>导航</div>
                 <el-menu-item index="2"><i class="el-icon-menu"></i>主页</el-menu-item>
                 <el-submenu index="1">
                     <template slot="title"><i class="el-icon-message"></i>系统</template>

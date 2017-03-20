@@ -8,14 +8,15 @@ const publicPath = '/'
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (options = {}) => ({
-    entry: {
-        vendor: './src/vendor',
-        index: './src/main.js'
-    },
+    entry: [
+        'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+        // './src/vendor',
+        './src/main.js'
+    ],
     output: {
         path: resolve(__dirname, '../public'),
-        filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
-        chunkFilename: '[id].js?[chunkhash]',
+        filename: 'main.js',
+        chunkFilename: 'main.js?',
         publicPath: options.dev ? '/assets/' : publicPath
     },
     module: {
@@ -81,10 +82,14 @@ module.exports = (options = {}) => ({
         new webpack.optimize.CommonsChunkPlugin({
             names: ['vendor', 'manifest']
         }),
+
         new HtmlWebpackPlugin({
-            template: 'src/index.html'
+            template: 'src/index.html',
         }),
         new ExtractTextPlugin('style' + (options.dev ? '' : '-[contenthash]') + '.css'),
+        new webpack.HotModuleReplacementPlugin(),
+
+        // new webpack.NoEmitOnErrorsPlugin(),
     ],
     resolve: {
         alias: {

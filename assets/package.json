@@ -1,7 +1,7 @@
 {
-  "name": "element-starter",
-  "description": "A Vue.js project",
-  "author": "yi.shyang@ele.me",
+  "name": "yst-system-ui",
+  "description": "药视通前端项目",
+  "author": "vodjk",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server -d --inline --hot --env.dev",
@@ -10,7 +10,8 @@
   "dependencies": {
     "element-ui": "^1.1.2",
     "vue": "^2.1.8",
-    "vue-router": "^2.3.0"
+    "vue-router": "^2.3.0",
+    "vuex": "^2.2.1"
   },
   "engines": {
     "node": ">=6"
@@ -29,10 +30,13 @@
     "eslint-plugin-html": "^2.0.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^2.1.1",
+    "express": "^4.15.2",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
     "html-loader": "^0.4.5",
     "html-webpack-plugin": "^2.24.1",
+    "http": "0.0.0",
+    "morgan": "^1.8.1",
     "node-sass": "^4.5.0",
     "postcss-loader": "^1.3.3",
     "rimraf": "^2.5.4",
@@ -43,6 +47,7 @@
     "vue-loader": "^11.1.4",
     "vue-template-compiler": "^2.1.8",
     "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.2.0"
+    "webpack-dev-server": "^2.2.0",
+    "webpack-hot-middleware": "^2.17.1"
   }
 }
