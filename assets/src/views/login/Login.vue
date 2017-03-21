@@ -1,8 +1,9 @@
-<style lang='scss' scoped>
+<style lang='scss' scoped rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
+
     .login-container {
         position: fixed;
-        top:0;
+        top: 0;
         left: 0;
         width: 100%;
         height: 100%;
@@ -10,7 +11,7 @@
         background-size: cover;
         .login-mask {
             position: absolute;
-            top:0;
+            top: 0;
             left: 0;
             width: 100%;
             height: 100%;
@@ -109,7 +110,9 @@
                             <div class="el-form-item">
                                 <div class="el-form-item__content">
                                     <div class="el-input el-input--large">
-                                        <input type="password" v-model="ruleForm2.checkPass" placeholder="管理密码" @keyup.enter="submitForm('ruleForm2')" autocomplete="off" class="el-input__inner">
+                                        <input type="password" v-model="ruleForm2.checkPass" placeholder="管理密码"
+                                               @keyup.enter="submitForm('ruleForm2')" autocomplete="off"
+                                               class="el-input__inner">
                                     </div>
                                 </div>
                             </div>
@@ -156,8 +159,8 @@
             }
             return {
                 ruleForm2: {
-                    account: '',
-                    checkPass: ''
+                    account: 'huanghx@vodjk.com',
+                    checkPass: '123456'
                 },
                 rules2: {
                     account: [
@@ -169,6 +172,9 @@
                 }
             }
         },
+        created () {
+            xmview.setLoading(false)
+        },
         methods: {
             submitForm (formName) {
                 this.$refs[formName].validate((valid) => {
@@ -176,6 +182,7 @@
                         // 请求接口
                         login(this.ruleForm2.account, this.ruleForm2.checkPass).then((ret) => {
                             authUtils.setAuthToken(ret.auth_token)
+                            xmview.showTip('success', '登录成功')
                             setTimeout(() => {
                                 // 判断是否需要回到上个页面
                                 if (this.$route.query.returnUrl) {
@@ -183,7 +190,7 @@
                                 } else {
                                     this.$router.replace({name: 'index'})
                                 }
-                            }, 200)
+                            }, 400)
                         }).catch((ret) => {
                         }).then(() => {
                             xmview.setLoading(false)

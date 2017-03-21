@@ -4,6 +4,7 @@
 
 import * as api from './api'
 import config from '../utils/config'
+import authUtils from '../utils/authUtils'
 const host = config.apiHost
 
 export function login (username, password) {
@@ -15,4 +16,8 @@ export function login (username, password) {
             return Promise.reject(ret)
         }
     })
+}
+
+export function loginout () {
+    authUtils.setAuthToken(null)
 }

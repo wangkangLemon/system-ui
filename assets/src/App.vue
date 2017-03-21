@@ -1,5 +1,5 @@
 <template>
-    <div id="app" v-loading.fullscreen.lock="fullscreenLoading">
+    <div id="app" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="拼命加载中">
         <transition name="fade">
             <router-view></router-view>
         </transition>
@@ -8,6 +8,7 @@
 
 <script>
     import 'element-ui/lib/theme-default/index.css'
+
     export default {
         data () {
             return {
@@ -52,4 +53,7 @@
         line-height: 1.4;
     }
 
+    * {
+        box-sizing: border-box;
+    }
 </style>

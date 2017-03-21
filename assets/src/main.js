@@ -5,7 +5,6 @@ import router from './router'
 import 'whatwg-fetch'
 
 Vue.use(ElementUI)
-
 window.xmview = {}
 window.xmrouter = router
 /* eslint-disable no-new */

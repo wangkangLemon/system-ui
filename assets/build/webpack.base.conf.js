@@ -3,9 +3,11 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 
-function resolve(dir) {
+function resolve (dir) {
     return path.join(__dirname, '..', dir)
 }
+
+console.info('路径:asdlkjalsdas', resolve('src'))
 
 module.exports = {
     entry: {
@@ -24,6 +26,7 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             '@': resolve('src'),
+            'base': path.resolve(__dirname, '../src')
         }
     },
     module: {
@@ -58,7 +61,7 @@ module.exports = {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
                 loader: 'url-loader',
                 query: {
-                    limit: 10000,
+                    limit: 1000,
                     name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
                 }
             }

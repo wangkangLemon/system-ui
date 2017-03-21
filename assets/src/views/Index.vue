@@ -7,7 +7,10 @@
 
     .header {
         height: 55px;
+        line-height: 55px;
         text-align: center;
+        z-index: 11;
+        background: #fff;
 
         .logo {
             text-align: left;
@@ -17,8 +20,8 @@
                 vertical-align: middle;
             }
             img {
-                width: 20px;
-                height: 20px;
+                width: 30px;
+                height: 30px;
             }
 
             h1 {
@@ -26,18 +29,64 @@
                 font-weight: normal;
             }
         }
+
+        // 右边部分
+        @at-root {
+            .header-right {
+                text-align: right;
+
+                > * {
+                    display: inline-block;
+
+                    > em {
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                }
+
+                // 问题反馈
+                .question {
+                    margin: 0 15px;
+                }
+
+                .nickname {
+                    cursor: pointer;
+                    margin-right: 30px;
+                    img {
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        vertical-align: middle;
+                        margin-right: 2px;
+                    }
+                }
+
+                @at-root {
+                    .nickname-dropdown {
+                        top: 35px !important;
+                        width: 160px;
+                    }
+                }
+            }
+        }
     }
 
     .content {
         position: absolute;
         width: 100%;
-        min-height: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        padding-top: 55px;
 
         .left-menu-container {
             width: 220px;
             z-index: 9;
-            min-height: 100%;
+            height: 100%;
             position: absolute;
+            top: 0;
+            padding-top: 55px;
+            overflow-y: auto;
 
             > div {
                 font-size: 14px;
@@ -48,11 +97,20 @@
 
         .right-content {
             position: absolute;
-            padding: 20px 220px 20px 20px;
+            padding: 75px 20px 20px 240px;
             width: 100%;
             background: #d9e0e7;
             height: 100%;
             top: 0;
+
+            .right-title {
+                font-size: 24px;
+                > small {
+                    font-weight: 300;
+                    font-size: 70%;
+                    display: inline-block;
+                }
+            }
         }
     }
 </style>
@@ -71,10 +129,22 @@
             </el-col>
 
 
-            <el-col :span="8">
-                <i>消息</i>
-                <i>问题反馈11</i>
-                <i>huanghuixin</i>
+            <el-col :span="8" class="header-right">
+                <div><i class="iconfont icon-xiaoxizhongxin"></i> <em>消息</em></div>
+                <div class="question"><i class="iconfont icon-wenti"></i> <em>问题反馈</em></div>
+                <el-dropdown @command="handleNickname">
+                      <span class="el-dropdown-link nickname">
+                        <img src="./images/user-default-male.jpg"> huanghuixin <i
+                              class="el-icon-caret-bottom el-icon--right"></i>
+                      </span>
+                    <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
+                        <el-dropdown-item>个人信息</el-dropdown-item>
+                        <el-dropdown-item>企业信息</el-dropdown-item>
+                        <el-dropdown-item>修改密码</el-dropdown-item>
+                        <el-dropdown-item :divided="true"></el-dropdown-item>
+                        <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
             </el-col>
         </el-row>
 
@@ -97,10 +167,16 @@
                         <el-menu-item index="1-4-2">客户端</el-menu-item>
                     </el-submenu>
                 </el-submenu>
+
+                <!--//-->
             </el-menu>
 
             <!--右边内容-->
             <section class="right-content">
+                <h2 class="right-title">
+                    考试记录
+                    <small>成绩</small>
+                </h2>
                 <div class="route-content">
                     <router-view></router-view>
                 </div>
@@ -112,13 +188,33 @@
 </template>
 
 <script lang='babel'>
-    import * as testService from '../services/testService'
+    import * as userService from '../services/userService'
+
     export default{
         created () {
-            testService.getCitys().then(ret => {
-                console.info(ret, 'index.vue')
-                xmview.setLoading(false)
-            })
+        },
+        methods: {
+            // 注销登录
+            handleNickname (type) {
+                /* eslint-disable indent  */
+                switch (type) {
+                    case 'loginout': {
+                        userService.loginout()
+                        this.$router.push({name: 'login'})
+                        break
+                    }
+                    case 2: {
+                        console.info('2')
+                        break
+                    }
+                    default: {
+                        console.info('3')
+                    }
+                }
+            },
+            proces () {
+
+            }
         }
     }
 </script>

@@ -1,0 +1,44 @@
+//
+//@font-face {font-family: "iconfont";
+//    src: url('./iconfont.eot'),
+//    url('./iconfont.woff') format('woff'),
+//    url('./iconfont.ttf') format('truetype') /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+//}
+
+@font-face {
+    font-family: 'iconfont';
+    src: url('~base/utils/mixins/font/iconfont.ttf') format("woff"), url('~base/utils/mixins/font/iconfont.ttf') format("truetype");
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 0;
+    line-height: 0;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    vertical-align: middle;
+
+    &:before {
+        font-size: 16px;
+        vertical-align: middle;
+    }
+}
+
+.icon-wenti:before {
+    content: "\e63d";
+}
+
+.icon-xiaoxizhongxin:before {
+    content: "\e665";
+}
+
+.icon-cart:before {
+    content: "\e68e";
+}
+
+.icon-refresh:before {
+    content: "\e640";
+}
+
