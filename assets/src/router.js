@@ -20,12 +20,27 @@ const scrollBehavior = (to, from, savedPosition) => {
 }
 
 const routes = [
+    {   // 表格
+        path: '/table',
+        name: 'table',
+        component: require('./views/Table.vue')
+    },
     {   // 首页
         path: '/',
         name: 'index',
         component: require('./views/Index.vue'),
         children: [
-            // 打卡
+            // 首页
+            {
+                path: '/index/main',
+                name: 'main',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/index/main'))
+                    })
+                }
+            },
+            // 管理
             {
                 path: '/system/admin',
                 name: 'admin',

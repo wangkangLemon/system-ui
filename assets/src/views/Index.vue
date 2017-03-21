@@ -153,7 +153,7 @@
             <!--左边菜单栏-->
             <el-menu default-active="2" class="left-menu-container" :router="true">
                 <div>导航</div>
-                <el-menu-item index="2"><i class="el-icon-menu"></i>主页</el-menu-item>
+                <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
                 <el-submenu index="system">
                     <template slot="title"><i class="el-icon-message"></i>系统</template>
                     <el-menu-item-group>
