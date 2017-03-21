@@ -36,6 +36,7 @@
                 text-align: right;
 
                 > * {
+                    text-align: center;
                     display: inline-block;
 
                     > em {
@@ -46,7 +47,7 @@
 
                 // 问题反馈
                 .question {
-                    margin: 0 15px;
+                    margin: 0 5px 0 15px
                 }
 
                 .nickname {
@@ -150,13 +151,13 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu default-active="2" class="left-menu-container">
+            <el-menu default-active="2" class="left-menu-container" :router="true">
                 <div>导航</div>
                 <el-menu-item index="2"><i class="el-icon-menu"></i>主页</el-menu-item>
-                <el-submenu index="1">
+                <el-submenu index="system">
                     <template slot="title"><i class="el-icon-message"></i>系统</template>
                     <el-menu-item-group>
-                        <el-menu-item index="1-1"><i class="el-icon-message"></i>管理员</el-menu-item>
+                        <el-menu-item index="/system/admin"><i class="el-icon-message"></i>管理员</el-menu-item>
                         <el-menu-item index="1-2"><i class="el-icon-message"></i>设置</el-menu-item>
                         <el-menu-item index="1-3"><i class="el-icon-message"></i>日志</el-menu-item>
                     </el-menu-item-group>
@@ -177,6 +178,7 @@
                     考试记录
                     <small>成绩</small>
                 </h2>
+
                 <div class="route-content">
                     <router-view></router-view>
                 </div>

@@ -23,7 +23,19 @@ const routes = [
     {   // 首页
         path: '/',
         name: 'index',
-        component: require('./views/Index.vue')
+        component: require('./views/Index.vue'),
+        children: [
+            // 打卡
+            {
+                path: '/system/admin',
+                name: 'admin',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/system/admin'))
+                    })
+                }
+            }
+        ]
     },
     {   // 登录
         path: '/login',
@@ -42,7 +54,7 @@ const routes = [
                 resolve(require('./views/Test.vue'))
             })
         }
-    }
+    },
 ]
 
 const router = new VueRouter({
@@ -53,6 +65,7 @@ const router = new VueRouter({
 })
 
 router.afterEach((route) => {
+    console.info('路由跳转 router.js')
     let title = route.meta.title
     if (title) {
         document.title = title + ' - 药视通'

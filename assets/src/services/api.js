@@ -39,10 +39,12 @@ export function get (url, params, needLoading = true) {
         }).then(function (response) {
             return response.json()
         }).then(json => {
-            console.info('第一次请求成功')
             processCodeError(json, url)
             resolve(json)
         }).catch(function (ex) {
+            requestedUrls[url] = true
+            xmview.setLoading(false)
+            ex.tipCom = xmview.showTip('error', '服务器请求失败! 请重试')  // 提示框的实例
             reject(ex)
         })
     })
@@ -68,6 +70,7 @@ export function post (url, params, needLoading = true) {
             processCodeError(json, url)
             resolve(json)
         }).catch(function (ex) { // 处理error的情况
+            requestedUrls[url] = true // 设置请求处理完毕
             xmview.setLoading(false)
             ex.tipCom = xmview.showTip('error', '服务器请求失败! 请重试')  // 提示框的实例
             reject(ex)

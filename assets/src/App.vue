@@ -40,7 +40,7 @@
     @import "./utils/mixins/mixins";
 
     .fade-enter-active, .fade-leave-active {
-        transition: opacity .3s
+        transition: opacity .2s
     }
 
     .fade-enter, .fade-leave-active {
