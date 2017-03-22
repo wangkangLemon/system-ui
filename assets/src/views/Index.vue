@@ -96,6 +96,10 @@
             top: 0;
             padding-top: 55px;
             overflow-y: auto;
+            @media (max-width: 767px) {
+                top: -110px;
+                z-index: 11;
+            }
 
             > div {
                 font-size: 14px;
@@ -111,6 +115,9 @@
             background: #d9e0e7;
             height: 100%;
             top: 0;
+            @media (max-width: 767px) {
+                padding: 75px 20px 20px;
+            }
 
             .right-title {
                 font-size: 24px;
@@ -127,7 +134,7 @@
 <template>
     <article class="index-container">
         <!--头部部分 pc端-->
-        <el-row class="header" type="flex" v-if="!isMobile()">
+        <el-row class="header" type="flex" v-if="!isMobile">
             <el-col :span="10" class="logo">
                 <img src="../assets/logo.png">
                 <h1>药视通系统管理平台</h1>
@@ -159,9 +166,12 @@
         <!--头部部分 wap端-->
         <section v-else>
             <el-row class="header wap-header" type="flex">
-                <el-col :span="24" class="logo">
+                <el-col :span="20" class="logo">
                     <img src="../assets/logo.png">
                     <h1>药视通系统管理平台</h1>
+                </el-col>
+                <el-col :span="4">
+                    <i class="el-icon-menu" @click="leftMenu = !leftMenu"></i>
                 </el-col>
             </el-row>
             <el-row class="header" type="flex">
@@ -190,7 +200,7 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu default-active="2" class="left-menu-container" :router="true">
+            <el-menu default-active="2" class="left-menu-container" :router="true" v-if="leftMenu">
                 <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
                 <el-submenu index="system">
@@ -233,13 +243,18 @@
     import config from '../utils/config'
 
     export default{
+        data () {
+            return {
+                isMobile: config.isMobile(),
+                leftMenu: true
+            }
+        },
         created () {
-            console.log(this.isMobile())
+            if (this.isMobile) {
+                this.leftMenu = false
+            }
         },
         methods: {
-            isMobile () {
-                return config.isMobile()
-            },
             // 注销登录
             handleNickname (type) {
                 /* eslint-disable indent  */
