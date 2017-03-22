@@ -26,19 +26,29 @@
     }
 }
 
+// 手机
+.icon-oslash:before {
+    content: "\e618";
+}
+// 问题
 .icon-wenti:before {
     content: "\e63d";
 }
-
+// 消息中心
 .icon-xiaoxizhongxin:before {
     content: "\e665";
 }
-
+// 卡片
 .icon-cart:before {
     content: "\e68e";
 }
-
+// 刷新
 .icon-refresh:before {
     content: "\e640";
+}
+
+//警告
+.icon-warn:before {
+    content: "\e653";
 }
 

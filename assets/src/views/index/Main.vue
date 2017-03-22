@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang='scss' scoped rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     .main-container {
          color: #fff;
@@ -65,7 +65,7 @@
                 let curDate = date2Str(new Date(new Date().setTime(Date.now() - 24 * 60 * 60 * 1000 * i)), '-', {hashour: false, hasDay: true})
                 this.pillarData.push(curDate)
             }
-//            this.pillarData = this.pillarData.reverse()
+            this.pillarData = this.pillarData.reverse()
             this.getPillarChart()
             this.getPieChart()
             this.getLineCahrt()
@@ -229,7 +229,7 @@
                             boundaryGap: false,
                             data: this.pillarData,
                             axisLabel: {
-                                interval: 2,
+                                interval: 1,
                             }
                         }
                     ],

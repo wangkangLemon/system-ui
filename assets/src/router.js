@@ -20,11 +20,6 @@ const scrollBehavior = (to, from, savedPosition) => {
 }
 
 const routes = [
-    {   // 表格
-        path: '/table',
-        name: 'table',
-        component: require('./views/Table.vue')
-    },
     {   // 首页
         path: '/',
         name: 'index',

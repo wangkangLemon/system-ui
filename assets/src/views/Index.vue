@@ -4,7 +4,11 @@
     .index-container {
         background: #fff;
     }
-
+    @media (max-width: 767px) {
+        .wap-header {
+            border-bottom: 1px solid #ededed;
+        }
+    }
     .header {
         height: 55px;
         line-height: 55px;
@@ -33,6 +37,8 @@
         // 右边部分
         @at-root {
             .header-right {
+                min-width: 50%;
+                max-width: 100%;
                 text-align: right;
 
                 > * {
@@ -78,7 +84,9 @@
         height: 100%;
         top: 0;
         left: 0;
-        padding-top: 55px;
+        @media (max-width: 767px) {
+            margin-top: 55px;
+        }
 
         .left-menu-container {
             width: 220px;
@@ -118,14 +126,14 @@
 
 <template>
     <article class="index-container">
-        <!--头部部分-->
-        <el-row class="header" type="flex">
-            <el-col :span="8" class="logo">
+        <!--头部部分 pc端-->
+        <el-row class="header" type="flex" v-if="!isMobile()">
+            <el-col :span="10" class="logo">
                 <img src="../assets/logo.png">
                 <h1>药视通系统管理平台</h1>
             </el-col>
 
-            <el-col :span="8">
+            <el-col :span="6">
                 <h2>药视通</h2>
             </el-col>
 
@@ -133,7 +141,7 @@
             <el-col :span="8" class="header-right">
                 <div><i class="iconfont icon-xiaoxizhongxin"></i> <em>消息</em></div>
                 <div class="question"><i class="iconfont icon-wenti"></i> <em>问题反馈</em></div>
-                <el-dropdown @command="handleNickname">
+                <el-dropdown trigger="click" @click="handleNickname">
                       <span class="el-dropdown-link nickname">
                         <img src="./images/user-default-male.jpg"> huanghuixin <i
                               class="el-icon-caret-bottom el-icon--right"></i>
@@ -148,6 +156,37 @@
                 </el-dropdown>
             </el-col>
         </el-row>
+        <!--头部部分 wap端-->
+        <section v-else>
+            <el-row class="header wap-header" type="flex">
+                <el-col :span="24" class="logo">
+                    <img src="../assets/logo.png">
+                    <h1>药视通系统管理平台</h1>
+                </el-col>
+            </el-row>
+            <el-row class="header" type="flex">
+                <el-col :span="8" :offset="2">
+                    <h2>药视通</h2>
+                </el-col>
+                <el-col :span="24" class="header-right">
+                    <div><i class="iconfont icon-xiaoxizhongxin"></i> <em></em></div>
+                    <div class="question"><i class="iconfont icon-wenti"></i> <em></em></div>
+                    <el-dropdown trigger="click" @click="handleNickname">
+                      <span class="el-dropdown-link nickname">
+                        <img src="./images/user-default-male.jpg"><i
+                              class="el-icon-caret-bottom el-icon--right"></i>
+                      </span>
+                        <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
+                            <el-dropdown-item>个人信息</el-dropdown-item>
+                            <el-dropdown-item>企业信息</el-dropdown-item>
+                            <el-dropdown-item>修改密码</el-dropdown-item>
+                            <el-dropdown-item :divided="true"></el-dropdown-item>
+                            <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </el-col>
+            </el-row>
+        </section>
 
         <article class="content">
             <!--左边菜单栏-->
@@ -191,11 +230,16 @@
 
 <script lang='babel'>
     import * as userService from '../services/userService'
+    import config from '../utils/config'
 
     export default{
         created () {
+            console.log(this.isMobile())
         },
         methods: {
+            isMobile () {
+                return config.isMobile()
+            },
             // 注销登录
             handleNickname (type) {
                 /* eslint-disable indent  */
