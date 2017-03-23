@@ -7,8 +7,11 @@
             > div {
                 vertical-align: top;
                 display: inline-block;
-                height: px2rem(60);
+                height: 100px;
                 width: 32%;
+                @media (max-width: 767px) {
+                    width: 100%;
+                }
                 &.department {
                     background: green;
                 }
@@ -21,19 +24,21 @@
             }
         }
         .exam-echars {
-            height: px2rem(200);
+            height: 200px;
             display: flex;
             .exam-left {
+                height: 100%;
                 width: 80%;
             }
             .exam-right {
+                height: 100%;
                 width: 20%;
             }
         }
         #lineChart {
-            margin-top: px2rem(40);
+            margin-top: 40px;
             width: 100%;
-            height: px2rem(200);
+            height: 300px;
         }
     }
 </style>
@@ -53,7 +58,7 @@
 </template>
 <script lang="babel">
     import Echars from 'echarts'
-    import {date2Str} from '../../utils/timeUtils'
+//    import {date2Str} from '../../utils/timeUtils'
     export default {
         data () {
             return {
@@ -62,7 +67,8 @@
         },
         mounted () {
             for (let i = 1; i < 31; i++) {
-                let curDate = date2Str(new Date(new Date().setTime(Date.now() - 24 * 60 * 60 * 1000 * i)), '-', {hashour: false, hasDay: true})
+//                let curDate = date2Str(new Date(new Date().setTime(Date.now() - 24 * 60 * 60 * 1000 * i)), '-', {hashour: false, hasDay: true})
+                let curDate = new Date().setTime(Date.now() - 24 * 60 * 60 * 1000 * i)
                 this.pillarData.push(curDate)
             }
             this.pillarData = this.pillarData.reverse()
@@ -71,7 +77,7 @@
             this.getLineCahrt()
         },
         methods: {
-            getPillarChart () {
+            getPillarChart () { // 柱形图
                 // 基于准备好的dom，初始化echarts实例
                 let myChart = Echars.init(document.getElementById('pillar'))
                 // 柱状图
@@ -83,13 +89,13 @@
                     tooltip: {
                         trigger: 'axis',
                     },
-                    legend: {
-                        data: ['及格的人数', '不及格的人数']
-                    },
+//                    legend: {
+//                        data: ['及格的人数', '不及格的人数']
+//                    },
                     grid: {
                         left: '3%',
                         right: '1%',
-                        bottom: '0',
+                        bottom: '10',
                         containLabel: true
                     },
                     xAxis: [
@@ -98,10 +104,17 @@
                             data: this.pillarData,
                             axisLabel: {
                                 interval: 2,
+                                rotate: 30,
+                                formatter: function (value, index) {
+                                    // 格式化成月/日，只在第一个刻度显示年份
+                                    var date = new Date(value)
+                                    var texts = [date.getMonth() + 1, date.getDate()]
+                                    return texts.join('/')
+                                }
                             },
                             axisTick: {
                                 alignWithLabel: true // 柱在刻度中间
-                            }
+                            },
                         }
                     ],
                     yAxis: [
@@ -127,7 +140,7 @@
                 }
                 myChart.setOption(option)
             },
-            getPieChart () {
+            getPieChart () { // 饼图
                 let myChart = Echars.init(document.getElementById('pieChart'))
                 let option = {
                     title: {
@@ -203,7 +216,7 @@
                 }
                 myChart.setOption(option)
             },
-            getLineCahrt () {
+            getLineCahrt () { // 线性
                 let myChart = Echars.init(document.getElementById('lineChart'))
                 let option = {
                     tooltip: {
@@ -220,8 +233,8 @@
                     grid: {
                         left: '3%',
                         right: '0%',
-                        bottom: '0',
-                        containLabel: true
+                        bottom: 20, // 通过bottom调整图表的高度 使得x轴label可以全部显示
+                        containLabel: true,
                     },
                     xAxis: [
                         {
@@ -230,6 +243,13 @@
                             data: this.pillarData,
                             axisLabel: {
                                 interval: 1,
+                                rotate: 60,
+                                formatter: function (value, index) {
+                                    // 格式化成月/日，只在第一个刻度显示年份
+                                    var date = new Date(value)
+                                    var texts = [date.getMonth() + 1, date.getDate()]
+                                    return texts.join('/')
+                                }
                             }
                         }
                     ],

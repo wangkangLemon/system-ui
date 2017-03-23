@@ -5,8 +5,22 @@
         background: #fff;
     }
     @media (max-width: 767px) {
+        .header-wap {
+            display: block;
+        }
+        .header-pc {
+            display: none;
+        }
         .wap-header {
             border-bottom: 1px solid #ededed;
+        }
+    }
+    @media (min-width: 768px) {
+        .header-wap {
+            display: none;
+        }
+        .header-pc {
+            display: block;
         }
     }
     .header {
@@ -37,8 +51,6 @@
         // 右边部分
         @at-root {
             .header-right {
-                min-width: 50%;
-                max-width: 100%;
                 text-align: right;
 
                 > * {
@@ -90,15 +102,15 @@
 
         .left-menu-container {
             width: 220px;
-            z-index: 9;
+            z-index: 11;
             height: 100%;
             position: absolute;
-            top: 0;
-            padding-top: 55px;
             overflow-y: auto;
             @media (max-width: 767px) {
-                top: -110px;
-                z-index: 11;
+                top: -55px;
+            }
+            @media (min-width: 768px) {
+                top: 55px;
             }
 
             > div {
@@ -113,10 +125,12 @@
             padding: 75px 20px 20px 240px;
             width: 100%;
             background: #d9e0e7;
-            height: 100%;
+            min-height: 100%;
             top: 0;
             @media (max-width: 767px) {
                 padding: 75px 20px 20px;
+                position: absolute;
+                /*top: 110px;*/
             }
 
             .right-title {
@@ -134,7 +148,7 @@
 <template>
     <article class="index-container">
         <!--头部部分 pc端-->
-        <el-row class="header" type="flex" v-if="!isMobile">
+        <el-row class="header header-pc" type="flex">
             <el-col :span="10" class="logo">
                 <img src="../assets/logo.png">
                 <h1>药视通系统管理平台</h1>
@@ -164,14 +178,14 @@
             </el-col>
         </el-row>
         <!--头部部分 wap端-->
-        <section v-else>
+        <section class="header-wap">
             <el-row class="header wap-header" type="flex">
                 <el-col :span="20" class="logo">
                     <img src="../assets/logo.png">
                     <h1>药视通系统管理平台</h1>
                 </el-col>
                 <el-col :span="4">
-                    <i class="el-icon-menu" @click="leftMenu = !leftMenu"></i>
+                    <i class="iconfont icon-list" @click="showLeftMenu()"></i>
                 </el-col>
             </el-row>
             <el-row class="header" type="flex">
@@ -200,7 +214,7 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu default-active="2" class="left-menu-container" :router="true" v-if="leftMenu">
+            <el-menu default-active="2" class="left-menu-container" :router="true">
                 <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
                 <el-submenu index="system">
@@ -241,20 +255,37 @@
 <script lang='babel'>
     import * as userService from '../services/userService'
     import config from '../utils/config'
-
+    let leftMenu = null
     export default{
         data () {
             return {
                 isMobile: config.isMobile(),
-                leftMenu: true
             }
         },
-        created () {
+        mounted () {
+            leftMenu = document.querySelector('.left-menu-container')
+            window.onresize = function () {
+                if (document.documentElement.clientWidth < 767) {
+                    leftMenu.style.display = 'none'
+                } else {
+                    leftMenu.style.display = 'block'
+                }
+            }
             if (this.isMobile) {
-                this.leftMenu = false
+                leftMenu.style.display = 'none'
+                document.querySelector('.right-content').addEventListener('click', () => {
+                    leftMenu.style.display = 'none'
+                }, false)
             }
         },
         methods: {
+            showLeftMenu () {
+                if (leftMenu.style.display == 'block') {
+                    leftMenu.style.display = 'none'
+                } else {
+                    leftMenu.style.display = 'block'
+                }
+            },
             // 注销登录
             handleNickname (type) {
                 /* eslint-disable indent  */
