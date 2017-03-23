@@ -26,7 +26,7 @@
             }
             .block {
                 text-align: right;
-                margin-top: px2rem(20);
+                margin-top: 10px;
             }
         }
         .showDetail {
@@ -202,8 +202,8 @@
                         @current-change="handleCurrentChange"
                         :current-page="currentPage4"
                         :page-sizes="[1, 2]"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        layout="total, sizes, ->, prev, pager, next, jumper"
+                        :total="4">
                 </el-pagination>
             </section>
         </div>

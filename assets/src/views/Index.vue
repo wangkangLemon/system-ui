@@ -221,8 +221,8 @@
                     <template slot="title"><i class="el-icon-message"></i>系统</template>
                     <el-menu-item-group>
                         <el-menu-item index="/system/admin"><i class="el-icon-message"></i>管理员</el-menu-item>
-                        <el-menu-item index="1-2"><i class="el-icon-message"></i>设置</el-menu-item>
-                        <el-menu-item index="1-3"><i class="el-icon-message"></i>日志</el-menu-item>
+                        <el-menu-item index="/system/set"><i class="el-icon-message"></i>设置</el-menu-item>
+                        <el-menu-item index="/system/log"><i class="el-icon-message"></i>日志</el-menu-item>
                     </el-menu-item-group>
 
                     <el-submenu index="1-4">
@@ -264,16 +264,20 @@
         },
         mounted () {
             leftMenu = document.querySelector('.left-menu-container')
+            let rightContent = document.querySelector('.right-content')
             window.onresize = function () {
                 if (document.documentElement.clientWidth < 767) {
                     leftMenu.style.display = 'none'
                 } else {
                     leftMenu.style.display = 'block'
+                    rightContent.addEventListener('click', () => {
+                        leftMenu.style.display = 'block'
+                    }, false)
                 }
             }
             if (this.isMobile) {
                 leftMenu.style.display = 'none'
-                document.querySelector('.right-content').addEventListener('click', () => {
+                rightContent.addEventListener('click', () => {
                     leftMenu.style.display = 'none'
                 }, false)
             }

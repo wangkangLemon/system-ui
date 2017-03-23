@@ -44,6 +44,26 @@ const routes = [
                         resolve(require('./views/system/admin'))
                     })
                 }
+            },
+            // 设置
+            {
+                path: '/system/set',
+                name: 'set',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/system/set'))
+                    })
+                }
+            },
+            // 日志
+            {
+                path: '/system/log',
+                name: 'log',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/system/log'))
+                    })
+                }
             }
         ]
     },
