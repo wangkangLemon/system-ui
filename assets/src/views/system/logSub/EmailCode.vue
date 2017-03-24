@@ -1,30 +1,7 @@
 <!--日志-->
 <style lang='scss' rel='stylesheet/scss' scoped>
     @import "../../../utils/mixins/mixins";
-
-    .main-container {
-        .search {
-            display: flex;
-            padding: 15px;
-            > div {
-                display: inline-block;
-                vertical-align: top;
-                label {
-                    margin-right: 2%;
-                }
-                .el-input, .el-select, .el-date-editor {
-                    width: 40%;
-                }
-            }
-        }
-        .el-table {
-            width: 100%;
-        }
-        .block {
-            text-align: right;
-            margin-top: 10px;
-        }
-    }
+    @import "../../../utils/mixins/table";
 </style>
 <template>
     <article class="main-container">
@@ -37,20 +14,22 @@
             </div>
             <div>
                 <label>发送时间</label>
-                <el-date-picker
-                        v-model="createTime"
-                        type="date"
-                        placeholder="开始时间">
-                </el-date-picker>
-                <el-date-picker
-                        v-model="endTime"
-                        type="date"
-                        placeholder="结束时间">
-                </el-date-picker>
+                <div class="time-container">
+                    <el-date-picker
+                            v-model="createTime"
+                            type="date"
+                            placeholder="开始时间">
+                    </el-date-picker>
+                    <el-date-picker
+                            v-model="endTime"
+                            type="date"
+                            placeholder="结束时间">
+                    </el-date-picker>
+                </div>
             </div>
         </section>
         <el-table
-                :data="data">
+                :data="data" border>
             <el-table-column
                     prop="email"
                     label="邮件"
@@ -85,7 +64,7 @@
             <el-pagination
                     :current-page="currentPage"
                     :page-sizes="[100, 200, 300, 400]"
-                    layout="total, sizes, prev, pager, next, jumper"
+                    layout="total, sizes, ->, prev, pager, next, jumper"
                     :total="400">
             </el-pagination>
         </section>

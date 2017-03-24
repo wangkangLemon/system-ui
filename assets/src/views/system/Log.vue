@@ -1,30 +1,4 @@
 <!--日志-->
-<style lang='scss' rel='stylesheet/scss' scoped>
-    @import "../../utils/mixins/mixins";
-    .main-container {
-        .search {
-            display: flex;
-            padding: 15px;
-            > div {
-                display: inline-block;
-                vertical-align: top;
-                label {
-                    margin-right: 2%;
-                }
-                .el-input, .el-select, .el-date-editor {
-                    width: 40%;
-                }
-            }
-        }
-        .el-table {
-            width: 100%;
-        }
-        .block {
-            text-align: right;
-            margin-top: 10px;
-        }
-    }
-</style>
 <template>
     <article>
         <el-tabs v-model="defaultTab"  type="border-card" @tab-click="tabClick">

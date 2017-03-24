@@ -1,27 +1,9 @@
 <!--设置-->
 <style lang='scss' rel='stylesheet/scss' scoped>
     @import "../../utils/mixins/mixins";
+    @import "../../utils/mixins/table";
     .main-container {
-        background: #fff;
-        padding: px2rem(20);
-        .search {
-            display: flex;
-            padding: 0 px2rem(20) px2rem(15);
-            > div {
-                display: inline-block;
-                vertical-align: top;
-                label {
-                    margin-right: 2%;
-                }
-                .name {
-                    width: 80%;
-                }
-            }
-        }
-        .block {
-            text-align: right;
-            margin-top: 10px;
-        }
+        padding: 20px;
     }
 </style>
 <template>

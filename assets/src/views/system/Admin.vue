@@ -10,7 +10,7 @@
         }
         .main-container {
             background: #fff;
-            padding: px2rem(20);
+            padding: 20px;
             .search {
                 display: flex;
                 padding: 0 px2rem(20) px2rem(15);

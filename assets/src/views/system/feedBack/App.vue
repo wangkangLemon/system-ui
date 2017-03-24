@@ -1,30 +1,11 @@
 <!--客户端-->
 <style lang='scss' scoped rel="stylesheet/scss">
     @import "../../../utils/mixins/mixins";
+    @import "../../../utils/mixins/table";
     .table-container {
+        padding: 20px;
+        background: #fff;
         border: 1px solid #ededed;
-        .main-container {
-            background: #fff;
-            padding: 20px;
-            .search {
-                display: flex;
-                padding: 15px;
-                > div {
-                    display: inline-block;
-                    vertical-align: top;
-                    label {
-                        margin-right: 2%;
-                    }
-                    .el-input, .el-select, .el-date-editor {
-                        width: 40%;
-                    }
-                }
-            }
-            .block {
-                text-align: right;
-                margin-top: 10px;
-            }
-        }
         .showDetail {
             .info {
                 display: inline-block;

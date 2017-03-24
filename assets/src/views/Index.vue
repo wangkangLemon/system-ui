@@ -214,7 +214,7 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu default-active="2" :default-openeds="[1]" :unique-opened="true" class="left-menu-container" :router="true">
+            <el-menu default-active="2" class="left-menu-container" :router="true">
                 <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
                 <el-submenu index="system">
@@ -264,25 +264,25 @@
         },
         mounted () {
             leftMenu = document.querySelector('.left-menu-container')
-            let rightContent = document.querySelector('.right-content')
-            window.onresize = function () {
+            window.onresize = () => {
                 if (document.documentElement.clientWidth < 767) {
-                    leftMenu.style.display = 'none'
+                    this.leftMenuStatus('none')
                 } else {
-                    leftMenu.style.display = 'block'
-                    rightContent.addEventListener('click', () => {
-                        leftMenu.style.display = 'block'
-                    }, false)
+                    this.leftMenuStatus('block')
                 }
             }
             if (this.isMobile) {
-                leftMenu.style.display = 'none'
-                rightContent.addEventListener('click', () => {
-                    leftMenu.style.display = 'none'
-                }, false)
+                this.leftMenuStatus('none')
             }
         },
         methods: {
+            leftMenuStatus (value) {
+                let rightContent = document.querySelector('.right-content')
+                leftMenu.style.display = value
+                rightContent.addEventListener('click', () => {
+                    leftMenu.style.display = value
+                }, false)
+            },
             showLeftMenu () {
                 if (leftMenu.style.display == 'block') {
                     leftMenu.style.display = 'none'
