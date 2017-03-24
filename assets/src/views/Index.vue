@@ -214,7 +214,7 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu default-active="2" class="left-menu-container" :router="true">
+            <el-menu default-active="2" :default-openeds="[1]" :unique-opened="true" class="left-menu-container" :router="true">
                 <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
                 <el-submenu index="system">
@@ -227,8 +227,8 @@
 
                     <el-submenu index="1-4">
                         <template slot="title">问题反馈</template>
-                        <el-menu-item index="1-4-1">连锁后台</el-menu-item>
-                        <el-menu-item index="1-4-2">客户端</el-menu-item>
+                        <el-menu-item index="/system/feedBack/chainBack">连锁后台</el-menu-item>
+                        <el-menu-item index="/system/feedBack/app">客户端</el-menu-item>
                     </el-submenu>
                 </el-submenu>
 

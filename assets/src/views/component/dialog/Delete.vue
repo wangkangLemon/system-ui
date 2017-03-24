@@ -23,7 +23,7 @@
 </style>
 <template>
     <article>
-        <el-dialog v-model="isShow" class="delete-dialog" size="tiny">
+        <el-dialog v-model="isShow" :show-close="false" class="delete-dialog" size="tiny">
             <i class="iconfont icon-warn"></i>
             <h1>操作提示</h1>
             <p>你将要删除<span>{{text}}</span>操作不可恢复确认吗？</p>

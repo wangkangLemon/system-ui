@@ -59,9 +59,90 @@ const routes = [
             {
                 path: '/system/log',
                 name: 'log',
+                component: require('./views/system/Log.vue'),
+                children: [
+                    {   // 系统管理
+                        path: '/system/logSub/systemManage',
+                        name: 'systemManage',
+                        component: resolve => {
+                            require.ensure([], () => {
+                                resolve(require('./views/system/logSub/SystemManage'))
+                            })
+                        }
+                    },
+                    {   // 企业管理
+                        path: '/system/logSub/companyManage',
+                        name: 'companyManage',
+                        component: resolve => {
+                            require.ensure([], () => {
+                                resolve(require('./views/system/logSub/CompanyManage'))
+                            })
+                        }
+                    },
+                    {   // 系统后台登录
+                        path: '/system/logSub/systemBack',
+                        name: 'systemBack',
+                        component: resolve => {
+                            require.ensure([], () => {
+                                resolve(require('./views/system/logSub/SystemBack'))
+                            })
+                        }
+                    },
+                    {   // 企业后台登录
+                        path: '/system/logSub/companyBack',
+                        name: 'companyBack',
+                        component: resolve => {
+                            require.ensure([], () => {
+                                resolve(require('./views/system/logSub/CompanyBack'))
+                            })
+                        }
+                    },
+                    {   // 前台登录
+                        path: '/system/logSub/frontDest',
+                        name: 'frontDest',
+                        component: resolve => {
+                            require.ensure([], () => {
+                                resolve(require('./views/system/logSub/FrontDest'))
+                            })
+                        }
+                    },
+                    {   // 手机验证码
+                        path: '/system/logSub/mobileCode',
+                        name: 'mobileCode',
+                        component: resolve => {
+                            require.ensure([], () => {
+                                resolve(require('./views/system/logSub/MobileCode'))
+                            })
+                        }
+                    },
+                    {   // 邮箱验证码
+                        path: '/system/logSub/emailCode',
+                        name: 'emailCode',
+                        component: resolve => {
+                            require.ensure([], () => {
+                                resolve(require('./views/system/logSub/EmailCode'))
+                            })
+                        }
+                    },
+                ]
+            },
+            // 连锁后台
+            {
+                path: '/system/feedBack/chainBack',
+                name: 'chainBack',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('./views/system/log'))
+                        resolve(require('./views/system/feedBack/ChainBack'))
+                    })
+                }
+            },
+            // 客户端
+            {
+                path: '/system/feedBack/app',
+                name: 'app',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/system/feedBack/App'))
                     })
                 }
             }
