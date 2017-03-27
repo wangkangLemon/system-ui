@@ -5,10 +5,23 @@
         background: #fff;
     }
 
+    @media (max-width: 767px) {
+        .header-wap {
+
     .header-wap {
         @media (max-width: 767px) {
             display: block;
         }
+        .header-pc {
+            display: none;
+        }
+        .wap-header {
+            border-bottom: 1px solid #ededed;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .header-wap {
         @media (min-width: 768px) {
             display: none;
         }
@@ -22,6 +35,7 @@
             display: block;
         }
     }
+
 
     .wap-header {
         @media (max-width: 767px) {
@@ -222,16 +236,6 @@
             <el-menu default-active="2" class="left-menu-container" :router="true">
                 <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
-                <!--数据分析-->
-                <el-submenu index="dataAnalysis">
-                    <template slot="title"><i class="el-icon-message"></i>数据分析</template>
-                    <el-menu-item-group>
-                        <el-menu-item index="/dataAnalysis/export"><i class="el-icon-message"></i>导出</el-menu-item>
-                        <el-menu-item index="/dataAnalysis/contractMessage"><i class="el-icon-message"></i>企业签约信息
-                        </el-menu-item>
-                    </el-menu-item-group>
-                </el-submenu>
-                <!--系统-->
                 <el-submenu index="system">
                     <template slot="title"><i class="el-icon-message"></i>系统</template>
                     <el-menu-item-group>
