@@ -62,7 +62,7 @@ const routes = [
                 component: require('./views/system/Log.vue'),
                 children: [
                     {   // 系统管理
-                        path: '/system/logSub/systemManage',
+                        path: 'systemManage',
                         name: 'systemManage',
                         component: resolve => {
                             require.ensure([], () => {
@@ -71,7 +71,7 @@ const routes = [
                         }
                     },
                     {   // 企业管理
-                        path: '/system/logSub/companyManage',
+                        path: 'companyManage',
                         name: 'companyManage',
                         component: resolve => {
                             require.ensure([], () => {
@@ -80,7 +80,7 @@ const routes = [
                         }
                     },
                     {   // 系统后台登录
-                        path: '/system/logSub/systemBack',
+                        path: 'systemBack',
                         name: 'systemBack',
                         component: resolve => {
                             require.ensure([], () => {
@@ -89,7 +89,7 @@ const routes = [
                         }
                     },
                     {   // 企业后台登录
-                        path: '/system/logSub/companyBack',
+                        path: 'companyBack',
                         name: 'companyBack',
                         component: resolve => {
                             require.ensure([], () => {
@@ -98,7 +98,7 @@ const routes = [
                         }
                     },
                     {   // 前台登录
-                        path: '/system/logSub/frontDest',
+                        path: 'frontDest',
                         name: 'frontDest',
                         component: resolve => {
                             require.ensure([], () => {
@@ -107,7 +107,7 @@ const routes = [
                         }
                     },
                     {   // 手机验证码
-                        path: '/system/logSub/mobileCode',
+                        path: 'mobileCode',
                         name: 'mobileCode',
                         component: resolve => {
                             require.ensure([], () => {
@@ -116,7 +116,7 @@ const routes = [
                         }
                     },
                     {   // 邮箱验证码
-                        path: '/system/logSub/emailCode',
+                        path: 'emailCode',
                         name: 'emailCode',
                         component: resolve => {
                             require.ensure([], () => {
@@ -207,6 +207,7 @@ router.afterEach((route) => {
 })
 
 router.beforeEach((to, from, next) => {
+    console.info('检测到路由切换')
     document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
     xmview.setContentLoading && xmview.setContentLoading(true)
     next()
