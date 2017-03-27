@@ -11,9 +11,9 @@
 
   /* Colors
   -------------------------- */
-  --color-primary: red;
+  --color-primary: #52bff1;
 
-  --color-success: red;
+  --color-success: #13ce66;
   --color-warning: #f7ba2a;
   --color-danger: #ff4949;
   --color-info: #50bfff;
@@ -21,7 +21,7 @@
   --color-secondary: color(var(--color-primary) s(99%) l(*0.9));
   --color-white: #fff;
   --color-dark-white: color(var(--color-white) blend(var(--color-primary) 2%));
-  --color-black: red;
+  --color-black: #000;
 
   --color-base-black: color(var(--color-primary) h(+6) s(33%) l(18%));
   --color-light-black: color(var(--color-base-black) h(+5) s(27%) l(27%));
@@ -37,7 +37,7 @@
 
   /* Link
   -------------------------- */
-  --link-color: red;
+  --link-color: var(--color-extra-light-black);
   --link-hover-color: var(--color-primary);
 
   /* Border
@@ -318,7 +318,7 @@
   --tab-header-color: var(--font-color-base);
   --tab-header-fill-active: rgba(var(--color-black), 0.06);
   --tab-header-fill-hover: rgba(var(--color-black), 0.06);
-  --tab-vertical-header-width: 900px;
+  --tab-vertical-header-width: 90px;
   --tab-vertical-header-count-color: var(--color-white);
   --tab-vertical-header-count-fill: var(--color-secondary);
 
