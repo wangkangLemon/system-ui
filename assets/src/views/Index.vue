@@ -4,23 +4,28 @@
     .index-container {
         background: #fff;
     }
-    @media (max-width: 767px) {
-        .header-wap {
+
+    .header-wap {
+        @media (max-width: 767px) {
             display: block;
         }
-        .header-pc {
+        @media (min-width: 768px) {
             display: none;
-        }
-        .wap-header {
-            border-bottom: 1px solid #ededed;
         }
     }
-    @media (min-width: 768px) {
-        .header-wap {
+
+    .header-pc {
+        @media (max-width: 767px) {
             display: none;
         }
-        .header-pc {
+        @media (min-width: 768px) {
             display: block;
+        }
+    }
+
+    .wap-header {
+        @media (max-width: 767px) {
+            border-bottom: 1px solid #ededed;
         }
     }
     .header {
