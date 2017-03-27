@@ -20,6 +20,9 @@
             .time-container {
                 width: 80%;
                 display: inline-block;
+                @media (max-width: 767px) {
+                    width: 100%;
+                }
             }
         }
         @media (min-width: 768px) {
