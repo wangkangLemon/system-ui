@@ -24,7 +24,8 @@ module.exports = {
         "no-unexpected-multiline": 0,
         "no-sequences": 0,
         "comma-dangle": 0,
-        "eqeqeq": 0
+        "eqeqeq": 0,
+        "curly ": 0
     },
     globals: {
         'xm': true,

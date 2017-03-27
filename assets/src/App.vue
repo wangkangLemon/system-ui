@@ -7,12 +7,10 @@
 </template>
 
 <script>
-    import 'element-ui/lib/theme-default/index.css'
-
     export default {
         data () {
             return {
-                fullscreenLoading: false
+                fullscreenLoading: false,
             }
         },
         created () {
@@ -20,6 +18,7 @@
             xmview.showTip = this.showTip.bind(this)
         },
         methods: {
+            // 全屏的loading
             setLoading (isloading) {
                 this.fullscreenLoading = isloading
             },

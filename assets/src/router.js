@@ -196,7 +196,6 @@ const router = new VueRouter({
 })
 
 router.afterEach((route) => {
-    console.info('路由跳转 router.js')
     let title = route.meta.title
     if (title) {
         document.title = title + ' - 药视通'
@@ -205,6 +204,7 @@ router.afterEach((route) => {
 
 router.beforeEach((to, from, next) => {
     document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
+    xmview.setContentLoading && xmview.setContentLoading(true)
     next()
 })
 

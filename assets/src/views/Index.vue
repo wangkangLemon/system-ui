@@ -252,7 +252,7 @@
                     <small>成绩</small>
                 </h2>
 
-                <div class="route-content">
+                <div class="route-content" v-loading="contentLoading">
                     <router-view></router-view>
                 </div>
             </section>
@@ -267,8 +267,12 @@
         data () {
             return {
                 isMobile: config.isMobile(),
-                isShowMenue: false
+                isShowMenue: false,
+                contentLoading: false
             }
+        },
+        created () {
+            xmview.setContentLoading = this.setContentLoading.bind(this)
         },
         mounted () {
             window.onresize = () => {
@@ -299,6 +303,9 @@
             },
             proces () {
 
+            },
+            setContentLoading (loading) {
+                this.contentLoading = loading
             }
         }
     }
