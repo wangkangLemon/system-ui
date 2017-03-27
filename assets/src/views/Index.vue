@@ -7,9 +7,6 @@
 
     @media (max-width: 767px) {
         .header-wap {
-
-    .header-wap {
-        @media (max-width: 767px) {
             display: block;
         }
         .header-pc {
@@ -22,26 +19,13 @@
 
     @media (min-width: 768px) {
         .header-wap {
-        @media (min-width: 768px) {
             display: none;
         }
-    }
-
-    .header-pc {
-        @media (max-width: 767px) {
-            display: none;
-        }
-        @media (min-width: 768px) {
+        .header-pc {
             display: block;
         }
     }
 
-
-    .wap-header {
-        @media (max-width: 767px) {
-            border-bottom: 1px solid #ededed;
-        }
-    }
     .header {
         height: 55px;
         line-height: 55px;
@@ -125,7 +109,10 @@
             height: 100%;
             position: absolute;
             overflow-y: auto;
+            transition: all 300ms ease;
+            transform: translateX(0);
             @media (max-width: 767px) {
+                transform: translateX(-100%);
                 top: -55px;
             }
             @media (min-width: 768px) {
@@ -136,6 +123,10 @@
                 font-size: 14px;
                 color: #999;
                 margin: 12px 20px 0;
+            }
+
+            &.isShowMenue {
+                transform: translateX(0);
             }
         }
 
@@ -204,7 +195,7 @@
                     <h1>药视通系统管理平台</h1>
                 </el-col>
                 <el-col :span="4">
-                    <i class="iconfont icon-list" @click="showLeftMenu()"></i>
+                    <i class="iconfont icon-list" @click="handleIsShowMenue(!isShowMenue)"></i>
                 </el-col>
             </el-row>
             <el-row class="header" type="flex">
@@ -233,7 +224,8 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu default-active="2" class="left-menu-container" :router="true">
+            <el-menu default-active="2" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
+                     :router="true">
                 <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
                 <el-submenu index="system">
@@ -250,12 +242,11 @@
                         <el-menu-item index="/system/feedBack/app">客户端</el-menu-item>
                     </el-submenu>
                 </el-submenu>
-
                 <!--//-->
             </el-menu>
 
             <!--右边内容-->
-            <section class="right-content">
+            <section class="right-content" @click="handleIsShowMenue(false)">
                 <h2 class="right-title">
                     考试记录
                     <small>成绩</small>
@@ -264,50 +255,29 @@
                 <div class="route-content">
                     <router-view></router-view>
                 </div>
-
             </section>
         </article>
-
     </article>
 </template>
 
 <script lang='babel'>
     import * as userService from '../services/userService'
     import config from '../utils/config'
-    let leftMenu = null
-    export default{
+    export default {
         data () {
             return {
                 isMobile: config.isMobile(),
+                isShowMenue: false
             }
         },
         mounted () {
-            leftMenu = document.querySelector('.left-menu-container')
             window.onresize = () => {
-                if (document.documentElement.clientWidth < 767) {
-                    this.leftMenuStatus('none')
-                } else {
-                    this.leftMenuStatus('block')
-                }
-            }
-            if (this.isMobile) {
-                this.leftMenuStatus('none')
+                this.handleIsShowMenue(document.documentElement.clientWidth > 767)
             }
         },
         methods: {
-            leftMenuStatus (value) {
-                let rightContent = document.querySelector('.right-content')
-                leftMenu.style.display = value
-                rightContent.addEventListener('click', () => {
-                    leftMenu.style.display = value
-                }, false)
-            },
-            showLeftMenu () {
-                if (leftMenu.style.display == 'block') {
-                    leftMenu.style.display = 'none'
-                } else {
-                    leftMenu.style.display = 'block'
-                }
+            handleIsShowMenue (val) {
+                this.isShowMenue = val
             },
             // 注销登录
             handleNickname (type) {
