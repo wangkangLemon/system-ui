@@ -145,6 +145,26 @@ const routes = [
                         resolve(require('./views/system/feedBack/App'))
                     })
                 }
+            },
+            // 导出
+            {
+                path: '/dataAnalysis/export',
+                name: 'export',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/dataAnalysis/Export'))
+                    })
+                }
+            },
+            // 企业签约信息
+            {
+                path: '/dataAnalysis/contractMessage',
+                name: 'contractMessage',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/dataAnalysis/ContractMessage'))
+                    })
+                }
             }
         ]
     },
