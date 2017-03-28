@@ -228,7 +228,7 @@
                      :router="true">
                 <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
-                <el-submenu >
+                <el-submenu index="">
                     <template slot="title"><i class="el-icon-message"></i>客户端</template>
                     <el-submenu index="1-4">
                         <template slot="title">内容推荐</template>

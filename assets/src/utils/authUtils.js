@@ -30,8 +30,15 @@ let authUtls = {
         intervalId && clearInterval(intervalId)
 
         intervalId = setInterval(() => {
-            userApi.refreshToken(authUtls.getUserInfo().id)
-        }, 1000 * 60 * 2) // 2分钟一请求
+            let userinfo = authUtls.getUserInfo()
+            if (userinfo && userinfo.id) {
+                userApi.refreshToken(userinfo.id)
+            } else {
+                xmview.showTip('error', '登录超时,请重新登录')
+                // 记录当前的url
+                xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
+            }
+        }, 1000 * 6) // 2分钟一请求
     },
     // 清理自动更新任务
     clearAuthRefreshToken () {
