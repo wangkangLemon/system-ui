@@ -4,6 +4,26 @@
     @import "../../utils/mixins/table";
 
     .content-manage {
+        // 同步时候的遮罩层
+        .keep {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            height: 250px;
+            z-index: 99;
+            background: rgba(255, 255, 255, 0.7);
+            top: 140px;
+        }
+        .synchronize {
+            background: cornflowerblue;
+            color: #fff;
+            padding: 10px;
+            line-height: 35px;
+            margin-bottom: 20px;
+            .el-button {
+                float: right;
+            }
+        }
         .addForm {
             text-align: left;
             text-align-last: left;
@@ -55,7 +75,7 @@
                 position: relative;
                 .leftSubTree {
                     position: absolute;
-                    z-index: 1;
+                    z-index: 5;
                     width: 50%;
                 }
             }
@@ -95,12 +115,30 @@
             }
             .right-list {
                 padding: 20px;
+                padding-bottom: 60px;
                 .cell {
-                    i {
+                    i.tag {
                         padding: 5px;
                         background: cornflowerblue;
                         color: #fff;
                         border-radius: 5px;
+                    }
+                    i.el-icon-picture {
+                        position: relative;
+                        .img-wrap {
+                            padding: 5px;
+                            border: 1px solid #ededed;
+                            width: 213px;
+                            height: 123px;
+                            position: absolute;
+                            bottom: -123px;
+                            right: -213px;
+                            z-index: 999 !important;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                            }
+                        }
                     }
                 }
             }
@@ -123,7 +161,14 @@
     <article class="content-manage">
         <!--添加/编辑课程-->
         <el-dialog v-model="addForm" :title="formTitle">
-            <el-form class="addForm" :model="form" :rules="rules" ref="form">
+            <div class="keep" v-if="isKeep && isUpdate"></div>
+            <div class="synchronize" @click="isKeep = false" v-if="isUpdate && isKeep">课程：{{form.title}}
+                <el-button>关闭同步</el-button>
+            </div>
+            <div class="synchronize" @click="isKeep = true" v-if="isUpdate && !isKeep">课程：{{form.title}}
+                <el-button>开启同步</el-button>
+            </div>
+            <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>
                 </el-form-item>
@@ -180,7 +225,7 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="chooseCourse = false">取 消</el-button>
                 <el-button type="primary" @click="courseConfirm">确 定</el-button>
-              </span>
+            </span>
         </el-dialog>
 
         <section class="left-content">
@@ -216,7 +261,7 @@
                 test-内容列表（绑定公开）
                 <span>
                     <el-button @click="chooseCourse = true">选取课程</el-button>
-                    <el-button @click="addForm = true">添加内容</el-button>
+                    <el-button @click="addCourse('form')">添加内容</el-button>
                 </span>
             </div>
             <div class="right-list">
@@ -231,8 +276,16 @@
                             label="标题"
                             width="200">
                         <template scope="scope">
-                            <i>课程</i>
+                            <i class="tag">课程</i>
                             {{scope.row.title}}
+                            <i class="el-icon-picture">
+                                <div class="img-wrap">
+                                    <img src="http://localhost:7010/static/img/logo.11729c9.png"/>
+                                </div>
+                            </i>
+                            <el-tooltip class="item" effect="dark" content="与引用内容保持同步" placement="top">
+                                <i class="iconfont icon-refresh"></i>
+                            </el-tooltip>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -248,7 +301,7 @@
                     <el-table-column prop="operate" label="操作">
                         <template scope="scope">
                             <el-button type="text" size="small" @click="updateCourse(scope.$index, scope.row)">
-                                修改
+                                编辑
                                 <!--点击详情 form数据变成当前管理员的信息-->
                             </el-button>
                             <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
@@ -275,19 +328,9 @@
             deleteDialog
         },
         data () {
-            let validateTitle = (rule, value, callback) => {
-                if ((value || '') === '') {
-                    callback(new Error('标题不能为空'))
-                }
-                callback()
-            }
-            let validateLink = (rule, value, callback) => {
-                if ((value || '') === '') {
-                    callback(new Error('链接不能为空'))
-                }
-                callback()
-            }
             return {
+                isKeep: true, // 是否同步
+                isUpdate: false,
                 formTitle: '添加内容',
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
@@ -303,10 +346,18 @@
                 },
                 rules: {
                     title: [
-                        {validator: validateTitle, trigger: 'blur'}
+                        {
+                            required: true,
+                            message: '标题不能为空',
+                            trigger: 'blur'
+                        }
                     ],
                     link: [
-                        {validator: validateLink, trigger: 'blur'}
+                        {
+                            required: true,
+                            message: '链接不能为空',
+                            trigger: 'blur'
+                        }
                     ]
                 },
                 deleteItemName: '', // 要删除的title
@@ -454,7 +505,22 @@
                 this.form.currentTag = index
             },
             updateCourse (index, item) {
-                console.log(item)
+                // 根据item.id获取数据 并赋值给form
+                this.isUpdate = true
+                this.formTitle = '编辑内容'
+                this.addForm = true
+                setTimeout(() => {
+                    this.$refs['form'].resetFields()
+                }, 0)
+                this.form.title = '哈哈'
+            },
+            addCourse (form) {
+                this.addForm = true
+                setTimeout(() => {
+                    this.$refs[form].resetFields()
+                }, 0)
+                this.formTitle = '添加内容'
+                this.isUpdate = false
             }
         }
     }
