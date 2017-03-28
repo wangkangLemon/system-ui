@@ -25,7 +25,7 @@ module.exports = {
         "no-sequences": 0,
         "comma-dangle": 0,
         "eqeqeq": 0,
-        "curly ": 0,
+        "curly": [0, 'multi'],
         "space-before-function-paren": 0
     },
     globals: {

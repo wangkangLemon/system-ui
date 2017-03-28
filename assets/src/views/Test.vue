@@ -6,21 +6,18 @@
 
 <template>
     <div>
-        <ImageEcropperInput></ImageEcropperInput>
+        <ImageEcropperInput :confirmFn="getData" :aspectRatio="4/7"></ImageEcropperInput>
     </div>
 </template>
 
 <script lang='babel'>
-    import * as testService from '../services/testService'
     import ImageEcropperInput from './component/upload/ImagEcropperInput.vue'
     export default{
         created () {
         },
         methods: {
-            getData () {
-                testService.getCitys().then(ret => {
-                    console.info(ret)
-                })
+            getData (data) {
+                console.info('test.vue 获取裁切内容' + data)
             }
         },
         components: {

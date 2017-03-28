@@ -31,7 +31,7 @@
     import '../../../../node_modules/cropperjs/dist/cropper.min.css'
 
     export default{
-        //    点击确认后的回调    长宽比例
+        //    点击确认后的回调    长宽比例 16/9
         props: ['confirmFn', 'aspectRatio'],
         data () {
             return {
