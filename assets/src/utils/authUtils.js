@@ -16,7 +16,7 @@ let authUtls = {
         localStorage.setItem(KEY_AUTHTOKEN, token)
     },
     getUserInfo () {
-        let str = localStorage.getItem(KEY_AUTHUSERINFO).trim()
+        let str = localStorage.getItem(KEY_AUTHUSERINFO)
         if (str)
             return JSON.parse(str)
         else

@@ -166,16 +166,26 @@ const routes = [
                     })
                 }
             },
-            // 内容维护
+            // ============客户端部分================== 开始
             {
-                path: '/client/contentManage',
+                path: '/client/contentManage', // 内容维护
                 name: 'contentManage',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/client/contentManage'))
                     })
                 }
+            },
+            {
+                path: '/client/bootad', // 启动广告
+                name: 'client-bootad',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/client/BootAd.vue'))
+                    })
+                }
             }
+            // ============客户端部分================== 结束
         ]
     },
     {   // 登录

@@ -26,7 +26,7 @@ function getTimeoutPromise (url) {
 // 请求完毕的url
 let requestedUrls = {}
 export function get (url, params, needLoading = true) {
-    params.temp = requestId++
+    params.urlid = requestId++
     url = url + '?' + processParams(params)
 
     let pRequest = new Promise(function (resolve, reject) {
@@ -56,7 +56,7 @@ export function get (url, params, needLoading = true) {
 }
 
 export function post (url, params, needLoading = true) {
-    url += '?temp=' + requestId++
+    url += '?urlid=' + requestId++
     let pRequest = new Promise(function (resolve, reject) {
         needLoading && xmview.setLoading(true)
         fetch(url, {
