@@ -5,10 +5,10 @@
 import * as api from './api'
 import config from '../utils/config'
 import authUtils from '../utils/authUtils'
-const host = config.apiHost
+const urlPre = config.apiHost + '/auth'
 
 export function login (username, password) {
-    let url = host + '/auth/login'
+    let url = urlPre + '/login'
     return api.post(url, {username, password}).then(ret => {
         if (ret.code == 0) {
             return ret.data
@@ -16,6 +16,11 @@ export function login (username, password) {
             return Promise.reject(ret)
         }
     })
+}
+
+export function refreshToken (userid) {
+    let url = urlPre + '/refresh'
+    api.get(url, {id: userid}, false)
 }
 
 export function loginout () {

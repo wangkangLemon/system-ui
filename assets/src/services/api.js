@@ -3,6 +3,8 @@
  */
 
 import authUtils from '../utils/authUtils'
+import config from '../utils/config'
+let requestId = 0
 function getTimeoutPromise (url) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -12,7 +14,7 @@ function getTimeoutPromise (url) {
                 xmview.showTip('error', '请求超时! 请重试')
                 reject(new Error({message: '请求超时', code: -9}))
             } else {
-                console.info('该url处理完毕', url)
+                config.debug && console.info('该url处理完毕', url)
             }
 
             // 删除这个url的引用
@@ -24,6 +26,7 @@ function getTimeoutPromise (url) {
 // 请求完毕的url
 let requestedUrls = {}
 export function get (url, params, needLoading = true) {
+    params.temp = requestId++
     url = url + '?' + processParams(params)
 
     let pRequest = new Promise(function (resolve, reject) {
@@ -53,6 +56,7 @@ export function get (url, params, needLoading = true) {
 }
 
 export function post (url, params, needLoading = true) {
+    url += '?temp=' + requestId++
     let pRequest = new Promise(function (resolve, reject) {
         needLoading && xmview.setLoading(true)
         fetch(url, {
@@ -85,7 +89,7 @@ function processCodeError (ret, url) {
     requestedUrls[url] = true
 
     // 如果过期
-    if (ret.code === 1102) {
+    if (ret.code === 10000 || ret.code === 10001 || ret.code === 10002) {
         xmview.showTip('error', '登录超时,请重新登录')
         // 记录当前的url
         xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})

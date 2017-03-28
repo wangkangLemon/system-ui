@@ -7,6 +7,9 @@ import store from './store'
 import {sync} from 'vuex-router-sync'
 import 'whatwg-fetch'
 import config from './utils/config'
+import authUtls from './utils/authUtils'
+
+authUtls.authRefreshtoken() // 开启自动更新token
 
 // keep router and vuex store in sync
 sync(store, router)

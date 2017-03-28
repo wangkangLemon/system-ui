@@ -173,6 +173,7 @@
             }
         },
         created () {
+            authUtils.clearAuthRefreshToken()
             xmview.setLoading(false)
         },
         methods: {
@@ -181,7 +182,9 @@
                     if (valid) {
                         // 请求接口
                         login(this.ruleForm2.account, this.ruleForm2.checkPass).then((ret) => {
-                            authUtils.setAuthToken(ret.auth_token)
+                            authUtils.setAuthToken(ret.auth_token) // 保存token
+                            authUtils.setUserInfo(ret.auth_user) // 保存用户信息
+                            authUtils.authRefreshtoken() // 启动自动更新token任务
                             xmview.showTip('success', '登录成功')
                             setTimeout(() => {
                                 // 判断是否需要回到上个页面

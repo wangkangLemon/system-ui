@@ -172,7 +172,7 @@
             <el-col :span="8" class="header-right">
                 <div><i class="iconfont icon-xiaoxizhongxin"></i> <em>消息</em></div>
                 <div class="question"><i class="iconfont icon-wenti"></i> <em>问题反馈</em></div>
-                <el-dropdown trigger="click" @click="handleNickname">
+                <el-dropdown trigger="click" @command="handleNickname">
                       <span class="el-dropdown-link nickname">
                         <img src="./images/user-default-male.jpg"> huanghuixin <i
                               class="el-icon-caret-bottom el-icon--right"></i>
@@ -205,7 +205,7 @@
                 <el-col :span="24" class="header-right">
                     <div><i class="iconfont icon-xiaoxizhongxin"></i> <em></em></div>
                     <div class="question"><i class="iconfont icon-wenti"></i> <em></em></div>
-                    <el-dropdown trigger="click" @click="handleNickname">
+                    <el-dropdown trigger="click" @command="handleNickname">
                       <span class="el-dropdown-link nickname">
                         <img src="./images/user-default-male.jpg"><i
                               class="el-icon-caret-bottom el-icon--right"></i>
@@ -279,6 +279,9 @@
                 this.handleIsShowMenue(document.documentElement.clientWidth > 767)
             }
         },
+        beforeDestroy() {
+            window.onresize = null
+        },
         methods: {
             handleIsShowMenue (val) {
                 this.isShowMenue = val
@@ -286,6 +289,7 @@
             // 注销登录
             handleNickname (type) {
                 /* eslint-disable indent  */
+                console.info(type)
                 switch (type) {
                     case 'loginout': {
                         userService.loginout()
