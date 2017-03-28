@@ -165,6 +165,16 @@ const routes = [
                         resolve(require('./views/dataAnalysis/ContractMessage'))
                     })
                 }
+            },
+            // 内容维护
+            {
+                path: '/client/contentManage',
+                name: 'contentManage',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/client/contentManage'))
+                    })
+                }
             }
         ]
     },

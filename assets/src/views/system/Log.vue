@@ -7,8 +7,8 @@
                     :label="item.title"
                     :name="item.name"
                     :key="item.id">
-                <router-view></router-view>
             </el-tab-pane>
+            <router-view></router-view>
         </el-tabs>
     </article>
 </template>

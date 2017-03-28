@@ -228,6 +228,29 @@
                      :router="true">
                 <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
+                <el-submenu index="app">
+                    <template slot="title"><i class="el-icon-message"></i>客户端</template>
+                    <el-submenu index="1-4">
+                        <template slot="title">内容推荐</template>
+                        <el-menu-item index="/client/contentManage">内容维护</el-menu-item>
+                        <el-menu-item index="">区块管理</el-menu-item>
+                        <el-menu-item index="">分类管理</el-menu-item>
+                    </el-submenu>
+                    <el-menu-item-group>
+                        <el-menu-item index=""><i class="el-icon-message"></i>消息推送</el-menu-item>
+                        <el-menu-item index=""><i class="el-icon-message"></i>启动广告</el-menu-item>
+                        <el-menu-item index=""><i class="el-icon-message"></i>企业Logo</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+                <!--数据分析-->
+                <el-submenu index="dataAnalysis">
+                    <template slot="title"><i class="el-icon-message"></i>数据分析</template>
+                    <el-menu-item-group>
+                        <el-menu-item index="/dataAnalysis/export"><i class="el-icon-message"></i>导出</el-menu-item>
+                        <el-menu-item index="/dataAnalysis/contractMessage"><i class="el-icon-message"></i>企业签约信息
+                        </el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
                 <el-submenu index="system">
                     <template slot="title"><i class="el-icon-message"></i>系统</template>
                     <el-menu-item-group>

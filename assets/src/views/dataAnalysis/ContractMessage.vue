@@ -3,9 +3,23 @@
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/table";
 
+    .el-upload {
+        width: 100%;
+    }
     .table-container {
-        border: 1px solid #ededed;
+        .el-dialog {
+            .upload-tip {
+                padding-top: 10px;
+                margin-top: 10px;
+                border-top: 1px solid #ededed;
+                h2 {
+                    font-size: 14px;
+                }
+            }
+        }
+
         .add {
+            border: 1px solid #ededed;
             padding: 10px 20px;
             .el-icon-upload2 {
                 padding-right: 5px;
@@ -41,13 +55,68 @@
                 }
             }
         }
+        .show-sum-count {
+            @extend %justify;
+            > div {
+                display: inline-block;
+                width: 32%;
+                background: blanchedalmond;
+                .intro {
+                    padding: 10px;
+                    border-top: 1px solid #000;
+                }
+            }
+        }
     }
 </style>
 <template>
     <article class="table-container">
+        <div class="show-sum-count">
+            <div class="part1">
+                <div>
+                    <p>签约连锁</p>
+                    <p>6</p>
+                    <i>icon</i>
+                </div>
+                <div class="intro">
+                    签约连锁总数
+                </div>
+            </div>
+            <div class="part3">
+                <div>
+                    <p>签约门店</p>
+                    <p>6</p>
+                    <i>icon</i>
+                </div>
+                <div class="intro">
+                    已录入 638家, 录入率为 173.84%
+                </div>
+            </div>
+            <div class="part4">
+                <div>
+                    <p>签约店员</p>
+                    <p>6</p>
+                    <i>icon</i>
+                </div>
+                <div class="intro">
+                    已录入 3895家, 录入率为 144.26%
+                </div>
+            </div>
+        </div>
         <!--导入弹窗-->
         <el-dialog v-model="isImport" title="导入企业签约信息" size="tiny">
-            导入
+            <el-upload
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :show-file-list="false">
+                <i class="el-icon-plus"></i>
+                <i>点击此处上传文件</i>
+            </el-upload>
+            <div class="upload-tip">
+                <h2>注意事项</h2>
+                <p>1. 模板中的字段请对照填写，不能为空</p>
+                <p>2. 如果有某些内容为空，导入时将跳过</p>
+            </div>
+            <el-button type="primary" @click="isImport = false">关闭</el-button>
         </el-dialog>
         <!--详情-->
         <el-dialog class="showDetail" title="测试添加企业签约信息" v-model="showDetial">
@@ -222,10 +291,10 @@
                 ]
             }
         },
+        created () {
+            xmview.setContentLoading(false)
+        },
         methods: {
-            forbidden () {
-                this.isForbidden = false
-            },
             handleSizeChange (val) {
                 console.log(`每页 ${val} 条`)
                 // 当切换每页条数得时候 获取当前第一页得数据

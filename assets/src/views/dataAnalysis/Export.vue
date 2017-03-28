@@ -111,6 +111,9 @@
                     }
                 ]
             }
+        },
+        created () {
+            xmview.setContentLoading(false)
         }
     }
 </script>

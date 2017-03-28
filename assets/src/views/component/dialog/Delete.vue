@@ -2,6 +2,7 @@
     @import "../../../utils/mixins/mixins";
     .delete-dialog {
         text-align: center;
+        text-align-last: center;
         i {
             &:before {
                 display: block;
