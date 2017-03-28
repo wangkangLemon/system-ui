@@ -6,12 +6,13 @@
 
 <template>
     <div>
-        <button @click="getData">点击获取数据</button>
+        <ImageEcropperInput></ImageEcropperInput>
     </div>
 </template>
 
 <script lang='babel'>
     import * as testService from '../services/testService'
+    import ImageEcropperInput from './component/upload/ImagEcropperInput.vue'
     export default{
         created () {
         },
@@ -21,6 +22,9 @@
                     console.info(ret)
                 })
             }
+        },
+        components: {
+            ImageEcropperInput
         }
     }
 </script>
