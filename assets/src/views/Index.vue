@@ -254,15 +254,15 @@
                 <el-submenu index="system">
                     <template slot="title"><i class="el-icon-message"></i>系统</template>
                     <el-menu-item-group>
-                        <el-menu-item index="/system/admin"><i class="el-icon-message"></i>管理员</el-menu-item>
-                        <el-menu-item index="/system/set"><i class="el-icon-message"></i>设置</el-menu-item>
-                        <el-menu-item index="/system/log"><i class="el-icon-message"></i>日志</el-menu-item>
+                        <el-menu-item index="/sys/admin"><i class="el-icon-message"></i>管理员</el-menu-item>
+                        <el-menu-item index="/sys/setting"><i class="el-icon-message"></i>设置</el-menu-item>
+                        <el-menu-item index="/sys/log"><i class="el-icon-message"></i>日志</el-menu-item>
                     </el-menu-item-group>
 
                     <el-submenu index="1-4">
                         <template slot="title">问题反馈</template>
-                        <el-menu-item index="/system/feedBack/chainBack">连锁后台</el-menu-item>
-                        <el-menu-item index="/system/feedBack/app">客户端</el-menu-item>
+                        <el-menu-item index="/system/feedBack/admin">连锁后台</el-menu-item>
+                        <el-menu-item index="/system/feedBack/mobile">客户端</el-menu-item>
                     </el-submenu>
                 </el-submenu>
                 <!--//-->

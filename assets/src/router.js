@@ -39,28 +39,34 @@ const routes = [
             },
             // 管理
             {
-                path: '/system/admin',
-                name: 'admin',
+                path: '/sys/admin',
+                name: 'sys-admin',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/system/admin'))
                     })
+                },
+                meta: {
+                    title: '管理员-系统',
                 }
             },
             // 设置
             {
-                path: '/system/set',
-                name: 'set',
+                path: '/sys/setting',
+                name: 'sys-setting',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/system/set'))
                     })
+                },
+                meta: {
+                    title: '设置',
                 }
             },
             // 日志
             {
-                path: '/system/log',
-                name: 'log',
+                path: '/sys/log',
+                name: 'sys-log',
                 component: require('./views/system/Log.vue'),
                 children: [
                     {   // 系统管理
@@ -70,6 +76,9 @@ const routes = [
                             require.ensure([], () => {
                                 resolve(require('./views/system/logSub/SystemManage'))
                             })
+                        },
+                        meta: {
+                            title: '系统管理操作-日志',
                         }
                     },
                     {   // 企业管理
@@ -79,6 +88,9 @@ const routes = [
                             require.ensure([], () => {
                                 resolve(require('./views/system/logSub/CompanyManage'))
                             })
+                        },
+                        meta: {
+                            title: '企业管理操作-日志',
                         }
                     },
                     {   // 系统后台登录
@@ -88,6 +100,9 @@ const routes = [
                             require.ensure([], () => {
                                 resolve(require('./views/system/logSub/SystemBack'))
                             })
+                        },
+                        meta: {
+                            title: '系统后台登录-日志',
                         }
                     },
                     {   // 企业后台登录
@@ -97,6 +112,9 @@ const routes = [
                             require.ensure([], () => {
                                 resolve(require('./views/system/logSub/CompanyBack'))
                             })
+                        },
+                        meta: {
+                            title: '企业后台登录-日志',
                         }
                     },
                     {   // 前台登录
@@ -106,6 +124,9 @@ const routes = [
                             require.ensure([], () => {
                                 resolve(require('./views/system/logSub/FrontDest'))
                             })
+                        },
+                        meta: {
+                            title: '前台登录-日志',
                         }
                     },
                     {   // 手机验证码
@@ -115,6 +136,9 @@ const routes = [
                             require.ensure([], () => {
                                 resolve(require('./views/system/logSub/MobileCode'))
                             })
+                        },
+                        meta: {
+                            title: '手机验证码-日志',
                         }
                     },
                     {   // 邮箱验证码
@@ -124,48 +148,63 @@ const routes = [
                             require.ensure([], () => {
                                 resolve(require('./views/system/logSub/EmailCode'))
                             })
+                        },
+                        meta: {
+                            title: '邮件验证码-日志',
                         }
                     },
                 ]
             },
             // 连锁后台
             {
-                path: '/system/feedBack/chainBack',
-                name: 'chainBack',
+                path: '/system/feedBack/admin',
+                name: 'system-feedBack-admin',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/system/feedBack/ChainBack'))
                     })
+                },
+                meta: {
+                    title: '问题反馈-连锁后台',
                 }
             },
             // 客户端
             {
-                path: '/system/feedBack/app',
-                name: 'app',
+                path: '/system/feedBack/mobile',
+                name: 'system-feedBack-mobile',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/system/feedBack/App'))
                     })
+                },
+                meta: {
+                    title: '问题反馈-客户端',
                 }
             },
             // 导出
             {
                 path: '/dataAnalysis/export',
-                name: 'export',
+                name: 'dataAnalysis-export',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/dataAnalysis/Export'))
                     })
+                },
+                meta: {
+                    title: '导出',
                 }
             },
             // 企业签约信息
             {
-                path: '/dataAnalysis/contractMessage',
-                name: 'contractMessage',
+                path: '/dataAnalysis/sign',
+                name: 'dataAnalysis-sign',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/dataAnalysis/ContractMessage'))
                     })
+                },
+                meta: {
+                    title: '企业签约信息',
                 }
             },
             // ============客户端部分================== 开始
@@ -176,6 +215,9 @@ const routes = [
                     require.ensure([], () => {
                         resolve(require('./views/client/contentManage'))
                     })
+                },
+                meta: {
+                    title: '内容维护-推荐',
                 }
             },
             {
@@ -185,6 +227,9 @@ const routes = [
                     require.ensure([], () => {
                         resolve(require('./views/client/BlockManage'))
                     })
+                },
+                meta: {
+                    title: '区块管理-推荐',
                 }
             },
             {
@@ -194,6 +239,9 @@ const routes = [
                     require.ensure([], () => {
                         resolve(require('./views/client/ClassifyManage'))
                     })
+                },
+                meta: {
+                    title: '分类管理-推荐',
                 }
             },
             {
