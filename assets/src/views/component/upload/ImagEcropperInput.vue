@@ -10,8 +10,7 @@
 <template>
     <article ref="container">
         <el-button type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i></el-button>
-        <el-dialog title="提示" v-model="showCropper" size="large" top="15px">
-            <span slot="title">裁切图片</span>
+        <el-dialog title="裁切图片" v-model="showCropper" size="large" top="15px">
             <div class="croppercontainer">
                 <img @load="startCropper()" class="image-preview" alt="Picture"
                      :src="imgData">
@@ -31,8 +30,8 @@
     import '../../../../node_modules/cropperjs/dist/cropper.min.css'
 
     export default{
-        //    点击确认后的回调    长宽比例 16/9
-        props: ['confirmFn', 'aspectRatio'],
+        //    点击确认后的回调  长宽比例 16/9  是否圆形裁切
+        props: ['confirmFn', 'aspectRatio', 'isRound'],
         data () {
             return {
                 showCropper: false,
@@ -54,6 +53,7 @@
                 let file = e.target.files[0]
                 if (!file)
                     return
+
                 let _this = this
                 let reader = new window.FileReader()
                 reader.readAsDataURL(file)
@@ -72,10 +72,20 @@
             },
             startCropper () {
                 let image = this.$refs.container.querySelector('.image-preview')
+                let _this = this
                 this.cropper = new Cropper(image, {
                     aspectRatio: this.finalRatio,
                     scalable: false,
                     zoomable: false,
+                    viewMode: 1,
+                    ready() {
+                        // 是否需要原型裁切
+                        if (_this.isRound) {
+                            [..._this.$refs.container.querySelectorAll('.cropper-view-box,.cropper-face')].map(item => {
+                                item.style['border-radius'] = '50%'
+                            })
+                        }
+                    }
                 })
             }
         },

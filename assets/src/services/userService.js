@@ -20,7 +20,9 @@ export function login (username, password) {
 
 export function refreshToken (userid) {
     let url = urlPre + '/refresh'
-    api.get(url, {id: userid}, false)
+    api.get(url, {id: userid}, false).catch((e) => {
+        e.tipCom && e.tipCom.close()
+    })
 }
 
 export function loginout () {

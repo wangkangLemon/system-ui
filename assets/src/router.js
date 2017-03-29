@@ -184,6 +184,15 @@ const routes = [
                         resolve(require('./views/client/BootAd.vue'))
                     })
                 }
+            },
+            {
+                path: '/client/companylogo', // 企业logo
+                name: 'client-companylogo',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/client/CompanyLogo.vue'))
+                    })
+                }
             }
             // ============客户端部分================== 结束
         ]

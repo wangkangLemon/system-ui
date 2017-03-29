@@ -93,7 +93,7 @@
         </el-form>
 
 
-        <el-dialog title="查看示例" v-model="isShowImgSample" size="small" class="dialog-sample-img">
+        <el-dialog title="查看示例" v-model="isShowImgSample" size="small">
             <img src="./images/mobile-boot-sample.png" style="width: 100%">
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="isShowImgSample = false">确 定</el-button>
