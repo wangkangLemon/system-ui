@@ -92,14 +92,13 @@
             </el-form-item>
         </el-form>
 
-
-        <el-dialog title="查看示例" v-model="isShowImgSample" size="small">
+        <!--查看示例的弹出框-->
+        <el-dialog title="查看示例" v-model="isShowImgSample" size="small" top="15px">
             <img src="./images/mobile-boot-sample.png" style="width: 100%">
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="isShowImgSample = false">确 定</el-button>
             </span>
         </el-dialog>
-
     </article>
 </template>
 

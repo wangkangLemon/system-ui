@@ -230,6 +230,14 @@
                      :router="true">
                 <div class="nav-title">导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
+                <el-submenu index="testing">
+                    <template slot="title"><i class="el-icon-message"></i>培训管理</template>
+                    <el-submenu index="1-4">
+                        <template slot="title">成绩</template>
+                        <el-menu-item index="/testing/all">成绩总览</el-menu-item>
+                        <el-menu-item index="">考试记录</el-menu-item>
+                    </el-submenu>
+                </el-submenu>
                 <el-submenu index="test123">
                     <template slot="title"><i class="el-icon-message"></i>客户端</template>
                     <el-submenu index="1-4">
@@ -241,6 +249,7 @@
                     <el-menu-item index="/client/msg"><i class="el-icon-message"></i>消息推送</el-menu-item>
                     <el-menu-item index="/client/bootad"><i class="el-icon-message"></i>启动广告</el-menu-item>
                     <el-menu-item index="/client/companylogo"><i class="el-icon-message"></i>企业Logo</el-menu-item>
+                    <el-menu-item index="/client/indexnav"><i class="el-icon-message"></i>首页导航</el-menu-item>
                 </el-submenu>
                 <!--数据分析-->
                 <el-submenu index="dataAnalysis">

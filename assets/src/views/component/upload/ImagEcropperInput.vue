@@ -29,6 +29,7 @@
     import Cropper from 'cropperjs'
     import '../../../../node_modules/cropperjs/dist/cropper.min.css'
 
+    let _this
     export default{
         //    点击确认后的回调  长宽比例 16/9  是否圆形裁切
         props: ['confirmFn', 'aspectRatio', 'isRound'],
@@ -40,7 +41,12 @@
                 cropper: null
             }
         },
+        // 提供给外部调用
+        chooseImg () {
+            _this.chooseImg()
+        },
         created () {
+            _this = this
             this.finalRatio = this.aspectRatio || 16 / 9
         },
         methods: {

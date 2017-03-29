@@ -182,6 +182,7 @@
                     if (valid) {
                         // 请求接口
                         login(this.ruleForm2.account, this.ruleForm2.checkPass).then((ret) => {
+                            this.$store.dispatch('setIndexNavMenu', {menu: ret.auth_menu})
                             authUtils.setAuthToken(ret.auth_token) // 保存token
                             authUtils.setUserInfo(ret.auth_user) // 保存用户信息
                             authUtils.authRefreshtoken() // 启动自动更新token任务

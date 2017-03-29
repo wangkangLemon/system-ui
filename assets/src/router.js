@@ -201,6 +201,18 @@ const routes = [
                 meta: {
                     title: '企业LOGO-手机客户端',
                 }
+            },
+            {
+                path: '/client/indexnav', // 企业logo
+                name: 'client-indexnav',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/client/IndexNav.vue'))
+                    })
+                },
+                meta: {
+                    title: '企业导航-手机客户端',
+                }
             }
             // ============客户端部分================== 结束
         ]
