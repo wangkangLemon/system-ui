@@ -244,7 +244,6 @@ router.afterEach((route) => {
 })
 
 router.beforeEach((to, from, next) => {
-    document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
     xmview.setContentLoading && xmview.setContentLoading(true)
 
     setTitle(to.meta.title)

@@ -15,6 +15,7 @@ authUtls.authRefreshtoken() // 开启自动更新token
 sync(store, router)
 Vue.config.devtools = config.debug
 
+document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
 Vue.use(ElementUI)
 window.xmview = {}
 window.xmrouter = router
