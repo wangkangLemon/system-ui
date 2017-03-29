@@ -51,13 +51,17 @@
             },
             // 文件切换选中
             fileChange (e) {
+                let file = e.target.files[0]
+                if (!file)
+                    return
                 let _this = this
-                let file = new window.FileReader()
-                file.readAsDataURL(e.target.files[0])
-                file.onload = function () {
+                let reader = new window.FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = function () {
                     _this.showCropper = true
                     _this.$nextTick(() => {
                         _this.imgData = this.result
+                        _this.$refs.file.value = null
                     })
                 }
             },

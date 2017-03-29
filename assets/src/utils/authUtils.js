@@ -5,6 +5,7 @@
 const KEY_AUTHTOKEN = 'KEY_AUTHTOKEN'
 const KEY_AUTHUSERINFO = 'KEY_AUTHUSERINFO'
 import * as userApi from '../services/userService'
+import config from '../utils/config'
 
 let intervalId = null
 let authUtls = {
@@ -38,7 +39,7 @@ let authUtls = {
                 // 记录当前的url
                 xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
             }
-        }, 1000 * 6) // 2分钟一请求
+        }, config.debug ? 1000 * 60 : 1000 * 60 * 5) // 5分钟一请求
     },
     // 清理自动更新任务
     clearAuthRefreshToken () {

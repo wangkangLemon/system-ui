@@ -238,8 +238,8 @@
                     </el-submenu>
                     <el-menu-item-group index="">
                         <el-menu-item index=""><i class="el-icon-message"></i>消息推送</el-menu-item>
-                        <el-menu-item index=""><i class="el-icon-message"></i>启动广告</el-menu-item>
-                        <el-menu-item index="/client/bootad"><i class="el-icon-message"></i>企业Logo</el-menu-item>
+                        <el-menu-item index="/client/bootad"><i class="el-icon-message"></i>启动广告</el-menu-item>
+                        <el-menu-item index=""><i class="el-icon-message"></i>企业Logo</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <!--数据分析-->
