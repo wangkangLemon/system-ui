@@ -228,52 +228,7 @@
             <el-menu :default-active="navMenueActive" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
                      :router="true">
                 <div class="nav-title">导航</div>
-
                 <MenuTree v-for="item in navMenus" :data="item" :key="item.item.id"></MenuTree>
-                <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
-                <!--<el-submenu v-for="arr in navMenus" :index="arr.item.menu_url">-->
-                <!--<template slot="title"><i class="el-icon-message"></i>客户端</template>-->
-                <!--</el-submenu>-->
-
-                <el-submenu index="asda">
-                    <template slot="title"><i class="el-icon-message"></i>客户端</template>
-                    <el-submenu index="1-4">
-                        <template slot="title">内容推荐</template>
-                        <el-menu-item index="/client/contentManage">内容维护</el-menu-item>
-                        <el-menu-item index="/client/blockManage">区块管理</el-menu-item>
-                        <el-menu-item index="">分类管理</el-menu-item>
-                    </el-submenu>
-                    <el-menu-item-group index="qweqwe">
-                        <el-menu-item index="/client/msg"><i class="el-icon-message"></i>消息推送</el-menu-item>
-                        <el-menu-item index="/client/bootad"><i class="el-icon-message"></i>启动广告</el-menu-item>
-                        <el-menu-item index="/client/companylogo"><i class="el-icon-message"></i>企业Logo</el-menu-item>
-                        <el-menu-item index="/client/indexnav"><i class="el-icon-message"></i>首页导航</el-menu-item>
-                    </el-menu-item-group>
-                </el-submenu>
-                <!--数据分析-->
-                <el-submenu index="dataAnalysis">
-                    <template slot="title"><i class="el-icon-message"></i>数据分析</template>
-                    <el-menu-item-group>
-                        <el-menu-item index="/dataAnalysis/export"><i class="el-icon-message"></i>导出</el-menu-item>
-                        <el-menu-item index="/dataAnalysis/contractMessage"><i class="el-icon-message"></i>企业签约信息
-                        </el-menu-item>
-                    </el-menu-item-group>
-                </el-submenu>
-                <el-submenu index="system">
-                    <template slot="title"><i class="el-icon-message"></i>系统</template>
-                    <el-menu-item-group>
-                        <el-menu-item index="/sys/admin"><i class="el-icon-message"></i>管理员</el-menu-item>
-                        <el-menu-item index="/sys/setting"><i class="el-icon-message"></i>设置</el-menu-item>
-                        <el-menu-item index="/sys/log"><i class="el-icon-message"></i>日志</el-menu-item>
-                    </el-menu-item-group>
-
-                    <el-submenu index="1-4">
-                        <template slot="title">问题反馈</template>
-                        <el-menu-item index="/system/feedBack/admin">连锁后台</el-menu-item>
-                        <el-menu-item index="/system/feedBack/mobile">客户端</el-menu-item>
-                    </el-submenu>
-                </el-submenu>
-                <!--//-->
             </el-menu>
 
             <!--右边内容-->
@@ -295,6 +250,7 @@
     import * as userService from '../services/userService'
     import config from '../utils/config'
     import MenuTree from './component/tree/MenuTree.vue'
+    import authUtils from '../utils/authUtils'
 
     export default {
         data () {
@@ -305,7 +261,7 @@
                 mainTitle: this.$store.state.index.webpathMain,
                 subTitle: this.$store.state.index.webpathSub,
                 navMenueActive: '', // 激活的菜单选项
-                navMenus: this.$store.state.index.navMenu, // 所有的菜单
+                navMenus: null, // 所有的菜单
             }
         },
         watch: {
@@ -319,6 +275,7 @@
         created () {
             xmview.setContentLoading = this.setContentLoading.bind(this)
             this.navMenueActive = this.$route.path
+            this.navMenus = authUtils.getNavMenu()
         },
         mounted () {
             window.onresize = () => {

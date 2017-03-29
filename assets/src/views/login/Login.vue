@@ -184,8 +184,7 @@
                     if (valid) {
                         // 请求接口
                         login(this.ruleForm2.account, this.ruleForm2.checkPass).then((ret) => {
-                            console.info(treeUtls.arr2Tree(ret.auth_menu))
-                            this.$store.dispatch('setIndexNavMenu', {menu: treeUtls.arr2Tree(ret.auth_menu)}) // 保存菜单
+                            authUtils.setNavMenu(treeUtls.arr2Tree(ret.auth_menu)) // 保存菜单
                             authUtils.setAuthToken(ret.auth_token) // 保存token
                             authUtils.setUserInfo(ret.auth_user) // 保存用户信息
                             authUtils.authRefreshtoken() // 启动自动更新token任务

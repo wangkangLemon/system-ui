@@ -1,7 +1,7 @@
 <style lang='scss' scoped rel='stylesheet/scss'></style>
 
 <template>
-    <el-submenu :index="data.item.menu_url" v-if="data">
+    <el-submenu :index="data.item.menu_url" v-if="data && data.children != null">
         <template slot="title"><i class="el-icon-message"></i>{{data.item.menu_name}}</template>
 
         <MenuTree v-for="item in hasChildCItems" :key="item.item.id" :data="item"></MenuTree>
@@ -11,6 +11,11 @@
             {{item.item.menu_name}}
         </el-menu-item>
     </el-submenu>
+
+    <el-menu-item :index="data.item.menu_url" v-else-if="data && data.children == null">
+        <i class="el-icon-menu"></i>
+        {{data.item.menu_name}}
+    </el-menu-item>
 </template>
 
 <script lang='babel'>
@@ -25,7 +30,6 @@
         },
         props: ['data'],
         created () {
-            console.info(this.data)
             let hasChildCItems = []
             let leafChildren = []
             if (this.data.children) {
