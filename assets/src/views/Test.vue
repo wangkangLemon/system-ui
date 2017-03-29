@@ -6,13 +6,29 @@
 
 <template>
     <div>
-        <ImageEcropperInput :confirmFn="getData" :aspectRatio="4/7"></ImageEcropperInput>
+        <Menutree :data="tree"></Menutree>
     </div>
 </template>
 
 <script lang='babel'>
-    import ImageEcropperInput from './component/upload/ImagEcropperInput.vue'
+    import Menutree from './component/tree/MenuTree.vue'
     export default{
+        data() {
+            return {
+                tree: {
+                    id: 1,
+                    child: {
+                        id: 2,
+                        child: {
+                            id: 3,
+                            child: {
+                                id: 4
+                            }
+                        }
+                    }
+                }
+            }
+        },
         created () {
         },
         methods: {
@@ -21,7 +37,7 @@
             }
         },
         components: {
-            ImageEcropperInput
+            Menutree
         }
     }
 </script>

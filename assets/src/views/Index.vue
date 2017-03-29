@@ -119,7 +119,7 @@
                 top: 55px;
             }
 
-            > div {
+            > div.nav-title {
                 font-size: 14px;
                 color: #999;
                 margin: 12px 20px 0;
@@ -145,6 +145,7 @@
 
             .right-title {
                 font-size: 24px;
+                margin-bottom: 15px;
                 > small {
                     font-weight: 300;
                     font-size: 70%;
@@ -224,11 +225,17 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu default-active="2" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
+            <el-menu :default-active="navMenueActive" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
                      :router="true">
-                <div>导航</div>
+                <div class="nav-title">导航</div>
+
+                <MenuTree v-for="item in navMenus" :data="item" :key="item.item.id"></MenuTree>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
-                <el-submenu index="">
+                <!--<el-submenu v-for="arr in navMenus" :index="arr.item.menu_url">-->
+                <!--<template slot="title"><i class="el-icon-message"></i>客户端</template>-->
+                <!--</el-submenu>-->
+
+                <el-submenu index="asda">
                     <template slot="title"><i class="el-icon-message"></i>客户端</template>
                     <el-submenu index="1-4">
                         <template slot="title">内容推荐</template>
@@ -236,10 +243,11 @@
                         <el-menu-item index="/client/blockManage">区块管理</el-menu-item>
                         <el-menu-item index="">分类管理</el-menu-item>
                     </el-submenu>
-                    <el-menu-item-group index="">
-                        <el-menu-item index=""><i class="el-icon-message"></i>消息推送</el-menu-item>
-                        <el-menu-item index=""><i class="el-icon-message"></i>启动广告</el-menu-item>
-                        <el-menu-item index="/client/bootad"><i class="el-icon-message"></i>企业Logo</el-menu-item>
+                    <el-menu-item-group index="qweqwe">
+                        <el-menu-item index="/client/msg"><i class="el-icon-message"></i>消息推送</el-menu-item>
+                        <el-menu-item index="/client/bootad"><i class="el-icon-message"></i>启动广告</el-menu-item>
+                        <el-menu-item index="/client/companylogo"><i class="el-icon-message"></i>企业Logo</el-menu-item>
+                        <el-menu-item index="/client/indexnav"><i class="el-icon-message"></i>首页导航</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <!--数据分析-->
@@ -271,8 +279,8 @@
             <!--右边内容-->
             <section class="right-content" @click="handleIsShowMenue(false)">
                 <h2 class="right-title">
-                    考试记录
-                    <small>成绩</small>
+                    {{mainTitle}}
+                    <small>{{subTitle}}</small>
                 </h2>
 
                 <div class="route-content" v-loading="contentLoading">
@@ -286,16 +294,31 @@
 <script lang='babel'>
     import * as userService from '../services/userService'
     import config from '../utils/config'
+    import MenuTree from './component/tree/MenuTree.vue'
+
     export default {
         data () {
             return {
                 isMobile: config.isMobile(),
                 isShowMenue: false,
-                contentLoading: false
+                contentLoading: false,
+                mainTitle: this.$store.state.index.webpathMain,
+                subTitle: this.$store.state.index.webpathSub,
+                navMenueActive: '', // 激活的菜单选项
+                navMenus: this.$store.state.index.navMenu, // 所有的菜单
+            }
+        },
+        watch: {
+            '$store.state.index.webpathMain': function () {
+                this.mainTitle = this.$store.state.index.webpathMain
+            },
+            '$store.state.index.webpathSub': function () {
+                this.subTitle = this.$store.state.index.webpathSub
             }
         },
         created () {
             xmview.setContentLoading = this.setContentLoading.bind(this)
+            this.navMenueActive = this.$route.path
         },
         mounted () {
             window.onresize = () => {
@@ -334,6 +357,9 @@
             setContentLoading (loading) {
                 this.contentLoading = loading
             }
+        },
+        components: {
+            MenuTree
         }
     }
 </script>

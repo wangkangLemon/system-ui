@@ -2,8 +2,9 @@
  * Created by huanghuixin on 2017/3/20.
  */
 
-const KEY_AUTHTOKEN = 'KEY_AUTHTOKEN'
-const KEY_AUTHUSERINFO = 'KEY_AUTHUSERINFO'
+const KEY_AUTHTOKEN = 'KEY_AUTH_UTILS_TOKEN'
+const KEY_AUTHUSERINFO = 'KEY_AUTH_UTILS_USERINFO'
+const KEY_AUTHSETNAVMENU = 'KEY_AUTH_UTILS_SETNAVMENU'
 import * as userApi from '../services/userService'
 import config from '../utils/config'
 
@@ -25,6 +26,17 @@ let authUtls = {
     },
     setUserInfo (userInfo) {
         localStorage.setItem(KEY_AUTHUSERINFO, JSON.stringify(userInfo))
+    },
+    // 保存获取菜单
+    getNavMenu () {
+        let str = localStorage.getItem(KEY_AUTHSETNAVMENU)
+        if (str)
+            return JSON.parse(str)
+        else
+            return null
+    },
+    setNavMenu (navData) {
+        localStorage.setItem(KEY_AUTHSETNAVMENU, JSON.stringify(navData))
     },
     // 自动更新用户的token
     authRefreshtoken () {
