@@ -179,6 +179,24 @@ const routes = [
                 }
             },
             {
+                path: '/client/blockManage', // 区块管理
+                name: 'blockManage',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/client/BlockManage'))
+                    })
+                }
+            },
+            {
+                path: '/client/classifyManage', // 分类管理
+                name: 'classifyManage',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('./views/client/ClassifyManage'))
+                    })
+                }
+            },
+            {
                 path: '/client/bootad', // 启动广告
                 name: 'client-bootad',
                 component: resolve => {

@@ -119,7 +119,7 @@
                 top: 55px;
             }
 
-            > div.nav-title {
+            > div {
                 font-size: 14px;
                 color: #999;
                 margin: 12px 20px 0;
@@ -145,7 +145,6 @@
 
             .right-title {
                 font-size: 24px;
-                margin-bottom: 15px;
                 > small {
                     font-weight: 300;
                     font-size: 70%;
@@ -225,38 +224,31 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu :default-active="navMenueActive" class="left-menu-container"
-                     :class="{ 'isShowMenue':isShowMenue }"
+            <el-menu default-active="2" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
                      :router="true">
-                <div class="nav-title">导航</div>
+                <div>导航</div>
                 <el-menu-item index="/index/main"><i class="el-icon-menu"></i>主页</el-menu-item>
-                <el-submenu index="testing">
-                    <template slot="title"><i class="el-icon-message"></i>培训管理</template>
-                    <el-submenu index="1-4">
-                        <template slot="title">成绩</template>
-                        <el-menu-item index="/testing/all">成绩总览</el-menu-item>
-                        <el-menu-item index="">考试记录</el-menu-item>
-                    </el-submenu>
-                </el-submenu>
-                <el-submenu index="test123">
+                <el-submenu index="">
                     <template slot="title"><i class="el-icon-message"></i>客户端</template>
                     <el-submenu index="1-4">
                         <template slot="title">内容推荐</template>
                         <el-menu-item index="/client/contentManage">内容维护</el-menu-item>
-                        <el-menu-item index="">区块管理</el-menu-item>
+                        <el-menu-item index="/client/blockManage">区块管理</el-menu-item>
                         <el-menu-item index="">分类管理</el-menu-item>
                     </el-submenu>
-                    <el-menu-item index="/client/msg"><i class="el-icon-message"></i>消息推送</el-menu-item>
-                    <el-menu-item index="/client/bootad"><i class="el-icon-message"></i>启动广告</el-menu-item>
-                    <el-menu-item index="/client/companylogo"><i class="el-icon-message"></i>企业Logo</el-menu-item>
-                    <el-menu-item index="/client/indexnav"><i class="el-icon-message"></i>首页导航</el-menu-item>
+                    <el-menu-item-group index="">
+                        <el-menu-item index=""><i class="el-icon-message"></i>消息推送</el-menu-item>
+                        <el-menu-item index=""><i class="el-icon-message"></i>启动广告</el-menu-item>
+                        <el-menu-item index="/client/bootad"><i class="el-icon-message"></i>企业Logo</el-menu-item>
+                    </el-menu-item-group>
                 </el-submenu>
                 <!--数据分析-->
                 <el-submenu index="dataAnalysis">
                     <template slot="title"><i class="el-icon-message"></i>数据分析</template>
                     <el-menu-item-group>
                         <el-menu-item index="/dataAnalysis/export"><i class="el-icon-message"></i>导出</el-menu-item>
-                        <el-menu-item index="/dataAnalysis/contractMessage"><i class="el-icon-message"></i>企业签约信息</el-menu-item>
+                        <el-menu-item index="/dataAnalysis/contractMessage"><i class="el-icon-message"></i>企业签约信息
+                        </el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="system">
@@ -279,8 +271,8 @@
             <!--右边内容-->
             <section class="right-content" @click="handleIsShowMenue(false)">
                 <h2 class="right-title">
-                    {{mainTitle}}
-                    <small>{{subTitle}}</small>
+                    考试记录
+                    <small>成绩</small>
                 </h2>
 
                 <div class="route-content" v-loading="contentLoading">
@@ -299,23 +291,11 @@
             return {
                 isMobile: config.isMobile(),
                 isShowMenue: false,
-                contentLoading: false,
-                mainTitle: this.$store.state.index.webpathMain,
-                subTitle: this.$store.state.index.webpathSub,
-                navMenueActive: '' // 激活的菜单选项
-            }
-        },
-        watch: {
-            '$store.state.index.webpathMain': function () {
-                this.mainTitle = this.$store.state.index.webpathMain
-            },
-            '$store.state.index.webpathSub': function () {
-                this.subTitle = this.$store.state.index.webpathSub
+                contentLoading: false
             }
         },
         created () {
             xmview.setContentLoading = this.setContentLoading.bind(this)
-            this.navMenueActive = this.$route.path
         },
         mounted () {
             window.onresize = () => {

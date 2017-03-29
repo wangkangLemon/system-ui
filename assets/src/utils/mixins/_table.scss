@@ -1,3 +1,4 @@
+//列表样式
 .main-container {
     background: #fff;
     .search {
@@ -43,4 +44,11 @@
         text-align: right;
         margin-top: 10px;
     }
+}
+
+//表单
+.dialog-footer {
+    text-align: right;
+    float: right;
+    margin-bottom: 30px;
 }

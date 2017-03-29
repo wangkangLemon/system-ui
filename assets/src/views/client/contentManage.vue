@@ -4,6 +4,33 @@
     @import "../../utils/mixins/table";
 
     .content-manage {
+        /*上传图片的样式*/
+        .avatar-uploader {
+            .el-upload {
+                border: 1px dashed #d9d9d9;
+                border-radius: 6px;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+
+                &:hover {
+                    border-color: #20a0ff;
+                }
+            }
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 150px;
+            height: 150px;
+            line-height: 150px;
+            text-align: center;
+        }
+        .avatar {
+            width: 150px;
+            height: 150px;
+            display: block;
+        }
         // 同步时候的遮罩层
         .keep {
             position: absolute;
@@ -176,7 +203,12 @@
                     <el-input v-model="form.link" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="image" label="图片" :label-width="formLabelWidth">
-                    <el-input v-model="form.image" auto-complete="off"></el-input>
+                    <!--图片上传-->
+                    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
+                               :show-file-list="false" :on-success="handleAvatarSuccess">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
                 </el-form-item>
                 <el-form-item prop="description" label="描述" :label-width="formLabelWidth">
                     <el-input type="textarea" :rows="3" v-model="form.description" auto-complete="off"></el-input>
@@ -279,6 +311,7 @@
                             <i class="tag">课程</i>
                             {{scope.row.title}}
                             <i class="el-icon-picture">
+                                <!--图片预览  样式 还有点问题-->
                                 <div class="img-wrap">
                                     <img src="http://localhost:7010/static/img/logo.11729c9.png"/>
                                 </div>
@@ -302,7 +335,6 @@
                         <template scope="scope">
                             <el-button type="text" size="small" @click="updateCourse(scope.$index, scope.row)">
                                 编辑
-                                <!--点击详情 form数据变成当前管理员的信息-->
                             </el-button>
                             <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
                                 删除
@@ -329,6 +361,8 @@
         },
         data () {
             return {
+                imageUrl: '', // 上传图片的地址
+                fileList: [],
                 isKeep: true, // 是否同步
                 isUpdate: false,
                 formTitle: '添加内容',
@@ -458,6 +492,9 @@
             }
         },
         methods: {
+            handleAvatarSuccess(res, file) {
+                this.imageUrl = window.URL.createObjectURL(file.raw)
+            },
             leftClassifyClick (item) { // 左侧列表按照分类搜索
                 console.log('调用接口数据 并赋值给classifyData')
             },
