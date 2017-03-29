@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from './store'
+import action from './store/actions'
 
 Vue.use(VueRouter)
 
@@ -183,6 +185,9 @@ const routes = [
                     require.ensure([], () => {
                         resolve(require('./views/client/BootAd.vue'))
                     })
+                },
+                meta: {
+                    title: '启动广告-手机客户端',
                 }
             },
             {
@@ -192,6 +197,9 @@ const routes = [
                     require.ensure([], () => {
                         resolve(require('./views/client/CompanyLogo.vue'))
                     })
+                },
+                meta: {
+                    title: '企业LOGO-手机客户端',
                 }
             }
             // ============客户端部分================== 结束
@@ -236,10 +244,24 @@ router.afterEach((route) => {
 })
 
 router.beforeEach((to, from, next) => {
-    console.info('检测到路由切换')
     document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
     xmview.setContentLoading && xmview.setContentLoading(true)
+
+    setTitle(to.meta.title)
+
     next()
 })
+
+function setTitle (title) {
+    // 设置标题
+    if (!title) {
+        return
+    }
+    let titles = title.split('-')
+    if (titles.length < 2) {
+        titles[1] = ''
+    }
+    action.setIndexWebpath(store, {main: titles[0], sub: titles[1]})
+}
 
 export default router

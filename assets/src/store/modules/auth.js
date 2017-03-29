@@ -1,5 +1,5 @@
 import {
-    AUTH_SET_USER
+    INDEX_SETWEBPATH
 } from '../mutations'
 
 const Auth = {
@@ -8,7 +8,7 @@ const Auth = {
     },
 
     mutations: {
-        [AUTH_SET_USER] (state, user) {
+        [INDEX_SETWEBPATH] (state, user) {
             state.user = user
         }
     }

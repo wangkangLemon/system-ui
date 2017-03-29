@@ -1,2 +1,3 @@
-//  用户信息部分
-export const AUTH_SET_USER = 'AUTH_SET_USER'
+//  ================首页部分=================
+// 设置内容上边的网站路径
+export const INDEX_SETWEBPATH = 'INDEX_SETWEBPATH'

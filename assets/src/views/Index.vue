@@ -145,6 +145,7 @@
 
             .right-title {
                 font-size: 24px;
+                margin-bottom: 15px;
                 > small {
                     font-weight: 300;
                     font-size: 70%;
@@ -271,8 +272,8 @@
             <!--右边内容-->
             <section class="right-content" @click="handleIsShowMenue(false)">
                 <h2 class="right-title">
-                    考试记录
-                    <small>成绩</small>
+                    {{mainTitle}}
+                    <small>{{subTitle}}</small>
                 </h2>
 
                 <div class="route-content" v-loading="contentLoading">
@@ -291,7 +292,17 @@
             return {
                 isMobile: config.isMobile(),
                 isShowMenue: false,
-                contentLoading: false
+                contentLoading: false,
+                mainTitle: this.$store.state.index.webpathMain,
+                subTitle: this.$store.state.index.webpathSub,
+            }
+        },
+        watch: {
+            '$store.state.index.webpathMain': function () {
+                this.mainTitle = this.$store.state.index.webpathMain
+            },
+            '$store.state.index.webpathSub': function () {
+                this.subTitle = this.$store.state.index.webpathSub
             }
         },
         created () {

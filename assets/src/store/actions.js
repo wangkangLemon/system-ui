@@ -1,8 +1,9 @@
 import * as types from './mutations'
 
 const actions = {
-    setUserInfo (store, userInfo) {
-        store.commit(types.AUTH_SET_USER, userInfo)
+    // 设置首页网站路径
+    setIndexWebpath (store, {main, sub}) {
+        store.commit(types.INDEX_SETWEBPATH, {main, sub})
     }
 }
 
