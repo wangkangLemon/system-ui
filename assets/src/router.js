@@ -250,10 +250,6 @@ router.afterEach((route) => {
     if (title) {
         document.title = title + ' - 药视通'
     }
-
-    setTimeout(() => {
-        xmview.setContentLoading && xmview.setContentLoading(false)
-    }, 1000)
 })
 
 router.beforeEach((to, from, next) => {

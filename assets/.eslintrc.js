@@ -26,7 +26,8 @@ module.exports = {
         "comma-dangle": 0,
         "eqeqeq": 0,
         "curly": [0, 'multi'],
-        "space-before-function-paren": 0
+        "space-before-function-paren": 0,
+        'prefer-promise-reject-errors': 0
     },
     globals: {
         'xm': true,

@@ -16,4 +16,16 @@ export default [
             title: '晒单总览-晒单',
         }
     },
+    {
+        path: pathPre + '/product', // 内容维护
+        name: 'sales-product',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/sales/Product.vue'))
+            })
+        },
+        meta: {
+            title: '药品列表-晒单',
+        }
+    },
 ]
