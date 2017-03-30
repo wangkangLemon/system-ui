@@ -105,7 +105,7 @@
 
         .left-menu-container {
             width: 220px;
-            z-index: 11;
+            z-index: 10;
             height: 100%;
             position: absolute;
             overflow-y: auto;
@@ -116,7 +116,8 @@
                 top: -55px;
             }
             @media (min-width: 768px) {
-                top: 55px;
+                top: 0;
+                padding-top: 55px;
             }
 
             > div.nav-title {
@@ -274,8 +275,8 @@
         },
         created () {
             xmview.setContentLoading = this.setContentLoading.bind(this)
-            this.navMenueActive = this.$route.path
-            this.navMenus = authUtils.getNavMenu()
+            this.navMenueActive = this.$route.path // 获取选中的菜单
+            this.navMenus = authUtils.getNavMenu() // 获取菜单
         },
         mounted () {
             window.onresize = () => {
