@@ -1,10 +1,12 @@
 /**
  * Created by huanghuixin on 2017/3/30.
  */
+const pathPre = '/client'
+// 客户端部分
 export default [
     {
-        path: '/client/contentManage', // 内容维护
-        name: 'contentManage',
+        path: pathPre + '/contentManage', // 内容维护
+        name: 'client-contentManage',
         component: resolve => {
             require.ensure([], () => {
                 resolve(require('../views/client/contentManage'))
@@ -15,8 +17,8 @@ export default [
         }
     },
     {
-        path: '/client/blockManage', // 区块管理
-        name: 'blockManage',
+        path: pathPre + '/blockManage', // 区块管理
+        name: 'client-blockManage',
         component: resolve => {
             require.ensure([], () => {
                 resolve(require('../views/client/BlockManage'))
@@ -27,8 +29,8 @@ export default [
         }
     },
     {
-        path: '/client/classifyManage', // 分类管理
-        name: 'classifyManage',
+        path: pathPre + '/classifyManage', // 分类管理
+        name: 'client-classifyManage',
         component: resolve => {
             require.ensure([], () => {
                 resolve(require('../views/client/ClassifyManage'))
@@ -39,7 +41,7 @@ export default [
         }
     },
     {
-        path: '/client/bootad', // 启动广告
+        path: pathPre + '/bootad', // 启动广告
         name: 'client-bootad',
         component: resolve => {
             require.ensure([], () => {
@@ -51,7 +53,7 @@ export default [
         }
     },
     {
-        path: '/client/companylogo', // 企业logo
+        path: pathPre + '/companylogo', // 企业logo
         name: 'client-companylogo',
         component: resolve => {
             require.ensure([], () => {
@@ -63,7 +65,7 @@ export default [
         }
     },
     {
-        path: '/client/indexnav', // 企业logo
+        path: pathPre + '/indexnav', // 企业logo
         name: 'client-indexnav',
         component: resolve => {
             require.ensure([], () => {
