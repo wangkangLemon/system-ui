@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from './store'
 import action from './store/actions'
-
 import client from './routers/client'
+import finance from './routers/finance'
 import sales from './routers/sales'
 
 Vue.use(VueRouter)
@@ -211,9 +211,7 @@ const routes = [
                 }
             },
             // ============客户端部分==================
-            ...client,
-            // ============晒单==================
-            ...sales
+            ...client
         ]
     },
     {   // 登录
