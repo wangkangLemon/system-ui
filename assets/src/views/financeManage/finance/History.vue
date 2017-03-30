@@ -1,13 +1,242 @@
-<style lang="scss"></style>
+<style lang='scss' scoped rel='stylesheet/scss'>
+    @import "../../../utils/mixins/mixins";
+    @import "../../../utils/mixins/table";
+
+
+</style>
+<style lang="scss">
+    .financeManage-finance-history {
+        .box-card {
+            margin-bottom: 20px;
+            .clearfix {
+                text-align: right;
+            }
+            .el-card__header {
+                padding: 10px 15px;
+                background: #f0f3f5;
+                .icon-iconfontexcel {
+                    position: relative;
+                    top: -2px;
+                    margin-right: 5px;
+                }
+            }
+            .search {
+                padding: 15px;
+                padding-top: 0;
+                > div {
+                    display: inline-block;
+                    vertical-align: top;
+                    label {
+                        margin-right: 2%;
+                    }
+                    .el-input, .el-select {
+                        width: 80%;
+                    }
+                    .el-date-editor {
+                        width: 40%;
+                    }
+                    @media (max-width: 767px) {
+                        .el-input, .el-select, .el-date-editor {
+                            width: 100%;
+                            margin-top: 10px;
+                        }
+                    }
+                    .time-container {
+                        width: 80%;
+                        display: inline-block;
+                        @media (max-width: 767px) {
+                            width: 100%;
+                        }
+                    }
+                }
+                @media (min-width: 768px) {
+                    display: flex;
+                }
+                @media (max-width: 767px) {
+                    display: block;
+                    > div {
+                        margin-top: 10px;
+                    }
+                }
+            }
+        }
+        .block {
+            text-align: right;
+            margin-top: 15px;
+        }
+    }
+</style>
 <template>
-    <article>
-        流水记录
+    <article class="financeManage-finance-history">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+            </div>
+            <section class="search">
+                <div>
+                    <label>企业</label>
+                    <el-select clearable v-model="companySelect" placeholder="未选择">
+                        <el-option
+                                v-for="(item, index) in companys"
+                                :label="item.name"
+                                :value="item.id"
+                                :key="item.id">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div>
+                    <label>课程</label>
+                    <el-select clearable v-model="courseSelect" placeholder="未选择">
+                        <el-option
+                                v-for="(item, index) in courses"
+                                :label="item.name"
+                                :value="item.id"
+                                :key="item.id">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div>
+                    <label>用户</label>
+                    <el-select clearable v-model="userSelect" placeholder="未选择">
+                        <el-option
+                                v-for="(item, index) in users"
+                                :label="item.name"
+                                :value="item.id"
+                                :key="item.id">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div>
+                    <label>创建时间</label>
+                    <div class="time-container">
+                        <el-date-picker
+                                v-model="createTime"
+                                type="date"
+                                placeholder="开始时间">
+                        </el-date-picker>
+                        <el-date-picker
+                                v-model="endTime"
+                                type="date"
+                                placeholder="结束时间">
+                        </el-date-picker>
+                    </div>
+                </div>
+            </section>
+            <el-table
+                    border
+                    :data="historyData"
+                    stripe
+                    style="width: 100%">
+                <el-table-column
+                        prop="number"
+                        label="流水号">
+                </el-table-column>
+                <el-table-column
+                        prop="company"
+                        label="企业"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="course"
+                        label="课程">
+                </el-table-column>
+                <el-table-column
+                        prop="chain"
+                        label="连锁">
+                </el-table-column>
+                <el-table-column
+                        prop="department"
+                        label="门店">
+                </el-table-column>
+                <el-table-column
+                        prop="clerk"
+                        label="店员">
+                </el-table-column>
+                <el-table-column
+                        prop="balance"
+                        label="金额">
+                </el-table-column>
+                <el-table-column
+                        prop="expend"
+                        label="余额">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-size="pageSize"
+                        layout="total, prev, pager, next"
+                        :total="1000">
+                </el-pagination>
+            </div>
+        </el-card>
     </article>
 </template>
 <script lang="babel">
     export default {
         data () {
-            return {}
+            return {
+                companySelect: '',
+                courseSelect: '',
+                userSelect: '',
+                createTime: '',
+                endTime: '',
+                currentPage: 1,
+                pageSize: 10,
+                historyData: [
+                    {
+                        id: 1,
+                        number: '20170329000000000214907699755645',
+                        company: '演示用制药企业',
+                        course: '复方红衣补血口服',
+                        chain: '演示用制药企业',
+                        department: '对对对',
+                        clerk: 'mslsls',
+                        balance: '2',
+                        expend: '333'
+                    },
+                    {
+                        id: 2,
+                        number: '20170329000000000214907699755645',
+                        company: '演示用制药企业',
+                        course: '复方红衣补血口服',
+                        chain: '演示用制药企业',
+                        department: '对对对',
+                        clerk: 'mslsls',
+                        balance: '2',
+                        expend: '333'
+                    }
+                ],
+                companys: [
+                    {
+                        id: 1,
+                        name: '企业1',
+                    }
+                ],
+                users: [
+                    {
+                        id: 1,
+                        name: '用户1',
+                    }
+                ],
+                courses: [
+                    {
+                        id: 1,
+                        name: '课程',
+                    }
+                ],
+            }
+        },
+        methods: {
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`)
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val
+                console.log(`当前页: ${val}`)
+            }
         }
     }
 </script>
