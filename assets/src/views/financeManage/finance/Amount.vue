@@ -36,11 +36,11 @@
     <article class="financeManage-finance-amount">
         <section class="panel">
             <div>
-                <amount-panel :title="balance.title" :content="balance.content" :bgColor="balance.bgColor"
+                <amount-panel title="当前余额" :content="balance.content" bgColor="#348fe2"
                               :footer="balance.footer"></amount-panel>
             </div>
             <div>
-                <amount-panel :title="expend.title" :content="expend.content" :bgColor="expend.bgColor"
+                <amount-panel title="今日支出" :content="expend.content" bgColor="#00acac"
                               :footer="expend.footer"></amount-panel>
             </div>
         </section>
@@ -60,7 +60,7 @@
                     stripe
                     style="width: 100%">
                 <el-table-column
-                        prop="name"
+                        prop="company"
                         label="工业">
                 </el-table-column>
                 <el-table-column
@@ -69,7 +69,7 @@
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="expend"
+                        prop="consume"
                         label="累计支出">
                 </el-table-column>
                 <el-table-column
@@ -79,12 +79,11 @@
             </el-table>
             <div class="block">
                 <el-pagination
-                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-size="pageSize"
                         layout="total, prev, pager, next"
-                        :total="1000">
+                        :total="dataTotal">
                 </el-pagination>
             </div>
         </el-card>
@@ -93,56 +92,60 @@
 <script lang="babel">
     import AmountPanel from '../../component/panel/AmountPanel'
     import Echars from 'echarts'
-    import {date2Str} from '../../../utils/timeUtils'
+    import * as finance from '../../../services/fianace/finance'
+    let charge = [] // 收入数据
+    let consume = [] // 支出数据
     export default {
         components: {
             AmountPanel
         },
         data () {
             return {
+                companyId: localStorage.getItem('KEY_AUTH_UTILS_USERINFO'),
                 pageSize: 10,
                 balance: {
-                    title: '当前余额',
-                    content: '223.00',
-                    bgColor: '#348fe2',
-                    footer: '累计充值'
+                    content: '',
+                    footer: '累计充值 '
                 },
                 expend: {
-                    title: '当前余额',
-                    content: '223.00',
-                    bgColor: '#348fe2',
-                    footer: '累计充值'
+                    content: '',
+                    footer: '累计支出 '
                 },
-                pillarData: [],
-                industryData: [
-                    {
-                        id: 1,
-                        name: '演示用制药企业',
-                        balance: '222.22',
-                        expend: '89.00',
-                        price: '2.00'
-                    },
-                    {
-                        id: 2,
-                        name: '演示用制药企业',
-                        balance: '222.22',
-                        expend: '89.00',
-                        price: '2.00'
-                    }
-                ],
+                pillarData: [], // X轴数据
+                industryData: [],
                 currentPage: 1, // 当前页
+                dataTotal: 0
             }
         },
         mounted () {
-            for (let i = 1; i < 31; i++) {
-                let curDate = date2Str(new Date(new Date().setTime(Date.now() - 24 * 60 * 60 * 1000 * i)), '-', {
-                    hashour: false,
-                    hasDay: true
+            // 余额和累计支出接口
+            finance.getfinance().then((ret) => {
+                this.balance.content = ret.balance
+                this.balance.footer = this.balance.footer + ret.charge
+                this.expend.content = ret.consumeToday
+                this.expend.footer = this.expend.footer + ret.consume
+                // 余额的百分比
+                // percentCharge
+                // 支出的百分比
+                // percentConsume
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
+
+            // 收支趋势
+            finance.incomeConsume().then((ret) => {
+//                console.log(ret)
+                ret.forEach((item) => {
+                    this.pillarData.push(item.created)
+                    charge.push(item.charge)
+                    consume.push(item.consume)
                 })
-//                let curDate = new Date().setTime(Date.now() - 24 * 60 * 60 * 1000 * i)
-                this.pillarData.push(curDate)
-            }
-            this.pillarData = this.pillarData.reverse()
+//                console.log(charge)
+            })
+
+            // 工业查询
+            this.getData(this.currentPage)
+            // 初始化数据图表
             this.getLineCahrt()
         },
         methods: {
@@ -203,7 +206,7 @@
                                     color: 'green'
                                 }
                             },
-                            data: [0.2, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            data: charge
                         },
                         {
                             name: '支出',
@@ -218,19 +221,21 @@
                                     color: 'rgba(0, 0, 0, 0)'
                                 }
                             },
-                            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            data: consume
                         }
                     ]
                 }
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(option)
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`)
-            },
             handleCurrentChange(val) {
-                this.currentPage = val
-                console.log(`当前页: ${val}`)
+                this.getData(val)
+            },
+            getData (currentPage) {
+                finance.industry(currentPage, this.pageSize, this.companyId).then((ret) => {
+                    this.industryData = ret.data
+                    this.dataTotal = ret.total
+                })
             }
         }
     }

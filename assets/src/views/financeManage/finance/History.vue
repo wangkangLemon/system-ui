@@ -128,53 +128,53 @@
                     stripe
                     style="width: 100%">
                 <el-table-column
-                        prop="number"
+                        prop="tradeno"
                         label="流水号">
                 </el-table-column>
                 <el-table-column
-                        prop="company"
+                        prop="ent_name"
                         label="企业"
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="course"
+                        prop="course_name"
                         label="课程">
                 </el-table-column>
                 <el-table-column
-                        prop="chain"
+                        prop="store_name"
                         label="连锁">
                 </el-table-column>
                 <el-table-column
-                        prop="department"
+                        prop="department_name"
                         label="门店">
                 </el-table-column>
                 <el-table-column
-                        prop="clerk"
+                        prop="user_name"
                         label="店员">
                 </el-table-column>
                 <el-table-column
-                        prop="balance"
+                        prop="price"
                         label="金额">
                 </el-table-column>
                 <el-table-column
-                        prop="expend"
+                        prop="balance"
                         label="余额">
                 </el-table-column>
             </el-table>
             <div class="block">
                 <el-pagination
-                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-size="pageSize"
                         layout="total, prev, pager, next"
-                        :total="1000">
+                        :total="total">
                 </el-pagination>
             </div>
         </el-card>
     </article>
 </template>
 <script lang="babel">
+    import {history} from '../../../services/fianace/finance'
     export default {
         data () {
             return {
@@ -185,30 +185,7 @@
                 endTime: '',
                 currentPage: 1,
                 pageSize: 10,
-                historyData: [
-                    {
-                        id: 1,
-                        number: '20170329000000000214907699755645',
-                        company: '演示用制药企业',
-                        course: '复方红衣补血口服',
-                        chain: '演示用制药企业',
-                        department: '对对对',
-                        clerk: 'mslsls',
-                        balance: '2',
-                        expend: '333'
-                    },
-                    {
-                        id: 2,
-                        number: '20170329000000000214907699755645',
-                        company: '演示用制药企业',
-                        course: '复方红衣补血口服',
-                        chain: '演示用制药企业',
-                        department: '对对对',
-                        clerk: 'mslsls',
-                        balance: '2',
-                        expend: '333'
-                    }
-                ],
+                historyData: [],
                 companys: [
                     {
                         id: 1,
@@ -227,15 +204,23 @@
                         name: '课程',
                     }
                 ],
+                total: 0
             }
         },
+        mounted () {
+            this.getData(this.currentPage)
+        },
         methods: {
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`)
-            },
             handleCurrentChange(val) {
-                this.currentPage = val
-                console.log(`当前页: ${val}`)
+                this.getData(val)
+            },
+            getData (currentPage) {
+                history(currentPage, this.pageSize, this.courseSelect, this.companySelect, this.userSelect, this.createTime, this.endTime).then((ret) => {
+                    this.historyData = ret.data
+                    this.total = ret.total
+                }).then(() => {
+                    xmview.setContentLoading(false)
+                })
             }
         }
     }
