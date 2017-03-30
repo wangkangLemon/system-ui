@@ -114,6 +114,7 @@
             @media (max-width: 767px) {
                 transform: translateX(-100%);
                 top: -55px;
+                z-index: 12;
             }
             @media (min-width: 768px) {
                 top: 0;

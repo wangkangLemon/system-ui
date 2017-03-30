@@ -1,5 +1,7 @@
 <!--药品列表-->
 <style lang='scss' scoped rel='stylesheet/scss'>
+    @import "../../utils/mixins/topSearch";
+
     #sales-procuct-container {
         padding: 15px;
         background: #fff;
@@ -16,26 +18,14 @@
         margin-top: 15px;
     }
 
-    .top-search-container {
-        > section {
-            display: inline-block;
-            margin-right: 10px;
-
-            > span {
-                display: inline-block;
-                margin-right: 2px;
-            }
-        }
-
-        .el-input {
-            width: auto;
-        }
+    .search {
+        @extend %top-search-container
     }
 </style>
 
 <template>
     <article id="sales-procuct-container">
-        <article class="top-search-container">
+        <article class="search">
             <section>
                 <i>工业</i>
                 <el-select v-loading="loadingSelectIndustry"

@@ -1,0 +1,15 @@
+%top-search-container {
+    > section {
+        display: inline-block;
+        margin-right: 10px;
+
+        > span {
+            display: inline-block;
+            margin-right: 2px;
+        }
+    }
+
+    .el-input {
+        width: auto;
+    }
+}

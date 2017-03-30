@@ -28,4 +28,16 @@ export default [
             title: '药品列表-晒单',
         }
     },
+    {
+        path: pathPre + '/history', // 内容维护
+        name: 'sales-history',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/sales/History.vue'))
+            })
+        },
+        meta: {
+            title: '流水记录-晒单',
+        }
+    },
 ]

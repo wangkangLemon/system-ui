@@ -25,7 +25,7 @@ function getTimeoutPromise (url) {
 
 // 请求完毕的url
 let requestedUrls = {}
-export function get (url, params, needLoading = true) {
+export function get (url, params, needLoading = false) {
     url = url + '?' + processParams(params)
 
     needLoading && xmview.setLoading(true)
@@ -44,7 +44,7 @@ export function get (url, params, needLoading = true) {
     return Promise.race([getTimeoutPromise(url), processResponse(pRequest, url)])
 }
 
-export function post (url, params, needLoading = true) {
+export function post (url, params, needLoading = false) {
     needLoading && xmview.setLoading(true)
     let pRequest = fetch(url, {
         credentials: 'include', // pass cookies, for authentication
