@@ -10,7 +10,8 @@
 
 <template>
     <section>
-        <i>工业</i>
+        <i v-if="type">工业</i>
+        <i v-else>企业</i>
         <el-select v-loading="loading"
                    @visible-change="handleIndustrySelChange"
                    @change="handleChange"
@@ -28,12 +29,13 @@
 <script lang='babel'>
     import companyService from '../../../services/companyService'
     export default{
-        props: ['value', 'change'],
+        props: ['value', 'change', 'type'],
         data () {
             return {
                 loading: false,
                 data: [{name: '全部', id: ''}],
-                currVal: this.value
+                currVal: this.value,
+                pageSize: 1000
             }
         },
         watch: {
@@ -48,7 +50,7 @@
                     return
 
                 this.loading = true
-                companyService.getIndrustrySelectList().then(ret => {
+                companyService.getIndrustrySelectList(this.type, this.pageSize).then(ret => {
                     this.data.push(...ret.data)
                     this.loading = false
                 }).catch(() => {

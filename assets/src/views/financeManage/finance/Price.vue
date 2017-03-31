@@ -40,7 +40,7 @@
         <el-dialog v-model="addForm" title="调整" size="tiny">
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
                 <el-form-item label="" prop="name">
-                    <IndustryCompanySelect v-model="form.company_id"
+                    <IndustryCompanySelect type="1" v-model="form.company_id"
                                            v-on:change="formIndustryChange">
                     </IndustryCompanySelect>
                 </el-form-item>
@@ -61,21 +61,17 @@
                 <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <IndustryCompanySelect v-model="industrySelect"
-                                       v-on:change="val=>industrySelect=val"
-                                       :change="fetchData">
+                <IndustryCompanySelect
+                        type="1"
+                        v-model="industrySelect"
+                        v-on:change="val=>industrySelect=val"
+                        :change="fetchData">
                 </IndustryCompanySelect>
-                <section>
-                    <span>管理员</span>
-                    <el-select clearable v-model="managerSelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in managers"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </section>
+                <admin
+                        :change="fetchData"
+                        v-on:change="val=>managerSelect=val"
+                        v-model="managerSelect">
+                </admin>
                 <section>
                     <span>创建时间</span>
                     <el-date-picker
@@ -145,11 +141,13 @@
 <script lang="babel">
     import {priceData, price} from '../../../services/fianace/finance'
     import {date2Str} from '../../../utils/timeUtils'
-    import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
+    import IndustryCompanySelect from '../../component/select/IndustryCompany'
+    import Admin from '../../component/select/Admin.vue'
     let _this
     export default {
         components: {
-            IndustryCompanySelect
+            IndustryCompanySelect,
+            Admin
         },
         data () {
             return {

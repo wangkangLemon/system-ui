@@ -73,17 +73,10 @@
                 <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <div>
-                    <label>企业</label>
-                    <el-select clearable v-model="companySelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in companys"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
+                <IndustryCompanySelect v-model="companySelect"
+                                       v-on:change="val=>companySelect=val"
+                                       :change="getData">
+                </IndustryCompanySelect>
                 <div>
                     <label>课程</label>
                     <el-select clearable v-model="courseSelect" placeholder="未选择">
@@ -180,8 +173,12 @@
 <script lang="babel">
     import {history, exportData} from '../../../services/fianace/finance'
     import {date2Str} from '../../../utils/timeUtils'
+    import IndustryCompanySelect from '../../component/select/IndustryCompany'
     let _this
     export default {
+        components: {
+            IndustryCompanySelect
+        },
         data () {
             return {
                 companySelect: '',
