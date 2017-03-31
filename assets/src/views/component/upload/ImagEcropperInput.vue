@@ -10,7 +10,7 @@
 <template>
     <article ref="container">
         <el-button type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i></el-button>
-        <el-dialog title="裁切图片" v-model="showCropper" size="large" top="15px">
+        <el-dialog :close-on-click-modal="false" title="裁切图片" v-model="showCropper" size="large" top="15px">
             <div class="croppercontainer">
                 <img @load="startCropper()" class="image-preview" alt="Picture"
                      :src="imgData">

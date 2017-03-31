@@ -44,15 +44,12 @@
                     <el-option label="已删除" value="1"></el-option>
                 </el-select>
             </section>
-            <section>
-                <i>晒单时间</i>
-                <el-date-picker
-                        @change="fetchData"
-                        v-model="fetchParam.timespan"
-                        type="daterange"
-                        placeholder="选择日期范围">
-                </el-date-picker>
-            </section>
+
+            <DateRange title="晒单时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
+                       v-on:changeStart="val=> fetchParam.time_start=val "
+                       v-on:changeEnd="val=> fetchParam.time_end=val "
+                       :change="fetchData">
+            </DateRange>
         </article>
 
         <el-table class="data-table" v-loading="loadingData"
@@ -102,10 +99,9 @@
 <script lang='babel'>
     import salesService from '../../services/salesService'
     import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
-    import * as timeUtls from '../../utils/timeUtils'
+    import DateRange from '../component/form/DateRangePicker.vue'
     import * as filters from '../../filters/timeFilter'
 
-    let _this
     export default{
         filters,
         data () {
@@ -117,27 +113,12 @@
                 pagesize: 15,
                 start: 1, // 当前第几页
                 fetchParam: {
-                    timespan: void 0, // 时间范围
-                    keyword: void 0, // 药品名称
+                    time_start: void 0, // 时间范围
+                    time_end: void 0, // 药品名称
                     enterprise_id: void 0, // 工业ID
                     deleted: void 0, // 删除状态
                 },
-                pickerOptionsStart: {
-                    disabledDate(time) {
-                        return !_this.fetchParam.time_end ? null
-                            : time.getTime() > _this.fetchParam.time_end.getTime() - 8.64e7
-                    }
-                },
-                pickerOptionsEnd: {
-                    disabledDate(time) {
-                        return !_this.fetchParam.time_start ? null
-                            : time.getTime() < _this.fetchParam.time_start.getTime() + 8.64e7
-                    }
-                },
             }
-        },
-        beforeCreate () {
-            _this = this
         },
         created () {
             this.fetchData().then(() => {
@@ -153,9 +134,7 @@
                     start: this.start,
                     length: this.pagesize
                 })
-                // 转为我们需要的格式
-                fetchParam.time_start = this.fetchParam.timespan && timeUtls.date2Str(this.fetchParam.timespan[0])
-                fetchParam.time_end = this.fetchParam.timespan && timeUtls.date2Str(this.fetchParam.timespan[1])
+
                 return salesService.getProductList(fetchParam)
                     .then(ret => {
                         this.data = ret.data
@@ -172,6 +151,6 @@
                 this.fetchData()
             },
         },
-        components: {IndustryCompanySelect}
+        components: {IndustryCompanySelect, DateRange}
     }
 </script>
