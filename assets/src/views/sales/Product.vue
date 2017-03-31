@@ -26,20 +26,10 @@
 <template>
     <article id="sales-procuct-container">
         <article class="search">
-            <section>
-                <i>工业</i>
-                <el-select v-loading="loadingSelectIndustry"
-                           @visible-change="handleIndustrySelChange"
-                           @change="fetchData"
-                           v-model="fetchParam.enterprise_id"
-                           placeholder="请选择">
-                    <el-option
-                            v-for="item in industry"
-                            :label="item.name"
-                            :value="item.id" :key="item.id">
-                    </el-option>
-                </el-select>
-            </section>
+            <IndustryCompanySelect v-model="fetchParam.enterprise_id"
+                                   v-on:change="val=>fetchParam.enterprise_id=val"
+                                   :change="fetchData">
+            </IndustryCompanySelect>
             <section>
                 <i>名称</i>
                 <el-input @change="fetchData" v-model="fetchParam.keyword" placeholder="药品名称"></el-input>
@@ -53,6 +43,24 @@
                     <el-option label="正常" value="0"></el-option>
                     <el-option label="已删除" value="1"></el-option>
                 </el-select>
+            </section>
+            <section>
+                <i>晒单时间</i>
+                <el-date-picker @change="fetchData"
+                                v-model="fetchParam.time_start"
+                                align="right"
+                                type="date"
+                                :picker-options="pickerOptionsStart"
+                                placeholder="开始日期">
+                </el-date-picker>
+                <el-date-picker
+                        @change="fetchData"
+                        v-model="fetchParam.time_end"
+                        align="right"
+                        type="date"
+                        :picker-options="pickerOptionsEnd"
+                        placeholder="结束日期">
+                </el-date-picker>
             </section>
         </article>
 
@@ -102,8 +110,13 @@
 
 <script lang='babel'>
     import salesService from '../../services/salesService'
+    import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
+    import * as timeUtls from '../../utils/timeUtils'
+    import * as filters from '../../filters/timeFilter'
 
+    let _this
     export default{
+        filters,
         data () {
             return {
                 loadingData: false,
@@ -112,7 +125,6 @@
                 total: 0,
                 pagesize: 15,
                 start: 1, // 当前第几页
-                industry: [{name: '全部'}], // 工业下拉数据
                 fetchParam: {
                     keyword: void 0, // 药品名称
                     enterprise_id: void 0, // 工业ID
@@ -120,7 +132,22 @@
                     time_end: void 0, // 结束时间
                     deleted: void 0, // 删除状态
                 },
+                pickerOptionsStart: {
+                    disabledDate(time) {
+                        return !_this.fetchParam.time_end ? null
+                            : time.getTime() > _this.fetchParam.time_end.getTime() - 8.64e7
+                    }
+                },
+                pickerOptionsEnd: {
+                    disabledDate(time) {
+                        return !_this.fetchParam.time_start ? null
+                            : time.getTime() < _this.fetchParam.time_start.getTime() + 8.64e7
+                    }
+                },
             }
+        },
+        beforeCreate () {
+            _this = this
         },
         created () {
             this.fetchData().then(() => {
@@ -136,7 +163,9 @@
                     start: this.start,
                     length: this.pagesize
                 })
-
+                // 转为我们需要的格式
+                fetchParam.time_start = fetchParam.time_start && timeUtls.date2Str(new Date(fetchParam.time_start))
+                fetchParam.time_end = fetchParam.time_end && timeUtls.date2Str(new Date(fetchParam.time_end))
                 return salesService.getProductList(fetchParam)
                     .then(ret => {
                         this.data = ret.data
@@ -152,19 +181,7 @@
                 this.start = val
                 this.fetchData()
             },
-            // 处理工业下拉框点击
-            handleIndustrySelChange () {
-                if (this.industry.length > 1)
-                    return
-
-                this.loadingSelectIndustry = true
-                salesService.getIndrustrySelectList().then(ret => {
-                    this.industry.push(...ret.data)
-                    this.loadingSelectIndustry = false
-                }).catch(() => {
-                    this.loadingSelectIndustry = false
-                })
-            }
-        }
+        },
+        components: {IndustryCompanySelect}
     }
 </script>

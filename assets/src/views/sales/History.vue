@@ -13,7 +13,11 @@
 
 <template>
     <article id="sales-history-container">
-        <article class="search"></article>
+        <article class="search">
+            <section>
+                <span>工业</span>
+            </section>
+        </article>
     </article>
 </template>
 

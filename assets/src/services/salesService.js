@@ -47,10 +47,19 @@ class SalesService {
         })
     }
 
-    // 获取工业连锁店
-    getIndrustrySelectList () {
-        let finalUrl = config.apiHost + '/sys/company/search'
-        return api.get(finalUrl, {category: 1, page: 1}, false).then((ret) => {
+    // 获取流水记录
+    getHistory ({enterprise_id = '', product_id = '', time_start = '', time_end = '', status = '', username = '', start = 1, length = 15}) {
+        let finalUrl = urlPre + '/history/search'
+        return api.get(finalUrl, {
+            enterprise_id, // 工业id
+            product_id, // 药品id
+            time_start, // 开始时间
+            time_end, // 结束时间
+            status, //  支付状态 0为待确认，1为待支付，2为已完成，3为已关闭，不赋值则表示未选择
+            username, // 姓名
+            start, // 第几页
+            length // 每页显示大小
+        }).then((ret) => {
             return ret.data
         })
     }
