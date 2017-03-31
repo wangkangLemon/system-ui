@@ -5,6 +5,7 @@
     #sales-history-container {
         padding: 15px;
         background: #fff;
+        border-radius: 5px;
         overflow: hidden;
 
         .pagin {
@@ -56,7 +57,6 @@
                 <i>姓名</i>
                 <v-input @changeVal="val=>fetchParam.username=val" :enter="fetchData" v-model="fetchParam.username"
                          placeholder="请输入内容"></v-input>
-                <!--<el-input @blur="fetchData" v-model="fetchParam.username" placeholder="请输入内容"></el-input>-->
             </section>
 
             <DateRange title="晒单时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
@@ -64,6 +64,16 @@
                        v-on:changeEnd="val=> fetchParam.time_end=val "
                        :change="fetchData">
             </DateRange>
+
+            <section>
+                <i>状态</i>
+                <el-select @change="fetchData"
+                           v-model="fetchParam.status">
+                    <el-option v-for="item in selectStatus"
+                               :label="item.name" :value="item.id" :key="item.id">
+                    </el-option>
+                </el-select>
+            </section>
         </article>
 
         <el-table class="data-table" v-loading="loadingData"
@@ -119,7 +129,8 @@
                 <template scope="t">
                     <el-tag type="primary" v-if="t.row.status == 1">待支付</el-tag>
                     <el-tag type="success" v-else-if="t.row.status == 2">已完成</el-tag>
-                    <el-tag v-else>待确认</el-tag>
+                    <el-tag v-else-if="t.row.status == 0">待确认</el-tag>
+                    <el-tag v-else-if="t.row.status == 3">已关闭</el-tag>
                 </template>
             </el-table-column>
             <el-table-column
@@ -167,6 +178,10 @@
                 total: 0,
                 data: [],
                 drugList: [{name: '全部'}],
+                selectStatus: [{name: '全部'}, {name: '待确认', id: 0}, {name: '待支付', id: 1}, {
+                    name: '已完成',
+                    id: 2
+                }, {name: '已关闭', id: 3}],
                 fetchParam: {
                     product_id: void 0,
                     time_start: void 0,
