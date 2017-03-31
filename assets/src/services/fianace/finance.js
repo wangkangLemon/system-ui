@@ -30,9 +30,9 @@ export function incomeConsume() {
 }
 
 // 工业账户查询
-export function industry(start, length, companyId) {
+export function industry(start, length) {
     let url = urlPre + '/company/fund/search'
-    return api.get(url, {start, length, company_id: companyId}).then(ret => {
+    return api.get(url, {start, length}).then(ret => {
         if (ret.code == 0) {
             return ret.data
         } else {

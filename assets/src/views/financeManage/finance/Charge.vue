@@ -125,13 +125,17 @@
                     <label>创建时间</label>
                     <div class="time-container">
                         <el-date-picker
+                                @change="getData"
                                 v-model="createTime"
                                 type="date"
+                                :picker-options="pickerOptionsStart"
                                 placeholder="开始时间">
                         </el-date-picker>
                         <el-date-picker
+                                @change="getData"
                                 v-model="endTime"
                                 type="date"
+                                :picker-options="pickerOptionsEnd"
                                 placeholder="结束时间">
                         </el-date-picker>
                     </div>
@@ -191,7 +195,8 @@
 </template>
 <script lang="babel">
     import {chargeData} from '../../../services/fianace/finance'
-    //    import {date2Str} from '../../../utils/timeUtils'
+    import {date2Str} from '../../../utils/timeUtils'
+    let _this
     export default {
         data () {
             return {
@@ -240,8 +245,23 @@
                         }
                     ]
                 },
-                total: 0
+                total: 0,
+                pickerOptionsStart: {
+                    disabledDate(time) {
+                        return !_this.endTime ? null
+                                : time.getTime() > _this.endTime.getTime() - 8.64e7
+                    }
+                },
+                pickerOptionsEnd: {
+                    disabledDate(time) {
+                        return !_this.createTime ? null
+                                : time.getTime() < _this.createTime.getTime() + 8.64e7
+                    }
+                },
             }
+        },
+        beforeCreate () {
+            _this = this
         },
         mounted () {
             this.getData()
@@ -263,12 +283,12 @@
             },
             getData () {
                 chargeData({
-                    start: this.currentPage,
-                    length: this.pageSize,
+                    page: this.currentPage,
+                    page_size: this.pageSize,
                     admin_id: this.managerSelect,
                     company_id: this.industrySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime
+                    time_start: date2Str(this.createTime),
+                    time_end: date2Str(this.endTime)
                 }).then((ret) => {
                     this.industryData = ret.data
                     this.total = ret.total

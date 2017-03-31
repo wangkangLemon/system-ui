@@ -110,13 +110,17 @@
                     <label>创建时间</label>
                     <div class="time-container">
                         <el-date-picker
+                                @change="getData"
                                 v-model="createTime"
                                 type="date"
+                                :picker-options="pickerOptionsStart"
                                 placeholder="开始时间">
                         </el-date-picker>
                         <el-date-picker
+                                @change="getData"
                                 v-model="endTime"
                                 type="date"
+                                :picker-options="pickerOptionsEnd"
                                 placeholder="结束时间">
                         </el-date-picker>
                     </div>
@@ -176,7 +180,7 @@
 <script lang="babel">
     import {history, exportData} from '../../../services/fianace/finance'
     import {date2Str} from '../../../utils/timeUtils'
-
+    let _this
     export default {
         data () {
             return {
@@ -206,20 +210,23 @@
                         name: '课程',
                     }
                 ],
-                total: 0
+                total: 0,
+                pickerOptionsStart: {
+                    disabledDate(time) {
+                        return !_this.endTime ? null
+                                : time.getTime() > _this.endTime.getTime() - 8.64e7
+                    }
+                },
+                pickerOptionsEnd: {
+                    disabledDate(time) {
+                        return !_this.createTime ? null
+                                : time.getTime() < _this.createTime.getTime() + 8.64e7
+                    }
+                },
             }
         },
-        watch: {
-            createTime (value) {
-                this.createTime = date2Str(value)
-                this.pageSize = 1
-                this.getData()
-            },
-            endTime (value) {
-                this.endTime = date2Str(value)
-                this.pageSize = 1
-                this.getData()
-            }
+        beforeCreate () {
+            _this = this
         },
         mounted () {
             this.getData()
@@ -229,14 +236,14 @@
                 this.currentPage = val
                 this.getData()
             },
-            getData (currentPage) {
+            getData () {
                 let params = {
-                    start: this.currentPage,
-                    length: this.pageSize,
+                    page: this.currentPage,
+                    page_size: this.pageSize,
                     course_id: this.courseSelect,
                     company_id: this.companySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime,
+                    time_start: date2Str(this.createTime),
+                    time_end: date2Str(this.endTime),
                     user_id: this.userSelect
                 }
                 history(params).then((ret) => {
@@ -250,8 +257,8 @@
                 exportData({
                     course_id: this.courseSelect,
                     company_id: this.companySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime,
+                    time_start: date2Str(this.createTime),
+                    time_end: date2Str(this.endTime),
                     user_id: this.userSelect
                 }).then((ret) => {
                     console.log(ret)

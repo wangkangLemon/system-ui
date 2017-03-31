@@ -126,13 +126,17 @@
                     <label>创建时间</label>
                     <div class="time-container">
                         <el-date-picker
+                                @change="fetchData"
                                 v-model="createTime"
                                 type="date"
+                                :picker-options="pickerOptionsStart"
                                 placeholder="开始时间">
                         </el-date-picker>
                         <el-date-picker
+                                @change="fetchData"
                                 v-model="endTime"
                                 type="date"
+                                :picker-options="pickerOptionsEnd"
                                 placeholder="结束时间">
                         </el-date-picker>
                     </div>
@@ -188,7 +192,8 @@
 </template>
 <script lang="babel">
     import {priceData} from '../../../services/fianace/finance'
-    //    import {date2Str} from '../../../utils/timeUtils'
+    import {date2Str} from '../../../utils/timeUtils'
+    let _this
     export default {
         data () {
             return {
@@ -238,21 +243,25 @@
                         }
                     ]
                 },
+                pickerOptionsStart: {
+                    disabledDate(time) {
+                        return !_this.endTime ? null
+                                : time.getTime() > _this.endTime.getTime() - 8.64e7
+                    }
+                },
+                pickerOptionsEnd: {
+                    disabledDate(time) {
+                        return !_this.createTime ? null
+                                : time.getTime() < _this.createTime.getTime() + 8.64e7
+                    }
+                },
             }
         },
+        beforeCreate () {
+            _this = this
+        },
         mounted () {
-            priceData({
-                start: this.currentPage,
-                length: this.pageSize,
-                admin_id: this.managerSelect,
-                company_id: this.industrySelect,
-                time_start: this.createTime,
-                time_end: this.endTime
-            }).then((ret) => {
-                this.industryData = ret.data
-            }).then(() => {
-                xmview.setContentLoading(false)
-            })
+            this.fetchData()
         },
         methods: {
             handleCurrentChange(val) {
@@ -269,6 +278,21 @@
                     }
                 })
             },
+            fetchData () {
+                priceData({
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    admin_id: this.managerSelect,
+                    company_id: this.industrySelect,
+                    time_start: date2Str(this.createTime),
+                    time_end: date2Str(this.endTime)
+                }).then((ret) => {
+                    this.industryData = ret.data
+                    this.total = ret.total
+                }).then(() => {
+                    xmview.setContentLoading(false)
+                })
+            }
         }
     }
 </script>

@@ -101,7 +101,7 @@
         },
         data () {
             return {
-                companyId: localStorage.getItem('KEY_AUTH_UTILS_USERINFO'),
+                companyId: JSON.parse(localStorage.getItem('KEY_AUTH_UTILS_USERINFO')).company_id,
                 pageSize: 10,
                 balance: {
                     content: '',
@@ -232,7 +232,7 @@
                 this.getData(val)
             },
             getData (currentPage) {
-                finance.industry(currentPage, this.pageSize, this.companyId).then((ret) => {
+                finance.industry(currentPage, this.pageSize).then((ret) => {
                     this.industryData = ret.data
                     this.dataTotal = ret.total
                 })
