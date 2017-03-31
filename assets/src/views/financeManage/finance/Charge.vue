@@ -110,17 +110,21 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div>
-                    <label>管理员</label>
-                    <el-select clearable v-model="managerSelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in managers"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
+                <!--<div>-->
+                <!--<label>管理员</label>-->
+                <!--<el-select clearable v-model="managerSelect" placeholder="未选择">-->
+                <!--<el-option-->
+                <!--v-for="(item, index) in managers"-->
+                <!--:label="item.name"-->
+                <!--:value="item.id"-->
+                <!--:key="item.id">-->
+                <!--</el-option>-->
+                <!--</el-select>-->
+                <!--</div>-->
+                <admin v-model="managerSelect"
+                       v-on:change="val=>managerSelect=val"
+                       :change="getData">
+                </admin>
                 <div>
                     <label>创建时间</label>
                     <div class="time-container">
@@ -196,8 +200,12 @@
 <script lang="babel">
     import {chargeData} from '../../../services/fianace/finance'
     import {date2Str} from '../../../utils/timeUtils'
+    import Admin from '../../component/select/Admin'
     let _this
     export default {
+        components: {
+            Admin
+        },
         data () {
             return {
                 industrySelect: '',
