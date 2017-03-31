@@ -51,6 +51,19 @@
                     </el-option>
                 </el-select>
             </section>
+
+            <section>
+                <i>姓名</i>
+                <v-input @changeVal="val=>fetchParam.username=val" :enter="fetchData" v-model="fetchParam.username"
+                         placeholder="请输入内容"></v-input>
+                <!--<el-input @blur="fetchData" v-model="fetchParam.username" placeholder="请输入内容"></el-input>-->
+            </section>
+
+            <DateRange title="晒单时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
+                       v-on:changeStart="val=> fetchParam.time_start=val "
+                       v-on:changeEnd="val=> fetchParam.time_end=val "
+                       :change="fetchData">
+            </DateRange>
         </article>
 
         <el-table class="data-table" v-loading="loadingData"
@@ -142,8 +155,9 @@
 
 <script lang='babel'>
     import IndustrySelect from '../component/select/IndustryCompany.vue'
+    import vInput from '../component/form/Input.vue'
     import salesService from '../../services/salesService'
-    import * as timeUtls from '../../utils/timeUtils'
+    import DateRange from '../component/form/DateRangePicker.vue'
 
     export default{
         data () {
@@ -155,7 +169,8 @@
                 drugList: [{name: '全部'}],
                 fetchParam: {
                     product_id: void 0,
-                    timespan: void 0,
+                    time_start: void 0,
+                    time_end: void 0,
                     enterprise_id: void 0,
                     status: void 0,
                     username: void 0,
@@ -172,11 +187,8 @@
         methods: {
             fetchData () {
                 this.loadingData = true
-                let finalParam = Object.assign({}, this.fetchParam)
-                finalParam.time_start = this.fetchParam.timespan && timeUtls.date2Str(this.fetchParam.timespan[0])
-                finalParam.time_end = this.fetchParam.timespan && timeUtls.date2Str(this.fetchParam.timespan[1])
 
-                return salesService.getHistory(finalParam).then((ret) => {
+                return salesService.getHistory(this.fetchParam).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
                     this.loadingData = false
@@ -208,7 +220,7 @@
             }
         },
         components: {
-            IndustrySelect
+            IndustrySelect, DateRange, vInput
         }
     }
 </script>
