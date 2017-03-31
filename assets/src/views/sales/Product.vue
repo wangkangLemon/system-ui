@@ -46,20 +46,11 @@
             </section>
             <section>
                 <i>晒单时间</i>
-                <el-date-picker @change="fetchData"
-                                v-model="fetchParam.time_start"
-                                align="right"
-                                type="date"
-                                :picker-options="pickerOptionsStart"
-                                placeholder="开始日期">
-                </el-date-picker>
                 <el-date-picker
                         @change="fetchData"
-                        v-model="fetchParam.time_end"
-                        align="right"
-                        type="date"
-                        :picker-options="pickerOptionsEnd"
-                        placeholder="结束日期">
+                        v-model="fetchParam.timespan"
+                        type="daterange"
+                        placeholder="选择日期范围">
                 </el-date-picker>
             </section>
         </article>
@@ -126,10 +117,9 @@
                 pagesize: 15,
                 start: 1, // 当前第几页
                 fetchParam: {
+                    timespan: void 0, // 时间范围
                     keyword: void 0, // 药品名称
                     enterprise_id: void 0, // 工业ID
-                    time_start: void 0, // 开始时间
-                    time_end: void 0, // 结束时间
                     deleted: void 0, // 删除状态
                 },
                 pickerOptionsStart: {
@@ -164,8 +154,8 @@
                     length: this.pagesize
                 })
                 // 转为我们需要的格式
-                fetchParam.time_start = fetchParam.time_start && timeUtls.date2Str(new Date(fetchParam.time_start))
-                fetchParam.time_end = fetchParam.time_end && timeUtls.date2Str(new Date(fetchParam.time_end))
+                fetchParam.time_start = this.fetchParam.timespan && timeUtls.date2Str(this.fetchParam.timespan[0])
+                fetchParam.time_end = this.fetchParam.timespan && timeUtls.date2Str(this.fetchParam.timespan[1])
                 return salesService.getProductList(fetchParam)
                     .then(ret => {
                         this.data = ret.data
