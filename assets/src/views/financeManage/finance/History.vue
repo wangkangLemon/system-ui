@@ -70,7 +70,7 @@
     <article class="financeManage-finance-history">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+                <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
                 <div>
@@ -174,7 +174,9 @@
     </article>
 </template>
 <script lang="babel">
-    import {history} from '../../../services/fianace/finance'
+    import {history, exportData} from '../../../services/fianace/finance'
+    import {date2Str} from '../../../utils/timeUtils'
+
     export default {
         data () {
             return {
@@ -207,19 +209,52 @@
                 total: 0
             }
         },
+        watch: {
+            createTime (value) {
+                this.createTime = date2Str(value)
+                this.pageSize = 1
+                this.getData()
+            },
+            endTime (value) {
+                this.endTime = date2Str(value)
+                this.pageSize = 1
+                this.getData()
+            }
+        },
         mounted () {
-            this.getData(this.currentPage)
+            this.getData()
         },
         methods: {
             handleCurrentChange(val) {
-                this.getData(val)
+                this.currentPage = val
+                this.getData()
             },
             getData (currentPage) {
-                history(currentPage, this.pageSize, this.courseSelect, this.companySelect, this.userSelect, this.createTime, this.endTime).then((ret) => {
+                let params = {
+                    start: this.currentPage,
+                    length: this.pageSize,
+                    course_id: this.courseSelect,
+                    company_id: this.companySelect,
+                    time_start: this.createTime,
+                    time_end: this.endTime,
+                    user_id: this.userSelect
+                }
+                history(params).then((ret) => {
                     this.historyData = ret.data
                     this.total = ret.total
                 }).then(() => {
                     xmview.setContentLoading(false)
+                })
+            },
+            exportData () {
+                exportData({
+                    course_id: this.courseSelect,
+                    company_id: this.companySelect,
+                    time_start: this.createTime,
+                    time_end: this.endTime,
+                    user_id: this.userSelect
+                }).then((ret) => {
+                    console.log(ret)
                 })
             }
         }

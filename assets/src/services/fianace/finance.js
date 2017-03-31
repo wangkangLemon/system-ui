@@ -42,17 +42,69 @@ export function industry(start, length, companyId) {
 }
 
 // 流水记录
-export function history(start, length, courseId, companyId, timeStart, timeEnd, userId) {
+export function history(reqObj) {
     let url = urlPre + '/history/search'
-    return api.get(url, {
-        start,
-        length,
-        course_id: courseId,
-        company_id: companyId,
-        time_start: timeStart,
-        time_end: timeEnd,
-        user_id: userId
-    }).then(ret => {
+    return api.get(url, reqObj).then(ret => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}
+
+// 流水记录导出接口
+export function exportData(reqObj) {
+    let url = urlPre + '/history/search?export=1'
+    return api.get(url, reqObj).then(ret => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}
+
+// 充值记录列表
+export function chargeData(reqObj) {
+    let url = urlPre + '/charge/search'
+    return api.get(url, reqObj).then(ret => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}
+
+// 充值接口
+export function charge(reqObj) {
+    let url = urlPre + '/charge'
+    return api.post(url, reqObj).then(ret => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}
+
+// 价格调整列表
+export function priceData(reqObj) {
+    let url = urlPre + '/price/search'
+    return api.get(url, reqObj).then(ret => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}
+
+// 调整价格接口
+export function price(reqObj) {
+    let url = urlPre + '/price'
+    return api.post(url, reqObj).then(ret => {
         if (ret.code == 0) {
             return ret.data
         } else {

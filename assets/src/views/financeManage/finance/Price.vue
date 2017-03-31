@@ -144,24 +144,24 @@
                     stripe
                     style="width: 100%">
                 <el-table-column
-                        prop="name"
+                        prop="company"
                         label="工业">
                 </el-table-column>
                 <el-table-column
-                        prop="manager"
+                        prop="admin_name"
                         label="管理员"
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="beforeCharge"
+                        prop="val_old"
                         label="调整前单价">
                 </el-table-column>
                 <el-table-column
-                        prop="afterCharge"
+                        prop="val_new"
                         label="调整后单价">
                 </el-table-column>
                 <el-table-column
-                        prop="time"
+                        prop="create_time_name"
                         label="调整时间">
                 </el-table-column>
                 <el-table-column
@@ -176,18 +176,19 @@
             </el-table>
             <div class="block">
                 <el-pagination
-                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-size="pageSize"
                         layout="total, prev, pager, next"
-                        :total="1000">
+                        :total="total">
                 </el-pagination>
             </div>
         </el-card>
     </article>
 </template>
 <script lang="babel">
+    import {priceData} from '../../../services/fianace/finance'
+    //    import {date2Str} from '../../../utils/timeUtils'
     export default {
         data () {
             return {
@@ -197,24 +198,8 @@
                 endTime: '',
                 currentPage: 1,
                 pageSize: 10,
-                industryData: [
-                    {
-                        id: 1,
-                        name: '20170329000000000214907699755645',
-                        manager: '演示用制药企业',
-                        beforeCharge: '复方红衣补血口服',
-                        afterCharge: '对对对',
-                        time: 'mslsls'
-                    },
-                    {
-                        id: 2,
-                        name: '20170329000000000214907699755645',
-                        manager: '演示用制药企业',
-                        beforeCharge: '复方红衣补血口服',
-                        afterCharge: '对对对',
-                        time: 'mslsls'
-                    }
-                ],
+                total: 0,
+                industryData: [],
                 industry: [
                     {
                         id: 1,
@@ -255,10 +240,21 @@
                 },
             }
         },
+        mounted () {
+            priceData({
+                start: this.currentPage,
+                length: this.pageSize,
+                admin_id: this.managerSelect,
+                company_id: this.industrySelect,
+                time_start: this.createTime,
+                time_end: this.endTime
+            }).then((ret) => {
+                this.industryData = ret.data
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
         methods: {
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`)
-            },
             handleCurrentChange(val) {
                 this.currentPage = val
                 console.log(`当前页: ${val}`)
