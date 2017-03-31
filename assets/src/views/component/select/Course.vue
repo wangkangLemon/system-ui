@@ -4,7 +4,7 @@
 
 <template>
     <section>
-        <i>管理员</i>
+        <i>课程</i>
         <el-select clearable v-loading="loading"
                    @visible-change="handleClick"
                    @change="handleChange"
@@ -26,7 +26,7 @@
 </template>
 
 <script lang='babel'>
-    import adminService from '../../../services/adminService'
+    import courseService from '../../../services/courseService'
     export default{
         props: ['value', 'change'],
         data () {
@@ -62,7 +62,7 @@
                 this.$emit('change', val)
             },
             fetchData () {
-                adminService.adminList(this.keyword, this.currentPage, this.pageSize).then(ret => {
+                courseService.courseList(this.keyword, this.currentPage, this.pageSize).then(ret => {
                     this.data = []
                     this.data.push(...ret.data)
                     this.loading = false

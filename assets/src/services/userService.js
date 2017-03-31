@@ -28,3 +28,15 @@ export function refreshToken (userid) {
 export function loginout () {
     authUtils.setAuthToken(null)
 }
+
+// 获取用户列表
+export function userList(keyword, page, pageSize) {
+    let url = config.apiHost + '/sys/user/search'
+    return api.post(url, {category: 'all', keyword, page, page_size: pageSize}, false).then(ret => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}

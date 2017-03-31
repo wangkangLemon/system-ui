@@ -55,7 +55,7 @@ export function history(reqObj) {
 
 // 流水记录导出接口
 export function exportData(reqObj) {
-    let url = '/sys/finance/charge/search?export=1'
+    let url = config.apiHost + '/sys/finance/charge/search?export=1'
     return api.get(url, reqObj).then(ret => {
         if (ret.code == 0) {
             return ret.data

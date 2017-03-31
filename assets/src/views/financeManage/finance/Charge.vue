@@ -72,21 +72,16 @@
         <!--充值表单-->
         <el-dialog v-model="addForm" title="充值" size="tiny">
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
-                <el-form-item label="要充值的工业" prop="name">
-                    <el-select v-model="form.name" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in industry"
-                                :label="item.name"
-                                :value="item.name"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="" prop="companyID">
+                    <IndustryCompanySelect type="1" v-model="form.companyID"
+                                           v-on:change="formIndustryChange">
+                    </IndustryCompanySelect>
                 </el-form-item>
                 <el-form-item prop="money" label="充值金额" :label-width="formLabelWidth">
                     <el-input v-model="form.money" type="number" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="receipt" label="充值收据" :label-width="formLabelWidth">
-                    <el-input type="textarea" :rows="3" v-model="form.receipt" auto-complete="off"></el-input>
+                <el-form-item prop="desc" label="充值收据" :label-width="formLabelWidth">
+                    <el-input type="textarea" :rows="3" v-model="form.desc" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -99,28 +94,10 @@
                 <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <div>
-                    <label>工业</label>
-                    <el-select clearable v-model="industrySelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in industry"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <!--<div>-->
-                <!--<label>管理员</label>-->
-                <!--<el-select clearable v-model="managerSelect" placeholder="未选择">-->
-                <!--<el-option-->
-                <!--v-for="(item, index) in managers"-->
-                <!--:label="item.name"-->
-                <!--:value="item.id"-->
-                <!--:key="item.id">-->
-                <!--</el-option>-->
-                <!--</el-select>-->
-                <!--</div>-->
+                <IndustryCompanySelect type="1" v-model="industrySelect"
+                                       v-on:change="val=>industrySelect=val"
+                                       :change="getData">
+                </IndustryCompanySelect>
                 <admin v-model="managerSelect"
                        v-on:change="val=>managerSelect=val"
                        :change="getData">
@@ -198,13 +175,15 @@
     </article>
 </template>
 <script lang="babel">
-    import {chargeData} from '../../../services/fianace/finance'
+    import {chargeData, charge} from '../../../services/fianace/finance'
     import {date2Str} from '../../../utils/timeUtils'
     import Admin from '../../component/select/Admin'
+    import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     let _this
     export default {
         components: {
-            Admin
+            Admin,
+            IndustryCompanySelect
         },
         data () {
             return {
@@ -230,13 +209,13 @@
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
                 form: {                // 表单属性值
-                    name: '',          // 工业名称
+                    companyID: '',          // 工业ID
                     money: '',          // 要充值的金额
-                    receipt: ''       // 收据
+                    desc: ''       // 收据
                 },
                 rules: {
-                    name: [
-                        {required: true, message: '必填项', trigger: 'change'}
+                    companyID: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
                     ],
                     money: [
                         {
@@ -245,7 +224,7 @@
                             trigger: 'blur'
                         }
                     ],
-                    receipt: [
+                    desc: [
                         {
                             required: true,
                             message: '必填项',
@@ -275,15 +254,24 @@
             this.getData()
         },
         methods: {
+            formIndustryChange (value) {
+                this.form.companyID = value
+                this.form.company_id = value
+            },
             handleCurrentChange(val) {
                 this.currentPage = val
                 this.getData()
             },
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {
-                    console.log(valid)
                     if (valid) {
-                        console.log(1)
+                        charge(this.form).then((ret) => {
+                            this.addForm = false
+                            xmview.showTip('success', '调整成功')
+                            this.getData()
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }

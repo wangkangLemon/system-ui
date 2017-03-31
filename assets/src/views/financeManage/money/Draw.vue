@@ -71,24 +71,17 @@
                 <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <div>
-                    <label>用户</label>
-                    <el-select clearable v-model="userSelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in users"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
+                <UserList v-model="userSelect"
+                          v-on:change="val=>userSelect=val"
+                          :change="getData">
+                </UserList>
                 <div>
                     <label>提现状态</label>
                     <el-select clearable v-model="drawStatusSelect" placeholder="未选择">
                         <el-option
                                 v-for="(item, index) in drawStatus"
                                 :label="item.name"
-                                :value="item.id"
+                                :value="item.value"
                                 :key="item.id">
                         </el-option>
                     </el-select>
@@ -176,8 +169,12 @@
 <script lang="babel">
     import {drawList} from '../../../services/fianace/money'
     import {date2Str} from '../../../utils/timeUtils'
+    import UserList from '../../component/select/User'
     let _this
     export default {
+        components: {
+            UserList
+        },
         data () {
             return {
                 drawStatusSelect: '',

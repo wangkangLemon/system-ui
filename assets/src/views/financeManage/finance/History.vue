@@ -77,28 +77,14 @@
                                        v-on:change="val=>companySelect=val"
                                        :change="getData">
                 </IndustryCompanySelect>
-                <div>
-                    <label>课程</label>
-                    <el-select clearable v-model="courseSelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in courses"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div>
-                    <label>用户</label>
-                    <el-select clearable v-model="userSelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in users"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
+                <course-list v-model="courseSelect"
+                             v-on:change="val=>courseSelect=val"
+                             :change="getData">
+                </course-list>
+                <UserList v-model="userSelect"
+                          v-on:change="val=>userSelect=val"
+                          :change="getData">
+                </UserList>
                 <div>
                     <label>创建时间</label>
                     <div class="time-container">
@@ -174,10 +160,14 @@
     import {history, exportData} from '../../../services/fianace/finance'
     import {date2Str} from '../../../utils/timeUtils'
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
+    import CourseList from '../../component/select/Course'
+    import UserList from '../../component/select/User'
     let _this
     export default {
         components: {
-            IndustryCompanySelect
+            IndustryCompanySelect,
+            CourseList,
+            UserList
         },
         data () {
             return {

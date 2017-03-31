@@ -99,28 +99,14 @@
                 <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <div>
-                    <label>工业</label>
-                    <el-select clearable v-model="industrySelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in industry"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div>
-                    <label>管理员</label>
-                    <el-select clearable v-model="managerSelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in managers"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
+                <IndustryCompanySelect type="1" v-model="industrySelect"
+                                       v-on:change="val=>industrySelect=val"
+                                       :change="getData">
+                </IndustryCompanySelect>
+                <admin v-model="managerSelect"
+                       v-on:change="val=>managerSelect=val"
+                       :change="getData">
+                </admin>
                 <div>
                     <label>创建时间</label>
                     <div class="time-container">
@@ -196,8 +182,14 @@
 <script lang="babel">
     import {chargeData} from '../../../services/fianace/money'
     import {date2Str} from '../../../utils/timeUtils'
+    import Admin from '../../component/select/Admin'
+    import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     let _this
     export default {
+        components: {
+            Admin,
+            IndustryCompanySelect
+        },
         data () {
             return {
                 industrySelect: '',

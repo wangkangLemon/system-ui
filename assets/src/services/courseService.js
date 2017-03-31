@@ -3,12 +3,12 @@
  */
 import * as api from './api'
 import config from '../utils/config'
-const urlPre = config.apiHost + '/sys/admin'
+const urlPre = config.apiHost + '/sys/course'
 
-class AdminService {
+class CourseService {
     // 获取管理员列表
-    adminList(keyword, page, pageSize) {
-        let url = urlPre + '/search'
+    courseList(keyword, page, pageSize) {
+        let url = urlPre + '/search/name'
         return api.get(url, {keyword, page, page_size: pageSize}, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
@@ -18,4 +18,4 @@ class AdminService {
         })
     }
 }
-export default new AdminService()
+export default new CourseService()
