@@ -32,7 +32,7 @@
         data () {
             return {
                 loading: false,
-                data: [{name: '全部'}],
+                data: [{name: '全部', id: ''}],
                 currVal: this.value
             }
         },
@@ -60,6 +60,7 @@
                 this.change && this.change()
             },
             setCurrentValue (val) {
+                if (this.curVal == val) return
                 this.currVal = val
                 this.$emit('change', val)
             }

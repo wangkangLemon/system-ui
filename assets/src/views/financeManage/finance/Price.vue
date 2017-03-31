@@ -1,11 +1,16 @@
 <style lang='scss' scoped rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
-    @import "../../../utils/mixins/table";
+    @import "../../../utils/mixins/topSearch";
+
+    .search {
+        @extend %top-search-container;
+        margin-bottom: 20px;
+    }
 </style>
 <style lang="scss">
     .financeManage-finance-charge {
         .box-card {
-            margin-bottom: 20px;
+            margin: 20px 0;
             .clearfix {
                 text-align: right;
             }
@@ -22,45 +27,6 @@
                     float: left;
                 }
             }
-            .search {
-                padding: 15px;
-                padding-top: 0;
-                > div {
-                    display: inline-block;
-                    vertical-align: top;
-                    label {
-                        margin-right: 2%;
-                    }
-                    .el-input, .el-select {
-                        width: 80%;
-                    }
-                    .el-date-editor {
-                        width: 40%;
-                    }
-                    @media (max-width: 767px) {
-                        .el-input, .el-select, .el-date-editor {
-                            width: 100%;
-                            margin-top: 10px;
-                        }
-                    }
-                    .time-container {
-                        width: 80%;
-                        display: inline-block;
-                        @media (max-width: 767px) {
-                            width: 100%;
-                        }
-                    }
-                }
-                @media (min-width: 768px) {
-                    display: flex;
-                }
-                @media (max-width: 767px) {
-                    display: block;
-                    > div {
-                        margin-top: 10px;
-                    }
-                }
-            }
         }
         .block {
             text-align: right;
@@ -73,21 +39,16 @@
         <!--充值表单-->
         <el-dialog v-model="addForm" title="调整" size="tiny">
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
-                <el-form-item label="要调整的工业" prop="name">
-                    <el-select v-model="form.name" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in industry"
-                                :label="item.name"
-                                :value="item.name"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="" prop="name">
+                    <IndustryCompanySelect v-model="form.company_id"
+                                           v-on:change="formIndustryChange">
+                    </IndustryCompanySelect>
                 </el-form-item>
-                <el-form-item prop="money" label="调整单价为" :label-width="formLabelWidth">
-                    <el-input v-model="form.money" type="number" auto-complete="off"></el-input>
+                <el-form-item prop="price" label="调整单价为" :label-width="formLabelWidth">
+                    <el-input v-model="form.price" type="number" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="receipt" label="调整依据" :label-width="formLabelWidth">
-                    <el-input type="textarea" :rows="3" v-model="form.receipt" auto-complete="off"></el-input>
+                <el-form-item prop="desc" label="调整依据" :label-width="formLabelWidth">
+                    <el-input type="textarea" :rows="3" v-model="form.desc" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -100,19 +61,12 @@
                 <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <div>
-                    <label>工业</label>
-                    <el-select clearable v-model="industrySelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in industry"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div>
-                    <label>管理员</label>
+                <IndustryCompanySelect v-model="industrySelect"
+                                       v-on:change="val=>industrySelect=val"
+                                       :change="fetchData">
+                </IndustryCompanySelect>
+                <section>
+                    <span>管理员</span>
                     <el-select clearable v-model="managerSelect" placeholder="未选择">
                         <el-option
                                 v-for="(item, index) in managers"
@@ -121,26 +75,24 @@
                                 :key="item.id">
                         </el-option>
                     </el-select>
-                </div>
-                <div>
-                    <label>创建时间</label>
-                    <div class="time-container">
-                        <el-date-picker
-                                @change="fetchData"
-                                v-model="createTime"
-                                type="date"
-                                :picker-options="pickerOptionsStart"
-                                placeholder="开始时间">
-                        </el-date-picker>
-                        <el-date-picker
-                                @change="fetchData"
-                                v-model="endTime"
-                                type="date"
-                                :picker-options="pickerOptionsEnd"
-                                placeholder="结束时间">
-                        </el-date-picker>
-                    </div>
-                </div>
+                </section>
+                <section>
+                    <span>创建时间</span>
+                    <el-date-picker
+                            @change="fetchData"
+                            v-model="createTime"
+                            type="date"
+                            :picker-options="pickerOptionsStart"
+                            placeholder="开始时间">
+                    </el-date-picker>
+                    <el-date-picker
+                            @change="fetchData"
+                            v-model="endTime"
+                            type="date"
+                            :picker-options="pickerOptionsEnd"
+                            placeholder="结束时间">
+                    </el-date-picker>
+                </section>
             </section>
             <el-table
                     border
@@ -191,10 +143,14 @@
     </article>
 </template>
 <script lang="babel">
-    import {priceData} from '../../../services/fianace/finance'
+    import {priceData, price} from '../../../services/fianace/finance'
     import {date2Str} from '../../../utils/timeUtils'
+    import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     let _this
     export default {
+        components: {
+            IndustryCompanySelect
+        },
         data () {
             return {
                 industrySelect: '',
@@ -205,12 +161,6 @@
                 pageSize: 10,
                 total: 0,
                 industryData: [],
-                industry: [
-                    {
-                        id: 1,
-                        name: '企业1'
-                    }
-                ],
                 managers: [
                     {
                         id: 1,
@@ -220,22 +170,22 @@
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
                 form: {                // 表单属性值
-                    name: '',          // 工业名称
-                    money: '',          // 要充值的金额
-                    receipt: ''       // 收据
+                    name: '',          // 工业
+                    price: '',          // 要充值的金额
+                    desc: ''       // 收据
                 },
                 rules: {
                     name: [
-                        {required: true, message: '必填项', trigger: 'change'}
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
                     ],
-                    money: [
+                    price: [
                         {
                             required: true,
                             message: '必填项',
                             trigger: 'blur'
                         }
                     ],
-                    receipt: [
+                    desc: [
                         {
                             required: true,
                             message: '必填项',
@@ -264,15 +214,25 @@
             this.fetchData()
         },
         methods: {
+            formIndustryChange (val) {
+                this.form.name = val
+                console.log(val)
+            },
             handleCurrentChange(val) {
                 this.currentPage = val
                 console.log(`当前页: ${val}`)
             },
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {
-                    console.log(valid)
                     if (valid) {
-                        console.log(1)
+                        this.form.company_id = this.form.name
+                        price(this.form).then((ret) => {
+                            this.addForm = false
+                            xmview.showTip('success', '调整成功')
+                            this.fetchData()
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }
