@@ -36,7 +36,32 @@
     <article id="course-history-container">
         <el-button class="export"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
 
-        <article class="search"></article>
+        <article class="search">
+            <h1 style="color:red">还有部分查询未完成 等待接口</h1>
+            <CourseSelect :change="fetchData" @change="val => fetchParam.course_id=val"
+                          v-model="fetchParam.course_id"></CourseSelect>
+
+            <section>
+                <i>成绩</i>
+                <el-select v-model="fetchParam.grade" placeholder="未选择"
+                           @change="fetchData" :clearable="true">
+                    <el-option label="满分" value="1"></el-option>
+                    <el-option label="及格" value="2"></el-option>
+                    <el-option label="不及格" value="3"></el-option>
+                </el-select>
+            </section>
+
+            <DateRange title="考试时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
+                       @changeStart="val=> fetchParam.time_start=val "
+                       @changeEnd="val=> fetchParam.time_end=val" :change="fetchData">
+            </DateRange>
+
+            <section>
+                <i>账号</i>
+                <v-input @changeVal="val=>fetchParam.account=val" :enter="fetchData" v-model="fetchParam.account"
+                placeholder="账号"></v-input>
+            </section>
+        </article>
 
         <el-table class="data-table" v-loading="loadingData"
                   :data="data"
@@ -95,6 +120,9 @@
 
 <script>
     import testingService from '../../services/testingService'
+    import CourseSelect from '../component/select/Course.vue'
+    import DateRange from '../component/form/DateRangePicker.vue'
+    import vInput from '../component/form/Input.vue'
     export default{
         data () {
             return {
@@ -134,6 +162,7 @@
                     this.loadingData = false
                 })
             }
-        }
+        },
+        components: {CourseSelect, DateRange, vInput}
     }
 </script>
