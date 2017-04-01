@@ -5,11 +5,11 @@ const pathPre = '/client'
 // 客户端部分
 export default [
     {
-        path: pathPre + '/contentManage', // 内容维护
-        name: 'client-contentManage',
+        path: pathPre + '/recommend/contentManage', // 内容维护
+        name: 'client-recommend-contentManage',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/client/contentManage'))
+                resolve(require('../views/client/ContentManage.vue'))
             })
         },
         meta: {
@@ -17,11 +17,11 @@ export default [
         }
     },
     {
-        path: pathPre + '/blockManage', // 区块管理
-        name: 'client-blockManage',
+        path: pathPre + '/recommend/blockManage', // 区块管理
+        name: 'client-recommend-blockManage',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/client/BlockManage'))
+                resolve(require('../views/client/BlockManage.vue'))
             })
         },
         meta: {
@@ -29,11 +29,11 @@ export default [
         }
     },
     {
-        path: pathPre + '/classifyManage', // 分类管理
-        name: 'client-classifyManage',
+        path: pathPre + '/recommend/classifyManage', // 分类管理
+        name: 'client-recommend-classifyManage',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/client/ClassifyManage'))
+                resolve(require('../views/client/ClassifyManage.vue'))
             })
         },
         meta: {

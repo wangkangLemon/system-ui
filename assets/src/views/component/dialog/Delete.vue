@@ -5,6 +5,7 @@
         text-align-last: center;
         i {
             &:before {
+                margin-top: 20px;
                 display: block;
                 font-size: px2rem(60);
                 color: #f8bb86;

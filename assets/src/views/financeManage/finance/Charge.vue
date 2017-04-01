@@ -123,6 +123,7 @@
                 </div>
             </section>
             <el-table
+                    v-loading="loading"
                     border
                     :data="industryData"
                     stripe
@@ -164,10 +165,12 @@
             </el-table>
             <div class="block">
                 <el-pagination
+                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
                         :page-size="pageSize"
-                        layout="total, prev, pager, next"
+                        layout="total, sizes, prev, pager, next"
                         :total="total">
                 </el-pagination>
             </div>
@@ -187,25 +190,14 @@
         },
         data () {
             return {
+                loading: false,
                 industrySelect: '',
                 managerSelect: '',
                 createTime: '',
                 endTime: '',
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 15,
                 industryData: [],
-                industry: [
-                    {
-                        id: 1,
-                        name: '企业1'
-                    }
-                ],
-                managers: [
-                    {
-                        id: 1,
-                        name: '用户1',
-                    }
-                ],
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
                 form: {                // 表单属性值
@@ -250,10 +242,16 @@
         beforeCreate () {
             _this = this
         },
-        mounted () {
-            this.getData()
+        created () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
             formIndustryChange (value) {
                 this.form.companyID = value
                 this.form.company_id = value
@@ -278,7 +276,8 @@
                 })
             },
             getData () {
-                chargeData({
+                this.loading = true
+                return chargeData({
                     page: this.currentPage,
                     page_size: this.pageSize,
                     admin_id: this.managerSelect,
@@ -289,7 +288,7 @@
                     this.industryData = ret.data
                     this.total = ret.total
                 }).then(() => {
-                    xmview.setContentLoading(false)
+                    this.loading = false
                 })
             }
         }

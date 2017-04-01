@@ -77,7 +77,7 @@
                 </UserList>
                 <div>
                     <label>提现状态</label>
-                    <el-select clearable v-model="drawStatusSelect" placeholder="未选择">
+                    <el-select @change="getData" clearable v-model="drawStatusSelect" placeholder="未选择">
                         <el-option
                                 v-for="(item, index) in drawStatus"
                                 :label="item.name"
@@ -107,12 +107,13 @@
                 </div>
             </section>
             <el-table
+                    v-loading="loading"
                     border
                     :data="drawData"
                     stripe
                     style="width: 100%">
                 <el-table-column
-                        prop="drawno"
+                        prop="draw_no"
                         label="编号">
                 </el-table-column>
                 <el-table-column
@@ -125,7 +126,7 @@
                         label="姓名">
                 </el-table-column>
                 <el-table-column
-                        prop="course_name"
+                        prop="bank_name"
                         label="银行">
                 </el-table-column>
                 <el-table-column
@@ -156,10 +157,12 @@
             </el-table>
             <div class="block">
                 <el-pagination
+                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
                         :page-size="pageSize"
-                        layout="total, prev, pager, next"
+                        layout="total, sizes, prev, pager, next"
                         :total="total">
                 </el-pagination>
             </div>
@@ -177,6 +180,7 @@
         },
         data () {
             return {
+                loading: false,
                 drawStatusSelect: '',
                 userSelect: '',
                 createTime: '',
@@ -206,12 +210,6 @@
                         value: 'close'
                     }
                 ],
-                users: [
-                    {
-                        id: 1,
-                        name: '用户1',
-                    }
-                ],
                 total: 0,
                 pickerOptionsStart: {
                     disabledDate(time) {
@@ -230,15 +228,22 @@
         beforeCreate () {
             _this = this
         },
-        mounted () {
-            this.getData()
+        created () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
             handleCurrentChange(val) {
                 this.currentPage = val
                 this.getData()
             },
             getData () { // 获取列表数据
+                this.loading = true
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
@@ -247,11 +252,15 @@
                     time_end: date2Str(this.endTime),
                     user_id: this.userSelect
                 }
-                drawList(params).then((ret) => {
+                return drawList(params).then((ret) => {
+                    let status = {pending: '待提现', complete: '已完成', close: '已关闭'}
                     this.drawData = ret.data
+                    ret.data.forEach((item) => {
+                        item.status = status[item.status]
+                    })
                     this.total = ret.total
                 }).then(() => {
-                    xmview.setContentLoading(false)
+                    this.loading = false
                 })
             }
         }

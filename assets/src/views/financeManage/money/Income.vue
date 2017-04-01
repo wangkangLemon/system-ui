@@ -106,6 +106,7 @@
                 </div>
             </section>
             <el-table
+                    v-loading="loading"
                     border
                     :data="historyData"
                     stripe
@@ -134,10 +135,12 @@
             </el-table>
             <div class="block">
                 <el-pagination
+                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
                         :page-size="pageSize"
-                        layout="total, prev, pager, next"
+                        layout="total, sizes, prev, pager, next"
                         :total="total">
                 </el-pagination>
             </div>
@@ -159,6 +162,7 @@
         },
         data () {
             return {
+                loading: false,
                 companySelect: '',
                 courseSelect: '',
                 userSelect: '',
@@ -167,24 +171,6 @@
                 currentPage: 1,
                 pageSize: 10,
                 historyData: [],
-                companys: [
-                    {
-                        id: 1,
-                        name: '企业1',
-                    }
-                ],
-                users: [
-                    {
-                        id: 1,
-                        name: '用户1',
-                    }
-                ],
-                courses: [
-                    {
-                        id: 1,
-                        name: '课程',
-                    }
-                ],
                 total: 0,
                 pickerOptionsStart: {
                     disabledDate(time) {
@@ -203,15 +189,22 @@
         beforeCreate () {
             _this = this
         },
-        mounted () {
-            this.getData()
+        created () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
             handleCurrentChange(val) {
                 this.currentPage = val
                 this.getData()
             },
             getData () { // 获取列表数据
+                this.loading = true
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
@@ -221,11 +214,11 @@
                     time_end: date2Str(this.endTime),
                     user_id: this.userSelect
                 }
-                history(params).then((ret) => {
+                return history(params).then((ret) => {
                     this.historyData = ret.data
                     this.total = ret.total
                 }).then(() => {
-                    xmview.setContentLoading(false)
+                    this.loading = false
                 })
             },
             exportData () { // 导出数据

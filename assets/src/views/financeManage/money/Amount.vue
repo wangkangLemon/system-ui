@@ -44,6 +44,7 @@
                 <span>工业账户</span>
             </div>
             <el-table
+                    v-loading="loading"
                     border
                     :data="industryData"
                     stripe
@@ -64,10 +65,12 @@
             </el-table>
             <div class="block">
                 <el-pagination
+                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
                         :page-size="pageSize"
-                        layout="total, prev, pager, next"
+                        layout="total, sizes, prev, pager, next"
                         :total="total">
                 </el-pagination>
             </div>
@@ -83,6 +86,7 @@
         },
         data () {
             return {
+                loading: false,
                 companyId: JSON.parse(localStorage.getItem('KEY_AUTH_UTILS_USERINFO')).company_id,
                 balance: {
                     content: '',
@@ -110,13 +114,20 @@
             this.getData()
         },
         methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
             handleCurrentChange (val) {
                 this.currentPage = val
             },
             getData () {
+                this.loading = true
                 industry(this.currentPage, this.pageSize).then((ret) => {
                     this.industryData = ret.data
                     this.total = ret.total
+                }).then(() => {
+                    this.loading = false
                 })
             }
         }

@@ -56,6 +56,7 @@
             </div>
             <el-table
                     border
+                    v-loading="loading"
                     :data="industryData"
                     stripe
                     style="width: 100%">
@@ -79,10 +80,12 @@
             </el-table>
             <div class="block">
                 <el-pagination
+                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
                         :page-size="pageSize"
-                        layout="total, prev, pager, next"
+                        layout="total, sizes, prev, pager, next"
                         :total="dataTotal">
                 </el-pagination>
             </div>
@@ -101,8 +104,9 @@
         },
         data () {
             return {
+                loading: false,
                 companyId: JSON.parse(localStorage.getItem('KEY_AUTH_UTILS_USERINFO')).company_id,
-                pageSize: 10,
+                pageSize: 15,
                 balance: {
                     content: '',
                     footer: '累计充值 '
@@ -149,6 +153,10 @@
             this.getLineCahrt()
         },
         methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
             getLineCahrt () { // 线性
                 let myChart = Echars.init(document.getElementById('incomeLine'))
                 let option = {
@@ -229,12 +237,15 @@
                 myChart.setOption(option)
             },
             handleCurrentChange(val) {
+                this.currentPage = val
                 this.getData(val)
             },
-            getData (currentPage) {
-                finance.industry(currentPage, this.pageSize).then((ret) => {
+            getData () {
+                this.loading = true
+                finance.industry(this.currentPage, this.pageSize).then((ret) => {
                     this.industryData = ret.data
                     this.dataTotal = ret.total
+                    this.loading = false
                 })
             }
         }

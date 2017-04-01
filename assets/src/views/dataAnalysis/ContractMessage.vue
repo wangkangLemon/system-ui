@@ -19,7 +19,7 @@
         }
 
         .add {
-            border: 1px solid #ededed;
+            background: #f0f3f5;
             padding: 10px 20px;
             .el-icon-upload2 {
                 padding-right: 5px;
@@ -72,36 +72,9 @@
 <template>
     <article class="table-container">
         <div class="show-sum-count">
-            <div class="part1">
-                <div>
-                    <p>签约连锁</p>
-                    <p>6</p>
-                    <i>icon</i>
-                </div>
-                <div class="intro">
-                    签约连锁总数
-                </div>
-            </div>
-            <div class="part3">
-                <div>
-                    <p>签约门店</p>
-                    <p>6</p>
-                    <i>icon</i>
-                </div>
-                <div class="intro">
-                    已录入 638家, 录入率为 173.84%
-                </div>
-            </div>
-            <div class="part4">
-                <div>
-                    <p>签约店员</p>
-                    <p>6</p>
-                    <i>icon</i>
-                </div>
-                <div class="intro">
-                    已录入 3895家, 录入率为 144.26%
-                </div>
-            </div>
+            <panel content="6" title="签约连锁" bgColor="#00acac" footer="签约连锁总数"></panel>
+            <panel content="6" title="签约门店" bgColor="#348fe2" footer="已录入 638家, 录入率为 173.84%"></panel>
+            <panel content="6" title="签约店员" bgColor="#727cb6" footer="已录入 638家, 录入率为 173.84%"></panel>
         </div>
         <!--导入弹窗-->
         <el-dialog v-model="isImport" title="导入企业签约信息" size="tiny">
@@ -236,7 +209,11 @@
     </article>
 </template>
 <script lang="babel">
+    import panel from '../component/panel/AmountPanel'
     export default {
+        components: {
+            panel
+        },
         data () {
             return {
                 searchName: '',        // 连锁名称

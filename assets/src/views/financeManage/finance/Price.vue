@@ -128,10 +128,12 @@
             </el-table>
             <div class="block">
                 <el-pagination
+                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
                         :page-size="pageSize"
-                        layout="total, prev, pager, next"
+                        layout="total, sizes, prev, pager, next"
                         :total="total">
                 </el-pagination>
             </div>
@@ -151,20 +153,15 @@
         },
         data () {
             return {
+                loading: false,
                 industrySelect: '',
                 managerSelect: '',
                 createTime: '',
                 endTime: '',
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 15,
                 total: 0,
                 industryData: [],
-                managers: [
-                    {
-                        id: 1,
-                        name: '用户1',
-                    }
-                ],
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
                 form: {                // 表单属性值
@@ -212,6 +209,10 @@
             this.fetchData()
         },
         methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.fetchData()
+            },
             formIndustryChange (val) {
                 this.form.name = val
                 console.log(val)
@@ -237,6 +238,7 @@
                 })
             },
             fetchData () {
+                this.loading = true
                 priceData({
                     page: this.currentPage,
                     page_size: this.pageSize,
@@ -248,7 +250,7 @@
                     this.industryData = ret.data
                     this.total = ret.total
                 }).then(() => {
-                    xmview.setContentLoading(false)
+                    this.loading = false
                 })
             }
         }

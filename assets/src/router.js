@@ -160,8 +160,8 @@ const routes = [
             },
             // 连锁后台
             {
-                path: '/system/feedBack/admin',
-                name: 'system-feedBack-admin',
+                path: '/sys/feedBack/admin',
+                name: 'sys-feedBack-admin',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/system/feedBack/ChainBack'))
@@ -173,8 +173,8 @@ const routes = [
             },
             // 客户端
             {
-                path: '/system/feedBack/mobile',
-                name: 'system-feedBack-mobile',
+                path: '/sys/feedBack/mobile',
+                name: 'sys-feedBack-mobile',
                 component: resolve => {
                     require.ensure([], () => {
                         resolve(require('./views/system/feedBack/App'))

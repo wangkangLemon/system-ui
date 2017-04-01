@@ -73,20 +73,15 @@
         <el-dialog v-model="addForm" title="充值" size="tiny">
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
                 <el-form-item label="要充值的工业" prop="name">
-                    <el-select v-model="form.name" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in industry"
-                                :label="item.name"
-                                :value="item.name"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
+                    <IndustryCompanySelect type="1" v-model="form.name"
+                                           v-on:change="formIndustryChange">
+                    </IndustryCompanySelect>
                 </el-form-item>
                 <el-form-item prop="money" label="充值金额" :label-width="formLabelWidth">
                     <el-input v-model="form.money" type="number" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="receipt" label="充值收据" :label-width="formLabelWidth">
-                    <el-input type="textarea" :rows="3" v-model="form.receipt" auto-complete="off"></el-input>
+                <el-form-item prop="desc" label="充值收据" :label-width="formLabelWidth">
+                    <el-input type="textarea" :rows="3" v-model="form.desc" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -128,6 +123,7 @@
                 </div>
             </section>
             <el-table
+                    v-loading="loading"
                     border
                     :data="industryData"
                     stripe
@@ -169,10 +165,12 @@
             </el-table>
             <div class="block">
                 <el-pagination
+                        @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
                         :page-size="pageSize"
-                        layout="total, prev, pager, next"
+                        layout="total, sizes, prev, pager, next"
                         :total="total">
                 </el-pagination>
             </div>
@@ -192,6 +190,7 @@
         },
         data () {
             return {
+                loading: false,
                 industrySelect: '',
                 managerSelect: '',
                 createTime: '',
@@ -199,28 +198,16 @@
                 currentPage: 1,
                 pageSize: 10,
                 industryData: [],
-                industry: [
-                    {
-                        id: 1,
-                        name: '企业1'
-                    }
-                ],
-                managers: [
-                    {
-                        id: 1,
-                        name: '用户1',
-                    }
-                ],
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
                 form: {                // 表单属性值
                     name: '',          // 工业名称
                     money: '',          // 要充值的金额
-                    receipt: ''       // 收据
+                    desc: ''       // 收据
                 },
                 rules: {
                     name: [
-                        {required: true, message: '必填项', trigger: 'change'}
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
                     ],
                     money: [
                         {
@@ -229,7 +216,7 @@
                             trigger: 'blur'
                         }
                     ],
-                    receipt: [
+                    desc: [
                         {
                             required: true,
                             message: '必填项',
@@ -255,10 +242,19 @@
         beforeCreate () {
             _this = this
         },
-        mounted () {
-            this.getData()
+        created () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
+            formIndustryChange (val) {
+                this.form.name = val
+            },
             handleCurrentChange(val) {
                 this.currentPage = val
                 this.getData()
@@ -273,7 +269,8 @@
                 })
             },
             getData () {
-                chargeData({
+                this.loading = true
+                return chargeData({
                     page: this.currentPage,
                     page_size: this.pageSize,
                     admin_id: this.managerSelect,
@@ -284,7 +281,7 @@
                     this.industryData = ret.data
                     this.total = ret.total
                 }).then(() => {
-                    xmview.setContentLoading(false)
+                    this.loading = false
                 })
             }
         }
