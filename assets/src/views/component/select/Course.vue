@@ -25,7 +25,7 @@
     </section>
 </template>
 
-<script lang='babel'>
+<script>
     import courseService from '../../../services/courseService'
     export default{
         props: ['value', 'change'],

@@ -36,7 +36,7 @@
 <template>
     <article id="sales-history-container">
         <article class="search">
-            <IndustrySelect v-model="fetchParam.enterprise_id"
+            <IndustrySelect v-model="fetchParam.enterprise_id" type="1"
                             v-on:change="val=>fetchParam.enterprise_id=val"
                             :change="fetchData">
             </IndustrySelect>

@@ -25,8 +25,9 @@
     </section>
 </template>
 
-<script lang='babel'>
+<script>
     import adminService from '../../../services/adminService'
+    import SelectScroll from '../../component/form/SelectScroll.vue'
     export default{
         props: ['value', 'change'],
         data () {
@@ -70,6 +71,7 @@
                     this.loading = false
                 })
             }
-        }
+        },
+        components: {SelectScroll}
     }
 </script>

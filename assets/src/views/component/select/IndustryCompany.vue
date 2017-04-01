@@ -12,20 +12,7 @@
     <section>
         <i v-if="type">工业</i>
         <i v-else>企业</i>
-        <!--<el-select v-loading="loading"-->
-        <!--@visible-change="handleIndustrySelChange"-->
-        <!--@change="handleChange"-->
-        <!--v-model="currVal"-->
-        <!--placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in data"-->
-        <!--:label="item.name"-->
-        <!--:value="item.id" :key="item.id">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-
         <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">
-
         </SelectScroll>
     </section>
 </template>

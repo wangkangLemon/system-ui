@@ -1,4 +1,7 @@
 <!--滚动刷新的select-->
+<!--使用方式-->
+<!--<SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">-->
+<!--</SelectScroll>-->
 <style lang='scss' rel='stylesheet/scss'>
     .component-form-selectscroll-more {
         color: #50bfff;
@@ -30,7 +33,7 @@
     export default{
         props: {
             // 请求数据的回调  参数:(val, length)  val-筛选关键词   length 当前的数据长度  注:只会出现其中一个
-            // 返回一个Pormise对象 结果 { data: [], total: 20 }
+            // 返回一个Pormise对象 结果 { data: [{ name:'xm', id:1 }], total: 20 }
             requestCb: Function,
             changeCb: Function, // 选项改变回调
             value: [String, Number]
@@ -48,7 +51,8 @@
             }
         },
         watch: {
-            'data'() {
+            'data'(val) {
+                if (val.length < 1) this.placeholder = '请选择'
                 this.initGetMore()
                 this.loading = false
             }
@@ -59,10 +63,11 @@
         methods: {
             // 筛选数据
             filter (val) {
-                console.info(val)
+                // 该名字是否在数据中出现过 则不进行搜索
+                if (this.data.some(item => item.name == val)) return
+
                 this.loading = true
                 this.keyword = val
-                console.info(val)
                 this.requestCb(val, 0).then(ret => {
                     this.isShowGetMore = true
                     this.processRequestRet(ret, 1)
