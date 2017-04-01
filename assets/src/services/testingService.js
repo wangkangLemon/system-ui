@@ -10,7 +10,25 @@ class TestingService {
     getAmount () {
         let url = urlPre
         return api.get(url).then(ret => {
-            return ret.analytics
+            return ret.data.analytics
+        })
+    }
+
+    // 获取考试记录
+    getHistory ({page, page_size, course_id, company_id, department_id, account, time_start, time_end, grade}) {
+        let finalUrl = urlPre + '/history/search'
+        return api.get(finalUrl, {
+            page,
+            page_size,
+            course_id,
+            company_id, // 连锁
+            department_id,
+            account,
+            time_start,
+            time_end,
+            grade, // 不赋值则为未选择，1位满分，2为及格，3为不及格
+        }).then((ret) => {
+            return ret.data
         })
     }
 }

@@ -2,12 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from './store'
 import action from './store/actions'
-import client from './routers/client'
-import finance from './routers/finance'
-import sales from './routers/sales'
 import article from './routers/article'
 import admin from './routers/admin'
 import dataAnalysis from './routers/dataAnalysis'
+import course from './routers/course' // 培训管理
+import client from './routers/client' // 客户端
+import finance from './routers/finance' // 财务
+import sales from './routers/sales' // 晒单
 
 Vue.use(VueRouter)
 
@@ -54,7 +55,9 @@ const routes = [
             // ============财务管理部分==================
             ...finance,
             // ============文章管理部分==================
-            ...article
+            ...article,
+            // ============培训管理==================
+            ...course,
         ]
     },
     {   // 登录

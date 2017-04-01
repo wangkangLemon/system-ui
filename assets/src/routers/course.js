@@ -5,8 +5,8 @@ const pathPre = '/course'
 // 培训管理
 export default [
     {
-        path: pathPre + '/recommend/contentManage', // 内容维护
-        name: 'course-recommend-contentManage',
+        path: pathPre + '/analysis', // 课程分析
+        name: 'course-analysis',
         component: resolve => {
             require.ensure([], () => {
                 resolve(require('../views/course/Analysis.vue'))
@@ -14,6 +14,18 @@ export default [
         },
         meta: {
             title: '课程分析-培训',
+        }
+    },
+    {
+        path: pathPre + '/history', // 考试记录
+        name: 'course-history',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/course/History.vue'))
+            })
+        },
+        meta: {
+            title: '考试记录-培训',
         }
     }
 ]
