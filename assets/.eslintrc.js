@@ -27,7 +27,8 @@ module.exports = {
         "eqeqeq": 0,
         "curly": [0, 'multi'],
         "space-before-function-paren": 0,
-        'prefer-promise-reject-errors': 0
+        'prefer-promise-reject-errors': 0,
+        'camelcase': 0
     },
     globals: {
         'xm': true,

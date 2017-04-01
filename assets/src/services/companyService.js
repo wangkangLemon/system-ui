@@ -7,9 +7,9 @@ const urlPre = config.apiHost + '/sys/company'
 
 class CompanyService {
     // 获取工业连锁店
-    getIndrustrySelectList(category, pageSize) {
+    getIndrustrySelectList ({category = '', page_size = '', page = '', keyword = ''}) {
         let finalUrl = urlPre + '/search'
-        return api.get(finalUrl, {category, page: 1, page_size: pageSize}, false).then((ret) => {
+        return api.get(finalUrl, {category, page, page_size, keyword}, false).then((ret) => {
             return ret.data
         })
     }

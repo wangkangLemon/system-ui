@@ -7,8 +7,8 @@
 </style>
 
 <template>
-    <el-select v-model="selectVal" :placeholder="placeholder" ref="container" @visible-change="initGetMore" filterable
-               :filter-method="filter" @change="handleChange" :clearable="true" no-data-text="暂无数据"
+    <el-select v-model="selectVal" :placeholder="placeholder" ref="container" @visible-change="handleVisibleChange"
+               :filter-method="filter" filterable @change="handleChange" :clearable="true" no-data-text="暂无数据"
                no-match-text="没有数据">
         <el-option v-loading="loading"
                    v-for="item in data"
@@ -17,30 +17,34 @@
                    :value="item.id">
         </el-option>
 
-        <el-option value="xmyst2" :disabled="true" v-show="!this.data || this.data.length < 1">
+        <el-option v-loading="loading" value="xmyst2" :disabled="true" v-show="!this.data || this.data.length < 1">
             <span>暂无数据</span>
         </el-option>
-        <el-option value="xmyst1" :disabled="true" v-show="this.data && this.data.length > 0">
+        <el-option value="xmyst1" :disabled="true" v-show="isShowGetMore && this.data && this.data.length > 0">
             <span ref="domLoading" class="component-form-selectscroll-more">点击加载更多</span>
         </el-option>
     </el-select>
 </template>
 
-<script lang='babel'>
+<script>
     export default{
         props: {
-            requestCb: Function, // 请求数据的回调  参数:(val, length)  val-筛选关键词   length 当前的数据长度  注:只会出现其中一个
-            changeCb: Function, // 选项改变
+            // 请求数据的回调  参数:(val, length)  val-筛选关键词   length 当前的数据长度  注:只会出现其中一个
+            // 返回一个Pormise对象 结果 { data: [], total: 20 }
+            requestCb: Function,
+            changeCb: Function, // 选项改变回调
             value: [String, Number]
         },
         data () {
             return {
+                keyword: void 0, // 搜索关键字
                 selectVal: this.value,
-                data: void 0,
+                data: [],
                 loading: false,
                 placeholder: '请选择',
                 input: null,
-                isSearching: false
+                isSearching: false,
+                isShowGetMore: true, // 是否显示加载更多按钮
             }
         },
         watch: {
@@ -55,13 +59,16 @@
         methods: {
             // 筛选数据
             filter (val) {
-                this.requestCb && this.requestCb(val)
+                console.info(val)
+                this.loading = true
+                this.keyword = val
+                console.info(val)
+                this.requestCb(val, 0).then(ret => {
+                    this.isShowGetMore = true
+                    this.processRequestRet(ret, 1)
+                })
             },
-            initGetMore (state) {
-                if (state == false) {
-                    this.placeholder = '请选择'
-                    return
-                }
+            initGetMore () { // 初始化更多按钮
                 this.placeholder = '输入内容进行搜索'
 
                 let _this = this
@@ -75,16 +82,40 @@
                         e = e || window.event
                         e.preventDefault()
                         e.stopPropagation()
-                        setTimeout(() => {
-                            _this.data.push(this.requestCb && this.requestCb(null, _this.data.length))
-                            option.loaded = false
-                        }, 1000)
+                        _this.requestCb(_this.keyword, _this.data.length).then(ret => {
+                            _this.processRequestRet(ret)
+                        })
+                        option.loaded = false
                     }, true)
                 })
             },
             handleChange (val) {
                 this.$emit('changeVal', val)
                 this.changeCb && this.changeCb(val)
+            },
+            // 处理select显示的操作
+            handleVisibleChange (state) {
+                if (state == false) {
+                    this.placeholder = '请选择'
+                    return
+                }
+                this.initGetMore()
+                // 判断是否有数据
+                if (!this.data || this.data.length < 1) {
+                    this.loading = true
+                    this.requestCb(this.keyword, 0).then((ret) => {
+                        this.processRequestRet(ret)
+                    })
+                }
+            },
+            // 处理请求后的结果 type- 0:追加 1-重新赋值
+            processRequestRet (ret, type = 0) {
+                if (type === 0)
+                    this.data.push(...ret.data)
+                else
+                    this.data = ret.data
+
+                this.isShowGetMore = this.data.length < ret.total
             }
         }
     }
