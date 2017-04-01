@@ -1,14 +1,11 @@
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
-
-    .search {
-        @extend %top-search-container;
-        margin-bottom: 20px;
-    }
-</style>
-<style lang="scss">
     .financeManage-finance-charge {
+        .search {
+            @extend %top-search-container;
+            margin-bottom: 20px;
+        }
         .box-card {
             margin: 20px 0;
             .clearfix {

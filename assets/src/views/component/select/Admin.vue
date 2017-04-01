@@ -5,23 +5,8 @@
 <template>
     <section>
         <i>管理员</i>
-        <el-select clearable v-loading="loading"
-                   @visible-change="handleClick"
-                   @change="handleChange"
-                   v-model="currVal"
-                   placeholder="请选择">
-            <el-input
-                    class="keyword-container"
-                    @change="fetchData"
-                    icon="search"
-                    v-model="keyword">
-            </el-input>
-            <el-option
-                    v-for="item in data"
-                    :label="item.name"
-                    :value="item.id" :key="item.id">
-            </el-option>
-        </el-select>
+        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">
+        </SelectScroll>
     </section>
 </template>
 
@@ -32,12 +17,8 @@
         props: ['value', 'change'],
         data () {
             return {
-                loading: false,
-                data: [],
                 currVal: this.value,
-                keyword: '',
-                currentPage: 1,
-                pageSize: 1000
+                pageSize: 20
             }
         },
         watch: {
@@ -46,12 +27,10 @@
             }
         },
         methods: {
-            handleClick () {
-                if (this.data.length > 1)
-                    return
-
-                this.loading = true
-                this.fetchData()
+            fetchData (val, length) {
+                let keyword = val
+                let page = parseInt(length / this.pageSize) + 1
+                return adminService.adminList(keyword, page, this.pageSize)
             },
             handleChange(val) {
                 this.setCurrentValue(val)
@@ -61,15 +40,6 @@
                 if (this.curVal == val) return
                 this.currVal = val
                 this.$emit('change', val)
-            },
-            fetchData () {
-                adminService.adminList(this.keyword, this.currentPage, this.pageSize).then(ret => {
-                    this.data = []
-                    this.data.push(...ret.data)
-                    this.loading = false
-                }).catch(() => {
-                    this.loading = false
-                })
             }
         },
         components: {SelectScroll}

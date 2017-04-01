@@ -1,10 +1,6 @@
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
-    @import "../../../utils/mixins/table";
-
-
-</style>
-<style lang="scss">
+    @import "../../../utils/mixins/topSearch";
     .financeManage-finance-history {
         .box-card {
             margin-bottom: 20px;
@@ -21,43 +17,7 @@
                 }
             }
             .search {
-                padding: 15px;
-                padding-top: 0;
-                > div {
-                    display: inline-block;
-                    vertical-align: top;
-                    label {
-                        margin-right: 2%;
-                    }
-                    .el-input, .el-select {
-                        width: 80%;
-                    }
-                    .el-date-editor {
-                        width: 40%;
-                    }
-                    @media (max-width: 767px) {
-                        .el-input, .el-select, .el-date-editor {
-                            width: 100%;
-                            margin-top: 10px;
-                        }
-                    }
-                    .time-container {
-                        width: 80%;
-                        display: inline-block;
-                        @media (max-width: 767px) {
-                            width: 100%;
-                        }
-                    }
-                }
-                @media (min-width: 768px) {
-                    display: flex;
-                }
-                @media (max-width: 767px) {
-                    display: block;
-                    > div {
-                        margin-top: 10px;
-                    }
-                }
+                @extend %top-search-container;
             }
         }
         .block {

@@ -1,4 +1,4 @@
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
 
     .financeManage-finance-amount {
@@ -10,15 +10,6 @@
                 vertical-align: top;
             }
         }
-    }
-
-    #incomeLine {
-        width: 100%;
-        height: 350px;
-    }
-</style>
-<style lang="scss">
-    .financeManage-finance-amount {
         .box-card {
             margin-bottom: 20px;
             .el-card__header {
@@ -30,6 +21,11 @@
             text-align: right;
             margin-top: 15px;
         }
+    }
+
+    #incomeLine {
+        width: 100%;
+        height: 350px;
     }
 </style>
 <template>

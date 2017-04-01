@@ -1,6 +1,5 @@
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
-
     .financeManage-money-amount {
         .panel {
             @extend %justify;
@@ -10,10 +9,6 @@
                 vertical-align: top;
             }
         }
-    }
-</style>
-<style lang="scss">
-    .financeManage-money-amount {
         .box-card {
             margin-bottom: 20px;
             .el-card__header {

@@ -24,7 +24,6 @@
         props: ['value', 'change', 'type'],
         data () {
             return {
-                loading: false,
                 currVal: this.value,
                 pageSize: 20
             }

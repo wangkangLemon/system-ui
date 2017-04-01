@@ -5,6 +5,7 @@ import action from './store/actions'
 import client from './routers/client'
 import finance from './routers/finance'
 import sales from './routers/sales'
+import article from './routers/article'
 
 Vue.use(VueRouter)
 
@@ -215,7 +216,9 @@ const routes = [
             // ============晒单==================
             ...sales,
             // ============财务管理部分==================
-            ...finance
+            ...finance,
+            // ============文章管理部分==================
+            ...article
         ]
     },
     {   // 登录

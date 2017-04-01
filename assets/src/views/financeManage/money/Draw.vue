@@ -1,9 +1,10 @@
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
-    @import "../../../utils/mixins/table";
-</style>
-<style lang="scss">
+    @import "../../../utils/mixins/topSearch";
     .financeManage-money-draw {
+        .search {
+            @extend %top-search-container;
+        }
         .box-card {
             margin-bottom: 20px;
             .clearfix {
@@ -16,45 +17,6 @@
                     position: relative;
                     top: -2px;
                     margin-right: 5px;
-                }
-            }
-            .search {
-                padding: 15px;
-                padding-top: 0;
-                > div {
-                    display: inline-block;
-                    vertical-align: top;
-                    label {
-                        margin-right: 2%;
-                    }
-                    .el-input, .el-select {
-                        width: 75%;
-                    }
-                    .el-date-editor {
-                        width: 40%;
-                    }
-                    @media (max-width: 767px) {
-                        .el-input, .el-select, .el-date-editor {
-                            width: 100%;
-                            margin-top: 10px;
-                        }
-                    }
-                    .time-container {
-                        width: 80%;
-                        display: inline-block;
-                        @media (max-width: 767px) {
-                            width: 100%;
-                        }
-                    }
-                }
-                @media (min-width: 768px) {
-                    display: flex;
-                }
-                @media (max-width: 767px) {
-                    display: block;
-                    > div {
-                        margin-top: 10px;
-                    }
                 }
             }
         }
@@ -75,7 +37,7 @@
                           v-on:change="val=>userSelect=val"
                           :change="getData">
                 </UserList>
-                <div>
+                <section>
                     <label>提现状态</label>
                     <el-select @change="getData" clearable v-model="drawStatusSelect" placeholder="未选择">
                         <el-option
@@ -85,7 +47,7 @@
                                 :key="item.id">
                         </el-option>
                     </el-select>
-                </div>
+                </section>
                 <DateRange title="申请时间" :start="createTime" :end="endTime"
                            v-on:changeStart="val=> createTime=val"
                            v-on:changeEnd="val=> endTime"
