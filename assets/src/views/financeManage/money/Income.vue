@@ -85,25 +85,11 @@
                           v-on:change="val=>userSelect=val"
                           :change="getData">
                 </UserList>
-                <div>
-                    <label>创建时间</label>
-                    <div class="time-container">
-                        <el-date-picker
-                                @change="getData"
-                                v-model="createTime"
-                                type="date"
-                                :picker-options="pickerOptionsStart"
-                                placeholder="开始时间">
-                        </el-date-picker>
-                        <el-date-picker
-                                @change="getData"
-                                v-model="endTime"
-                                type="date"
-                                :picker-options="pickerOptionsEnd"
-                                placeholder="结束时间">
-                        </el-date-picker>
-                    </div>
-                </div>
+                <DateRange title="创建时间" :start="createTime" :end="endTime"
+                           v-on:changeStart="val=> createTime=val"
+                           v-on:changeEnd="val=> endTime"
+                           :change="getData">
+                </DateRange>
             </section>
             <el-table
                     v-loading="loading"
@@ -153,12 +139,13 @@
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import CourseList from '../../component/select/Course'
     import UserList from '../../component/select/User'
-    let _this
+    import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
         components: {
             IndustryCompanySelect,
             CourseList,
-            UserList
+            UserList,
+            DateRange
         },
         data () {
             return {
@@ -171,23 +158,8 @@
                 currentPage: 1,
                 pageSize: 10,
                 historyData: [],
-                total: 0,
-                pickerOptionsStart: {
-                    disabledDate(time) {
-                        return !_this.endTime ? null
-                                : time.getTime() > _this.endTime.getTime() - 8.64e7
-                    }
-                },
-                pickerOptionsEnd: {
-                    disabledDate(time) {
-                        return !_this.createTime ? null
-                                : time.getTime() < _this.createTime.getTime() + 8.64e7
-                    }
-                },
+                total: 0
             }
-        },
-        beforeCreate () {
-            _this = this
         },
         created () {
             this.getData().then(() => {

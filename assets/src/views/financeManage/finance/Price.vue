@@ -72,23 +72,11 @@
                         v-on:change="val=>managerSelect=val"
                         v-model="managerSelect">
                 </admin>
-                <section>
-                    <span>创建时间</span>
-                    <el-date-picker
-                            @change="fetchData"
-                            v-model="createTime"
-                            type="date"
-                            :picker-options="pickerOptionsStart"
-                            placeholder="开始时间">
-                    </el-date-picker>
-                    <el-date-picker
-                            @change="fetchData"
-                            v-model="endTime"
-                            type="date"
-                            :picker-options="pickerOptionsEnd"
-                            placeholder="结束时间">
-                    </el-date-picker>
-                </section>
+                <DateRange title="创建时间" :start="createTime" :end="endTime"
+                           v-on:changeStart="val=> createTime=val"
+                           v-on:changeEnd="val=> endTime"
+                           :change="fetchData">
+                </DateRange>
             </section>
             <el-table
                     border
@@ -145,11 +133,12 @@
     import {date2Str} from '../../../utils/timeUtils'
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import Admin from '../../component/select/Admin.vue'
-    let _this
+    import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
         components: {
             IndustryCompanySelect,
-            Admin
+            Admin,
+            DateRange
         },
         data () {
             return {
@@ -187,26 +176,13 @@
                             trigger: 'blur'
                         }
                     ]
-                },
-                pickerOptionsStart: {
-                    disabledDate(time) {
-                        return !_this.endTime ? null
-                                : time.getTime() > _this.endTime.getTime() - 8.64e7
-                    }
-                },
-                pickerOptionsEnd: {
-                    disabledDate(time) {
-                        return !_this.createTime ? null
-                                : time.getTime() < _this.createTime.getTime() + 8.64e7
-                    }
-                },
+                }
             }
         },
-        beforeCreate () {
-            _this = this
-        },
-        mounted () {
-            this.fetchData()
+        created () {
+            this.fetchData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             handleSizeChange (val) {
@@ -239,7 +215,7 @@
             },
             fetchData () {
                 this.loading = true
-                priceData({
+                return priceData({
                     page: this.currentPage,
                     page_size: this.pageSize,
                     admin_id: this.managerSelect,
