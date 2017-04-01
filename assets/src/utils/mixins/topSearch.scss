@@ -1,11 +1,17 @@
 %top-search-container {
     > section {
+        margin-left: 10px;
+        margin-bottom: 9px;
         display: inline-block;
         margin-right: 10px;
 
         > span, i {
-            display: inline-block;
             margin-right: 2px;
+        }
+
+        > * {
+            vertical-align: middle;
+            display: inline-block;
         }
     }
 

@@ -1,14 +1,14 @@
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang='scss' rel='stylesheet/scss'>
     #sales-amount-container {
         padding: 15px;
-    }
 
-    // 头部晒单和返现的container
-    .shaidan-fanxian-container {
-    }
+        // 头部晒单和返现的container
+        .shaidan-fanxian-container {
+        }
 
-    .tabs {
-        margin-top: 11px;
+        .tabs {
+            margin-top: 11px;
+        }
     }
 </style>
 

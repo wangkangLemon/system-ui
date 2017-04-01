@@ -1,5 +1,5 @@
 <!--药品列表-->
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang='scss' rel='stylesheet/scss'>
     @import "../../utils/mixins/topSearch";
 
     #sales-procuct-container {
@@ -7,19 +7,19 @@
         background: #fff;
         border-radius: 6px;
         overflow: hidden;
-    }
 
-    .data-table {
-        margin-top: 15px;
-    }
+        .data-table {
+            margin-top: 15px;
+        }
 
-    .pagin {
-        float: right;
-        margin-top: 15px;
-    }
+        .pagin {
+            float: right;
+            margin-top: 10px;
+        }
 
-    .search {
-        @extend %top-search-container
+        .search {
+            @extend %top-search-container
+        }
     }
 </style>
 

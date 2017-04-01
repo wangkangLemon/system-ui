@@ -1,5 +1,5 @@
 <!--流水记录-->
-<style lang='scss' scoped rel='stylesheet/scss'>
+<style lang='scss' rel='stylesheet/scss'>
     @import "../../utils/mixins/topSearch";
 
     #sales-history-container {
@@ -14,7 +14,7 @@
         }
 
         .data-table {
-            margin-top: 15px;
+            margin-top: 10px;
             img {
                 vertical-align: middle;
                 width: 70px;
@@ -26,10 +26,10 @@
 
             }
         }
-    }
 
-    .search {
-        @extend %top-search-container;
+        .search {
+            @extend %top-search-container;
+        }
     }
 </style>
 
