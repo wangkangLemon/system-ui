@@ -1,0 +1,151 @@
+/**
+ * Created by huangrui on 2017/4/1.
+ */
+const pathPre = '/sys'
+// 系统栏目下路由
+export default [
+    // 管理
+    {
+        path: pathPre + '/admin',
+        name: 'sys-admin',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/system/admin'))
+            })
+        },
+        meta: {
+            title: '管理员-系统',
+        }
+    },
+    // 设置
+    {
+        path: pathPre + '/setting',
+        name: 'sys-setting',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/system/set'))
+            })
+        },
+        meta: {
+            title: '设置',
+        }
+    },
+    // 日志
+    {
+        path: pathPre + '/log',
+        name: 'sys-log',
+        component: require('../views/system/Log.vue'),
+        children: [
+            {   // 系统管理
+                path: 'systemManage',
+                name: 'systemManage',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/logSub/SystemManage'))
+                    })
+                },
+                meta: {
+                    title: '系统管理操作-日志',
+                }
+            },
+            {   // 企业管理
+                path: 'companyManage',
+                name: 'companyManage',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/logSub/CompanyManage'))
+                    })
+                },
+                meta: {
+                    title: '企业管理操作-日志',
+                }
+            },
+            {   // 系统后台登录
+                path: 'systemBack',
+                name: 'systemBack',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/logSub/SystemBack'))
+                    })
+                },
+                meta: {
+                    title: '系统后台登录-日志',
+                }
+            },
+            {   // 企业后台登录
+                path: 'companyBack',
+                name: 'companyBack',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/logSub/CompanyBack'))
+                    })
+                },
+                meta: {
+                    title: '企业后台登录-日志',
+                }
+            },
+            {   // 前台登录
+                path: 'frontDest',
+                name: 'frontDest',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/logSub/FrontDest'))
+                    })
+                },
+                meta: {
+                    title: '前台登录-日志',
+                }
+            },
+            {   // 手机验证码
+                path: 'mobileCode',
+                name: 'mobileCode',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/logSub/MobileCode'))
+                    })
+                },
+                meta: {
+                    title: '手机验证码-日志',
+                }
+            },
+            {   // 邮箱验证码
+                path: 'emailCode',
+                name: 'emailCode',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/logSub/EmailCode'))
+                    })
+                },
+                meta: {
+                    title: '邮件验证码-日志',
+                }
+            },
+        ]
+    },
+    // 连锁后台
+    {
+        path: pathPre + '/feedBack/admin',
+        name: 'sys-feedBack-admin',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/system/feedBack/ChainBack'))
+            })
+        },
+        meta: {
+            title: '问题反馈-连锁后台',
+        }
+    },
+    // 客户端
+    {
+        path: pathPre + '/feedBack/mobile',
+        name: 'sys-feedBack-mobile',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/system/feedBack/App'))
+            })
+        },
+        meta: {
+            title: '问题反馈-客户端',
+        }
+    }
+]

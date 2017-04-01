@@ -6,6 +6,8 @@ import client from './routers/client'
 import finance from './routers/finance'
 import sales from './routers/sales'
 import article from './routers/article'
+import admin from './routers/admin'
+import dataAnalysis from './routers/dataAnalysis'
 
 Vue.use(VueRouter)
 
@@ -41,176 +43,10 @@ const routes = [
                     })
                 }
             },
-            // 管理
-            {
-                path: '/sys/admin',
-                name: 'sys-admin',
-                component: resolve => {
-                    require.ensure([], () => {
-                        resolve(require('./views/system/admin'))
-                    })
-                },
-                meta: {
-                    title: '管理员-系统',
-                }
-            },
-            // 设置
-            {
-                path: '/sys/setting',
-                name: 'sys-setting',
-                component: resolve => {
-                    require.ensure([], () => {
-                        resolve(require('./views/system/set'))
-                    })
-                },
-                meta: {
-                    title: '设置',
-                }
-            },
-            // 日志
-            {
-                path: '/sys/log',
-                name: 'sys-log',
-                component: require('./views/system/Log.vue'),
-                children: [
-                    {   // 系统管理
-                        path: 'systemManage',
-                        name: 'systemManage',
-                        component: resolve => {
-                            require.ensure([], () => {
-                                resolve(require('./views/system/logSub/SystemManage'))
-                            })
-                        },
-                        meta: {
-                            title: '系统管理操作-日志',
-                        }
-                    },
-                    {   // 企业管理
-                        path: 'companyManage',
-                        name: 'companyManage',
-                        component: resolve => {
-                            require.ensure([], () => {
-                                resolve(require('./views/system/logSub/CompanyManage'))
-                            })
-                        },
-                        meta: {
-                            title: '企业管理操作-日志',
-                        }
-                    },
-                    {   // 系统后台登录
-                        path: 'systemBack',
-                        name: 'systemBack',
-                        component: resolve => {
-                            require.ensure([], () => {
-                                resolve(require('./views/system/logSub/SystemBack'))
-                            })
-                        },
-                        meta: {
-                            title: '系统后台登录-日志',
-                        }
-                    },
-                    {   // 企业后台登录
-                        path: 'companyBack',
-                        name: 'companyBack',
-                        component: resolve => {
-                            require.ensure([], () => {
-                                resolve(require('./views/system/logSub/CompanyBack'))
-                            })
-                        },
-                        meta: {
-                            title: '企业后台登录-日志',
-                        }
-                    },
-                    {   // 前台登录
-                        path: 'frontDest',
-                        name: 'frontDest',
-                        component: resolve => {
-                            require.ensure([], () => {
-                                resolve(require('./views/system/logSub/FrontDest'))
-                            })
-                        },
-                        meta: {
-                            title: '前台登录-日志',
-                        }
-                    },
-                    {   // 手机验证码
-                        path: 'mobileCode',
-                        name: 'mobileCode',
-                        component: resolve => {
-                            require.ensure([], () => {
-                                resolve(require('./views/system/logSub/MobileCode'))
-                            })
-                        },
-                        meta: {
-                            title: '手机验证码-日志',
-                        }
-                    },
-                    {   // 邮箱验证码
-                        path: 'emailCode',
-                        name: 'emailCode',
-                        component: resolve => {
-                            require.ensure([], () => {
-                                resolve(require('./views/system/logSub/EmailCode'))
-                            })
-                        },
-                        meta: {
-                            title: '邮件验证码-日志',
-                        }
-                    },
-                ]
-            },
-            // 连锁后台
-            {
-                path: '/sys/feedBack/admin',
-                name: 'sys-feedBack-admin',
-                component: resolve => {
-                    require.ensure([], () => {
-                        resolve(require('./views/system/feedBack/ChainBack'))
-                    })
-                },
-                meta: {
-                    title: '问题反馈-连锁后台',
-                }
-            },
-            // 客户端
-            {
-                path: '/sys/feedBack/mobile',
-                name: 'sys-feedBack-mobile',
-                component: resolve => {
-                    require.ensure([], () => {
-                        resolve(require('./views/system/feedBack/App'))
-                    })
-                },
-                meta: {
-                    title: '问题反馈-客户端',
-                }
-            },
-            // 导出
-            {
-                path: '/dataAnalysis/export',
-                name: 'dataAnalysis-export',
-                component: resolve => {
-                    require.ensure([], () => {
-                        resolve(require('./views/dataAnalysis/Export'))
-                    })
-                },
-                meta: {
-                    title: '导出',
-                }
-            },
-            // 企业签约信息
-            {
-                path: '/dataAnalysis/sign',
-                name: 'dataAnalysis-sign',
-                component: resolve => {
-                    require.ensure([], () => {
-                        resolve(require('./views/dataAnalysis/ContractMessage'))
-                    })
-                },
-                meta: {
-                    title: '企业签约信息',
-                }
-            },
+            // ============系统==================
+            ...admin,
+            // ============数据分析==================
+            ...dataAnalysis,
             // ============客户端部分==================
             ...client,
             // ============晒单==================

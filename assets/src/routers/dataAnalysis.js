@@ -1,0 +1,33 @@
+/**
+ * Created by huangrui on 2017/4/1.
+ */
+// 数据分析路由
+const pathPre = '/dataAnalysis'
+export default [
+    // 导出
+    {
+        path: pathPre + '/export',
+        name: 'dataAnalysis-export',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/Export'))
+            })
+        },
+        meta: {
+            title: '导出',
+        }
+    },
+    // 企业签约信息
+    {
+        path: pathPre + '/sign',
+        name: 'dataAnalysis-sign',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/ContractMessage'))
+            })
+        },
+        meta: {
+            title: '企业签约信息',
+        }
+    }
+]

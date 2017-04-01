@@ -1,7 +1,7 @@
 <!--内容维护-->
 <style lang='scss' scoped rel="stylesheet/scss">
-    @import "../../utils/mixins/mixins";
-    @import "../../utils/mixins/table";
+    @import "../../../utils/mixins/mixins";
+    @import "../../../utils/mixins/table";
 
     .content-manage {
         /*上传图片的样式*/
@@ -354,7 +354,7 @@
     </article>
 </template>
 <script lang="babel">
-    import deleteDialog from '../component/dialog/Delete.vue'
+    import deleteDialog from '../../component/dialog/Delete.vue'
     export default {
         components: {
             deleteDialog

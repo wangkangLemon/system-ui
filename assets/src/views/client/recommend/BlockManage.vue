@@ -1,7 +1,7 @@
 <!--区块管理-->
 <style lang='scss' scoped rel="stylesheet/scss">
-    @import "../../utils/mixins/mixins";
-    @import "../../utils/mixins/table";
+    @import "../../../utils/mixins/mixins";
+    @import "../../../utils/mixins/table";
 
     .block-manage {
         @extend %justify;
@@ -114,7 +114,7 @@
     </article>
 </template>
 <script lang="babel">
-    import deleteDialog from '../component/dialog/Delete.vue'
+    import deleteDialog from '../../component/dialog/Delete.vue'
     export default {
         data () {
             return {

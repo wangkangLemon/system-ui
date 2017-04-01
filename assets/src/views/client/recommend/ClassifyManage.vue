@@ -1,7 +1,7 @@
 <!--分类管理-->
 <style lang='scss' scoped rel="stylesheet/scss">
-    @import "../../utils/mixins/mixins";
-    @import "../../utils/mixins/table";
+    @import "../../../utils/mixins/mixins";
+    @import "../../../utils/mixins/table";
 
     .classify-container {
         margin-top: 20px;

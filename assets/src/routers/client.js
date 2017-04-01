@@ -9,7 +9,7 @@ export default [
         name: 'client-recommend-contentManage',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/client/ContentManage.vue'))
+                resolve(require('../views/client/recommend/ContentManage.vue'))
             })
         },
         meta: {
@@ -21,7 +21,7 @@ export default [
         name: 'client-recommend-blockManage',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/client/BlockManage.vue'))
+                resolve(require('../views/client/recommend/BlockManage.vue'))
             })
         },
         meta: {
@@ -33,7 +33,7 @@ export default [
         name: 'client-recommend-classifyManage',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/client/ClassifyManage.vue'))
+                resolve(require('../views/client/recommend/ClassifyManage.vue'))
             })
         },
         meta: {
