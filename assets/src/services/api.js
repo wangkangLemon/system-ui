@@ -105,7 +105,8 @@ function processCodeError (ret, url) {
 function processParams (params) {
     let data = []
     for (let k in params) {
-        data.push(k + '=' + params[k])
+        let val = params[k] == null ? '' : params[k]
+        data.push(k + '=' + val)
     }
 
     return data.join('&')
