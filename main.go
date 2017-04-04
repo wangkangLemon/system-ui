@@ -34,7 +34,7 @@ func main() {
 	})
 
 	// 所有的视图页面
-	app.Get("/views/*", func(c *baa.Context) {
+	app.Get("/view/*", func(c *baa.Context) {
 		c.HTML(200, "./public/index.html")
 	})
 
