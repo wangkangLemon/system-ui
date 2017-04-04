@@ -81,7 +81,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-    base: '/',
+    base: '/view',
     mode: 'history',
     scrollBehavior,
     routes
