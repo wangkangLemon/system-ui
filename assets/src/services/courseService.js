@@ -19,15 +19,18 @@ class CourseService {
     }
 
     // 获取课程列表
-    getCourseList ({date, store_id, type, course_id, page, page_size}) {
-        let url = urlPre + '/stat/search'
+    getCourseList ({status, category, company_id, course_id, page, page_size, time_start, time_end, keyword}) {
+        let url = urlPre + '/search'
         return api.get(url, {
-            date, // yesterday 为昨日，week为本周，prevweek 为上周，month为本月，prevmonth 为上月
-            store_id,
-            type, // public 为公开课，private 为私有课，industry为工业课，不赋值则表示全部
+            status, // 2- 视屏转码中 1-下线 0-正常
+            category, // 1-工业 默认-公开课
             course_id,
+            company_id,
             page,
-            page_size
+            page_size,
+            time_start,
+            time_end,
+            keyword
         }).then(ret => {
             return ret.data
         })

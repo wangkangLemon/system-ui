@@ -14,11 +14,21 @@ h1, h2, h3, h4, h5, h6 {
 
 @import "./font/iconfont";
 
-%content-container{
+%content-container {
     padding: 15px;
     position: relative;
     border: 1px solid #ededed;
     border-radius: 5px;
     background: #fff;
-    overflow: hidden;
+
+    &:after {
+        content: '';
+        clear: both;
+        display: block;
+    }
+
+    .pagin {
+        float: right;
+        margin-top: 15px;
+    }
 }
