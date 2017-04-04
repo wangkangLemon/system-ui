@@ -25,17 +25,22 @@
 </style>
 <template>
     <article>
-        <el-dialog v-model="isShow" :show-close="false" class="delete-dialog" size="tiny">
+        <el-dialog v-model="value" :show-close="false" class="delete-dialog" size="tiny">
             <i class="iconfont icon-warn"></i>
             <h1>操作提示</h1>
             <p>你将要删除<span>{{text}}</span>操作不可恢复确认吗？</p>
-            <el-button @click="callback(0)">取 消</el-button>
-            <el-button type="primary" @click="callback(1)">确认删除</el-button>
+            <el-button @click="operate(0)">取 消</el-button>
+            <el-button @click="operate(1)" type="primary">确认删除</el-button>
         </el-dialog>
     </article>
 </template>
 <script lang="babel">
     export default {
-        props: ['callback', 'isShow', 'text']
+        props: ['value', 'text'],
+        methods: {
+            operate (val) {
+                this.$emit('callback', val)
+            }
+        }
     }
 </script>

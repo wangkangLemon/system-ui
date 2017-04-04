@@ -84,40 +84,26 @@
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
-                <el-form-item prop="role" label="角色" :label-width="formLabelWidth">
+                <el-form-item prop="role" label="分类" :label-width="formLabelWidth">
                     <el-select v-model="form.role" placeholder="角色">
                         <el-option label="管理员" value="管理员"></el-option>
                         <el-option label="编辑" value="编辑"></el-option>
                         <el-option label="营销" value="营销"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" placeholder="管理员姓名" auto-complete="off"></el-input>
+                <el-form-item prop="name" label="标题" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="sex" label="性别" :label-width="formLabelWidth">
-                    <el-radio class="radio" v-model="form.sex" :label="0">男</el-radio>
-                    <el-radio class="radio" v-model="form.sex" :label="1">女</el-radio>
+                <el-form-item prop="sex" label="封面" :label-width="formLabelWidth">
+                    上传
                 </el-form-item>
-                <el-form-item prop="mobile" label="手机号" :label-width="formLabelWidth">
-                    <el-input v-model="form.mobile" type="number" placeholder="手机号" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item prop="email" label="邮箱" :label-width="formLabelWidth">
-                    <el-input v-model="form.email" placeholder="邮箱" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item prop="pass" label="密码" :label-width="formLabelWidth">
-                    <el-input type="password" v-model="form.pass" placeholder="密码" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="地址" :label-width="formLabelWidth">
-                    <el-input v-model="form.address" placeholder="地址" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item prop="status" label="状态" :label-width="formLabelWidth">
-                    <el-radio class="radio" v-model="form.status" :label="0">正常</el-radio>
-                    <el-radio class="radio" v-model="form.status" :label="1">禁用</el-radio>
+                <el-form-item prop="mobile" label="正文内容" id="editor" :label-width="formLabelWidth">
+                    <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addForm = false">取 消</el-button>
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
+                <el-button type="primary" @click="submit('form')">存为草稿</el-button>
             </div>
         </el-dialog>
         <section class="add">
@@ -130,6 +116,11 @@
                     <i>姓名</i>
                     <el-input class="name" v-model="name" placeholder="请输入姓名"></el-input>
                 </section>
+                <DateRange title="创建时间" :start="createTime" :end="endTime"
+                           v-on:changeStart="val=> createTime=val"
+                           v-on:changeEnd="val=> endTime=val"
+                           :change="getData">
+                </DateRange>
             </section>
             <el-card class="box-card">
                 <el-table border :data="tableData">
@@ -155,7 +146,7 @@
                     <el-table-column prop="operate" label="操作">
                         <template scope="scope">
                             <el-button type="text" size="small" @click="showDetial = true">
-                                详情
+                                查看
                             </el-button>
                             <el-button type="text" size="small" @click="addForm = true">
                                 修改
@@ -183,9 +174,12 @@
 </template>
 <script lang="babel">
     import deleteDialog from '../component/dialog/Delete'
+    import DateRange from '../component/form/DateRangePicker.vue'
+
     export default {
         components: {
-            deleteDialog
+            deleteDialog,
+            DateRange
         },
         data () {
             let validateName = (rule, value, callback) => {
@@ -207,6 +201,8 @@
                 callback()
             }
             return {
+                createTime: '',
+                endTime: '',
                 itemName: '',           // 要删除项名称
                 deletDialog: false,     // 删除弹窗
                 showDetial: false,     // 是否显示详情对话框
@@ -281,6 +277,9 @@
                 this.currentPage = val
                 console.log(`当前页: ${val}`)
                 // 以下获取当页数据
+            },
+            getData () {
+                console.log(1)
             }
         }
     }

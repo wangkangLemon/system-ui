@@ -39,16 +39,16 @@
 <template>
     <article class="article-category">
         <div class="add-category">
-            <el-button type="primary" @click="addNewCategory = true"><i class="el-icon-plus"></i>添加分类</el-button>
+            <el-button type="primary" @click="addCategory"><i class="el-icon-plus"></i>添加分类</el-button>
         </div>
         <article class="article-category-content">
             <section class="left-content" v-if="!addNewCategory">
                 <el-tree
+                        :current-node-key="currentNode.id"
+                        :expand-on-click-node="false"
                         :default-expanded-keys="[2]"
                         :default-checked-keys="[2]"
                         node-key="id"
-                        :show-checkbox="true"
-                        :check-strictly="true"
                         class="leftSubTree"
                         :highlight-current="true"
                         :data="categoryData"
@@ -57,11 +57,11 @@
             </section>
             <section class="right-content">
                 <el-tabs v-model="activeName" v-if="!addNewCategory" @tab-click="handleClick">
-                    <el-tab-pane label="修改分类" name="first"></el-tab-pane>
-                    <el-tab-pane label="添加子分类" name="second"></el-tab-pane>
-                    <el-tab-pane label="移动分类" name="third"></el-tab-pane>
-                    <el-tab-pane label="移动分类下内容" name="fourth"></el-tab-pane>
-                    <el-tab-pane label="删除分类" name="fifth"></el-tab-pane>
+                    <el-tab-pane label="修改分类" name="1"></el-tab-pane>
+                    <el-tab-pane label="添加子分类" name="2"></el-tab-pane>
+                    <el-tab-pane label="移动分类" name="3"></el-tab-pane>
+                    <el-tab-pane label="移动分类下内容" name="4"></el-tab-pane>
+                    <el-tab-pane label="删除分类" name="5"></el-tab-pane>
                 </el-tabs>
                 <div>
                     <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
@@ -79,15 +79,41 @@
                 </div>
             </section>
         </article>
+        <!--移动分类弹窗-->
+        <el-dialog :title="'移动栏目【' + currentNode.label + '】到'" v-model="moveCategory" size="tiny">
+            <el-tree
+                    :current-node-key="currentNode.id"
+                    node-key="id"
+                    class="leftSubTree"
+                    :highlight-current="true"
+                    :data="categoryData"
+                    :props="defaultProps"
+                    @node-click="targetFn"></el-tree>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="moveCategory = false">取消</el-button>
+                <el-button type="primary">保存</el-button>
+            </div>
+        </el-dialog>
+        <!--删除弹窗-->
+        <delete-dialog :text="deleteName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
     </article>
 </template>
 <script lang="babel">
+    import deleteDialog from '../component/dialog/Delete'
     let id = 1000
     export default {
+        components: {
+            deleteDialog
+        },
         data () {
             return {
+                targetNode: {}, // 移动到目标分类
+                currentNode: {}, // 当前选中节点的key
+                moveCategory: false, // 移动分类弹窗的显示状态
+                deleteName: '',
+                deletDialog: false,
                 addNewCategory: false,
-                activeName: 'second',
+                activeName: '1',
                 categoryData: [
                     {
                         id: 1,
@@ -106,6 +132,7 @@
                         ]
                     },
                     { // 左侧分类数据
+                        id: 4,
                         label: '一级 2'
                     }
                 ],
@@ -114,6 +141,7 @@
                     label: 'label'
                 },
                 form: {
+                    id: '',
                     name: '',
                     sort: ''
                 },
@@ -129,15 +157,58 @@
             }
         },
         created () {
+            this.form = {
+                name: this.categoryData[0].label,
+                id: this.categoryData[0].id,
+                sort: this.categoryData[0].id
+            }
+            this.currentNode = this.categoryData[0]
             xmview.setContentLoading(false)
         },
         methods: {
-            leftClassifyClick (item) { // 左侧列表按照分类搜索
-                console.log('调用接口数据 并赋值给blockData')
-                this.currentClass = item.label
+            deleteItem (confirm) {
+                this.deletDialog = false
+                if (!confirm) {
+                    return false
+                }
+                // 以下执行接口删除动作
+                console.log(11)
+            },
+            leftClassifyClick (item, node, ele) { // 左侧列表按照分类搜索
+                console.log(item)
+                console.log(node)
+                console.log(ele)
+                if (this.activeName == '1') {
+                    this.form = {
+                        name: item.label,
+                        sort: item.id,
+                        id: item.id
+                    }
+                }
+                this.currentNode = {
+                    id: item.id,
+                    label: item.label
+                }
+//                this.currentClass = item.label
+            },
+            targetFn (item, node, ele) {
+                this.targetNode = item
             },
             handleClick (tab, event) {
-                console.log(tab, event)
+                // 添加分类
+                if (tab.name == '2') {
+                    this.form = {
+                        name: '',
+                        sort: '',
+                        id: ''
+                    }
+                    // 移动分类
+                } else if (tab.name == '3' || tab.name == '4') {
+                    this.moveCategory = true
+                    // 删除分类
+                } else if (tab.name == '5') {
+                    this.deletDialog = true
+                }
             },
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {
@@ -154,18 +225,13 @@
             remove (store, data) {
                 store.remove(data)
             },
-            renderContent (h, {node, data, store}) {
-//                return (
-//                    <span>
-//                        <span>
-//                          <span>{node.label}</span>
-//                        </span>
-//                        <span style="float: right; margin-right: 20px">
-//                          <el-button size="mini" on-click={ () => this.append(store, data) }>Append</el-button>
-//                          <el-button size="mini" on-click={ () => this.remove(store, data) }>Delete</el-button>
-//                        </span>
-//                    </span>
-//                )
+            addCategory () {
+                this.addNewCategory = true
+                this.form = {
+                    name: '',
+                    sort: '',
+                    id: ''
+                }
             }
         }
     }
