@@ -10,14 +10,12 @@
 
 <template>
     <div class="container">
-        <SelectScroll></SelectScroll>
-        <Test v-model="testVal"></Test>
+        <VueEditor ueditorPath="/vendor/ueditor/" @ready="ueReady"></VueEditor>
     </div>
 </template>
 
 <script>
-    import SelectScroll from './component/form/SelectScroll.vue'
-    import Test from './component/Test.vue'
+    import VueEditor from 'vue-ueditor'
 
     export default{
         data() {
@@ -27,15 +25,13 @@
         },
         created () {
         },
-        watch: {
-            'testVal'(newVal) {
-                console.info('值改变!', newVal)
+        methods: {
+            ueReady (ue) {
+                console.info(ue)
             }
         },
-        methods: {},
         components: {
-            SelectScroll,
-            Test
+            VueEditor
         }
     }
 </script>
