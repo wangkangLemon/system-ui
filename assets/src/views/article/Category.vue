@@ -73,7 +73,7 @@
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
-                        <el-button type="primary" @click="submit('form')">修改</el-button>
+                        <el-button type="primary" @click="submit('form')">{{buttonText}}</el-button>
                         <el-button v-if="addNewCategory" @click="addNewCategory = false">取消</el-button>
                     </div>
                 </div>
@@ -100,13 +100,13 @@
 </template>
 <script lang="babel">
     import deleteDialog from '../component/dialog/Delete'
-    let id = 1000
     export default {
         components: {
             deleteDialog
         },
         data () {
             return {
+                buttonText: '修改',
                 targetNode: {}, // 移动到目标分类
                 currentNode: {}, // 当前选中节点的key
                 moveCategory: false, // 移动分类弹窗的显示状态
@@ -202,6 +202,7 @@
                         sort: '',
                         id: ''
                     }
+                    this.buttonText = '添加'
                     // 移动分类
                 } else if (tab.name == '3' || tab.name == '4') {
                     this.moveCategory = true
@@ -218,12 +219,6 @@
                         return false
                     }
                 })
-            },
-            append (store, data) {
-                store.append({id: id++, label: 'testtest', children: []}, data)
-            },
-            remove (store, data) {
-                store.remove(data)
             },
             addCategory () {
                 this.addNewCategory = true

@@ -2,7 +2,31 @@
 <style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
-
+    .avatar-uploader {
+        .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            &:hover {
+                border-color: #20a0ff;
+            }
+        }
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
     .table-container {
         border: 1px solid #ededed;
         .add {
@@ -65,7 +89,7 @@
 <template>
     <article class="table-container">
         <!--删除弹窗-->
-        <delete-dialog :text="itemName" :isShow="deletDialog" :callback="deleteItem"></delete-dialog>
+        <delete-dialog :text="itemName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
             <div class="avatar">
@@ -95,10 +119,18 @@
                     <el-input v-model="form.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="sex" label="封面" :label-width="formLabelWidth">
-                    上传
+                    <el-upload
+                            class="avatar-uploader"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :show-file-list="false"
+                            :on-preview="handlePictureCardPreview"
+                            :on-success="handleUploadSuccess">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
                 </el-form-item>
                 <el-form-item prop="mobile" label="正文内容" id="editor" :label-width="formLabelWidth">
-                    <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+                    <vue-editor @ready="ueReady"></vue-editor>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -175,32 +207,17 @@
 <script lang="babel">
     import deleteDialog from '../component/dialog/Delete'
     import DateRange from '../component/form/DateRangePicker.vue'
+    import VueEditor from '../component/form/UEditor.vue'
 
     export default {
         components: {
             deleteDialog,
-            DateRange
+            DateRange,
+            VueEditor
         },
         data () {
-            let validateName = (rule, value, callback) => {
-                if ((value || '') === '') {
-                    callback(new Error('请输入姓名'))
-                }
-                callback()
-            }
-            let validateEmail = (rule, value, callback) => {
-                if (!(this.form.mobile || '').match(/^1[34578]\d{9}$/) && !(value || '').match(/^\w+([-+.]\w+)*@\w+([-+.]\w+)*.\w+([-+.]\w+)*$/)) {
-                    callback(new Error('邮箱或手机号至少填写一个'))
-                }
-                callback()
-            }
-            let validatePass = (rule, value, callback) => {
-                if ((value || '') === '') {
-                    callback(new Error('请输入密码'))
-                }
-                callback()
-            }
             return {
+                imageUrl: '',
                 createTime: '',
                 endTime: '',
                 itemName: '',           // 要删除项名称
@@ -218,13 +235,13 @@
                 },
                 rules: {
                     name: [
-                        {validator: validateName, trigger: 'blur'}
+                        {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     email: [
-                        {validator: validateEmail, trigger: 'blur'}
+                        {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     pass: [
-                        {validator: validatePass, trigger: 'blur'}
+                        {required: true, message: '必须填写', trigger: 'blur'}
                     ]
                 },
                 formLabelWidth: '120px', // 表单label的宽度
@@ -280,6 +297,17 @@
             },
             getData () {
                 console.log(1)
+            },
+            handleUploadSuccess(res, file) {
+                this.imageUrl = window.URL.createObjectURL(file.raw)
+            },
+            handlePictureCardPreview(file) {
+                this.imageUrl = file.url
+            },
+            ueReady (ue) {
+                ue.setContent('html')
+                console.log(ue.getContent())
+                console.log(ue.getContentTxt())
             }
         }
     }

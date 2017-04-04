@@ -27,7 +27,9 @@
         },
         methods: {
             ueReady (ue) {
-                console.info(ue)
+                ue.setContent('html')
+                console.log(ue.getContent())
+                console.log(ue.getContentTxt())
             }
         },
         components: {
