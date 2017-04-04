@@ -1,6 +1,6 @@
 <!--滚动刷新的select-->
 <!--使用方式-->
-<!--<SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">-->
+<!--<SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="value">-->
 <!--</SelectScroll>-->
 <style lang='scss' rel='stylesheet/scss'>
     .component-form-selectscroll-more {
@@ -95,7 +95,7 @@
                 })
             },
             handleChange (val) {
-                this.$emit('changeVal', val)
+                this.$emit('input', val)
                 this.changeCb && this.changeCb(val)
             },
             // 处理select显示的操作

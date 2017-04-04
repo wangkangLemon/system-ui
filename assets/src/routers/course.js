@@ -27,5 +27,17 @@ export default [
         meta: {
             title: '考试记录-培训',
         }
+    },
+    {
+        path: pathPre + '/manage/public', // 公开课管理
+        name: 'course-manage-public',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/course/manage/Public.vue'))
+            })
+        },
+        meta: {
+            title: '公开课管理-培训',
+        }
     }
 ]

@@ -99,6 +99,7 @@ function processCodeError (ret, url) {
         xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
     } else if (ret.code >= 100) {
         xmview.showTip('error', ret.message)
+        return Promise.reject(ret)
     }
 }
 

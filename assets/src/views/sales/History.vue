@@ -55,7 +55,7 @@
 
             <section>
                 <i>姓名</i>
-                <v-input @changeVal="val=>fetchParam.username=val" :enter="fetchData" v-model="fetchParam.username"
+                <v-input :enter="fetchData" v-model="fetchParam.username"
                          placeholder="请输入内容"></v-input>
             </section>
 
@@ -238,4 +238,5 @@
             IndustrySelect, DateRange, vInput
         }
     }
+
 </script>

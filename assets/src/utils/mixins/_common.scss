@@ -13,3 +13,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @import "./font/iconfont";
+
+%content-container{
+    padding: 15px;
+    position: relative;
+    border: 1px solid #ededed;
+    border-radius: 5px;
+    background: #fff;
+    overflow: hidden;
+}

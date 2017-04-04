@@ -248,7 +248,7 @@
     </article>
 </template>
 
-<script lang='babel'>
+<script>
     import * as userService from '../services/userService'
     import config from '../utils/config'
     import MenuTree from './component/tree/MenuTree.vue'

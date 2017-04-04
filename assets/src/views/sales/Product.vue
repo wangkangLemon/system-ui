@@ -27,7 +27,6 @@
     <article id="sales-procuct-container">
         <article class="search">
             <IndustryCompanySelect type="1" v-model="fetchParam.enterprise_id"
-                                   v-on:change="val=>fetchParam.enterprise_id=val"
                                    :change="fetchData">
             </IndustryCompanySelect>
             <section>

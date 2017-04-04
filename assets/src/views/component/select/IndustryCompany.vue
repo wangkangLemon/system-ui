@@ -12,7 +12,7 @@
     <section>
         <i v-if="type">工业</i>
         <i v-else>企业</i>
-        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">
+        <SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="value">
         </SelectScroll>
     </section>
 </template>
@@ -49,6 +49,7 @@
             setCurrentValue (val) {
                 if (this.curVal == val) return
                 this.currVal = val
+                this.$emit('input', val)
                 this.$emit('change', val)
             }
         },

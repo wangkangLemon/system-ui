@@ -1,11 +1,11 @@
 <!--使用示例-->
-<!--<v-input @changeVal="val=>fetchParam.username=val" :enter="fetchData" v-model="fetchParam.username"-->
-         <!--placeholder="请输入内容"></v-input>-->
+<!--<v-input  :enter="fetchData" v-model="fetchParam.username"-->
+<!--placeholder="请输入内容"></v-input>-->
 <template>
     <el-input ref="container" :placeholder="placeholder" @change="setVal"></el-input>
 </template>
 
-<script lang='babel'>
+<script>
     export default{
         props: {
             enter: Function,
@@ -31,7 +31,7 @@
             setVal (val) {
                 if (val == this.currVal) return
                 this.currVal = val
-                this.$emit('changeVal', val)
+                this.$emit('input', val)
             }
         }
     }
