@@ -10,12 +10,12 @@
 
 <template>
     <div class="container">
-        <VueEditor ueditorPath="/vendor/ueditor/" @ready="ueReady"></VueEditor>
+        <VueEditor @ready="ueReady"></VueEditor>
     </div>
 </template>
 
 <script>
-    import VueEditor from 'vue-ueditor'
+    import VueEditor from './component/form/UEditor.vue'
 
     export default{
         data() {
