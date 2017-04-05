@@ -306,7 +306,6 @@
                 this.itemName = row.name
             },
             deleteItem (confirm) {
-                console.log(2222)
                 this.deletDialog = false
                 if (!confirm) {
                     return false

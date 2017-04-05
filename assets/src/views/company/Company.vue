@@ -166,30 +166,10 @@
                         </el-option>
                     </el-select>
                 </section>
-                <section>
-                    <i>地区</i>
-                    <el-select clearable placeholder="全部">
-                        <el-option v-for="(item, index) in searchParms.provinces"
-                                   :label="item.name"
-                                   :value="item.id"
-                                   :key="item.id">
-                        </el-option>
-                    </el-select>
-                    <el-select clearable placeholder="全部">
-                        <el-option v-for="(item, index) in searchParms.citys"
-                                   :label="item.name"
-                                   :value="item.id"
-                                   :key="item.id">
-                        </el-option>
-                    </el-select>
-                    <el-select clearable placeholder="全部">
-                        <el-option v-for="(item, index) in searchParms.areas"
-                                   :label="item.name"
-                                   :value="item.id"
-                                   :key="item.id">
-                        </el-option>
-                    </el-select>
-                </section>
+                <Region v-on:provinceChange="val => provinceSelect = val"
+                        v-on:cityChange="val => citySelect = val"
+                        v-on:areaChange="val => areaChange = val"
+                        :change="getData"></Region>
                 <section>
                     <i>名称：</i>
                     <el-input v-model="searchParms.name" auto-complete="off"></el-input>
@@ -267,12 +247,14 @@
     import Admin from '../component/select/Admin'
     import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
+    import Region from '../component/select/Region.vue'
     let _this
     export default {
         components: {
             Admin,
             IndustryCompanySelect,
-            DateRange
+            DateRange,
+            Region
         },
         data () {
             let validateEmail = (rule, value, callback) => {
@@ -307,9 +289,9 @@
                             id: 3
                         }
                     ],
-                    provinces: [], // 省
-                    citys: [], // 市
-                    areas: [], // 区
+                    provinceSelect: '',
+                    citySelect: '',
+                    areaSelect: '',
                     name: ''
                 },
                 form: {

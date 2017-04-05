@@ -10,7 +10,8 @@
 
 <template>
     <section>
-        <i v-if="type">工业</i>
+        <i v-if="type == 1">工业</i>
+        <i v-else-if="type == 2">连锁</i>
         <i v-else>企业</i>
         <SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="value">
         </SelectScroll>
