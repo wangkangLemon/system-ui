@@ -10,7 +10,7 @@
 
 <template>
     <article id="course-manage-addcourse-container">
-        <el-form label-width="80px">
+        <el-form label-width="120px">
             <el-form-item label="所属栏目">
                 <el-input></el-input>
             </el-form-item>
@@ -18,22 +18,22 @@
                 <el-input></el-input>
             </el-form-item>
             <el-form-item label="课程封面图">
-                <el-input></el-input>
+                <UploadImg></UploadImg>
             </el-form-item>
         </el-form>
     </article>
 </template>
 
 <script>
+    import UploadImg from '../../component/upload/UploadImg.vue'
     export default{
         data () {
             return {}
         },
         activated () {
-            console.info('activated')
             xmview.setContentLoading(false)
         },
         methods: {},
-        components: {}
+        components: {UploadImg}
     }
 </script>

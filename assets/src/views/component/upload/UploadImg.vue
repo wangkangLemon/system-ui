@@ -1,6 +1,95 @@
+<style lang="scss" rel="stylesheet/scss">
+    @import "../../../utils/mixins/mixins";
+    .component-upload-uploadimg {
+        width: 100px;
+        height: 100px;
+        display: inline-block;
+
+        %commSize {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        > * {
+            height: 100%;
+        }
+
+        .defaultImg {
+            position: relative;
+            border-radius: 5px;
+
+            &:hover {
+                span {
+                    opacity: 1;
+                }
+            }
+            img {
+                width: 100%;
+                height: 100%
+            }
+
+            span {
+                border-radius: 5px;
+                opacity: 0;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                background: rgba(0, 0, 0, 0.4);
+                text-align: center;
+                transition: all 300ms ease;
+
+                i {
+                    font-size: 30px;
+                    color: #fff;
+                    display: block;
+                    transform: translateY(-50%);
+                    top: 50%;
+                    position: absolute;
+                    width: 100%;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .el-upload--picture-card {
+            @extend %commSize;
+            position: relative;
+            i {
+                position: absolute;
+                @extend %absoluteCenter;
+            }
+        }
+
+        .el-upload-list__item-actions {
+            @extend %commSize
+        }
+
+        .el-upload-list__item {
+            @extend %commSize
+        }
+
+        .el-progress, .el-progress--circle {
+            @extend %commSize;
+            .el-progress-circle {
+                @extend %commSize;
+            }
+            > * {
+                @extend %commSize
+            }
+        }
+    }
+</style>
 <template>
-    <div>
-        <el-upload ref="container"
+    <div class="component-upload-uploadimg">
+        <div v-show="isShowDefault" class="defaultImg">
+            <img :src="this.defaultImg">
+            <span>
+                <i class="el-icon-delete2" @click="deleteDefault"></i>
+            </span>
+        </div>
+        <el-upload ref="container" v-show="!isShowDefault"
                    :headers="headers"
                    :action="url"
                    list-type="picture-card"
@@ -28,14 +117,16 @@
                 default: 'https://jsonplaceholder.typicode.com/posts/'
             },
             // 上传成功后的回调
-            onSuccess: Function
+            onSuccess: Function,
+            defaultImg: String
         },
         data () {
             return {
                 uploadBtn: null, // 上传按钮
                 currImg: void 0,
                 dialogVisible: false,
-                headers: void 0
+                headers: void 0,
+                isShowDefault: !!this.defaultImg, // 是否显示默认图片
             }
         },
         created () {
@@ -64,6 +155,9 @@
             },
             handleSuccess (response, file, fileList) {
                 this.onSuccess && this.onSuccess(response)
+            },
+            deleteDefault () {
+                this.isShowDefault = false
             }
         },
     }
