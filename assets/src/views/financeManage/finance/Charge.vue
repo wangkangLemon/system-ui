@@ -66,7 +66,7 @@
                 </admin>
                 <DateRange title="创建时间" :start="createTime" :end="endTime"
                            v-on:changeStart="val=> createTime=val"
-                           v-on:changeEnd="val=> endTime"
+                           v-on:changeEnd="val=> endTime = val"
                            :change="getData">
                 </DateRange>
             </section>

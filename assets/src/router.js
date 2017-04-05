@@ -9,6 +9,7 @@ import course from './routers/course' // 培训管理
 import client from './routers/client' // 客户端
 import finance from './routers/finance' // 财务
 import sales from './routers/sales' // 晒单
+import company from './routers/company' // 企业
 
 Vue.use(VueRouter)
 
@@ -58,6 +59,8 @@ const routes = [
             ...article,
             // ============培训管理==================
             course,
+            // ============企业管理==================
+            company
         ]
     },
     {   // 登录

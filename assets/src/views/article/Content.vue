@@ -108,28 +108,27 @@
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
-                <el-form-item prop="role" label="分类" :label-width="formLabelWidth">
-                    <el-select v-model="form.role" placeholder="角色">
+                <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
+                    <el-select v-model="form.category" placeholder="请选择">
                         <el-option label="管理员" value="管理员"></el-option>
                         <el-option label="编辑" value="编辑"></el-option>
                         <el-option label="营销" value="营销"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="name" label="标题" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" auto-complete="off"></el-input>
+                <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
+                    <el-input v-model="form.title" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="sex" label="封面" :label-width="formLabelWidth">
+                <el-form-item prop="imgUrl" label="封面" :label-width="formLabelWidth">
                     <el-upload
                             class="avatar-uploader"
                             action="https://jsonplaceholder.typicode.com/posts/"
                             :show-file-list="false"
-                            :on-preview="handlePictureCardPreview"
                             :on-success="handleUploadSuccess">
                         <img v-if="imageUrl" :src="imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-form-item>
-                <el-form-item prop="mobile" label="正文内容" id="editor" :label-width="formLabelWidth">
+                <el-form-item prop="content" label="正文内容" id="editor" :label-width="formLabelWidth">
                     <vue-editor @ready="ueReady"></vue-editor>
                 </el-form-item>
             </el-form>
@@ -217,6 +216,7 @@
         },
         data () {
             return {
+                editor: null,
                 imageUrl: '',
                 createTime: '',
                 endTime: '',
@@ -224,24 +224,17 @@
                 deletDialog: false,     // 删除弹窗
                 showDetial: false,     // 是否显示详情对话框
                 form: {                // 表单属性值
-                    name: '',          // 姓名
-                    role: '编辑',       // 权限
-                    mobile: '',        // 手机
-                    email: '',         // 邮箱
-                    pass: '',          // 密码
-                    address: '',       // 地址
-                    sex: 0,            // 性别
-                    status: 0          // 状态
+                    title: '',          // 标题
+                    category: '',       // 分类
+                    imgUrl: '',        // 图片地址
+                    content: '',         // 正文内容
                 },
                 rules: {
-                    name: [
+                    title: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    email: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
-                    pass: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
+                    category: [
+                        {required: true, message: '请选择栏目', trigger: 'change'}
                     ]
                 },
                 formLabelWidth: '120px', // 表单label的宽度
@@ -259,8 +252,9 @@
                 ]
             }
         },
-        created () {
+        mounted () {
             xmview.setContentLoading(false)
+            console.log(1)
         },
         methods: {
             handleDelete (index, row) {
@@ -277,9 +271,13 @@
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
-                    console.log(valid)
                     if (valid) {
-                        console.log(1)
+                        if (!this.editor.getContentTxt()) {
+                            xmview.showTip('error', '请填写正文内容')
+                            return
+                        }
+                        this.form.content = this.editor.getContentTxt()
+                        console.log(this.form)
                     } else {
                         return false
                     }
@@ -300,14 +298,10 @@
             },
             handleUploadSuccess(res, file) {
                 this.imageUrl = window.URL.createObjectURL(file.raw)
-            },
-            handlePictureCardPreview(file) {
-                this.imageUrl = file.url
+                console.log(file)
             },
             ueReady (ue) {
-                ue.setContent('html')
-                console.log(ue.getContent())
-                console.log(ue.getContentTxt())
+                this.editor = ue
             }
         }
     }

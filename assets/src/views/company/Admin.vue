@@ -2,11 +2,21 @@
 <style lang='scss' scoped rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     .table-container {
+        .status {
+            padding: 2px 5px;
+            background: #00acac;
+            border-radius: 5px;
+            color: #fff;
+        }
         border: 1px solid #ededed;
         .add {
             background: #ededed;
             padding: px2rem(10) px2rem(20);
             border-bottom: 1px solid #ededed;
+
+            .back {
+                float: right;
+            }
         }
         .main-container {
             background: #fff;
@@ -75,41 +85,33 @@
     <article class="table-container">
         <!--删除弹窗-->
         <delete-dialog :text="itemName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
-        <!--禁用弹窗-->
-        <el-dialog v-model="isForbidden" class="forbidden-content" size="tiny">
-            <i class="iconfont icon-warn"></i>
-            <h1>操作提示</h1>
-            <p>你将要禁用管理员<span>测试营销员</span>确认吗？</p>
-            <el-button @click="isForbidden = false">取 消</el-button>
-            <el-button type="primary" @click="forbidden()">确 定</el-button>
-        </el-dialog>
         <!--详情-->
-        <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
+        <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetail">
             <div class="avatar">
                 <img src="http://sys.yst.vodjk.dev/assets/img/user-default-female.jpg?00da903dc4d95b13b46f" />
             </div>
             <div class="info">
                 <p><span>测试营销员</span></p>
-                <p><span>Mobile：</span> <i class="iconfont icon-oslash"></i>13012332324</p>
-                <p><span>Email：</span><i class="el-icon-message"></i> 12@vodjk.com</p>
-                <p><span>状态：</span> 正常</p>
-                <p><span>性别：</span> 女</p>
-                <p><span>地址：</span> 北京市朝阳区</p>
-                <p><span>注册时间：</span>2017-03-17 12:333</p>
+                <p><span>所属门店：</span>{{clerkDetail.department}}</p>
+                <p><span>Mobile：</span> <i class="iconfont icon-oslash"></i>{{clerkDetail.mobile}}</p>
+                <p><span>Email：</span> <i class="el-icon-message"></i>{{clerkDetail.email}}</p>
+                <p><span>状态：</span> <i class="status">{{clerkDetail.status}}</i></p>
+                <p><span>性别：</span> {{clerkDetail.sex ? '男' : '女'}}</p>
+                <p><span>生日：</span> {{clerkDetail.birthday}}</p>
+                <p><span>地址：</span> {{clerkDetail.address}}</p>
+                <p><span>注册时间：</span>{{clerkDetail.create_time_name}}</p>
             </div>
         </el-dialog>
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
-                <el-form-item prop="role" label="角色" :label-width="formLabelWidth">
-                    <el-select v-model="form.role" placeholder="角色">
-                        <el-option label="管理员" value="管理员"></el-option>
-                        <el-option label="编辑" value="编辑"></el-option>
-                        <el-option label="营销" value="营销"></el-option>
+                <el-form-item prop="department" label="门店" :label-width="formLabelWidth">
+                    <el-select v-model="form.department" placeholder="请选择">
+                        <el-option label="总店" value="0"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" placeholder="管理员姓名" auto-complete="off"></el-input>
+                    <el-input v-model="form.name" placeholder="店员姓名" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="sex" label="性别" :label-width="formLabelWidth">
                     <el-radio class="radio" v-model="form.sex" :label="0">男</el-radio>
@@ -118,18 +120,14 @@
                 <el-form-item prop="mobile" label="手机号" :label-width="formLabelWidth">
                     <el-input v-model="form.mobile" type="number" placeholder="手机号" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="email" label="邮箱" :label-width="formLabelWidth">
-                    <el-input v-model="form.email" placeholder="邮箱" auto-complete="off"></el-input>
-                </el-form-item>
                 <el-form-item prop="pass" label="密码" :label-width="formLabelWidth">
                     <el-input type="password" v-model="form.pass" placeholder="密码" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item prop="birthday" label="生日" :label-width="formLabelWidth">
+                    <el-input v-model="form.birthday" placeholder="生日" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="地址" :label-width="formLabelWidth">
                     <el-input v-model="form.address" placeholder="地址" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item prop="status" label="状态" :label-width="formLabelWidth">
-                    <el-radio class="radio" v-model="form.status" :label="0">正常</el-radio>
-                    <el-radio class="radio" v-model="form.status" :label="1">禁用</el-radio>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -140,6 +138,7 @@
         <section class="add">
             <!--点击添加 form数据取邮箱/手机号 密码-->
             <el-button icon="plus" @click="addForm = true">添加</el-button>
+            <el-button class="back" @click="goBack">返回</el-button>
         </section>
         <div class="main-container">
             <section class="search">
@@ -174,22 +173,10 @@
                         label="上次登录IP"
                         width="200">
                 </el-table-column>
-                <el-table-column
-                        prop="status"
-                        label="状态"
-                        width="200">
-                </el-table-column>
                 <el-table-column prop="operate" label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="showDetial = true">
+                        <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
                             详情
-                        </el-button>
-                        <el-button type="text" size="small" @click="addForm = true">
-                            修改
-                            <!--点击详情 form数据变成当前管理员的信息-->
-                        </el-button>
-                        <el-button type="text" size="small" @click="isForbidden = true">
-                            禁用
                         </el-button>
                         <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
                             删除
@@ -201,10 +188,10 @@
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage4"
-                        :page-sizes="[1, 2]"
+                        :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
                         layout="total, sizes, ->, prev, pager, next, jumper"
-                        :total="4">
+                        :total="total">
                 </el-pagination>
             </section>
         </div>
@@ -217,53 +204,52 @@
             deleteDialog
         },
         data () {
-            let validateName = (rule, value, callback) => {
-                if ((value || '') === '') {
-                    callback(new Error('请输入姓名'))
-                }
-                callback()
-            }
-            let validateEmail = (rule, value, callback) => {
-                if (!(this.form.mobile || '').match(/^1[34578]\d{9}$/) && !(value || '').match(/^\w+([-+.]\w+)*@\w+([-+.]\w+)*.\w+([-+.]\w+)*$/)) {
-                    callback(new Error('邮箱或手机号至少填写一个'))
-                }
-                callback()
-            }
-            let validatePass = (rule, value, callback) => {
-                if ((value || '') === '') {
-                    callback(new Error('请输入密码'))
+            let validateMobile = (rule, value, callback) => {
+                if (!(value || '').match(/^1[34578]\d{9}$/)) {
+                    callback(new Error('请填写正确的手机号'))
                 }
                 callback()
             }
             return {
-                itemName: '',           // 要删除项名称
-                deletDialog: false,     // 删除弹窗
-                isForbidden: false,    // 禁用弹窗状态
-                showDetial: false,     // 是否显示详情对话框
-                form: {                // 表单属性值
+                // 查看店员详情
+                clerkDetail: {
                     name: '',          // 姓名
-                    role: '编辑',       // 权限
+                    department: '',       // 门店
                     mobile: '',        // 手机
-                    email: '',         // 邮箱
                     pass: '',          // 密码
                     address: '',       // 地址
                     sex: 0,            // 性别
-                    status: 0          // 状态
+                    birthday: '',          // 生日
+                    create_time_name: ''
+                },
+                companyID: this.$route.params.company_id,
+                itemName: '',           // 要删除项名称
+                deletDialog: false,     // 删除弹窗
+                showDetail: false,     // 是否显示详情对话框
+                form: {                // 表单属性值
+                    name: '',          // 姓名
+                    department: '',       // 门店
+                    mobile: '',        // 手机
+                    pass: '',          // 密码
+                    address: '',       // 地址
+                    sex: 0,            // 性别
+                    birthday: ''          // 生日
                 },
                 rules: {
                     name: [
-                        {validator: validateName, trigger: 'blur'}
+                        {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    email: [
-                        {validator: validateEmail, trigger: 'blur'}
+                    mobile: [
+                        {validator: validateMobile, trigger: 'blur'}
                     ],
                     pass: [
-                        {validator: validatePass, trigger: 'blur'}
+                        {required: true, message: '必须填写', trigger: 'blur'}
                     ]
                 },
                 formLabelWidth: '120px', // 表单label的宽度
                 addForm: false, // 表单弹窗是否显示
-                currentPage4: 1, // 分页当前显示的页数
+                currentPage: 1, // 分页当前显示的页数
+                total: 0,
                 name: '', // 搜索的姓名
                 tableData: [
                     {
@@ -306,23 +292,27 @@
             }
         },
         created () {
+            console.log(this.companyID)
             xmview.setContentLoading(false)
         },
         methods: {
+            // 查看店员详情
+            checkClerkDetail (index, row) {
+                this.showDetail = true
+                this.clerkDetail = row
+            },
             handleDelete (index, row) {
                 this.deletDialog = true
                 this.itemName = row.name
             },
             deleteItem (confirm) {
+                console.log(2222)
                 this.deletDialog = false
                 if (!confirm) {
                     return false
                 }
                 // 以下执行接口删除动作
                 console.log(11)
-            },
-            forbidden () {
-                this.isForbidden = false
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
@@ -343,6 +333,9 @@
                 this.currentPage = val
                 console.log(`当前页: ${val}`)
                 // 以下获取当页数据
+            },
+            goBack () {
+                window.history.back()
             }
         }
     }
