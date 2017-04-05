@@ -12,7 +12,7 @@
     <article id="course-manage-addcourse-container">
         <el-form label-width="80px">
             <el-form-item label="所属栏目">
-                <el-input ></el-input>
+                <el-input></el-input>
             </el-form-item>
             <el-form-item label="课程名称">
                 <el-input></el-input>
@@ -27,11 +27,10 @@
 <script>
     export default{
         data () {
-            return {
-
-            }
+            return {}
         },
         activated () {
+            console.info('activated')
             xmview.setContentLoading(false)
         },
         methods: {},

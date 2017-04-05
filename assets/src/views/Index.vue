@@ -237,6 +237,7 @@
             <section class="right-content" @click="handleIsShowMenue(false)">
                 <h2 class="right-title">
                     {{mainTitle}}
+
                     <small>{{subTitle}}</small>
                 </h2>
 
@@ -314,7 +315,9 @@
 
             },
             setContentLoading (loading) {
-                this.contentLoading = loading
+                setTimeout(() => {
+                    this.contentLoading = loading
+                }, 0)
             }
         },
         components: {
