@@ -10,30 +10,21 @@
 
 <template>
     <div class="container">
-        <VueEditor @ready="ueReady"></VueEditor>
+        <Upload :on-success="successCb"></Upload>
     </div>
 </template>
 
 <script>
-    import VueEditor from './component/form/UEditor.vue'
-
-    export default{
+    import Upload from './component/upload/UploadImg.vue'
+    export default {
         data() {
-            return {
-                testVal: 1
-            }
-        },
-        created () {
+            return {}
         },
         methods: {
-            ueReady (ue) {
-                ue.setContent('html')
-                console.log(ue.getContent())
-                console.log(ue.getContentTxt())
+            successCb (response) {
+                console.info(response)
             }
         },
-        components: {
-            VueEditor
-        }
+        components: {Upload}
     }
 </script>

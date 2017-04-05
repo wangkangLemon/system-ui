@@ -48,6 +48,18 @@ export default {
             }
         },
         {
+            path: 'manage/add-course', // 添加课程
+            name: 'course-manage-addCourse',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/course/manage/AddCourse.vue'))
+                })
+            },
+            meta: {
+                title: '添加课程-培训',
+            }
+        },
+        {
             path: 'manage/industry', // 工业课
             name: 'course-manage-industry',
             component: resolve => {

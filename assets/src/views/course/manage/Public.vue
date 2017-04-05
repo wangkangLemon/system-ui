@@ -40,7 +40,8 @@
 <template>
     <article id="course-manage-public-container">
         <section class="manage-container">
-            <el-button type="primary" icon="plus">添加课程 </el-button>
+            <el-button type="primary" icon="plus" @click="$router.push({ name:'course-manage-addCourse'})">添加课程
+            </el-button>
             <el-button type="warning" icon="menu">管理栏目 </el-button>
             <el-button type="success" icon="menu">专辑管理 </el-button>
         </section>
@@ -179,7 +180,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.fetchData()
         },
         methods: {
