@@ -35,5 +35,11 @@ class CourseService {
             return ret.data
         })
     }
+
+    // 获取课程栏目树
+    getCategoryTree ({companyid, id = 'tree', filter = true}) {
+        let finalUrl = config.apiHost + '/com/' + companyid + '/course/category/children'
+        return api.get(finalUrl, {id, filter})
+    }
 }
 export default new CourseService()

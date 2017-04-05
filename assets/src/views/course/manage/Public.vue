@@ -41,14 +41,14 @@
     <article id="course-manage-public-container">
         <section class="manage-container">
             <el-button type="primary" icon="plus" @click="$router.push({ name:'course-manage-addCourse'})">添加课程
+
+
             </el-button>
             <el-button type="warning" icon="menu">管理栏目 </el-button>
             <el-button type="success" icon="menu">专辑管理 </el-button>
         </section>
 
         <article class="search">
-            <h1 style="color:red">部分查询选项接口未完成</h1>
-
             <section>
                 <i>课程名称</i>
                 <vInput :enter="fetchData" v-model="fetchParam.keyword"></vInput>
@@ -62,6 +62,10 @@
                     <el-option label="下线" value="1"></el-option>
                     <el-option label="视频转码中" value="2"></el-option>
                 </el-select>
+            </section>
+
+            <section><i>栏目</i>
+                <CourseCategorySelect></CourseCategorySelect>
             </section>
 
             <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
@@ -156,6 +160,7 @@
     import courseService from '../../../services/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import vInput from '../../component/form/Input.vue'
+    import CourseCategorySelect from '../../component/select/CourseCategory.vue'
 
     export default{
         data () {
@@ -242,6 +247,6 @@
                 this.dialogVisible = true
             }
         },
-        components: {vInput, DateRange}
+        components: {vInput, DateRange, CourseCategorySelect}
     }
 </script>
