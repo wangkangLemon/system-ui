@@ -43,6 +43,9 @@ const routes = [
                     require.ensure([], () => {
                         resolve(require('./views/index/main'))
                     })
+                },
+                meta: {
+                    title: '控制台'
                 }
             },
             // ============系统==================
