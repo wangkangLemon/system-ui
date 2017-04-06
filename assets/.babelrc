@@ -7,10 +7,16 @@
       }
     ]
   ],
-  "plugins": [["component", [
-    {
-      "libraryName": "element-ui",
-      "styleLibraryName": "~theme"
-    }
-  ]]]
+  "plugins": [
+    [
+      "component",
+      [
+        {
+          "libraryName": "element-ui",
+          "styleLibraryName": "~theme"
+        }
+      ]
+    ],
+    "transform-vue-jsx"
+  ]
 }

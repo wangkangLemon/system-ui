@@ -61,6 +61,17 @@
                 }
             },
             renderContent(h, { node, data, store }) {
+                /* eslint-disable */
+                return (
+                    <span>
+                        <span>
+                        <span>{node.label}</span>
+                        </span>
+                        <span style='float: right; margin-right: 20px'>
+                            <el-button size='mini' on-click={ () => this.append(store, data) }>Append</el-button>
+                        <el-button size='mini' on-click={ () => this.remove(store, data) }>Delete</el-button>
+                        </span>
+                </span>)
             }
         },
         components: {}
