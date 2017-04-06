@@ -93,5 +93,65 @@ export default {
                 }
             ]
         },
+        {
+            path: 'announce',
+            name: 'company-announce',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/Announce.vue'))
+                })
+            },
+            meta: {
+                title: '公告-企业',
+            }
+        },
+        {
+            path: 'medicine',
+            name: 'company-medicine',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/Medicine.vue'))
+                })
+            },
+            meta: {
+                title: '拿药练习-企业',
+            }
+        },
+        {
+            path: 'coursetask',
+            name: 'company-coursetask',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/Coursetask.vue'))
+                })
+            },
+            meta: {
+                title: '课程任务-企业',
+            }
+        },
+        {
+            path: 'analytics',
+            name: 'company-analytics',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/Analytics.vue'))
+                })
+            },
+            meta: {
+                title: '新增统计-企业',
+            }
+        },
+        {
+            path: 'audit',
+            name: 'company-audit',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/Audit.vue'))
+                })
+            },
+            meta: {
+                title: '入驻审核-企业',
+            }
+        },
     ]
 }
