@@ -1,10 +1,10 @@
 <!--课程栏目-->
 <template>
     <el-cascader
-            :options='options'
-            v-model="selectedOptions" :show-all-levels="false"
+            :options='options' :show-all-levels="false"
             @active-item-change="handleItemChange"
-            @change="handleChange"
+            :clearable="true"
+            @change="setCurrVal"
     ></el-cascader>
 </template>
 
@@ -15,20 +15,14 @@
     export default{
         props: {
             value: [String, Number],
-            onchange: Function
+            onchange: Function,
         },
         data () {
             return {
                 options: [],
                 currVal: this.value,
-                selectedOptions: [],
                 companyid: void 0, // 企业id
             }
-        },
-        watch: {
-            'value'(val) {
-                val !== this.currVal && this.setCurrVal(val)
-            },
         },
         created () {
             this.companyid = authUtils.getUserInfo().company_id
@@ -41,8 +35,10 @@
         },
         methods: {
             setCurrVal (val) {
+                if (this.currVal == val || !val) return
                 this.currVal = val
-                this.$emit('input', val)
+                this.$emit('input', val[val.length - 1])
+                this.onchange && this.onchange(val)
             },
             handleItemChange (val) {
                 if (val.length < 1) return
@@ -61,9 +57,6 @@
                         currItem.children.push(...ret)
                     })
             },
-            handleChange (val) {
-                this.onchange && this.onchange(val)
-            }
         },
         components: {}
     }

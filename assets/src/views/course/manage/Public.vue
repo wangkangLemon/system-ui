@@ -43,6 +43,8 @@
             <el-button type="primary" icon="plus" @click="$router.push({ name:'course-manage-addCourse'})">添加课程
 
 
+
+
             </el-button>
             <el-button type="warning" icon="menu">管理栏目 </el-button>
             <el-button type="success" icon="menu">专辑管理 </el-button>
@@ -65,7 +67,7 @@
             </section>
 
             <section><i>栏目</i>
-                <CourseCategorySelect></CourseCategorySelect>
+                <CourseCategorySelect :onchange="fetchData" v-model="fetchParam.category_id"></CourseCategorySelect>
             </section>
 
             <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
@@ -175,13 +177,12 @@
                 fetchParam: {
                     status: void 0, // 2- 视屏转码中 1-下线 0-正常
                     category: void 0, // 1-工业 默认-公开课
-                    course_id: void 0,
-                    company_id: void 0,
+                    category_id: void 0, // 栏目id
                     page: 1,
                     page_size: 15,
                     time_start: void 0,
                     time_end: void 0,
-                    keyword: void 0, // 搜索关键词
+                    keyword: void 0, // 课程名称
                 }
             }
         },
@@ -197,9 +198,9 @@
                 this.fetchParam.page_size = val
                 this.fetchData()
             },
-            fetchData () {
+            fetchData (val) {
                 this.loadingData = true
-                return courseService.getCourseList(this.fetchParam).then((ret) => {
+                return courseService.getPublicCourselist(this.fetchParam).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
                     this.loadingData = false
