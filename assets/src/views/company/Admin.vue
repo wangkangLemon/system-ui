@@ -1,4 +1,4 @@
-<!--管理员-->
+<!--企业列表-管理员-->
 <style lang='scss' scoped rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     .table-container {

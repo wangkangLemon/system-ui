@@ -491,6 +491,9 @@
                 }]
             }
         },
+        created () {
+            xmview.setContentLoading(false)
+        },
         methods: {
             handleAvatarSuccess(res, file) {
                 this.imageUrl = window.URL.createObjectURL(file.raw)

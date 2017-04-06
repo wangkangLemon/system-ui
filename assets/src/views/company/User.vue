@@ -1,4 +1,4 @@
-<!--日志-->
+<!--店员-->
 <template>
     <article>
         <el-tabs v-model="defaultTab"  type="border-card" @tab-click="tabClick">
