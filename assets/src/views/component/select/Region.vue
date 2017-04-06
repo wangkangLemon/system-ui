@@ -36,6 +36,8 @@
 </template>
 
 <script>
+    import cityData from '../../../assets/city'
+    import treeUtils from '../../../utils/treeUtils'
     export default{
         props: ['change'],
         data () {
@@ -45,18 +47,42 @@
                 areas: [],
                 provinceSelect: '',
                 citySelect: '',
-                areaSelect: ''
+                areaSelect: '',
+                curItem: []
             }
         },
         created () {
             // 获取数据
-            this.fetchData()
+            cityData.forEach((item) => {
+                this.provinces.push({
+                    name: item.name,
+                    id: item.id
+                })
+            })
         },
         methods: {
             setCurrVal (type, val) {
                 let emitArr = ['provinceChange', 'cityChange', 'areaChange']
                 this.$emit(emitArr[type], val)
                 this.change && this.change()
+                let levelPath = []
+                let typeArr = ['provinceSelect', 'citySelect', 'areaSelect']
+                if (!this[typeArr[type]]) return
+                levelPath = [this[typeArr[type]]]
+                if (type == 0) {
+                    this.curItem = treeUtils.findItem(cityData, levelPath)
+                    if (this.curItem.children && this.curItem.children.length > 0) {
+                        this.citys = this.curItem.children
+                        this.citySelect = ''
+                        this.areaSelect = ''
+                    }
+                } else if (this.provinceSelect && type == 1) {
+                    if (this.curItem.children && this.curItem.children.length > 0) {
+                        this.curItem = treeUtils.findItem(this.curItem.children, levelPath)
+                        this.areaSelect = ''
+                        this.areas = this.curItem.children
+                    }
+                }
             },
             fetchData () {
 //                获取数据

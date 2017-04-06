@@ -167,17 +167,17 @@
                         </el-option>
                     </el-select>
                 </section>
-                <Region v-on:provinceChange="val => provinceSelect = val"
-                        v-on:cityChange="val => citySelect = val"
-                        v-on:areaChange="val => areaChange = val"
+                <Region v-on:provinceChange="val => searchParms.provinceSelect = val"
+                        v-on:cityChange="val => searchParms.citySelect = val"
+                        v-on:areaChange="val => searchParms.areaChange = val"
                         :change="getData"></Region>
                 <section>
                     <i>名称：</i>
-                    <el-input v-model="searchParms.name" auto-complete="off"></el-input>
+                    <el-input @change="getData" v-model="searchParms.name" auto-complete="off"></el-input>
                 </section>
-                <DateRange title="创建时间" :start="createTime" :end="endTime"
-                           v-on:changeStart="val=> createTime=val"
-                           v-on:changeEnd="val=> endTime = val"
+                <DateRange title="创建时间" :start="searchParms.createTime" :end="searchParms.endTime"
+                           v-on:changeStart="val=> searchParms.createTime = val"
+                           v-on:changeEnd="val=> searchParms.endTime = val"
                            :change="getData">
                 </DateRange>
             </section>
@@ -243,16 +243,15 @@
     </article>
 </template>
 <script lang='babel'>
-    import {chargeData, charge} from '../../services/fianace/finance'
-    import {date2Str} from '../../utils/timeUtils'
-    import Admin from '../component/select/Admin'
+    import companyService from '../../services/companyService'
     import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
     import Region from '../component/select/Region.vue'
+    import treeUtils from '../../utils/treeUtils'
+    import cityData from '../../assets/city'
     let _this
     export default {
         components: {
-            Admin,
             IndustryCompanySelect,
             DateRange,
             Region
@@ -268,13 +267,13 @@
                 showDetail: false, // 显示详情弹窗
                 formLabelWidth: '100px',
                 loading: false,
-                createTime: '',
-                endTime: '',
                 currentPage: 1,
                 pageSize: 15,
                 companyData: [],
                 addForm: false, // 表单弹窗是否显示
                 searchParms: {
+                    createTime: '',
+                    endTime: '',
                     typeSelect: '',
                     types: [ // 类型
                         {
@@ -284,10 +283,6 @@
                         {
                             name: '连锁',
                             id: 2
-                        },
-                        {
-                            name: '平台',
-                            id: 3
                         }
                     ],
                     provinceSelect: '',
@@ -373,13 +368,6 @@
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        charge(this.form).then((ret) => {
-                            this.addForm = false
-                            xmview.showTip('success', '调整成功')
-                            this.getData()
-                        }).catch((ret) => {
-                            xmview.showTip('error', ret.message)
-                        })
                     } else {
                         return false
                     }
@@ -387,17 +375,22 @@
             },
             getData () {
                 this.loading = true
-                return chargeData({
-                    page: this.currentPage,
+                return companyService.getIndrustrySelectList({
                     page_size: this.pageSize,
-                    admin_id: this.managerSelect,
-                    company_id: this.industrySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime)
+                    page: this.currentPage,
+                    category: this.searchParms.typeSelect,
+                    keyword: this.searchParms.name,
+                    time_start: this.searchParms.createTime,
+                    time_end: this.searchParms.endTime,
+                    province: this.searchParms.provinceSelect,
+                    city: this.searchParms.citySelect,
+                    area: this.searchParms.areaSelect
                 }).then((ret) => {
                     this.companyData = ret.data
+                    this.companyData.map((item) => {
+                        item.site = treeUtils.findItemName(cityData, item.province) + treeUtils.findItemName(cityData, item.city) + treeUtils.findItemName(cityData, item.area)
+                    })
                     this.total = ret.total
-                }).then(() => {
                     this.loading = false
                 })
             }

@@ -60,6 +60,25 @@ class TreeUtils {
             }
         }
     }
+
+    /**
+     * 查找某一项的名称
+     * @param arr 数据
+     * @param id 形如 1
+     * @param compareKey
+     */
+    findItemName (arr, id, compareKey = 'id', returnkey = 'name') {
+        for (let i = 0; i < arr.length; i++) {
+            let item = arr[i]
+            if (item[compareKey] == id) {
+                return item[returnkey]
+            } else {
+                if (item.children && item.children.length > 0) {
+                    return this.findItemName(item.children, id, compareKey, returnkey)
+                }
+            }
+        }
+    }
 }
 
 export default new TreeUtils()
