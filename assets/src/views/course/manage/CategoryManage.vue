@@ -7,73 +7,140 @@
 
         > section {
             display: inline-block;
+            vertical-align: top;
         }
         .left-container {
-            width: 300px;
+            min-width: 300px;
             border-right: 1px solid #ededed;
+        }
+
+        .right-container {
+            margin-left: 15px;
+            .edit-content {
+                margin: 10px 0 0
+            }
+
+            .btn-selected {
+                background: #20A0FF;
+                color: #fff;
+            }
         }
     }
 </style>
 
 <template>
-    <article id="course-manage-coursecategory" ref="container">
+    <article id="course-manage-coursecategory">
         <section class="left-container">
-            <el-tree :data="data" @node-click="handleNodeClick"  :render-content="renderContent"></el-tree>
+            <CourseCategoryTree :onNodeClick="treeNodeClick.bind(this,1)"></CourseCategoryTree>
         </section>
 
-        <section class="right-container"></section>
+        <section class="right-container">
+            <div>
+                <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改栏目</el-button>
+                <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子栏目</el-button>
+
+                <el-button>移动子栏目</el-button>
+                <el-button>移动组栏目下内容</el-button>
+                <el-button type="danger">删除栏目</el-button>
+            </div>
+
+            <el-card class="edit-content">
+                <el-form label-position="right" label-width="90px" :rules="rules" :model="fetchParam" ref="form">
+                    <el-form-item label="分类名称" prop="name">
+                        <el-input v-model="fetchParam.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="栏目logo" prop="image">
+                        <UploadImg ref="uploadImg" :defaultImg="fetchParam.image" :url="uploadImgUrl"
+                                   :onSuccess="handleImgUploaded"></UploadImg>
+                    </el-form-item>
+                    <el-form-item label="栏目排序" prop="sort">
+                        <el-input placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="info" @click="submitForm">保存</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </section>
     </article>
 </template>
 
-<script>
+<script type="text/jsx">
     import courseService from '../../../services/courseService'
     import treeUtils from '../../../utils/treeUtils'
+    import CourseCategoryTree from '../../component/tree/CourseCategory.vue'
+    import UploadImg from '../../component/upload/UploadImg.vue'
 
     export default{
         data () {
             return {
-                data: []
+                activeTab: 'add',
+                uploadImgUrl: void 0,
+                nodeSelected: void 0, // 被训中的node节点
+                fetchParam: {
+                    parent_id: void 0,
+                    name: void 0,
+                    image: void 0,
+                    sort: void 0,
+                    id: 0
+                },
+                rules: {
+                    name: [
+                        {required: true, message: '请输入栏目名称', trigger: 'blur'},
+                    ],
+                    image: [
+                        {required: true, message: '请上传栏目logo', trigger: 'blur'}
+                    ]
+                }
             }
         },
         activated () {
-            courseService.getCategoryTree({}).then(ret => {
-                this.data = treeUtils.arr2Cascader(ret, 0, void 0, void 0, 'name', 'id')
-                xmview.setContentLoading(false)
-            })
+            this.uploadImgUrl = courseService.getUploadCategoryImgUrl()
         },
         methods: {
-            handleNodeClick (data, node, nodeDom) {
-                // 如果是有children 并且只有一个[加载中...]的一项 则去服务器加载数据
-                if (data.children && !data.children[0].value) {
-                    courseService.getCategoryTree({id: data.value}).then(ret => {
-                        ret.map((item) => {
-                            item.label = item.name
-                            item.value = item.id
-                            item.children = item.has_children ? [{label: '加载中...'}] : null
-                        })
-                        data.children = ret
-                    })
-                } else if (!data.children) { // 否则就是选中了叶子节点
-                    [...this.$refs.container.querySelectorAll('.el-tree-node__expand-icon.is-leaf')].map((item) => {
-                        item.parentNode.parentNode.style.background = '#ffffff'
-                    })
-                    nodeDom.$el.style.background = 'rgb(228, 233, 241)'
+            // 添加栏目
+            addCategory (node, data, store) {
+                store.preventDefault()
+                store.stopPropagation()
+            },
+            deleteCategory (node, data, store){
+                store.preventDefault()
+                store.stopPropagation()
+            },
+            treeNodeClick (type, data) {
+                if (type == 1) {
+                    this.$refs.uploadImg.clearFiles()
+                    this.nodeSelected = data
+                    this.fetchParam = data.item
+                    this.activeTab = 'edit'
                 }
             },
-            renderContent(h, { node, data, store }) {
-                /* eslint-disable */
-                return (
-                    <span>
-                        <span>
-                        <span>{node.label}</span>
-                        </span>
-                        <span style='float: right; margin-right: 20px'>
-                            <el-button size='mini' on-click={ () => this.append(store, data) }>Append</el-button>
-                        <el-button size='mini' on-click={ () => this.remove(store, data) }>Delete</el-button>
-                        </span>
-                </span>)
-            }
+            // 图片上传完毕
+            handleImgUploaded (response) {
+                this.fetchParam.image = response.data.url
+            },
+            // 提交表单
+            submitForm () {
+                this.$refs.form.validate((ret) => {
+                    if (!ret) return
+
+                    let p
+                    if (this.activeTab === 'add')
+                        p = courseService.addCategory(this.fetchParam)
+                    else
+                        p = courseService.updateCategory(this.fetchParam)
+
+                    p.then((ret) => {
+                        xmview.showTip('success', '操作成功!')
+                        if (this.activeTab === 'edit') {
+                            this.nodeSelected.label = this.fetchParam.name
+                            this.nodeSelected.item = this.fetchParam
+                            this.$forceUpdate()
+                        }
+                    })
+                })
+            },
         },
-        components: {}
+        components: {CourseCategoryTree, UploadImg}
     }
 </script>

@@ -26,38 +26,39 @@ function getTimeoutPromise (url) {
 // 请求完毕的url
 let requestedUrls = {}
 export function get (url, params, needLoading = false) {
-    url = url + '?' + processParams(params)
-
-    needLoading && xmview.setLoading(true)
-    let pRequest = fetch(url, {
-        method: 'GET',
-        credentials: 'include', // pass cookies, for authentication
-        headers: {
-            'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-            'Authorization': 'Bearer ' + authUtils.getAuthToken()
-        }
-    })
-
-    url += '|' + requestId++
-
-    return Promise.race([getTimeoutPromise(url), processResponse(pRequest, url)])
+    return sendRequest('GET', url, params, needLoading)
 }
 
 export function post (url, params, needLoading = false) {
-    needLoading && xmview.setLoading(true)
+    return sendRequest('POST', url, params, needLoading)
+}
+
+export function put (url, params, needLoading) {
+    return sendRequest('PUT', url, params, needLoading)
+}
+
+export function del (url, params, needLoading) {
+    return sendRequest('DELETE', url, params, needLoading)
+}
+
+// 共用的请求数据方法
+function sendRequest (method, url, params, needLoding = false) {
+    if (method === 'GET')
+        url = url + '?' + processParams(params)
+
+    needLoding && xmview.setLoading(true)
     let pRequest = fetch(url, {
+        method: method,
         credentials: 'include', // pass cookies, for authentication
-        method: 'POST',
         headers: {
             'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
             'Authorization': 'Bearer ' + authUtils.getAuthToken()
         },
-        body: processParams(params)
+        body: method === 'GET' ? {} : processParams(params)
     })
 
-    url += '#urlid=' + requestId++
+    url += '|' + requestId++
 
     return Promise.race([getTimeoutPromise(url), processResponse(pRequest, url)])
 }

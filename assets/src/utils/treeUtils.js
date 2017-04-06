@@ -37,6 +37,7 @@ class TreeUtils {
             return {
                 label: item[labelKey],
                 value: item[valKey] + '',
+                item,
                 children: item[hasChildrenKey] ? [{label: '加载中...'}] : null
             }
         })

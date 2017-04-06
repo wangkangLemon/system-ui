@@ -1,5 +1,6 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "../../../utils/mixins/mixins";
+
     .component-upload-uploadimg {
         width: 100px;
         height: 100px;
@@ -83,13 +84,13 @@
 </style>
 <template>
     <div class="component-upload-uploadimg">
-        <div v-show="isShowDefault" class="defaultImg">
-            <img :src="this.defaultImg">
+        <div v-show="isShowDefault && defaultImg" class="defaultImg">
+            <img :src="host + this.defaultImg">
             <span>
                 <i class="el-icon-delete2" @click="deleteDefault"></i>
             </span>
         </div>
-        <el-upload ref="container" v-show="!isShowDefault"
+        <el-upload ref="container" v-show="!(isShowDefault && defaultImg)"
                    :headers="headers"
                    :action="url"
                    list-type="picture-card"
@@ -109,6 +110,7 @@
 
 <script>
     import authUtils from '../../../utils/authUtils'
+    import config from '../../../utils/config'
     export default{
         props: {
             // 要上传的url地址
@@ -126,7 +128,8 @@
                 currImg: void 0,
                 dialogVisible: false,
                 headers: void 0,
-                isShowDefault: !!this.defaultImg, // 是否显示默认图片
+                isShowDefault: true, // 是否显示默认图片
+                host: config.apiHost
             }
         },
         created () {
@@ -144,6 +147,7 @@
             handleRemove () {
                 setTimeout(() => {
                     this.uploadBtn.style.display = 'block'
+                    this.clearFiles()
                 }, 500)
             },
             handlePictureCardPreview (file) {
@@ -154,10 +158,19 @@
                 this.currImg = val
             },
             handleSuccess (response, file, fileList) {
-                this.onSuccess && this.onSuccess(response)
+                if (response.code == 0)
+                    this.onSuccess && this.onSuccess(response)
+                else {
+                    xmview.showTip('error', response.message)
+                    this.handleRemove()
+                }
             },
             deleteDefault () {
                 this.isShowDefault = false
+            },
+            clearFiles() {
+                this.isShowDefault = true
+                this.$refs.container.clearFiles()
             }
         },
     }

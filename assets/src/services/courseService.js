@@ -61,5 +61,47 @@ class CourseService {
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category/children`
         return api.get(finalUrl, {id, filter})
     }
+
+    // 获取上传栏目图片的url
+    getUploadCategoryImgUrl ({companyid} = {}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/category/image`
+        return finalUrl
+    }
+
+    // 添加栏目
+    addCategory ({companyid, parent_id = 0, name, image, sort}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/category`
+        return api.post(finalUrl, {parent_id, name, image, sort})
+    }
+
+    // 修改栏目
+    updateCategory ({companyid, name, image, sort, id}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/category/${id}`
+        return api.put(finalUrl, {name, image, sort})
+    }
+
+    // 删除栏目
+    deleteCategory ({companyid, id}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/category/${id}`
+        return api.del(finalUrl, {})
+    }
+
+    // 移动栏目
+    moveCategory ({companyid, id, to}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/category/${id}/move`
+        return api.put(finalUrl, {to})
+    }
+
+    // 移动栏目下内容
+    moveCategoryContent ({companyid, id, to}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/category/${id}/move/content`
+        return api.put(finalUrl, {to})
+    }
 }
 export default new CourseService()
