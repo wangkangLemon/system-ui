@@ -45,16 +45,16 @@
                 // 递归找到该项
                 let currItem = treeUtils.findItem(this.options, val, 'value')
 
-                if (!currItem.children || currItem.children.length > 0) return
+                if (!currItem.children || (currItem.children.length > 0 && currItem.children[0].value)) return
                 courseService.getCategoryTree({companyid: this.companyid, id: val[val.length - 1]})
                     .then(ret => {
                         // 重新组合数据
                         ret.map((item) => {
                             item.label = item.name
                             item.value = item.id
-                            item.children = item.has_children ? [] : null
+                            item.children = item.has_children ? [{label: '加载中...'}] : null
                         })
-                        currItem.children.push(...ret)
+                        currItem.children = ret
                     })
             },
         },

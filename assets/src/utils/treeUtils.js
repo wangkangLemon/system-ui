@@ -31,13 +31,13 @@ class TreeUtils {
         return ret
     }
 
-    // 数组转为elementui的cascader数据结构
-    arr2Cascader (arr, pid = 0, pidKey = 'parent_id', idKey = 'id', labelKey = 'name', valKey = 'id', hasChildrenKey) {
+    // 数组转为elementui的cascader和tree数据结构
+    arr2Cascader (arr, pid = 0, pidKey = 'parent_id', idKey = 'id', labelKey = 'name', valKey = 'id', hasChildrenKey = 'has_children') {
         return this.arr2Tree(arr, pid, pidKey, idKey, (item) => {
             return {
                 label: item[labelKey],
                 value: item[valKey] + '',
-                children: item.has_children ? [] : null
+                children: item[hasChildrenKey] ? [{label: '加载中...'}] : null
             }
         })
     }

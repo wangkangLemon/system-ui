@@ -60,6 +60,18 @@ export default {
             }
         },
         {
+            path: 'manage/course-category-manage', // 栏目管理
+            name: 'course-manage-course-category-manage',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/course/manage/CategoryManage.vue'))
+                })
+            },
+            meta: {
+                title: '栏目管理-培训',
+            }
+        },
+        {
             path: 'manage/industry', // 工业课
             name: 'course-manage-industry',
             component: resolve => {

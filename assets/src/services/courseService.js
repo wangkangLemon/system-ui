@@ -57,6 +57,7 @@ class CourseService {
 
     // 获取课程栏目树
     getCategoryTree ({companyid, id = 'tree', filter = true}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category/children`
         return api.get(finalUrl, {id, filter})
     }

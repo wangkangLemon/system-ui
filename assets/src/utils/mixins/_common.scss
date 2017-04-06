@@ -32,3 +32,10 @@ h1, h2, h3, h4, h5, h6 {
         margin-top: 15px;
     }
 }
+
+//右上角按钮的容器样式
+%right-top-btnContainer{
+    position: absolute;
+    right: 0;
+    top: -50px;
+}
