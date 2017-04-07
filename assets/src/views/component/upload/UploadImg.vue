@@ -129,6 +129,7 @@
                 dialogVisible: false,
                 headers: void 0,
                 isShowDefault: true, // 是否显示默认图片
+                forceShowUpload: false, // 强行显示上传图片
                 host: config.apiHost
             }
         },
@@ -146,7 +147,6 @@
             },
             handleRemove () {
                 setTimeout(() => {
-                    this.uploadBtn.style.display = 'block'
                     this.clearFiles()
                 }, 500)
             },
@@ -169,6 +169,7 @@
                 this.isShowDefault = false
             },
             clearFiles() {
+                this.uploadBtn.style.display = 'block'
                 this.isShowDefault = true
                 this.$refs.container.clearFiles()
             }

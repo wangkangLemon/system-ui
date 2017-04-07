@@ -1,8 +1,10 @@
 <!--课程栏目-->
 
 <template>
-    <el-tree :data="data" :expand-on-click-node="false" @node-click="handleNodeClick" @node-expand="handleNodeExpand"
-             ref="container"></el-tree>
+    <el-tree v-loading="loading" :data="data" :expand-on-click-node="false" @node-click="handleNodeClick"
+             @node-expand="handleNodeExpand"
+             ref="container">
+    </el-tree>
 </template>
 
 <script>
@@ -11,21 +13,19 @@
 
     export default{
         props: {
-            onNodeClick: Function
+            onNodeClick: Function,
+            value: Array,
         },
         data () {
             return {
-                data: [],
+                data: this.value,
                 allNodes: [],
+                loading: false
             }
         },
         activated () {
-            courseService.getCategoryTree({}).then(ret => {
-                this.data = treeUtils.arr2Cascader(ret, 0, void 0, void 0, 'name', 'id')
-                xmview.setContentLoading(false)
-            }).then(() => {
-                return this.setAllNodes()
-            })
+            if (!this.value || this.value.length < 1)
+                this.initData()
         },
         deactivated () {
             this.allNodes = null
@@ -57,7 +57,7 @@
                 })
             },
             handleNodeClick (data, node, store) {
-                this.onNodeClick && this.onNodeClick(data)
+                this.onNodeClick && this.onNodeClick(data, node, store)
                 // 根节点无法被选中
                 if (data.value == 0) return
                 this.allNodes.map((item) => {
@@ -65,8 +65,35 @@
                 })
                 store.$el.querySelector('.el-tree-node__content').style.background = 'rgb(228, 233, 241)'
             },
-            init () {
+            removeItem (item, parent) {
+                // 父节点没有children 说明当前是根节点
+                if (!parent.data.children) {
+                    this.data = this.data.filter((curr) => {
+                        return curr.value != item.value
+                    })
+                    return
+                }
+                parent.data.children = parent.data.children.filter((curr) => {
+                    return curr.value != item.value
+                })
 
+                if (parent.data.children.length < 1) parent.data.children = null
+            },
+            setCurrVal (val) {
+                if (val === this.data) return
+                this.data = val
+                this.$emit('input', val)
+            },
+            initData () {
+                this.loading = true
+                return courseService.getCategoryTree({}).then(ret => {
+                    this.setCurrVal(treeUtils.arr2Cascader(ret, 0, void 0, void 0, 'name', 'id'))
+                    xmview.setContentLoading(false)
+                }).then(() => {
+                    this.loading = false
+                    this.setAllNodes()
+                    this.$forceUpdate()
+                })
             }
         },
         components: {}
