@@ -177,6 +177,11 @@
                 <el-table-column
                         prop="name"
                         label="名称">
+                    <template scope="scope">
+                        <el-tag type="gray" v-if="scope.row.category == 1">工业</el-tag>
+                        <el-tag type="gray" v-if="scope.row.category == 2">连锁</el-tag>
+                        {{scope.row.name}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="area_name"

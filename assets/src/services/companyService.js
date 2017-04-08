@@ -32,7 +32,26 @@ class CompanyService {
         })
     }
     // 添加企业
-    addCompany ({category, name, concact, mobile, email, tel, fax, province, city, area, address, zip, url, description, department_number, user_number, user_name, sign_time, expire_time}) {
+    addCompany ({
+        category,
+        name,
+        concact,
+        mobile,
+        email,
+        tel,
+        fax,
+        province,
+        city,
+        area,
+        address,
+        zip,
+        url,
+        description,
+        department_number,
+        user_number,
+        user_name,
+        sign_time,
+        expire_time}) {
         return api.post(urlPre, {category, name, concact, mobile, email, tel, fax, province, city, area, address, zip, url, description, department_number, user_number, user_name, sign_time, expire_time}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)

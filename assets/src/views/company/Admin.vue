@@ -45,11 +45,18 @@
                 border: 1px solid #ededed;
                 display: inline-block;
                 vertical-align: top;
+                width: 150px;
+                height: 130px;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
             }
             .info {
                 display: inline-block;
                 vertical-align: top;
                 > p {
+                    line-height: 30px;
                     > span {
                         display: inline-block;
                         width:px2rem(100);
@@ -83,19 +90,21 @@
 </style>
 <template>
     <article class="table-container">
+        <p>删除和添加接口-接口有问题-二次认证</p>
         <!--删除弹窗-->
-        <delete-dialog :text="itemName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
+        <delete-dialog v-if="currentItem" :text="currentItem.text" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
         <!--详情-->
-        <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetail">
+        <el-dialog class="showDetail" title="查看店员" v-model="showDetail">
             <div class="avatar">
-                <img src="http://sys.yst.vodjk.dev/assets/img/user-default-female.jpg?00da903dc4d95b13b46f" />
+                <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar" />
             </div>
             <div class="info">
-                <p><span>测试营销员</span></p>
-                <p><span>所属门店：</span>{{clerkDetail.department}}</p>
+                <p><span></span>{{clerkDetail.name}}({{clerkDetail.company}})</p>
+                <p><span>所属门店：</span>{{clerkDetail.dep_name}}</p>
                 <p><span>Mobile：</span> <i class="iconfont icon-oslash"></i>{{clerkDetail.mobile}}</p>
                 <p><span>Email：</span> <i class="el-icon-message"></i>{{clerkDetail.email}}</p>
-                <p><span>状态：</span> <i class="status">{{clerkDetail.status}}</i></p>
+                <p><span>状态：</span> <el-tag type="success" v-if="!clerkDetail.disabled">正常</el-tag></p>
+                <p><span>状态：</span> <el-tag type="danger" v-if="clerkDetail.disabled">异常</el-tag></p>
                 <p><span>性别：</span> {{clerkDetail.sex ? '男' : '女'}}</p>
                 <p><span>生日：</span> {{clerkDetail.birthday}}</p>
                 <p><span>地址：</span> {{clerkDetail.address}}</p>
@@ -106,9 +115,9 @@
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="department_id" label="门店" :label-width="formLabelWidth">
-                    <el-select v-model="form.department_id" placeholder="请选择">
-                        <el-option v-for="item in departmentData" :label="item.name" :value="item.id"></el-option>
-                    </el-select>
+                    <departmentSelect :type="companyID" v-model="form.department_id"
+                    v-on:change="val=>form.department_id = val">
+                    </departmentSelect>
                 </el-form-item>
                 <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="form.name" placeholder="店员姓名" auto-complete="off"></el-input>
@@ -124,7 +133,7 @@
                     <el-input type="password" v-model="form.passwd" placeholder="密码" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="birthday" label="生日" :label-width="formLabelWidth">
-                    <el-input v-model="form.birthday" placeholder="生日" auto-complete="off"></el-input>
+                    <el-date-picker type="date" v-model="form.birthday"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="地址" :label-width="formLabelWidth">
                     <el-input v-model="form.address" placeholder="地址" auto-complete="off"></el-input>
@@ -138,7 +147,7 @@
         <section class="add">
             <!--点击添加 form数据取邮箱/手机号 密码-->
             <el-button icon="plus" @click="addAdmin">添加</el-button>
-            <el-button class="back" @click="goBack">返回</el-button>
+            <router-link class="back" tag="el-button" :to="{name: 'company-index'}">返回</router-link>
         </section>
         <div class="main-container">
             <section class="search">
@@ -201,10 +210,18 @@
     import deleteDialog from '../component/dialog/Delete'
     import companyService from '../../services/companyService'
     import departmentService from '../../services/departmentService'
-//    import adminService from '../../services/adminService'
+    import departmentSelect from '../component/select/CompanyDepartment.vue'
+    import * as timeUtils from '../../utils/timeUtils'
+    import adminService from '../../services/adminService'
+    import companyUserService from '../../services/companyUserService'
+    import {defaultAvatar} from '../../utils/filterUtils'
     export default {
+        filters: {
+            defaultAvatar
+        },
         components: {
-            deleteDialog
+            deleteDialog,
+            departmentSelect
         },
         data () {
             let validateMobile = (rule, value, callback) => {
@@ -227,7 +244,7 @@
                 },
                 departmentData: [],
                 companyID: this.$route.params.company_id,
-                itemName: '',           // 要删除项名称
+                currentItem: null,           // 要删除项
                 deletDialog: false,     // 删除弹窗
                 showDetail: false,     // 是否显示详情对话框
                 form: {                // 表单属性值
@@ -266,7 +283,6 @@
             }
         },
         activated () {
-            console.log(this.companyID)
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -298,10 +314,14 @@
             checkClerkDetail (index, row) {
                 this.showDetail = true
                 this.clerkDetail = row
+                companyUserService.userDetail(row.id).then((ret) => {
+                    this.clerkDetail = ret.data
+                })
             },
             handleDelete (index, row) {
                 this.deletDialog = true
-                this.itemName = row.name
+                this.currentItem = row
+                this.currentItem.text = `你确认要删除用户${row.name}的管理权限吗？`
             },
             deleteItem (confirm) {
                 this.deletDialog = false
@@ -309,12 +329,17 @@
                     return false
                 }
                 // 以下执行接口删除动作
-//                adminService.adminDelete()
+                adminService.adminDelete(this.currentItem.id).then((ret) => {
+                    xmview.showTip('success', '删除成功')
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         this.form.company_id = this.companyID
+                        this.form.birthday = timeUtils.date2Str(this.form.birthday)
                         companyService.addCompanyAdmin(this.form).then((ret) => {
                             xmview.showTip('success', '添加成功')
                         }).then(() => {
