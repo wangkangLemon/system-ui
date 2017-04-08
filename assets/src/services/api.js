@@ -99,9 +99,10 @@ function processCodeError (ret, url) {
         // 记录当前的url
         xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
     } else if (ret.code >= 100) {
-        xmview.showTip('error', ret.message)
+        ret.tipCom = xmview.showTip('error', ret.message)
         return Promise.reject(ret)
     } else if (ret.code != 0) {
+        ret.tipCom = xmview.showTip('error', '远程服务器出现问题!')
         return Promise.reject(ret)
     }
 }
