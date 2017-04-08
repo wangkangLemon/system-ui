@@ -105,23 +105,23 @@
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
-                <el-form-item prop="department" label="门店" :label-width="formLabelWidth">
-                    <el-select v-model="form.department" placeholder="请选择">
-                        <el-option label="总店" value="0"></el-option>
+                <el-form-item prop="department_id" label="门店" :label-width="formLabelWidth">
+                    <el-select v-model="form.department_id" placeholder="请选择">
+                        <el-option v-for="item in departmentData" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="form.name" placeholder="店员姓名" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="sex" label="性别" :label-width="formLabelWidth">
-                    <el-radio class="radio" v-model="form.sex" :label="0">男</el-radio>
-                    <el-radio class="radio" v-model="form.sex" :label="1">女</el-radio>
+                    <el-radio class="radio" v-model="form.sex" :label="1">男</el-radio>
+                    <el-radio class="radio" v-model="form.sex" :label="0">女</el-radio>
                 </el-form-item>
                 <el-form-item prop="mobile" label="手机号" :label-width="formLabelWidth">
                     <el-input v-model="form.mobile" type="number" placeholder="手机号" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="pass" label="密码" :label-width="formLabelWidth">
-                    <el-input type="password" v-model="form.pass" placeholder="密码" auto-complete="off"></el-input>
+                <el-form-item prop="passwd" label="密码" :label-width="formLabelWidth">
+                    <el-input type="password" v-model="form.passwd" placeholder="密码" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="birthday" label="生日" :label-width="formLabelWidth">
                     <el-input v-model="form.birthday" placeholder="生日" auto-complete="off"></el-input>
@@ -137,17 +137,17 @@
         </el-dialog>
         <section class="add">
             <!--点击添加 form数据取邮箱/手机号 密码-->
-            <el-button icon="plus" @click="addForm = true">添加</el-button>
+            <el-button icon="plus" @click="addAdmin">添加</el-button>
             <el-button class="back" @click="goBack">返回</el-button>
         </section>
         <div class="main-container">
             <section class="search">
                 <div>
                     <label>姓名</label>
-                    <el-input class="name" v-model="name" placeholder="请输入姓名"></el-input>
+                    <el-input @change="getData" class="name" v-model="search.name" placeholder="请输入姓名"></el-input>
                 </div>
             </section>
-            <el-table border :data="tableData">
+            <el-table border :data="adminData">
                 <el-table-column
                         prop="name"
                         label="姓名"
@@ -164,12 +164,12 @@
                         width="200">
                 </el-table-column>
                 <el-table-column
-                        prop="time"
+                        prop="last_login_time"
                         label="上次登录时间"
                         width="200">
                 </el-table-column>
                 <el-table-column
-                        prop="ip"
+                        prop="last_login_ip"
                         label="上次登录IP"
                         width="200">
                 </el-table-column>
@@ -199,6 +199,9 @@
 </template>
 <script lang="babel">
     import deleteDialog from '../component/dialog/Delete'
+    import companyService from '../../services/companyService'
+    import departmentService from '../../services/departmentService'
+//    import adminService from '../../services/adminService'
     export default {
         components: {
             deleteDialog
@@ -222,27 +225,32 @@
                     birthday: '',          // 生日
                     create_time_name: ''
                 },
+                departmentData: [],
                 companyID: this.$route.params.company_id,
                 itemName: '',           // 要删除项名称
                 deletDialog: false,     // 删除弹窗
                 showDetail: false,     // 是否显示详情对话框
                 form: {                // 表单属性值
                     name: '',          // 姓名
-                    department: '',       // 门店
+                    department_id: '',       // 门店
                     mobile: '',        // 手机
-                    pass: '',          // 密码
+                    passwd: '',          // 密码
                     address: '',       // 地址
                     sex: 0,            // 性别
                     birthday: ''          // 生日
                 },
                 rules: {
+                    department_id: [
+                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
+                    ],
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     mobile: [
+                        {required: true, message: '必须填写', trigger: 'blur'},
                         {validator: validateMobile, trigger: 'blur'}
                     ],
-                    pass: [
+                    passwd: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ]
                 },
@@ -250,52 +258,42 @@
                 addForm: false, // 表单弹窗是否显示
                 currentPage: 1, // 分页当前显示的页数
                 total: 0,
-                name: '', // 搜索的姓名
-                tableData: [
-                    {
-                        id: 1,
-                        name: '销售',
-                        mobile: '13920307216',
-                        email: '13@vod.com',
-                        time: '2133',
-                        ip: '102,2202',
-                        status: '正常'
-                    },
-                    {
-                        id: 2,
-                        name: '销售',
-                        mobile: '13920307216',
-                        email: '13@vod.com',
-                        time: '2133',
-                        ip: '102,2202',
-                        status: '正常'
-                    },
-                    {
-                        id: 3,
-                        name: '销售',
-                        mobile: '13920307216',
-                        email: '13@vod.com',
-                        time: '2133',
-                        ip: '102,2202',
-                        status: '正常'
-                    },
-                    {
-                        id: 4,
-                        name: '销售',
-                        mobile: '13920307216',
-                        email: '13@vod.com',
-                        time: '2133',
-                        ip: '102,2202',
-                        status: '正常'
-                    },
-                ]
+                pageSize: 15,
+                search: { // 搜索的姓名
+                    name: ''
+                },
+                adminData: []
             }
         },
-        created () {
+        activated () {
             console.log(this.companyID)
-            xmview.setContentLoading(false)
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
+            addAdmin () {
+                departmentService.getDepartment({
+                    company_id: this.companyID
+                }).then((ret) => {
+                    if (ret.data.length > 0) {
+                        this.departmentData = ret.data
+                    }
+                }).then(() => {
+                    this.addForm = true
+                })
+            },
+            getData () {
+                return companyService.companyAdmin({
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    keyword: this.search.name,
+                    company_id: this.companyID
+                }).then((ret) => {
+                    this.adminData = ret.data
+                    this.total = ret.total
+                })
+            },
             // 查看店员详情
             checkClerkDetail (index, row) {
                 this.showDetail = true
@@ -311,13 +309,21 @@
                     return false
                 }
                 // 以下执行接口删除动作
-                console.log(11)
+//                adminService.adminDelete()
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
-                    console.log(valid)
                     if (valid) {
-                        console.log(1)
+                        this.form.company_id = this.companyID
+                        companyService.addCompanyAdmin(this.form).then((ret) => {
+                            xmview.showTip('success', '添加成功')
+                        }).then(() => {
+                            this.addForm = false
+                            this.getData()
+                            this.currentPage = 1
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }

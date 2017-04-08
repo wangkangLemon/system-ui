@@ -102,7 +102,7 @@ router.afterEach((route) => {
 
 router.beforeEach((to, from, next) => {
     xmview.setContentLoading && xmview.setContentLoading(true)
-
+    console.log('切换路由')
     setTitle(to.meta.title)
 
     next()

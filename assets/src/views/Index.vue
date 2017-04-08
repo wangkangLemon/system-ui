@@ -315,9 +315,17 @@
 
             },
             setContentLoading (loading) {
-                setTimeout(() => {
+                if (!loading) {
+                    this.$nextTick(() => {
+                        setTimeout(() => {
+                            console.log('关闭loading', loading)
+                            this.contentLoading = loading
+                        }, 300)
+                    })
+                } else {
+                    console.log('开启loading', loading)
                     this.contentLoading = loading
-                }, 0)
+                }
             }
         },
         components: {

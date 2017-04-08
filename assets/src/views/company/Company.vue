@@ -2,6 +2,7 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
+
     .company-index {
         .box-card {
             margin-bottom: 20px;
@@ -43,33 +44,36 @@
 <template>
     <article class="company-index">
         <!--详情-->
-        <el-dialog class="showDetail" v-model="showDetail" title="企业信息">
-            <h2>陕西众信大药房</h2>
-            <p><i>门店数量：</i>45</p>
-            <p><i>店员数量：</i>45</p>
-            <p><i>联系人：</i>45</p>
-            <p><i>联系人手机：</i>45</p>
-            <p><i>联系人邮箱：</i>45</p>
-            <p><i>企业电话：</i>45</p>
-            <p><i>传真：</i>45</p>
-            <p><i>地区：</i>45</p>
-            <p><i>地址：</i>45</p>
-            <p><i>邮编：</i>45</p>
-            <p><i>企业网址：</i>45</p>
-            <p><i>企业介绍：</i>45</p>
+        <el-dialog v-if="details != null" class="showDetail" v-model="showDetail" title="企业信息">
+            <h2>{{details.name}}</h2>
+            <p><i>门店数量：</i>{{details.department_count}}</p>
+            <p><i>店员数量：</i>{{details.user_count}}</p>
+            <p><i>联系人：</i>{{details.concact}}</p>
+            <p><i>联系人手机：</i>{{details.mobile}}</p>
+            <p><i>联系人邮箱：</i>{{details.email}}</p>
+            <p><i>企业电话：</i>{{details.tel}}</p>
+            <p><i>传真：</i>{{details.fax}}</p>
+            <p><i>地区：</i>{{details.area_name}}</p>
+            <p><i>地址：</i>{{details.address}}</p>
+            <p><i>邮编：</i>{{details.zip}}</p>
+            <p><i>企业网址：</i>{{details.url}}</p>
+            <p><i>企业介绍：</i>{{details.description}}</p>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="showDetail = false">确 定</el-button>
+            </div>
         </el-dialog>
         <!--添加表单-->
-        <el-dialog v-model="addForm" title="添加企业" >
+        <el-dialog v-model="addForm" title="添加企业" v-loading="editloading">
             <el-form class="addForm" :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
-                <el-form-item prop="type" label="企业类型">
-                    <el-select v-model="form.type">
+                <el-form-item prop="category" label="企业类型">
+                    <el-select v-model="form.category">
                         <el-option v-for="(item, index) in searchParms.types"
-                        :label="item.name" :value="item.id" :key="item.id">
+                                   :label="item.name" :value="item.id" :key="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="name" label="企业名称" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" type="number" auto-complete="off"></el-input>
+                    <el-input v-model="form.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="concact" label="联系人" :label-width="formLabelWidth">
                     <el-input v-model="form.concact" auto-complete="off"></el-input>
@@ -80,67 +84,50 @@
                 <el-form-item prop="email" label="联系人邮箱" :label-width="formLabelWidth">
                     <el-input v-model="form.email" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="phone" label="电话" :label-width="formLabelWidth">
-                    <el-input v-model="form.phone" auto-complete="off"></el-input>
+                <el-form-item prop="tel" label="电话" :label-width="formLabelWidth">
+                    <el-input v-model="form.tel" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="fax" label="传真" :label-width="formLabelWidth">
                     <el-input v-model="form.fax" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="地区" :label-width="formLabelWidth">
-                    <el-select clearable placeholder="全部">
-                        <el-option v-for="(item, index) in searchParms.provinces"
-                                   :label="item.name"
-                                   :value="item.id"
-                                   :key="item.id">
-                        </el-option>
-                    </el-select>
-                    <el-select clearable placeholder="全部">
-                        <el-option v-for="(item, index) in searchParms.citys"
-                                   :label="item.name"
-                                   :value="item.id"
-                                   :key="item.id">
-                        </el-option>
-                    </el-select>
-                    <el-select clearable placeholder="全部">
-                        <el-option v-for="(item, index) in searchParms.areas"
-                                   :label="item.name"
-                                   :value="item.id"
-                                   :key="item.id">
-                        </el-option>
-                    </el-select>
+                    <Region title="" v-on:provinceChange="val => form.province = val"
+                            v-on:cityChange="val => form.city = val"
+                            v-on:areaChange="val => form.area = val"></Region>
                 </el-form-item>
                 <el-form-item prop="address" label="地址" :label-width="formLabelWidth">
                     <el-input v-model="form.address" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="postcode" label="邮编" :label-width="formLabelWidth">
-                    <el-input v-model="form.postcode" auto-complete="off"></el-input>
+                <el-form-item prop="zip" label="邮编" :label-width="formLabelWidth">
+                    <el-input v-model="form.zip" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="website" label="企业网址" :label-width="formLabelWidth">
-                    <el-input v-model="form.website" auto-complete="off"></el-input>
+                <el-form-item prop="url" label="企业网址" :label-width="formLabelWidth">
+                    <el-input v-model="form.url" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="introduce" label="企业介绍" :label-width="formLabelWidth">
-                    <el-input type="textarea" :rows="3" v-model="form.introduce" auto-complete="off"></el-input>
+                <el-form-item prop="description" label="企业介绍" :label-width="formLabelWidth">
+                    <el-input type="textarea" :rows="3" v-model="form.description" auto-complete="off"></el-input>
                 </el-form-item>
                 <div class="tip">
                     * 以下信息会关联到营销数据中心，如果是营销人员签约连锁，请务必填写。
                 </div>
                 <el-form-item prop="department_number" label="签约门店数量" :label-width="formLabelWidth">
-                    <el-input placeholder="签约门店数量" v-model="form.department_number" auto-complete="off"></el-input>
+                    <el-input placeholder="签约门店数量" type="number" v-model="sign.department_number" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="user_number" label="签约店员数量" :label-width="formLabelWidth">
-                    <el-input placeholder="签约店员数量" v-model="form.user_number" auto-complete="off"></el-input>
+                    <el-input placeholder="签约店员数量" type="number" v-model="sign.user_number" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="member" label="签约人" :label-width="formLabelWidth">
-                    <el-input placeholder="签约店员数量" v-model="form.member" auto-complete="off"></el-input>
+                <el-form-item prop="user_name" label="签约人" :label-width="formLabelWidth">
+                    <el-input placeholder="签约人" v-model="sign.user_name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="signTime" label="签约时间" :label-width="formLabelWidth">
-                    <el-date-picker v-model="form.signTime"
+                <el-form-item prop="sign_time" label="签约时间" :label-width="formLabelWidth">
+                    <el-date-picker v-model="sign.sign_time"
                                     type="date"
+                                    :picker-options="pickerOptionsStart"
                                     placeholder="开始日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item prop="overTime" label="合同到期日" :label-width="formLabelWidth">
-                    <el-date-picker v-model="form.overTime"
+                <el-form-item prop="expire_time" label="合同到期日" :label-width="formLabelWidth">
+                    <el-date-picker v-model="sign.expire_time"
                                     type="date"
                                     :picker-options="pickerOptionsEnd"
                                     placeholder="合同到期日">
@@ -167,9 +154,9 @@
                         </el-option>
                     </el-select>
                 </section>
-                <Region v-on:provinceChange="val => searchParms.provinceSelect = val"
+                <Region title="地区" v-on:provinceChange="val => searchParms.provinceSelect = val"
                         v-on:cityChange="val => searchParms.citySelect = val"
-                        v-on:areaChange="val => searchParms.areaChange = val"
+                        v-on:areaChange="val => searchParms.areaSelect = val"
                         :change="getData"></Region>
                 <section>
                     <i>名称：</i>
@@ -192,7 +179,7 @@
                         label="名称">
                 </el-table-column>
                 <el-table-column
-                        prop="site"
+                        prop="area_name"
                         label="地区"
                         width="180">
                 </el-table-column>
@@ -219,10 +206,10 @@
                         <el-button type="text" size="small" @click="adminPage(scope.$index, scope.row)">
                             管理员
                         </el-button>
-                        <el-button type="text" size="small" @click="showDetail = true">
+                        <el-button type="text" size="small" @click="showFn(scope.$index, scope.row)">
                             详情
                         </el-button>
-                        <el-button type="text" size="small">
+                        <el-button type="text" size="small" @click="editCompany(scope.$index, scope.row)">
                             修改
                         </el-button>
                     </template>
@@ -247,8 +234,7 @@
     import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
     import Region from '../component/select/Region.vue'
-    import treeUtils from '../../utils/treeUtils'
-    import cityData from '../../assets/city'
+    import * as timeUtils from '../../utils/timeUtils'
     let _this
     export default {
         components: {
@@ -263,7 +249,16 @@
                 }
                 callback()
             }
+            let validateMobile = (rule, value, callback) => {
+                if (!(value || '').match(/^1[34578]\d{9}$/)) {
+                    callback(new Error('请输入正确的手机号'))
+                }
+                callback()
+            }
             return {
+                editloading: false,
+                companyID: '',
+                details: null,
                 showDetail: false, // 显示详情弹窗
                 formLabelWidth: '100px',
                 loading: false,
@@ -291,30 +286,38 @@
                     name: ''
                 },
                 form: {
-                    type: '', // 类型
+                    category: 1, // 类型
                     name: '', // 名称
                     concact: '', // 联系人
                     mobile: '', // 联系人手机
-                    phone: '', // 电话
+                    tel: '', // 电话
                     email: '', // 联系人邮箱
                     fax: '', // 传真
                     province: '', // 省
                     city: '', // 市
                     area: '', // 区
                     address: '', // 地址
-                    postcode: '', // 邮编
-                    website: '', // 企业网址
-                    introduce: '', // 企业介绍
+                    zip: '', // 邮编
+                    url: '', // 企业网址
+                    description: '', // 企业介绍
+                },
+                sign: {
                     department_number: '', // 门店数量
                     user_number: '', // 店员数量
-                    member: '', // 签约人
-                    signTime: '', // 签约日期
-                    endTime: '' // 合同到期日
+                    user_name: '', // 签约人
+                    sign_time: '', // 签约日期
+                    expire_time: '' // 合同到期日
+                },
+                pickerOptionsStart: {
+                    disabledDate(time) {
+                        return !_this.sign.sign_time ? null
+                                : time.getTime() > new Date(_this.sign.sign_time).getTime()
+                    }
                 },
                 pickerOptionsEnd: {
                     disabledDate(time) {
-                        return !_this.form.signTime ? null
-                                : time.getTime() < new Date(_this.form.signTime).getTime()
+                        return !_this.sign.expire_time ? null
+                                : time.getTime() < new Date(_this.sign.expire_time).getTime()
                     }
                 },
                 rules: {
@@ -325,7 +328,8 @@
                         {required: true, message: '必填项', trigger: 'blur'}
                     ],
                     mobile: [
-                        {required: true, message: '必填项', trigger: 'blur'}
+                        {required: true, message: '必填项', trigger: 'blur'},
+                        {validator: validateMobile, trigger: 'blur'}
                     ],
                     email: [
                         {required: true, message: '必填项', trigger: 'blur'},
@@ -335,22 +339,41 @@
                 total: 0
             }
         },
-        created () {
+        activated () {
             _this = this
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
         },
         methods: {
+            // 修改企业信息
+            editCompany (index, row) {
+                this.add()
+                this.editloading = true
+                companyService.editCompany(row.id).then((ret) => {
+                    this.form = ret.data
+                    this.sign = ret.sign
+                    this.companyID = row.id
+                }).then(() => {
+                    this.editloading = false
+                })
+            },
+            // 显示详情
+            showFn (index, row) {
+                companyService.getCompanyInfo(row.id).then((ret) => {
+                    this.details = ret.data
+                    this.showDetail = true
+                })
+            },
             adminPage (index, item) {
                 this.$router.push({name: 'company-admin', params: {company_id: item.id || 1}})
             },
             // 添加
             add () {
                 this.addForm = true
-                let _this = this
+                this.companyID = ''
                 setTimeout(() => {
-                    _this.$refs['form'].resetFields()
+                    this.$refs['form'].resetFields()
                 }, 0)
             },
             handleSizeChange (val) {
@@ -368,6 +391,28 @@
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {
                     if (valid) {
+                        this.form = Object.assign(this.form, this.sign)
+                        let reqFn = companyService.addCompany
+                        let msg = '添加成功'
+                        if (this.form.sign_time) {
+                            this.form.sign_time = timeUtils.date2Str(this.form.sign_time)
+                        }
+                        if (this.form.expire_time) {
+                            this.form.expire_time = timeUtils.date2Str(this.form.expire_time)
+                        }
+                        if (this.companyID) {
+                            this.form.company_id = this.companyID
+                            reqFn = companyService.updateCompany
+                            msg = '修改成功'
+                        }
+                        reqFn(this.form).then(() => {
+                            xmview.showTip('success', msg)
+                        }).then(() => {
+                            this.addForm = false
+                            this.getData()
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }
@@ -387,10 +432,8 @@
                     area: this.searchParms.areaSelect
                 }).then((ret) => {
                     this.companyData = ret.data
-                    this.companyData.map((item) => {
-                        item.site = treeUtils.findItemName(cityData, item.province) + treeUtils.findItemName(cityData, item.city) + treeUtils.findItemName(cityData, item.area)
-                    })
                     this.total = ret.total
+                }).then(() => {
                     this.loading = false
                 })
             }

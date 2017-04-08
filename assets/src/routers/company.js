@@ -24,6 +24,18 @@ export default {
             }
         },
         {
+            path: 'admin/:company_id',
+            name: 'company-admin',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/Admin.vue'))
+                })
+            },
+            meta: {
+                title: '管理员',
+            }
+        },
+        {
             path: 'department',
             name: 'company-department',
             component: resolve => {

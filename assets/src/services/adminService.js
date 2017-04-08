@@ -17,5 +17,14 @@ class AdminService {
             }
         })
     }
+    // 删除管理员
+    adminDelete(userID) {
+        let finalUrl = `${urlPre}/${userID}`
+        return api.del(finalUrl).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
 }
 export default new AdminService()

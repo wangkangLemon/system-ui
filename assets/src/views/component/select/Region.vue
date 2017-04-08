@@ -10,7 +10,7 @@
 
 <template>
     <section>
-        <i>地区</i>
+        <i>{{title}}</i>
         <el-select clearable placeholder="全部" @change="setCurrVal(0, provinceSelect)" v-model="provinceSelect">
             <el-option v-for="(item, index) in provinces"
                        :label="item.name"
@@ -39,7 +39,7 @@
     import cityData from '../../../assets/city'
     import treeUtils from '../../../utils/treeUtils'
     export default{
-        props: ['change'],
+        props: ['change', 'title'],
         data () {
             return {
                 provinces: [],
@@ -77,15 +77,11 @@
                         this.areaSelect = ''
                     }
                 } else if (this.provinceSelect && type == 1) {
-                    if (this.curItem.children && this.curItem.children.length > 0) {
-                        this.curItem = treeUtils.findItem(this.curItem.children, levelPath)
+                    if (this.citys && this.citys.length > 0) {
                         this.areaSelect = ''
-                        this.areas = this.curItem.children
+                        this.areas = treeUtils.findItem(this.citys, levelPath).children
                     }
                 }
-            },
-            fetchData () {
-//                获取数据
             }
         }
     }
