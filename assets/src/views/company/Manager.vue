@@ -29,6 +29,7 @@
 </style>
 <template>
     <article class="company-manager">
+        <p>接口有问题 没有数据</p>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
@@ -49,8 +50,8 @@
                 <section>
                     <i>是否删除</i>
                     <el-select v-model="searchParams.status" @change="getData">
-                        <el-option label="未删除" value="0"></el-option>
-                        <el-option label="已删除" value="1"></el-option>
+                        <el-option label="未删除" :value="0"></el-option>
+                        <el-option label="已删除" :value="1"></el-option>
                     </el-select>
                 </section>
                 <DateRange title="创建时间" :start="searchParams.createTime" :end="searchParams.endTime"
@@ -62,7 +63,7 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="historyData"
+                    :data="managerData"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -102,10 +103,9 @@
     </article>
 </template>
 <script lang="babel">
-    import {history, exportData} from '../../services/fianace/finance'
-    import {date2Str} from '../../utils/timeUtils'
     import IndustryCompanySelect from '../component/select/IndustryCompany'
     import DateRange from '../component/form/DateRangePicker.vue'
+    import ManagerService from '../../services/managerService'
     export default {
         components: {
             IndustryCompanySelect,
@@ -116,7 +116,7 @@
                 loading: false,
                 currentPage: 1,
                 pageSize: 10,
-                historyData: [],
+                managerData: [],
                 total: 0,
                 searchParams: {
                     companySelect: '',
@@ -124,11 +124,11 @@
                     endTime: '',
                     name: '',
                     mobile: '',
-                    status: ''
+                    status: 0
                 }
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -147,29 +147,21 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
-                    user_id: this.userSelect
+                    company_id: this.searchParams.companySelect,
+                    time_start: this.searchParams.createTime,
+                    time_end: this.searchParams.endTime,
+                    deleted: this.searchParams.status,
+                    manager_name: this.searchParams.name,
+                    manager_mobile: this.searchParams.mobile,
                 }
-                return history(params).then((ret) => {
-                    this.historyData = ret.data
+                return ManagerService.getManager(params).then((ret) => {
+                    this.managerData = ret.data
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false
                 })
             },
             exportData () {
-                exportData({
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
-                    user_id: this.userSelect
-                }).then((ret) => {
-                    console.log(ret)
-                })
             }
         }
     }

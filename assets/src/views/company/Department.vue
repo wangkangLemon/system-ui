@@ -6,13 +6,19 @@
         .showDetail {
             h2 {
                 margin-bottom: 10px;
+                font-size: 20px;
             }
-            p {
-                span {
-                    display: inline-block;
-                    width: 90px;
-                    margin-right: 10px;
-                    text-align: right;
+            .info {
+                display: inline-block;
+                vertical-align: top;
+                > p {
+                    line-height: 30px;
+                    > span {
+                        display: inline-block;
+                        width:px2rem(100);
+                        text-align: right;
+                        padding-right: px2rem(10);
+                    }
                 }
             }
         }
@@ -42,18 +48,19 @@
 </style>
 <template>
     <article class="company-department">
+        <p>删除接口有问题</p>
         <!--详情-->
-        <el-dialog class="showDetail" title="查看门店" v-model="show.showDetail">
+        <el-dialog v-if="show.detail" class="showDetail" title="查看门店" v-model="show.showDetail">
             <div class="info">
-                <p><span>测试营销员</span></p>
+                <h2>测试营销员</h2>
                 <p><span>店长：</span>{{show.detail.concact}}</p>
                 <p><span>手机：</span>{{show.detail.mobile}}</p>
-                <p><span>电话：</span>{{show.detail.phone}}</p>
+                <p><span>电话：</span>{{show.detail.tel}}</p>
                 <p><span>传真：</span>{{show.detail.fax}}</i></p>
                 <p><span>地区：</span>{{show.detail.area_name}}</p>
                 <p><span>地址：</span>{{show.detail.address}}</p>
-                <p><span>邮编：</span>{{show.detail.postcode}}</p>
-                <p><span>描述：</span>{{show.detail.introduce}}</p>
+                <p><span>邮编：</span>{{show.detail.zip}}</p>
+                <p><span>描述：</span>{{show.detail.description}}</p>
             </div>
         </el-dialog>
         <el-card class="box-card">
@@ -61,7 +68,7 @@
                 <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <Region v-on:provinceChange="val => searchParams.provinceSelect = val"
+                <Region title="地区" v-on:provinceChange="val => searchParams.provinceSelect = val"
                         v-on:cityChange="val => searchParams.citySelect = val"
                         v-on:areaChange="val => searchParams.areaChange = val"
                         :change="getData"></Region>
@@ -86,7 +93,7 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="historyData"
+                    :data="departmentData"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -111,10 +118,6 @@
                         label="店员数量">
                 </el-table-column>
                 <el-table-column
-                        prop="user_name"
-                        label="店员">
-                </el-table-column>
-                <el-table-column
                         prop="mobile"
                         label="手机">
                 </el-table-column>
@@ -130,10 +133,10 @@
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="show.showDetail = true">
+                        <el-button type="text" size="small" @click="showFn(scope.$index, scope.row)">
                             详情
                         </el-button>
-                        <el-button type="text" size="small" @click="deletDialog = true">
+                        <el-button type="text" size="small" @click="handleDelete(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -152,11 +155,11 @@
             </div>
         </el-card>
         <!--删除弹窗-->
-        <delete-dialog :text="itemName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
+        <delete-dialog v-if="currentItem" :text="currentItem.text" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
     </article>
 </template>
 <script lang="babel">
-    import {history, exportData} from '../../services/fianace/finance'
+    import departmentService from '../../services/departmentService'
     import {date2Str} from '../../utils/timeUtils'
     import IndustryCompanySelect from '../component/select/IndustryCompany'
     import DateRange from '../component/form/DateRangePicker.vue'
@@ -172,24 +175,15 @@
         data () {
             return {
                 deletDialog: false,
-                itemName: '',
+                currentItem: null,
                 show: {
-                    detail: {
-                        concact: '',
-                        mobile: '',
-                        phone: '',
-                        fax: '',
-                        areaName: '',
-                        address: '',
-                        postcode: '',
-                        introduce: ''
-                    },
+                    detail: null,
                     showDetail: false, // 显示详情
                 },
                 loading: false,
                 currentPage: 1,
                 pageSize: 10,
-                historyData: [],
+                departmentData: [],
                 total: 0,
                 searchParams: {
                     companySelect: '',
@@ -203,19 +197,37 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
         },
         methods: {
+            // 显示详情
+            showFn (index, row) {
+                this.show.showDetail = true
+                departmentService.getDepInfo(row.id).then((ret) => {
+                    this.show.detail = ret.data
+                })
+            },
+            handleDelete (row) {
+                this.deletDialog = true
+                this.currentItem = row
+                this.currentItem.text = `你将要删除门店 ${row.name} 并且同时删除店长 操作不可恢复确认吗？`
+            },
+            // 删除操作
             deleteItem (confirm) {
-                this.deletDialog = false
                 if (!confirm) {
+                    this.deletDialog = false
                     return false
                 }
                 // 以下执行接口删除动作
-                console.log(11)
+                departmentService.depDelete(this.currentItem.id).then(() => {
+                    this.deletDialog = false
+                    xmview.showTip('success', '删除成功')
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             handleSizeChange (val) {
                 this.pageSize = val
@@ -230,29 +242,23 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
-                    user_id: this.userSelect
+                    province: this.searchParams.provinceSelect,
+                    city: this.searchParams.citySelect,
+                    area: this.searchParams.areaSelect,
+                    company_id: this.searchParams.companySelect,
+                    time_start: date2Str(this.searchParams.createTime),
+                    time_end: date2Str(this.searchParams.endTime),
+                    keyword: this.searchParams.name,
+                    concact: this.searchParams.concact
                 }
-                return history(params).then((ret) => {
-                    this.historyData = ret.data
+                return departmentService.getDepartment(params).then((ret) => {
+                    this.departmentData = ret.data
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false
                 })
             },
             exportData () {
-                exportData({
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
-                    user_id: this.userSelect
-                }).then((ret) => {
-                    console.log(ret)
-                })
             }
         }
     }

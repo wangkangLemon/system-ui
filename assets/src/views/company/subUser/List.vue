@@ -8,16 +8,26 @@
                 border: 1px solid #ededed;
                 display: inline-block;
                 vertical-align: top;
+                width: 150px;
+                height: 130px;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
             }
             .info {
                 display: inline-block;
                 vertical-align: top;
                 > p {
+                    line-height: 30px;
                     > span {
                         display: inline-block;
                         width:px2rem(100);
                         text-align: right;
                         padding-right: px2rem(10);
+                        &.status {
+                            width: auto !important;
+                        }
                     }
                 }
             }
@@ -56,19 +66,21 @@
     <article class="company-user-list">
         <!--详情-->
         <el-dialog class="showDetail" title="查看店员" v-model="showDetail">
-            <div class="avatar">
-                <img src="http://sys.yst.vodjk.dev/assets/img/user-default-female.jpg?00da903dc4d95b13b46f" />
-            </div>
-            <div class="info">
-                <p><span>测试营销员</span></p>
-                <p><span>所属门店：</span>111</p>
-                <p><span>Mobile：</span> <i class="iconfont icon-oslash"></i>222</p>
-                <p><span>Email：</span> <i class="el-icon-message"></i>333</p>
-                <p><span>状态：</span> <i class="status">444</i></p>
-                <p><span>性别：</span> 555</p>
-                <p><span>生日：</span>666</p>
-                <p><span>地址：</span> 777</p>
-                <p><span>注册时间：</span>888</p>
+            <div v-if="details != null">
+                <div class="avatar">
+                    <img :src="{url: details.avatar, sex: details.sex} | defaultAvatar" />
+                </div>
+                <div class="info">
+                    <p><span></span>{{details.name}}({{details.company}})</p>
+                    <p><span>所属门店：</span>{{details.dep_name}}</p>
+                    <p><span>Mobile：</span> <i class="iconfont icon-oslash"></i>{{details.mobile}}</p>
+                    <p><span>Email：</span> <i class="el-icon-message"></i>{{details.email}}</p>
+                    <p><span>状态：</span> <el-tag class="status" type="success">{{details.disabled ? '异常' : '正常'}}</el-tag></p>
+                    <p><span>性别：</span> {{details.sex ? '男' : '女'}}</p>
+                    <p><span>生日：</span>{{details.birthday}}</p>
+                    <p><span>地址：</span> {{details.address}}</p>
+                    <p><span>注册时间：</span>{{details.create_time_name}}</p>
+                </div>
             </div>
         </el-dialog>
         <el-card class="box-card">
@@ -91,9 +103,9 @@
                 </IndustryCompanySelect>
                 <section>
                     <i>属性</i>
-                    <el-select v-model="searchParams.status" @change="getData">
-                        <el-option label="店员" value="0"></el-option>
-                        <el-option label="注册用户" value="1"></el-option>
+                    <el-select clearable v-model="searchParams.status" @change="getData">
+                        <el-option label="店员" :value="1"></el-option>
+                        <el-option label="注册用户" :value="2"></el-option>
                     </el-select>
                 </section>
                 <DateRange title="创建时间" :start="searchParams.createTime" :end="searchParams.endTime"
@@ -105,7 +117,7 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="historyData"
+                    :data="companyUserData"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -131,12 +143,16 @@
                 <el-table-column
                         prop="disabled"
                         label="状态">
+                    <template scope="scope">
+                        <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
+                        <el-tag type="danger" v-if="scope.row.disabled">异常</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="showDetail = true">
+                        <el-button type="text" size="small" @click="showFn(scope.row)">
                             详情
                         </el-button>
                     </template>
@@ -157,11 +173,14 @@
     </article>
 </template>
 <script lang="babel">
-    import {history} from '../../../services/fianace/finance'
-    import {date2Str} from '../../../utils/timeUtils'
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import DateRange from '../../component/form/DateRangePicker.vue'
+    import CompanyUserService from '../../../services/companyUserService'
+    import {defaultAvatar} from '../../../utils/filterUtils'
     export default {
+        filters: {
+            defaultAvatar
+        },
         components: {
             IndustryCompanySelect,
             DateRange
@@ -169,10 +188,11 @@
         data () {
             return {
                 showDetail: false,
+                details: null,
                 loading: false,
                 currentPage: 1,
-                pageSize: 10,
-                historyData: [],
+                pageSize: 15,
+                companyUserData: [],
                 total: 0,
                 searchParams: {
                     companySelect: '',
@@ -191,6 +211,14 @@
             })
         },
         methods: {
+            // 显示详情
+            showFn (row) {
+                CompanyUserService.userDetail(row.id).then((ret) => {
+                    this.details = ret.data
+                }).then(() => {
+                    this.showDetail = true
+                })
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
@@ -204,14 +232,16 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
-                    user_id: this.userSelect
+                    keyword: this.searchParams.name,
+                    company_id: this.searchParams.companySelect,
+                    time_start: this.searchParams.createTime,
+                    time_end: this.searchParams.endTime,
+                    mobile: this.searchParams.mobile,
+                    email: this.searchParams.email,
+                    user_type: this.searchParams.status
                 }
-                return history(params).then((ret) => {
-                    this.historyData = ret.data
+                return CompanyUserService.getUserList(params).then((ret) => {
+                    this.companyUserData = ret.data
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false

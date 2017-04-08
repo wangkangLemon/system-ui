@@ -324,13 +324,15 @@
                 this.currentItem.text = `你确认要删除用户${row.name}的管理权限吗？`
             },
             deleteItem (confirm) {
-                this.deletDialog = false
                 if (!confirm) {
+                    this.deletDialog = false
                     return false
                 }
                 // 以下执行接口删除动作
                 adminService.adminDelete(this.currentItem.id).then((ret) => {
+                    this.deletDialog = false
                     xmview.showTip('success', '删除成功')
+                    this.getData()
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
                 })
