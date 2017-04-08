@@ -63,32 +63,32 @@
     <article class="company-user-list">
         <!--详情-->
         <el-dialog class="showDetail" :title="show.title" v-model="show.showDetail">
-            <div class="info">
-                <p><span>药店地址：</span></p>
-                <p><span>门店数量：</span></p>
-                <p><span>店员数量：</span></p>
-                <p><span>运营联系人：</span></p>
-                <p><span>联系人电话：</span></p>
-                <p><span>联系人邮箱：</span></p>
-                <p><span>营业执照：</span></p>
-                <p><span>经营许可证：</span></p>
-                <p><span>GSP/GSM认证：</span></p>
-                <p><span>负责人身份证：</span></p>
+            <div class="info" v-if="show.detail">
+                <p><span>药店地址：</span>{{show.detail.address}}</p>
+                <p><span>门店数量：</span>{{show.detail.department_range}}</p>
+                <p><span>店员数量：</span>{{show.detail.user_range}}</p>
+                <p><span>运营联系人：</span>{{show.detail.contact}}</p>
+                <p><span>联系人电话：</span>{{show.detail.phone}}</p>
+                <p><span>联系人邮箱：</span>{{show.detail.email}}</p>
+                <p><span>营业执照：</span><img :src="show.detail.business_license" alt=""></p>
+                <p><span>经营许可证：</span><img :src="show.detail.business_permit" alt=""></p>
+                <p><span>GSP/GSM认证：</span><img :src="show.detail.gsp" alt=""></p>
+                <p><span>负责人身份证：</span><img :src="show.detail.id_card" alt=""></p>
                 <p>
                     <span>审核结果：</span>
-                    <el-select v-model="searchParams.result" @change="getData">
-                        <el-option label="待审核" value="0"></el-option>
-                        <el-option label="审核通过" value="1"></el-option>
-                        <el-option label="审核失败" value="2"></el-option>
+                    <el-select v-model="form.status">
+                        <el-option label="待审核" :value="1"></el-option>
+                        <el-option label="审核通过" :value="2"></el-option>
+                        <el-option label="审核失败" :value="3"></el-option>
                     </el-select>
                 </p>
                 <p>
                     <span>备注：</span>
-                    <el-input type="textarea" :rows="3"></el-input>
+                    <el-input type="textarea" v-model="form.note" :rows="3"></el-input>
                 </p>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="show.showDetail = false">提 交</el-button>
+                <el-button type="primary" @click="submit">提 交</el-button>
             </div>
         </el-dialog>
         <el-card class="box-card">
@@ -96,9 +96,9 @@
                 <section>
                     <i>审核结果</i>
                     <el-select v-model="searchParams.result" @change="getData">
-                        <el-option label="待审核" value="0"></el-option>
-                        <el-option label="审核通过" value="1"></el-option>
-                        <el-option label="审核失败" value="2"></el-option>
+                        <el-option label="待审核" :value="1"></el-option>
+                        <el-option label="审核通过" :value="2"></el-option>
+                        <el-option label="审核失败" :value="3"></el-option>
                     </el-select>
                 </section>
                 <DateRange title="日期查找" :start="searchParams.createTime" :end="searchParams.endTime"
@@ -114,7 +114,7 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="historyData"
+                    :data="auditData"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -126,7 +126,7 @@
                         label="企业地址">
                 </el-table-column>
                 <el-table-column
-                        prop="concact"
+                        prop="contact"
                         label="联系人">
                 </el-table-column>
                 <el-table-column
@@ -141,8 +141,10 @@
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="checkDetail(scope.$index, scope.row)">
-                            待审核
+                        <el-button type="text" size="small" @click="checkDetail(scope.row)">
+                            <el-tag type="primary" v-if="scope.row.status == 1">待审核</el-tag>
+                            <el-tag type="success" v-if="scope.row.status == 2">审核通过</el-tag>
+                            <el-tag type="danger" v-if="scope.row.status == 3">审核失败</el-tag>
                         </el-button>
                     </template>
                 </el-table-column>
@@ -162,8 +164,7 @@
     </article>
 </template>
 <script lang="babel">
-    import {history} from '../../services/fianace/finance'
-    import {date2Str} from '../../utils/timeUtils'
+    import companyService from '../../services/companyService'
     import DateRange from '../component/form/DateRangePicker'
     export default {
         components: {
@@ -173,13 +174,17 @@
             return {
                 show: {
                     showDetail: false,
-                    detial: null,
+                    detail: null,
                     title: ''
+                },
+                form: {
+                    status: '',
+                    note: ''
                 },
                 loading: false,
                 currentPage: 1,
-                pageSize: 10,
-                historyData: [],
+                pageSize: 15,
+                auditData: [],
                 total: 0,
                 searchParams: {
                     createTime: '',
@@ -195,9 +200,15 @@
             })
         },
         methods: {
-            checkDetail (index, item) {
-                this.show.showDetail = true
-                this.show.title = item.name || '标题'
+            checkDetail (item) {
+                companyService.getAuditDetail(item.id).then((ret) => {
+                    this.show.detail = ret.data
+                    this.show.title = `${ret.data.name}(审核)`
+                    this.form.status = ret.data.status
+                    this.form.note = ret.data.note
+                }).then(() => {
+                    this.show.showDetail = true
+                })
             },
             handleSizeChange (val) {
                 this.pageSize = val
@@ -207,19 +218,30 @@
                 this.currentPage = val
                 this.getData()
             },
+            submit () {
+                companyService.addAudit({
+                    audit_id: this.show.detail.id,
+                    status: this.form.status,
+                    note: this.form.note
+                }).then((ret) => {
+                    this.show.showDetail = false
+                    xmview.showTip('success', '提交成功')
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
+            },
             getData () {
                 this.loading = true
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
-                    user_id: this.userSelect
+                    keyword: this.searchParams.keyword,
+                    status: this.searchParams.result,
+                    time_start: this.searchParams.createTime,
+                    time_end: this.searchParams.endTime
                 }
-                return history(params).then((ret) => {
-                    this.historyData = ret.data
+                return companyService.getAuditList(params).then((ret) => {
+                    this.auditData = ret.data
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false

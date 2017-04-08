@@ -29,7 +29,7 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="historyData"
+                    :data="courseData"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -61,15 +61,14 @@
     </article>
 </template>
 <script lang="babel">
-    import {history} from '../../services/fianace/finance'
-    import {date2Str} from '../../utils/timeUtils'
+    import companyService from '../../services/companyService'
     export default {
         data () {
             return {
                 loading: false,
                 currentPage: 1,
                 pageSize: 10,
-                historyData: [],
+                courseData: [],
                 total: 0,
             }
         },
@@ -91,15 +90,10 @@
                 this.loading = true
                 let params = {
                     page: this.currentPage,
-                    page_size: this.pageSize,
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
-                    user_id: this.userSelect
+                    page_size: this.pageSize
                 }
-                return history(params).then((ret) => {
-                    this.historyData = ret.data
+                return companyService.getCourseTaskList(params).then((ret) => {
+                    this.courseData = ret.data
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false

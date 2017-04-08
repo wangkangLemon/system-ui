@@ -55,9 +55,8 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog class="showDetail" title="查看公告" v-model="showDetail">
-            <div>查看公告：标题</div>
-            <div>内容</div>
+        <el-dialog class="showDetail" :title="currentItem.title" v-model="showDetail">
+            <div>{{currentItem.content}}</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>
             </div>
@@ -91,7 +90,7 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="historyData"
+                    :data="announceData"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -101,6 +100,10 @@
                 <el-table-column
                         prop="type"
                         label="类型">
+                    <template scope="scope">
+                        <el-tag type="primary" v-if="scope.row.type == 'company'">企业公告</el-tag>
+                        <el-tag type="success" v-if="scope.row.type == 'department'">分店公告</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="title"
@@ -113,12 +116,15 @@
                 <el-table-column
                         prop="status"
                         label="状态">
+                    <template scope="scope">
+                        <el-tag type="gray">{{statusArr[scope.row.status]}}</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="showDetail = true">
+                        <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看公告
                         </el-button>
                     </template>
@@ -139,8 +145,7 @@
     </article>
 </template>
 <script lang="babel">
-    import {history} from '../../services/fianace/finance'
-    import {date2Str} from '../../utils/timeUtils'
+    import companyService from '../../services/companyService'
     import IndustryCompanySelect from '../component/select/IndustryCompany'
     export default {
         components: {
@@ -148,11 +153,16 @@
         },
         data () {
             return {
+                currentItem: {
+                    title: '',
+                    content: ''
+                },
+                statusArr: ['正常', '草稿', '撤销'],
                 showDetail: false,
                 loading: false,
                 currentPage: 1,
-                pageSize: 10,
-                historyData: [],
+                pageSize: 15,
+                announceData: [],
                 total: 0,
                 searchParams: {
                     companySelect: '',
@@ -168,6 +178,14 @@
             })
         },
         methods: {
+            showFn (row) {
+                console.log(1)
+                this.showDetail = true
+                setTimeout(() => {
+                    this.currentItem.title = `查看公告:${row.title}`
+                    this.currentItem.content = row.content
+                }, 10)
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
@@ -181,14 +199,13 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
-                    user_id: this.userSelect
+                    company_id: this.searchParams.companySelect,
+                    keyword: this.searchParams.title,
+                    status: this.searchParams.status,
+                    type: this.searchParams.type,
                 }
-                return history(params).then((ret) => {
-                    this.historyData = ret.data
+                return companyService.getAnnounceList(params).then((ret) => {
+                    this.announceData = ret.data
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false

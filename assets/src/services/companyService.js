@@ -90,6 +90,91 @@ class CompanyService {
             }
         })
     }
+
+    // 获取公告列表
+    getAnnounceList ({
+        page = '',
+        page_size = '',
+        company_id = '',
+        keyword = '',
+        status = '',
+        type = ''
+    }) {
+        let finalUrl = `${urlPre}/announce/search`
+        return api.get(finalUrl, {page, page_size, company_id, keyword, status, type}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 拿药练习
+    getMedicineList ({
+        page = '',
+        page_size = ''
+    }) {
+        let finalUrl = config.apiHost + '/sys/medicine/company/search'
+        return api.get(finalUrl, {page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 课程任务
+    getCourseTaskList ({
+        page = '',
+        page_size = ''
+    }) {
+        let finalUrl = config.apiHost + '/sys/coursetask/company/search'
+        return api.get(finalUrl, {page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 统计列表
+    getStatList ({
+        page = '',
+        page_size = ''
+    }) {
+        let finalUrl = `${urlPre}/analytics/grow/search`
+        return api.get(finalUrl, {page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 审计列表
+    getAuditList ({
+        page = '',
+        page_size = '',
+        keyword = '',
+        status = '',
+        time_start = '',
+        time_end = ''
+    }) {
+        let finalUrl = `${urlPre}/audit/search`
+        return api.get(finalUrl, {page, page_size, keyword, status, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 查询审计详情
+    getAuditDetail (id) {
+        let finalUrl = `${urlPre}/audit/${id}`
+        return api.get(finalUrl, {}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 审计审核提交
+    addAudit ({
+        audit_id,
+        status,
+        note = ''
+    }) {
+        let finalUrl = `${urlPre}/audit/${audit_id}`
+        return api.put(finalUrl, {status, note}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
 }
 
 export default new CompanyService()

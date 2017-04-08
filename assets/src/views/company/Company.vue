@@ -43,6 +43,7 @@
 </style>
 <template>
     <article class="company-index">
+        <p>签约人下拉框滚动加载 修改的时候市区选中</p>
         <!--详情-->
         <el-dialog v-if="details != null" class="showDetail" v-model="showDetail" title="企业信息">
             <h2>
