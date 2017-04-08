@@ -45,7 +45,10 @@
     <article class="company-index">
         <!--详情-->
         <el-dialog v-if="details != null" class="showDetail" v-model="showDetail" title="企业信息">
-            <h2>{{details.name}}</h2>
+            <h2>
+                {{details.name}}
+                <el-tag type="success">{{companyType[details.category]}}</el-tag>
+            </h2>
             <p><i>门店数量：</i>{{details.department_count}}</p>
             <p><i>店员数量：</i>{{details.user_count}}</p>
             <p><i>联系人：</i>{{details.concact}}</p>
@@ -178,8 +181,7 @@
                         prop="name"
                         label="名称">
                     <template scope="scope">
-                        <el-tag type="gray" v-if="scope.row.category == 1">工业</el-tag>
-                        <el-tag type="gray" v-if="scope.row.category == 2">连锁</el-tag>
+                        <el-tag type="gray">{{companyType[scope.row.category]}}</el-tag>
                         {{scope.row.name}}
                     </template>
                 </el-table-column>
@@ -261,6 +263,7 @@
                 callback()
             }
             return {
+                companyType: ['', '工业', '连锁'],
                 editloading: false,
                 companyID: '',
                 details: null,
