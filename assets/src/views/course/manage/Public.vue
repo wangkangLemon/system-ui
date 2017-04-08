@@ -38,12 +38,14 @@
 <template>
     <article id="course-manage-public-container">
         <section class="manage-container">
-            <el-button type="primary" icon="plus" @click="$router.push({ name:'course-manage-addCourse'})">添加课程
+            <el-button type="primary" icon="plus" @click="$router.push({ name:'course-manage-addCourse'})"><i>添加课程</i>
             </el-button>
             <el-button type="warning" icon="menu" @click="$router.push({name:'course-manage-course-category-manage'})">
-                管理栏目
+                <i>管理栏目</i>
             </el-button>
-            <el-button type="success" icon="menu">专辑管理 </el-button>
+            <el-button type="success" icon="menu" @click="$router.push({name:'course-manage-course-album-manage'})">
+                <i>专辑管理</i>
+            </el-button>
         </section>
 
         <article class="search">

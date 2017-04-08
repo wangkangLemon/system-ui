@@ -72,6 +72,18 @@ export default {
             }
         },
         {
+            path: 'manage/course-album-manage', // 栏目管理
+            name: 'course-manage-course-album-manage',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/course/manage/AlbumManage.vue'))
+                })
+            },
+            meta: {
+                title: '专辑管理-培训',
+            }
+        },
+        {
             path: 'manage/industry', // 工业课
             name: 'course-manage-industry',
             component: resolve => {

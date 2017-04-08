@@ -23,6 +23,11 @@
                 loading: false
             }
         },
+        watch: {
+            'value' (val) {
+                if (val.length != this.data.length) this.setCurrVal(val)
+            }
+        },
         activated () {
             if (!this.value || this.value.length < 1)
                 this.initData()
@@ -83,6 +88,7 @@
                 if (val === this.data) return
                 this.data = val
                 this.$emit('input', val)
+                this.setAllNodes()
             },
             initData () {
                 this.loading = true
@@ -91,8 +97,13 @@
                     xmview.setContentLoading(false)
                 }).then(() => {
                     this.loading = false
-                    this.setAllNodes()
                     this.$forceUpdate()
+                })
+            },
+            // 清空选中项
+            clearSelected () {
+                this.allNodes.map((item) => {
+                    item.style.background = '#ffffff'
                 })
             }
         },

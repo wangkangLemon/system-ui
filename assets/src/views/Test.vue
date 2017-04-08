@@ -7,21 +7,30 @@
 
 <template>
     <div id="testview-container">
-        <CourseCategory :onchange="handleChange"></CourseCategory>
+        <UploadFile v-model="isShow" ref="container"></UploadFile>
+        <el-button @click="() => isShow = true">显示</el-button>
     </div>
 </template>
 
 <script>
-    import CourseCategory from './component/select/CourseCategory.vue'
+    import UploadFile from './course/component/DialogVideo.vue'
+
     export default {
         data() {
-            return {}
+            return {
+                isShow: true,
+                file: '/upload/1.docx'
+            }
+        },
+        mounted () {
+            this.$refs.container.fetchData()
+            console.info(this.$refs.container.fetchData)
         },
         methods: {
             handleChange (val) {
                 console.info(val)
             }
         },
-        components: {CourseCategory}
+        components: {UploadFile}
     }
 </script>

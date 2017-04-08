@@ -1,9 +1,7 @@
+<!--课程专辑下拉框-->
 <template>
-    <section>
-        <i>课程</i>
-        <SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="value">
-        </SelectScroll>
-    </section>
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData">
+    </SelectScroll>
 </template>
 
 <script>
@@ -27,19 +25,21 @@
         },
         methods: {
             handleChange(val) {
+                console.info('监听到变化')
                 this.setCurrentValue(val)
                 this.change && this.change()
             },
             setCurrentValue (val) {
                 if (this.curVal == val) return
                 this.currVal = val
-                this.$emit('change', val)
-                this.$emit('input')
+                this.$emit('input', val)
             },
             fetchData (val, length) {
                 let keyword = val
                 let page = parseInt(length / this.pageSize) + 1
-                return courseService.courseList(keyword, page, this.pageSize)
+                return courseService.getAlbumList({keyword, page, page_size: this.pageSize}).then((ret) => {
+                    return ret.data
+                })
             }
         }
     }

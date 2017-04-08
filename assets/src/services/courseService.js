@@ -55,6 +55,41 @@ class CourseService {
         })
     }
 
+    // 添加课程
+    addCourse ({companyid, category_id, name, image, material_type, material_id, album_id, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course`
+        return api.post(finalUrl, {
+            category_id,
+            name,
+            image,
+            material_type,
+            material_id,
+            album_id,
+            description,
+            need_testing,
+            limit_time,
+            limit_repeat,
+            score_pass,
+            price_enabled,
+            price,
+            price_float
+        })
+    }
+
+    // 弹出框请求的视频列表
+    getVideo4Dialog ({companyid, status, keyword, page, page_size}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/video/search`
+        return api.get(finalUrl, {keyword, status, page, page_size})
+    }
+
+    // 获取文档上传url
+    getCourseDocUploadUrl ({companyid} = {}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        return `${config.apiHost}/com/${companyid}/course/doc/upload`
+    }
+
     // 获取课程栏目树
     getCategoryTree ({companyid, id = 'tree', filter = true}) {
         companyid = companyid || authUtils.getUserInfo().company_id
@@ -70,10 +105,13 @@ class CourseService {
     }
 
     // 添加栏目
-    addCategory ({companyid, parent_id = 0, name, image, sort}) {
+    addCategory ({companyid, parent_id, name, image, sort}) {
         companyid = companyid || authUtils.getUserInfo().company_id
+        let reqParam = {parent_id, name, image, sort}
+        if (parent_id === 0) delete reqParam['parent_id']
+
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category`
-        return api.post(finalUrl, {parent_id, name, image, sort})
+        return api.post(finalUrl, reqParam)
     }
 
     // 修改栏目
@@ -102,6 +140,41 @@ class CourseService {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category/${id}/move/content`
         return api.put(finalUrl, {to})
+    }
+
+    // 获取专辑
+    getAlbumList ({companyid, page, page_size, keyword, time_start, time_end}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/album/search`
+        return api.get(finalUrl, {page, page_size, keyword, time_start, time_end})
+    }
+
+    // 删除专辑
+    deleteAlbumList ({companyid, id}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/album/${id}`
+        return api.del(finalUrl, {})
+    }
+
+    // 批量删除专辑 ids: id数组
+    deleteBatchAlbumList ({companyid, ids}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/album/batchdel`
+        return api.post(finalUrl, {id: ids.join(',')})
+    }
+
+    // 新增专辑
+    addAlbum ({companyid, course_id, name}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/album/add`
+        return api.post(finalUrl, {course_id, name})
+    }
+
+    // 编辑专辑
+    editAlbum ({companyid, course_id, name}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/album/edit`
+        return api.post(finalUrl, {course_id, name})
     }
 }
 export default new CourseService()

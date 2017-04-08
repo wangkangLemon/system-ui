@@ -6,6 +6,10 @@
     #course-manage-coursecategory {
         @extend %content-container;
 
+        .manage-container {
+            @extend %right-top-btnContainer;
+        }
+
         > section {
             display: inline-block;
             vertical-align: top;
@@ -37,6 +41,10 @@
 
 <template>
     <article id="course-manage-coursecategory">
+        <section class="manage-container">
+            <el-button type="primary" @click="addRootCategory">新建栏目</el-button>
+        </section>
+
         <section class="left-container">
             <CourseCategoryTree v-model="treeData" ref="courseCategory"
                                 :onNodeClick="treeNodeClick.bind(this,1)"></CourseCategoryTree>
@@ -154,6 +162,7 @@
             },
         },
         activated () {
+            xmview.setContentLoading(false)
             this.uploadImgUrl = courseService.getUploadCategoryImgUrl()
         },
         methods: {
@@ -167,21 +176,18 @@
 
                 this.dialogConfirm.isShow = true
                 this.dialogConfirm.msg = `是否确认删除栏目 <i style="color:red">${node.label}</i> 吗？`
-                if (typeof this.dialogConfirm.confirmClick === 'object') {
-                    this.dialogConfirm.confirmClick = () => {
-                        courseService.deleteCategory({id: node.value}).then(() => {
-                            xmview.showTip('success', '操作成功!')
-                            this.$refs.courseCategory.removeItem(node, this.nodeParentSelected)
-                            node = null
-                            this.dialogConfirm.isShow = false
-                            this.resetForm()
-                        })
-                    }
+                this.dialogConfirm.confirmClick = () => {
+                    courseService.deleteCategory({id: node.value}).then(() => {
+                        xmview.showTip('success', '操作成功!')
+                        this.$refs.courseCategory.removeItem(node, this.nodeParentSelected)
+                        node = null
+                        this.dialogConfirm.isShow = false
+                        this.resetForm()
+                    })
                 }
             },
             // 左边的节点被点击
             treeNodeClick (type, data, node, store) {
-                console.info(this.treeData)
                 if (type == 1) {
                     this.nodeParentSelected = node.parent// 记录父节点
                     this.nodeSelected = data // 记录当前节点
@@ -196,6 +202,13 @@
             // 图片上传完毕
             handleImgUploaded (response) {
                 this.fetchParam.image = response.data.url
+            },
+            // 新建根节点
+            addRootCategory () {
+                this.activeTab = 'add'
+                // 清空选中项
+                this.$refs.courseCategory.clearSelected()
+                this.fetchParam.parent_id = 0
             },
             // 提交表单
             submitForm () {
@@ -216,13 +229,17 @@
                             this.$forceUpdate()
                         } else {
                             this.fetchParam.id = ret.data.id
-                            if (!this.nodeSelected.children) this.nodeSelected.children = [{label: '加载中...'}]
+                            let addedItem = {
+                                label: this.fetchParam.name,
+                                value: this.fetchParam.id,
+                                item: this.fetchParam
+                            }
+
+                            // 如果是添加的根节点
+                            if (this.fetchParam.parent_id === 0) this.treeData.push(addedItem)
+                            else if (!this.nodeSelected.children) this.nodeSelected.children = [{label: '加载中...'}]
                             else if (this.nodeSelected.children[0].value) {
-                                this.nodeSelected.children.push({
-                                    label: this.fetchParam.name,
-                                    value: this.fetchParam.id,
-                                    item: this.fetchParam
-                                })
+                                this.nodeSelected.children.push(addedItem)
                             }
                         }
                     })

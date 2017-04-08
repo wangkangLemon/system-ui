@@ -46,8 +46,8 @@
                 }
             }
 
-            .bottom-btns{
-                .submit{
+            .bottom-btns {
+                .submit {
                     float: right;
 
                 }
@@ -60,47 +60,51 @@
     <article id="course-manage-addcourse-container">
         <el-tabs v-model="activeTab">
             <el-tab-pane label="课程信息" name="first">
-                <el-form label-width="120px">
+                <el-form label-width="120px" ref="formFirst">
                     <el-form-item label="所属栏目">
-                        <el-input></el-input>
+                        <CourseCategorySelect v-model="fetchParam.category_id"></CourseCategorySelect>
                     </el-form-item>
                     <el-form-item label="课程名称">
-                        <el-input></el-input>
+                        <el-input v-model="fetchParam.name"></el-input>
                     </el-form-item>
                     <el-form-item label="课程封面图">
-                        <UploadImg></UploadImg>
+                        <UploadImg :url="uploadDocUrl" :on-success="handleUploadMedia"></UploadImg>
                     </el-form-item>
                     <el-form-item label="课程类型">
-                        <el-select v-model="fetchParam.courseType" placeholder="请选择" :clearable="true">
-                            <el-option label="视频" value="1"></el-option>
-                            <el-option label="WORD" value="2"></el-option>
-                            <el-option label="PPT" value="3"></el-option>
-                            <el-option label="PDF" value="4"></el-option>
+                        <el-select v-model="fetchParam.material_type" placeholder="请选择" :clearable="true">
+                            <el-option label="视频" value="video"></el-option>
+                            <el-option label="WORD" value="doc"></el-option>
+                            <el-option label="PPT" value="ppt"></el-option>
+                            <el-option label="PDF" value="pdf"></el-option>
                         </el-select>
+                    </el-form-item>
+                    <el-form-item label="课程文件">
+                        <UploadFile v-show="fetchParam.material_type !== 'video'"></UploadFile>
+                        <el-button v-show="fetchParam.material_type === 'video'" @click="isShowVideoDialog=true">选取视频
+
+                        </el-button>
                     </el-form-item>
                     <el-form-item label="所属专辑">
-                        <el-select v-model="fetchParam.courseType" placeholder="请选择" :clearable="true">
-                            <el-option label="视频" value="1"></el-option>
-                        </el-select>
+                        <CourseAlbumSelect v-model="fetchParam.album_id"></CourseAlbumSelect>
                     </el-form-item>
                     <el-form-item label="课程介绍">
-                        <el-input
-                                type="textarea"
-                                :autosize="{ minRows: 2, maxRows: 4}"
-                                placeholder="请输入内容">
+                        <el-input v-model="fetchParam.description"
+                                  type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  placeholder="请输入内容">
                         </el-input>
                     </el-form-item>
 
                     <h2>课后考试设置</h2>
                     <el-form-item label="课后考试">
-                        <el-radio class="radio" label="1">需要</el-radio>
-                        <el-radio class="radio" label="2">不需要</el-radio>
+                        <el-radio class="radio" v-model="fetchParam.need_testing" label="1">需要</el-radio>
+                        <el-radio class="radio" v-model="fetchParam.need_testing" label="0">不需要</el-radio>
                     </el-form-item>
                     <el-form-item label="考试时间">
-                        <el-input placeholder="以分钟为单位"></el-input>
+                        <el-input placeholder="以分钟为单位" v-model="fetchParam.limit_time"></el-input>
                     </el-form-item>
                     <el-form-item label="及格分数">
-                        <el-input></el-input>
+                        <el-input v-model="fetchParam.score_pass"></el-input>
                     </el-form-item>
 
                     <el-form-item label="">
@@ -228,32 +232,69 @@
             </el-tab-pane>
         </el-tabs>
 
+        <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
     </article>
 </template>
 
 <script>
+    import courseService from '../../../services/courseService'
     import UploadImg from '../../component/upload/UploadImg.vue'
+    import DialogVideo from '../component/DialogVideo.vue'
+    import UploadFile from '../../component/upload/UploadFiles.vue'
+    import CourseCategorySelect from '../../component/select/CourseCategory.vue'
+    import CourseAlbumSelect from '../../component/select/CourseAlbum.vue'
+
     export default{
         data () {
             return {
                 activeTab: 'first',
+                uploadDocUrl: '',
+                isShowVideoDialog: false, // 是否显示视频列表弹出框
+                videoName: '请选择视频',
                 fetchParam: {
-                    courseType: void 0,
+                    category_id: void 0,
+                    name: void 0,
+                    image: void 0,
+                    material_type: void 0,
+                    material_id: void 0,
+                    album_id: void 0,
+                    description: void 0,
+                    need_testing: void 0,
+                    limit_time: void 0,
+                    limit_repeat: void 0,
+                    score_pass: void 0,
+                    price_enabled: void 0,
+                    price: void 0,
+                    price_floa: void 0,
                 }
             }
         },
         activated () {
+            this.uploadDocUrl = courseService.getCourseDocUploadUrl()
             xmview.setContentLoading(false)
         },
         methods: {
             // 下一步按钮点击
             btnNextClick () {
-                this.activeTab = 'second'
+                if (this.$refs.formFirst.validate())
+                    this.activeTab = 'second'
             },
             btnPreClick () {
                 this.activeTab = 'first'
+            },
+            submit () {
+                courseService.addCourse(this.fetchParam).then(() => {
+                })
+            },
+            // 处理上传文档
+            handleUploadMedia (response) {
+                this.fetchParam.material_id = response.data.id
+            },
+            // 处理视频选取
+            handleVideoSelected (row) {
+                this.videoName = row.name
             }
         },
-        components: {UploadImg}
+        components: {UploadImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}
     }
 </script>

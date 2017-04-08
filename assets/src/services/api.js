@@ -101,6 +101,8 @@ function processCodeError (ret, url) {
     } else if (ret.code >= 100) {
         xmview.showTip('error', ret.message)
         return Promise.reject(ret)
+    } else if (ret.code != 0) {
+        return Promise.reject(ret)
     }
 }
 

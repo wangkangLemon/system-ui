@@ -95,8 +95,8 @@
                 })
             },
             handleChange (val) {
-                this.$emit('input', val)
                 this.changeCb && this.changeCb(val)
+                this.$emit('input', val)
             },
             // 处理select显示的操作
             handleVisibleChange (state) {
