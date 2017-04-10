@@ -128,20 +128,21 @@
             </el-tab-pane>
             <el-tab-pane :disabled="!fetchParam.id" label="考试题目设置" name="second" class="testing-set">
                 <el-form>
-                    <el-form label-width="120px">
+                    <el-form label-width="120px" v-for="(item,index) in fetchTesting" :key="index">
                         <el-form-item label="">
-                            <el-button icon="plus">判断题</el-button>
-                            <el-button icon="plus">单选题</el-button>
-                            <el-button icon="plus">多选题</el-button>
+                            <el-button icon="plus" @click='addTesting(0, index)'>判断题</el-button>
+                            <el-button icon="plus" @click='addTesting(1, index)'>单选题</el-button>
+                            <el-button icon="plus" @click='addTesting(2, index)'>多选题</el-button>
+                            <el-button icon="delete" type="danger" @click='deleteTesting(index, item)'>删除</el-button>
                         </el-form-item>
                         <el-form-item label="分数">
-                            <el-input placeholder="为该题设置分数"></el-input>
+                            <el-input placeholder="为该题设置分数" v-model="item.score"></el-input>
                         </el-form-item>
                         <el-form-item label="题目">
-                            <el-input
-                                    type="textarea"
-                                    :autosize="{ minRows: 2, maxRows: 4}"
-                                    placeholder="请输入内容">
+                            <el-input v-model="item.description"
+                                      type="textarea"
+                                      :autosize="{ minRows: 2, maxRows: 4}"
+                                      placeholder="请输入内容">
                             </el-input>
                         </el-form-item>
                         <el-form-item label="配图">
@@ -180,64 +181,13 @@
 
                         <hr>
                     </el-form>
-
-                    <el-form label-width="120px">
-                        <el-form-item label="">
-                            <el-button icon="plus">判断题</el-button>
-                            <el-button icon="plus">单选题</el-button>
-                            <el-button icon="plus">多选题</el-button>
-                        </el-form-item>
-                        <el-form-item label="分数">
-                            <el-input placeholder="为该题设置分数"></el-input>
-                        </el-form-item>
-                        <el-form-item label="题目">
-                            <el-input
-                                    type="textarea"
-                                    :autosize="{ minRows: 2, maxRows: 4}"
-                                    placeholder="请输入内容">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="配图">
-                            <UploadImg></UploadImg>
-                        </el-form-item>
-
-                        <el-form-item label="选项">
-                            <el-radio class="radio" label="1">正确</el-radio>
-                            <el-radio class="radio" label="2">错误</el-radio>
-                        </el-form-item>
-
-                        <el-form-item label="选项">
-                            <h5>请在正确答案前面打勾</h5>
-                            <div class="multy-choose-item">
-                                <el-checkbox></el-checkbox>
-                                <el-input placeholder="填写描述"></el-input>
-                                <el-button type="text">删除</el-button>
-                            </div>
-                            <div class="multy-choose-item">
-                                <el-checkbox></el-checkbox>
-                                <el-input placeholder="填写描述"></el-input>
-                                <el-button type="text">删除</el-button>
-                            </div>
-                            <div class="multy-choose-item">
-                                <el-button type="text">添加更多选项</el-button>
-                            </div>
-                        </el-form-item>
-
-                        <el-form-item label="答案详解">
-                            <el-input
-                                    type="textarea"
-                                    :autosize="{ minRows: 2, maxRows: 4}"
-                                    placeholder="请输入内容">
-                            </el-input>
-                        </el-form-item>
-                    </el-form>
                 </el-form>
 
                 <el-form label-width="120px">
                     <el-form-item label="">
-                        <el-button icon="plus">判断题</el-button>
-                        <el-button icon="plus">单选题</el-button>
-                        <el-button icon="plus">多选题</el-button>
+                        <el-button icon="plus" @click='addTesting(0, fetchTesting.length)'>判断题</el-button>
+                        <el-button icon="plus" @click='addTesting(1, fetchTesting.length)'>单选题</el-button>
+                        <el-button icon="plus" @click='addTesting(2, fetchTesting.length)'>多选题</el-button>
                     </el-form-item>
                 </el-form>
 
@@ -259,6 +209,7 @@
     import UploadFile from '../../component/upload/UploadFiles.vue'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     import CourseAlbumSelect from '../../component/select/CourseAlbum.vue'
+    import testingFactory from '../utils/testingFactory'
 
     export default{
         name: 'course-manage-addcourse',
@@ -342,6 +293,15 @@
             handleVideoSelected (row) {
                 this.fetchParam.material_name = row.name
                 this.fetchParam.material_id = row.id
+            },
+            addTesting (type, index) {
+                this.fetchTesting.splice(index, 0, testingFactory.getTestingSet(type))
+            },
+            // 删除考试
+            deleteTesting (index, item) {
+                xmview.showDialog(`是否确定删除题目【 <i style="color:red">${item.description || ''}</i> 】?`, () => {
+                    this.fetchTesting.splice(index, 1)
+                })
             }
         },
         components: {UploadImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}

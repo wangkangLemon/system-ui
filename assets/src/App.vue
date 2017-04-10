@@ -3,6 +3,14 @@
         <transition name="fade">
             <router-view></router-view>
         </transition>
+
+        <el-dialog title="提示" v-model="dialog.isShow" size="tiny">
+            <span v-html="dialog.title"></span>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="dialog.isShow = false">取 消</el-button>
+            <el-button type="primary" @click="dialog.confirmFn">确 定</el-button>
+          </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -11,12 +19,18 @@
     export default {
         data () {
             return {
+                dialog: {
+                    isShow: false,
+                    title: '',
+                    confirmFn: {}
+                },
                 fullscreenLoading: false,
             }
         },
         created () {
             xmview.setLoading = this.setLoading.bind(this)
             xmview.showTip = this.showTip.bind(this)
+            xmview.showDialog = this.showDialog.bind(this)
         },
         methods: {
             // 全屏的loading
@@ -30,6 +44,15 @@
                     message: msg,
                     duration: msgDuring
                 })
+            },
+            // 显示dialog
+            showDialog (title, confirmFn, isShow = true) {
+                this.dialog.isShow = isShow
+                this.dialog.title = title
+                this.dialog.confirmFn = () => {
+                    this.dialog.isShow = false
+                    confirmFn && confirmFn()
+                }
             }
         },
         store

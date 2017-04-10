@@ -7,7 +7,7 @@ class TestingFactory {
     // 最全的原始数据
     getOrignData () {
         return {
-            description: void 0, // 描述
+            description: void 0, // 题目
             score: void 0, // 分数
             image: void 0, // 图片
             explain: void 0, // 答案详解
