@@ -48,7 +48,6 @@
 </style>
 <template>
     <article class="company-department">
-        <p>删除接口有问题</p>
         <!--详情-->
         <el-dialog v-if="show.detail" class="showDetail" title="查看门店" v-model="show.showDetail">
             <div class="info">
@@ -225,6 +224,7 @@
                 departmentService.depDelete(this.currentItem.id).then(() => {
                     this.deletDialog = false
                     xmview.showTip('success', '删除成功')
+                    this.getData()
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
                 })

@@ -2,6 +2,9 @@
 <style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
+    .edui-editor {
+        width: 100% !important;
+    }
     .avatar-uploader {
         .el-upload {
             border: 1px dashed #d9d9d9;
@@ -109,24 +112,14 @@
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
-                    <el-select v-model="form.category" placeholder="请选择">
-                        <el-option label="管理员" value="管理员"></el-option>
-                        <el-option label="编辑" value="编辑"></el-option>
-                        <el-option label="营销" value="营销"></el-option>
-                    </el-select>
+                    <ArticleCategorySelect v-model="form.category"></ArticleCategorySelect>
                 </el-form-item>
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="imgUrl" label="封面" :label-width="formLabelWidth">
-                    <el-upload
-                            class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :show-file-list="false"
-                            :on-success="handleUploadSuccess">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                    <UploadImg ref="uploadImg" :defaultImg="form.cover" :url="uploadImgUrl"
+                               :onSuccess="handleImgUploaded"></UploadImg>
                 </el-form-item>
                 <el-form-item prop="content" label="正文内容" id="editor" :label-width="formLabelWidth">
                     <vue-editor @ready="ueReady"></vue-editor>
@@ -134,7 +127,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
-                <el-button type="primary" @click="submit('form')">存为草稿</el-button>
+                <el-button type="primary" @click="submit('form', 1)">存为草稿</el-button>
             </div>
         </el-dialog>
         <section class="add">
@@ -144,17 +137,21 @@
         <div class="main-container">
             <section class="search">
                 <section>
-                    <i>姓名</i>
-                    <el-input class="name" v-model="name" placeholder="请输入姓名"></el-input>
+                    <i>标题</i>
+                    <el-input @change="getData" class="name" v-model="search.title" />
                 </section>
-                <DateRange title="创建时间" :start="createTime" :end="endTime"
-                           v-on:changeStart="val=> createTime=val"
-                           v-on:changeEnd="val=> endTime=val"
+                <section>
+                    <i>类别</i>
+                    <ArticleCategorySelect :onchange="getData" v-model="search.category_id"></ArticleCategorySelect>
+                </section>
+                <DateRange title="时间" :start="search.createTime" :end="search.endTime"
+                           v-on:changeStart="val=> search.createTime=val"
+                           v-on:changeEnd="val=> search.endTime=val"
                            :change="getData">
                 </DateRange>
             </section>
             <el-card class="box-card">
-                <el-table border :data="tableData">
+                <el-table border :data="articleData" v-loading="loading">
                     <el-table-column
                             prop="title"
                             label="标题">
@@ -168,6 +165,10 @@
                             prop="status_name"
                             label="状态"
                             width="200">
+                        <template scope="scope">
+                            <el-tag type="gray" v-if="scope.row.status">{{scope.row.status_name}}</el-tag>
+                            <el-tag type="success" v-if="!scope.row.status">{{scope.row.status_name}}</el-tag>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="create_time_name"
@@ -176,10 +177,7 @@
                     </el-table-column>
                     <el-table-column prop="operate" label="操作">
                         <template scope="scope">
-                            <el-button type="text" size="small" @click="showDetial = true">
-                                查看
-                            </el-button>
-                            <el-button type="text" size="small" @click="addForm = true">
+                            <el-button type="text" size="small" @click="editArticle(scope.row)">
                                 修改
                                 <!--点击详情 form数据变成当前管理员的信息-->
                             </el-button>
@@ -193,10 +191,10 @@
                     <el-pagination
                             @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
-                            :current-page="currentPage4"
-                            :page-sizes="[1, 2]"
+                            :current-page="currentPage"
+                            :page-sizes="[15, 30, 60, 100]"
                             layout="total, sizes, ->, prev, pager, next, jumper"
-                            :total="4">
+                            :total="total">
                     </el-pagination>
                 </section>
             </el-card>
@@ -207,54 +205,59 @@
     import deleteDialog from '../component/dialog/Delete'
     import DateRange from '../component/form/DateRangePicker.vue'
     import VueEditor from '../component/form/UEditor.vue'
+    import ArticleService from '../../services/articleService'
+    import ArticleCategorySelect from '../component/select/ArticleCategory.vue'
+    import UploadImg from '../component/upload/UploadImg.vue'
 
     export default {
         components: {
             deleteDialog,
             DateRange,
-            VueEditor
+            VueEditor,
+            ArticleCategorySelect,
+            UploadImg
         },
         data () {
             return {
+                loading: false,
+                search: {
+                    title: '',
+                    category_id: '',
+                    createTime: '',
+                    endTime: '',
+                },
                 editor: null,
-                imageUrl: '',
-                createTime: '',
-                endTime: '',
                 itemName: '',           // 要删除项名称
                 deletDialog: false,     // 删除弹窗
                 showDetial: false,     // 是否显示详情对话框
+                uploadImgUrl: '',      // 要上传图片的请求地址
                 form: {                // 表单属性值
                     title: '',          // 标题
                     category: '',       // 分类
-                    imgUrl: '',        // 图片地址
+                    cover: '',        // 图片地址
                     content: '',         // 正文内容
                 },
                 rules: {
                     title: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    category: [
-                        {required: true, message: '请选择栏目', trigger: 'change'}
-                    ]
+                    category: {type: 'number', required: true, message: '请选择栏目', trigger: 'change'}
                 },
                 formLabelWidth: '120px', // 表单label的宽度
                 addForm: false, // 表单弹窗是否显示
-                currentPage4: 1, // 分页当前显示的页数
                 name: '', // 搜索的姓名
-                tableData: [
-                    {
-                        id: 1,
-                        title: '销售',
-                        category_name: '13920307216',
-                        create_time_name: '2133',
-                        status_name: '正常'
-                    }
-                ]
+                articleData: [],
+                total: 0,
+                currentPage: 1, // 分页当前显示的页数
+                pageSize: 15
             }
         },
-        mounted () {
-            xmview.setContentLoading(false)
-            console.log(1)
+        created () {
+            this.uploadImgUrl = ArticleService.getArticleUploadUrl()
+            console.log(this.uploadImgUrl)
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             handleDelete (index, row) {
@@ -269,7 +272,18 @@
                 // 以下执行接口删除动作
                 console.log(11)
             },
-            submit (form) {
+            editArticle (row) {
+                this.addForm = true
+                let _this = this
+                setTimeout(() => {
+                    _this.$refs['form'].resetFields()
+                    _this.form = row
+                    console.log(_this.editor)
+//                    _this.editor.setContent(_this.form.content || '')
+                    console.log(row)
+                }, 0)
+            },
+            submit (form, status = 0) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         if (!this.editor.getContentTxt()) {
@@ -277,7 +291,14 @@
                             return
                         }
                         this.form.content = this.editor.getContentTxt()
-                        console.log(this.form)
+                        this.form.draft = status
+                        ArticleService.addArticle(this.form).then((ret) => {
+                            xmview.showTip('success', '发布成功')
+                            this.addForm = false
+                            this.getData()
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }
@@ -294,11 +315,23 @@
                 // 以下获取当页数据
             },
             getData () {
-                console.log(1)
+                this.loading = true
+                return ArticleService.getArticleList({
+                    category_id: this.search.category_id,
+                    title: this.search.title,
+                    start_time: this.search.createTime,
+                    end_time: this.search.endTime,
+                    page: this.currentPage,
+                    page_size: this.pageSize
+                }).then((ret) => {
+                    this.articleData = ret.data
+                    this.total = ret.total
+                }).then(() => {
+                    this.loading = false
+                })
             },
-            handleUploadSuccess(res, file) {
-                this.imageUrl = window.URL.createObjectURL(file.raw)
-                console.log(file)
+            handleImgUploaded(response) {
+                this.form.cover = response.data.url
             },
             ueReady (ue) {
                 this.editor = ue
