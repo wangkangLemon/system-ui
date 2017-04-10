@@ -226,6 +226,7 @@
                 }).then((ret) => {
                     this.show.showDetail = false
                     xmview.showTip('success', '提交成功')
+                    this.getData()
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
                 })
