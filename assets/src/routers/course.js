@@ -48,7 +48,7 @@ export default {
             }
         },
         {
-            path: 'manage/add-course', // 添加课程
+            path: 'manage/add-course', // 添加和编辑课程
             name: 'course-manage-addCourse',
             component: resolve => {
                 require.ensure([], () => {

@@ -74,6 +74,32 @@ class CourseService {
             price_enabled,
             price,
             price_float
+        }).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 修改课程
+    editCourse ({companyid, id, category_id, name, image, material_type, material_id, album_id, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/${id}`
+        return api.put(finalUrl, {
+            category_id,
+            name,
+            image,
+            material_type,
+            material_id,
+            album_id,
+            description,
+            need_testing,
+            limit_time,
+            limit_repeat,
+            score_pass,
+            price_enabled,
+            price,
+            price_float
+        }).then((ret) => {
+            return ret.data
         })
     }
 
@@ -90,11 +116,20 @@ class CourseService {
         return `${config.apiHost}/com/${companyid}/course/doc/upload`
     }
 
+    // 获取添加编辑课程上传图片的url
+    getManageImgUploadUrl ({companyid} = {}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        return `${config.apiHost}/com/${companyid}/course/image`
+    }
+
     // 获取课程栏目树
     getCategoryTree ({companyid, id = 'tree', filter = true}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category/children`
-        return api.get(finalUrl, {id, filter})
+        return api.get(finalUrl, {id, filter}).catch((ret) => {
+            ret.tipCom.close()
+            return ret
+        })
     }
 
     // 获取上传栏目图片的url

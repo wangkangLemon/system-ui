@@ -217,7 +217,8 @@
             preview () {
             },
             // 编辑
-            edit () {
+            edit (index, row) {
+                this.$router.push({name: 'course-manage-addCourse', params: {courseInfo: row}})
             },
             // 下线
             offline (index, row) {

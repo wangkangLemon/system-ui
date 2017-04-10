@@ -1,35 +1,69 @@
 <!--课程栏目-->
 <template>
-    <el-cascader
-            :options='options' :show-all-levels="false"
-            @active-item-change="handleItemChange"
-            :clearable="true"
-            @change="setCurrVal"
+    <el-cascader ref="container" v-loading="loading"
+                 :options='options' :show-all-levels="false"
+                 :placeholder="placeholder"
+                 @active-item-change="handleItemChange"
+                 :clearable="true"
+                 @change="setCurrVal"
     ></el-cascader>
 </template>
 
 <script>
     import treeUtils from '../../../utils/treeUtils'
-    import authUtils from '../../../utils/authUtils'
     import courseService from '../../../services/courseService'
     export default{
         props: {
-            value: [String, Number],
+            value: [String, Number, Array],
+            autoClear: {
+                type: Boolean,
+                default: false
+            },
             onchange: Function,
+            placeholder: {
+                type: String,
+                default: '请选择'
+            },
         },
         data () {
             return {
+                loading: false,
                 options: [],
                 currVal: this.value,
                 companyid: void 0, // 企业id
+                lastData: void 0,
             }
         },
-        created () {
-            this.companyid = authUtils.getUserInfo().company_id
-            courseService.getCategoryTree({companyid: this.companyid})
-                .then(ret => {
-                    this.options = treeUtils.arr2Cascader(ret, 0, void 0, void 0, 'name', 'id')
-                })
+        watch: {
+            'value' (val) {
+                this.setCurrVal(val)
+            },
+            'currVal' (val, old) {
+                this.$emit('input', val.length > 0 ? parseInt(val[val.length - 1]) : val)
+                this.onchange && this.onchange(val)
+            }
+        },
+        mounted () {
+            this.$refs.container.$el.addEventListener('click', () => {
+                console.info(this.$refs.container.$el, '点击coursecategory')
+                if (this.loading || this.options.length > 0) return
+                if (this.lastData) {
+                    this.options = this.lastData
+                } else {
+                    this.loading = true
+                    courseService.getCategoryTree({companyid: this.companyid})
+                        .then(ret => {
+                            this.options = treeUtils.arr2Cascader(ret, 0, void 0, void 0, 'name', 'id')
+                            this.loading = false
+                        })
+                }
+            })
+        },
+        deactivated () {
+            if (this.autoClear && this.options.length > 0) {
+                this.lastData = this.options
+                this.options = []
+            }
         },
         activated () {
         },
@@ -37,8 +71,6 @@
             setCurrVal (val) {
                 if (this.currVal == val || !val) return
                 this.currVal = val
-                this.$emit('input', val[val.length - 1])
-                this.onchange && this.onchange(val)
             },
             handleItemChange (val) {
                 if (val.length < 1) return

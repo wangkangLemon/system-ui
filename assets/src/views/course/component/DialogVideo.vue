@@ -114,9 +114,6 @@
                 }
             }
         },
-        activated () {
-            this.fetchData()
-        },
         watch: {
             'fetchParam.page' () {
                 this.fetchData()
@@ -130,6 +127,7 @@
             'isShowDialog'(val) {
                 this.$emit('input', val)
                 this.setShowDialog(val)
+                if (this.data.length < 1) this.fetchData()
             }
         },
         methods: {
@@ -144,6 +142,7 @@
                 })
             },
             selectVideo (index, row) {
+                this.setShowDialog(false)
                 this.onSelect && this.onSelect(row)
             },
             setShowDialog(val) {

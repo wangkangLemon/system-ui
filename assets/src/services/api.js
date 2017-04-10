@@ -79,9 +79,11 @@ function processResponse (promise, url) {
             return Promise.reject({message: '服务器错误'})
         return response.json()
     }).then(json => {
-        processCodeError(json, url)
+        let p = processCodeError(json, url)
+        if (p)
+            return p
         return json
-    }).catch(function (ex) {
+    }, ex => {
         requestedUrls[url] = true
         xmview.setLoading(false)
         ex.tipCom = xmview.showTip('error', '服务器请求失败! 请重试')  // 提示框的实例

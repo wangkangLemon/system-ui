@@ -10,7 +10,7 @@
 </style>
 
 <template>
-    <el-select v-model="selectVal" :placeholder="placeholder" ref="container" @visible-change="handleVisibleChange"
+    <el-select v-model="selectVal" :placeholder="currPlaceholder" ref="container" @visible-change="handleVisibleChange"
                :filter-method="filter" filterable @change="handleChange" :clearable="true" no-data-text="暂无数据"
                no-match-text="没有数据">
         <el-option v-loading="loading"
@@ -36,7 +36,11 @@
             // 返回一个Pormise对象 结果 { data: [{ name:'xm', id:1 }], total: 20 }
             requestCb: Function,
             changeCb: Function, // 选项改变回调
-            value: [String, Number]
+            value: [String, Number],
+            placeholder: {
+                type: String,
+                default: '请选择'
+            }
         },
         data () {
             return {
@@ -44,7 +48,7 @@
                 selectVal: this.value,
                 data: [],
                 loading: false,
-                placeholder: '请选择',
+                currPlaceholder: this.placeholder,
                 input: null,
                 isSearching: false,
                 isShowGetMore: true, // 是否显示加载更多按钮
@@ -52,9 +56,12 @@
         },
         watch: {
             'data'(val) {
-                if (val.length < 1) this.placeholder = '请选择'
+                if (val.length < 1) this.currPlaceholder = this.placeholder
                 this.initGetMore()
                 this.loading = false
+            },
+            'placeholder' (val) {
+                this.currPlaceholder = val
             }
         },
         mounted () {
@@ -74,7 +81,7 @@
                 })
             },
             initGetMore () { // 初始化更多按钮
-                this.placeholder = '输入内容进行搜索'
+                this.currPlaceholder = '输入内容进行搜索'
 
                 let _this = this
                 this.$nextTick(() => {
@@ -101,7 +108,7 @@
             // 处理select显示的操作
             handleVisibleChange (state) {
                 if (state == false) {
-                    this.placeholder = '请选择'
+                    this.currPlaceholder = this.placeholder
                     return
                 }
                 this.initGetMore()

@@ -10,6 +10,9 @@
             margin-bottom: 10px;
         }
 
+        .tab {
+            max-width: 700px;
+        }
         .el-tab-pane {
             max-width: 700px;
         }
@@ -58,17 +61,19 @@
 
 <template>
     <article id="course-manage-addcourse-container">
-        <el-tabs v-model="activeTab">
+        <el-tabs v-model="activeTab" class="tab">
             <el-tab-pane label="课程信息" name="first">
-                <el-form label-width="120px" ref="formFirst">
-                    <el-form-item label="所属栏目">
-                        <CourseCategorySelect v-model="fetchParam.category_id"></CourseCategorySelect>
+                <el-form label-width="120px" ref="formFirst" :rules="rulesFirst" :model="fetchParam">
+                    <el-form-item label="所属栏目" prop="category_id">
+                        <CourseCategorySelect :placeholder="fetchParam.cat_name" :autoClear="true"
+                                              v-model="fetchParam.category_id"></CourseCategorySelect>
                     </el-form-item>
-                    <el-form-item label="课程名称">
+                    <el-form-item label="课程名称" prop="name">
                         <el-input v-model="fetchParam.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="课程封面图">
-                        <UploadImg :url="uploadDocUrl" :on-success="handleUploadMedia"></UploadImg>
+                    <el-form-item label="课程封面图" prop="image">
+                        <UploadImg :defaultImg="fetchParam.image" :url="uploadImgUrl"
+                                   :on-success="res=> fetchParam.image = res.data.url"></UploadImg>
                     </el-form-item>
                     <el-form-item label="课程类型">
                         <el-select v-model="fetchParam.material_type" placeholder="请选择" :clearable="true">
@@ -78,143 +83,154 @@
                             <el-option label="PDF" value="pdf"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="课程文件">
-                        <UploadFile v-show="fetchParam.material_type !== 'video'"></UploadFile>
-                        <el-button v-show="fetchParam.material_type === 'video'" @click="isShowVideoDialog=true">选取视频
-
+                    <el-form-item label="课程文件" prop="material_id">
+                        <UploadFile :url="uploadDocUrl" :disabled="fetchParam.material_type == null"
+                                    v-show="fetchParam.material_type !== 'video'"></UploadFile>
+                        <el-button v-show="fetchParam.material_type === 'video'" @click="isShowVideoDialog=true">
+                            <i>{{fetchParam.material_name}}</i>
                         </el-button>
                     </el-form-item>
                     <el-form-item label="所属专辑">
-                        <CourseAlbumSelect v-model="fetchParam.album_id"></CourseAlbumSelect>
+                        <CourseAlbumSelect :placeholder="fetchParam.album_name"
+                                           v-model="fetchParam.album_id"></CourseAlbumSelect>
                     </el-form-item>
-                    <el-form-item label="课程介绍">
+                    <el-form-item label="课程介绍" prop="description">
                         <el-input v-model="fetchParam.description"
                                   type="textarea"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 6}"
                                   placeholder="请输入内容">
                         </el-input>
                     </el-form-item>
 
                     <h2>课后考试设置</h2>
-                    <el-form-item label="课后考试">
-                        <el-radio class="radio" v-model="fetchParam.need_testing" label="1">需要</el-radio>
-                        <el-radio class="radio" v-model="fetchParam.need_testing" label="0">不需要</el-radio>
+                    <el-form-item label="课后考试" prop="need_testing">
+                        <el-radio class="radio" v-model="fetchParam.need_testing" :label="1">需要</el-radio>
+                        <el-radio class="radio" v-model="fetchParam.need_testing" :label="0">不需要</el-radio>
                     </el-form-item>
-                    <el-form-item label="考试时间">
-                        <el-input placeholder="以分钟为单位" v-model="fetchParam.limit_time"></el-input>
+                    <el-form-item label="考试时间" prop="limit_time">
+                        <el-input :disabled="fetchParam.need_testing == 0" placeholder="以分钟为单位"
+                                  v-model="fetchParam.limit_time"></el-input>
                     </el-form-item>
-                    <el-form-item label="及格分数">
-                        <el-input v-model="fetchParam.score_pass"></el-input>
+                    <el-form-item label="考试次数限制">
+                        <el-input :disabled="fetchParam.need_testing == 0" placeholder="留空或0位不限制"
+                                  v-model="fetchParam.limit_repeat"></el-input>
+                    </el-form-item>
+                    <el-form-item label="及格分数" prop="score_pass">
+                        <el-input :disabled="fetchParam.need_testing == 0" v-model="fetchParam.score_pass"></el-input>
                     </el-form-item>
 
                     <el-form-item label="">
-                        <el-button type="primary" @click="btnNextClick">下一步</el-button>
+                        <el-button style="float: right" type="primary" @click="btnNextClick">
+                            <i>{{ fetchParam.need_testing == 0 ? '保存' : '保存并下一步' }}</i>
+                        </el-button>
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
-            <el-tab-pane label="考试题目设置" name="second" class="testing-set">
-                <el-form label-width="120px">
-                    <el-form-item label="">
-                        <el-button icon="plus">判断题</el-button>
-                        <el-button icon="plus">单选题</el-button>
-                        <el-button icon="plus">多选题</el-button>
-                    </el-form-item>
-                    <el-form-item label="分数">
-                        <el-input placeholder="为该题设置分数"></el-input>
-                    </el-form-item>
-                    <el-form-item label="题目">
-                        <el-input
-                                type="textarea"
-                                :autosize="{ minRows: 2, maxRows: 4}"
-                                placeholder="请输入内容">
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item label="配图">
-                        <UploadImg></UploadImg>
-                    </el-form-item>
+            <el-tab-pane :disabled="!fetchParam.id" label="考试题目设置" name="second" class="testing-set">
+                <el-form>
+                    <el-form label-width="120px">
+                        <el-form-item label="">
+                            <el-button icon="plus">判断题</el-button>
+                            <el-button icon="plus">单选题</el-button>
+                            <el-button icon="plus">多选题</el-button>
+                        </el-form-item>
+                        <el-form-item label="分数">
+                            <el-input placeholder="为该题设置分数"></el-input>
+                        </el-form-item>
+                        <el-form-item label="题目">
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2, maxRows: 4}"
+                                    placeholder="请输入内容">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="配图">
+                            <UploadImg></UploadImg>
+                        </el-form-item>
 
-                    <el-form-item label="选项">
-                        <el-radio class="radio" label="1">正确</el-radio>
-                        <el-radio class="radio" label="2">错误</el-radio>
-                    </el-form-item>
+                        <el-form-item label="选项">
+                            <el-radio class="radio" label="1">正确</el-radio>
+                            <el-radio class="radio" label="2">错误</el-radio>
+                        </el-form-item>
 
-                    <el-form-item label="选项">
-                        <h5>请在正确答案前面打勾</h5>
-                        <div class="multy-choose-item">
-                            <el-checkbox></el-checkbox>
-                            <el-input placeholder="填写描述"></el-input>
-                            <el-button type="text">删除</el-button>
-                        </div>
-                        <div class="multy-choose-item">
-                            <el-checkbox></el-checkbox>
-                            <el-input placeholder="填写描述"></el-input>
-                            <el-button type="text">删除</el-button>
-                        </div>
-                        <div class="multy-choose-item">
-                            <el-button type="text">添加更多选项</el-button>
-                        </div>
-                    </el-form-item>
+                        <el-form-item label="选项">
+                            <h5>请在正确答案前面打勾</h5>
+                            <div class="multy-choose-item">
+                                <el-checkbox></el-checkbox>
+                                <el-input placeholder="填写描述"></el-input>
+                                <el-button type="text">删除</el-button>
+                            </div>
+                            <div class="multy-choose-item">
+                                <el-checkbox></el-checkbox>
+                                <el-input placeholder="填写描述"></el-input>
+                                <el-button type="text">删除</el-button>
+                            </div>
+                            <div class="multy-choose-item">
+                                <el-button type="text">添加更多选项</el-button>
+                            </div>
+                        </el-form-item>
 
-                    <el-form-item label="答案详解">
-                        <el-input
-                                type="textarea"
-                                :autosize="{ minRows: 2, maxRows: 4}"
-                                placeholder="请输入内容">
-                        </el-input>
-                    </el-form-item>
+                        <el-form-item label="答案详解">
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2, maxRows: 4}"
+                                    placeholder="请输入内容">
+                            </el-input>
+                        </el-form-item>
 
-                    <hr>
-                </el-form>
+                        <hr>
+                    </el-form>
 
-                <el-form label-width="120px">
-                    <el-form-item label="">
-                        <el-button icon="plus">判断题</el-button>
-                        <el-button icon="plus">单选题</el-button>
-                        <el-button icon="plus">多选题</el-button>
-                    </el-form-item>
-                    <el-form-item label="分数">
-                        <el-input placeholder="为该题设置分数"></el-input>
-                    </el-form-item>
-                    <el-form-item label="题目">
-                        <el-input
-                                type="textarea"
-                                :autosize="{ minRows: 2, maxRows: 4}"
-                                placeholder="请输入内容">
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item label="配图">
-                        <UploadImg></UploadImg>
-                    </el-form-item>
+                    <el-form label-width="120px">
+                        <el-form-item label="">
+                            <el-button icon="plus">判断题</el-button>
+                            <el-button icon="plus">单选题</el-button>
+                            <el-button icon="plus">多选题</el-button>
+                        </el-form-item>
+                        <el-form-item label="分数">
+                            <el-input placeholder="为该题设置分数"></el-input>
+                        </el-form-item>
+                        <el-form-item label="题目">
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2, maxRows: 4}"
+                                    placeholder="请输入内容">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="配图">
+                            <UploadImg></UploadImg>
+                        </el-form-item>
 
-                    <el-form-item label="选项">
-                        <el-radio class="radio" label="1">正确</el-radio>
-                        <el-radio class="radio" label="2">错误</el-radio>
-                    </el-form-item>
+                        <el-form-item label="选项">
+                            <el-radio class="radio" label="1">正确</el-radio>
+                            <el-radio class="radio" label="2">错误</el-radio>
+                        </el-form-item>
 
-                    <el-form-item label="选项">
-                        <h5>请在正确答案前面打勾</h5>
-                        <div class="multy-choose-item">
-                            <el-checkbox></el-checkbox>
-                            <el-input placeholder="填写描述"></el-input>
-                            <el-button type="text">删除</el-button>
-                        </div>
-                        <div class="multy-choose-item">
-                            <el-checkbox></el-checkbox>
-                            <el-input placeholder="填写描述"></el-input>
-                            <el-button type="text">删除</el-button>
-                        </div>
-                        <div class="multy-choose-item">
-                            <el-button type="text">添加更多选项</el-button>
-                        </div>
-                    </el-form-item>
+                        <el-form-item label="选项">
+                            <h5>请在正确答案前面打勾</h5>
+                            <div class="multy-choose-item">
+                                <el-checkbox></el-checkbox>
+                                <el-input placeholder="填写描述"></el-input>
+                                <el-button type="text">删除</el-button>
+                            </div>
+                            <div class="multy-choose-item">
+                                <el-checkbox></el-checkbox>
+                                <el-input placeholder="填写描述"></el-input>
+                                <el-button type="text">删除</el-button>
+                            </div>
+                            <div class="multy-choose-item">
+                                <el-button type="text">添加更多选项</el-button>
+                            </div>
+                        </el-form-item>
 
-                    <el-form-item label="答案详解">
-                        <el-input
-                                type="textarea"
-                                :autosize="{ minRows: 2, maxRows: 4}"
-                                placeholder="请输入内容">
-                        </el-input>
-                    </el-form-item>
+                        <el-form-item label="答案详解">
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2, maxRows: 4}"
+                                    placeholder="请输入内容">
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                 </el-form>
 
                 <el-form label-width="120px">
@@ -245,45 +261,77 @@
     import CourseAlbumSelect from '../../component/select/CourseAlbum.vue'
 
     export default{
+        name: 'course-manage-addcourse',
         data () {
             return {
                 activeTab: 'first',
-                uploadDocUrl: '',
+                uploadDocUrl: '', // 上传文档的url
+                uploadImgUrl: '', // 上传封面的url
                 isShowVideoDialog: false, // 是否显示视频列表弹出框
-                videoName: '请选择视频',
-                fetchParam: {
-                    category_id: void 0,
-                    name: void 0,
-                    image: void 0,
-                    material_type: void 0,
-                    material_id: void 0,
-                    album_id: void 0,
-                    description: void 0,
-                    need_testing: void 0,
-                    limit_time: void 0,
-                    limit_repeat: void 0,
-                    score_pass: void 0,
-                    price_enabled: void 0,
-                    price: void 0,
-                    price_floa: void 0,
-                }
+                fetchParam: getOrignData(),
+                rulesFirst: { // 课程信息的校验规则
+                    name: {required: true, message: '请输入课程名称', trigger: 'change'},
+                    category_id: {required: true, type: 'number', message: '请选择课程栏目', trigger: 'change'},
+                    image: {required: true, message: '请上传课程封面', trigger: 'change'},
+                    description: {required: true, message: '请输入课程介绍', trigger: 'change'},
+                    material_id: {required: true, type: 'number', message: '请上传课程文件', trigger: 'change'},
+                    need_testing: {required: true, type: 'number', message: '请选择是否需要课后考试', trigger: 'change'},
+                },
+
+                // 考试设置部分
+                fetchTesting: []
             }
         },
-        activated () {
+        created () {
             this.uploadDocUrl = courseService.getCourseDocUploadUrl()
+            this.uploadImgUrl = courseService.getManageImgUploadUrl()
+            if (this.$route.params.courseInfo) this.fetchParam = this.$route.params.courseInfo
             xmview.setContentLoading(false)
+        },
+//        activated () {
+//            this.fetchParam = getOrignData()
+//            this.$refs.formFirst.resetFields()
+//            if (this.$route.params.courseInfo) this.fetchParam = this.$route.params.courseInfo
+//            xmview.setContentLoading(false)
+//            this.activeTab = 'first'
+//        },
+        watch: {
+            'fetchParam.need_testing' (val) {
+                if (val == 1) { // 需要考试
+                    this.rulesFirst.limit_time = {required: true, message: '请输入考试时间', trigger: 'change'}
+                    this.rulesFirst.score_pass = {required: true, message: '请输入及格分数', trigger: 'change'}
+                } else { // 不需要考试
+                    this.$delete(this.rulesFirst, 'limit_time')
+                    this.$delete(this.rulesFirst, 'score_pass')
+                }
+            }
         },
         methods: {
             // 下一步按钮点击
             btnNextClick () {
-                if (this.$refs.formFirst.validate())
-                    this.activeTab = 'second'
+                this.fetchParam.limit_time && (this.fetchParam.limit_time += '')
+                this.fetchParam.score_pass && (this.fetchParam.score_pass += '')
+                this.$refs.formFirst.validate((isValidate) => {
+                    if (!isValidate) return
+                    // 如果是编辑
+                    if (this.fetchParam.id) {
+                        courseService.editCourse(this.fetchParam).then((ret) => {
+                            this.activeTab = 'second'
+                        })
+                    } else {
+                        courseService.addCourse(this.fetchParam).then((ret) => {
+                            this.fetchParam.id = ret.data.id
+                            this.activeTab = 'second'
+                        })
+                    }
+                })
             },
             btnPreClick () {
                 this.activeTab = 'first'
             },
             submit () {
-                courseService.addCourse(this.fetchParam).then(() => {
+                courseService.addCourse(this.fetchParam).then((ret) => {
+                    console.info(ret)
                 })
             },
             // 处理上传文档
@@ -292,9 +340,35 @@
             },
             // 处理视频选取
             handleVideoSelected (row) {
-                this.videoName = row.name
+                this.fetchParam.material_name = row.name
+                this.fetchParam.material_id = row.id
             }
         },
         components: {UploadImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}
+    }
+
+    function getOrignData () {
+        let orignData = { // 课程信息部分
+            id: void 0,
+            category_id: void 0,
+            cat_name: void 0,
+            name: void 0,
+            image: void 0,
+            material_type: void 0,
+            material_id: void 0,
+            material_name: '选择视频',
+            album_id: void 0,
+            album_name: void 0,
+            description: void 0,
+            need_testing: void 0,
+            limit_time: void 0,
+            limit_repeat: void 0,
+            score_pass: void 0,
+            price_enabled: void 0,
+            price: void 0,
+            price_floa: void 0,
+        }
+
+        return orignData
     }
 </script>

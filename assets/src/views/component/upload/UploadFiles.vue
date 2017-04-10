@@ -3,11 +3,11 @@
 <!--<UploadFile :defaultFile="file" url='asdjadasd' :on-success="handleChange"></UploadFile>-->
 <template>
     <el-upload ref="upload"
-               :headers="header"
+               :headers="headers"
                :action="url"
                :file-list="fileList"
                :on-success="handleUploadMedia" :multiple="false">
-        <el-button size="small" type="primary">点击上传</el-button>
+        <el-button size="small" :disabled="disabled" type="primary">点击上传</el-button>
     </el-upload>
 </template>
 
@@ -20,17 +20,16 @@
                 default: 'https://jsonplaceholder.typicode.com/posts/'
             },
             defaultFile: String,
-            onSuccess: Function
+            onSuccess: Function,
+            disabled: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             return {
-                header: {},
+                headers: {},
                 fileList: this.defaultFile ? [{name: this.defaultFile}] : []
-            }
-        },
-        created () {
-            this.headers = {
-                'Authorization': 'Bearer ' + authUtils.getAuthToken()
             }
         },
         activated () {
