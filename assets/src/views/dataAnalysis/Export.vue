@@ -1,119 +1,182 @@
-<!--导出-->
-<style lang='scss' rel='stylesheet/scss' scoped>
+<!--审计-->
+<style lang="scss" rel='stylesheet/scss'>
     @import "../../utils/mixins/mixins";
-    @import "../../utils/mixins/table";
-
-    .main-container {
-        padding: 20px;
+    @import "../../utils/mixins/topSearch";
+    .company-user-list {
+        .showDetail {
+            .avatar {
+                border: 1px solid #ededed;
+                display: inline-block;
+                vertical-align: top;
+            }
+            .info {
+                display: inline-block;
+                vertical-align: top;
+                > p {
+                    margin-bottom: 10px;
+                    > span {
+                        display: inline-block;
+                        width:40%;
+                        text-align: right;
+                        vertical-align: top;
+                        padding-right: px2rem(10);
+                    }
+                    .el-select, .el-textarea {
+                        display: inline-block;
+                        width: 58%;
+                        vertical-align: top;
+                    }
+                }
+            }
+        }
+        .status {
+            padding: 2px 5px;
+            background: #00acac;
+            border-radius: 5px;
+            color: #fff;
+        }
+        .box-card {
+            margin-bottom: 20px;
+            .clearfix {
+                text-align: right;
+            }
+            .el-card__header {
+                padding: 10px 15px;
+                background: #f0f3f5;
+                .icon-iconfontexcel {
+                    position: relative;
+                    top: -2px;
+                    margin-right: 5px;
+                }
+            }
+            .search {
+                @extend %top-search-container;
+            }
+        }
+        .block {
+            text-align: right;
+            margin-top: 15px;
+        }
     }
 </style>
 <template>
-    <article class="main-container">
-        <section class="search">
-            <div>
-                <label>状态</label>
-                <el-select v-model="statusSelect">
-                    <el-option
-                            v-for="(item, index) in exportStatus"
-                            :label="item.name"
-                            :value="item.id"
-                            :key="item.id">
-                    </el-option>
-                </el-select>
+    <article class="company-user-list">
+        <el-card class="box-card">
+            <section class="search">
+                <section>
+                    <label>状态</label>
+                    <el-select clearable @change="getData" v-model="search.statusSelect">
+                        <el-option label="已完成" :value="0"></el-option>
+                        <el-option label="待处理" :value="1"></el-option>
+                        <el-option label="进行中" :value="2"></el-option>
+                        <el-option label="失败" :value="3"></el-option>
+                    </el-select>
+                </section>
+                <DateRange title="日期" :start="search.createTime" :end="search.endTime"
+                           v-on:changeStart="val=> search.createTime=val"
+                           v-on:changeEnd="val=> search.endTime"
+                           :change="getData">
+                </DateRange>
+            </section>
+            <el-table
+                    :data="exportData" border v-loading="loading">
+                <el-table-column
+                        prop="name"
+                        label="名称">
+                </el-table-column>
+                <el-table-column
+                        prop="status"
+                        label="状态"
+                        width="180">
+                    <template scope="scope">
+                        <el-tag type="success">{{statusArr[scope.row.status]}}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="create_time_name"
+                        label="创建时间"
+                        width="180">
+                </el-table-column>
+                <el-table-column prop="operate" label="操作" width="180">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="downLoad(scope.row)">
+                            下载
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next"
+                        :total="total">
+                </el-pagination>
             </div>
-            <div>
-                <label>时间</label>
-                <div class="time-container">
-                    <el-date-picker
-                            v-model="createTime"
-                            type="date"
-                            placeholder="开始时间">
-                    </el-date-picker>
-                    <el-date-picker
-                            v-model="endTime"
-                            type="date"
-                            placeholder="结束时间">
-                    </el-date-picker>
-                </div>
-            </div>
-        </section>
-        <el-table
-                :data="data" border>
-            <el-table-column
-                    prop="name"
-                    label="名称">
-            </el-table-column>
-            <el-table-column
-                    prop="status"
-                    label="状态"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="createTime"
-                    label="创建时间"
-                    width="180">
-            </el-table-column>
-            <el-table-column prop="operate" label="操作" width="180">
-                <template scope="scope">
-                    <el-button type="text" size="small">
-                        下载
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <section class="block">
-            <el-pagination
-                    :current-page="currentPage"
-                    :page-sizes="[100, 200, 300, 400]"
-                    layout="total, sizes, ->, prev, pager, next, jumper"
-                    :total="400">
-            </el-pagination>
-        </section>
+        </el-card>
     </article>
 </template>
 <script lang="babel">
+    import DateRange from '../component/form/DateRangePicker.vue'
+    import analysisService from '../../services/analysisService'
+    import authUtils from '../../utils/authUtils'
     export default {
+        components: {
+            DateRange
+        },
         data () {
             return {
-                createTime: '',
-                endTime: '',
+                statusArr: ['已完成', '待处理', '进行中', '失败'],
+                loading: false,
+                total: 0,
+                pageSize: 15,
                 currentPage: 1,
-                statusSelect: 0,
-                ip: '',
-                data: [
-                    {
-                        id: 1,
-                        name: '上海市普陀区金沙江路 1518 弄',
-                        status: '10.1.1.1',
-                        createTime: '21-22-2'
-                    }
-                ],
-                exportStatus: [
-                    {
-                        id: 0,
-                        name: '未选择'
-                    },
-                    {
-                        id: 1,
-                        name: '已完成'
-                    },
-                    {
-                        id: 2,
-                        name: '待处理'
-                    },
-                    {
-                        id: 3,
-                        name: '进行中'
-                    },
-                    {
-                        id: 4,
-                        name: '失败'
-                    }
-                ]
+                search: {
+                    statusSelect: '',
+                    createTime: '',
+                    endTime: '',
+                },
+                exportData: []
             }
         },
         created () {
-            xmview.setContentLoading(false)
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
+        methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val
+                this.getData()
+            },
+            getData () {
+                this.loading = true
+                return analysisService.getExportList({
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    status: this.search.statusSelect,
+                    time_start: this.search.createTime,
+                    time_end: this.search.endTime,
+                    company_id: authUtils.getUserInfo().company_id
+                }).then((ret) => {
+                    this.exportData = ret.data
+                }).then(() => {
+                    this.loading = false
+                })
+            },
+            downLoad (item) {
+                analysisService.exportDownload({
+                    company_id: item.company_id,
+                    job_id: item.last_run.job_id
+                })
+            }
         }
     }
 </script>

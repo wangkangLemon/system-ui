@@ -54,6 +54,31 @@ class ArticleService {
             }
         })
     }
+
+    // 修改文章
+    updateArticle ({
+        id,
+        title,
+        category,
+        draft,
+        content = '',
+        cover = ''
+    }) {
+        let finalUrl = `${urlPre}/${id}`
+        return api.put(finalUrl, {title, category, draft, content, cover}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+
+    // 编辑时获取文章内容
+    getEditDetail (id) {
+        let finalUrl = `${config.apiHost}/article/${id}`
+        return api.get(finalUrl, {}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new ArticleService()

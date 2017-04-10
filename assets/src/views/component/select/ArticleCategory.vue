@@ -11,6 +11,7 @@
             :clearable="true"
             :props="props"
             @change="setCurrVal"
+            :placeholder="placeholder"
     ></el-cascader>
 </template>
 
@@ -21,6 +22,10 @@
         props: {
             value: [String, Number],
             onchange: Function,
+            placeholder: {
+                type: String,
+                default: '请选择'
+            },
         },
         data () {
             return {

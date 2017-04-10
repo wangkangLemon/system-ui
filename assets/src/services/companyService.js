@@ -175,6 +175,39 @@ class CompanyService {
             }
         })
     }
+
+    // 获取企业签约信息接口
+    getCompanySignList ({
+        page,
+        page_size,
+        keyword = '',
+        isdepartment = '',
+        isuser = '',
+        signatory = '',
+        time_start = '',
+        time_end = ''
+    }) {
+        let finalUrl = `${urlPre}/sign/search`
+        return api.get(finalUrl, {page, page_size, keyword, isdepartment, isuser, signatory, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取签约信息预览的 上面三大板块
+    getSignMessage () {
+        let finalUrl = `${urlPre}/sign/`
+        return api.get(finalUrl, {}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取连锁信息的接口
+    getSignDetail (signID) {
+        let finalUrl = `${urlPre}/sign/view/${signID}`
+        return api.get(finalUrl, {}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new CompanyService()

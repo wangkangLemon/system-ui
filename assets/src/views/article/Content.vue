@@ -91,8 +91,7 @@
 </style>
 <template>
     <article class="table-container">
-        <!--删除弹窗-->
-        <delete-dialog :text="itemName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
+        <p>编辑文章缺少 获取接口</p>
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
             <div class="avatar">
@@ -112,7 +111,7 @@
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
-                    <ArticleCategorySelect v-model="form.category"></ArticleCategorySelect>
+                    <ArticleCategorySelect :placeholder="currCategoryName" v-model="form.category"></ArticleCategorySelect>
                 </el-form-item>
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>
@@ -132,7 +131,7 @@
         </el-dialog>
         <section class="add">
             <!--点击添加 form数据取邮箱/手机号 密码-->
-            <el-button icon="plus" @click="addForm = true">添加</el-button>
+            <el-button icon="plus" @click="addArticle">添加</el-button>
         </section>
         <div class="main-container">
             <section class="search">
@@ -202,7 +201,6 @@
     </article>
 </template>
 <script lang="babel">
-    import deleteDialog from '../component/dialog/Delete'
     import DateRange from '../component/form/DateRangePicker.vue'
     import VueEditor from '../component/form/UEditor.vue'
     import ArticleService from '../../services/articleService'
@@ -211,7 +209,6 @@
 
     export default {
         components: {
-            deleteDialog,
             DateRange,
             VueEditor,
             ArticleCategorySelect,
@@ -219,6 +216,7 @@
         },
         data () {
             return {
+                currCategoryName: '',
                 loading: false,
                 search: {
                     title: '',
@@ -227,8 +225,6 @@
                     endTime: '',
                 },
                 editor: null,
-                itemName: '',           // 要删除项名称
-                deletDialog: false,     // 删除弹窗
                 showDetial: false,     // 是否显示详情对话框
                 uploadImgUrl: '',      // 要上传图片的请求地址
                 form: {                // 表单属性值
@@ -261,27 +257,42 @@
         },
         methods: {
             handleDelete (index, row) {
-                this.deletDialog = true
-                this.itemName = row.name
+                xmview.showDialog(`你将要删除文章【<i style="color:red">${row.title || ''}</i>】操作不可恢复确认吗？`, this.deleteItem(row.id))
             },
-            deleteItem (confirm) {
-                this.deletDialog = false
-                if (!confirm) {
-                    return false
-                }
+            deleteItem (id) {
                 // 以下执行接口删除动作
-                console.log(11)
+                return () => {
+                    ArticleService.deleteArticle(id).then((ret) => {
+                        xmview.showTip('success', '删除成功')
+                        this.getData()
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
+                }
+            },
+            addArticle () {
+                this.addForm = true
+                setTimeout(() => {
+                    this.$refs['form'].resetFields()
+                }, 0)
             },
             editArticle (row) {
-                this.addForm = true
-                let _this = this
-                setTimeout(() => {
-                    _this.$refs['form'].resetFields()
-                    _this.form = row
-                    console.log(_this.editor)
-//                    _this.editor.setContent(_this.form.content || '')
-                    console.log(row)
-                }, 0)
+                console.log(this.editor)
+                ArticleService.getEditDetail(row.id).then((ret) => {
+                    this.form.category = ret.data.category_id
+                    this.form.title = ret.data.title
+                    this.form.cover = ret.category.cover
+                    this.form.content = ret.data.content
+                    this.form.id = ret.data.id
+                    this.currCategoryName = ret.category.name
+//                    this.editor.setContent(ret.data.content)
+//                    console.log(this.form)
+                    console.log(this.form)
+                }).then(() => {
+                    this.addForm = true
+                }).catch(() => {
+                    console.log(11)
+                })
             },
             submit (form, status = 0) {
                 this.$refs[form].validate((valid) => {
@@ -292,8 +303,16 @@
                         }
                         this.form.content = this.editor.getContentTxt()
                         this.form.draft = status
-                        ArticleService.addArticle(this.form).then((ret) => {
-                            xmview.showTip('success', '发布成功')
+
+                        let reqFn = ArticleService.addArticle
+                        let msg = '发布成功'
+                        if (this.form.id) {
+                            reqFn = ArticleService.updateArticle
+                            msg = '修改成功'
+                        }
+
+                        reqFn(this.form).then((ret) => {
+                            xmview.showTip('success', msg)
                             this.addForm = false
                             this.getData()
                         }).catch((ret) => {
@@ -305,14 +324,12 @@
                 })
             },
             handleSizeChange (val) {
-                console.log(`每页 ${val} 条`)
-                // 当切换每页条数得时候 获取当前第一页得数据
-                this.handleCurrentChange(1)
+                this.pageSize = val
+                this.getData()
             },
             handleCurrentChange (val) {
                 this.currentPage = val
-                console.log(`当前页: ${val}`)
-                // 以下获取当页数据
+                this.getData()
             },
             getData () {
                 this.loading = true
@@ -332,6 +349,8 @@
             },
             handleImgUploaded(response) {
                 this.form.cover = response.data.url
+                console.log(response)
+                console.log(this.form.cover)
             },
             ueReady (ue) {
                 this.editor = ue
