@@ -168,7 +168,7 @@
                                  :key="indexOption">
                                 <el-checkbox v-model="option.correct" :true-label="1"
                                              v-if="item.category == 2"></el-checkbox>
-                                <el-radio @change="testChange" class="radio" v-model="item.correct" :label="indexOption"
+                                <el-radio class="radio" v-model="item.correct" :label="indexOption"
                                           v-else>
                                     <i></i>
                                 </el-radio>
@@ -323,7 +323,23 @@
             },
             // 考试题目信息提交
             handleSubmitTesting () {
+                // 处理当前的数据
+                this.fetchTesting.map((item, index) => {
+                    // 处理单选题的正确答案选中
+                    if (item.category == 1) {
+                        item.options.map((itemOptions) => {
+                            delete itemOptions.correct
+                        })
+                        item.options[item.correct].correct = 1
+                    }
+                })
 
+                courseService.addOrEditTesting({
+                    course_id: this.fetchParam.id,
+                    fetchParam: this.fetchTesting
+                }).then((ret) => {
+                    console.info(ret)
+                })
             }
         },
         components: {UploadImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}
