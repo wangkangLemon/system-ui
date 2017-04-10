@@ -7,30 +7,27 @@
 
 <template>
     <div id="testview-container">
-        <UploadFile v-model="isShow" ref="container"></UploadFile>
-        <el-button @click="() => isShow = true">显示</el-button>
-    </div>
+        <UploadImg :defaultImg="defaultImg"></UploadImg>
+     </div>
 </template>
 
 <script>
-    import UploadFile from './course/component/DialogVideo.vue'
+    import UploadImg from './component/upload/UploadImg.vue'
 
     export default {
         data() {
             return {
                 isShow: true,
-                file: '/upload/1.docx'
+                defaultImg: 'http://images2015.cnblogs.com/news/24442/201703/24442-20170323175419330-619990066.jpg'
             }
         },
         mounted () {
-            this.$refs.container.fetchData()
-            console.info(this.$refs.container.fetchData)
         },
         methods: {
             handleChange (val) {
                 console.info(val)
             }
         },
-        components: {UploadFile}
+        components: {UploadImg}
     }
 </script>

@@ -83,14 +83,8 @@
     }
 </style>
 <template>
-    <div class="component-upload-uploadimg">
-        <div v-show="isShowDefault && defaultImg" class="defaultImg">
-            <img :src="host + this.defaultImg">
-            <span>
-                <i class="el-icon-delete2" @click="deleteDefault"></i>
-            </span>
-        </div>
-        <el-upload ref="container" v-show="!(isShowDefault && defaultImg)"
+    <div class="component-upload-uploadimg" ref="container">
+        <el-upload ref="container"
                    :headers="headers"
                    :action="url"
                    list-type="picture-card"
@@ -99,11 +93,12 @@
                    :on-success="handleSuccess"
                    :on-error="handleRemove"
                    :on-preview="handlePictureCardPreview"
-                   :on-remove="handleRemove">
+                   :on-remove="handleRemove"
+                   :file-list="currImg">
             <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog v-model="dialogVisible" size="tiny">
-            <img width="100%" :src="currImg" alt="">
+            <img width="100%" :src="currImg.length > 0 && currImg[0].url" alt="">
         </el-dialog>
     </div>
 </template>
@@ -120,26 +115,39 @@
             },
             // 上传成功后的回调
             onSuccess: Function,
-            defaultImg: String
+            defaultImg: String,
         },
         data () {
             return {
                 uploadBtn: null, // 上传按钮
-                currImg: void 0,
                 dialogVisible: false,
                 headers: void 0,
-                isShowDefault: true, // 是否显示默认图片
                 forceShowUpload: false, // 强行显示上传图片
-                host: config.apiHost
+                host: config.apiHost,
+                currImg: [],
+            }
+        },
+        watch: {
+            'currImg' (val) {
+                if (val.length > 0 && val[0].url) {
+                    this.uploadBtn && (this.uploadBtn.style.display = 'none')
+                }
+            },
+            'defaultImg' (val) {
+                this.currImg = val ? [{name: val, url: val}] : []
             }
         },
         created () {
+            this.currImg = this.defaultImg ? [{name: this.defaultImg, url: this.defaultImg}] : []
             this.headers = {
                 'Authorization': 'Bearer ' + authUtils.getAuthToken()
             }
         },
+        activated () {
+            this.uploadBtn && (this.uploadBtn = this.$refs.container.querySelector('.el-upload--picture-card'))
+        },
         mounted () {
-            this.uploadBtn = document.querySelector('.el-upload--picture-card')
+            this.uploadBtn = this.$refs.container.querySelector('.el-upload--picture-card')
         },
         methods: {
             beforeUpload () {
@@ -148,14 +156,11 @@
             handleRemove () {
                 setTimeout(() => {
                     this.clearFiles()
+                    this.currImg = []
                 }, 500)
             },
             handlePictureCardPreview (file) {
                 this.dialogVisible = true
-                this.setImgUrl(file.url)
-            },
-            setImgUrl (val) {
-                this.currImg = val
             },
             handleSuccess (response, file, fileList) {
                 if (response.code == 0)
@@ -165,14 +170,11 @@
                     this.handleRemove()
                 }
             },
-            deleteDefault () {
-                this.isShowDefault = false
-            },
             clearFiles() {
                 this.uploadBtn.style.display = 'block'
                 this.isShowDefault = true
                 this.$refs.container.clearFiles()
-            }
+            },
         },
     }
 </script>

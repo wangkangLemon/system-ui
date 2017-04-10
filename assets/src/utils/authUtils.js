@@ -51,7 +51,7 @@ let authUtls = {
                 // 记录当前的url
                 xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
             }
-        }, 1000 * 60 * 10) // 20分钟一请求
+        }, 1000 * 60 * 20) // 20分钟一请求
     },
     // 清理自动更新任务
     clearAuthRefreshToken () {

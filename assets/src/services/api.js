@@ -44,7 +44,7 @@ export function del (url, params, needLoading) {
 // 共用的请求数据方法
 function sendRequest (method, url, params, needLoding = false) {
     if (method === 'GET')
-        url = url + '?' + processParams(params)
+        url = url + processParams(params)
 
     needLoding && xmview.setLoading(true)
     let pRequest = fetch(url, {
@@ -116,5 +116,5 @@ function processParams (params) {
         data.push(k + '=' + val)
     }
 
-    return data.join('&')
+    return data.length > 0 ? '?' + data.join('&') : ''
 }

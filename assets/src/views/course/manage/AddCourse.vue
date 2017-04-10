@@ -135,8 +135,10 @@
                             <el-button icon="plus" @click='addTesting(2, index)'>多选题</el-button>
                             <el-button icon="delete" type="danger" @click='deleteTesting(index, item)'>删除</el-button>
                         </el-form-item>
-                        <el-form-item label="分数">
-                            <el-input placeholder="为该题设置分数" v-model="item.score"></el-input>
+                        <el-form-item :label="'第' + (index+1) + '题'">
+                            <span v-if="item.category == 0">判断题</span>
+                            <span v-else-if="item.category == 1">单选题</span>
+                            <span v-else>多选题</span>
                         </el-form-item>
                         <el-form-item label="题目">
                             <el-input v-model="item.description"
@@ -145,37 +147,46 @@
                                       placeholder="请输入内容">
                             </el-input>
                         </el-form-item>
+                        <el-form-item label="分数">
+                            <el-input placeholder="为该题设置分数" v-model="item.score"></el-input>
+                        </el-form-item>
                         <el-form-item label="配图">
-                            <UploadImg></UploadImg>
+                            <UploadImg :defaultImg="item.image" :url="uploadImgUrl"
+                                       :onSuccess="res => item.image = res.data.url"></UploadImg>
                         </el-form-item>
 
-                        <el-form-item label="选项">
-                            <el-radio class="radio" label="1">正确</el-radio>
-                            <el-radio class="radio" label="2">错误</el-radio>
+                        <!--判断题的正确错误选项-->
+                        <el-form-item label="选项" v-if="item.category == 0">
+                            <el-radio class="radio" v-model="item.correct" :label="1">正确</el-radio>
+                            <el-radio class="radio" v-model="item.correct" :label="0">错误</el-radio>
                         </el-form-item>
 
-                        <el-form-item label="选项">
+                        <!--单选|多选的答案部分-->
+                        <el-form-item label="选项" v-else>
                             <h5>请在正确答案前面打勾</h5>
-                            <div class="multy-choose-item">
-                                <el-checkbox></el-checkbox>
-                                <el-input placeholder="填写描述"></el-input>
-                                <el-button type="text">删除</el-button>
+                            <div class="multy-choose-item" v-for="(option,indexOption) in item.options"
+                                 :key="indexOption">
+                                <el-checkbox v-model="option.correct" :true-label="1"
+                                             v-if="item.category == 2"></el-checkbox>
+                                <el-radio @change="testChange" class="radio" v-model="item.correct" :label="indexOption"
+                                          v-else>
+                                    <i></i>
+                                </el-radio>
+                                <el-input placeholder="填写描述" v-model="option.description"></el-input>
+                                <el-button type="text" @click="item.options.splice(indexOption, 1)">
+                                    <i>删除</i>
+                                </el-button>
                             </div>
                             <div class="multy-choose-item">
-                                <el-checkbox></el-checkbox>
-                                <el-input placeholder="填写描述"></el-input>
-                                <el-button type="text">删除</el-button>
-                            </div>
-                            <div class="multy-choose-item">
-                                <el-button type="text">添加更多选项</el-button>
+                                <el-button type="text" @click="addMoreTestingOption(item.options)">添加更多选项</el-button>
                             </div>
                         </el-form-item>
 
                         <el-form-item label="答案详解">
-                            <el-input
-                                    type="textarea"
-                                    :autosize="{ minRows: 2, maxRows: 4}"
-                                    placeholder="请输入内容">
+                            <el-input v-model="item.explain"
+                                      type="textarea"
+                                      :autosize="{ minRows: 2, maxRows: 4}"
+                                      placeholder="请输入内容">
                             </el-input>
                         </el-form-item>
 
@@ -193,7 +204,7 @@
 
                 <div class="bottom-btns">
                     <el-button @click="btnPreClick">上一步</el-button>
-                    <el-button class="submit" type="primary">发布</el-button>
+                    <el-button class="submit" type="primary" @click="handleSubmitTesting">发布</el-button>
                 </div>
             </el-tab-pane>
         </el-tabs>
@@ -239,13 +250,6 @@
             if (this.$route.params.courseInfo) this.fetchParam = this.$route.params.courseInfo
             xmview.setContentLoading(false)
         },
-//        activated () {
-//            this.fetchParam = getOrignData()
-//            this.$refs.formFirst.resetFields()
-//            if (this.$route.params.courseInfo) this.fetchParam = this.$route.params.courseInfo
-//            xmview.setContentLoading(false)
-//            this.activeTab = 'first'
-//        },
         watch: {
             'fetchParam.need_testing' (val) {
                 if (val == 1) { // 需要考试
@@ -254,6 +258,13 @@
                 } else { // 不需要考试
                     this.$delete(this.rulesFirst, 'limit_time')
                     this.$delete(this.rulesFirst, 'score_pass')
+                }
+            },
+            'activeTab' (val) {
+                if (val === 'second' && this.fetchTesting.length < 1 && this.fetchParam.id) {
+                    courseService.getTestingInfo({course_id: this.fetchParam.id}).then((data) => {
+                        this.fetchTesting = data
+                    })
                 }
             }
         },
@@ -302,6 +313,17 @@
                 xmview.showDialog(`是否确定删除题目【 <i style="color:red">${item.description || ''}</i> 】?`, () => {
                     this.fetchTesting.splice(index, 1)
                 })
+            },
+            // 添加多选 单选的选项
+            addMoreTestingOption (options) {
+                options.push({
+                    description: '',
+                    correct: ''
+                })
+            },
+            // 考试题目信息提交
+            handleSubmitTesting () {
+
             }
         },
         components: {UploadImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}

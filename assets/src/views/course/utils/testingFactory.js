@@ -11,10 +11,11 @@ class TestingFactory {
             score: void 0, // 分数
             image: void 0, // 图片
             explain: void 0, // 答案详解
+            correct: void 0,
             options: [{ // 选项
-                sort: 0,
+                sort: 1,
                 description: '',
-                correct: '' // 是否正确答案 正确为1
+                correct: void 0 // 是否正确答案 正确为1
             }]
         }
     }
@@ -25,6 +26,7 @@ class TestingFactory {
      */
     getTestingSet (type) {
         let data = this.getOrignData()
+        data.category = type
         if (type == 0) {
             delete data.options
             data.correct = void 0

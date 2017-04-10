@@ -55,8 +55,8 @@
                 <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改栏目</el-button>
                 <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子栏目</el-button>
 
-                <el-button @click="moveSubCategory">移动子栏目</el-button>
-                <el-button @click="moveSubCategoryContent">移动组栏目下内容</el-button>
+                <el-button @click="moveSubCategory">移动栏目</el-button>
+                <el-button @click="moveSubCategoryContent">移动栏目下内容</el-button>
                 <el-button type="danger" @click="deleteCategory">删除栏目</el-button>
             </div>
 

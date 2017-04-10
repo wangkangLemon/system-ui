@@ -122,6 +122,24 @@ class CourseService {
         return `${config.apiHost}/com/${companyid}/course/image`
     }
 
+    // 获取课程题目
+    getTestingInfo ({companyid, course_id}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/${course_id}/subject/edit`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data.subjects
+        })
+    }
+
+    // 添加或修改题目
+    addOrEditTesting ({companyid, course_id, fetchParam}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/${course_id}/subject`
+        return api.post(finalUrl, fetchParam).then((ret) => {
+            return ret.data
+        })
+    }
+
     // 获取课程栏目树
     getCategoryTree ({companyid, id = 'tree', filter = true}) {
         companyid = companyid || authUtils.getUserInfo().company_id
