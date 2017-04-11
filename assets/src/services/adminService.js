@@ -27,5 +27,17 @@ class AdminService {
             }
         })
     }
+
+    // 获取签约人
+    getSignatoryList ({
+        page,
+        page_size,
+        keyword = ''
+    }) {
+        let finalUrl = `${urlPre}/search/sale`
+        return api.get(finalUrl, {page, page_size, keyword}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 export default new AdminService()

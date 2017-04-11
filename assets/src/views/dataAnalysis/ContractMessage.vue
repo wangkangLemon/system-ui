@@ -46,6 +46,7 @@
                 display: inline-block;
                 vertical-align: top;
                 > p {
+                    line-height: 30px;
                     > span {
                         display: inline-block;
                         width: px2rem(100);
@@ -93,7 +94,6 @@
 </style>
 <template>
     <article class="table-container">
-        签约人下拉框
         <div class="show-sum-count" v-if="signs">
             <panel :content="signs.companyCount" title="签约连锁" bgColor="#00acac" footer="签约连锁总数"></panel>
             <panel :content="signs.departmentSum" title="签约门店" bgColor="#348fe2" :footer="'已录入'+ signs.departmentCount +'家, 录入率为' + signs.departmentRatio"></panel>
@@ -159,14 +159,7 @@
                 </section>
                 <section>
                     <label>签约人</label>
-                    <el-select v-model="search.signatory">
-                        <el-option
-                                v-for="(item, index) in constructor"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
+                    <SignatorySelect :change="getData" v-model="search.signatory"></SignatorySelect>
                 </section>
             </section>
             <el-table border :data="signData" v-loading="loading">
@@ -220,10 +213,12 @@
     import panel from '../component/panel/AmountPanel'
     import DateRange from '../component/form/DateRangePicker.vue'
     import companyService from '../../services/companyService'
+    import SignatorySelect from '../component/select/Signatory.vue'
     export default {
         components: {
             panel,
-            DateRange
+            DateRange,
+            SignatorySelect
         },
         data () {
             return {

@@ -91,7 +91,7 @@
 </style>
 <template>
     <article class="table-container">
-        <p>编辑文章缺少 获取接口</p>
+        <p>编辑文章有一点小问题，第二次点击修改才能获取到ueditor</p>
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
             <div class="avatar">
@@ -277,7 +277,6 @@
                 }, 0)
             },
             editArticle (row) {
-                console.log(this.editor)
                 ArticleService.getEditDetail(row.id).then((ret) => {
                     this.form.category = ret.data.category_id
                     this.form.title = ret.data.title
@@ -285,9 +284,9 @@
                     this.form.content = ret.data.content
                     this.form.id = ret.data.id
                     this.currCategoryName = ret.category.name
-//                    this.editor.setContent(ret.data.content)
-//                    console.log(this.form)
-                    console.log(this.form)
+                    if (this.editor != null) {
+                        this.editor.setContent(ret.data.content)
+                    }
                 }).then(() => {
                     this.addForm = true
                 }).catch(() => {

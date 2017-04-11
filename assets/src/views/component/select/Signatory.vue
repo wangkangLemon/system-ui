@@ -1,18 +1,14 @@
-<!--门店下拉框-->
-
+<!--签约人下拉框-->
 <template>
-    <section>
-        <i>门店</i>
-        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">
-        </SelectScroll>
-    </section>
+    <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="currVal">
+    </SelectScroll>
 </template>
 
 <script>
     import SelectScroll from '../../component/form/SelectScroll.vue'
-    import companyService from '../../../services/companyService'
+    import adminService from '../../../services/adminService'
     export default{
-        props: ['value', 'change', 'type'],
+        props: ['value', 'change'],
         data () {
             return {
                 currVal: this.value,
@@ -26,9 +22,8 @@
         },
         methods: {
             fetchData (val, length) {
-                return companyService.getIndrustrySelectList({
+                return adminService.getSignatoryList({
                     keyword: val,
-                    category: this.type,
                     page_size: this.pageSize,
                     page: parseInt(length / this.pageSize) + 1
                 })
@@ -40,7 +35,7 @@
             setCurrentValue (val) {
                 if (this.curVal == val) return
                 this.currVal = val
-                this.$emit('change', val)
+                this.$emit('input', val)
             }
         },
         components: {
