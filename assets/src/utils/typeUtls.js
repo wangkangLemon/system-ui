@@ -13,7 +13,8 @@ export const types = {
     date: '[object Date]',
     reg: '[object RegExp]',
     obj: '[object Object]',
-    err: '[object Error]'
+    err: '[object Error]',
+    object: '[object Object]'
 }
 
 //  是否是数组
@@ -33,4 +34,8 @@ export function isDate (obj) {
 
 export function isString (obj) {
     return getType(obj) === types.str
+}
+
+export function isObject (obj) {
+    return getType(obj) == types.object
 }

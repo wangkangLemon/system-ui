@@ -1,8 +1,8 @@
 <!--使用示例-->
 <!--<DateRange title="晒单时间" :start="fetchParam.time_start" :end="fetchParam.time_end"-->
-           <!--v-on:changeStart="val=> fetchParam.time_start=val "-->
-           <!--v-on:changeEnd="val=> fetchParam.time_end=val "-->
-           <!--:change="fetchData">-->
+<!--v-on:changeStart="val=> fetchParam.time_start=val "-->
+<!--v-on:changeEnd="val=> fetchParam.time_end=val "-->
+<!--:change="fetchData">-->
 <template>
     <section>
         <i>{{title}}</i>
@@ -24,7 +24,7 @@
     </section>
 </template>
 
-<script lang='babel'>
+<script>
     import * as timeUtls from '../../../utils/timeUtils'
     let _this
     export default{
@@ -66,7 +66,7 @@
             setCurrVal (type, val) {
                 if (this.timespan[type] === val && this.timespan[type] != undefined) return
 
-                val = timeUtls.date2Str(new Date(val || this.timespan[type]))
+                val = (val || this.timespan[type]) ? timeUtls.date2Str(new Date(val || this.timespan[type])) : ''
 
                 const emitArr = ['changeStart', 'changeEnd']
 

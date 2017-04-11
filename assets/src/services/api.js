@@ -4,6 +4,8 @@
 
 import authUtils from '../utils/authUtils'
 import config from '../utils/config'
+import * as typeUtils from '../utils/typeUtls'
+
 let requestId = 0
 function getTimeoutPromise (url) {
     return new Promise((resolve, reject) => {
@@ -104,12 +106,15 @@ function processCodeError (ret, url) {
         ret.tipCom = xmview.showTip('error', ret.message)
         return Promise.reject(ret)
     } else if (ret.code != 0) {
-        ret.tipCom = xmview.showTip('error', '远程服务器出现问题!')
+        ret.tipCom = xmview.showTip('error', ret.message || '远程服务器出现问题!')
         return Promise.reject(ret)
     }
 }
 
 function processParams (params) {
+    // 如果是字符串直接返回
+    if (typeUtils.isString(params))
+        return params
     let data = []
     for (let k in params) {
         let val = params[k] == null ? '' : params[k]

@@ -20,7 +20,7 @@ export function login (username, password) {
 
 export function refreshToken (userid) {
     let url = urlPre + '/refresh'
-    api.get(url, {id: userid}).catch((e) => {
+    return api.get(url, {id: userid}).catch((e) => {
         e.tipCom && e.tipCom.close()
     })
 }
@@ -30,7 +30,7 @@ export function loginout () {
 }
 
 // 获取用户列表
-export function userList(keyword, page, pageSize) {
+export function userList (keyword, page, pageSize) {
     let url = config.apiHost + '/sys/user/search'
     return api.get(url, {category: 'all', keyword, page, page_size: pageSize}, false).then(ret => {
         if (ret.code == 0) {

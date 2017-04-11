@@ -20,7 +20,7 @@ class CourseService {
     }
 
     // 获取公开课列表
-    getPublicCourselist ({companyid, page, page_size, status, keyword, time_start, time_end, category_id, need_testing}) {
+    getPublicCourselist ({companyid, page, page_size, status, keyword, time_start, time_end, category_id, need_testing, album_id}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/search`
         return api.get(finalUrl, {
@@ -31,7 +31,8 @@ class CourseService {
             time_start,
             time_end,
             category_id,
-            need_testing // 课后考试 不赋值则表示全部，0为不需要，1为需要
+            need_testing, // 课后考试 不赋值则表示全部，0为不需要，1为需要
+            album_id,
         }).then(ret => {
             return ret.data
         })
@@ -103,6 +104,34 @@ class CourseService {
         })
     }
 
+    // 上下线课程
+    offlineCourse ({companyid, course_id, disabled}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/${course_id}/disable`
+        return api.put(finalUrl, {disabled})
+    }
+
+    // 删除课程
+    deleteCourse ({companyid, course_id}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/${course_id}`
+        return api.del(finalUrl, {})
+    }
+
+    // 批量删除课程
+    deleteCourseMulty ({companyid, id}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/batchdel`
+        return api.post(finalUrl, {id})
+    }
+
+    // 批量移动课程到指定分类
+    moveCourseToCategoryMulty ({companyid, id, catid}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/batchmove`
+        return api.post(finalUrl, {id, catid})
+    }
+
     // 弹出框请求的视频列表
     getVideo4Dialog ({companyid, status, keyword, page, page_size}) {
         companyid = companyid || authUtils.getUserInfo().company_id
@@ -132,10 +161,10 @@ class CourseService {
     }
 
     // 添加或修改题目
-    addOrEditTesting ({companyid, course_id, fetchParam}) {
+    addOrEditTesting ({companyid, course_id, subjects}) {
         companyid = companyid || authUtils.getUserInfo().company_id
-        let finalUrl = `${config.apiHost}/com/${companyid}/course/${course_id}/subject`
-        return api.post(finalUrl, fetchParam).then((ret) => {
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/${course_id}/subject/`
+        return api.put(finalUrl, subjects).then((ret) => {
             return ret.data
         })
     }
@@ -199,18 +228,20 @@ class CourseService {
     getAlbumList ({companyid, page, page_size, keyword, time_start, time_end}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/album/search`
-        return api.get(finalUrl, {page, page_size, keyword, time_start, time_end})
+        return api.get(finalUrl, {page, page_size, keyword, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
     }
 
     // 删除专辑
-    deleteAlbumList ({companyid, id}) {
+    deleteAlbum ({companyid, id}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/album/${id}`
         return api.del(finalUrl, {})
     }
 
     // 批量删除专辑 ids: id数组
-    deleteBatchAlbumList ({companyid, ids}) {
+    deleteAlbumMulty ({companyid, ids}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/album/batchdel`
         return api.post(finalUrl, {id: ids.join(',')})
@@ -220,14 +251,15 @@ class CourseService {
     addAlbum ({companyid, course_id, name}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/album/add`
-        return api.post(finalUrl, {course_id, name})
+        return api.post(finalUrl, {course_id: course_id.join(','), name})
     }
 
     // 编辑专辑
     editAlbum ({companyid, course_id, name}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/album/edit`
-        return api.post(finalUrl, {course_id, name})
+        return api.post(finalUrl, {course_id: course_id.join(','), name})
     }
 }
+
 export default new CourseService()

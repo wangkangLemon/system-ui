@@ -12,6 +12,7 @@ class TestingFactory {
             image: void 0, // 图片
             explain: void 0, // 答案详解
             correct: void 0,
+            editable: true,
             options: [{ // 选项
                 sort: 1,
                 description: '',

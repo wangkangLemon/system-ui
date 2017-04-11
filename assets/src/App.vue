@@ -4,8 +4,8 @@
             <router-view></router-view>
         </transition>
 
-        <el-dialog title="提示" v-model="dialog.isShow" size="tiny">
-            <span v-html="dialog.title"></span>
+        <el-dialog :title="dialog.title" v-model="dialog.isShow" size="tiny">
+            <span v-html="dialog.content"></span>
             <span slot="footer" class="dialog-footer">
             <el-button @click="dialog.isShow = false">取 消</el-button>
             <el-button type="primary" @click="dialog.confirmFn">确 定</el-button>
@@ -21,8 +21,9 @@
             return {
                 dialog: {
                     isShow: false,
-                    title: '',
-                    confirmFn: {}
+                    content: '',
+                    confirmFn: {},
+                    title: '提示'
                 },
                 fullscreenLoading: false,
             }
@@ -46,9 +47,10 @@
                 })
             },
             // 显示dialog
-            showDialog (title, confirmFn, isShow = true) {
+            showDialog (content, confirmFn, title = '操作提示', isShow = true) {
                 this.dialog.isShow = isShow
                 this.dialog.title = title
+                this.dialog.content = content
                 this.dialog.confirmFn = () => {
                     this.dialog.isShow = false
                     confirmFn && confirmFn()

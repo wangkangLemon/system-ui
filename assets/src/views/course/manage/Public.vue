@@ -32,6 +32,12 @@
         .bottom-manage {
             margin-top: 15px;
         }
+
+        .el-dialog__wrapper {
+            padding-top: 15px;
+            background: rgba(0, 0, 0, .5);
+            z-index: 1000;
+        }
     }
 </style>
 
@@ -120,13 +126,19 @@
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="180"
+                    width="200"
                     label="操作">
                 <template scope="scope">
-                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>
+                    <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
-                    <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">下线</el-button>
+                    <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
+                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
+                    </el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    <el-button v-if="scope.row.subject_num > 0"
+                               @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.id}})"
+                               type="text" size="small">答案分析
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -141,18 +153,31 @@
                        :total="total">
         </el-pagination>
 
+        <!--底部的批量删除和移动两个按钮-->
         <div class="bottom-manage">
-            <el-button :disabled='selectedIds.length < 1' @click="moveToCat">移动到</el-button>
+            <el-button :disabled='selectedIds.length < 1' @click="dialogTree.isShow = true">移动到</el-button>
             <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
         </div>
 
-        <el-dialog title="操作提示" v-model="dialogVisible" size="tiny">
-            <span v-html="dialogTitle"></span>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogConfirm">确 定</el-button>
-            </span>
-        </el-dialog>
+        <!--移动子栏目的弹出框-->
+        <div class="el-dialog__wrapper" v-show="dialogTree.isShow">
+            <article class="el-dialog el-dialog--tiny">
+                <section class="el-dialog__header">
+                    <i>移动课程到</i>
+                </section>
+                <section class="el-dialog__body">
+                    <CourseCategoryTree node-key="id"
+                                        :onNodeClick="(data) => dialogTree.selectedId=data.value"></CourseCategoryTree>
+                </section>
+
+                <section class="el-dialog__footer">
+                    <span class="dialog-footer">
+                          <el-button @click="dialogTree.isShow = false">取 消</el-button>
+                        <el-button type="primary" @click="moveToCat">确 定</el-button>
+                    </span>
+                </section>
+            </article>
+        </div>
     </article>
 </template>
 
@@ -161,6 +186,7 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import vInput from '../../component/form/Input.vue'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
+    import CourseCategoryTree from '../../component/tree/CourseCategory.vue'
 
     export default{
         data () {
@@ -169,8 +195,6 @@
                 data: [], // 表格数据
                 total: 0,
                 dialogVisible: false,
-                dialogType: 1, // 1-删除 2-批量删除
-                dialogTitle: null,
                 selectedIds: [], // 被选中的数据id集合
                 fetchParam: {
                     status: void 0, // 2- 视屏转码中 1-下线 0-正常
@@ -181,6 +205,10 @@
                     time_start: void 0,
                     time_end: void 0,
                     keyword: void 0, // 课程名称
+                },
+                dialogTree: {
+                    isShow: false,
+                    selectedId: void 0,
                 }
             }
         },
@@ -220,33 +248,49 @@
             edit (index, row) {
                 this.$router.push({name: 'course-manage-addCourse', params: {courseInfo: row}})
             },
-            // 下线
+            // 下线 或者上线课程 0为下线，1为上线
             offline (index, row) {
-                this.showDialog('你将要下线课程 <span style="color:red">' + row.name + '</span> 操作不可恢复确认吗?')
-                this.dialogConfirm = () => {
-                    alert('test')
-                }
+                let txt = row.status == 0 ? '下线' : '上线'
+                xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
+                    courseService.offlineCourse({course_id: row.id, disabled: row.status}).then((ret) => {
+                        row.status = row.status == 0 ? 1 : 0
+                    })
+                })
             },
             // 单条删除
             del (index, row) {
-                this.showDialog('你将要删除课程 <span style="color:red">' + row.name + '</span> 操作不可恢复确认吗?')
+                xmview.showDialog(`你将要删除课程 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
+                    courseService.deleteCourse({course_id: row.id}).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.data.splice(index, 1)
+                    })
+                })
             },
-            // 移动到
             moveToCat () {
+                courseService.moveCourseToCategoryMulty({
+                    id: this.selectedIds.join(','),
+                    catid: this.dialogTree.selectedId
+                }).then(() => {
+                    xmview.showTip('success', '操作成功')
+                    this.dialogTree.isShow = false
+                    setTimeout(() => {
+                        this.fetchData() // 重新刷新数据
+                    }, 300)
+                })
             },
             // 批量删除
             delMulti () {
-                this.showDialog('你将要删除选中的课程，操作不可恢复确认吗?')
+                xmview.showDialog(`你将要删除选中的课程，操作不可恢复确认吗?`, () => {
+                    courseService.deleteCourseMulty({id: this.selectedIds.join(',')}).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.dialogTree.isShow = false
+                        setTimeout(() => {
+                            this.fetchData() // 重新刷新数据
+                        }, 300)
+                    })
+                })
             },
-            // dialog 确认按钮
-            dialogConfirm () {
-                this.dialogVisible = false
-            },
-            showDialog (title) {
-                this.dialogTitle = title
-                this.dialogVisible = true
-            }
         },
-        components: {vInput, DateRange, CourseCategorySelect}
+        components: {vInput, DateRange, CourseCategorySelect, CourseCategoryTree}
     }
 </script>

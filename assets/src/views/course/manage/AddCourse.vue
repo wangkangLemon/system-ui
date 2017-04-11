@@ -142,23 +142,28 @@
                         </el-form-item>
                         <el-form-item label="题目">
                             <el-input v-model="item.description"
+                                      :disabled="!item.editable"
                                       type="textarea"
                                       :autosize="{ minRows: 2, maxRows: 4}"
                                       placeholder="请输入内容">
                             </el-input>
                         </el-form-item>
                         <el-form-item label="分数">
-                            <el-input placeholder="为该题设置分数" v-model="item.score"></el-input>
+                            <el-input placeholder="为该题设置分数" :disabled="!item.editable" v-model="item.score"></el-input>
                         </el-form-item>
                         <el-form-item label="配图">
-                            <UploadImg :defaultImg="item.image" :url="uploadImgUrl"
+                            <UploadImg :defaultImg="item.image" :url="uploadImgUrl" :disabled="!item.editable"
                                        :onSuccess="res => item.image = res.data.url"></UploadImg>
                         </el-form-item>
 
                         <!--判断题的正确错误选项-->
                         <el-form-item label="选项" v-if="item.category == 0">
-                            <el-radio class="radio" v-model="item.correct" :label="1">正确</el-radio>
-                            <el-radio class="radio" v-model="item.correct" :label="0">错误</el-radio>
+                            <el-radio class="radio" :disabled="!item.editable" v-model="item.correct" :label="1">
+                                <i>正确</i>
+                            </el-radio>
+                            <el-radio class="radio" :disabled="!item.editable" v-model="item.correct" :label="0">
+                                <i>错误</i>
+                            </el-radio>
                         </el-form-item>
 
                         <!--单选|多选的答案部分-->
@@ -166,14 +171,17 @@
                             <h5>请在正确答案前面打勾</h5>
                             <div class="multy-choose-item" v-for="(option,indexOption) in item.options"
                                  :key="indexOption">
-                                <el-checkbox v-model="option.correct" :true-label="1"
+                                <el-checkbox v-model="option.correct" :true-label="1" :disabled="!item.editable"
                                              v-if="item.category == 2"></el-checkbox>
                                 <el-radio class="radio" v-model="item.correct" :label="indexOption"
+                                          :disabled="!item.editable"
                                           v-else>
                                     <i></i>
                                 </el-radio>
-                                <el-input placeholder="填写描述" v-model="option.description"></el-input>
-                                <el-button type="text" @click="item.options.splice(indexOption, 1)">
+                                <el-input placeholder="填写描述" v-model="option.description"
+                                          :disabled="!item.editable"></el-input>
+                                <el-button :disabled="!item.editable" type="text"
+                                           @click="item.options.splice(indexOption, 1)">
                                     <i>删除</i>
                                 </el-button>
                             </div>
@@ -183,9 +191,9 @@
                         </el-form-item>
 
                         <el-form-item label="答案详解">
-                            <el-input v-model="item.explain"
+                            <el-input v-model="item.explain" :disabled="!item.editable"
                                       type="textarea"
-                                      :autosize="{ minRows: 2, maxRows: 4}"
+                                      :autosize="{ minRows: 4, maxRows: 6}"
                                       placeholder="请输入内容">
                             </el-input>
                         </el-form-item>
@@ -221,6 +229,7 @@
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     import CourseAlbumSelect from '../../component/select/CourseAlbum.vue'
     import testingFactory from '../utils/testingFactory'
+    import formUtils from '../../../utils/formUtils'
 
     export default{
         name: 'course-manage-addcourse',
@@ -262,8 +271,10 @@
             },
             'activeTab' (val) {
                 if (val === 'second' && this.fetchTesting.length < 1 && this.fetchParam.id) {
+                    xmview.setContentLoading(true)
                     courseService.getTestingInfo({course_id: this.fetchParam.id}).then((data) => {
                         this.fetchTesting = data
+                        xmview.setContentLoading(false)
                     })
                 }
             }
@@ -324,21 +335,34 @@
             // 考试题目信息提交
             handleSubmitTesting () {
                 // 处理当前的数据
-                this.fetchTesting.map((item, index) => {
+                let item = null
+                for (let i = 0; i < this.fetchTesting.length, item = this.fetchTesting[i]; i++) {
                     // 处理单选题的正确答案选中
-                    if (item.category == 1) {
+                    if (item.category == 1 && item.correct) {
                         item.options.map((itemOptions) => {
                             delete itemOptions.correct
                         })
                         item.options[item.correct].correct = 1
+                        delete item.correct
                     }
-                })
 
+                    // 修复sort属性
+                    item.sort = i + 1
+                    if (item.options) {
+                        item.options.map((itemOptions, index) => {
+                            itemOptions.sort = index + 1
+                        })
+                    }
+                }
+
+                xmview.setContentLoading(true)
                 courseService.addOrEditTesting({
                     course_id: this.fetchParam.id,
-                    fetchParam: this.fetchTesting
+                    subjects: formUtils.serializeArray(this.fetchTesting)
                 }).then((ret) => {
-                    console.info(ret)
+                    xmview.setContentLoading(false)
+                    xmview.showTip('success', '操作成功')
+                    this.$router.back()
                 })
             }
         },

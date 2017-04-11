@@ -84,8 +84,7 @@
 </style>
 <template>
     <div class="component-upload-uploadimg" ref="container">
-        <el-upload ref="container"
-                   :headers="headers"
+        <el-upload :headers="headers"
                    :action="url"
                    list-type="picture-card"
                    :multiple="false"
@@ -116,6 +115,10 @@
             // 上传成功后的回调
             onSuccess: Function,
             defaultImg: String,
+            disabled: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             return {
@@ -131,10 +134,15 @@
             'currImg' (val) {
                 if (val.length > 0 && val[0].url) {
                     this.uploadBtn && (this.uploadBtn.style.display = 'none')
+                } else {
+                    this.uploadBtn.style.display = 'block'
                 }
             },
             'defaultImg' (val) {
                 this.currImg = val ? [{name: val, url: val}] : []
+            },
+            'disabled' (val) {
+                this.isShowDelAndPreview(!val)
             }
         },
         created () {
@@ -144,7 +152,9 @@
             }
         },
         activated () {
+            console.info(this.disabled)
             this.uploadBtn && (this.uploadBtn = this.$refs.container.querySelector('.el-upload--picture-card'))
+            this.isShowDelAndPreview(!this.disabled)
         },
         mounted () {
             this.uploadBtn = this.$refs.container.querySelector('.el-upload--picture-card')
@@ -156,7 +166,6 @@
             handleRemove () {
                 setTimeout(() => {
                     this.clearFiles()
-                    this.currImg = []
                 }, 500)
             },
             handlePictureCardPreview (file) {
@@ -173,8 +182,11 @@
             clearFiles() {
                 this.uploadBtn.style.display = 'block'
                 this.isShowDefault = true
-                this.$refs.container.clearFiles()
+                this.currImg = []
             },
+            isShowDelAndPreview (isShow) {
+                this.$refs.container.querySelector('.el-upload-list__item-actions').style.display = isShow ? 'block' : 'none'
+            }
         },
     }
 </script>

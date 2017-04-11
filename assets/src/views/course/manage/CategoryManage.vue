@@ -98,7 +98,6 @@
                 </section>
                 <section class="el-dialog__body">
                     <CourseCategoryTree v-model="treeData" node-key="id"
-                                        :default-expanded-keys='["10"]'
                                         :onNodeClick="treeNodeClick.bind(this,2)"></CourseCategoryTree>
                 </section>
 

@@ -8,7 +8,7 @@ const KEY_AUTHSETNAVMENU = 'KEY_AUTH_UTILS_SETNAVMENU'
 import * as userApi from '../services/userService'
 // import config from '../utils/config'
 
-let intervalId = null
+let refreshIntervalId
 let authUtls = {
     // 身份凭证操作
     getAuthToken () {
@@ -40,22 +40,28 @@ let authUtls = {
     },
     // 自动更新用户的token
     authRefreshtoken () {
-        intervalId && clearInterval(intervalId)
-
-        intervalId = setInterval(() => {
-            let userinfo = authUtls.getUserInfo()
-            if (userinfo && userinfo.id) {
-                userApi.refreshToken(userinfo.id)
-            } else {
-                xmview.showTip('error', '登录超时,请重新登录')
-                // 记录当前的url
-                xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
-            }
+        authUtls.clearAuthRefreshToken()
+        setTimeout(() => {
+            authUtls.refreshToken()
+        }, 1000 * 10)
+        refreshIntervalId = setInterval(() => {
+            authUtls.refreshToken()
         }, 1000 * 60 * 20) // 20分钟一请求
     },
-    // 清理自动更新任务
+    refreshToken () {
+        let userinfo = authUtls.getUserInfo()
+        if (userinfo && userinfo.id) {
+            userApi.refreshToken(userinfo.id).then((ret) => {
+                authUtls.setAuthToken(ret.data.auth_token)
+            })
+        } else {
+            xmview.showTip('error', '登录超时,请重新登录')
+            // 记录当前的url
+            xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
+        }
+    },
     clearAuthRefreshToken () {
-        clearInterval(intervalId)
+        refreshIntervalId && clearInterval(refreshIntervalId)
     }
 }
 

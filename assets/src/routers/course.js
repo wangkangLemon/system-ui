@@ -72,6 +72,18 @@ export default {
             }
         },
         {
+            path: 'manage/course-answer-analysis/:id', // 答案分析
+            name: 'course-manage-course-answer-analysis',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/course/manage/AnswerAnalysis.vue'))
+                })
+            },
+            meta: {
+                title: '答案分析-培训',
+            }
+        },
+        {
             path: 'manage/course-album-manage', // 栏目管理
             name: 'course-manage-course-album-manage',
             component: resolve => {
