@@ -22,6 +22,7 @@
     import SelectScroll from '../../component/form/SelectScroll.vue'
     import companyService from '../../../services/companyService'
     export default{
+        //                          1-工业 2-连锁 3-企业
         props: ['value', 'change', 'type'],
         data () {
             return {

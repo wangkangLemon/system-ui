@@ -138,6 +138,7 @@
                     <el-button v-if="scope.row.subject_num > 0"
                                @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.id}})"
                                type="text" size="small">答案分析
+
                     </el-button>
                 </template>
             </el-table-column>
@@ -251,9 +252,10 @@
             // 下线 或者上线课程 0为下线，1为上线
             offline (index, row) {
                 let txt = row.status == 0 ? '下线' : '上线'
+                let finalStatus = row.status == 0 ? 1 : 0
                 xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                    courseService.offlineCourse({course_id: row.id, disabled: row.status}).then((ret) => {
-                        row.status = row.status == 0 ? 1 : 0
+                    courseService.offlineCourse({course_id: row.id, disabled: finalStatus}).then((ret) => {
+                        row.status = finalStatus
                     })
                 })
             },

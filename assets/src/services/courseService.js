@@ -39,12 +39,11 @@ class CourseService {
     }
 
     // 获取课程列表
-    getCourseList ({status, category, company_id, category_id, page, page_size, time_start, time_end, keyword}) {
+    getCourseList ({status, category, company_id, page, page_size, time_start, time_end, keyword}) {
         let url = urlPre + '/search'
         return api.get(url, {
             status, // 2- 视屏转码中 1-下线 0-正常
-            category, // 1-工业 默认-公开课
-            category_id,
+            category, // 1-工业 2-连锁
             company_id,
             page,
             page_size,

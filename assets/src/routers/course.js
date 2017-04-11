@@ -104,7 +104,7 @@ export default {
                 })
             },
             meta: {
-                title: '工业课管理-培训',
+                title: '企业课管理-培训',
             }
         }]
 }
