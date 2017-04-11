@@ -5,7 +5,7 @@
 <template>
     <section>
         <i>管理员</i>
-        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">
+        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="currVal">
         </SelectScroll>
     </section>
 </template>
@@ -28,9 +28,11 @@
         },
         methods: {
             fetchData (val, length) {
-                let keyword = val
-                let page = parseInt(length / this.pageSize) + 1
-                return adminService.adminList(keyword, page, this.pageSize)
+                return adminService.adminList({
+                    keyword: val,
+                    page: parseInt(length / this.pageSize) + 1,
+                    page_size: this.pageSize
+                })
             },
             handleChange(val) {
                 this.setCurrentValue(val)
@@ -39,7 +41,7 @@
             setCurrentValue (val) {
                 if (this.curVal == val) return
                 this.currVal = val
-                this.$emit('change', val)
+                this.$emit('input', val)
             }
         },
         components: {SelectScroll}

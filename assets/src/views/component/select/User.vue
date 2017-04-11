@@ -5,7 +5,7 @@
 <template>
     <section>
         <i>用户</i>
-        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">
+        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="currVal">
         </SelectScroll>
     </section>
 </template>

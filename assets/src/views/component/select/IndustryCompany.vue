@@ -52,7 +52,7 @@
                 if (this.curVal == val) return
                 this.currVal = val
                 this.$emit('input', val)
-                this.$emit('change', val)
+//                this.$emit('change', val)
             }
         },
         components: {

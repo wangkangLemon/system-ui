@@ -1,131 +1,171 @@
-<!--日志-->
-<style lang='scss' rel='stylesheet/scss' scoped>
+<!--日志-手机验证码-->
+<style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
-    @import "../../../utils/mixins/table";
+    @import "../../../utils/mixins/topSearch";
+    .system-manage {
+        .box-card {
+            margin-bottom: 20px;
+            .clearfix {
+                text-align: right;
+            }
+            .el-card__header {
+                padding: 10px 15px;
+                background: #f0f3f5;
+                .icon-iconfontexcel {
+                    position: relative;
+                    top: -2px;
+                    margin-right: 5px;
+                }
+            }
+            .search {
+                @extend %top-search-container;
+            }
+        }
+        .block {
+            text-align: right;
+            margin-top: 15px;
+        }
+    }
 </style>
 <template>
-    <article class="main-container">
-        <section class="search">
-            <div><label>手机号</label>
-                <el-input v-model="mobile"></el-input>
+    <article class="system-manage">
+        <el-card class="box-card">
+            <section class="search">
+                <section>
+                    <i>手机号</i>
+                    <el-input @change="getData" v-model="search.mobile"></el-input>
+                </section>
+                <section>
+                    <i>是否成功</i>
+                    <el-select clearable @change="getData" v-model="search.success">
+                        <el-option label="成功" :value="1"></el-option>
+                        <el-option label="失败" :value="0"></el-option>
+                    </el-select>
+                </section>
+                <section>
+                    <i>发送IP</i>
+                    <el-input @change="getData" v-model="search.ip"></el-input>
+                </section>
+                <DateRange title="发送时间" :start="search.time_start" :end="search.time_end"
+                           v-on:changeStart="val=> search.time_start=val "
+                           v-on:changeEnd="val=> search.time_end=val "
+                           :change="getData"></DateRange>
+            </section>
+            <el-table
+                    v-loading="loading"
+                    border
+                    :data="listData">
+                <el-table-column
+                        prop="mobile"
+                        label="手机号"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="code"
+                        label="验证码"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="recv_id"
+                        label="编辑短信">
+                </el-table-column>
+                <el-table-column
+                        prop="company"
+                        label="连锁">
+                </el-table-column>
+                <el-table-column
+                        prop="department"
+                        label="门店"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="send_ip_name"
+                        label="发送IP">
+                </el-table-column>
+                <el-table-column
+                        prop="send_time_name"
+                        label="发送时间"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="success"
+                        label="状态"
+                        width="180">
+                    <template scope="scope">
+                        <el-tag type="success" v-if="scope.row.success == 1">成功</el-tag>
+                        <el-tag type="danger" v-if="!scope.row.success">失败</el-tag>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next"
+                        :total="total">
+                </el-pagination>
             </div>
-            <div>
-                <label>是否成功</label>
-                <el-select v-model="statusSelect" placeholder="请选择">
-                    <el-option
-                            v-for="(item, index) in status"
-                            :label="item.name"
-                            :value="item.value"
-                            :key="item.id">
-                    </el-option>
-                </el-select>
-            </div>
-            <div><label>发送IP</label>
-                <el-input v-model="ip"></el-input>
-            </div>
-            <div>
-                <label>发送时间</label>
-                <div class="time-container">
-                    <el-date-picker
-                            v-model="createTime"
-                            type="date"
-                            placeholder="开始时间">
-                    </el-date-picker>
-                    <el-date-picker
-                            v-model="endTime"
-                            type="date"
-                            placeholder="结束时间">
-                    </el-date-picker>
-                </div>
-            </div>
-        </section>
-        <el-table
-                :data="data" border>
-            <el-table-column
-                    prop="mobile"
-                    label="手机号"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="code"
-                    label="验证码">
-            </el-table-column>
-            <el-table-column
-                    prop="message"
-                    label="短信编号">
-            </el-table-column>
-            <el-table-column
-                    prop="chain"
-                    label="连锁"
-                    width="200">
-            </el-table-column>
-            <el-table-column
-                    prop="department"
-                    label="门店"
-                    width="200">
-            </el-table-column>
-            <el-table-column
-                    prop="ip"
-                    label="发送IP"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="sendTime"
-                    label="发送时间"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="status"
-                    label="状态"
-                    width="180">
-            </el-table-column>
-        </el-table>
-        <section class="block">
-            <el-pagination
-                    :current-page="currentPage"
-                    :page-sizes="[100, 200, 300, 400]"
-                    layout="total, sizes, ->, prev, pager, next, jumper"
-                    :total="400">
-            </el-pagination>
-        </section>
+        </el-card>
     </article>
 </template>
 <script lang="babel">
+    import logService from '../../../services/logService'
+    import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
+        components: {
+            DateRange,
+        },
         data () {
             return {
-                createTime: '',
-                endTime: '',
+                loading: false,
                 currentPage: 1,
-                statusSelect: '',
-                mobile: '',
-                ip: '',
-                data: [
-                    {
-                        id: 1,
-                        mobile: '2016-05-02',
-                        code: '王小虎1',
-                        message: '上海市普陀区金沙江路 1518 弄',
-                        department: '上海市普陀区金沙江路 1518 弄',
-                        chain: '方式',
-                        ip: '10.1.1.1',
-                        sendTime: '21-22-2',
-                        status: '失败'
-                    }
-                ],
-                status: [
-                    {
-                        id: 1,
-                        name: '成功',
-                        value: 1
-                    },
-                    {
-                        id: 2,
-                        name: '失败',
-                        value: 0
-                    }
-                ]
+                pageSize: 15,
+                listData: [],
+                total: 0,
+                search: {
+                    mobile: '',
+                    ip: '',
+                    time_start: '',
+                    time_end: '',
+                    success: '',
+                }
             }
+        },
+        created () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
+        methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val
+                this.getData()
+            },
+            getData () {
+                this.loading = true
+                let params = {
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    mobile: this.search.mobile,
+                    ip: this.search.ip,
+                    time_start: this.search.time_start,
+                    time_end: this.search.time_end,
+                    success: this.search.success
+                }
+                return logService.getSmsCodeList(params).then((ret) => {
+                    this.listData = ret.data
+                    this.total = ret.total
+                }).then(() => {
+                    this.loading = false
+                })
+            },
         }
     }
 </script>

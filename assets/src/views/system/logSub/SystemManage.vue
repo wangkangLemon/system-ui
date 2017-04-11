@@ -1,108 +1,142 @@
-<!--日志-->
-<style lang='scss' rel='stylesheet/scss' scoped>
+<!--日志-系统管理-->
+<style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
-    @import "../../../utils/mixins/table";
+    @import "../../../utils/mixins/topSearch";
+    .system-manage {
+        .box-card {
+            margin-bottom: 20px;
+            .clearfix {
+                text-align: right;
+            }
+            .el-card__header {
+                padding: 10px 15px;
+                background: #f0f3f5;
+                .icon-iconfontexcel {
+                    position: relative;
+                    top: -2px;
+                    margin-right: 5px;
+                }
+            }
+            .search {
+                @extend %top-search-container;
+            }
+        }
+        .block {
+            text-align: right;
+            margin-top: 15px;
+        }
+    }
 </style>
 <template>
-    <article class="main-container">
-        <section class="search">
-            <div>
-                <label>管理员</label>
-                <el-select v-model="managerSelect" placeholder="请选择">
-                    <el-option
-                            v-for="(item, index) in manager"
-                            :label="item.name"
-                            :value="item.id"
-                            :key="item.id">
-                    </el-option>
-                </el-select>
+    <article class="system-manage">
+        <el-card class="box-card">
+            <section class="search">
+                <AdminSelect v-model="search.admin_id" :change="getData"></AdminSelect>
+                <section>
+                    <i>操作IP</i>
+                    <el-input @change="getData" v-model="search.ip"></el-input>
+                </section>
+                <DateRange title="操作时间" :start="search.time_start" :end="search.time_end"
+                v-on:changeStart="val=> search.time_start=val "
+                v-on:changeEnd="val=> search.time_end=val "
+                :change="getData"></DateRange>
+            </section>
+            <el-table
+                    v-loading="loading"
+                    border
+                    :data="listData">
+                <el-table-column
+                        prop="owner_name"
+                        label="管理员"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="action_name"
+                        label="操作"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="target_type"
+                        label="目标类型">
+                </el-table-column>
+                <el-table-column
+                        prop="create_ip"
+                        label="操作IP">
+                </el-table-column>
+                <el-table-column
+                        prop="create_time_name"
+                        label="操作时间">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next"
+                        :total="total">
+                </el-pagination>
             </div>
-            <div><label>操作IP</label><el-input v-model="ip"></el-input></div>
-            <div>
-                <label>操作时间</label>
-                <div class="time-container">
-                    <el-date-picker
-                            v-model="createTime"
-                            type="date"
-                            placeholder="开始时间">
-                    </el-date-picker>
-                    <el-date-picker
-                            v-model="endTime"
-                            type="date"
-                            placeholder="结束时间">
-                    </el-date-picker>
-                </div>
-            </div>
-        </section>
-        <el-table
-                :data="data" border>
-            <el-table-column
-                    prop="manager"
-                    label="管理员"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="operate"
-                    label="操作">
-            </el-table-column>
-            <el-table-column
-                    prop="targetType"
-                    label="目标类型"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="target"
-                    label="目标"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="ip"
-                    label="操作IP"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="operateTime"
-                    label="操作时间"
-                    width="180">
-            </el-table-column>
-        </el-table>
-        <section class="block">
-            <el-pagination
-                    :current-page="currentPage"
-                    :page-sizes="[100, 200, 300, 400]"
-                    layout="total, sizes, ->, prev, pager, next, jumper"
-                    :total="400">
-            </el-pagination>
-        </section>
+        </el-card>
     </article>
 </template>
 <script lang="babel">
+    import logService from '../../../services/logService'
+    import DateRange from '../../component/form/DateRangePicker.vue'
+    import AdminSelect from '../../component/select/Admin.vue'
     export default {
+        components: {
+            DateRange,
+            AdminSelect
+        },
         data () {
             return {
-                createTime: '',
-                endTime: '',
+                loading: false,
                 currentPage: 1,
-                managerSelect: '',
-                ip: '',
-                data: [
-                    {
-                        id: 1,
-                        operateTime: '2016-05-02',
-                        manager: '王小虎1',
-                        operate: '上海市普陀区金沙江路 1518 弄',
-                        targetType: '1',
-                        target: '2',
-                        ip: '10.1.1.1'
-                    }
-                ],
-                manager: [
-                    {
-                        id: 1,
-                        name: '选项1'
-                    }
-                ]
+                pageSize: 15,
+                listData: [],
+                total: 0,
+                search: {
+                    admin_id: '',
+                    ip: '',
+                    time_start: '',
+                    time_end: ''
+                }
             }
+        },
+        created () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
+        methods: {
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.getData()
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val
+                this.getData()
+            },
+            getData () {
+                this.loading = true
+                let params = {
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    admin_id: this.search.admin_id,
+                    ip: this.search.ip,
+                    time_start: this.search.time_start,
+                    time_end: this.search.time_end
+                }
+                return logService.getSystemManageList(params).then((ret) => {
+                    this.listData = ret.data
+                    this.total = ret.total
+                }).then(() => {
+                    this.loading = false
+                })
+            },
         }
     }
 </script>

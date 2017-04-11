@@ -1,249 +1,262 @@
-<!--客户端-->
-<style lang='scss' scoped rel="stylesheet/scss">
+<!--日志-企业后台登录-->
+<style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
-    @import "../../../utils/mixins/table";
-    .table-container {
-        padding: 20px;
-        background: #fff;
-        border: 1px solid #ededed;
+    @import "../../../utils/mixins/topSearch";
+    .system-manage {
         .showDetail {
             .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    > span {
+                p {
+                    line-height: 30px;
+                }
+                .remark {
+                    margin-bottom: 10px;
+                    > * {
                         display: inline-block;
-                        width:px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
+                        vertical-align: top;
+                    }
+                    textarea {
+                        width: 40%;
                     }
                 }
             }
         }
+        .box-card {
+            margin-bottom: 20px;
+            .clearfix {
+                text-align: right;
+            }
+            .el-card__header {
+                padding: 10px 15px;
+                background: #f0f3f5;
+                .icon-iconfontexcel {
+                    position: relative;
+                    top: -2px;
+                    margin-right: 5px;
+                }
+            }
+            .search {
+                @extend %top-search-container;
+            }
+        }
+        .block {
+            text-align: right;
+            margin-top: 15px;
+        }
     }
 </style>
 <template>
-    <article class="table-container">
-        <!--删除弹窗-->
-        <delete-dialog :text="itemName" :isShow="deletDialog" :callback="deleteItem"></delete-dialog>
+    <article class="system-manage">
+        接口显示状态 说明不详
         <!--详情-->
-        <el-dialog class="showDetail" v-model="showDetial">
-            <div class="info">
-                <p><span>企业名称：</span>{{details.company}}</p>
-                <p><span>门店：</span>{{details.department}}</p>
-                <p><span>提交人：</span>{{details.submitter}}</p>
-                <p><span>联系方式：</span> {{details.link}}</p>
-                <p><span>问题描述：</span> {{details.description}}</p>
-                <p><span>问题截取：</span><img :src="details.questionImg" /></p>
+        <el-dialog title="查看详情" class="showDetail" v-model="showDetail">
+            <div class="info" v-if="details != null">
+                <p><span>问题类型：</span>{{details.category}}</p>
+                <p><span>提交时间：</span>{{details.create_time}}</p>
+                <p><span>提交人：</span>{{details.ContactName}}</p>
+                <p><span>联系方式：</span> {{details.contact}}</p>
+                <p><span>问题描述：</span> {{details.content}}</p>
+                <p><span>手机型号：</span> {{details.app_version}}</p>
+                <p><span>系统版本：</span> {{details.system_version}}</p>
+                <p class="remark">
+                    <span>备注：</span>
+                    <el-input type="textarea" :rows="3" v-model="form.note"></el-input>
+                </p>
                 <p>
                     <span>状态：</span>
-                    <el-select v-model="details.status">
-                        <el-option
-                                v-for="(item, index) in processState"
-                                :label="item.status"
-                                :value="item.value"
-                                :key="item.id">
-                        </el-option>
+                    <el-select clearable v-model="form.status">
+                        <el-option label="待处理" :value="1"></el-option>
+                        <el-option label="已处理" :value="2"></el-option>
                     </el-select>
                 </p>
             </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="updateFn(details.id)">提交修改</el-button>
+            </span>
         </el-dialog>
-        <div class="main-container">
+        <el-card class="box-card">
             <section class="search">
-                <div>
-                    <label>类型</label>
-                    <el-select>
-                        <el-option
-                                v-for="(item, index) in questionType"
-                                :label="item.name"
-                                :value="item.value"
-                                :key="item.id">
-                        </el-option>
+                <section>
+                    <i>关键字</i>
+                    <el-input @change="getData" v-model="search.keyword"></el-input>
+                </section>
+                <section>
+                    <i>类型：</i>
+                    <el-select clearable @change="getData" v-model="search.category">
+                        <el-option label="建议" :value="1"></el-option>
+                        <el-option label="操作体验不好" :value="2"></el-option>
+                        <el-option label="闪退" :value="3"></el-option>
+                        <el-option label="视频无法播放" :value="4"></el-option>
                     </el-select>
-                </div>
-                <div>
-                    <label>状态</label>
-                    <el-select>
-                        <el-option
-                                v-for="(item, index) in processState"
-                                :label="item.status"
-                                :value="item.value"
-                                :key="item.id">
-                        </el-option>
+                </section>
+                <section>
+                    <i>状态：</i>
+                    <el-select @change="getData" clearable v-model="search.status">
+                        <el-option label="待处理" :value="1"></el-option>
+                        <el-option label="已处理" :value="2"></el-option>
                     </el-select>
-                </div>
-                <div>
-                    <label>日期</label>
-                    <el-date-picker
-                            v-model="createTime"
-                            type="date"
-                            placeholder="开始时间">
-                    </el-date-picker>
-                    <el-date-picker
-                            v-model="endTime"
-                            type="date"
-                            placeholder="结束时间">
-                    </el-date-picker>
-                </div>
-                <div><label>关键字</label><el-input v-model="keywords"></el-input></div>
+                </section>
+                <DateRange title="日期" :start="search.time_start" :end="search.time_end"
+                           v-on:changeStart="val=> search.time_start=val "
+                           v-on:changeEnd="val=> search.time_end=val "
+                           :change="getData"></DateRange>
             </section>
-            <el-table border :data="tableData">
+            <el-table
+                    v-loading="loading"
+                    border
+                    :data="listData">
                 <el-table-column
-                        prop="type"
+                        prop="category"
                         label="类型"
-                        width="100%">
+                        width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="instruction"
-                        label="说明">
+                        prop="content"
+                        label="说明"
+                        width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="appVersion"
+                        prop="app_version"
                         label="APP版本"
-                        width="200">
+                        width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="systemVersion"
+                        prop="system_version"
                         label="系统版本"
-                        width="200">
+                        width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="time"
+                        prop="create_time"
                         label="时间"
-                        width="200">
+                        width="180">
                 </el-table-column>
                 <el-table-column
                         prop="status"
-                        label="状态"
-                        width="200">
-                </el-table-column>
-                <el-table-column prop="operate" label="操作">
+                        label="状态">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="showFn(scope.$index, scope.row)">
+                        <el-tag type="primary" v-if="scope.row.status == 1">待处理</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == 2">已处理</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="operate"
+                        label="操作">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看
                         </el-button>
-                        <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
+                        <el-button type="text" size="small" @click="deleteFn(scope.row)">
                             删除
                         </el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <section class="block">
+            <div class="block">
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
-                        :page-sizes="[1, 2]"
-                        layout="total, sizes, ->, prev, pager, next, jumper"
-                        :total="4">
+                        :page-sizes="[15, 30, 60, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next"
+                        :total="total">
                 </el-pagination>
-            </section>
-        </div>
+            </div>
+        </el-card>
     </article>
 </template>
 <script lang="babel">
-    import deleteDialog from '../../component/dialog/Delete'
+    import feedBackService from '../../../services/feedBackService'
+    import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
         components: {
-            deleteDialog
+            DateRange
         },
         data () {
             return {
-                createTime: '',
-                endTime: '',
-                keywords: '', // 关键字
-                questionType: [
-                    {
-                        id: 1,
-                        name: '建议',
-                        value: 1
-                    },
-                    {
-                        id: 2,
-                        name: '操作体验不好',
-                        value: 2
-                    },
-                    {
-                        id: 3,
-                        name: '程序闪退',
-                        value: 3
-                    },
-                    {
-                        id: 4,
-                        name: '视频无法播放',
-                        value: 4
-                    }
-                ],
-                // 处理状态
-                processState: [
-                    {
-                        id: 1,
-                        status: '待处理',
-                        value: 1
-                    },
-                    {
-                        id: 2,
-                        status: '已处理',
-                        value: 2
-                    }
-                ],
-                details: {}, // 详情
-                itemName: '',           // 要删除项名称
-                deletDialog: false,     // 删除弹窗
-                showDetial: false,     // 是否显示详情对话框
-                currentPage: 1, // 分页当前显示的页数
-                tableData: [ // 列表数据
-                    {
-                        id: 1,
-                        type: '销售',
-                        instruction: '销售',
-                        appVersion: '销售',
-                        systemVersion: '13920307216',
-                        time: '13@vod.com',
-                        status: '正常'
-                    }
-                ]
+                showDetail: false,
+                details: null,
+                loading: false,
+                currentPage: 1,
+                pageSize: 15,
+                listData: [],
+                total: 0,
+                search: {
+                    keyword: '',
+                    status: '',
+                    category: '',
+                    time_start: '',
+                    time_end: ''
+                },
+                form: {
+                    note: '',
+                    status: 0
+                }
             }
         },
+        created () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
         methods: {
-            showFn (index, row) {
-                this.showDetial = true
-                // 获取数据
-                // row.id
-                this.details = {
-                    company: '演示医药连锁',
-                    department: '演示医药连锁',
-                    submitter: '提交人',
-                    link: '林夕方式',
-                    description: '问题描述',
-                    questionImg: 'http://sys.yst.vodjk.dev/assets/img/user-default-female.jpg?00da903dc4d95b13b46f',
-                    status: 1
-                }
+            deleteFn (row) {
+                xmview.showDialog('你将要执行删除操作且不可恢复确认吗？', () => {
+                    feedBackService.deleteMobileData(row.id).then(() => {
+                        xmview.showTip('success', '删除成功')
+                        this.getData()
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
+                })
             },
-            // 显示删除dialog
-            handleDelete (index, row) {
-                this.deletDialog = true
-                this.itemName = row.chain
+            updateFn (id) {
+                feedBackService.updateMobile({
+                    id,
+                    status: this.form.status,
+                    note: this.form.note
+                }).then((ret) => {
+                    this.showDetail = false
+                    xmview.showTip('success', '提交成功')
+                    this.getData()
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
-            // 处理删除动作
-            deleteItem (confirm) {
-                this.deletDialog = false
-                if (!confirm) {
-                    return false
-                }
-                // 以下执行接口删除动作
-                console.log(11)
+            showFn (row) {
+                feedBackService.getMobileDetail(row.id).then((ret) => {
+                    this.details = ret.data
+                    this.form.status = ret.data.status
+                    this.form.note = ret.data.note
+                }).then(() => {
+                    this.showDetail = true
+                })
             },
             handleSizeChange (val) {
-                console.log(`每页 ${val} 条`)
-                // 当切换每页条数得时候 获取当前第一页得数据
-                this.handleCurrentChange(1)
+                this.pageSize = val
+                this.getData()
             },
-            handleCurrentChange (val) {
+            handleCurrentChange(val) {
                 this.currentPage = val
-                console.log(`当前页: ${val}`)
-                // 以下获取当页数据
-            }
+                this.getData()
+            },
+            getData () {
+                this.loading = true
+                let params = {
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    keyword: this.search.keyword,
+                    category: this.search.category,
+                    status: this.search.status,
+                    time_start: this.search.time_start,
+                    time_end: this.search.time_end
+                }
+                return feedBackService.getMobileList(params).then((ret) => {
+                    this.listData = ret.data
+                    this.total = ret.total
+                }).then(() => {
+                    this.loading = false
+                })
+            },
         }
     }
 </script>
