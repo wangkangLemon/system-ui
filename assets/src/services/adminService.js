@@ -7,9 +7,13 @@ const urlPre = config.apiHost + '/sys/admin'
 
 class AdminService {
     // 获取管理员列表
-    adminList(keyword, page, pageSize) {
+    adminList({
+        keyword = '',
+        page,
+        page_size
+    }) {
         let url = urlPre + '/search'
-        return api.get(url, {keyword, page, page_size: pageSize}, false).then(ret => {
+        return api.get(url, {keyword, page, page_size}, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -17,11 +21,54 @@ class AdminService {
             }
         })
     }
+    // 新增管理员
+    addAdmin ({role_id, name, sex = '', mobile = '', passwd, email = '', address = '', disabled = ''}) {
+        return api.post(urlPre, {role_id, name, sex, mobile, email, passwd, address, disabled}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 编辑管理员获取信息
+    editAdmin (adminID) {
+        let finalUrl = `${urlPre}/${adminID}`
+        return api.get(finalUrl, {}).then((ret) => {
+            return ret.data.data
+        })
+    }
+    // 修改管理员获取信息
+    updateAdmin ({id, role_id, name, sex = '', mobile = '', passwd = '', email = '', address = '', disabled = ''}) {
+        console.log(disabled)
+        let finalUrl = `${urlPre}/${id}`
+        return api.put(finalUrl, {role_id, name, sex, mobile, passwd, email, address, disabled}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
     // 删除管理员
     adminDelete(userID) {
         let finalUrl = `${urlPre}/${userID}`
-        console.log(finalUrl)
         return api.del(finalUrl, {}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 获取管理员详情
+    adminDetail (adminID) {
+        let finalUrl = `${urlPre}/${adminID}`
+        return api.get(finalUrl, {}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 禁用管理员
+    adminDisable({
+        adminID,
+        disabled
+    }) {
+        let finalUrl = `${urlPre}/${adminID}/disable`
+        return api.put(finalUrl, {disabled}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
