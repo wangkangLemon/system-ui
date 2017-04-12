@@ -43,7 +43,6 @@
 </style>
 <template>
     <article class="company-index">
-        <p>签约人下拉框滚动加载 修改的时候市区选中</p>
         <!--详情-->
         <el-dialog v-if="details != null" class="showDetail" v-model="showDetail" title="企业信息">
             <h2>
@@ -95,7 +94,7 @@
                     <el-input v-model="form.fax" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="地区" :label-width="formLabelWidth">
-                    <Region title="" v-on:provinceChange="val => form.province = val"
+                    <Region :placeholder="[form.province, form.city, form.area]" title="" v-on:provinceChange="val => form.province = val"
                             v-on:cityChange="val => form.city = val"
                             v-on:areaChange="val => form.area = val"></Region>
                 </el-form-item>
@@ -120,8 +119,8 @@
                 <el-form-item prop="user_number" label="签约店员数量" :label-width="formLabelWidth">
                     <el-input placeholder="签约店员数量" type="number" v-model="sign.user_number" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="user_name" label="签约人" :label-width="formLabelWidth">
-                    <el-input placeholder="签约人" v-model="sign.user_name" auto-complete="off"></el-input>
+                <el-form-item prop="signatory" label="签约人" :label-width="formLabelWidth">
+                    <SignatorySelect v-model="sign.signatory"></SignatorySelect>
                 </el-form-item>
                 <el-form-item prop="sign_time" label="签约时间" :label-width="formLabelWidth">
                     <el-date-picker v-model="sign.sign_time"
@@ -242,13 +241,15 @@
     import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
     import Region from '../component/select/Region.vue'
+    import SignatorySelect from '../component/select/Signatory.vue'
     import * as timeUtils from '../../utils/timeUtils'
     let _this
     export default {
         components: {
             IndustryCompanySelect,
             DateRange,
-            Region
+            Region,
+            SignatorySelect
         },
         data () {
             let validateEmail = (rule, value, callback) => {
@@ -313,7 +314,7 @@
                 sign: {
                     department_number: '', // 门店数量
                     user_number: '', // 店员数量
-                    user_name: '', // 签约人
+                    signatory: '', // 签约人
                     sign_time: '', // 签约日期
                     expire_time: '' // 合同到期日
                 },

@@ -11,21 +11,21 @@
 <template>
     <section>
         <i>{{title}}</i>
-        <el-select clearable placeholder="全部" @change="setCurrVal(0, provinceSelect)" v-model="provinceSelect">
+        <el-select :placeholder="placeholderVal.province" clearable @change="setCurrVal(0, provinceSelect)" v-model="provinceSelect">
             <el-option v-for="(item, index) in provinces"
                        :label="item.name"
                        :value="item.id"
                        :key="item.id">
             </el-option>
         </el-select>
-        <el-select clearable placeholder="全部" @change="setCurrVal(1, citySelect)" v-model="citySelect">
+        <el-select :placeholder="placeholderVal.city" clearable @change="setCurrVal(1, citySelect)" v-model="citySelect">
             <el-option v-for="(item, index) in citys"
                        :label="item.name"
                        :value="item.id"
                        :key="item.id">
             </el-option>
         </el-select>
-        <el-select clearable placeholder="全部" @change="setCurrVal(2, areaSelect)" v-model="areaSelect">
+        <el-select :placeholder="placeholderVal.area" clearable @change="setCurrVal(2, areaSelect)" v-model="areaSelect">
             <el-option v-for="(item, index) in areas"
                        :label="item.name"
                        :value="item.id"
@@ -39,7 +39,7 @@
     import cityData from '../../../assets/city'
     import treeUtils from '../../../utils/treeUtils'
     export default{
-        props: ['change', 'title'],
+        props: ['change', 'title', 'placeholder'],
         data () {
             return {
                 provinces: [],
@@ -48,7 +48,21 @@
                 provinceSelect: '',
                 citySelect: '',
                 areaSelect: '',
-                curItem: []
+                curItem: [],
+                placeholderVal: {
+                    province: '全部',
+                    city: '全部',
+                    area: '全部'
+                }
+            }
+        },
+        watch: {
+            placeholder (val) {
+                if (val && val.length > 0) {
+                    this.placeholderVal.province = treeUtils.findItem(cityData, [`${val[0]}`]).name
+                    this.placeholderVal.city = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`]).name
+                    this.placeholderVal.area = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`, `${val[2]}`]).name
+                }
             }
         },
         created () {
