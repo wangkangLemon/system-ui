@@ -1,5 +1,4 @@
 <!--工业课-->
-<!--公开课管理-->
 <style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/common";
     @import "../../../utils/mixins/topSearch";

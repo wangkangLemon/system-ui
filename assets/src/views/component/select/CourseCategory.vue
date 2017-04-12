@@ -45,7 +45,6 @@
         },
         mounted () {
             this.$refs.container.$el.addEventListener('click', () => {
-                console.info(this.$refs.container.$el, '点击coursecategory')
                 if (this.loading || this.options.length > 0) return
                 if (this.lastData) {
                     this.options = this.lastData
@@ -89,6 +88,10 @@
                         currItem.children = ret
                     })
             },
+            clearData () {
+                this.lastData = this.options
+                this.options = []
+            }
         },
         components: {}
     }

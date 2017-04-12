@@ -6,16 +6,9 @@
 <!--:change="fetchData">-->
 <!--</IndustryCompanySelect>-->
 
-<style lang='scss' scoped rel='stylesheet/scss'></style>
-
 <template>
-    <section>
-        <i v-if="type == 1">工业</i>
-        <i v-else-if="type == 2">连锁</i>
-        <i v-else>企业</i>
-        <SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="currVal">
-        </SelectScroll>
-    </section>
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="currVal" :placeholder="placeholder">
+    </SelectScroll>
 </template>
 
 <script>
@@ -23,7 +16,7 @@
     import companyService from '../../../services/companyService'
     export default{
         //                          1-工业 2-连锁 3-企业
-        props: ['value', 'change', 'type'],
+        props: ['value', 'change', 'type', 'placeholder'],
         data () {
             return {
                 currVal: this.value,
@@ -52,7 +45,7 @@
                 if (this.curVal == val) return
                 this.currVal = val
                 this.$emit('input', val)
-//                this.$emit('change', val)
+                this.$emit('change', val)
             }
         },
         components: {

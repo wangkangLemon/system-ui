@@ -106,5 +106,42 @@ export default {
             meta: {
                 title: '企业课管理-培训',
             }
-        }]
+        },
+        {
+            path: 'manage/video', // 视频管理
+            name: 'course-manage-video',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/course/manage/Video.vue'))
+                })
+            },
+            meta: {
+                title: '视频管理-培训',
+            }
+        },
+        {
+            path: 'manage/video/add', // 视频添加
+            name: 'course-manage-video-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/course/manage/VideoAdd.vue'))
+                })
+            },
+            meta: {
+                title: '视频添加-培训',
+            }
+        },
+        {
+            path: 'manage/doc', // 文档管理
+            name: 'course-manage-doc',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/course/manage/Doc.vue'))
+                })
+            },
+            meta: {
+                title: '文档管理-培训',
+            }
+        },
+    ]
 }

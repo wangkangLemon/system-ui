@@ -168,6 +168,7 @@ class CourseService {
         })
     }
 
+    // ============================================= 栏目 开始 ======================================================
     // 获取课程栏目树
     getCategoryTree ({companyid, id = 'tree', filter = true}) {
         companyid = companyid || authUtils.getUserInfo().company_id
@@ -223,6 +224,7 @@ class CourseService {
         return api.put(finalUrl, {to})
     }
 
+    // ============================================= 专辑 开始 ======================================================
     // 获取专辑
     getAlbumList ({companyid, page, page_size, keyword, time_start, time_end}) {
         companyid = companyid || authUtils.getUserInfo().company_id
@@ -258,6 +260,48 @@ class CourseService {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/album/edit`
         return api.post(finalUrl, {course_id: course_id.join(','), name})
+    }
+
+    // ============================================= 视频页面部分 开始 ======================================================
+    // 获取视频
+    getVideo ({company_id, status, keyword, page, page_size}) {
+        let url = `${urlPre}/video/search`
+        return api.get(url, {company_id, status, keyword, page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 添加视频
+    addVideo ({name, company_id, tags, source_type, source_url}) {
+        company_id = company_id || authUtils.getUserInfo().company_id
+        let url = `${urlPre}/video/`
+        return api.post(url, {name, company_id, tags, source_type, source_url})
+    }
+
+    // 修改视频
+    updateVideo ({name, company_id, tags, cover, durationid, id}) {
+        company_id = company_id || authUtils.getUserInfo().company_id
+        let url = `${urlPre}/video/${id}`
+        return api.put(url, {name, company_id, tags, cover, durationid})
+    }
+
+    // 获取oss的上传token
+    getOssToken ({companyid} = {}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/video/upload`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取上传封面的url
+    getVideoUploadCoverUrl () {
+        return `${urlPre}/video/cover`
+    }
+
+    deleteVideo ({id}) {
+        let url = `${urlPre}/video/${id}`
+        return api.del(url)
     }
 }
 

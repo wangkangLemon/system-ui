@@ -1,7 +1,6 @@
+<style lang='scss' rel='stylesheet/scss'></style>
+
 <template>
-    <keep-alive exclude="course-manage-addcourse,course-manage-videoadd">
-        <router-view></router-view>
-    </keep-alive>
 </template>
 
 <script>
@@ -10,6 +9,8 @@
             return {}
         },
         created () {
+        },
+        activated () {
         },
         methods: {},
         components: {}
