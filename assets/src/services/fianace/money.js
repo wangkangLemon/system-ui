@@ -76,3 +76,17 @@ export function drawList(reqObj) {
         }
     })
 }
+
+// 红包充值接口
+export function moneyCharge({
+    company_id,
+    money,
+    desc
+}) {
+    let url = `${urlPre}/charge`
+    return api.post(url, {company_id, money, desc}).then((ret) => {
+        if (ret.code) {
+            return Promise.reject(ret)
+        }
+    })
+}

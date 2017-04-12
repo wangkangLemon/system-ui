@@ -34,8 +34,8 @@
         <!--充值表单-->
         <el-dialog v-model="addForm" title="充值" size="tiny">
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
-                <el-form-item label="要充值的工业" prop="name">
-                    <IndustryCompanySelect type="1" v-model="form.name"
+                <el-form-item label="" prop="company_id">
+                    <IndustryCompanySelect type="1" v-model="form.company_id"
                                            v-on:change="formIndustryChange">
                     </IndustryCompanySelect>
                 </el-form-item>
@@ -52,7 +52,7 @@
         </el-dialog>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <el-button class="recharge" @click="addForm = true"><i class="el-icon-plus"></i>充值</el-button>
+                <el-button class="recharge" @click="addFn"><i class="el-icon-plus"></i>充值</el-button>
                 <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
@@ -126,7 +126,7 @@
     </article>
 </template>
 <script lang="babel">
-    import {chargeData} from '../../../services/fianace/money'
+    import {chargeData, moneyCharge} from '../../../services/fianace/money'
     import {date2Str} from '../../../utils/timeUtils'
     import Admin from '../../component/select/Admin'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
@@ -150,12 +150,12 @@
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
                 form: {                // 表单属性值
-                    name: '',          // 工业名称
+                    company_id: '',          // 工业名称
                     money: '',          // 要充值的金额
                     desc: ''       // 收据
                 },
                 rules: {
-                    name: [
+                    company_id: [
                         {type: 'number', required: true, message: '必填项', trigger: 'change'}
                     ],
                     money: [
@@ -182,6 +182,11 @@
             })
         },
         methods: {
+            addFn () {
+                if (!this.loading) {
+                    this.addForm = true
+                }
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
@@ -196,7 +201,13 @@
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        console.log(1)
+                        console.log(this.form)
+                        moneyCharge(this.form).then(() => {
+                            this.addForm = false
+                            xmview.showTip('success', '充值成功')
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }

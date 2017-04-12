@@ -33,7 +33,7 @@
     .table-container {
         border: 1px solid #ededed;
         .add {
-            background: #ededed;
+            background: #f0f3f5;
             padding: px2rem(10) px2rem(20);
             border-bottom: 1px solid #ededed;
         }

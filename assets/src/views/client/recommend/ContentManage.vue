@@ -1,9 +1,19 @@
 <!--内容维护-->
-<style lang='scss' scoped rel="stylesheet/scss">
+<style lang='scss' rel="stylesheet/scss">
     @import "../../../utils/mixins/mixins";
-    @import "../../../utils/mixins/table";
+    /*@import "../../../utils/mixins/table";*/
+    @import "../../../utils/mixins/topSearch";
 
     .content-manage {
+        .search {
+            @extend %top-search-container;
+        }
+        .el-input {
+            .el-input__icon {
+                text-align: center;
+                text-align-last: center;
+            }
+        }
         /*上传图片的样式*/
         .avatar-uploader {
             .el-upload {
@@ -36,7 +46,7 @@
             position: absolute;
             width: 100%;
             left: 0;
-            height: 250px;
+            height: 360px;
             z-index: 99;
             background: rgba(255, 255, 255, 0.7);
             top: 140px;
@@ -98,13 +108,8 @@
 
             .title {
                 padding: 10px 20px;
-                background: #ededed;
+                background: #f0f3f5;
                 position: relative;
-                .leftSubTree {
-                    position: absolute;
-                    z-index: 5;
-                    width: 50%;
-                }
             }
             .left-list {
                 background: #fff;
@@ -132,7 +137,7 @@
 
             .title {
                 padding: 10px 20px;
-                background: #ededed;
+                background: #f0f3f5;
                 text-align: right;
                 line-height: 35px;
                 span {
@@ -186,36 +191,32 @@
 </style>
 <template>
     <article class="content-manage">
+        <p>编辑和添加来回切换的时候 显示有点问题</p>
         <!--添加/编辑课程-->
         <el-dialog v-model="addForm" :title="formTitle">
-            <div class="keep" v-if="isKeep && isUpdate"></div>
-            <div class="synchronize" @click="isKeep = false" v-if="isUpdate && isKeep">课程：{{form.title}}
-                <el-button>关闭同步</el-button>
-            </div>
-            <div class="synchronize" @click="isKeep = true" v-if="isUpdate && !isKeep">课程：{{form.title}}
-                <el-button>开启同步</el-button>
+            <div class="keep" v-if="form.ref_id && form.ref_sync"></div>
+            <div class="synchronize">课程：{{form.course.name}}
+                <el-button @click="form.ref_sync = 0" v-if="form.ref_id && form.ref_sync">关闭同步</el-button>
+                <el-button @click="keepSync" v-if="form.ref_id && !form.ref_sync">开启同步</el-button>
             </div>
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="link" label="链接" :label-width="formLabelWidth">
-                    <el-input v-model="form.link" auto-complete="off"></el-input>
+                <el-form-item v-if="!form.ref_id" prop="url" label="链接" :label-width="formLabelWidth">
+                    <el-input v-model="form.url" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="image" label="图片" :label-width="formLabelWidth">
                     <!--图片上传-->
-                    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
-                               :show-file-list="false" :on-success="handleAvatarSuccess">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                    <UploadImg ref="uploadImg" :defaultImg="form.image" :url="uploadReqUrl"
+                                :onSuccess="handleImgUploaded"></UploadImg>
                 </el-form-item>
-                <el-form-item prop="description" label="描述" :label-width="formLabelWidth">
-                    <el-input type="textarea" :rows="3" v-model="form.description" auto-complete="off"></el-input>
+                <el-form-item prop="desc" label="描述" :label-width="formLabelWidth">
+                    <el-input type="textarea" :rows="3" v-model="form.desc" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item class="tag" label="标签" :label-width="formLabelWidth">
-                    <span @click="toggleTag(index)" :class="{'active': index == form.currentTag}"
-                          v-for="(item, index) in form.tags">{{item}}</span>
+                    <span @click="toggleTag(item.value)" :class="{'active': item.value == form.tags}"
+                          v-for="(item, index) in tags">{{item.name}}</span>
                 </el-form-item>
                 <el-form-item prop="date" label="日期" :label-width="formLabelWidth">
                     <el-date-picker v-model="form.date" type="date"/>
@@ -230,74 +231,78 @@
             </div>
         </el-dialog>
         <!--选取课程-->
-        <el-dialog class="chooseCourse main-container" title="选取课程" v-model="chooseCourse">
+        <el-dialog class="chooseCourse main-container" title="选取课程" v-model="course.isShow">
             <section class="search">
-                <div><label>名称</label>
-                    <div class="el-input">
-                        <input type="text" @keyup.enter="nameSearch($event)" autocomplete="off" class="el-input__inner">
-                    </div>
-                </div>
-                <div>
-                    <el-button @click="categoryShow = !categoryShow">栏目分类</el-button>
-                    <el-tree class="categorySubTree" v-if="categoryShow" :highlight-current="true" :data="categoryData"
-                             :props="defaultProps" @node-click="chooseCategory"></el-tree>
-                </div>
+                <section>
+                    <i>名称</i>
+                    <el-input @change="getCourse" v-model="course.search.keyword"></el-input>
+                </section>
+                <section>
+                    <i>栏目分类</i>
+                    <CourseCategorySelect v-model="course.search.category_id" :onchange="getCourse"></CourseCategorySelect>
+                </section>
             </section>
-            <el-table @row-click="selectCurrentCourse" border :data="courseData" :highlight-current-row="true">
-                <el-table-column property="course" label="课程"></el-table-column>
-                <el-table-column property="company" label="企业" width="200"></el-table-column>
-                <el-table-column property="type" label="类型" width="150"></el-table-column>
+            <el-table v-loading="course.loading" @row-click="selectCurrentCourse" border :data="course.data" :highlight-current-row="true">
+                <el-table-column prop="name" label="课程"></el-table-column>
+                <el-table-column prop="company" label="企业" width="200"></el-table-column>
+                <el-table-column prop="material_type" label="类型" width="150">
+                    <template scope="scope">
+                        {{course.material_type[scope.row.material_type]}}
+                    </template>
+                </el-table-column>
             </el-table>
             <div class="block">
                 <el-pagination
-                        layout="prev, pager, next"
-                        :total="1000">
+                        @size-change="courseSizeChange"
+                        @current-change="coursePageChange"
+                        :total="course.total"
+                        :current-page="course.page"
+                        :page-size="course.page_size"
+                        :page-sizes="[15, 30, 60, 100]"
+                        layout="total, sizes, prev, pager, next">
                 </el-pagination>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="chooseCourse = false">取 消</el-button>
+                <el-button @click="course.isShow = false">取 消</el-button>
                 <el-button type="primary" @click="courseConfirm">确 定</el-button>
             </span>
         </el-dialog>
 
         <section class="left-content">
             <div class="classify title">
-                <el-button @click="leftSubTree = !leftSubTree">
-                    分类
-                    <i class="el-icon-caret-bottom"></i>
-                </el-button>
-                <el-tree class="leftSubTree" v-if="leftSubTree" :highlight-current="true" :data="leftSubTreeData"
-                         :props="defaultProps" @node-click="leftClassifyClick"></el-tree>
+                <SectionCategorySelect :onchange="getLeftCategoryData" v-model="section.category_id"></SectionCategorySelect>
             </div>
             <div class="left-list">
                 <div class="list">
-                    <el-table :show-header="false" :highlight-current-row="true" :data="classifyData" border
-                              style="width: 100%">
-                        <el-table-column label="日期">
+                    <el-table v-loading="section.loading" @row-click="sectionChange" :show-header="false" :highlight-current-row="true" :data="section.classifyData" border>
+                        <el-table-column>
                             <template scope="scope">
                                 <h2 class="name">{{scope.row.name}}</h2>
-                                <p class="class">{{scope.row.class}}</p>
+                                <p class="class">{{scope.row.categorys}}</p>
                             </template>
                         </el-table-column>
                     </el-table>
                 </div>
                 <el-pagination
+                        @current-change="sectionPageChange"
+                        :current-page="section.page"
+                        :page-size="section.page_size"
                         small
                         layout="prev, pager, next"
-                        :total="12">
+                        :total="section.total">
                 </el-pagination>
             </div>
         </section>
         <section class="right-content">
             <div class="title">
-                test-内容列表（绑定公开）
+                {{result.title.name}}-内容列表<i v-if="result.title.category">(绑定公开课栏目:{{result.title.category}})</i>
                 <span>
-                    <el-button @click="chooseCourse = true">选取课程</el-button>
+                    <el-button @click="chooseCourse">选取课程</el-button>
                     <el-button @click="addCourse('form')">添加内容</el-button>
                 </span>
             </div>
             <div class="right-list">
-                <el-table border :data="resultData">
+                <el-table v-loading="result.loading" border :data="result.data">
                     <el-table-column
                             label="序号"
                             type="index"
@@ -308,7 +313,8 @@
                             label="标题"
                             width="200">
                         <template scope="scope">
-                            <i class="tag">课程</i>
+                            <el-tag type="primary" class="tag" v-if="scope.row.ref_type == 'course'">课程</el-tag>
+                            <el-tag type="gray" class="tag" v-if="scope.row.ref_type == 'link'">链接</el-tag>
                             {{scope.row.title}}
                             <i class="el-icon-picture">
                                 <!--图片预览  样式 还有点问题-->
@@ -343,41 +349,109 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination
+                        @current-change="resultPageChange"
+                        :current-page="result.page"
+                        :page-size="result.page_size"
                         small
                         layout="prev, pager, next"
-                        :total="12">
+                        :total="result.total">
                 </el-pagination>
             </div>
         </section>
-        <!--删除弹窗-->
-        <delete-dialog :text="deleteItemName" :isShow="deletDialog" :callback="deleteItem"></delete-dialog>
     </article>
 </template>
 <script lang="babel">
-    import deleteDialog from '../../component/dialog/Delete.vue'
+    import SectionCategorySelect from '../../component/select/SectionCategory.vue'
+    import CourseCategorySelect from '../../component/select/CourseCategory.vue'
+    import sectionService from '../../../services/sectionService'
+    import courseService from '../../../services/courseService'
+    import UploadImg from '../../component/upload/UploadImg.vue'
+    import {date2Str} from '../../../utils/timeUtils'
     export default {
         components: {
-            deleteDialog
+            SectionCategorySelect,
+            CourseCategorySelect,
+            UploadImg
         },
         data () {
             return {
-                imageUrl: '', // 上传图片的地址
-                fileList: [],
-                isKeep: true, // 是否同步
-                isUpdate: false,
+                // 左侧分类
+                section: {
+                    loading: false,
+                    category_id: '',
+                    classifyData: [],  // 左侧显示的列表数据
+                    total: 0,
+                    page: 1,
+                    page_size: 15,
+                    currentID: '' // 当前选中的区块ID
+                },
+                // 右侧结果
+                result: {
+                    loading: false,
+                    title: {
+                        name: '',
+                        category: ''
+                    },
+                    data: [],
+                    page: 1,
+                    page_size: 15,
+                    total: 0
+                },
+                // 选取课程
+                course: {
+                    currentData: null,
+                    loading: false,
+                    isShow: false,
+                    search: {
+                        keyword: '',
+                        category_id: ''
+                    },
+                    data: [],
+                    page: 1,
+                    page_size: 10,
+                    total: 0,
+                    material_type: {
+                        video: '视频',
+                        doc: 'word文档',
+                        ppt: '幻灯片',
+                        pdf: 'PDF文件'
+                    }
+                },
+                // 表单相关属性
                 formTitle: '添加内容',
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
+                uploadReqUrl: '', // 上传图片的请求地址
                 form: {                // 表单属性值
                     title: '',          // 标题
-                    link: '',       // 链接
+                    url: '', // 链接地址
+                    ref_type: '',       // 引用类型
+                    ref_id: '',       // 引用ID
+                    ref_sync: 0,       // 是否与引用同步
                     image: '',        // 图片
-                    description: '',         // 描述
+                    desc: '',         // 描述
                     date: '',       // 日期
                     sort: '',            // 排序
-                    tags: ['无', '热门', '最新', '推荐'],
-                    currentTag: 0
+                    tags: ''
                 },
+                tags: [
+                    {
+                        name: '无',
+                        value: ''
+                    },
+                    {
+                        name: '热门',
+                        value: 'hot'
+                    },
+                    {
+                        name: '最新',
+                        value: 'new'
+                    },
+                    {
+                        name: '推荐',
+                        value: 'recommend'
+                    }
+                ],
                 rules: {
                     title: [
                         {
@@ -386,181 +460,177 @@
                             trigger: 'blur'
                         }
                     ],
-                    link: [
+                    url: [
                         {
                             required: true,
                             message: '链接不能为空',
                             trigger: 'blur'
                         }
                     ]
-                },
-                deleteItemName: '', // 要删除的title
-                deletDialog: false,
-                courseID: 0, // 选取课程的时候 存储课程ID
-                courseName: '', // 选取课程 按照课程名称搜索
-                leftSubTree: false, // 左侧分类是否显示
-                categoryShow: false, // 选取课程的时候 是否显示栏目分类
-                classifyData: [ // 左侧显示的列表数据
-                    {
-                        id: 1,
-                        name: '推荐课程',
-                        class: '首页推荐版块'
-                    },
-                    {
-                        id: 2,
-                        name: '推荐课程',
-                        class: '首页推荐版块'
-                    }
-                ],
-                leftSubTreeData: [{
-                    id: 1,
-                    label: '一级 1',
-                    children: [{
-                        id: 2,
-                        label: '二级 1-1',
-                        children: [{
-                            id: 3,
-                            label: '三级 1-1-1'
-                        }]
-                    }]
-                }, {
-                    label: '一级 2',
-                    children: [{
-                        label: '二级 2-1',
-                        children: [{
-                            label: '三级 2-1-1'
-                        }]
-                    }, {
-                        label: '二级 2-2',
-                        children: [{
-                            label: '三级 2-2-1'
-                        }]
-                    }]
-                }],
-                defaultProps: {
-                    children: 'children',
-                    label: 'label'
-                },
-                resultData: [
-                    {
-                        id: 1,
-                        title: '课程',
-                        sort: 12,
-                        date: '2102'
-                    }
-                ],
-                chooseCourse: false,
-                courseData: [ // 选取课程
-                    {
-                        id: 1,
-                        course: '测试一部发布',
-                        company: '药视通',
-                        type: '文档'
-                    },
-                    {
-                        id: 2,
-                        course: '测试',
-                        company: '药视通',
-                        type: '文档'
-                    }
-                ],
-                categoryData: [{
-                    id: 1,
-                    label: '一级 1',
-                    children: [{
-                        id: 2,
-                        label: '二级 1-1',
-                        children: [{
-                            id: 3,
-                            label: '三级 1-1-1'
-                        }]
-                    }]
-                }, {
-                    label: '一级 2',
-                    children: [{
-                        label: '二级 2-1',
-                        children: [{
-                            label: '三级 2-1-1'
-                        }]
-                    }, {
-                        label: '二级 2-2',
-                        children: [{
-                            label: '三级 2-2-1'
-                        }]
-                    }]
-                }]
+                }
             }
         },
         created () {
-            xmview.setContentLoading(false)
+            this.getLeftCategoryData().then((ret) => {
+                this.sectionChange(ret.data[0]).then(() => {
+                    xmview.setContentLoading(false)
+                })
+            })
         },
         methods: {
-            handleAvatarSuccess(res, file) {
-                this.imageUrl = window.URL.createObjectURL(file.raw)
+            // 保持同步
+            keepSync () {
+                this.form.ref_sync = 1
+                this.form.title = this.form.course.name
+                this.form.image = this.form.course.image
+                this.form.des = this.form.course.description
             },
-            leftClassifyClick (item) { // 左侧列表按照分类搜索
-                console.log('调用接口数据 并赋值给classifyData')
+            chooseCourse () {
+                this.course.isShow = true
+                this.getCourse()
             },
-            chooseCategory (item) { // 选取课程时按照栏目分类搜索
-                // 最后一级的时候调用接口
-                if (item.children == undefined) {
-                    console.log('调用接口 并赋值给courseDate')
-                    this.categoryShow = false
+            getCourse () {
+                this.course.loading = true
+                // 获取课程数据
+                return courseService.getPublicCourselist({
+                    keyword: this.course.search.keyword,
+                    category_id: this.course.search.category_id,
+                    page: this.course.page,
+                    page_size: this.course.page_size
+                }).then((ret) => {
+                    this.course.data = ret.data
+                    this.course.total = ret.total
+                    this.course.loading = false
+                })
+            },
+            // 课程分页
+            courseSizeChange (val) {
+                this.course.page_size = val
+                this.getCourse()
+            },
+            // 课程当前页
+            coursePageChange (val) {
+                this.course.page = val
+                this.getCourse()
+            },
+            // 区块当前页
+            sectionPageChange (val) {
+                this.section.page = val
+                this.getLeftCategoryData()
+            },
+            // 结果当前页
+            resultPageChange (val) {
+                this.result.page = val
+                this.getSectionData(this.section.currentID)
+            },
+            // 点击分类获取列表
+            sectionChange (row) {
+                this.result.title = {
+                    name: row.name,
+                    category: row.course_category_name
                 }
+                this.section.currentID = row.id
+                this.getSectionData(row.id)
             },
-            nameSearch (e) { // 选取课程时按照名称搜索
-                console.log(e.target.value)
+            // 结果列表
+            getSectionData (sectionID) {
+                this.result.loading = true
+                sectionService.getSectionDataList({
+                    page: this.result.page,
+                    page_size: this.result.page_size,
+                    section_id: sectionID
+                }).then((ret) => {
+                    this.result.data = ret.data
+                    this.result.total = ret.total
+                    this.result.loading = false
+                })
+            },
+            // 获取左侧分类列表
+            getLeftCategoryData () {
+                this.section.loading = true
+                return sectionService.getSectionList({
+                    category_id: this.section.category_id
+                }).then((ret) => {
+                    this.section.classifyData = ret.data
+                    this.section.total = ret.total
+                    this.section.loading = false
+                    return ret
+                })
             },
             selectCurrentCourse (item) { // 选取课程 点击搜索之后的某一行存储当前选择的id 确定的时候调用
-                this.courseID = item.id
+                this.course.currentData = item
             },
             courseConfirm () { // 点击确定的时候，进行搜索结果
-                console.log(this.courseID)
-                // 通过存储的课程ID 调用接口获取数据
-                this.chooseCourse = false
-            },
-            deleteItem (confirm) {
-                this.deletDialog = false
-                if (!confirm) {
-                    return false
-                }
-                // 以下执行接口删除动作
-                console.log(11)
+                this.form.course = this.course.currentData
+                this.form.ref_id = this.course.currentData.id
+                this.form.ref_sync = 1
+                this.keepSync()
+                this.addForm = true
             },
             handleDelete (index, row) {
-                this.deleteItemName = row.title
-                this.deletDialog = true
+                xmview.showDialog(`你确定要将内容 【<i style="color:red">${row.title}</i>】 从区块中删除吗？`, () => {
+                    sectionService.delSectionData({
+                        id: row.id,
+                        section_id: this.section.currentID
+                    }).then(() => {
+                        xmview.showTip('success', '删除成功')
+                        this.getSectionData(this.section.currentID)
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
+                })
             },
             submit (form) { // 表单提交
+                this.form.section_id = this.section.currentID
+                this.form.date = this.form.date ? date2Str(this.form.date) : ''
+                this.form.ref_type = this.form.ref_id ? 'course' : 'link'
                 this.$refs[form].validate((valid) => {
-                    console.log(valid)
                     if (valid) {
-                        console.log(1)
+                        let reqFn = sectionService.createSectionData
+                        let msg = '添加成功'
+                        if (this.form.id) {
+                            reqFn = sectionService.updateSectionData
+                            msg = '修改成功'
+                        }
+                        reqFn(this.form).then(() => {
+                            xmview.showTip('success', msg)
+                            this.addForm = false
+                            this.course.isShow = false
+                            this.getSectionData(this.section.currentID)
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }
                 })
             },
-            toggleTag (index) {
-                this.form.currentTag = index
+            toggleTag (value) {
+                this.form.tags = value
             },
             updateCourse (index, item) {
                 // 根据item.id获取数据 并赋值给form
-                this.isUpdate = true
                 this.formTitle = '编辑内容'
+                if (item.ref_id) {
+                    this.formTitle = '编辑课程'
+                }
+                this.form = item
                 this.addForm = true
-                setTimeout(() => {
-                    this.$refs['form'].resetFields()
-                }, 0)
-                this.form.title = '哈哈'
             },
             addCourse (form) {
+                if (this.section.loading || this.result.loading) {
+                    return
+                }
                 this.addForm = true
+                let _this = this
                 setTimeout(() => {
-                    this.$refs[form].resetFields()
+                    _this.$refs[form].resetFields()
+                    console.log(_this.form)
+                    this.formTitle = '添加内容'
                 }, 0)
-                this.formTitle = '添加内容'
-                this.isUpdate = false
+            },
+            handleImgUploaded () {
+                console.log('上传图片成功之后的回调')
             }
         }
     }
