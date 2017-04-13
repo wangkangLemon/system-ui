@@ -7,15 +7,19 @@ import config from '../utils/config'
 const urlPre = config.apiHost + '/sys/course'
 
 class CourseService {
+    // 获取课程分析列表
+    getAnalysis ({type, course_id, date, page, page_size}) {
+        let url = `${urlPre}/stat/search`
+        return api.get(url, {type, course_id, date, page, page_size}).then(ret => {
+            return ret.data
+        })
+    }
+
     // 获取管理员列表
     courseList (keyword, page, pageSize) {
         let url = `${urlPre}/search/name`
-        return api.get(url, {keyword, page, page_size: pageSize}, false).then(ret => {
-            if (ret.code == 0) {
-                return ret.data
-            } else {
-                return Promise.reject(ret)
-            }
+        return api.get(url, {keyword, page, page_size: pageSize}).then(ret => {
+            return ret.data
         })
     }
 

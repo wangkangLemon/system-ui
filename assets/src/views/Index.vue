@@ -184,6 +184,7 @@
                         <el-dropdown-item>个人信息</el-dropdown-item>
                         <el-dropdown-item>企业信息</el-dropdown-item>
                         <el-dropdown-item>修改密码</el-dropdown-item>
+                        <el-dropdown-item command="safeset">安全设置</el-dropdown-item>
                         <el-dropdown-item :divided="true"></el-dropdown-item>
                         <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
@@ -295,15 +296,14 @@
             // 注销登录
             handleNickname (type) {
                 /* eslint-disable indent  */
-                console.info(type)
                 switch (type) {
                     case 'loginout': {
                         userService.loginout()
                         this.$router.push({name: 'login'})
                         break
                     }
-                    case 2: {
-                        console.info('2')
+                    case 'safeset': {
+                        console.info('安全设置')
                         break
                     }
                     default: {

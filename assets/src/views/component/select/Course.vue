@@ -1,9 +1,6 @@
 <template>
-    <section>
-        <i>课程</i>
-        <SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="value">
-        </SelectScroll>
-    </section>
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="value">
+    </SelectScroll>
 </template>
 
 <script>
@@ -34,7 +31,7 @@
                 if (this.curVal == val) return
                 this.currVal = val
                 this.$emit('change', val)
-                this.$emit('input')
+                this.$emit('input', val)
             },
             fetchData (val, length) {
                 let keyword = val

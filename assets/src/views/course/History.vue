@@ -33,10 +33,11 @@
         <el-button class="export"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
 
         <article class="search">
-            <h1 style="color:red">还有部分查询未完成 等待接口</h1>
-            <CourseSelect :change="fetchData" @change="val => fetchParam.course_id=val"
-                          v-model="fetchParam.course_id"></CourseSelect>
-
+            <section>
+                <i>课程</i>
+                <CourseSelect :change="fetchData" @change="val => fetchParam.course_id=val"
+                              v-model="fetchParam.course_id"></CourseSelect>
+            </section>
             <section>
                 <i>成绩</i>
                 <el-select v-model="fetchParam.grade" placeholder="未选择"
@@ -52,11 +53,11 @@
                        @changeEnd="val=> fetchParam.time_end=val" :change="fetchData">
             </DateRange>
 
-            <section>
-                <i>账号</i>
-                <v-input @changeVal="val=>fetchParam.account=val" :enter="fetchData" v-model="fetchParam.account"
-                         placeholder="账号"></v-input>
-            </section>
+            <!--<section>-->
+                <!--<i>账号</i>-->
+                <!--<v-input @changeVal="val=>fetchParam.account=val" :enter="fetchData" v-model="fetchParam.account"-->
+                         <!--placeholder="账号"></v-input>-->
+            <!--</section>-->
         </article>
 
         <el-table class="data-table" v-loading="loadingData"
@@ -138,7 +139,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.fetchData().then(() => {
                 xmview.setContentLoading(false)
             })

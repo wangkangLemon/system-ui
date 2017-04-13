@@ -31,5 +31,13 @@ class TestingService {
             return ret.data
         })
     }
+
+    // 获取考试分析列表
+    getTestingList ({date, page, page_size}) {
+        let finalUrl = urlPre + '/search'
+        return api.get(finalUrl, {date, page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 export default new TestingService()
