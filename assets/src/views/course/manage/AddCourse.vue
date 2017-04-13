@@ -84,7 +84,8 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="课程文件" prop="material_id">
-                        <UploadFile :url="uploadDocUrl" :disabled="fetchParam.material_type == null"
+                        <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl"
+                                    :disabled="fetchParam.material_type == null"
                                     v-show="fetchParam.material_type !== 'video'"></UploadFile>
                         <el-button v-show="fetchParam.material_type === 'video'" @click="isShowVideoDialog=true">
                             <i>{{fetchParam.material_name}}</i>
@@ -364,6 +365,9 @@
                     xmview.showTip('success', '操作成功')
                     this.$router.back()
                 })
+            },
+            handleUploadDoc (rep) { // 文档上传完毕
+                this.fetchParam.material_id = rep.data.id
             }
         },
         components: {UploadImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}

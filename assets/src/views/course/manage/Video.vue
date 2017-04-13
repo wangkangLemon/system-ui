@@ -29,7 +29,9 @@
         // 底部的管理按钮
         .bottom-manage {
             margin-top: 15px;
+            display: inline-block;
         }
+
     }
 </style>
 
@@ -116,6 +118,16 @@
             <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
         </div>
 
+        <el-pagination class="pagin"
+                       @size-change="val => fetchParam.page_size = val "
+                       @current-change="val => fetchParam.page = val"
+                       :current-page="fetchParam.page"
+                       :page-size="fetchParam.page_size"
+                       :page-sizes="[15, 30, 60, 100]"
+                       layout="sizes,total, prev, pager, next"
+                       :total="total">
+        </el-pagination>
+
         <el-dialog :title="dialogAdd.title" v-model="dialogAdd.isShow">
             <el-form label-position="right" label-width="80px" :model="videoModel">
                 <el-form-item label="视频名称">
@@ -185,6 +197,14 @@
                     confirmFn: {}
                 },
                 videoModel: getVideoModel()
+            }
+        },
+        watch: {
+            'fetchParam.page_size'() {
+                this.fetchData()
+            },
+            'fetchParam.page'() {
+                this.fetchData()
             }
         },
         created () {

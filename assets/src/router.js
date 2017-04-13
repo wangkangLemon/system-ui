@@ -30,6 +30,15 @@ const scrollBehavior = (to, from, savedPosition) => {
 }
 
 const routes = [
+    {
+        path: '/showdoc', // 文档管理
+        name: 'showdoc',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('./views/course/manage/DocShow.vue'))
+            })
+        }
+    },
     {   // 首页
         path: '/',
         name: 'index',

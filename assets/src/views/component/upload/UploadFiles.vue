@@ -32,6 +32,11 @@
                 fileList: this.defaultFile ? [{name: this.defaultFile}] : []
             }
         },
+        created () {
+            this.headers = {
+                'Authorization': 'Bearer ' + authUtils.getAuthToken()
+            }
+        },
         activated () {
             this.headers = {
                 'Authorization': 'Bearer ' + authUtils.getAuthToken()

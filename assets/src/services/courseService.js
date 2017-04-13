@@ -279,10 +279,10 @@ class CourseService {
     }
 
     // 修改视频
-    updateVideo ({name, company_id, tags, cover, durationid, id}) {
+    updateVideo ({name, company_id, tags, cover, duration, id}) {
         company_id = company_id || authUtils.getUserInfo().company_id
         let url = `${urlPre}/video/${id}`
-        return api.put(url, {name, company_id, tags, cover, durationid})
+        return api.put(url, {name, comid: company_id, tags, cover, duration})
     }
 
     // 获取oss的上传token
@@ -302,6 +302,25 @@ class CourseService {
     deleteVideo ({id}) {
         let url = `${urlPre}/video/${id}`
         return api.del(url)
+    }
+
+    // ============================================= 文档管理部分 开始 ======================================================
+    getDocList ({page, page_size, keyword, company_id, file_type, time_start, time_end}) {
+        let url = `${urlPre}/doc/search`
+        return api.get(url, {page, page_size, keyword, company_id, file_type, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    deleteDoc ({id}) {
+        let url = `${urlPre}/doc/${id}`
+        return api.del(url)
+    }
+
+    // 批量删除
+    deleteDocMulty ({id}) {
+        let url = `${urlPre}/doc/batchdel`
+        return api.del(url, {id: id.join(',')})
     }
 }
 
