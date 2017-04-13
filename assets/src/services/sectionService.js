@@ -17,7 +17,7 @@ class SectionService {
             return ret
         })
     }
-    // 获取左侧区块列表
+    // 获取区块列表
     getSectionList ({
         keyword = '',
         category_id = '',
@@ -28,6 +28,40 @@ class SectionService {
         return api.get(finalUrl, {keyword, category_id, page, page_size}).then((ret) => {
             return ret.data
         })
+    }
+    // 创建区块
+    createSection ({
+        category_id,
+        name,
+        sort = '',
+        course_category_id
+    }) {
+        let finalUrl = `${urlPre}/create`
+        return api.post(finalUrl, {category_id, name, sort, course_category_id}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 更新区块
+    updateSection ({
+        id,
+        category_id,
+        name,
+        sort = '',
+        course_category_id
+    }) {
+        let finalUrl = `${urlPre}/${id}`
+        return api.put(finalUrl, {category_id, name, sort, course_category_id}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 删除区块
+    delSection (id) {
+        let finalUrl = `${urlPre}/${id}`
+        return api.del(finalUrl, {})
     }
     // 获取区块数据列表
     getSectionDataList ({

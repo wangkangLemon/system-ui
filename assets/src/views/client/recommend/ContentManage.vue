@@ -5,6 +5,9 @@
     @import "../../../utils/mixins/topSearch";
 
     .content-manage {
+        .cell {
+            overflow: visible !important;
+        }
         .search {
             @extend %top-search-container;
         }
@@ -191,14 +194,15 @@
 </style>
 <template>
     <article class="content-manage">
-        <p>编辑和添加来回切换的时候 显示有点问题</p>
         <!--添加/编辑课程-->
         <el-dialog v-model="addForm" :title="formTitle">
-            <div class="keep" v-if="form.ref_id && form.ref_sync"></div>
-            <div class="synchronize">课程：{{form.course.name}}
-                <el-button @click="form.ref_sync = 0" v-if="form.ref_id && form.ref_sync">关闭同步</el-button>
-                <el-button @click="keepSync" v-if="form.ref_id && !form.ref_sync">开启同步</el-button>
-            </div>
+            <section v-if="form.ref_id">
+                <div class="keep" v-if="form.ref_sync"></div>
+                <div class="synchronize">课程：{{form.course.name}}
+                    <el-button @click="form.ref_sync = 0" v-if="form.ref_sync">关闭同步</el-button>
+                    <el-button @click="keepSync" v-if="!form.ref_sync">开启同步</el-button>
+                </div>
+            </section>
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>
@@ -306,31 +310,30 @@
                     <el-table-column
                             label="序号"
                             type="index"
-                            width="100%">
+                            width="100">
                     </el-table-column>
                     <el-table-column
                             class="course-column"
-                            label="标题"
-                            width="200">
+                            label="标题">
                         <template scope="scope">
                             <el-tag type="primary" class="tag" v-if="scope.row.ref_type == 'course'">课程</el-tag>
                             <el-tag type="gray" class="tag" v-if="scope.row.ref_type == 'link'">链接</el-tag>
                             {{scope.row.title}}
-                            <i class="el-icon-picture">
-                                <!--图片预览  样式 还有点问题-->
-                                <div class="img-wrap">
-                                    <img src="http://localhost:7010/static/img/logo.11729c9.png"/>
-                                </div>
+                            <i class="el-icon-picture" v-if="scope.row.image">
+                                <!--<div class="img-wrap">-->
+                                    <!--<img src="http://localhost:7010/static/img/logo.11729c9.png"/>-->
+                                <!--</div>-->
                             </i>
-                            <el-tooltip class="item" effect="dark" content="与引用内容保持同步" placement="top">
+                            <el-tooltip v-if="scope.row.ref_sync" class="item" effect="dark" content="与引用内容保持同步" placement="top">
                                 <i class="iconfont icon-refresh"></i>
                             </el-tooltip>
+                            <el-tag type="gray" v-if="scope.row.tags">{{scope.row.tags | filterArray}}</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column
                             prop="sort"
                             label="排序"
-                            width="200">
+                            width="100">
                     </el-table-column>
                     <el-table-column
                             prop="date"
@@ -367,6 +370,7 @@
     import courseService from '../../../services/courseService'
     import UploadImg from '../../component/upload/UploadImg.vue'
     import {date2Str} from '../../../utils/timeUtils'
+    let _this
     export default {
         components: {
             SectionCategorySelect,
@@ -470,7 +474,21 @@
                 }
             }
         },
+        filters: {
+            // 过滤标签名
+            filterArray (value) {
+                let newVal = ''
+                _this.tags.forEach((item) => {
+                    console.log(item.value)
+                    if (item['value'] == value) {
+                        newVal = item['name']
+                    }
+                })
+                return newVal
+            }
+        },
         created () {
+            _this = this
             this.getLeftCategoryData().then((ret) => {
                 this.sectionChange(ret.data[0]).then(() => {
                     xmview.setContentLoading(false)
@@ -621,13 +639,21 @@
                 if (this.section.loading || this.result.loading) {
                     return
                 }
+//                this.$refs['form'].resetFields() 不起作用
+                this.form = {
+                    title: '',
+                    url: '',
+                    ref_type: '',
+                    ref_id: '',
+                    ref_sync: 0,
+                    image: '',
+                    desc: '',
+                    date: '',
+                    sort: '',
+                    tags: ''
+                }
                 this.addForm = true
-                let _this = this
-                setTimeout(() => {
-                    _this.$refs[form].resetFields()
-                    console.log(_this.form)
-                    this.formTitle = '添加内容'
-                }, 0)
+                this.formTitle = '添加内容'
             },
             handleImgUploaded () {
                 console.log('上传图片成功之后的回调')

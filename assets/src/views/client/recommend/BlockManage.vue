@@ -7,7 +7,7 @@
         @extend %justify;
         .content-title {
             padding: 10px 20px;
-            background: #ededed;
+            background: #f0f3f5;
             text-align: right;
             line-height: 35px;
             button {
@@ -55,12 +55,7 @@
                     <el-input v-model="form.sort" placeholder="最小的排在前面" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="绑定公开课栏目（可选）" :label-width="formLabelWidth">
-                    <el-button @click="cateSubTree = !cateSubTree">
-                        {{form.category || '选择栏目'}}
-                        <i class="el-icon-caret-bottom"></i>
-                    </el-button>
-                    <el-tree class="cateSubTree" v-if="cateSubTree" :highlight-current="true" :data="cateSubTreeData"
-                             :props="defaultProps" @node-click="cateSubTreeClick"></el-tree>
+                    <CourseCategorySelect :placeholder="editPlacehoder" v-model="form.course_category_id"></CourseCategorySelect>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -71,24 +66,28 @@
         <section class="left-content">
             <div class="content-title">
                 所有分类
-                <el-button>管理分类</el-button>
+                <router-link tag="el-button" :to="{name: 'client-recommend-classifyManage'}">管理分类</router-link>
             </div>
             <div class="classify-tree">
-                <el-tree class="leftSubTree" :highlight-current="true" :data="leftSubTreeData"
+                <el-tree class="leftSubTree" :highlight-current="true" :data="category.data"
                          :props="defaultProps" @node-click="leftClassifyClick"></el-tree>
             </div>
         </section>
         <section class="right-content">
             <div class="content-title">
-                <span v-if="currentClass">{{currentClass}}-</span>区块列表
+                <span v-if="category.title">{{category.title}}-</span>区块列表
                 <el-button @click="addForm = true">添加区块</el-button>
             </div>
             <div class="content-list">
-                <el-table border :data="blockData">
-                    <el-table-column property="name" label="名称"></el-table-column>
-                    <el-table-column property="bindCate" label="绑定栏目" width="200"></el-table-column>
-                    <el-table-column property="sort" label="排序" width="150"></el-table-column>
-                    <el-table-column property="updateTime" label="更新时间" width="150"></el-table-column>
+                <el-table v-loading="section.loading" border :data="section.data">
+                    <el-table-column prop="name" label="名称"></el-table-column>
+                    <el-table-column prop="course_category_name" label="绑定栏目" width="200">
+                        <template scope="scope">
+                            {{scope.row.course_category_name || '无'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="sort" label="排序" width="150"></el-table-column>
+                    <el-table-column prop="update_time_name" label="更新时间" width="150"></el-table-column>
                     <el-table-column prop="operate" label="操作">
                         <template scope="scope">
                             <el-button type="text" size="small" @click="update(scope.$index, scope.row)">
@@ -102,55 +101,42 @@
                 </el-table>
                 <div class="block">
                     <el-pagination
+                            @current-change="sectionPageChange"
+                            :current-page="section.page"
+                            :page-size="section.page_size"
                             small
                             layout="prev, pager, next"
-                            :total="12">
+                            :total="section.total">
                     </el-pagination>
                 </div>
             </div>
         </section>
-        <!--删除弹窗-->
-        <delete-dialog :text="deleteItemName" :isShow="deletDialog" :callback="deleteItem"></delete-dialog>
     </article>
 </template>
 <script lang="babel">
-    import deleteDialog from '../../component/dialog/Delete.vue'
+    import sectionService from '../../../services/sectionService'
+    import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     export default {
+        components: {
+            CourseCategorySelect
+        },
         data () {
             return {
-                cateSubTree: false, // 是否显示
-                cateSubTreeData: [{
-                    id: 1,
-                    label: '一级 1',
-                    children: [{
-                        id: 2,
-                        label: '二级 1-1',
-                        children: [{
-                            id: 3,
-                            label: '三级 1-1-1'
-                        }]
-                    }]
-                }, { // 添加/ 编辑区块的栏目分类数据
-                    label: '一级 2',
-                    children: [{
-                        label: '二级 2-1',
-                        children: [{
-                            label: '三级 2-1-1'
-                        }]
-                    }, {
-                        label: '二级 2-2',
-                        children: [{
-                            label: '三级 2-2-1'
-                        }]
-                    }]
-                }],
+                category: {
+                    currentData: null,
+                    loading: false,
+                    title: '',
+                    data: []
+                },
                 formTitle: '', // 添加/编辑区块标题
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
+                editPlacehoder: '',
                 form: {                // 表单属性值
                     name: '',          // 名称
                     sort: '',          // 排序
-                    category: ''       // 绑定的栏目
+                    category_id: '',   // 分类ID
+                    course_category_id: ''       // 绑定的栏目
                 },
                 rules: {
                     name: [
@@ -161,78 +147,92 @@
                         }
                     ]
                 },
-                deleteItemName: '', // 要删除的列表名称
-                deletDialog: false, // 是否显示
-                currentClass: '', // 选择的当前分类
-                blockData: [
-                    {
-                        name: '推荐课程',
-                        bindCate: '无',
-                        sort: '3',
-                        updateTime: '2012-2-23'
-                    }
-                ], // 区块数据
-                leftSubTreeData: [{
-                    id: 1,
-                    label: '一级 1',
-                    children: [{
-                        id: 2,
-                        label: '二级 1-1',
-                        children: [{
-                            id: 3,
-                            label: '三级 1-1-1'
-                        }]
-                    }]
-                }, { // 左侧分类数据
-                    label: '一级 2',
-                    children: [{
-                        label: '二级 2-1',
-                        children: [{
-                            label: '三级 2-1-1'
-                        }]
-                    }, {
-                        label: '二级 2-2',
-                        children: [{
-                            label: '三级 2-2-1'
-                        }]
-                    }]
-                }],
+                section: {
+                    loading: false,
+                    data: [],
+                    page: 1,
+                    page_size: 10,
+                    total: 0
+                },
                 defaultProps: {
                     children: 'children',
-                    label: 'label'
+                    label: 'name'
                 },
             }
         },
-        components: {
-            deleteDialog
+        created () {
+            this.category.loading = true
+            this.getCategoryTree().then((ret) => {
+                this.category.data = ret
+                xmview.setContentLoading(false)
+                this.category.loading = false
+                this.category.currentData = ret[0]
+                this.getSectionData()
+            })
         },
         methods: {
+            // 获取左侧分类
+            getCategoryTree (id) {
+                return sectionService.getSectionCategoryTree({id}).then((ret) => {
+                    ret.map((item) => {
+                        item.children = item.has_children ? [{label: '加载中...'}] : null
+                    })
+                    return ret
+                })
+            },
             leftClassifyClick (item) { // 左侧列表按照分类搜索
-                console.log('调用接口数据 并赋值给blockData')
-                this.currentClass = item.label
-            },
-            cateSubTreeClick (item) {
-                if (item.children == undefined) {
-                    this.form.category = item.label
+                this.category.title = item.name
+                if (item.has_children) {
+                    this.category.loading = true
+                    this.getCategoryTree(item.id).then((ret) => {
+                        item.children = ret
+                    }).then(() => {
+                        this.category.loading = false
+                    })
                 }
+                // 获取区块数据
+                this.category.currentData = item
+                this.getSectionData()
             },
-            deleteItem (confirm) {
-                this.deletDialog = false
-                if (!confirm) {
-                    return false
-                }
-                // 以下执行接口删除动作
-                console.log(11)
+            getSectionData () {
+                this.section.loading = true
+                return sectionService.getSectionList({
+                    page: this.section.page,
+                    page_size: this.section.page_size,
+                    category_id: this.category.currentData.id
+                }).then((ret) => {
+                    this.section.data = ret.data
+                    this.section.total = ret.total
+                    this.section.loading = false
+                })
             },
             handleDelete (index, row) {
-                this.deleteItemName = row.name
-                this.deletDialog = true
+                xmview.showDialog(`确认要删除课程【<i style="color:red">${row.name}</i>】吗？`, () => {
+                    sectionService.delSection(row.id).then(() => {
+                        xmview.showTip('success', '删除成功')
+                        this.getSectionData()
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
+                })
             },
             submit (form) { // 表单提交
+                this.form.category_id = this.category.currentData.id
                 this.$refs[form].validate((valid) => {
-                    console.log(valid)
                     if (valid) {
-                        console.log(1)
+                        let reqFn = sectionService.createSection
+                        let msg = '添加成功'
+                        if (this.form.id) {
+                            reqFn = sectionService.updateSection
+                            msg = '修改成功'
+                        }
+                        reqFn(this.form).then(() => {
+                            xmview.showTip('success', msg)
+                            this.addForm = false
+                            this.getSectionData()
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }
@@ -242,11 +242,12 @@
                 this.addForm = true
                 this.formTitle = '编辑区块：' + row.name
                 // 调用接口 获取数据并赋值给this.form
-                this.form = {
-                    name: 1,
-                    sort: 10,
-                    category: '编辑'
-                }
+                this.editPlacehoder = row.course_category_name ? row.course_category_name : '请选择'
+                this.form = row
+            },
+            sectionPageChange (val) {
+                this.section.page = val
+                this.getSectionData()
             }
         }
     }
