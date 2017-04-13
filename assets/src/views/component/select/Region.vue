@@ -58,10 +58,16 @@
         },
         watch: {
             placeholder (val) {
+                console.log(val)
                 if (val && val.length > 0) {
-                    this.placeholderVal.province = treeUtils.findItem(cityData, [`${val[0]}`]).name
-                    this.placeholderVal.city = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`]).name
-                    this.placeholderVal.area = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`, `${val[2]}`]).name
+                    let provinceObj = treeUtils.findItem(cityData, [`${val[0]}`])
+                    let cityObj = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`])
+                    let areaObj = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`, `${val[2]}`])
+                    if (provinceObj != undefined && cityObj != undefined && areaObj != undefined) {
+                        this.placeholderVal.province = provinceObj.name
+                        this.placeholderVal.city = cityObj.name
+                        this.placeholderVal.area = areaObj.name
+                    }
                 }
             }
         },
@@ -89,6 +95,11 @@
                         this.citys = this.curItem.children
                         this.citySelect = ''
                         this.areaSelect = ''
+                        this.placeholderVal = {
+                            province: '全部',
+                            city: '全部',
+                            area: '全部'
+                        }
                     }
                 } else if (this.provinceSelect && type == 1) {
                     if (this.citys && this.citys.length > 0) {

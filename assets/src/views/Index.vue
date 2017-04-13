@@ -183,8 +183,8 @@
                       </span>
                     <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
                         <el-dropdown-item command="profile">个人信息</el-dropdown-item>
-                        <el-dropdown-item>企业信息</el-dropdown-item>
-                        <el-dropdown-item>修改密码</el-dropdown-item>
+                        <el-dropdown-item command="company">企业信息</el-dropdown-item>
+                        <el-dropdown-item command="password">修改密码</el-dropdown-item>
                         <el-dropdown-item command="safeset">安全设置</el-dropdown-item>
                         <el-dropdown-item :divided="true"></el-dropdown-item>
                         <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
@@ -298,6 +298,7 @@
             // 注销登录
             handleNickname (type) {
                 /* eslint-disable indent  */
+                console.log(type)
                 switch (type) {
                     case 'loginout': {
                         userService.loginout()

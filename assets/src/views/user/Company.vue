@@ -58,6 +58,7 @@
 </template>
 <script lang="babel">
     import Region from '../component/select/Region.vue'
+    import mineService from '../../services/mineService'
     export default {
         components: {
             Region
@@ -110,11 +111,22 @@
                 },
             }
         },
+        created () {
+            mineService.getCompanyInfo().then((ret) => {
+                this.form = ret
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
         methods: {
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        console.log(valid)
+                        mineService.modifyCompany(this.form).then(() => {
+                            xmview.showTip('success', '修改成功')
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }

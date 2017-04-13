@@ -44,6 +44,35 @@ class MineService {
             }
         })
     }
+    // 获取公司信息接口
+    getCompanyInfo () {
+        let url = `${urlPre}/company`
+        return api.get(url).then((ret) => {
+            return ret.data.data
+        })
+    }
+    modifyCompany ({
+        name,
+        concact,
+        mobile,
+        email,
+        tel = '',
+        fax = '',
+        province = '',
+        city = '',
+        area = '',
+        address = '',
+        zip = '',
+        url = '',
+        description = ''
+    }) {
+        let finalUrl = `${urlPre}/company`
+        return api.put(finalUrl, {name, concact, mobile, email, tel, fax, province, city, area, address, zip, url, description}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
 }
 
 export default new MineService()
