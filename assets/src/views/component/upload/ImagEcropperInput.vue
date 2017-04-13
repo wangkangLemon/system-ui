@@ -12,8 +12,7 @@
         <el-button type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i></el-button>
         <el-dialog :close-on-click-modal="false" title="裁切图片" v-model="showCropper" size="large" top="15px">
             <div class="croppercontainer">
-                <img @load="startCropper()" class="image-preview" alt="Picture"
-                     :src="imgData">
+                <img @load="startCropper()" class="image-preview" :src="imgData">
             </div>
             <span slot="footer">
                 <el-button @click="showCropper = false">取 消</el-button>
@@ -25,11 +24,10 @@
     </article>
 </template>
 
-<script lang='babel'>
+<script>
     import Cropper from 'cropperjs'
     import '../../../../node_modules/cropperjs/dist/cropper.min.css'
 
-    let _this
     export default{
         //    点击确认后的回调  长宽比例 16/9  是否圆形裁切
         props: ['confirmFn', 'aspectRatio', 'isRound'],
@@ -41,12 +39,12 @@
                 cropper: null
             }
         },
-        // 提供给外部调用
-        chooseImg () {
-            _this.chooseImg()
+        watch: {
+            'showCropper'(val) {
+                if (!val) this.cropper.destroy()
+            }
         },
         created () {
-            _this = this
             this.finalRatio = this.aspectRatio || 16 / 9
         },
         methods: {
@@ -64,10 +62,10 @@
                 let reader = new window.FileReader()
                 reader.readAsDataURL(file)
                 reader.onload = function () {
-                    _this.showCropper = true
                     _this.$nextTick(() => {
                         _this.imgData = this.result
                         _this.$refs.file.value = null
+                        _this.showCropper = true
                     })
                 }
             },
@@ -75,6 +73,7 @@
             confirmCropper () {
                 this.showCropper = false
                 this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL())
+                this.imgData = null
             },
             startCropper () {
                 let image = this.$refs.container.querySelector('.image-preview')

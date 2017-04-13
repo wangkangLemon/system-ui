@@ -66,7 +66,7 @@
         </section>
     </article>
 </template>
-<script lang="babel">
+<script>
     import mineService from '../../services/mineService'
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
     export default {

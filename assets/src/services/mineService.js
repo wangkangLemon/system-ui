@@ -12,13 +12,6 @@ class MineService {
             return ret.data.data
         })
     }
-
-    getSafeSetInfo () {
-        let url = `${urlPre}/two-step/`
-        return api.get(url).then(ret => {
-            return ret.data.stepTypes
-        })
-    }
 }
 
 export default new MineService()
