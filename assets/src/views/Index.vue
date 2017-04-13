@@ -1,161 +1,162 @@
-<style lang='scss' rel='stylesheet/scss' scoped>
+<style lang='scss' rel='stylesheet/scss'>
     @import "../utils/mixins/mixins";
 
     .index-container {
         background: #fff;
-    }
 
-    @media (max-width: 767px) {
-        .header-wap {
-            display: block;
-        }
-        .header-pc {
-            display: none;
-        }
-        .wap-header {
-            border-bottom: 1px solid #ededed;
-        }
-    }
-
-    @media (min-width: 768px) {
-        .header-wap {
-            display: none;
-        }
-        .header-pc {
-            display: block;
-        }
-    }
-
-    .header {
-        height: 55px;
-        line-height: 55px;
-        text-align: center;
-        z-index: 11;
-        background: #fff;
-
-        .logo {
-            text-align: left;
-            padding-left: 28px;
-            > * {
-                display: inline-block;
-                vertical-align: middle;
-            }
-            img {
-                width: 30px;
-                height: 30px;
-            }
-
-            h1 {
-                font-size: 16px;
-                font-weight: normal;
-            }
-        }
-
-        // 右边部分
-        @at-root {
-            .header-right {
-                text-align: right;
-
-                > * {
-                    text-align: center;
-                    display: inline-block;
-
-                    > em {
-                        display: inline-block;
-                        vertical-align: middle;
-                    }
-                }
-
-                // 问题反馈
-                .question {
-                    margin: 0 5px 0 15px
-                }
-
-                .nickname {
-                    cursor: pointer;
-                    margin-right: 30px;
-                    img {
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 50%;
-                        vertical-align: middle;
-                        margin-right: 2px;
-                    }
-                }
-
-                @at-root {
-                    .nickname-dropdown {
-                        top: 35px !important;
-                        width: 160px;
-                    }
-                }
-            }
-        }
-    }
-
-    .content {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
         @media (max-width: 767px) {
-            margin-top: 55px;
-        }
-
-        .left-menu-container {
-            width: 220px;
-            z-index: 10;
-            height: 100%;
-            position: absolute;
-            overflow-y: auto;
-            transition: all 300ms ease;
-            transform: translateX(0);
-            @media (max-width: 767px) {
-                transform: translateX(-100%);
-                top: -55px;
-                z-index: 12;
+            .header-wap {
+                display: block;
             }
-            @media (min-width: 768px) {
-                top: 0;
-                padding-top: 55px;
+            .header-pc {
+                display: none;
             }
-
-            > div.nav-title {
-                font-size: 14px;
-                color: #999;
-                margin: 12px 20px 0;
-            }
-
-            &.isShowMenue {
-                transform: translateX(0);
+            .wap-header {
+                border-bottom: 1px solid #ededed;
             }
         }
 
-        .right-content {
-            position: absolute;
-            padding: 75px 20px 20px 240px;
-            width: 100%;
-            background: #d9e0e7;
-            min-height: 100%;
-            top: 0;
-            @media (max-width: 767px) {
-                padding: 75px 20px 20px;
-                position: absolute;
-                /*top: 110px;*/
+        @media (min-width: 768px) {
+            .header-wap {
+                display: none;
             }
+            .header-pc {
+                display: block;
+            }
+        }
 
-            .right-title {
-                font-size: 24px;
-                margin-bottom: 15px;
-                > small {
-                    font-weight: 300;
-                    font-size: 70%;
+        .header {
+            height: 55px;
+            line-height: 55px;
+            text-align: center;
+            z-index: 11;
+            background: #fff;
+
+            .logo {
+                text-align: left;
+                padding-left: 28px;
+                > * {
                     display: inline-block;
+                    vertical-align: middle;
+                }
+                img {
+                    width: 30px;
+                    height: 30px;
+                }
+
+                h1 {
+                    font-size: 16px;
+                    font-weight: normal;
+                }
+            }
+
+            // 右边部分
+            @at-root {
+                .header-right {
+                    text-align: right;
+
+                    > * {
+                        text-align: center;
+                        display: inline-block;
+
+                        > em {
+                            display: inline-block;
+                            vertical-align: middle;
+                        }
+                    }
+
+                    // 问题反馈
+                    .question {
+                        margin: 0 5px 0 15px
+                    }
+
+                    .nickname {
+                        cursor: pointer;
+                        margin-right: 30px;
+                        img {
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            vertical-align: middle;
+                            margin-right: 2px;
+                        }
+                    }
+
+                    @at-root {
+                        .nickname-dropdown {
+                            top: 35px !important;
+                            width: 160px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            @media (max-width: 767px) {
+                margin-top: 55px;
+            }
+
+            .left-menu-container {
+                width: 220px;
+                z-index: 10;
+                height: 100%;
+                position: absolute;
+                overflow-y: auto;
+                transition: all 300ms ease;
+                transform: translateX(0);
+                @media (max-width: 767px) {
+                    transform: translateX(-100%);
+                    top: -55px;
+                    z-index: 12;
+                }
+                @media (min-width: 768px) {
+                    top: 0;
+                    padding-top: 55px;
+                }
+
+                > div.nav-title {
+                    font-size: 14px;
+                    color: #999;
+                    margin: 12px 20px 0;
+                }
+
+                &.isShowMenue {
+                    transform: translateX(0);
+                }
+            }
+
+            .right-content {
+                position: absolute;
+                padding: 75px 20px 20px 240px;
+                width: 100%;
+                background: #d9e0e7;
+                min-height: 100%;
+                top: 0;
+                @media (max-width: 767px) {
+                    padding: 75px 20px 20px;
+                    position: absolute;
+                    /*top: 110px;*/
+                }
+
+                .right-title {
+                    font-size: 24px;
+                    margin-bottom: 15px;
+                    > small {
+                        font-weight: 300;
+                        font-size: 70%;
+                        display: inline-block;
+                    }
                 }
             }
         }
     }
+
 </style>
 
 <template>
@@ -239,6 +240,7 @@
                 <h2 class="right-title">
                     {{mainTitle}}
 
+
                     <small>{{subTitle}}</small>
                 </h2>
 
@@ -303,7 +305,7 @@
                         break
                     }
                     case 'safeset': {
-                        console.info('安全设置')
+                        this.$router.push({name: 'user-safeset'})
                         break
                     }
                     default: {

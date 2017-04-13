@@ -18,6 +18,7 @@ export function login (username, password) {
     })
 }
 
+// 刷新token
 export function refreshToken (userid) {
     let url = urlPre + '/refresh'
     return api.get(url, {id: userid}).catch((e) => {
@@ -25,6 +26,7 @@ export function refreshToken (userid) {
     })
 }
 
+// 登出
 export function loginout () {
     authUtils.setAuthToken(null)
 }
