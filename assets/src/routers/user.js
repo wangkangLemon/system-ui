@@ -1,11 +1,11 @@
 /**
  * Created by huanghuixin on 2017/3/30.
  */
-// 晒单部分
+// 个人信息
 const pathPre = '/user'
 export default [
     {
-        path: pathPre + '/safeset', // 内容维护
+        path: pathPre + '/safeset',
         name: 'user-safeset',
         component: resolve => {
             require.ensure([], () => {
@@ -14,6 +14,18 @@ export default [
         },
         meta: {
             title: '安全设置-我的',
+        }
+    },
+    {
+        path: pathPre + '/profile',
+        name: 'user-profile',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/user/Profile.vue'))
+            })
+        },
+        meta: {
+            title: '个人信息',
         }
     },
 ]

@@ -182,7 +182,7 @@
                               class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                     <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
-                        <el-dropdown-item>个人信息</el-dropdown-item>
+                        <el-dropdown-item command="profile">个人信息</el-dropdown-item>
                         <el-dropdown-item>企业信息</el-dropdown-item>
                         <el-dropdown-item>修改密码</el-dropdown-item>
                         <el-dropdown-item command="safeset">安全设置</el-dropdown-item>
@@ -306,6 +306,10 @@
                     }
                     case 'safeset': {
                         this.$router.push({name: 'user-safeset'})
+                        break
+                    }
+                    case 'profile': {
+                        this.$router.push({name: 'user-profile'})
                         break
                     }
                     default: {

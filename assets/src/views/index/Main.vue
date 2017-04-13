@@ -397,7 +397,7 @@
                         yAxis: [
                             {
                                 type: 'value',
-                                max: 4000
+                                max: 40
                             }
                         ],
                         series: [
