@@ -28,4 +28,28 @@ export default [
             title: '个人信息',
         }
     },
+    {
+        path: pathPre + '/company',
+        name: 'user-company',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/user/Company.vue'))
+            })
+        },
+        meta: {
+            title: '企业信息',
+        }
+    },
+    {
+        path: pathPre + '/password',
+        name: 'user-password',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/user/Password.vue'))
+            })
+        },
+        meta: {
+            title: '修改密码',
+        }
+    },
 ]

@@ -216,9 +216,9 @@
                               class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                         <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
-                            <el-dropdown-item>个人信息</el-dropdown-item>
-                            <el-dropdown-item>企业信息</el-dropdown-item>
-                            <el-dropdown-item>修改密码</el-dropdown-item>
+                            <el-dropdown-item command="profile">个人信息</el-dropdown-item>
+                            <el-dropdown-item command="company">企业信息</el-dropdown-item>
+                            <el-dropdown-item command="password">修改密码</el-dropdown-item>
                             <el-dropdown-item :divided="true"></el-dropdown-item>
                             <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
@@ -312,13 +312,18 @@
                         this.$router.push({name: 'user-profile'})
                         break
                     }
+                    case 'company': {
+                        this.$router.push({name: 'user-company'})
+                        break
+                    }
+                    case 'password': {
+                        this.$router.push({name: 'user-password'})
+                        break
+                    }
                     default: {
                         console.info('3')
                     }
                 }
-            },
-            proces () {
-
             },
             setContentLoading (loading) {
                 if (!loading) {

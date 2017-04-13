@@ -31,6 +31,7 @@
 </style>
 <template>
     <article class="user-profile">
+        上传头像 有问题
         <section class="upload-avatar">
             <div class="img-container">
                 <img :src="imgUrl"/>
@@ -39,7 +40,7 @@
                                class="upload-btn"></ImagEcropperInput>
         </section>
         <section class="submit-form">
-            <el-form :rules="rules" ref="form">
+            <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item label="手机号码" :label-width="formLabelWidth">
                     <el-input v-model="form.mobile" :disabled="true" type="number" placeholder="手机号码" auto-complete="off"></el-input>
                 </el-form-item>
@@ -102,12 +103,23 @@
             // 裁切后的回调
             cropperFn(data) {
                 this.imgUrl = data
+                mineService.uploadAvatar({
+                    avatar: data,
+                    alias: Date.now() + '.jpg'
+                }).then(() => {
+                    xmview.showTip('success', '上传成功')
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             submit (form) {
-                console.log(this.form)
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        console.log(1)
+                        mineService.updateProfile(this.form).then(() => {
+                            xmview.showTip('success', '修改成功')
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }

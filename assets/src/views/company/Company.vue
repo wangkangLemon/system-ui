@@ -81,7 +81,7 @@
                 <el-form-item prop="concact" label="联系人" :label-width="formLabelWidth">
                     <el-input v-model="form.concact" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="mobile" label="联系人手机" :label-width="formLabelWidth">
+                <el-form-item prop="mobile" type="number" label="联系人手机" :label-width="formLabelWidth">
                     <el-input v-model="form.mobile" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="email" label="联系人邮箱" :label-width="formLabelWidth">
