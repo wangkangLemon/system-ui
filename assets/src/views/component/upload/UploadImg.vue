@@ -185,7 +185,11 @@
                 this.currImg = []
             },
             isShowDelAndPreview (isShow) {
-                this.$refs.container.querySelector('.el-upload-list__item-actions').style.display = isShow ? 'block' : 'none'
+                let uploadList = this.$refs.container.querySelector('.el-upload-list__item-actions')
+                if (uploadList) {
+                    uploadList.style.display = isShow ? 'block' : 'none'
+                }
+//                this.$refs.container.querySelector('.el-upload-list__item-actions').style.display = isShow ? 'block' : 'none'
             }
         },
     }
