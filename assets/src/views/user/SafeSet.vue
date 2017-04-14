@@ -139,7 +139,6 @@
             }
         },
         created () {
-            console.info('created')
             twoStepService.getSafeSetInfo().then((ret) => {
                 this.sms = ret.sms
                 this.sms && (this.sms.data = processMobile(this.sms.data))

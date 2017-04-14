@@ -11,13 +11,15 @@
         <Tags v-model="tags"></Tags>
 
         <div id="qrcode"></div>
+
+        <iframe name="iframwechatqe" src="http://52hhx.com" frameborder="0" ref="iframe"></iframe>
     </div>
 </template>
 
 <script>
     import UploadImg from './component/upload/UploadImg.vue'
     import Tags from './component/form/Tags.vue'
-    import wechatSdk from '../vendor/wechatSdk'
+    //    import wechatSdk from '../vendor/wechatSdk'
 
     export default {
         data() {
@@ -29,17 +31,22 @@
         },
         mounted () {
             /* eslint-disable no-new */
-            wechatSdk.initSdk().then(() => {
-                new window.WxLogin({
-                    id: 'qrcode',
-                    appid: '',
-                    scope: '',
-                    redirect_uri: '',
-                    state: '',
-                    style: '',
-                    href: ''
-                })
-            })
+//            wechatSdk.initSdk().then(() => {
+//                new window.WxLogin({
+//                    id: 'qrcode',
+//                    appid: '',
+//                    scope: '',
+//                    redirect_uri: '',
+//                    state: '',
+//                    style: '',
+//                    href: ''
+//                })
+//            })
+
+            this.$refs.iframe.onload = () => {
+                console.info(window.frames['iframwechatqe'].location.href)
+                console.info('地址变化', this.$refs.iframe.getAttribute('src'))
+            }
         },
         methods: {
             handleChange (val) {

@@ -91,7 +91,6 @@ function sendRequest (method, url, params, needLoding = false) {
 // 处理请求后的response数据
 function processResponse (promise, url) {
     return promise.then(json => {
-        console.info('processResponse', json)
         // 表示跨域请求的第一次
         if (typeof json === 'function') return 'cross'
 
