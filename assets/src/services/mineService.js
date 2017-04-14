@@ -73,6 +73,25 @@ class MineService {
             }
         })
     }
+
+    // 获取密码接口
+    getPassword () {
+        let url = `${urlPre}/password`
+        return api.get(url).then((ret) => {
+            return ret.data.data
+        })
+    }
+    // 修改密码
+    modifyPassword ({
+        origin_password,
+        new_password,
+        re_password
+    }) {
+        let url = `${urlPre}/password`
+        return api.put(url, {origin_password, new_password, re_password}).then((ret) => {
+            return ret.data.data
+        })
+    }
 }
 
 export default new MineService()

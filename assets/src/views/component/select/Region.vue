@@ -58,7 +58,6 @@
         },
         watch: {
             placeholder (val) {
-                console.log(val)
                 if (val && val.length > 0) {
                     let provinceObj = treeUtils.findItem(cityData, [`${val[0]}`])
                     let cityObj = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`])

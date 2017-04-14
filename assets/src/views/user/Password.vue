@@ -43,47 +43,43 @@
     import mineService from '../../services/mineService'
     export default {
         data () {
+            let validateRepass = (rule, value, callback) => {
+                if (value !== this.form.new_password) {
+                    callback(new Error('两次输入密码不一致!'))
+                } else {
+                    callback()
+                }
+            }
             return {
                 imgUrl: '',
                 form: {
-                    mobile: '',
-                    email: '',
-                    name: '',
-                    address: '',
-                    sex: 0
-                },
-                rules: {
-                    name: {required: true, message: '必须填写', trigger: 'blur'},
-                    address: {required: true, message: '必须填写', trigger: 'blur'}
+                    origin_password: '',
+                    new_password: '',
+                    re_password: ''
                 },
                 formLabelWidth: '120px', // 表单label的宽度
+                rules: {
+                    origin_password: {required: true, message: '必须填写', trigger: 'blur'},
+                    new_password: {required: true, message: '必须填写', trigger: 'blur'},
+                    re_password: [
+                        {required: true, message: '必须填写', trigger: 'blur'},
+                        {validator: validateRepass, trigger: 'blur'}
+                    ],
+                }
             }
         },
         created () {
-            // 获取个人信息
-            mineService.getProfile().then((ret) => {
+            mineService.getPassword().then((ret) => {
                 this.form = ret
             }).then(() => {
                 xmview.setContentLoading(false)
             })
         },
         methods: {
-            // 裁切后的回调
-            cropperFn(data) {
-                this.imgUrl = data
-                mineService.uploadAvatar({
-                    avatar: data,
-                    alias: Date.now() + '.jpg'
-                }).then(() => {
-                    xmview.showTip('success', '上传成功')
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
-                })
-            },
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        mineService.updateProfile(this.form).then(() => {
+                        mineService.modifyPassword(this.form).then(() => {
                             xmview.showTip('success', '修改成功')
                         }).catch((ret) => {
                             xmview.showTip('error', ret.message)
@@ -92,7 +88,7 @@
                         return false
                     }
                 })
-            },
+            }
         }
     }
 </script>
