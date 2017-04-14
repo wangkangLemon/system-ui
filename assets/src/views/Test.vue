@@ -9,12 +9,15 @@
     <div id="testview-container">
         <UploadImg :defaultImg="defaultImg"></UploadImg>
         <Tags v-model="tags"></Tags>
+
+        <div id="qrcode"></div>
     </div>
 </template>
 
 <script>
     import UploadImg from './component/upload/UploadImg.vue'
     import Tags from './component/form/Tags.vue'
+    import wechatSdk from '../vendor/wechatSdk'
 
     export default {
         data() {
@@ -25,6 +28,18 @@
             }
         },
         mounted () {
+            /* eslint-disable no-new */
+            wechatSdk.initSdk().then(() => {
+                new window.WxLogin({
+                    id: 'qrcode',
+                    appid: '',
+                    scope: '',
+                    redirect_uri: '',
+                    state: '',
+                    style: '',
+                    href: ''
+                })
+            })
         },
         methods: {
             handleChange (val) {

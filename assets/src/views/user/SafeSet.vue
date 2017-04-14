@@ -91,13 +91,13 @@
         <el-dialog :title="dialog.title" v-model="dialog.isShow" size="tiny">
             <el-form label-width="80px">
                 <el-form-item :label="dialog.showKey">
-                    <el-input auto-complete="off" v-show="dialog.type == 0"
+                    <el-input v-model="fetchParam.code" auto-complete="off" v-show="dialog.type == 0"
                               :placeholder="dialog.placeholder"></el-input>
                     <i v-show="dialog.type == 1">{{dialog.showVal}}</i>
                 </el-form-item>
                 <el-form-item label="验证码">
                     <div style="display: inline-block;width: 60%">
-                        <el-input placeholder="输入验证码"></el-input>
+                        <el-input v-model="fetchParam.code" placeholder="输入验证码"></el-input>
                     </div>
                     <el-button @click="dialog.sendValidcode">发送验证码</el-button>
                 </el-form-item>
@@ -139,13 +139,16 @@
             }
         },
         created () {
+            console.info('created')
             twoStepService.getSafeSetInfo().then((ret) => {
                 this.sms = ret.sms
-                this.sms.data = processMobile(this.sms.data)
+                this.sms && (this.sms.data = processMobile(this.sms.data))
 
                 this.email = ret.email
-                this.email.data = processEmail(this.email.data)
+                this.email && (this.email.data = processEmail(this.email.data))
                 xmview.setContentLoading(false)
+            }).catch((err) => {
+                console.info(err)
             })
         },
         methods: {
@@ -163,14 +166,14 @@
                 dialog.title = '绑定电子邮箱'
                 dialog.showKey = '电子邮箱'
                 dialog.placeholder = '请输入要绑定的电子邮箱'
-                dialog.sendValidcode = twoStepService.sendEmailValidcode
+                dialog.sendValidcode = twoStepService.sendEmailValidcode.bind(null, this.fetchParam)
             },
             bindFn () {
                 twoStepService.bindOrChange(this.fetchParam).then(() => {
                     this.dialog.isShow = false
                     xmview.showTip('success', '操作成功')
                 })
-            }
+            },
         },
         components: {}
     }

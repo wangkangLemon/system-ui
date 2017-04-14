@@ -12,6 +12,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "@fdaciuk/ajax": "^2.1.5",
     "cropperjs": "^1.0.0-rc",
     "echarts": "^3.4.0",
     "element-ui": "^1.2.7",

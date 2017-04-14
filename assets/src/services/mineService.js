@@ -19,12 +19,13 @@ class MineService {
             return ret.data.stepTypes
         })
     }
+
     // 修改个人信息
     updateProfile ({
-        name,
-        address,
-        sex
-    }) {
+                       name,
+                       address,
+                       sex
+                   }) {
         let url = `${urlPre}/profile`
         return api.put(url, {name, address, sex}).then((ret) => {
             if (ret.code) {
@@ -32,11 +33,9 @@ class MineService {
             }
         })
     }
+
     // 上传头像
-    uploadAvatar ({
-        avatar = '',
-        alias = ''
-    }) {
+    uploadAvatar ({avatar, alias}) {
         let url = `${urlPre}/profile/avatar`
         return api.post(url, {avatar, alias}).then((ret) => {
             if (ret.code) {

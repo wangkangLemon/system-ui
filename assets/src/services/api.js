@@ -5,6 +5,7 @@
 import authUtils from '../utils/authUtils'
 import config from '../utils/config'
 import * as typeUtils from '../utils/typeUtls'
+import ajax from '@fdaciuk/ajax'
 
 let requestId = 0
 function getTimeoutPromise (url) {
@@ -49,27 +50,59 @@ function sendRequest (method, url, params, needLoding = false) {
         url = url + '?' + processParams(params)
 
     needLoding && xmview.setLoading(true)
-    let pRequest = fetch(url, {
-        method: method,
-        credentials: 'include', // pass cookies, for authentication
-        headers: {
-            'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-            'Authorization': 'Bearer ' + authUtils.getAuthToken()
-        },
-        body: method === 'GET' ? {} : processParams(params)
+    // let pRequest = fetch(url, {
+    //     method: method,
+    //     credentials: 'include', // pass cookies, for authentication
+    //     headers: {
+    //         'Accept': '*.*',
+    //         'Content-Type': 'application/x-www-form-urlencoded',
+    //         // 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary5iaCmhwToXQ2CNwA; charset=utf-8',
+    //         'Authorization': 'Bearer ' + authUtils.getAuthToken()
+    //     },
+    //     body: method === 'GET' ? {} : processParams(params)
+    // })
+
+    let pRequest = new Promise((resolve, reject) => {
+        ajax({
+            method: method,
+            url: url,
+            data: method === 'GET' ? {} : params,
+            headers: {
+                'Authorization': 'Bearer ' + authUtils.getAuthToken()
+            }
+        }).then((ret) => {
+            resolve(ret)
+        }).catch(err => {
+            reject(err)
+        })
     })
 
     url += '|' + requestId++
 
-    return Promise.race([getTimeoutPromise(url), processResponse(pRequest, url)])
+    return new Promise((resolve, reject) => {
+        Promise.race([getTimeoutPromise(url), processResponse(pRequest, url)]).then((ret) => {
+            if (typeof ret !== 'function') resolve(ret)
+        }).catch((err) => {
+            reject(err)
+        })
+    })
 }
 
 // 处理请求后的response数据
 function processResponse (promise, url) {
-    return promise.then(function (response) {
+    return promise.then(json => {
+        console.info('processResponse', json)
+        // 表示跨域请求的第一次
+        if (typeof json === 'function') return 'cross'
+
+        let p = processCodeError(json, url)
+        if (p)
+            return p
+        return json
+    }, (ex, xhr) => {
+        console.info('请求错误', ex, xhr)
         // 如果登录验证失败
-        if (response.status === 401) {
+        if (xhr.status === 401) {
             xmview.showTip('error', '登录超时,请重新登录')
             // 记录当前的url
             xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
@@ -77,15 +110,9 @@ function processResponse (promise, url) {
         }
 
         // 如果是其他错误
-        if (response.status < 200 || response.status > 299)
+        if (xhr.status < 200 || xhr.status > 299)
             return Promise.reject({message: '服务器错误'})
-        return response.json()
-    }).then(json => {
-        let p = processCodeError(json, url)
-        if (p)
-            return p
-        return json
-    }, ex => {
+
         requestedUrls[url] = true
         xmview.setLoading(false)
         ex.tipCom = xmview.showTip('error', '服务器请求失败! 请重试')  // 提示框的实例
@@ -120,6 +147,7 @@ function processParams (params) {
         let val = params[k] == null ? '' : params[k]
         data.push(k + '=' + val)
     }
+    console.info(data)
 
     return data.join('&')
 }
