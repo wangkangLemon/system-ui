@@ -208,6 +208,14 @@ class CompanyService {
             return ret.data
         })
     }
+    // 删除管理员接口
+    delAdmin ({
+        company_id,
+        id
+    }) {
+        let finalUrl = `${urlPre}/${company_id}/admin/${id}`
+        return api.del(finalUrl)
+    }
 }
 
 export default new CompanyService()

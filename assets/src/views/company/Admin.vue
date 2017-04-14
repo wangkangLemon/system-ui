@@ -90,9 +90,6 @@
 </style>
 <template>
     <article class="table-container">
-        <p>删除和添加接口-接口有问题-二次认证</p>
-        <!--删除弹窗-->
-        <delete-dialog v-if="currentItem" :text="currentItem.text" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
         <!--详情-->
         <el-dialog class="showDetail" title="查看店员" v-model="showDetail">
             <div class="avatar">
@@ -156,7 +153,7 @@
                     <el-input @change="getData" class="name" v-model="search.name" placeholder="请输入姓名"></el-input>
                 </div>
             </section>
-            <el-table border :data="adminData">
+            <el-table border v-loading="loading" :data="adminData">
                 <el-table-column
                         prop="name"
                         label="姓名"
@@ -207,12 +204,10 @@
     </article>
 </template>
 <script lang="babel">
-    import deleteDialog from '../component/dialog/Delete'
     import companyService from '../../services/companyService'
     import departmentService from '../../services/departmentService'
     import departmentSelect from '../component/select/CompanyDepartment.vue'
     import * as timeUtils from '../../utils/timeUtils'
-    import adminService from '../../services/adminService'
     import companyUserService from '../../services/companyUserService'
     import {defaultAvatar} from '../../utils/filterUtils'
     export default {
@@ -220,7 +215,6 @@
             defaultAvatar
         },
         components: {
-            deleteDialog,
             departmentSelect
         },
         data () {
@@ -231,6 +225,7 @@
                 callback()
             }
             return {
+                loading: false,
                 // 查看店员详情
                 clerkDetail: {
                     name: '',          // 姓名
@@ -244,8 +239,6 @@
                 },
                 departmentData: [],
                 companyID: this.$route.params.company_id,
-                currentItem: null,           // 要删除项
-                deletDialog: false,     // 删除弹窗
                 showDetail: false,     // 是否显示详情对话框
                 form: {                // 表单属性值
                     name: '',          // 姓名
@@ -300,6 +293,7 @@
                 })
             },
             getData () {
+                this.loading = true
                 return companyService.companyAdmin({
                     page: this.currentPage,
                     page_size: this.pageSize,
@@ -308,6 +302,7 @@
                 }).then((ret) => {
                     this.adminData = ret.data
                     this.total = ret.total
+                    this.loading = false
                 })
             },
             // 查看店员详情
@@ -319,22 +314,13 @@
                 })
             },
             handleDelete (index, row) {
-                this.deletDialog = true
-                this.currentItem = row
-                this.currentItem.text = `你确认要删除用户${row.name}的管理权限吗？`
-            },
-            deleteItem (confirm) {
-                if (!confirm) {
-                    this.deletDialog = false
-                    return false
-                }
-                // 以下执行接口删除动作
-                adminService.adminDelete(this.currentItem.id).then((ret) => {
-                    this.deletDialog = false
-                    xmview.showTip('success', '删除成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
+                xmview.showDialog(`你确认要删除用户<i style="color:red">${row.name}</i>的管理权限吗？`, () => {
+                    companyService.delAdmin({company_id: row.company_id, id: row.id}).then((ret) => {
+                        xmview.showTip('success', '删除成功')
+                        this.getData()
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
             },
             submit (form) {
