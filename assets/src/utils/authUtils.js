@@ -40,8 +40,12 @@ let authUtls = {
     setNavMenu (navData) {
         localStorage.setItem(KEY_AUTHSETNAVMENU, JSON.stringify(navData))
     },
+    // 设置获取二次绑定的key
     getTwiceToken () {
         return localStorage.getItem(KEY_TWICE_AUTH)
+    },
+    setTwiceToken (val) {
+        return localStorage.setItem(KEY_TWICE_AUTH, val)
     },
     // 自动更新用户的token
     authRefreshtoken () {

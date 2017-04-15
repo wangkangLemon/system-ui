@@ -43,6 +43,14 @@ class MineService {
         return api.post(url, {type, receiver})
     }
 
+    // 校验验证码
+    validTwoVliadCode ({code, type}) {
+        let url = `${urlPre}/two-step/code/verify`
+        return api.post(url, {code, type}).then((ret) => {
+            return ret.data.adminTwoStepAuthToken
+        })
+    }
+
     // 修改个人信息
     updateProfile ({name, address, sex}) {
         let url = `${urlPre}/profile`

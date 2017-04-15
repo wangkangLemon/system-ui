@@ -68,7 +68,8 @@ function sendRequest (method, url, params, needLoding = false) {
             url: url,
             data: method === 'GET' ? {} : params,
             headers: {
-                'Authorization': 'Bearer ' + authUtils.getAuthToken()
+                'Authorization': 'Bearer ' + authUtils.getAuthToken(), // 登录凭证
+                'TwoStep': authUtils.getTwiceToken() // 二次验证的token
             }
         }).then((ret, xhr) => {
             resolve(ret, xhr)

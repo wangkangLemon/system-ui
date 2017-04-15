@@ -66,7 +66,7 @@
                         </span>
                         <span v-else>
                             <el-tag type="primary">已绑定手机号码: {{sms.data}}</el-tag>
-                            <el-button type="text">更换</el-button>
+                            <el-button type="text" @click="changeSms">更换</el-button>
                         </span>
                         <div>绑定后，登录药视通平台用该手机号码接收登录验证码。</div>
                     </div>
@@ -110,6 +110,31 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
+
+        <el-dialog title="更换绑定" v-model="dialogChange.isShow" size="tiny">
+            <el-form label-width="80px">
+                <el-form-item label="验证方式">
+                    <i>{{(fetchParam.type == 'email' ? '电子邮箱' : '手机号码') + ' (' + fetchParam.receiver + ')'}}</i>
+                </el-form-item>
+                <el-form-item label="验证码">
+                    <div style="display: inline-block;width: 60%">
+                        <el-input v-model="fetchParam.code" placeholder="输入验证码"></el-input>
+                    </div>
+                    <el-button type="primary" @click="sendBindValidCode" :disabled="dialogBind.validWait > 0">
+                        <i v-if="dialogBind.validWait <= 0">发送验证码</i>
+                        <i v-else>{{dialogBind.validWait}} 秒后重发</i>
+                    </el-button>
+                </el-form-item>
+                <el-form-item label="">
+                    <el-button @click="validCode" type="primary">
+                        <i>确定</i>
+                    </el-button>
+                </el-form-item>
+            </el-form>
+            <span slot="footer">
+                如果您已绑定{{fetchParam.type == 'email' ? '电子邮箱' : '手机号码'}}无法接收验证码，请联系我们：400-686-5262
+            </span>
+        </el-dialog>
     </article>
 </template>
 
@@ -117,6 +142,7 @@
     import twoStepService from '../../services/twoStepService'
     import minepService from '../../services/mineService'
     import wechatSdk from '../../vendor/wechatSdk'
+    import authUtils from '../../utils/authUtils'
 
     function getFetchParam () {
         return {
@@ -141,8 +167,6 @@
                 // 更换的dialog
                 dialogChange: {
                     isShow: false,
-                    confirmFn: {},
-                    sendValidcode: {}, //  发送验证码
                 }
             }
         },
@@ -169,8 +193,16 @@
             // 更换邮箱
             changeEmail () {
                 this.fetchParam.type = 'email'
-                this.dialog.isShow = true
-                this.dialog.sendValidcode = twoStepService.sendEmailValidcode
+                this.fetchParam.code = ''
+                this.fetchParam.receiver = this.email.data
+                this.dialogChange.isShow = true
+            },
+            // 更换手机号
+            changeSms () {
+                this.fetchParam.type = 'sms'
+                this.fetchParam.code = ''
+                this.fetchParam.receiver = this.sms.data
+                this.dialogChange.isShow = true
             },
             // 绑定邮箱
             bindEmail () {
@@ -194,7 +226,12 @@
             },
             // 发送绑定的验证码
             sendBindValidCode () {
-                minepService.sendTwoValidCode(this.fetchParam).then(() => {
+                let fetchParam = {
+                    type: this.fetchParam.type,
+                    receiver: this.fetchParam.receiver.indexOf('***') > -1 ? '' : this.fetchParam.receiver
+                }
+                console.info('发送验证码', fetchParam)
+                minepService.sendTwoValidCode(fetchParam).then(() => {
                     xmview.showTip('success', '验证码发送成功,请注意查收')
                     this.dialogBind.validWait = 60
                     let intervalId = setInterval(() => {
@@ -213,6 +250,21 @@
                     console.info(err)
                 })
             },
+            // 确认验证码
+            validCode () {
+                minepService.validTwoVliadCode(this.fetchParam).then((ret) => {
+                    // 关掉解绑框  打开绑定框
+                    this.dialogChange.isShow = false
+                    setTimeout(() => {
+                        this.dialogBind.isShow = true
+                    }, 500)
+                    // 刷新绑定
+                    this.fetchParam.code = ''
+                    this.fetchParam.receiver = ''
+
+                    authUtils.setTwiceToken(ret)
+                })
+            }
         },
         components: {}
     }
