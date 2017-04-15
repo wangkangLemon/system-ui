@@ -70,10 +70,10 @@ function sendRequest (method, url, params, needLoding = false) {
             headers: {
                 'Authorization': 'Bearer ' + authUtils.getAuthToken()
             }
-        }).then((ret) => {
-            resolve(ret)
-        }).catch(err => {
-            reject(err)
+        }).then((ret, xhr) => {
+            resolve(ret, xhr)
+        }).catch((err, xhr) => {
+            reject({err, xhr})
         })
     })
 
@@ -82,8 +82,8 @@ function sendRequest (method, url, params, needLoding = false) {
     return new Promise((resolve, reject) => {
         Promise.race([getTimeoutPromise(url), processResponse(pRequest, url)]).then((ret) => {
             if (typeof ret !== 'function') resolve(ret)
-        }).catch((err) => {
-            reject(err)
+        }).catch((err, xhr) => {
+            reject({err, xhr})
         })
     })
 }
@@ -98,24 +98,24 @@ function processResponse (promise, url) {
         if (p)
             return p
         return json
-    }, (ex, xhr) => {
-        console.info('请求错误', ex, xhr)
+    }, ({ex, xhr}) => {
         // 如果登录验证失败
         if (xhr.status === 401) {
             xmview.showTip('error', '登录超时,请重新登录')
+            let query = {}
+            if (xmrouter.$route.name !== 'login') query = {returnUrl: window.location.href}
             // 记录当前的url
-            xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
+            xmrouter.push({name: 'login', query})
             return true
         }
 
         // 如果是其他错误
-        if (xhr.status < 200 || xhr.status > 299)
-            return Promise.reject({message: '服务器错误'})
-
-        requestedUrls[url] = true
-        xmview.setLoading(false)
-        ex.tipCom = xmview.showTip('error', '服务器请求失败! 请重试')  // 提示框的实例
-        return Promise.reject(ex)
+        if (xhr.status < 200 || xhr.status > 299) {
+            requestedUrls[url] = true
+            xmview.setLoading(false)
+            ex.tipCom = xmview.showTip('error', '服务器请求失败! 请重试')  // 提示框的实例
+            return Promise.reject(ex)
+        }
     })
 }
 

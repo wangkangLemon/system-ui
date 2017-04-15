@@ -52,7 +52,7 @@
                     <div>
                         <span>
                             <el-tag type="gray">未绑定</el-tag>
-                            <el-button type="text">绑定</el-button>
+                            <el-button type="text" @click="bindWechat">绑定</el-button>
                         </span>
                         <div>绑定后，登录药视通平台可用绑定微信账号扫码进行安全验证。</div>
                     </div>
@@ -62,7 +62,7 @@
                     <div>
                         <span v-if="!sms || !sms.data">
                             <el-tag type="gray">未绑定</el-tag>
-                            <el-button type="text">绑定</el-button>
+                            <el-button type="text" @click="bindSms">绑定</el-button>
                         </span>
                         <span v-else>
                             <el-tag type="primary">已绑定手机号码: {{sms.data}}</el-tag>
@@ -88,66 +88,81 @@
             </article>
         </el-card>
 
-        <el-dialog :title="dialog.title" v-model="dialog.isShow" size="tiny">
+        <el-dialog title="绑定" v-model="dialogBind.isShow" size="tiny">
             <el-form label-width="80px">
-                <el-form-item :label="dialog.showKey">
-                    <el-input v-model="fetchParam.code" auto-complete="off" v-show="dialog.type == 0"
-                              :placeholder="dialog.placeholder"></el-input>
-                    <i v-show="dialog.type == 1">{{dialog.showVal}}</i>
+                <el-form-item :label="fetchParam.type == 'email' ? '电子邮箱' : '手机号码'">
+                    <el-input v-model="fetchParam.receiver" auto-complete="off"
+                              :placeholder="fetchParam.type == 'email' ? '请输入邮箱地址' : '请输入手机号码'"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码">
                     <div style="display: inline-block;width: 60%">
                         <el-input v-model="fetchParam.code" placeholder="输入验证码"></el-input>
                     </div>
-                    <el-button @click="dialog.sendValidcode">发送验证码</el-button>
+                    <el-button type="primary" @click="sendBindValidCode" :disabled="dialogBind.validWait > 0">
+                        <i v-if="dialogBind.validWait <= 0">发送验证码</i>
+                        <i v-else>{{dialogBind.validWait}} 秒后重发</i>
+                    </el-button>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button @click="bindFn" type="primary">确定</el-button>
+                    <el-button @click="bindFn" type="primary">
+                        <i>确定</i>
+                    </el-button>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <span>如果您已绑定电子邮箱无法接收验证码，请联系我们：400-686-5262</span>
-            </div>
         </el-dialog>
     </article>
 </template>
 
 <script>
     import twoStepService from '../../services/twoStepService'
+    import minepService from '../../services/mineService'
+    import wechatSdk from '../../vendor/wechatSdk'
 
+    function getFetchParam () {
+        return {
+            type: 'email',
+            code: '',
+            receiver: ''
+        }
+    }
     export default {
         data () {
             return {
                 email: {},
                 sms: {},
                 wechat: {},
-                fetchParam: {
-                    type: 'email',
-                    code: '',
-                    receiver: ''
+                wechatConfig: void 0,
+                fetchParam: getFetchParam(),
+                // 绑定的dialog
+                dialogBind: {
+                    isShow: false,
+                    validWait: 0, // 验证码等待
                 },
-                dialog: {
-                    title: '更换',
+                // 更换的dialog
+                dialogChange: {
                     isShow: false,
                     confirmFn: {},
-                    type: 0, // 0 绑定 1-更换
-                    showKey: '电子邮箱', // 显示的key
-                    showVal: '24xxx@qq.com', // 显示的val
-                    placeholder: '', // 文本框的placeholder
                     sendValidcode: {}, //  发送验证码
-                },
+                }
             }
         },
         created () {
             twoStepService.getSafeSetInfo().then((ret) => {
-                this.sms = ret.sms
-                this.sms && (this.sms.data = processMobile(this.sms.data))
+                if (ret) {
+                    this.sms = ret.sms
+                    this.sms && (this.sms.data = processMobile(this.sms.data))
 
-                this.email = ret.email
-                this.email && (this.email.data = processEmail(this.email.data))
+                    this.email = ret.email
+                    this.email && (this.email.data = processEmail(this.email.data))
+                }
                 xmview.setContentLoading(false)
             }).catch((err) => {
                 console.info(err)
+            })
+
+            // 微信配置
+            minepService.getWechatLoginConfig().then((ret) => {
+                this.wechatConfig = ret
             })
         },
         methods: {
@@ -159,18 +174,43 @@
             },
             // 绑定邮箱
             bindEmail () {
+                this.fetchParam = getFetchParam()
                 this.fetchParam.type = 'email'
-                let dialog = this.dialog
-                dialog.isShow = true
-                dialog.title = '绑定电子邮箱'
-                dialog.showKey = '电子邮箱'
-                dialog.placeholder = '请输入要绑定的电子邮箱'
-                dialog.sendValidcode = twoStepService.sendEmailValidcode.bind(null, this.fetchParam)
+                this.dialogBind.isShow = true
             },
+            // 绑定手机号
+            bindSms () {
+                this.fetchParam = getFetchParam()
+                this.fetchParam.type = 'sms'
+                this.dialogBind.isShow = true
+            },
+            // 绑定微信
+            bindWechat () {
+                console.info('微信登录配置信息', this.wechatConfig)
+                wechatSdk.openWechatLogin(this.wechatConfig, (data) => {
+                    // 发送绑定信息
+                    console.info(data, '微信绑定')
+                })
+            },
+            // 发送绑定的验证码
+            sendBindValidCode () {
+                minepService.sendTwoValidCode(this.fetchParam).then(() => {
+                    xmview.showTip('success', '验证码发送成功,请注意查收')
+                    this.dialogBind.validWait = 60
+                    let intervalId = setInterval(() => {
+                        --this.dialogBind.validWait <= 0 && clearInterval(intervalId)
+                    }, 1000)
+                })
+            },
+            // 设置绑定 或者更换绑定
             bindFn () {
-                twoStepService.bindOrChange(this.fetchParam).then(() => {
-                    this.dialog.isShow = false
+                minepService.bindOrChangeTwo(this.fetchParam).then((ret) => {
+                    this[this.fetchParam.type] = {data: this.fetchParam.receiver}
+                    this.dialogBind.isShow = false
+                    this.dialogChange.isShow = false
                     xmview.showTip('success', '操作成功')
+                }).catch((err) => {
+                    console.info(err)
                 })
             },
         },

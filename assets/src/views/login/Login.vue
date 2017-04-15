@@ -127,7 +127,7 @@
     </article>
 </template>
 
-<script lang='babel'>
+<script>
     import {login} from '../../services/userService'
     import authUtils from '../../utils/authUtils'
     import treeUtls from '../../utils/treeUtils'
@@ -187,7 +187,6 @@
                             authUtils.setNavMenu(treeUtls.arr2Tree(ret.auth_menu)) // 保存菜单
                             authUtils.setAuthToken(ret.auth_token) // 保存token
                             authUtils.setUserInfo(ret.auth_user) // 保存用户信息
-                            authUtils.authRefreshtoken() // 启动自动更新token任务
                             xmview.showTip('success', '登录成功')
                             setTimeout(() => {
                                 // 判断是否需要回到上个页面

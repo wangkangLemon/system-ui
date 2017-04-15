@@ -87,6 +87,18 @@ const routes = [
             notAuth: true, //  不需要身份验证
         }
     },
+    {   // 二次认证 登录
+        path: '/login/twice',
+        name: 'login-twice',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('./views/login/TwiceValid.vue'))
+            })
+        },
+        meta: {
+            title: '二次认证-微信登录',
+        }
+    },
     {
         path: '/test',
         name: 'test',
@@ -114,7 +126,6 @@ router.afterEach((route) => {
 
 router.beforeEach((to, from, next) => {
     xmview.setContentLoading && xmview.setContentLoading(true)
-    console.log('切换路由')
     setTitle(to.meta.title)
 
     next()

@@ -284,6 +284,7 @@
             this.navMenus = authUtils.getNavMenu() // 获取菜单
         },
         mounted () {
+            authUtils.authRefreshtoken() // 开启自动更新token
             window.onresize = () => {
                 this.handleIsShowMenue(document.documentElement.clientWidth > 767)
             }

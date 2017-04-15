@@ -2,9 +2,11 @@
  * Created by huanghuixin on 2017/3/20.
  */
 
-const KEY_AUTHTOKEN = 'KEY_AUTH_UTILS_TOKEN'
-const KEY_AUTHUSERINFO = 'KEY_AUTH_UTILS_USERINFO'
-const KEY_AUTHSETNAVMENU = 'KEY_AUTH_UTILS_SETNAVMENU'
+const KEY_AUTHTOKEN = 'KEY_AUTH_UTILS_TOKEN' // jwt的token
+const KEY_AUTHUSERINFO = 'KEY_AUTH_UTILS_USERINFO' // 用户信息
+const KEY_AUTHSETNAVMENU = 'KEY_AUTH_UTILS_SETNAVMENU' // 菜单
+const KEY_TWICE_AUTH = 'KEY_AUTH_UTILS_TWICEAUTH' // 二次验证的key
+
 import * as userApi from '../services/userService'
 // import config from '../utils/config'
 
@@ -38,6 +40,9 @@ let authUtls = {
     setNavMenu (navData) {
         localStorage.setItem(KEY_AUTHSETNAVMENU, JSON.stringify(navData))
     },
+    getTwiceToken () {
+        return localStorage.getItem(KEY_TWICE_AUTH)
+    },
     // 自动更新用户的token
     authRefreshtoken () {
         authUtls.clearAuthRefreshToken()
@@ -62,6 +67,11 @@ let authUtls = {
     },
     clearAuthRefreshToken () {
         refreshIntervalId && clearInterval(refreshIntervalId)
+    },
+    clearAuthInfo () {
+        authUtls.setAuthToken(null)
+        authUtls.setNavMenu(null)
+        authUtls.setUserInfo(null)
     }
 }
 

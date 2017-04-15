@@ -12,45 +12,50 @@
 
         <div id="qrcode"></div>
 
-        <iframe name="iframwechatqe" src="http://52hhx.com" frameborder="0" ref="iframe"></iframe>
+        <el-button @click="openWechat">打开open</el-button>
+        <el-button @click="closetab">关闭open</el-button>
+
     </div>
 </template>
 
 <script>
     import UploadImg from './component/upload/UploadImg.vue'
     import Tags from './component/form/Tags.vue'
-    //    import wechatSdk from '../vendor/wechatSdk'
+    import wechatSdk from '../vendor/wechatSdk'
+    import mineService from '../services/mineService'
 
     export default {
         data() {
             return {
                 isShow: true,
                 defaultImg: 'http://images2015.cnblogs.com/news/24442/201703/24442-20170323175419330-619990066.jpg',
-                tags: []
+                tags: [],
+                wechatUrl: '',
+                newTab: void 0,
             }
         },
         mounted () {
-            /* eslint-disable no-new */
-//            wechatSdk.initSdk().then(() => {
-//                new window.WxLogin({
-//                    id: 'qrcode',
-//                    appid: '',
-//                    scope: '',
-//                    redirect_uri: '',
-//                    state: '',
-//                    style: '',
-//                    href: ''
-//                })
-//            })
-
-            this.$refs.iframe.onload = () => {
-                console.info(window.frames['iframwechatqe'].location.href)
-                console.info('地址变化', this.$refs.iframe.getAttribute('src'))
-            }
+            mineService.getWechatLoginConfig().then((ret) => {
+                this.wechatConfig = ret
+            })
         },
         methods: {
             handleChange (val) {
                 console.info(val)
+            },
+            closetab () {
+                console.info(this.newTab)
+                this.newTab.close()
+            },
+            openWechat () {
+                wechatSdk.openWechatLogin(this.wechatConfig, (data) => {
+                    console.info(data, '请求完毕')
+                })
+//
+//                window.open('http://localhost:8080/Scripts/1.html')
+//                window.addEventListener('message', (e) => {
+//                    console.info('接收消息', e, wechatSdk)
+//                }, false)
             }
         },
         components: {UploadImg, Tags}
