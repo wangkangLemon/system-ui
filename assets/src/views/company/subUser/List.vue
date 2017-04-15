@@ -97,10 +97,13 @@
                     <i>邮箱</i>
                     <el-input @change="getData" v-model="searchParams.email" auto-complete="off"></el-input>
                 </section>
-                <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
-                                       v-on:change="val=>searchParams.companySelect=val"
-                                       :change="getData">
-                </IndustryCompanySelect>
+                <section>
+                    <i>连锁</i>
+                    <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
+                                           v-on:change="val=>searchParams.companySelect=val"
+                                           :change="getData">
+                    </IndustryCompanySelect>
+                </section>
                 <section>
                     <i>属性</i>
                     <el-select clearable v-model="searchParams.status" @change="getData">
@@ -172,7 +175,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanyUserService from '../../../services/companyUserService'

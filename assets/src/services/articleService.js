@@ -79,6 +79,38 @@ class ArticleService {
             return ret.data
         })
     }
+    // 创建分类
+    createCategory (reqObj) {
+        let finalUrl = `${urlPre}/category`
+        return api.post(finalUrl, reqObj).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 修改分类
+    updateCategory (reqObj) {
+        let finalUrl = `${urlPre}/category/${reqObj.id}`
+        return api.put(finalUrl, reqObj).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 删除分类
+    delCategory (id) {
+        let finalUrl = `${urlPre}/category/${id}`
+        return api.del(finalUrl).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 获取分类上传图片地址
+    getCategoryImageUrl () {
+        let finalUrl = `${urlPre}/category/image`
+        return finalUrl
+    }
 }
 
 export default new ArticleService()

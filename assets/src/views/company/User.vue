@@ -12,7 +12,7 @@
         </el-tabs>
     </article>
 </template>
-<script lang="babel">
+<script>
     export default {
         data () {
             return {

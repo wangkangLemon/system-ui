@@ -195,7 +195,7 @@
                 <p>门店总数量</p>
                 <div>
                     <i>昨日新增{{mainData.department_inc}}</i>
-                    <a href="#">查看详情</a>
+                    <router-link tag="a" :to="{name: 'company-department'}">查看详情</router-link>
                 </div>
             </div>
             <div>
@@ -204,7 +204,7 @@
                 <p>店员总数量</p>
                 <div>
                     <i>昨日新增{{mainData.user_inc}}</i>
-                    <a href="#">查看详情</a>
+                    <router-link tag="a" :to="{name: 'company-user-list', query: {status: 2}}">查看详情</router-link>
                 </div>
             </div>
             <div>
@@ -213,7 +213,7 @@
                 <p>注册用户数</p>
                 <div>
                     <i>昨日新增{{mainData.register_user_inc}}</i>
-                    <a href="#">查看详情</a>
+                    <router-link tag="a" :to="{name: 'company-user-list'}">查看详情</router-link>
                 </div>
             </div>
         </section>
@@ -331,7 +331,7 @@
         </section>
     </article>
 </template>
-<script lang="babel">
+<script>
     import Echars from 'echarts'
     import mainService from '../../services/mainService'
     export default {

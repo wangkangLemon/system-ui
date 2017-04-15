@@ -1,233 +1,304 @@
-<!--文章分类管理-->
-<style lang='scss' rel="stylesheet/scss">
+<!--栏目管理-->
+<style lang='scss' rel='stylesheet/scss'>
+    @import "../../utils/mixins/common";
     @import "../../utils/mixins/mixins";
 
-    .article-category {
-        .add-category {
-            text-align: right;
+    #course-manage-coursecategory {
+        @extend %content-container;
+
+        .manage-container {
+            @extend %right-top-btnContainer;
         }
-        .article-category-content {
-            background: #fff;
-            margin-top: 20px;
-            @extend %justify;
-            padding: 20px;
-            .left-content {
-                border-right: 1px solid #ededed;
-                display: inline-block;
-                vertical-align: top;
-                width: 35%;
-                .el-icon-plus {
-                    margin-right: 10px;
-                }
-                .el-tree {
-                    width: auto;
-                    border: none;
-                }
+
+        > section {
+            display: inline-block;
+            vertical-align: top;
+        }
+        .left-container {
+            min-width: 300px;
+            border-right: 1px solid #ededed;
+        }
+
+        .right-container {
+            margin-left: 15px;
+            .edit-content {
+                margin: 10px 0 0
             }
 
-            .right-content {
-                width: 62%;
-                display: inline-block;
-                vertical-align: top;
-                padding-bottom: 20px;
-
+            .btn-selected {
+                background: #20A0FF;
+                color: #fff;
             }
+        }
+
+        .el-dialog__wrapper {
+            padding-top: 15px;
+            background: rgba(0, 0, 0, .5);
+            z-index: 1000;
         }
     }
-
 </style>
+
 <template>
-    <article class="article-category">
-        <div class="add-category">
-            <el-button type="primary" @click="addCategory"><i class="el-icon-plus"></i>添加分类</el-button>
-        </div>
-        <article class="article-category-content">
-            <section class="left-content" v-if="!addNewCategory">
-                <el-tree
-                        :current-node-key="currentNode.id"
-                        :expand-on-click-node="false"
-                        :default-expanded-keys="[2]"
-                        :default-checked-keys="[2]"
-                        node-key="id"
-                        class="leftSubTree"
-                        :highlight-current="true"
-                        :data="categoryData"
-                        :props="defaultProps"
-                        @node-click="leftClassifyClick"></el-tree>
-            </section>
-            <section class="right-content">
-                <el-tabs v-model="activeName" v-if="!addNewCategory" @tab-click="handleClick">
-                    <el-tab-pane label="修改分类" name="1"></el-tab-pane>
-                    <el-tab-pane label="添加子分类" name="2"></el-tab-pane>
-                    <el-tab-pane label="移动分类" name="3"></el-tab-pane>
-                    <el-tab-pane label="移动分类下内容" name="4"></el-tab-pane>
-                    <el-tab-pane label="删除分类" name="5"></el-tab-pane>
-                </el-tabs>
-                <div>
-                    <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
-                        <el-form-item prop="name" label="名称">
-                            <el-input v-model="form.name" auto-complete="off"></el-input>
-                        </el-form-item>
-                        <el-form-item prop="sort" label="排序">
-                            <el-input v-model="form.sort" auto-complete="off"></el-input>
-                        </el-form-item>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button type="primary" @click="submit('form')">{{buttonText}}</el-button>
-                        <el-button v-if="addNewCategory" @click="addNewCategory = false">取消</el-button>
-                    </div>
-                </div>
-            </section>
-        </article>
-        <!--移动分类弹窗-->
-        <el-dialog :title="'移动栏目【' + currentNode.label + '】到'" v-model="moveCategory" size="tiny">
-            <el-tree
-                    :current-node-key="currentNode.id"
-                    node-key="id"
-                    class="leftSubTree"
-                    :highlight-current="true"
-                    :data="categoryData"
-                    :props="defaultProps"
-                    @node-click="targetFn"></el-tree>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="moveCategory = false">取消</el-button>
-                <el-button type="primary">保存</el-button>
+    <article id="course-manage-coursecategory">
+        <section class="manage-container">
+            <el-button type="primary" @click="addRootCategory">新建栏目</el-button>
+        </section>
+
+        <section class="left-container">
+            <ArticleCategoryTree v-model="treeData" ref="articleCategory"
+                                :onNodeClick="treeNodeClick.bind(this,1)"></ArticleCategoryTree>
+        </section>
+
+        <section class="right-container">
+            <div>
+                <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改栏目</el-button>
+                <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子栏目</el-button>
+
+                <el-button @click="moveSubCategory">移动栏目</el-button>
+                <el-button @click="moveSubCategoryContent">移动栏目下内容</el-button>
+                <el-button type="danger" @click="deleteCategory">删除栏目</el-button>
             </div>
+
+            <el-card class="edit-content">
+                <el-form label-position="right" label-width="90px" :rules="rules" :model="fetchParam" ref="form">
+                    <el-form-item label="名称" prop="name">
+                        <el-input v-model="fetchParam.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="图片" prop="image">
+                        <UploadImg ref="uploadImg" :defaultImg="fetchParam.image" :url="uploadImgUrl"
+                                   :onSuccess="handleImgUploaded"></UploadImg>
+                    </el-form-item>
+                    <el-form-item label="排序" prop="sort">
+                        <el-input placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="info" @click="submitForm">保存</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </section>
+
+        <el-dialog title="操作提示" v-model="dialogConfirm.isShow" size="tiny">
+            <span v-html="dialogConfirm.msg"></span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogConfirm.isShow = false">取 消</el-button>
+                <el-button type="primary" @click="dialogConfirm.confirmClick">确 定</el-button>
+            </span>
         </el-dialog>
-        <!--删除弹窗-->
-        <delete-dialog :text="deleteName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
+
+        <!--移动子栏目的弹出框-->
+        <div class="el-dialog__wrapper" v-show="dialogTree.isShow">
+            <article class="el-dialog el-dialog--tiny">
+                <section class="el-dialog__header">
+                    移动栏目【
+                    <span style="color:red">
+                        {{nodeSelected && nodeSelected.label}}
+                    </span> <i>】到</i>
+                </section>
+                <section class="el-dialog__body">
+                    <ArticleCategoryTree v-model="treeData" node-key="id"
+                                        :onNodeClick="treeNodeClick.bind(this,2)"></ArticleCategoryTree>
+                </section>
+
+                <section class="el-dialog__footer">
+                    <span class="dialog-footer">
+                          <el-button @click="dialogTree.isShow = false">取 消</el-button>
+                        <el-button type="primary" @click="dialogTree.confirmClick">确 定</el-button>
+                    </span>
+                </section>
+            </article>
+        </div>
     </article>
 </template>
-<script lang="babel">
-    import deleteDialog from '../component/dialog/Delete'
-    export default {
-        components: {
-            deleteDialog
-        },
+
+<script type="text/jsx">
+    import articleService from '../../services/articleService'
+    import treeUtils from '../../utils/treeUtils'
+    import ArticleCategoryTree from '../component/tree/ArticleCategory.vue'
+    import UploadImg from '../component/upload/UploadImg.vue'
+
+    export default{
         data () {
             return {
-                buttonText: '修改',
-                targetNode: {}, // 移动到目标分类
-                currentNode: {}, // 当前选中节点的key
-                moveCategory: false, // 移动分类弹窗的显示状态
-                deleteName: '',
-                deletDialog: false,
-                addNewCategory: false,
-                activeName: '1',
-                categoryData: [
-                    {
-                        id: 1,
-                        label: '一级 1',
-                        children: [
-                            {
-                                id: 2,
-                                label: '二级 1-1',
-                                children: [
-                                    {
-                                        id: 3,
-                                        label: '三级 1-1-1'
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    { // 左侧分类数据
-                        id: 4,
-                        label: '一级 2'
-                    }
-                ],
-                defaultProps: {
-                    children: 'children',
-                    label: 'label'
+                activeTab: 'add',
+                uploadImgUrl: void 0,
+                nodeSelected: void 0, // 被选中的node节点
+                nodeParentSelected: void 0, // 被选中node节点的父节点
+                moveToNode: void 0, // 将要移动到最终的栏目
+                treeData: [],
+                dialogConfirm: {
+                    isShow: false,
+                    msg: '',
+                    confirmClick: {}
                 },
-                form: {
-                    id: '',
-                    name: '',
-                    sort: ''
+                dialogTree: {
+                    isShow: false,
+                    confirmClick: {}
+                },
+                fetchParam: {
+                    parent_id: void 0,
+                    name: void 0,
+                    image: void 0,
+                    sort: void 0,
+                    id: 0
                 },
                 rules: {
                     name: [
-                        {
-                            required: true,
-                            message: '必填项',
-                            trigger: 'blur'
-                        }
+                        {required: true, message: '请输入栏目名称', trigger: 'blur'},
                     ]
                 }
             }
         },
+        watch: {
+            'activeTab'(val) {
+                if (val === 'add') {
+                    this.resetForm()
+                }
+            },
+        },
         created () {
-            this.form = {
-                name: this.categoryData[0].label,
-                id: this.categoryData[0].id,
-                sort: this.categoryData[0].id
-            }
-            this.currentNode = this.categoryData[0]
             xmview.setContentLoading(false)
+            this.uploadImgUrl = articleService.getCategoryImageUrl()
         },
         methods: {
-            deleteItem (confirm) {
-                this.deletDialog = false
-                if (!confirm) {
-                    return false
+            // 删除栏目
+            deleteCategory (){
+                let node = this.nodeSelected
+                if (node && node.children) {
+                    xmview.showTip('warning', '该栏目下还有子栏目,不能被删除')
+                    return
                 }
-                // 以下执行接口删除动作
-                console.log(11)
-            },
-            leftClassifyClick (item, node, ele) { // 左侧列表按照分类搜索
-                console.log(item)
-                console.log(node)
-                console.log(ele)
-                if (this.activeName == '1') {
-                    this.form = {
-                        name: item.label,
-                        sort: item.id,
-                        id: item.id
-                    }
-                }
-                this.currentNode = {
-                    id: item.id,
-                    label: item.label
-                }
-//                this.currentClass = item.label
-            },
-            targetFn (item, node, ele) {
-                this.targetNode = item
-            },
-            handleClick (tab, event) {
-                // 添加分类
-                if (tab.name == '2') {
-                    this.form = {
-                        name: '',
-                        sort: '',
-                        id: ''
-                    }
-                    this.buttonText = '添加'
-                    // 移动分类
-                } else if (tab.name == '3' || tab.name == '4') {
-                    this.moveCategory = true
-                    // 删除分类
-                } else if (tab.name == '5') {
-                    this.deletDialog = true
+
+                this.dialogConfirm.isShow = true
+                this.dialogConfirm.msg = `是否确认删除栏目 <i style="color:red">${node.label}</i> 吗？`
+                this.dialogConfirm.confirmClick = () => {
+                    articleService.delCategory({id: node.value}).then(() => {
+                        xmview.showTip('success', '操作成功!')
+                        this.$refs.articleCategory.removeItem(node, this.nodeParentSelected)
+                        node = null
+                        this.dialogConfirm.isShow = false
+                        this.resetForm()
+                    })
                 }
             },
-            submit (form) { // 表单提交
-                this.$refs[form].validate((valid) => {
-                    if (valid) {
-                        console.log(1)
-                    } else {
-                        return false
-                    }
+            // 左边的节点被点击
+            treeNodeClick (type, data, node, store) {
+                if (type == 1) {
+                    this.nodeParentSelected = node.parent// 记录父节点
+                    this.nodeSelected = data // 记录当前节点
+                    this.$refs.uploadImg.clearFiles()
+                    this.fetchParam = data.item
+                    this.fetchParam.parent_id = data.value // 重新指向当前的id
+                    this.activeTab = 'edit'
+                } else if (type == 2) {
+                    this.moveToNode = node
+                }
+            },
+            // 图片上传完毕
+            handleImgUploaded (response) {
+                this.fetchParam.image = response.data.url
+            },
+            // 新建根节点
+            addRootCategory () {
+                this.activeTab = 'add'
+                // 清空选中项
+                this.$refs.articleCategory.clearSelected()
+                this.fetchParam.parent_id = 0
+            },
+            // 提交表单
+            submitForm () {
+                this.$refs.form.validate((ret) => {
+                    if (!ret) return
+
+                    let p
+                    if (this.activeTab === 'add')
+                        p = articleService.createCategory(this.fetchParam)
+                    else
+                        p = articleService.updateCategory(this.fetchParam)
+
+                    p.then((ret) => {
+                        xmview.showTip('success', '操作成功!')
+                        if (this.activeTab === 'edit') {
+                            this.nodeSelected.label = this.fetchParam.name
+                            this.nodeSelected.item = this.fetchParam
+                            this.$forceUpdate()
+                        } else {
+                            this.fetchParam.id = ret.data.id
+                            let addedItem = {
+                                label: this.fetchParam.name,
+                                value: this.fetchParam.id,
+                                item: this.fetchParam
+                            }
+
+                            // 如果是添加的根节点
+                            if (this.fetchParam.parent_id === 0) this.treeData.push(addedItem)
+                            else if (!this.nodeSelected.children) this.nodeSelected.children = [{label: '加载中...'}]
+                            else if (this.nodeSelected.children[0].value) {
+                                this.nodeSelected.children.push(addedItem)
+                            }
+                        }
+                    })
                 })
             },
-            addCategory () {
-                this.addNewCategory = true
-                this.form = {
-                    name: '',
-                    sort: '',
-                    id: ''
+            // 重置表单
+            resetForm () {
+                this.$refs.form.resetFields()
+            },
+            // 移动子栏目点击
+            moveSubCategory () {
+                if (!this.nodeSelected) {
+                    xmview.showTip('warning', '请先选中一个栏目')
+                    return
+                }
+
+                this.dialogTree.isShow = true
+                this.dialogTree.confirmClick = () => {
+                    let id = this.nodeSelected.value
+                    let to = this.moveToNode.data.value
+                    if (id === to) {
+                        xmview.showTip('warning', '请选择不同的栏目')
+                        return
+                    }
+//                    articleService.moveCategory({id, to}).then((ret) => {
+//                        // 重新渲染树节点
+//                        if (ret.code === 0) {
+//                            xmview.showTip('success', '操作成功!')
+//                            this.$refs.articleCategory.initData()
+//                            this.dialogTree.isShow = false
+//                        } else if (ret.code === 1) {
+//                            xmview.showTip('error', ret.message)
+//                        }
+//                    })
+                }
+            },
+            // 移动栏目下的内容
+            moveSubCategoryContent () {
+                if (!this.nodeSelected) {
+                    xmview.showTip('warning', '请先选中一个栏目')
+                    return
+                }
+
+                this.dialogTree.isShow = true
+                this.dialogTree.confirmClick = () => {
+                    let id = this.nodeSelected.value
+                    let to = this.moveToNode.data.value
+                    if (id === to) {
+                        xmview.showTip('warning', '请选择不同的栏目')
+                        return
+                    }
+//                    articleService.moveCategoryContent({id, to}).then((ret) => {
+//                        // 重新渲染树节点
+//                        if (ret.code === 0) {
+//                            xmview.showTip('success', '操作成功!')
+//                            this.dialogTree.isShow = false
+//                        } else if (ret.code === 1) {
+//                            xmview.showTip('error', ret.message)
+//                        }
+//                    })
                 }
             }
-        }
+        },
+        components: {ArticleCategoryTree, UploadImg}
     }
 </script>

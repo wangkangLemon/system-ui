@@ -113,7 +113,7 @@
         </section>
     </article>
 </template>
-<script lang="babel">
+<script>
     import sectionService from '../../../services/sectionService'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     export default {
