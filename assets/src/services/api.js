@@ -69,7 +69,7 @@ function sendRequest (method, url, params, needLoding = false) {
             data: method === 'GET' ? {} : params,
             headers: {
                 'Authorization': 'Bearer ' + authUtils.getAuthToken(), // 登录凭证
-                'TwoStep': authUtils.getTwiceToken() // 二次验证的token
+                // 'twostep': authUtils.getTwiceToken() // 二次验证的token
             }
         }).then((ret, xhr) => {
             resolve(ret, xhr)
@@ -83,8 +83,8 @@ function sendRequest (method, url, params, needLoding = false) {
     return new Promise((resolve, reject) => {
         Promise.race([getTimeoutPromise(url), processResponse(pRequest, url)]).then((ret) => {
             if (typeof ret !== 'function') resolve(ret)
-        }).catch((err, xhr) => {
-            reject({err, xhr})
+        }).catch(err => {
+            reject(err)
         })
     })
 }
@@ -104,14 +104,11 @@ function processResponse (promise, url) {
         if (xhr.status === 401) {
             xmview.showTip('error', '登录超时,请重新登录')
             let query = {}
-            if (xmrouter.$route.name !== 'login') query = {returnUrl: window.location.href}
+            if (xmrouter.history.current.name !== 'login') query = {returnUrl: window.location.href}
             // 记录当前的url
             xmrouter.push({name: 'login', query})
             return true
-        }
-
-        // 如果是其他错误
-        if (xhr.status < 200 || xhr.status > 299) {
+        } else {
             requestedUrls[url] = true
             xmview.setLoading(false)
             ex.tipCom = xmview.showTip('error', '服务器请求失败! 请重试')  // 提示框的实例

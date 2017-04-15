@@ -36,7 +36,7 @@
             <div>
                 <el-tabs type="card" value="first">
                     <el-tab-pane label="微信扫码登录" name="first">
-                        <div></div>
+                        <div id="login-twice-wechatqr"></div>
                     </el-tab-pane>
                     <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
                 </el-tabs>
@@ -47,7 +47,7 @@
 
 <script>
     import wechatSdk from '../../vendor/wechatSdk'
-    import twoStepService from '../../services/twoStepService'
+    import mineService from '../../services/mineService'
 
     export default{
         data () {
@@ -57,8 +57,8 @@
         },
         created () {
             // 获取微信的登录url
-            twoStepService.getWechatLoginConfig().then((ret) => {
-                wechatSdk.initLogin(Object.assign({}, ret))
+            mineService.getWechatLoginConfig().then((ret) => {
+                wechatSdk.initLogin(Object.assign({}, ret, {id: 'login-twice-wechatqr'}))
                 xmview.setContentLoading(false)
             })
         },

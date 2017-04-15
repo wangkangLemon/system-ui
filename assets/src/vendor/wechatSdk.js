@@ -24,7 +24,6 @@ let wechatSdk = {
                 style: 'white',
                 href: ''
             })
-            console.info(wechatConfig)
             if (config.debug) {
                 wechatConfig.redirect_uri = 'http://sys.yst.vodjk.com/mine/two-step/wechat/callback?verify='
             } else {
@@ -49,7 +48,6 @@ let wechatSdk = {
         currMsgListener = (e) => {
             callback(e.data)
             // tab.close()
-            console.info('微信绑定成功, 暂时不关闭tab')
             window.removeEventListener('message', currMsgListener)
             tab = null
             currMsgListener = null
