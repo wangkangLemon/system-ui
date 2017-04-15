@@ -147,7 +147,6 @@ function processParams (params) {
         let val = params[k] == null ? '' : params[k]
         data.push(k + '=' + val)
     }
-    console.info(data)
 
     return data.join('&')
 }

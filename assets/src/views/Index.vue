@@ -131,7 +131,7 @@
                 }
             }
 
-            .right-content {
+            .index-right-content {
                 position: absolute;
                 padding: 75px 20px 20px 240px;
                 width: 100%;
@@ -236,7 +236,7 @@
             </el-menu>
 
             <!--右边内容-->
-            <section class="right-content" @click="handleIsShowMenue(false)">
+            <section class="index-right-content" @click="handleIsShowMenue(false)">
                 <h2 class="right-title">
                     {{mainTitle}}
 

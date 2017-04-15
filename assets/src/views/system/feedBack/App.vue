@@ -96,8 +96,8 @@
                     </el-select>
                 </section>
                 <DateRange title="日期" :start="search.time_start" :end="search.time_end"
-                           v-on:changeStart="val=> search.time_start=val "
-                           v-on:changeEnd="val=> search.time_end=val "
+                           v-on:changeStart="val=>search.time_start=val "
+                           v-on:changeEnd="val=>search.time_end=val "
                            :change="getData"></DateRange>
             </section>
             <el-table
@@ -164,7 +164,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import feedBackService from '../../../services/feedBackService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     export default {

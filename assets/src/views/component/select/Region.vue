@@ -11,21 +11,21 @@
 <template>
     <section>
         <i>{{title}}</i>
-        <el-select :placeholder="placeholderVal.province" clearable @change="setCurrVal(0, provinceSelect)" v-model="provinceSelect">
+        <el-select :disabled="disabled" :placeholder="placeholderVal.province" clearable @change="setCurrVal(0, provinceSelect)" v-model="provinceSelect">
             <el-option v-for="(item, index) in provinces"
                        :label="item.name"
                        :value="item.id"
                        :key="item.id">
             </el-option>
         </el-select>
-        <el-select :placeholder="placeholderVal.city" clearable @change="setCurrVal(1, citySelect)" v-model="citySelect">
+        <el-select :disabled="disabled" :placeholder="placeholderVal.city" clearable @change="setCurrVal(1, citySelect)" v-model="citySelect">
             <el-option v-for="(item, index) in citys"
                        :label="item.name"
                        :value="item.id"
                        :key="item.id">
             </el-option>
         </el-select>
-        <el-select :placeholder="placeholderVal.area" clearable @change="setCurrVal(2, areaSelect)" v-model="areaSelect">
+        <el-select :disabled="disabled" :placeholder="placeholderVal.area" clearable @change="setCurrVal(2, areaSelect)" v-model="areaSelect">
             <el-option v-for="(item, index) in areas"
                        :label="item.name"
                        :value="item.id"
@@ -39,7 +39,7 @@
     import cityData from '../../../assets/city'
     import treeUtils from '../../../utils/treeUtils'
     export default{
-        props: ['change', 'title', 'placeholder'],
+        props: ['change', 'title', 'placeholder', 'disabled'],
         data () {
             return {
                 provinces: [],
@@ -67,6 +67,11 @@
                         this.placeholderVal.city = cityObj.name
                         this.placeholderVal.area = areaObj.name
                     }
+                }
+            },
+            disabled (val) {
+                if (val) {
+                    this.provinceSelect = ''
                 }
             }
         },

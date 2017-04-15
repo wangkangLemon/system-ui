@@ -102,7 +102,7 @@
     </article>
 </template>
 
-<script lang='babel'>
+<script>
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../services/mobileService'
     import authUtls from '../../utils/authUtils'

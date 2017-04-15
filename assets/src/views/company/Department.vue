@@ -157,7 +157,7 @@
         <delete-dialog v-if="currentItem" :text="currentItem.text" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
     </article>
 </template>
-<script lang="babel">
+<script>
     import departmentService from '../../services/departmentService'
     import {date2Str} from '../../utils/timeUtils'
     import IndustryCompanySelect from '../component/select/IndustryCompany'

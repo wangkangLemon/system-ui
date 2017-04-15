@@ -56,7 +56,7 @@
         </div>
     </article>
 </template>
-<script lang="babel">
+<script>
     import Region from '../component/select/Region.vue'
     import mineService from '../../services/mineService'
     export default {

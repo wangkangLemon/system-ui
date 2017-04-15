@@ -1,15 +1,10 @@
 <!--内容维护-->
 <style lang='scss' rel="stylesheet/scss">
     @import "../../../utils/mixins/mixins";
-    /*@import "../../../utils/mixins/table";*/
-    @import "../../../utils/mixins/topSearch";
 
-    .content-manage {
+    .client-content-manage {
         .cell {
             overflow: visible !important;
-        }
-        .search {
-            @extend %top-search-container;
         }
         .el-input {
             .el-input__icon {
@@ -182,18 +177,10 @@
                 margin-top: 10px;
             }
         }
-        .chooseCourse {
-            .block {
-                text-align: center !important;
-                width: 50%;
-                margin: 0 auto;
-                margin-top: 10px;
-            }
-        }
     }
 </style>
 <template>
-    <article class="content-manage">
+    <article class="client-content-manage">
         <!--添加/编辑课程-->
         <el-dialog v-model="addForm" :title="formTitle">
             <section v-if="form.ref_id">
@@ -235,43 +222,7 @@
             </div>
         </el-dialog>
         <!--选取课程-->
-        <el-dialog class="chooseCourse main-container" title="选取课程" v-model="course.isShow">
-            <section class="search">
-                <section>
-                    <i>名称</i>
-                    <el-input @change="getCourse" v-model="course.search.keyword"></el-input>
-                </section>
-                <section>
-                    <i>栏目分类</i>
-                    <CourseCategorySelect v-model="course.search.category_id" :onchange="getCourse"></CourseCategorySelect>
-                </section>
-            </section>
-            <el-table v-loading="course.loading" @row-click="selectCurrentCourse" border :data="course.data" :highlight-current-row="true">
-                <el-table-column prop="name" label="课程"></el-table-column>
-                <el-table-column prop="company" label="企业" width="200"></el-table-column>
-                <el-table-column prop="material_type" label="类型" width="150">
-                    <template scope="scope">
-                        {{course.material_type[scope.row.material_type]}}
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="block">
-                <el-pagination
-                        @size-change="courseSizeChange"
-                        @current-change="coursePageChange"
-                        :total="course.total"
-                        :current-page="course.page"
-                        :page-size="course.page_size"
-                        :page-sizes="[15, 30, 60, 100]"
-                        layout="total, sizes, prev, pager, next">
-                </el-pagination>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="course.isShow = false">取 消</el-button>
-                <el-button type="primary" @click="courseConfirm">确 定</el-button>
-            </span>
-        </el-dialog>
-
+        <ChooseCourse v-model="course.isShow" v-on:result="courseConfirm"></ChooseCourse>
         <section class="left-content">
             <div class="classify title">
                 <SectionCategorySelect :onchange="getLeftCategoryData" v-model="section.category_id"></SectionCategorySelect>
@@ -363,18 +314,17 @@
         </section>
     </article>
 </template>
-<script lang="babel">
+<script>
+    import ChooseCourse from '../component/ChooseCourse.vue'
     import SectionCategorySelect from '../../component/select/SectionCategory.vue'
-    import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     import sectionService from '../../../services/sectionService'
-    import courseService from '../../../services/courseService'
     import UploadImg from '../../component/upload/UploadImg.vue'
     import {date2Str} from '../../../utils/timeUtils'
     let _this
     export default {
         components: {
+            ChooseCourse,
             SectionCategorySelect,
-            CourseCategorySelect,
             UploadImg
         },
         data () {
@@ -403,23 +353,7 @@
                 },
                 // 选取课程
                 course: {
-                    currentData: null,
-                    loading: false,
-                    isShow: false,
-                    search: {
-                        keyword: '',
-                        category_id: ''
-                    },
-                    data: [],
-                    page: 1,
-                    page_size: 10,
-                    total: 0,
-                    material_type: {
-                        video: '视频',
-                        doc: 'word文档',
-                        ppt: '幻灯片',
-                        pdf: 'PDF文件'
-                    }
+                    isShow: false
                 },
                 // 表单相关属性
                 formTitle: '添加内容',
@@ -505,31 +439,6 @@
             },
             chooseCourse () {
                 this.course.isShow = true
-                this.getCourse()
-            },
-            getCourse () {
-                this.course.loading = true
-                // 获取课程数据
-                return courseService.getPublicCourselist({
-                    keyword: this.course.search.keyword,
-                    category_id: this.course.search.category_id,
-                    page: this.course.page,
-                    page_size: this.course.page_size
-                }).then((ret) => {
-                    this.course.data = ret.data
-                    this.course.total = ret.total
-                    this.course.loading = false
-                })
-            },
-            // 课程分页
-            courseSizeChange (val) {
-                this.course.page_size = val
-                this.getCourse()
-            },
-            // 课程当前页
-            coursePageChange (val) {
-                this.course.page = val
-                this.getCourse()
             },
             // 区块当前页
             sectionPageChange (val) {
@@ -575,12 +484,9 @@
                     return ret
                 })
             },
-            selectCurrentCourse (item) { // 选取课程 点击搜索之后的某一行存储当前选择的id 确定的时候调用
-                this.course.currentData = item
-            },
-            courseConfirm () { // 点击确定的时候，进行搜索结果
-                this.form.course = this.course.currentData
-                this.form.ref_id = this.course.currentData.id
+            courseConfirm (item) { // 点击确定的时候，进行搜索结果
+                this.form.course = item
+                this.form.ref_id = item.id
                 this.form.ref_sync = 1
                 this.keepSync()
                 this.addForm = true

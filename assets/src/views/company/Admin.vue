@@ -1,13 +1,7 @@
 <!--企业列表-管理员-->
 <style lang='scss' scoped rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
-    .table-container {
-        .status {
-            padding: 2px 5px;
-            background: #00acac;
-            border-radius: 5px;
-            color: #fff;
-        }
+    .company-admin-container {
         border: 1px solid #ededed;
         .add {
             background: #ededed;
@@ -66,30 +60,10 @@
                 }
             }
         }
-        .forbidden-content {
-            text-align: center;
-            i {
-                &:before {
-                    display: block;
-                    font-size: px2rem(60);
-                    color: #f8bb86;
-                    padding-bottom: px2rem(40);
-                }
-            }
-            h1 {
-                font-size: px2rem(20);
-            }
-            p {
-                margin: px2rem(10);
-                span {
-                    color: red;
-                }
-            }
-        }
     }
 </style>
 <template>
-    <article class="table-container">
+    <article class="company-admin-container">
         <!--详情-->
         <el-dialog class="showDetail" title="查看店员" v-model="showDetail">
             <div class="avatar">
@@ -203,7 +177,7 @@
         </div>
     </article>
 </template>
-<script lang="babel">
+<script>
     import companyService from '../../services/companyService'
     import departmentService from '../../services/departmentService'
     import departmentSelect from '../component/select/CompanyDepartment.vue'
@@ -275,7 +249,7 @@
                 adminData: []
             }
         },
-        activated () {
+        created () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -308,7 +282,6 @@
             // 查看店员详情
             checkClerkDetail (index, row) {
                 this.showDetail = true
-                this.clerkDetail = row
                 companyUserService.userDetail(row.id).then((ret) => {
                     this.clerkDetail = ret.data
                 })
@@ -343,14 +316,12 @@
                 })
             },
             handleSizeChange (val) {
-                console.log(`每页 ${val} 条`)
-                // 当切换每页条数得时候 获取当前第一页得数据
-                this.handleCurrentChange(1)
+                this.pageSize = val
+                this.getData()
             },
             handleCurrentChange (val) {
                 this.currentPage = val
-                console.log(`当前页: ${val}`)
-                // 以下获取当页数据
+                this.getData()
             },
             goBack () {
                 window.history.back()

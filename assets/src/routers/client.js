@@ -75,5 +75,29 @@ export default [
         meta: {
             title: '企业导航-手机客户端',
         }
+    },
+    {
+        path: pathPre + '/push',
+        name: 'client-push',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/client/Push.vue'))
+            })
+        },
+        meta: {
+            title: '消息推送',
+        }
+    },
+    {
+        path: pathPre + '/push/create',
+        name: 'client-push-create',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/client/CreatePush.vue'))
+            })
+        },
+        meta: {
+            title: '新建消息推送',
+        }
     }
 ]
