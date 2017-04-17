@@ -245,7 +245,6 @@
                     type: this.fetchParam.type,
                     receiver: this.fetchParam.receiver.indexOf('***') > -1 ? '' : this.fetchParam.receiver
                 }
-                console.info('发送验证码', fetchParam)
                 minepService.sendTwoValidCode(fetchParam).then(() => {
                     xmview.showTip('success', '验证码发送成功,请注意查收')
                     this.dialogBind.validWait = 60
@@ -268,6 +267,7 @@
             // 确认验证码
             validCode () {
                 minepService.validTwoVliadCode(this.fetchParam).then((ret) => {
+                    this.dialogBind.validWait = 0
                     // 关掉解绑框  打开绑定框
                     this.dialogChange.isShow = false
                     setTimeout(() => {
