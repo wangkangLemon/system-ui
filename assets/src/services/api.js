@@ -50,17 +50,6 @@ function sendRequest (method, url, params, needLoding = false) {
         url = url + '?' + processParams(params)
 
     needLoding && xmview.setLoading(true)
-    // let pRequest = fetch(url, {
-    //     method: method,
-    //     credentials: 'include', // pass cookies, for authentication
-    //     headers: {
-    //         'Accept': '*.*',
-    //         'Content-Type': 'application/x-www-form-urlencoded',
-    //         // 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary5iaCmhwToXQ2CNwA; charset=utf-8',
-    //         'Authorization': 'Bearer ' + authUtils.getAuthToken()
-    //     },
-    //     body: method === 'GET' ? {} : processParams(params)
-    // })
 
     let pRequest = new Promise((resolve, reject) => {
         ajax({
@@ -69,7 +58,7 @@ function sendRequest (method, url, params, needLoding = false) {
             data: method === 'GET' ? {} : params,
             headers: {
                 'Authorization': 'Bearer ' + authUtils.getAuthToken(), // 登录凭证
-                // 'twostep': authUtils.getTwiceToken() // 二次验证的token
+                'TwoStep': `Bearer ` + authUtils.getTwiceToken() // 二次验证的token
             }
         }).then((ret, xhr) => {
             resolve(ret, xhr)
@@ -108,6 +97,9 @@ function processResponse (promise, url) {
             // 记录当前的url
             xmrouter.push({name: 'login', query})
             return true
+        } else if (xhr.status === 404) {
+            xmview.showTip('error', '未找到该请求地址')
+            return Promise.reject(ex)
         } else {
             requestedUrls[url] = true
             xmview.setLoading(false)
@@ -122,7 +114,7 @@ function processCodeError (ret, url) {
     requestedUrls[url] = true
 
     // 如果过期
-    if (ret.code === 10000 || ret.code === 10001 || ret.code === 10002) {
+    if (ret.code === 10000 || ret.code === 10001 || ret.code === 10002 || ret.code === 10003) {
         xmview.showTip('error', '登录超时,请重新登录')
         // 记录当前的url
         xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})

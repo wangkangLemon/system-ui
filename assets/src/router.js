@@ -11,6 +11,7 @@ import finance from './routers/finance' // 财务
 import sales from './routers/sales' // 晒单
 import company from './routers/company' // 企业
 import user from './routers/user' // 企业
+import im from './routers/im'
 
 Vue.use(VueRouter)
 
@@ -76,6 +77,8 @@ const routes = [
             company,
             // ============当前登录用户==================
             ...user,
+            // ============服务号==================
+            im,
         ]
     },
     {   // 登录

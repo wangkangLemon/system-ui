@@ -1,3 +1,7 @@
+<!--使用ex.-->
+<!--<el-form-item label="课程封面图" prop="image">-->
+    <!--<UploadImg :defaultImg="fetchParam.image" :url="uploadImgUrl"-->
+               <!--:on-success="res=> fetchParam.image = res.data.url"></UploadImg>-->
 <style lang="scss" rel="stylesheet/scss">
     @import "../../../utils/mixins/mixins";
 

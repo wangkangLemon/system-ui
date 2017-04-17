@@ -73,9 +73,10 @@ let authUtls = {
         refreshIntervalId && clearInterval(refreshIntervalId)
     },
     clearAuthInfo () {
-        authUtls.setAuthToken(null)
-        authUtls.setNavMenu(null)
-        authUtls.setUserInfo(null)
+        authUtls.setAuthToken('')
+        authUtls.setNavMenu('')
+        authUtls.setUserInfo('')
+        // authUtls.setTwiceToken('')
     }
 }
 

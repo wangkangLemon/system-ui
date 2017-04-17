@@ -176,6 +176,7 @@
         },
         created () {
             authUtils.clearAuthRefreshToken()
+            authUtils.clearAuthInfo()
             xmview.setLoading(false)
         },
         methods: {
@@ -189,11 +190,13 @@
                             authUtils.setUserInfo(ret.auth_user) // 保存用户信息
                             xmview.showTip('success', '登录成功')
                             setTimeout(() => {
-                                // 判断是否需要回到上个页面
-                                if (this.$route.query.returnUrl) {
+                                // 如果需要二次登录
+                                if (ret.need_two_step) {
+                                    this.$router.replace({name: 'login-twice'})
+                                } else if (this.$route.query.returnUrl) {  // 判断是否需要回到上个页面
                                     window.location.href = this.$route.query.returnUrl
                                 } else {
-                                    this.$router.replace({name: 'index'})
+                                    this.$router.replace({name: 'main'})
                                 }
                             }, 400)
                         }).catch((ret) => {

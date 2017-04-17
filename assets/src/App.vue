@@ -39,7 +39,7 @@
                 this.fullscreenLoading = isloading
             },
             // success/warning/info/error
-            showTip (type, msg, msgDuring = 2000) {
+            showTip (type, msg, msgDuring = 3000) {
                 return this.$message({
                     type,
                     message: msg,

@@ -45,16 +45,17 @@
             </div>
             <article class="content-container">
                 <section>
-                    <i>
-                        <el-tag type="danger">推荐</el-tag>
-                        微信:
-                    </i>
+                    <i>手机号码:</i>
                     <div>
-                        <span>
+                        <span v-if="!wechat || !wechat.data">
                             <el-tag type="gray">未绑定</el-tag>
                             <el-button type="text" @click="bindWechat">绑定</el-button>
                         </span>
-                        <div>绑定后，登录药视通平台可用绑定微信账号扫码进行安全验证。</div>
+                        <span v-else>
+                            <el-tag type="primary">已绑定手机号码: {{wechat.data}}</el-tag>
+                            <el-button type="text" @click="changeWechat">更换</el-button>
+                        </span>
+                        <div>绑定后，登录药视通平台用该手机号码接收登录验证码。</div>
                     </div>
                 </section>
                 <section>
@@ -139,7 +140,7 @@
 </template>
 
 <script>
-    import twoStepService from '../../services/twoStepService'
+    //    import twoStepService from '../../services/twoStepService'
     import minepService from '../../services/mineService'
     import wechatSdk from '../../vendor/wechatSdk'
     import authUtils from '../../utils/authUtils'
@@ -171,23 +172,7 @@
             }
         },
         created () {
-            twoStepService.getSafeSetInfo().then((ret) => {
-                if (ret) {
-                    this.sms = ret.sms
-                    this.sms && (this.sms.data = processMobile(this.sms.data))
-
-                    this.email = ret.email
-                    this.email && (this.email.data = processEmail(this.email.data))
-                }
-                xmview.setContentLoading(false)
-            }).catch((err) => {
-                console.info(err)
-            })
-
-            // 微信配置
-            minepService.getWechatLoginConfig().then((ret) => {
-                this.wechatConfig = ret
-            })
+            this.initData()
         },
         methods: {
             // 更换邮箱
@@ -218,10 +203,40 @@
             },
             // 绑定微信
             bindWechat () {
-                console.info('微信登录配置信息', this.wechatConfig)
                 wechatSdk.openWechatLogin(this.wechatConfig, (data) => {
-                    // 发送绑定信息
-                    console.info(data, '微信绑定')
+                    data = JSON.parse(data)
+                    if (data.code == 0) {
+                        // 保存二次验证的token
+                        authUtils.setTwiceToken(data.data.adminTwoStepAuthToken)
+                        this.initData()
+                        xmview.showTip('success', '操作成功', 5000)
+                    } else {
+                        xmview.showTip('error', data.message)
+                    }
+                })
+            },
+            // 更换微信绑定
+            changeWechat () {
+                let wechatConfig = Object.assign({}, this.wechatConfig, {verify: 'xm'})
+                wechatSdk.openWechatLogin(wechatConfig, (data) => {
+                    data = JSON.parse(data)
+                    if (data.code == 0) {
+                        // 重新刷新绑定数据 如果message为空 则验证成功
+                        minepService.getSafeSetInfo().then((ret) => {
+                            if (!ret.message) {
+                                this.wechat = {}
+                                xmview.showTip('success', '操作成功!请重新绑定新的微信', 5000)
+                            } else {
+                                xmview.showTip('error', ret.message, 5000)
+                            }
+                        }).then(() => {
+                            minepService.getWechatLoginConfig().then((ret) => {
+                                this.wechatConfig = ret
+                            })
+                        })
+                    } else {
+                        xmview.showTip('error', data.message, 5000)
+                    }
                 })
             },
             // 发送绑定的验证码
@@ -263,6 +278,31 @@
                     this.fetchParam.receiver = ''
 
                     authUtils.setTwiceToken(ret)
+                })
+            },
+            initData () {
+                minepService.getSafeSetInfo().then((ret) => {
+                    if (ret) {
+                        ret.stepTypes.forEach((item) => {
+                            if (item.type === 'sms') {
+                                this.sms = item
+                                this.sms && (this.sms.data = processMobile(this.sms.data))
+                            } else if (item.type === 'email') {
+                                this.email = item
+                                this.email && (this.email.data = processEmail(this.email.data))
+                            } else {
+                                this.wechat = item
+                            }
+                        })
+                    }
+                    xmview.setContentLoading(false)
+                }).catch((err) => {
+                    console.info(err)
+                }).then(() => {
+                    // 微信配置
+                    minepService.getWechatLoginConfig().then((ret) => {
+                        this.wechatConfig = ret
+                    })
                 })
             }
         },

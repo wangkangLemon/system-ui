@@ -23,21 +23,23 @@ class TwoStepService {
 
     // 发送短信验证码
     sendSmsValidcode () {
-        let url = `${urlPre}/sms/verify`
+        let url = `${urlPre}/sms/send`
         return api.post(url)
     }
 
-    // 绑定或者更换绑定
-    bindOrChange ({code, type, receiver}) {
-        let url = `${urlPre}/code/bind`
-        return api.put(url, {code, type, receiver})
+    // 短信二次验证
+    twiceSmsValid ({code}) {
+        let url = `${urlPre}/sms/verify`
+        return api.post(url, {code}).then((ret) => {
+            return ret.data.adminTwoStepAuthToken
+        })
     }
 
-    // 获取微信登录的配置
-    getWechatLoginConfig () {
-        let url = `${urlPre}/wechat`
-        return api.get(url).then((ret) => {
-            return ret.data.wechatConfig
+    // 邮箱二次验证
+    twiceEmailValid ({code}) {
+        let url = `${urlPre}/email/verify`
+        return api.post(url, {code}).then((ret) => {
+            return ret.data.adminTwoStepAuthToken
         })
     }
 }
