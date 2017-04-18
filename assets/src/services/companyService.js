@@ -198,6 +198,11 @@ class CompanyService {
         })
     }
 
+    // 企业签约信息导入
+    importData () {
+        return `${urlPre}/sign/import`
+    }
+
     // 获取签约信息预览的 上面三大板块
     getSignMessage () {
         let finalUrl = `${urlPre}/sign/`

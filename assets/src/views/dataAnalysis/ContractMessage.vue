@@ -101,18 +101,15 @@
         </div>
         <!--导入弹窗-->
         <el-dialog v-model="isImport" title="导入企业签约信息" size="tiny">
-            <el-upload
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false">
-                <i class="el-icon-plus"></i>
-                <i>点击此处上传文件</i>
-            </el-upload>
+            <UploadFile :beforeUpload="beforeUpload" :url='uploadFileUrl' :on-success="uploadImgSucc" btnTitle='上传文件'></UploadFile>
             <div class="upload-tip">
                 <h2>注意事项</h2>
                 <p>1. 模板中的字段请对照填写，不能为空</p>
                 <p>2. 如果有某些内容为空，导入时将跳过</p>
             </div>
-            <el-button type="primary" @click="isImport = false">关闭</el-button>
+            <div class="block">
+                <el-button type="primary" @click="isImport = false">关闭</el-button>
+            </div>
         </el-dialog>
         <!--详情-->
         <el-dialog class="showDetail" title="连锁详情" v-model="showDetial">
@@ -129,7 +126,7 @@
         </el-dialog>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+                <el-button @click="isImport = true"><i class="el-icon-upload2"></i>导入</el-button>
             </div>
             <section class="search">
                 <section>
@@ -209,7 +206,8 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
+    import UploadFile from '../component/upload/UploadFiles.vue'
     import panel from '../component/panel/AmountPanel'
     import DateRange from '../component/form/DateRangePicker.vue'
     import companyService from '../../services/companyService'
@@ -218,10 +216,12 @@
         components: {
             panel,
             DateRange,
-            SignatorySelect
+            SignatorySelect,
+            UploadFile
         },
         data () {
             return {
+                uploadFileUrl: '',
                 signs: null,
                 currentItems: null, // 当前预览信息
                 loading: false,
@@ -256,9 +256,17 @@
                 this.signs = ret[1]
             }).then(() => {
                 xmview.setContentLoading(false)
+                this.uploadFileUrl = companyService.importData()
             })
         },
         methods: {
+            beforeUpload (file) {
+                const isJPG = file.type === 'application/vnd.ms-excel'
+                if (!isJPG) {
+                    this.$message.error('只允许上传指定的格式: .xlsx;.xls')
+                    return false
+                }
+            },
             showFn (item) {
                 companyService.getSignDetail(item.id).then((ret) => {
                     this.currentItems = ret.data
@@ -291,6 +299,10 @@
                 }).then(() => {
                     this.loading = false
                 })
+            },
+            // 图片上传完毕之后的逻辑
+            uploadImgSucc (res) {
+                xmview.showTip('success', '上传成功')
             }
         }
     }

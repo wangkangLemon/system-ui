@@ -3,6 +3,7 @@
 <!--<UploadFile :defaultFile="file" url='asdjadasd' :on-success="handleChange" btnTitle='点击上传'></UploadFile>-->
 <template>
     <el-upload ref="upload"
+               :before-upload="beforeUpload"
                :headers="headers"
                :action="url"
                :file-list="fileList"
@@ -16,6 +17,7 @@
     import authUtils from '../../../utils/authUtils'
     export default {
         props: {
+            beforeUpload: Function,
             url: {
                 type: String, // 上传的url
                 default: 'https://jsonplaceholder.typicode.com/posts/'
