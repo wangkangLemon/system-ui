@@ -100,6 +100,20 @@ class IMService {
         let url = urlPre + '/mass/'
         return api.post(url, reqParam)
     }
+
+    // 已经发送的群消息列表
+    getMassSendedMList ({page, page_size, type, receiver, time_start, time_end}) {
+        let url = urlPre + '/mass/search'
+        return api.get(url, {page, page_size, type, receiver, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 删除群发消息
+    delMassSended (id) {
+        let url = urlPre + '/mass/' + id
+        return api.del(url)
+    }
 }
 
 export default new IMService()

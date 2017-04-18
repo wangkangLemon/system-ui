@@ -112,7 +112,10 @@
                     <i>删除</i>
                 </el-button>
             </el-tab-pane>
-            <el-tab-pane label="已发送" name="sended">配置管理</el-tab-pane>
+            <!--=============================华丽的分隔符===========================-->
+            <el-tab-pane label="已发送" name="sended">
+                <SendedList ref="sendedlist"></SendedList>
+            </el-tab-pane>
         </el-tabs>
 
         <el-dialog title="选择图文消息" v-model="dialogMaterial.isShow">
@@ -130,6 +133,7 @@
     import MaterialList from './components/MaterialList.vue'
     import ImgList from './components/ImgList.vue'
     import NewsInfo from './components/NewsInfo.vue' // 图文消息的展示
+    import SendedList from './components/SendedList.vue'
 
     export default{
         data () {
@@ -155,7 +159,11 @@
         },
         methods: {
             handleClick (tab) {
-                console.info('选中tab', tab, this.activedTab)
+                if (tab.name == 'sended') {
+                    this.$nextTick(() => {
+                        this.$refs.sendedlist.fetchData()
+                    })
+                }
             },
             // 选中图文消息
             selectedMaterial(data) {
@@ -204,7 +212,7 @@
                 })
             }
         },
-        components: {MaterialList, ImgList, NewsInfo}
+        components: {MaterialList, ImgList, NewsInfo, SendedList}
     }
 
     function getOrignFetchParamSend () {
