@@ -93,6 +93,7 @@ function processResponse (promise, url) {
         if (xhr.status === 401) {
             xmview.showTip('error', '登录超时,请重新登录')
             let query = {}
+            console.info(xmrouter.history.current.name)
             if (xmrouter.history.current.name !== 'login') query = {returnUrl: window.location.href}
             // 记录当前的url
             xmrouter.push({name: 'login', query})

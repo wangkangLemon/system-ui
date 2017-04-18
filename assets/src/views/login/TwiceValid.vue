@@ -54,12 +54,12 @@
             </div>
             <div>
                 <i class="tip"> <i class="el-icon-warning"></i> 为进一步确保您的账号信息和其他内容的安全，请选择任一种方式进行账号校验</i>
-                <el-tabs type="card" value="first">
-                    <el-tab-pane label="微信扫码登录" name="first" v-if="wechat">
+                <el-tabs type="card" :value="tabSelected">
+                    <el-tab-pane label="微信扫码登录" name="wechat" v-if="wechat">
                         <div>您设置的验证微信账号是：{{wechat.data}}, 请扫码登录</div>
                         <div id="login-twice-wechatlogin"></div>
                     </el-tab-pane>
-                    <el-tab-pane label="手机号码验证" name="second" v-if="sms">
+                    <el-tab-pane label="手机号码验证" name="sms" v-if="sms">
                         <i>您设置的手机号码是 ({{sms.data}})</i>
                         <div class="center-slit">
                             <el-input v-model="smsCode" placeholder="填写手机验证码"></el-input>
@@ -70,7 +70,7 @@
                         </div>
                         <el-button type="primary" @click="login(0)">登录</el-button>
                     </el-tab-pane>
-                    <el-tab-pane label="邮箱验证" name="third" v-if="email">
+                    <el-tab-pane label="邮箱验证" name="email" v-if="email">
                         <i>您设置的邮箱码是 ({{email.data}})</i>
                         <div class="center-slit">
                             <el-input v-model="emailCode" placeholder="填写邮箱验证码"></el-input>
@@ -103,7 +103,8 @@
                 user: {},
                 codeWaitSecond: 0, // 验证码发送后的等待时间 -1表示不可用 比如正在请求发送验证码接口
                 smsCode: void 0,
-                emailCode: void 0
+                emailCode: void 0,
+                tabSelected: 'first', // 选中的tab
             }
         },
         created () {
@@ -123,7 +124,7 @@
             // 获取已绑定的信息
             twiceService.getSafeSetInfo().then((ret) => {
                 // 如果都没绑定  跳到绑定页面
-                if (!ret || (!this.sms && !this.email && !this.wechat)) {
+                if (!ret || (!ret.sms && !ret.email && !ret.wechat)) {
                     this.$router.replace({name: 'user-safeset'})
                 }
 
@@ -133,7 +134,11 @@
                 this.wechatConfig = ret.wechatConfig
 
                 this.loadingdata = false
-                return true
+
+                // 设置当前选中的tab
+                if (this.wechat) this.tabSelected = 'wechat'
+                else if (this.sms) this.tabSelected = 'sms'
+                else this.tabSelected = 'email'
             }).then(() => {
                 // 如果绑定了微信 初始化微信登录二维码
                 if (!this.wechatConfig) return
