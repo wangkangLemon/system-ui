@@ -22,6 +22,11 @@ class ManagerService {
             return ret.data
         })
     }
+    exportManager (reqObj) {
+        let parmas = api.processParams(reqObj)
+        let finalUrl = `${urlPre}/search?export=1&${parmas}`
+        return finalUrl
+    }
 }
 
 export default new ManagerService()

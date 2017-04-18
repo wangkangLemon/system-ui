@@ -1,3 +1,4 @@
+<!--充值-->
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
@@ -53,7 +54,7 @@
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <el-button class="recharge" @click="addForm = true"><i class="el-icon-plus"></i>充值</el-button>
-                <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+                <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
                 <IndustryCompanySelect type="1" v-model="industrySelect"
@@ -125,9 +126,8 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
-    import {chargeData, charge} from '../../../services/fianace/finance'
-    import {date2Str} from '../../../utils/timeUtils'
+<script>
+    import {chargeData, charge, exportCharge} from '../../../services/fianace/finance'
     import Admin from '../../component/select/Admin'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
@@ -216,14 +216,18 @@
                     page_size: this.pageSize,
                     admin_id: this.managerSelect,
                     company_id: this.industrySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime)
+                    time_start: this.createTime,
+                    time_end: this.endTime
                 }).then((ret) => {
                     this.industryData = ret.data
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false
                 })
+            },
+            exportData () {
+                let url = exportCharge()
+                window.location.href = url
             }
         }
     }

@@ -30,7 +30,7 @@
     <article class="financeManage-money-draw">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+                <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
                 <UserList v-model="userSelect"
@@ -117,9 +117,8 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
-    import {drawList} from '../../../services/fianace/money'
-    import {date2Str} from '../../../utils/timeUtils'
+<script>
+    import {drawList, exportDraw} from '../../../services/fianace/money'
     import UserList from '../../component/select/User'
     import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
@@ -182,8 +181,8 @@
                     page: this.currentPage,
                     page_size: this.pageSize,
                     status: this.drawStatusSelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
+                    time_start: this.createTime,
+                    time_end: this.endTime,
                     user_id: this.userSelect
                 }
                 return drawList(params).then((ret) => {
@@ -196,6 +195,15 @@
                 }).then(() => {
                     this.loading = false
                 })
+            },
+            exportData () {
+                let url = exportDraw({
+                    status: this.drawStatusSelect,
+                    time_start: this.createTime,
+                    time_end: this.endTime,
+                    user_id: this.userSelect
+                })
+                window.location.href = url
             }
         }
     }

@@ -1,3 +1,4 @@
+<!--流水-->
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
@@ -93,9 +94,8 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import {history, exportData} from '../../../services/fianace/money'
-    import {date2Str} from '../../../utils/timeUtils'
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import CourseList from '../../component/select/Course'
     import UserList from '../../component/select/User'
@@ -142,8 +142,8 @@
                     page_size: this.pageSize,
                     course_id: this.courseSelect,
                     enterprise_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
+                    time_start: this.createTime,
+                    time_end: this.endTime,
                     user_id: this.userSelect
                 }
                 return history(params).then((ret) => {
@@ -154,14 +154,13 @@
                 })
             },
             exportData () { // 导出数据
-                exportData({
+                let url = exportData({
                     company_id: this.companySelect,
-                    time_start: date2Str(this.createTime),
-                    time_end: date2Str(this.endTime),
+                    time_start: this.createTime,
+                    time_end: this.endTime,
                     user_id: this.userSelect
-                }).then((ret) => {
-                    console.log(ret)
                 })
+                window.location.href = url
             }
         }
     }

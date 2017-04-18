@@ -27,7 +27,7 @@
     <article class="company-manager">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <el-button><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+                <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <el-table
                     v-loading="loading"
@@ -74,7 +74,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import companyService from '../../services/companyService'
     export default {
         data () {
@@ -113,6 +113,10 @@
                     this.loading = false
                 })
             },
+            exportData () {
+                let url = companyService.exportStat()
+                window.location.href = url
+            }
         }
     }
 </script>

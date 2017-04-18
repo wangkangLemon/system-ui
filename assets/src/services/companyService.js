@@ -138,6 +138,11 @@ class CompanyService {
             return ret.data
         })
     }
+    // 导出统计表
+    exportStat () {
+        let finalUrl = `${urlPre}/search?export=1`
+        return finalUrl
+    }
 
     // 审计列表
     getAuditList ({

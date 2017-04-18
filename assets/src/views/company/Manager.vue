@@ -101,7 +101,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import IndustryCompanySelect from '../component/select/IndustryCompany'
     import DateRange from '../component/form/DateRangePicker.vue'
     import ManagerService from '../../services/managerService'
@@ -161,6 +161,15 @@
                 })
             },
             exportData () {
+                let url = ManagerService.exportManager({
+                    company_id: this.searchParams.companySelect,
+                    time_start: this.searchParams.createTime,
+                    time_end: this.searchParams.endTime,
+                    deleted: this.searchParams.status,
+                    manager_name: this.searchParams.name,
+                    manager_mobile: this.searchParams.mobile,
+                })
+                window.location.href = url
             }
         }
     }

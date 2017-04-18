@@ -259,7 +259,7 @@
                 })
             },
             exportData () {
-                departmentService.exportDepartment({
+                let url = departmentService.exportDepartment({
                     province: this.searchParams.provinceSelect,
                     city: this.searchParams.citySelect,
                     area: this.searchParams.areaSelect,
@@ -269,6 +269,7 @@
                     keyword: this.searchParams.name,
                     concact: this.searchParams.concact
                 })
+                window.location.href = url
             }
         }
     }

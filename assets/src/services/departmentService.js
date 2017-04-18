@@ -39,5 +39,10 @@ class DepartmentService {
             }
         })
     }
+    exportDepartment (reqObj) {
+        let parmas = api.processParams(reqObj)
+        let finalUrl = `${urlPre}/search?export=1&${parmas}`
+        return finalUrl
+    }
 }
 export default new DepartmentService()

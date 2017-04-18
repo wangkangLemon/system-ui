@@ -54,15 +54,9 @@ export function history(reqObj) {
 }
 
 // 流水记录导出接口
-export function exportData(reqObj) {
-    let url = urlPre + '/history/search?export=1'
-    return api.get(url, reqObj).then(ret => {
-        if (ret.code == 0) {
-            return ret.data
-        } else {
-            return Promise.reject(ret)
-        }
-    })
+export function exportHistory () {
+    let finalUrl = `${urlPre}/history/search?export=1`
+    return finalUrl
 }
 
 // 充值记录列表
@@ -88,6 +82,11 @@ export function charge(reqObj) {
         }
     })
 }
+// 充值导出
+export function exportCharge () {
+    let finalUrl = `${urlPre}/charge/search?export=1`
+    return finalUrl
+}
 
 // 价格调整列表
 export function priceData(reqObj) {
@@ -111,4 +110,9 @@ export function price(reqObj) {
             return Promise.reject(ret)
         }
     })
+}
+// 价格导出
+export function exportPrice () {
+    let finalUrl = `${urlPre}/price/search?export=1`
+    return finalUrl
 }
