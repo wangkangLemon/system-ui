@@ -128,7 +128,7 @@ function processCodeError (ret, url) {
     }
 }
 
-function processParams (params) {
+export function processParams (params) {
     // 如果是字符串直接返回
     if (typeUtils.isString(params))
         return params
