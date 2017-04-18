@@ -98,7 +98,7 @@ class ArticleService {
         })
     }
     // 删除分类
-    delCategory (id) {
+    delCategory ({id}) {
         let finalUrl = `${urlPre}/category/${id}`
         return api.del(finalUrl).then((ret) => {
             if (ret.code) {
@@ -110,6 +110,24 @@ class ArticleService {
     getCategoryImageUrl () {
         let finalUrl = `${urlPre}/category/image`
         return finalUrl
+    }
+    // 移动分类
+    moveCategory ({id, to}) {
+        let finalUrl = `${urlPre}/category/${id}/move`
+        return api.put(finalUrl, {to}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 移动分类内容
+    moveCategoryContent ({id, to}) {
+        let finalUrl = `${urlPre}/category/${id}/move/content`
+        return api.put(finalUrl, {to}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
     }
 }
 

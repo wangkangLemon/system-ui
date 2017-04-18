@@ -260,16 +260,16 @@
                         xmview.showTip('warning', '请选择不同的栏目')
                         return
                     }
-//                    articleService.moveCategory({id, to}).then((ret) => {
-//                        // 重新渲染树节点
-//                        if (ret.code === 0) {
-//                            xmview.showTip('success', '操作成功!')
-//                            this.$refs.articleCategory.initData()
-//                            this.dialogTree.isShow = false
-//                        } else if (ret.code === 1) {
-//                            xmview.showTip('error', ret.message)
-//                        }
-//                    })
+                    articleService.moveCategory({id, to}).then((ret) => {
+                        // 重新渲染树节点
+                        if (ret.code === 0) {
+                            xmview.showTip('success', '操作成功!')
+                            this.$refs.articleCategory.initData()
+                            this.dialogTree.isShow = false
+                        } else if (ret.code === 1) {
+                            xmview.showTip('error', ret.message)
+                        }
+                    })
                 }
             },
             // 移动栏目下的内容
@@ -287,15 +287,15 @@
                         xmview.showTip('warning', '请选择不同的栏目')
                         return
                     }
-//                    articleService.moveCategoryContent({id, to}).then((ret) => {
-//                        // 重新渲染树节点
-//                        if (ret.code === 0) {
-//                            xmview.showTip('success', '操作成功!')
-//                            this.dialogTree.isShow = false
-//                        } else if (ret.code === 1) {
-//                            xmview.showTip('error', ret.message)
-//                        }
-//                    })
+                    articleService.moveCategoryContent({id, to}).then((ret) => {
+                        // 重新渲染树节点
+                        if (ret.code === 0) {
+                            xmview.showTip('success', '操作成功!')
+                            this.dialogTree.isShow = false
+                        } else if (ret.code === 1) {
+                            xmview.showTip('error', ret.message)
+                        }
+                    })
                 }
             }
         },
