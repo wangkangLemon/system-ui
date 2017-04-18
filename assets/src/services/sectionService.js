@@ -124,5 +124,41 @@ class SectionService {
         let finalUrl = `${urlPre}/${section_id}/data/${id}`
         return api.del(finalUrl, {})
     }
+    // 创建分类
+    createCategory ({parent_id, name, image, sort}) {
+        let finalUrl = `${urlPre}/category`
+        let reqParam = {parent_id, name, image, sort}
+        if (parent_id === 0) delete reqParam['parent_id']
+        return api.post(finalUrl, reqParam)
+    }
+    // 修改分类
+    updateCategory ({name, image, sort, id}) {
+        let finalUrl = `${urlPre}/category/${id}`
+        return api.put(finalUrl, {name, image, sort})
+    }
+    // 删除分类
+    delCategory ({id}) {
+        let finalUrl = `${urlPre}/category/${id}`
+        return api.del(finalUrl).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 获取分类上传图片地址
+    getCategoryImageUrl () {
+        let finalUrl = `${urlPre}/category/image`
+        return finalUrl
+    }
+    // 移动分类
+    moveCategory ({id, to}) {
+        let finalUrl = `${urlPre}/category/${id}/move`
+        return api.put(finalUrl, {to})
+    }
+    // 移动分类内容
+    moveCategoryContent ({id, to}) {
+        let finalUrl = `${urlPre}/category/${id}/move/content`
+        return api.put(finalUrl, {to})
+    }
 }
 export default new SectionService()

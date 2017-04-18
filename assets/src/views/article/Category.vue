@@ -1,4 +1,4 @@
-<!--栏目管理-->
+<!--分类管理-->
 <style lang='scss' rel='stylesheet/scss'>
     @import "../../utils/mixins/common";
     @import "../../utils/mixins/mixins";
@@ -42,7 +42,7 @@
 <template>
     <article id="course-manage-coursecategory">
         <section class="manage-container">
-            <el-button type="primary" @click="addRootCategory">新建栏目</el-button>
+            <el-button type="primary" @click="addRootCategory">新建分类</el-button>
         </section>
 
         <section class="left-container">
@@ -52,24 +52,24 @@
 
         <section class="right-container">
             <div>
-                <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改栏目</el-button>
-                <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子栏目</el-button>
+                <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改分类</el-button>
+                <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子分类</el-button>
 
-                <el-button @click="moveSubCategory">移动栏目</el-button>
-                <el-button @click="moveSubCategoryContent">移动栏目下内容</el-button>
-                <el-button type="danger" @click="deleteCategory">删除栏目</el-button>
+                <el-button @click="moveSubCategory">移动分类</el-button>
+                <el-button @click="moveSubCategoryContent">移动分类下内容</el-button>
+                <el-button type="danger" @click="deleteCategory">删除分类</el-button>
             </div>
 
             <el-card class="edit-content">
                 <el-form label-position="right" label-width="90px" :rules="rules" :model="fetchParam" ref="form">
-                    <el-form-item label="名称" prop="name">
+                    <el-form-item label="分类名称" prop="name">
                         <el-input v-model="fetchParam.name"></el-input>
                     </el-form-item>
                     <el-form-item label="图片" prop="image">
                         <UploadImg ref="uploadImg" :defaultImg="fetchParam.image" :url="uploadImgUrl"
                                    :onSuccess="handleImgUploaded"></UploadImg>
                     </el-form-item>
-                    <el-form-item label="排序" prop="sort">
+                    <el-form-item label="分类排序" prop="sort">
                         <el-input placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -87,11 +87,11 @@
             </span>
         </el-dialog>
 
-        <!--移动子栏目的弹出框-->
+        <!--移动子分类的弹出框-->
         <div class="el-dialog__wrapper" v-show="dialogTree.isShow">
             <article class="el-dialog el-dialog--tiny">
                 <section class="el-dialog__header">
-                    移动栏目【
+                    移动分类【
                     <span style="color:red">
                         {{nodeSelected && nodeSelected.label}}
                     </span> <i>】到</i>
@@ -125,7 +125,7 @@
                 uploadImgUrl: void 0,
                 nodeSelected: void 0, // 被选中的node节点
                 nodeParentSelected: void 0, // 被选中node节点的父节点
-                moveToNode: void 0, // 将要移动到最终的栏目
+                moveToNode: void 0, // 将要移动到最终的分类
                 treeData: [],
                 dialogConfirm: {
                     isShow: false,
@@ -145,7 +145,7 @@
                 },
                 rules: {
                     name: [
-                        {required: true, message: '请输入栏目名称', trigger: 'blur'},
+                        {required: true, message: '请输入分类名称', trigger: 'blur'},
                     ]
                 }
             }
@@ -162,16 +162,16 @@
             this.uploadImgUrl = articleService.getCategoryImageUrl()
         },
         methods: {
-            // 删除栏目
+            // 删除分类
             deleteCategory (){
                 let node = this.nodeSelected
                 if (node && node.children) {
-                    xmview.showTip('warning', '该栏目下还有子栏目,不能被删除')
+                    xmview.showTip('warning', '该分类下还有子分类,不能被删除')
                     return
                 }
 
                 this.dialogConfirm.isShow = true
-                this.dialogConfirm.msg = `是否确认删除栏目 <i style="color:red">${node.label}</i> 吗？`
+                this.dialogConfirm.msg = `是否确认删除分类 <i style="color:red">${node.label}</i> 吗？`
                 this.dialogConfirm.confirmClick = () => {
                     articleService.delCategory({id: node.value}).then(() => {
                         xmview.showTip('success', '操作成功!')
@@ -232,9 +232,11 @@
                             }
 
                             // 如果是添加的根节点
-                            if (this.fetchParam.parent_id === 0) this.treeData.push(addedItem)
-                            else if (!this.nodeSelected.children) this.nodeSelected.children = [{label: '加载中...'}]
-                            else if (this.nodeSelected.children[0].value) {
+                            if (this.fetchParam.parent_id === 0) {
+                                this.treeData.push(addedItem)
+                            } else if (!this.nodeSelected.children) {
+                                this.nodeSelected.children = [{label: '加载中...'}]
+                            } else if (this.nodeSelected.children[0].value) {
                                 this.nodeSelected.children.push(addedItem)
                             }
                         }
@@ -245,10 +247,10 @@
             resetForm () {
                 this.$refs.form.resetFields()
             },
-            // 移动子栏目点击
+            // 移动子分类点击
             moveSubCategory () {
                 if (!this.nodeSelected) {
-                    xmview.showTip('warning', '请先选中一个栏目')
+                    xmview.showTip('warning', '请先选中一个分类')
                     return
                 }
 
@@ -257,7 +259,7 @@
                     let id = this.nodeSelected.value
                     let to = this.moveToNode.data.value
                     if (id === to) {
-                        xmview.showTip('warning', '请选择不同的栏目')
+                        xmview.showTip('warning', '请选择不同的分类')
                         return
                     }
                     articleService.moveCategory({id, to}).then((ret) => {
@@ -272,10 +274,10 @@
                     })
                 }
             },
-            // 移动栏目下的内容
+            // 移动分类下的内容
             moveSubCategoryContent () {
                 if (!this.nodeSelected) {
-                    xmview.showTip('warning', '请先选中一个栏目')
+                    xmview.showTip('warning', '请先选中一个分类')
                     return
                 }
 
@@ -284,7 +286,7 @@
                     let id = this.nodeSelected.value
                     let to = this.moveToNode.data.value
                     if (id === to) {
-                        xmview.showTip('warning', '请选择不同的栏目')
+                        xmview.showTip('warning', '请选择不同的分类')
                         return
                     }
                     articleService.moveCategoryContent({id, to}).then((ret) => {

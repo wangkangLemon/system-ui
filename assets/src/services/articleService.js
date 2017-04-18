@@ -27,9 +27,9 @@ class ArticleService {
     }
 
     // 获取文章分类
-    getCategoryTree ({id = 'tree'}) {
+    getCategoryTree ({id = 'tree', filter = true}) {
         let finalUrl = `${urlPre}/category/children`
-        return api.get(finalUrl, {id}).catch((ret) => {
+        return api.get(finalUrl, {id, filter}).catch((ret) => {
             ret.tipCom.close()
             return ret
         })
@@ -80,22 +80,16 @@ class ArticleService {
         })
     }
     // 创建分类
-    createCategory (reqObj) {
+    createCategory ({parent_id, name, image, sort}) {
         let finalUrl = `${urlPre}/category`
-        return api.post(finalUrl, reqObj).then((ret) => {
-            if (ret.code) {
-                return Promise.reject(ret)
-            }
-        })
+        let reqParam = {parent_id, name, image, sort}
+        if (parent_id === 0) delete reqParam['parent_id']
+        return api.post(finalUrl, reqParam)
     }
     // 修改分类
-    updateCategory (reqObj) {
-        let finalUrl = `${urlPre}/category/${reqObj.id}`
-        return api.put(finalUrl, reqObj).then((ret) => {
-            if (ret.code) {
-                return Promise.reject(ret)
-            }
-        })
+    updateCategory ({name, image, sort, id}) {
+        let finalUrl = `${urlPre}/category/${id}`
+        return api.put(finalUrl, {name, image, sort})
     }
     // 删除分类
     delCategory ({id}) {
@@ -114,20 +108,12 @@ class ArticleService {
     // 移动分类
     moveCategory ({id, to}) {
         let finalUrl = `${urlPre}/category/${id}/move`
-        return api.put(finalUrl, {to}).then((ret) => {
-            if (ret.code) {
-                return Promise.reject(ret)
-            }
-        })
+        return api.put(finalUrl, {to})
     }
     // 移动分类内容
     moveCategoryContent ({id, to}) {
         let finalUrl = `${urlPre}/category/${id}/move/content`
-        return api.put(finalUrl, {to}).then((ret) => {
-            if (ret.code) {
-                return Promise.reject(ret)
-            }
-        })
+        return api.put(finalUrl, {to})
     }
 }
 

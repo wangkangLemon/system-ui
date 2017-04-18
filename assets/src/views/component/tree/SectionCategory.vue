@@ -1,4 +1,4 @@
-<!--课程栏目-->
+<!--客户端分类管理栏目-->
 
 <template>
     <el-tree v-loading="loading" :data="data" :expand-on-click-node="false" @node-click="handleNodeClick"
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    import courseService from '../../../services/courseService'
+    import sectionService from '../../../services/sectionService'
     import treeUtils from '../../../utils/treeUtils'
 
     export default{
@@ -49,7 +49,7 @@
                 if (data.children && data.children[0].value)
                     return
 
-                courseService.getCategoryTree({id: data.value}).then(ret => {
+                sectionService.getSectionCategoryTree({id: data.value}).then(ret => {
                     ret.map((item) => {
                         item.label = item.name
                         item.value = item.id
@@ -92,7 +92,7 @@
             },
             initData () {
                 this.loading = true
-                return courseService.getCategoryTree({}).then(ret => {
+                return sectionService.getSectionCategoryTree({}).then(ret => {
                     this.setCurrVal(treeUtils.arr2Cascader(ret, 0, void 0, void 0, 'name', 'id'))
                     xmview.setContentLoading(false)
                 }).then(() => {
