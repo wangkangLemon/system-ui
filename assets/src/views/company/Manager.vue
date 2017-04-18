@@ -29,7 +29,6 @@
 </style>
 <template>
     <article class="company-manager">
-        <p>接口有问题 没有数据</p>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>

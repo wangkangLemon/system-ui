@@ -91,7 +91,6 @@
 </style>
 <template>
     <article class="table-container">
-        <p>编辑文章有一点小问题，第二次点击修改才能获取到ueditor</p>
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
             <div class="avatar">
@@ -200,7 +199,7 @@
         </div>
     </article>
 </template>
-<script lang="babel">
+<script>
     import DateRange from '../component/form/DateRangePicker.vue'
     import VueEditor from '../component/form/UEditor.vue'
     import ArticleService from '../../services/articleService'
@@ -278,19 +277,14 @@
             },
             editArticle (row) {
                 ArticleService.getEditDetail(row.id).then((ret) => {
+                    this.addForm = true
                     this.form.category = ret.data.category_id
                     this.form.title = ret.data.title
                     this.form.cover = ret.category.cover
                     this.form.content = ret.data.content
                     this.form.id = ret.data.id
                     this.currCategoryName = ret.category.name
-                    if (this.editor != null) {
-                        this.editor.setContent(ret.data.content)
-                    }
-                }).then(() => {
-                    this.addForm = true
-                }).catch(() => {
-                    console.log(11)
+                    this.editor.setContent(ret.data.content)
                 })
             },
             submit (form, status = 0) {

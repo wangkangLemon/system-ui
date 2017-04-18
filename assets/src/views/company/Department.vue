@@ -259,6 +259,16 @@
                 })
             },
             exportData () {
+                departmentService.exportDepartment({
+                    province: this.searchParams.provinceSelect,
+                    city: this.searchParams.citySelect,
+                    area: this.searchParams.areaSelect,
+                    company_id: this.searchParams.companySelect,
+                    time_start: date2Str(this.searchParams.createTime),
+                    time_end: date2Str(this.searchParams.endTime),
+                    keyword: this.searchParams.name,
+                    concact: this.searchParams.concact
+                })
             }
         }
     }
