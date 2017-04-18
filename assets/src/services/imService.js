@@ -40,8 +40,65 @@ class IMService {
         return api.post(url, {articles: JSON.stringify(arrParam)})
     }
 
+    editNews (arrParam, id) {
+        let ret = []
+
+        // 取出只需要的参数
+        arrParam.forEach((item) => {
+            ret.push({
+                content: item.content,
+                title: item.title,
+                cover: item.cover,
+                thumb: item.thumb
+            })
+        })
+
+        let url = urlPre + '/media/news/' + id
+        return api.put(url, {articles: JSON.stringify(arrParam)})
+    }
+
     getNewsUploadImgUrl () {
         return `${urlPre}/media/image/upload`
+    }
+
+    // 获取图文列表
+    getMaterialList ({page, page_size}) {
+        let url = urlPre + '/media/news/search'
+        return api.get(url, {page, page_size}).then(ret => {
+            return ret.data
+        })
+    }
+
+    // 删除图文素材
+    deleteMaterial ({id}) {
+        let url = urlPre + '/media/news/' + id
+        return api.del(url)
+    }
+
+    // 获取图片素材列表
+    getImgList ({keyword, page, page_size}) {
+        let url = urlPre + '/media/image/search'
+        return api.get(url, {keyword, page, page_size}).then(ret => {
+            return ret.data
+        })
+    }
+
+    // 编辑图片素材
+    editImg ({name, id}) {
+        let url = urlPre + '/media/image/' + id
+        return api.put(url, {name})
+    }
+
+    // 删除图片素材
+    delImg (id) {
+        let url = urlPre + '/media/image/' + id
+        return api.del(url)
+    }
+
+    // 群发消息
+    mass (reqParam) {
+        let url = urlPre + '/mass/'
+        return api.post(url, reqParam)
     }
 }
 

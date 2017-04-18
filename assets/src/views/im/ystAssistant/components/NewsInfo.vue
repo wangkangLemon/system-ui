@@ -153,7 +153,7 @@
              @mouseleave="listData[0].showManage = false"
              @click="handleItemClick(0,listData[0])">
             <div>
-                <img :src="listData[0].thumb" v-if="listData[0] && listData[0].thumb">
+                <img :src="listData[0].thumb | fillImgPath" v-if="listData[0] && listData[0].thumb">
                 <i class="el-icon-picture" v-else></i>
                 <h5>{{listData[0].title}}</h5>
             </div>
@@ -171,7 +171,7 @@
                  @click="handleItemClick(index+1,item)">
             <div>
                 <h5>{{item.title}}</h5>
-                <img :src="item.thumb" v-if="item && item.thumb">
+                <img :src="item.thumb | fillImgPath" v-if="item && item.thumb">
                 <i class="el-icon-picture" v-else></i>
             </div>
 
@@ -190,6 +190,7 @@
 </template>
 
 <script>
+    import {fillImgPath} from '../../../../utils/filterUtils'
     function getModel () {
         return {
             'title': '标题',
@@ -213,6 +214,9 @@
     }
 
     export default{
+        filters: {
+            fillImgPath
+        },
         props: {
             value: {
                 type: Array
@@ -232,6 +236,7 @@
         },
         watch: {
             'value' (val) {
+                if (val == this.listData || val.length == this.listData.length) return
                 this.setCurrList(val)
             }
         },
@@ -254,6 +259,7 @@
                     item.selected = true
                 }
 
+                this.$emit('input', this.listData)
                 this.nodeClick && this.nodeClick(index, item)
             },
             move (type, index) { // type- 0往上 1-往下
@@ -272,12 +278,17 @@
             setCurrList (val) {
                 if (!val || val.length < 1) {
                     this.listData = [getModel()]
+                    this.$emit('input', this.listData)
                     return
                 }
                 if (this.type === 0)
                     this.listData = processList(val)
-                else
+                else {
                     this.listData = val
+                    this.listData.map((data) => {
+                        data.selected = false
+                    })
+                }
             }
         },
         components: {}

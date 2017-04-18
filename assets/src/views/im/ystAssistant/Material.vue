@@ -28,36 +28,24 @@
                     <el-input v-model="model.title"></el-input>
                 </el-form-item>
                 <el-form-item label="封面图片">
-                    <UploadImg :defaultImg="model.cover" :url="uploadImgUrl"
+                    <UploadImg :defaultImg="model.thumb | fillImgPath" :url="uploadImgUrl"
                                :on-success="uploadImgSucc"></UploadImg>
                 </el-form-item>
                 <el-form-item label="内容">
-                    <textarea name="" id="" cols="30" rows="10" v-model="model.content"></textarea>
+                    <textarea cols="30" rows="10" v-model="model.content"></textarea>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="save" type="primary">保存</el-button>
                 </el-form-item>
             </el-form>
         </section>
-
-        <el-button @click="save">保存</el-button>
     </article>
 </template>
 
 <script>
-    // 获取测试数据
-    //    function getTestData (index) {
-    //        return {
-    //            'title': index || Date.now(),
-    //            'digest': '',
-    //            'cover': '/upload/im/image/1/1492228225351392.png',
-    //            'thumb': '/upload/im/image/1/1492228225351392t.png',
-    //            'hits': 2,
-    //            'source_url': 'http://demo.yst.vodjk.com/im/news/73',
-    //        }
-    //    }
-
     import NewsInfo from './components/NewsInfo.vue'
     import imService from '../../../services/imService'
     import UploadImg from '../../component/upload/UploadImg.vue'
-
     export default{
         name: 'im-ystassistant-material',
         data () {
@@ -69,27 +57,33 @@
                     cover: '',
                     thumb: '',
                     content: '',
-                }
+                },
+                id: void 0,
             }
         },
         created () {
+            this.id = this.$route.query.id
             this.articles = this.$route.params.articles || []
             this.uploadImgUrl = imService.getNewsUploadImgUrl()
             xmview.setContentLoading(false)
         },
         methods: {
             itemClick(index, item) {
-                console.info('点击每一项', index, item)
                 this.model = item
             },
             save () {
-                imService.addNews()
+                let p = this.id ? imService.editNews(this.articles, this.id) : imService.addNews(this.articles)
+                p.then(() => {
+                    xmview.showTip('success', '保存成功')
+                    // 跳转到列表页面
+                    this.$router.back()
+                })
             },
             // 图片上传完毕的回调
             uploadImgSucc (res) {
                 this.model.cover = res.data.url
                 this.model.thumb = res.data.thumb
-            }
+            },
         },
         components: {NewsInfo, UploadImg}
     }

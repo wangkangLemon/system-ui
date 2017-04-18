@@ -257,8 +257,10 @@
     import config from '../utils/config'
     import MenuTree from './component/tree/MenuTree.vue'
     import authUtils from '../utils/authUtils'
+    import * as filters from '../utils/filterUtils'
 
     export default {
+        filters,
         data () {
             return {
                 isMobile: config.isMobile(),

@@ -36,5 +36,17 @@ export default {
                 title: '素材信息-服务号管理',
             }
         },
+        {
+            path: ystAssistantPre + '/materialmanage', // 素材信息
+            name: 'im-ystAssistant-materialmanage',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/im/ystAssistant/MaterialManage.vue'))
+                })
+            },
+            meta: {
+                title: '素材管理-服务号管理',
+            }
+        },
     ]
 }

@@ -64,8 +64,8 @@
                     <el-tab-pane name="news">
                         <span slot="label"><i class="el-icon-menu"></i> 图文消息</span>
 
-                        <article class="news-msg">
-                            <section>
+                        <article class="news-msg" v-if="!currNewsInfo">
+                            <section @click="showDialogMaterial">
                                 <div>+</div>
                                 <br>
                                 <h5>从素材库中选择</h5>
@@ -76,33 +76,75 @@
                                 <h5>新建图文消息</h5>
                             </router-link>
                         </article>
+                        <NewsInfo v-else v-model="currNewsInfo.articles" :type="1"></NewsInfo>
                     </el-tab-pane>
                     <el-tab-pane name="text">
                         <span slot="label"><i class="el-icon-document"></i> 文本消息</span>
-                        <article>配置管理</article>
+                        <el-input
+                                type="textarea"
+                                :autosize="{ minRows: 12, maxRows: 15}"
+                                placeholder="请输入内容"
+                                v-model="fetchParamSend.text">
+                        </el-input>
                     </el-tab-pane>
                     <el-tab-pane label="图片消息" name="image">
-                        <span slot="label"><i class="el-icon-picture"></i> 图片消息</span>
-                        <article></article>
+                        <article class="news-msg" v-if="!currImg">
+                            <section @click="showDialogImg">
+                                <div>+</div>
+                                <br>
+                                <h5>从图片库中选择</h5>
+                            </section>
+                            <router-link :to="{name:'im-ystAssistant-materialmanage'}" tag="section">
+                                <div>+</div>
+                                <br>
+                                <h5>上传图片</h5>
+                            </router-link>
+                        </article>
+                        <img :src="currImg.thumb_url | fillImgPath" title="加载失败" v-else>
                     </el-tab-pane>
                 </el-tabs>
 
-                <el-button type="primary">群发</el-button>
+                <el-button type="primary" @click="send" :disabled="isSending">
+                    <i v-if="!isSending">群发</i>
+                    <i v-else>发送中</i>
+                </el-button>
+                <el-button type="danger" @click="currNewsInfo = currImg = void 0" v-show="currNewsInfo || currImg">
+                    <i>删除</i>
+                </el-button>
             </el-tab-pane>
             <el-tab-pane label="已发送" name="sended">配置管理</el-tab-pane>
         </el-tabs>
+
+        <el-dialog title="选择图文消息" v-model="dialogMaterial.isShow">
+            <MaterialList ref="materiallist" :type="1" :onSelected="selectedMaterial"></MaterialList>
+        </el-dialog>
+
+        <el-dialog title="选择图片" v-model="dialogImg.isShow">
+            <ImgList ref="imglist" :type="1" :onSelected="selectedImg"></ImgList>
+        </el-dialog>
     </article>
 </template>
 
 <script>
+    import imService from '../../../services/imService'
+    import MaterialList from './components/MaterialList.vue'
+    import ImgList from './components/ImgList.vue'
+    import NewsInfo from './components/NewsInfo.vue' // 图文消息的展示
+
     export default{
         data () {
             return {
                 activedTab: 'new',
-                fetchParamSend: {
-                    type: 'news',
-                    receiver: ''
-                }
+                fetchParamSend: getOrignFetchParamSend(),
+                dialogMaterial: {
+                    isShow: false,
+                },
+                dialogImg: {
+                    isShow: false
+                },
+                currNewsInfo: void 0,
+                currImg: void 0,
+                isSending: false, // 是否正在群发中
             }
         },
         created () {
@@ -114,8 +156,63 @@
         methods: {
             handleClick (tab) {
                 console.info('选中tab', tab, this.activedTab)
+            },
+            // 选中图文消息
+            selectedMaterial(data) {
+                this.dialogMaterial.isShow = false
+                this.currNewsInfo = data
+            },
+            showDialogMaterial() {
+                this.dialogMaterial.isShow = true
+                this.$nextTick(() => {
+                    this.$refs.materiallist.fetchData()
+                })
+            },
+            // 选中图片
+            selectedImg(data) {
+                this.dialogImg.isShow = false
+                this.currImg = data
+            },
+            showDialogImg () {
+                this.dialogImg.isShow = true
+                this.$nextTick(() => {
+                    this.$refs.imglist.fetchData()
+                })
+            },
+            send () {
+                // 群发图文
+                if (this.fetchParamSend.type === 'text') {
+                    if (!this.fetchParamSend.text) {
+                        xmview.showTip('warning', '请填写内容后发送')
+                        return
+                    }
+                } else {
+                    if ((this.fetchParamSend.type === 'news' && !this.currNewsInfo) || (this.fetchParamSend.type === 'image' && !this.currImg)) {
+                        xmview.showTip('warning', '请选取素材后发送')
+                        return
+                    }
+                    // 加上素材的id
+                    this.fetchParamSend.media_id = this.fetchParamSend.type === 'news' ? this.currNewsInfo.id : this.currImg.id
+                }
+
+                this.isSending = true
+                imService.mass(this.fetchParamSend).then(() => {
+                    this.fetchParamSend = getOrignFetchParamSend()
+                    this.isSending = false
+                }).catch(() => {
+                    this.isSending = false
+                })
             }
         },
-        components: {}
+        components: {MaterialList, ImgList, NewsInfo}
+    }
+
+    function getOrignFetchParamSend () {
+        return {
+            type: 'news',
+            receiver: '',
+            media_id: void 0,
+            text: ''
+        }
     }
 </script>
