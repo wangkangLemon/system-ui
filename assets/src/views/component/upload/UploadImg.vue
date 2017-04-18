@@ -152,7 +152,8 @@
         created () {
             this.currImg = this.defaultImg ? [{name: this.defaultImg, url: this.defaultImg}] : []
             this.headers = {
-                'Authorization': 'Bearer ' + authUtils.getAuthToken()
+                'Authorization': 'Bearer ' + authUtils.getAuthToken(),
+                'TwoStep': `Bearer ` + authUtils.getTwiceToken() // 二次验证的token
             }
         },
         activated () {

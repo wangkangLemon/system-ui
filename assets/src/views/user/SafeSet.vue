@@ -256,6 +256,7 @@
             // 设置绑定 或者更换绑定
             bindFn () {
                 minepService.bindOrChangeTwo(this.fetchParam).then((ret) => {
+                    authUtils.setTwiceToken(ret)
                     this[this.fetchParam.type] = {data: this.fetchParam.receiver}
                     this.dialogBind.isShow = false
                     this.dialogChange.isShow = false
