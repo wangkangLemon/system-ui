@@ -88,7 +88,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import AmountPanel from '../../component/panel/AmountPanel'
     import Echars from 'echarts'
     import * as finance from '../../../services/fianace/finance'
