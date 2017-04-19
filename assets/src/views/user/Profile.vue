@@ -70,6 +70,7 @@
     import mineService from '../../services/mineService'
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
     import * as filterUtils from '../../utils/filterUtils'
+    import authUtils from '../../utils/authUtils'
     export default {
         filterUtils,
         components: {
@@ -119,6 +120,7 @@
                     if (valid) {
                         mineService.updateProfile(this.form).then(() => {
                             xmview.showTip('success', '修改成功')
+                            authUtils.setUserInfo(this.form)
                         }).catch((ret) => {
                             xmview.showTip('error', ret.message)
                         })

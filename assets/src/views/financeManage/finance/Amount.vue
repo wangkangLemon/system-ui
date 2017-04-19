@@ -92,8 +92,6 @@
     import AmountPanel from '../../component/panel/AmountPanel'
     import Echars from 'echarts'
     import * as finance from '../../../services/fianace/finance'
-    let charge = [] // 收入数据
-    let consume = [] // 支出数据
     export default {
         components: {
             AmountPanel
@@ -111,6 +109,8 @@
                     content: '',
                     footer: '累计支出 '
                 },
+                charge: [], // 收入
+                consume: [], // 支出
                 pillarData: [], // X轴数据
                 industryData: [],
                 currentPage: 1, // 当前页
@@ -134,19 +134,19 @@
 
             // 收支趋势
             finance.incomeConsume().then((ret) => {
-//                console.log(ret)
                 ret.forEach((item) => {
                     this.pillarData.push(item.created)
-                    charge.push(item.charge)
-                    consume.push(item.consume)
+                    this.charge.push(item.charge)
+                    this.consume.push(item.consume)
                 })
-//                console.log(charge)
+            }).then(() => {
+                // 初始化数据图表
+                this.getLineCahrt()
             })
+            console.log(this.pillarData)
 
             // 工业查询
             this.getData(this.currentPage)
-            // 初始化数据图表
-            this.getLineCahrt()
         },
         methods: {
             handleSizeChange (val) {
@@ -210,7 +210,7 @@
                                     color: 'green'
                                 }
                             },
-                            data: charge
+                            data: this.charge
                         },
                         {
                             name: '支出',
@@ -225,7 +225,7 @@
                                     color: 'rgba(0, 0, 0, 0)'
                                 }
                             },
-                            data: consume
+                            data: this.consume
                         }
                     ]
                 }

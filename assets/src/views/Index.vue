@@ -258,7 +258,6 @@
     export default {
         data () {
             return {
-                userInfo: null,
                 isMobile: config.isMobile(),
                 isShowMenue: false,
                 contentLoading: false,
@@ -266,6 +265,11 @@
                 subTitle: this.$store.state.index.webpathSub,
                 navMenueActive: '', // 激活的菜单选项
                 navMenus: null, // 所有的菜单
+            }
+        },
+        computed: {
+            userInfo () {
+                return authUtils.getUserInfo()
             }
         },
         watch: {
@@ -277,7 +281,6 @@
             }
         },
         created () {
-            this.userInfo = authUtils.getUserInfo()
             // 如果没有用户信息
             if (!this.userInfo) {
                 this.$router.push({name: 'login'})
