@@ -2,26 +2,8 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
+    @import "../../utils/mixins/showDetail";
     .company-department {
-        .showDetail {
-            h2 {
-                margin-bottom: 10px;
-                font-size: 20px;
-            }
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    line-height: 30px;
-                    > span {
-                        display: inline-block;
-                        width:px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
-                    }
-                }
-            }
-        }
         .box-card {
             margin-bottom: 20px;
             .clearfix {
@@ -52,14 +34,14 @@
         <el-dialog v-if="show.detail" class="showDetail" title="查看门店" v-model="show.showDetail">
             <div class="info">
                 <h2>测试营销员</h2>
-                <p><span>店长：</span>{{show.detail.concact}}</p>
-                <p><span>手机：</span>{{show.detail.mobile}}</p>
-                <p><span>电话：</span>{{show.detail.tel}}</p>
-                <p><span>传真：</span>{{show.detail.fax}}</i></p>
-                <p><span>地区：</span>{{show.detail.area_name}}</p>
-                <p><span>地址：</span>{{show.detail.address}}</p>
-                <p><span>邮编：</span>{{show.detail.zip}}</p>
-                <p><span>描述：</span>{{show.detail.description}}</p>
+                <p><i>店长：</i><span>{{show.detail.concact || '无'}}</span></p>
+                <p><i>手机：</i><span>{{show.detail.mobile || '无'}}</span></p>
+                <p><i>电话：</i><span>{{show.detail.tel || '无'}}</span></p>
+                <p><i>传真：</i><span>{{show.detail.fax || '无'}}</span></p>
+                <p><i>地区：</i><span>{{show.detail.area_name || '无'}}</span></p>
+                <p><i>地址：</i><span>{{show.detail.address || '无'}}</span></p>
+                <p><i>邮编：</i><span>{{show.detail.zip || '无'}}</span></p>
+                <p><i>描述：</i><span>{{show.detail.description || '无'}}</span></p>
             </div>
         </el-dialog>
         <el-card class="box-card">

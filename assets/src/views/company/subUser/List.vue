@@ -2,36 +2,37 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
+    @import "../../../utils/mixins/showDetail";
     .company-user-list {
-        .showDetail {
-            .avatar {
-                border: 1px solid #ededed;
-                display: inline-block;
-                vertical-align: top;
-                width: 150px;
-                height: 130px;
-                img {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    line-height: 30px;
-                    > span {
-                        display: inline-block;
-                        width:px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
-                        &.status {
-                            width: auto !important;
-                        }
-                    }
-                }
-            }
-        }
+        /*.showDetail {*/
+            /*.avatar {*/
+                /*border: 1px solid #ededed;*/
+                /*display: inline-block;*/
+                /*vertical-align: top;*/
+                /*width: 150px;*/
+                /*height: 130px;*/
+                /*img {*/
+                    /*width: 100%;*/
+                    /*height: 100%;*/
+                /*}*/
+            /*}*/
+            /*.info {*/
+                /*display: inline-block;*/
+                /*vertical-align: top;*/
+                /*> p {*/
+                    /*line-height: 30px;*/
+                    /*> span {*/
+                        /*display: inline-block;*/
+                        /*width:px2rem(100);*/
+                        /*text-align: right;*/
+                        /*padding-right: px2rem(10);*/
+                        /*&.status {*/
+                            /*width: auto !important;*/
+                        /*}*/
+                    /*}*/
+                /*}*/
+            /*}*/
+        /*}*/
         .status {
             padding: 2px 5px;
             background: #00acac;
@@ -71,15 +72,15 @@
                     <img :src="{url: details.avatar, sex: details.sex} | defaultAvatar" />
                 </div>
                 <div class="info">
-                    <p><span></span>{{details.name}}({{details.company}})</p>
-                    <p><span>所属门店：</span>{{details.dep_name}}</p>
-                    <p><span>Mobile：</span> <i class="iconfont icon-oslash"></i>{{details.mobile}}</p>
-                    <p><span>Email：</span> <i class="el-icon-message"></i>{{details.email}}</p>
-                    <p><span>状态：</span> <el-tag class="status" type="success">{{details.disabled ? '异常' : '正常'}}</el-tag></p>
-                    <p><span>性别：</span> {{details.sex ? '男' : '女'}}</p>
-                    <p><span>生日：</span>{{details.birthday}}</p>
-                    <p><span>地址：</span> {{details.address}}</p>
-                    <p><span>注册时间：</span>{{details.create_time_name}}</p>
+                    <h2>{{details.name}}({{details.company}})</h2>
+                    <p><i class="title">所属门店：</i><span class="value">{{details.dep_name || '无'}}</span></p>
+                    <p><i class="title">Mobile：</i><span class="value">{{details.mobile || '无'}}</span></p>
+                    <p><i class="title">Email：</i><span class="value">{{details.email || '无'}}</span></p>
+                    <p><i class="title">状态：</i><span class="value"><el-tag type="success">{{details.disabled ? '异常' : '正常'}}</el-tag></span></p>
+                    <p><i class="title">性别：</i> <span class="value">{{details.sex ? '男' : '女'}}</span></p>
+                    <p><i class="title">生日：</i><span class="value">{{details.birthday || '无'}}</span></p>
+                    <p><i class="title">地址：</i> <span class="value">{{details.address || '无'}}</span></p>
+                    <p><i class="title">注册时间：</i><span class="value">{{details.create_time_name || '无'}}</span></p>
                 </div>
             </div>
         </el-dialog>

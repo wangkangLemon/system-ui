@@ -29,6 +29,7 @@
                 }
                 > i {
                     display: block;
+                    line-height: 82px;
                     width: 55px;
                     height: 55px;
                     position: absolute;
@@ -38,9 +39,12 @@
                     border-radius: 50%;
                     text-align: center;
                     text-align-last: center;
-                    line-height: 60px;
                     .icon-xiaoxizhongxin:before {
                         font-size: 30px;
+                    }
+                    img {
+                        width: 35px;
+                        height: 35px;
                     }
                 }
                 > h2 {
@@ -92,7 +96,6 @@
                     width: 55px;
                     height: 55px;
                     text-align: center;
-                    line-height: 55px;
                     border-radius: 50%;
                     margin:10px 20px;
                     &.test {
@@ -106,6 +109,11 @@
                     }
                     &.industry {
                         background: #F9BF00;
+                    }
+                    line-height: 76px;
+                    img {
+                        width: 30px;
+                        height: 30px;
                     }
                 }
                 > div {
@@ -181,7 +189,7 @@
     <article class="main-container" v-if="mainData != null">
         <section class="department-analytics">
             <div>
-                <i><i class="iconfont icon-xiaoxizhongxin"></i></i>
+                <i><img src="./images/company.png" /></i>
                 <h2>{{mainData.company}}</h2>
                 <p>连锁总数量</p>
                 <div>
@@ -190,7 +198,7 @@
                 </div>
             </div>
             <div>
-                <i></i>
+                <i><img src="./images/department.png" /></i>
                 <h2>{{mainData.department}}</h2>
                 <p>门店总数量</p>
                 <div>
@@ -199,7 +207,7 @@
                 </div>
             </div>
             <div>
-                <i></i>
+                <i><img src="./images/user.png" /></i>
                 <h2>{{mainData.user}}</h2>
                 <p>店员总数量</p>
                 <div>
@@ -208,7 +216,7 @@
                 </div>
             </div>
             <div>
-                <i></i>
+                <i><img src="./images/r_user.png" /></i>
                 <h2>{{mainData.register_user}}</h2>
                 <p>注册用户数</p>
                 <div>
@@ -219,28 +227,28 @@
         </section>
         <section class="course-analytics">
             <div>
-                <i class="sign test"></i>
+                <i class="sign test"><img src="./images/testing.png" /></i>
                 <div>
                     <i>考试次数</i>
                     <p>{{mainData.testing}}</p>
                 </div>
             </div>
             <div>
-                <i class="sign public"></i>
+                <i class="sign public"><img src="./images/public.png" /></i>
                 <div>
                     <i>公开课数量</i>
                     <p>{{mainData.public_course}}</p>
                 </div>
             </div>
             <div>
-                <i class="sign primary"></i>
+                <i class="sign primary"><img src="./images/primary.png" /></i>
                 <div>
                     <i>私有课数量</i>
                     <p>{{mainData.private_course}}</p>
                 </div>
             </div>
             <div>
-                <i class="sign industry"></i>
+                <i class="sign industry"><img src="./images/industry.png" /></i>
                 <div>
                     <i>工业课数量</i>
                     <p>{{mainData.industry_course}}</p>

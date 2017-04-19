@@ -2,33 +2,8 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
+    @import "../../utils/mixins/showDetail";
     .company-user-list {
-        .showDetail {
-            .avatar {
-                border: 1px solid #ededed;
-                display: inline-block;
-                vertical-align: top;
-            }
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    margin-bottom: 10px;
-                    > span {
-                        display: inline-block;
-                        width:40%;
-                        text-align: right;
-                        vertical-align: top;
-                        padding-right: px2rem(10);
-                    }
-                    .el-select, .el-textarea {
-                        display: inline-block;
-                        width: 58%;
-                        vertical-align: top;
-                    }
-                }
-            }
-        }
         .status {
             padding: 2px 5px;
             background: #00acac;
@@ -64,17 +39,17 @@
         <!--详情-->
         <el-dialog class="showDetail" :title="show.title" v-model="show.showDetail">
             <div class="info" v-if="show.detail">
-                <p><span>药店地址：</span>{{show.detail.address}}</p>
-                <p><span>门店数量：</span>{{show.detail.department_range}}</p>
-                <p><span>店员数量：</span>{{show.detail.user_range}}</p>
-                <p><span>运营联系人：</span>{{show.detail.contact}}</p>
-                <p><span>联系人电话：</span>{{show.detail.phone}}</p>
-                <p><span>联系人邮箱：</span>{{show.detail.email}}</p>
-                <p><span>营业执照：</span><img :src="show.detail.business_license" alt=""></p>
-                <p><span>经营许可证：</span><img :src="show.detail.business_permit" alt=""></p>
-                <p><span>GSP/GSM认证：</span><img :src="show.detail.gsp" alt=""></p>
-                <p><span>负责人身份证：</span><img :src="show.detail.id_card" alt=""></p>
-                <p>
+                <p><i class="title">药店地址：</i><span class="value">{{show.detail.address}}</span></p>
+                <p><i class="title">门店数量：</i><span class="value">{{show.detail.department_range}}</span></p>
+                <p><i class="title">店员数量：</i><span class="value">{{show.detail.user_range}}</span></p>
+                <p><i class="title">运营联系人：</i><span class="value">{{show.detail.contact}}</span></p>
+                <p><i class="title">联系人电话：</i><span class="value">{{show.detail.phone}}</span></p>
+                <p><i class="title">联系人邮箱：</i><span class="value">{{show.detail.email}}</span></p>
+                <p><i class="title">营业执照：</i><span class="value"><img :src="show.detail.business_license" alt=""></span></p>
+                <p><i class="title">经营许可证：</i><span class="value"><img :src="show.detail.business_permit" alt=""></span></p>
+                <p><i class="title">GSP/GSM认证：</i><span class="value"><img :src="show.detail.gsp" alt=""></span></p>
+                <p><i class="title">负责人身份证：</i><span class="value"><img :src="show.detail.id_card" alt=""></span></p>
+                <p class="select">
                     <span>审核结果：</span>
                     <el-select v-model="form.status">
                         <el-option label="待审核" :value="1"></el-option>
@@ -82,7 +57,7 @@
                         <el-option label="审核失败" :value="3"></el-option>
                     </el-select>
                 </p>
-                <p>
+                <p class="select">
                     <span>备注：</span>
                     <el-input type="textarea" v-model="form.note" :rows="3"></el-input>
                 </p>
@@ -163,7 +138,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import companyService from '../../services/companyService'
     import DateRange from '../component/form/DateRangePicker'
     export default {

@@ -2,6 +2,7 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
+    @import "../../utils/mixins/showDetail";
 
     .company-index {
         .box-card {
@@ -26,41 +27,30 @@
                 line-height: 50px;
             }
         }
-        .showDetail {
-            h2 {
-                margin-bottom: 10px;
-            }
-            p {
-                i {
-                    display: inline-block;
-                    width: 90px;
-                    margin-right: 10px;
-                    text-align: right;
-                }
-            }
-        }
     }
 </style>
 <template>
     <article class="company-index">
         <!--详情-->
         <el-dialog v-if="details != null" class="showDetail" v-model="showDetail" title="企业信息">
-            <h2>
-                {{details.name}}
-                <el-tag type="success">{{companyType[details.category]}}</el-tag>
-            </h2>
-            <p><i>门店数量：</i>{{details.department_count}}</p>
-            <p><i>店员数量：</i>{{details.user_count}}</p>
-            <p><i>联系人：</i>{{details.concact}}</p>
-            <p><i>联系人手机：</i>{{details.mobile}}</p>
-            <p><i>联系人邮箱：</i>{{details.email}}</p>
-            <p><i>企业电话：</i>{{details.tel}}</p>
-            <p><i>传真：</i>{{details.fax}}</p>
-            <p><i>地区：</i>{{details.area_name}}</p>
-            <p><i>地址：</i>{{details.address}}</p>
-            <p><i>邮编：</i>{{details.zip}}</p>
-            <p><i>企业网址：</i>{{details.url}}</p>
-            <p><i>企业介绍：</i>{{details.description}}</p>
+            <div class="info">
+                <h2>
+                    {{details.name}}
+                    <el-tag type="success">{{companyType[details.category]}}</el-tag>
+                </h2>
+                <p><i class="title">门店数量：</i><span class="value">{{details.department_count || '无'}}</span></p>
+                <p><i class="title">店员数量：</i><span class="value">{{details.user_count || '无'}}</span></p>
+                <p><i class="title">联系人：</i><span class="value">{{details.concact || '无'}}</span></p>
+                <p><i class="title">联系人手机：</i><span class="value">{{details.mobile || '无'}}</span></p>
+                <p><i class="title">联系人邮箱：</i><span class="value">{{details.email || '无'}}</span></p>
+                <p><i class="title">企业电话：</i><span class="value">{{details.tel || '无'}}</span></p>
+                <p><i class="title">传真：</i><span class="value">{{details.fax || '无'}}</span></p>
+                <p><i class="title">地区：</i><span class="value">{{details.area_name || '无'}}</span></p>
+                <p><i class="title">地址：</i><span class="value">{{details.address || '无'}}</span></p>
+                <p><i class="title">邮编：</i><span class="value">{{details.zip || '无'}}</span></p>
+                <p><i class="title">企业网址：</i><span class="value">{{details.url || '无'}}</span></p>
+                <p><i class="title">企业介绍：</i><span class="value">{{details.description || '无'}}</span></p>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">确 定</el-button>
             </div>
