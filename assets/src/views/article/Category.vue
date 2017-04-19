@@ -224,7 +224,7 @@
                             this.nodeSelected.item = this.fetchParam
                             this.$forceUpdate()
                         } else {
-                            this.fetchParam.id = ret.data.id
+//                            this.fetchParam.id = ret.data.id
                             let addedItem = {
                                 label: this.fetchParam.name,
                                 value: this.fetchParam.id,

@@ -167,18 +167,15 @@
                 <img src="../assets/logo.png">
                 <h1>药视通系统管理平台</h1>
             </el-col>
-
             <el-col :span="6">
                 <h2>药视通</h2>
             </el-col>
-
-
             <el-col :span="8" class="header-right">
-                <div><i class="iconfont icon-xiaoxizhongxin"></i> <em>消息</em></div>
-                <div class="question"><i class="iconfont icon-wenti"></i> <em>问题反馈</em></div>
+                <!--<div><i class="iconfont icon-xiaoxizhongxin"></i> <em>消息</em></div>-->
+                <!--<div class="question"><i class="iconfont icon-wenti"></i> <em>问题反馈</em></div>-->
                 <el-dropdown trigger="click" @command="handleNickname">
                       <span class="el-dropdown-link nickname">
-                        <img src="./images/user-default-male.jpg"> huanghuixin <i
+                        <img :src="userInfo.avatar | defaultAvatar"> {{userInfo.name}} <i
                               class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                     <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
@@ -263,6 +260,7 @@
         filters,
         data () {
             return {
+                userInfo: null,
                 isMobile: config.isMobile(),
                 isShowMenue: false,
                 contentLoading: false,
@@ -281,6 +279,8 @@
             }
         },
         created () {
+            this.userInfo = authUtils.getUserInfo()
+            console.log(this.userInfo)
             xmview.setContentLoading = this.setContentLoading.bind(this)
             this.navMenueActive = this.$route.path // 获取选中的菜单
             this.navMenus = authUtils.getNavMenu() // 获取菜单

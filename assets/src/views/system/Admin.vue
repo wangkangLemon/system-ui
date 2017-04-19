@@ -84,7 +84,6 @@
 </style>
 <template>
     <article class="admin-container">
-        修改的时候选择禁用 不起作用，接口问题
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetail">
             <section v-if="clerkDetail != null">
@@ -220,7 +219,7 @@
         </div>
     </article>
 </template>
-<script lang="babel">
+<script>
     import adminService from '../../services/adminService'
     import {defaultAvatar} from '../../utils/filterUtils'
     export default {
