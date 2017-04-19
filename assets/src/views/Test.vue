@@ -65,7 +65,6 @@
             api.downLoad('http://10.1.2.13:8002/sys/finance/history/search', {export: 1}, '到处.xls').then((ret) => {
                 console.info(ret)
             }).catch((err) => {
-                debugger
                 console.info(err)
             })
         },
@@ -75,7 +74,6 @@
                 let reader = new window.FileReader()
                 reader.readAsArrayBuffer(e.target.files[0])
                 reader.onload = function () {
-                    debugger
                     let blob = new window.Blob([this.result])
                     _this.url = window.URL.createObjectURL(blob)
                 }
