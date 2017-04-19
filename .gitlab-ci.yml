@@ -1,0 +1,13 @@
+image: hub.docker.vodjk.com/golang/common
+
+before_script:
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  script:
+    - curl -Ss -XPOST "http://admin:1470de62b4d2e1e40acb37057fd91545@192.168.40.76:8080/job/yst-system-ui-build-docker-dev/build?token=uuxREAji8EEerdiqw9rbfxa"
