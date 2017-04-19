@@ -125,9 +125,9 @@
             </div>
         </el-dialog>
         <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <el-button @click="isImport = true"><i class="el-icon-upload2"></i>导入</el-button>
-            </div>
+            <!--<div slot="header" class="clearfix">-->
+                <!--<el-button @click="isImport = true"><i class="el-icon-upload2"></i>导入</el-button>-->
+            <!--</div>-->
             <section class="search">
                 <section>
                     <label>连锁名称</label>

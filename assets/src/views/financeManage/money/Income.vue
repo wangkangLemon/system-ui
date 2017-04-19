@@ -154,13 +154,12 @@
                 })
             },
             exportData () { // 导出数据
-                let url = exportData({
+                exportData({
                     company_id: this.companySelect,
                     time_start: this.createTime,
                     time_end: this.endTime,
                     user_id: this.userSelect
                 })
-                window.location.href = url
             }
         }
     }

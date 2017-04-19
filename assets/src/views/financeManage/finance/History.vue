@@ -166,8 +166,13 @@
                 })
             },
             exportData () {
-                let url = exportHistory()
-                window.location.href = url
+                exportHistory({
+                    course_id: this.courseSelect,
+                    company_id: this.companySelect,
+                    time_start: this.createTime,
+                    time_end: this.endTime,
+                    user_id: this.userSelect
+                })
             }
         }
     }

@@ -43,9 +43,8 @@ export function chargeData(reqObj) {
 
 // 充值导出接口
 export function exportCharge(reqObj) {
-    let parmas = api.processParams(reqObj)
-    let finalUrl = `${urlPre}/charge/search?export=1&${parmas}`
-    return finalUrl
+    let finalUrl = `${urlPre}/charge/search`
+    api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '红包充值.xls')
 }
 
 // 流水记录
@@ -62,9 +61,8 @@ export function history(reqObj) {
 
 // 流水记录导出接口
 export function exportData(reqObj) {
-    let parmas = api.processParams(reqObj)
-    let finalUrl = `${urlPre}/income/search?export=1&${parmas}`
-    return finalUrl
+    let finalUrl = `${urlPre}/income/search`
+    api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '红包流水记录.xls')
 }
 
 // 提现记录
@@ -80,9 +78,8 @@ export function drawList(reqObj) {
 }
 // 提现导出接口
 export function exportDraw(reqObj) {
-    let parmas = api.processParams(reqObj)
-    let finalUrl = `${urlPre}/draw/search?export=1&${parmas}`
-    return finalUrl
+    let finalUrl = `${urlPre}/draw/search`
+    api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '提现记录.xls')
 }
 // 红包充值接口
 export function moneyCharge({

@@ -197,13 +197,12 @@
                 })
             },
             exportData () {
-                let url = exportDraw({
+                exportDraw({
                     status: this.drawStatusSelect,
                     time_start: this.createTime,
                     time_end: this.endTime,
                     user_id: this.userSelect
                 })
-                window.location.href = url
             }
         }
     }

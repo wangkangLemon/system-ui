@@ -40,9 +40,8 @@ class DepartmentService {
         })
     }
     exportDepartment (reqObj) {
-        let parmas = api.processParams(reqObj)
-        let finalUrl = `${urlPre}/search?export=1&${parmas}`
-        return finalUrl
+        let finalUrl = `${urlPre}/search`
+        api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), 'department.xls')
     }
 }
 export default new DepartmentService()

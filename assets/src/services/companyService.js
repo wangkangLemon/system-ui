@@ -140,8 +140,8 @@ class CompanyService {
     }
     // 导出统计表
     exportStat () {
-        let finalUrl = `${urlPre}/search?export=1`
-        return finalUrl
+        let finalUrl = `${urlPre}/search`
+        api.downLoad(finalUrl, {export: 1}, 'stat.xls')
     }
 
     // 审计列表

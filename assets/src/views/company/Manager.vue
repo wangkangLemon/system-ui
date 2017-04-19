@@ -161,7 +161,7 @@
                 })
             },
             exportData () {
-                let url = ManagerService.exportManager({
+                ManagerService.exportManager({
                     company_id: this.searchParams.companySelect,
                     time_start: this.searchParams.createTime,
                     time_end: this.searchParams.endTime,
@@ -169,7 +169,6 @@
                     manager_name: this.searchParams.name,
                     manager_mobile: this.searchParams.mobile,
                 })
-                window.location.href = url
             }
         }
     }

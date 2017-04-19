@@ -114,8 +114,7 @@
                 })
             },
             exportData () {
-                let url = companyService.exportStat()
-                window.location.href = url
+                companyService.exportStat()
             }
         }
     }

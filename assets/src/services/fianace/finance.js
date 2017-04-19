@@ -54,9 +54,9 @@ export function history(reqObj) {
 }
 
 // 流水记录导出接口
-export function exportHistory () {
-    let finalUrl = `${urlPre}/history/search?export=1`
-    return finalUrl
+export function exportHistory (reqObj) {
+    let finalUrl = `${urlPre}/history/search`
+    api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '流水记录.xls')
 }
 
 // 充值记录列表
@@ -83,9 +83,9 @@ export function charge(reqObj) {
     })
 }
 // 充值导出
-export function exportCharge () {
-    let finalUrl = `${urlPre}/charge/search?export=1`
-    return finalUrl
+export function exportCharge (reqObj) {
+    let finalUrl = `${urlPre}/charge/search`
+    api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '充值记录.xls')
 }
 
 // 价格调整列表
@@ -112,7 +112,7 @@ export function price(reqObj) {
     })
 }
 // 价格导出
-export function exportPrice () {
-    let finalUrl = `${urlPre}/price/search?export=1`
-    return finalUrl
+export function exportPrice (reqObj) {
+    let finalUrl = `${urlPre}/price/search`
+    api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '价格调整.xls')
 }

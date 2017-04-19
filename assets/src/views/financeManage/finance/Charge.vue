@@ -226,8 +226,12 @@
                 })
             },
             exportData () {
-                let url = exportCharge()
-                window.location.href = url
+                exportCharge({
+                    admin_id: this.managerSelect,
+                    company_id: this.industrySelect,
+                    time_start: this.createTime,
+                    time_end: this.endTime
+                })
             }
         }
     }
