@@ -1,4 +1,6 @@
 <!--图片裁切上传-->
+<!--<ImgCropper :isShowBtn="false" ref="imgcropper" :confirmFn="cropperImgSucc" :aspectRatio="1"-->
+            <!--:isRound="true"></ImgCropper>-->
 <style lang='scss' scoped rel='stylesheet/scss'>
     .croppercontainer {
         img {
@@ -9,7 +11,7 @@
 
 <template>
     <article ref="container">
-        <el-button type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+        <el-button v-show="isShowBtn" type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i></el-button>
         <el-dialog :close-on-click-modal="false" title="裁切图片" v-model="showCropper" size="large" top="15px">
             <div class="croppercontainer">
                 <img @load="startCropper()" class="image-preview" :src="imgData">
@@ -29,8 +31,21 @@
     import '../../../../node_modules/cropperjs/dist/cropper.min.css'
 
     export default{
-        //    点击确认后的回调  长宽比例 16/9  是否圆形裁切
-        props: ['confirmFn', 'aspectRatio', 'isRound'],
+        props: {
+            confirmFn: Function, // 点击确认后的回调
+            aspectRatio: { // 长宽比例 16/9
+                type: Number,
+                default: 16 / 9
+            },
+            isRound: { // 是否原型
+                type: Boolean,
+                default: false
+            },
+            isShowBtn: { // 是否显示上传按钮
+                isShowBtn: Boolean,
+                default: true
+            }
+        },
         data () {
             return {
                 showCropper: false,

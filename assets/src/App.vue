@@ -16,7 +16,10 @@
 
 <script>
     import store from './store/index'
+    import * as filters from './utils/filterUtils'
+
     export default {
+        filters,
         data () {
             return {
                 dialog: {

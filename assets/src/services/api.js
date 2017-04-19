@@ -44,6 +44,36 @@ export function del (url, params, needLoading) {
     return sendRequest('DELETE', url, params, needLoading)
 }
 
+// 下载功能
+export function downLoad (url, params, fileName = '1.xls') {
+    return new Promise((resolve, reject) => {
+        url = url + '?' + processParams(params)
+        let xhr = new window.XMLHttpRequest()
+        xhr.open('GET', url, true)
+        xhr.setRequestHeader('Authorization', `Bearer ${authUtils.getAuthToken()}`)
+        xhr.setRequestHeader('TwoStep', `Bearer ${authUtils.getTwiceToken()}`)
+        xhr.responseType = 'arraybuffer'
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                let blob = new window.Blob([xhr.response])
+                var aLink = document.createElement('a')
+                let evt = new window.MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window,
+                })
+                aLink.download = fileName
+                aLink.href = window.URL.createObjectURL(blob)
+                aLink.dispatchEvent(evt)
+                resolve(blob)
+            } else {
+                reject(xhr)
+            }
+        }
+        xhr.send()
+    })
+}
+
 // 共用的请求数据方法
 function sendRequest (method, url, params, needLoding = false) {
     if (method === 'GET')

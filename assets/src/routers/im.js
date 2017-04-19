@@ -48,5 +48,17 @@ export default {
                 title: '素材管理-服务号管理',
             }
         },
+        {
+            path: ystAssistantPre + '/profile', // 素材信息
+            name: 'im-ystAssistant-profile',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/im/ystAssistant/Profile.vue'))
+                })
+            },
+            meta: {
+                title: '资料设置-服务号管理',
+            }
+        },
     ]
 }

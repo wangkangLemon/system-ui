@@ -10,18 +10,10 @@
 
 import * as api from './api'
 import config from '../utils/config'
-import authUtils from '../utils/authUtils'
-const urlPre = config.apiHost + '/sys/im/' + authUtils.getUserInfo().id
+// import authUtils from '../utils/authUtils'
+const urlPre = config.apiHost + '/sys/im/1' // + authUtils.getUserInfo().id
 
 class IMService {
-    // 更换头像
-    changeAvatar ({avatar, alias = Date.now() + '.jpg'}) {
-        let url = urlPre + '/login'
-        return api.post(url, {avatar, alias}).then(ret => {
-            return ret.data.url
-        })
-    }
-
     // 增加图文消息
     addNews (arrParam) {
         let ret = []
@@ -113,6 +105,27 @@ class IMService {
     delMassSended (id) {
         let url = urlPre + '/mass/' + id
         return api.del(url)
+    }
+
+    // 获取资料设置信息
+    getProfileInfo () {
+        let url = urlPre + '/edit'
+        return api.get(url).then((ret) => {
+            return ret.data.imAccount
+        })
+    }
+
+    // 更换资料设置的头像
+    changeProfileAvatar ({alias = Date.now() + '.jpg', avatar}) {
+        let url = urlPre + '/avatar'
+        return api.post(url, {alias, avatar}).then((ret) => {
+            return ret.data.url
+        })
+    }
+
+    // 修改资料设置
+    editProfile ({name, mobile, email, address, intro, avatar}) {
+        return api.put(urlPre, {name, mobile, email, address, intro, avatar})
     }
 }
 
