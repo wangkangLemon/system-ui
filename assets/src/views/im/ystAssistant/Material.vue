@@ -12,8 +12,8 @@
         }
 
         .right-container {
-            height: 500px;
-            width: 600px;
+            height: 800px;
+            width: 700px;
         }
     }
 </style>
@@ -32,7 +32,7 @@
                                :on-success="uploadImgSucc"></UploadImg>
                 </el-form-item>
                 <el-form-item label="内容">
-                    <textarea cols="30" rows="10" v-model="model.content"></textarea>
+                    <UEditor ref="ue" v-model="model.content"></UEditor>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="save" type="primary">保存</el-button>
@@ -46,6 +46,7 @@
     import NewsInfo from './components/NewsInfo.vue'
     import imService from '../../../services/imService'
     import UploadImg from '../../component/upload/UploadImg.vue'
+    import UEditor from '../../component/form/UEditor.vue'
     export default{
         name: 'im-ystassistant-material',
         data () {
@@ -70,6 +71,7 @@
         methods: {
             itemClick(index, item) {
                 this.model = item
+                this.$refs.ue.setContent(item.content)
             },
             save () {
                 let p = this.id ? imService.editNews(this.articles, this.id) : imService.addNews(this.articles)
@@ -85,6 +87,6 @@
                 this.model.thumb = res.data.thumb
             },
         },
-        components: {NewsInfo, UploadImg}
+        components: {NewsInfo, UploadImg, UEditor}
     }
 </script>

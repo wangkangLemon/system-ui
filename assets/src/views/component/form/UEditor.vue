@@ -1,5 +1,8 @@
+<!--<UEditor ref="ue" v-model="model.content"></UEditor>-->
 <template>
-    <textarea :id="randomId" name="content"></textarea>
+    <div style="line-height: 1.4em">
+        <textarea :id="randomId" name="content" style="height: 400px"></textarea>
+    </div>
 </template>
 
 <script>
@@ -17,7 +20,8 @@
                 default: function () {
                     return {}
                 }
-            }
+            },
+            value: String
         },
         data () {
             return {
@@ -25,7 +29,8 @@
                 randomId: 'editor_' + (Math.random() * 100000000000000000),
                 instance: null,
                 // scriptTagStatus -> 0:代码未加载，1:两个代码依赖加载了一个，2:两个代码依赖都已经加载完成
-                scriptTagStatus: 0
+                scriptTagStatus: 0,
+                currVal: ''
             }
         },
         created () {
@@ -93,9 +98,29 @@
                         // 绑定事件，当 UEditor 初始化完成后，将编辑器实例通过自定义的 ready 事件交出去
                         this.instance.addListener('ready', () => {
                             this.$emit('ready', this.instance)
+
+                            this.setContent(this.currVal)
+                            // 监听文本变化
+                            this.instance.addListener('contentChange', () => {
+                                this.$emit('input', this.instance.getContent())
+                            })
                         })
                     })
                 }
+            },
+            // 设置文本内的信息
+            setContent (val = '') {
+                this.instance && this.instance.setContent(val)
+            },
+            // 获取文本内的信息
+            getContent () {
+                this.instance && this.instance.getContent()
+            },
+            setCurrVal (val) {
+                if (val === this.currVal) return
+
+                this.currVal = val
+                this.$emit('input', val)
             }
         }
     }
