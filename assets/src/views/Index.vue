@@ -278,6 +278,11 @@
         },
         created () {
             this.userInfo = authUtils.getUserInfo()
+            // 如果没有用户信息
+            if (!this.userInfo) {
+                this.$router.push({name: 'login'})
+                return
+            }
             xmview.setContentLoading = this.setContentLoading.bind(this)
             this.navMenueActive = this.$route.path // 获取选中的菜单
             this.navMenus = authUtils.getNavMenu() // 获取菜单

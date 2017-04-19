@@ -48,7 +48,7 @@ const routes = [
         children: [
             // 首页
             {
-                path: '/index/main',
+                path: '',
                 name: 'main',
                 component: resolve => {
                     require.ensure([], () => {
@@ -100,6 +100,7 @@ const routes = [
         },
         meta: {
             title: '二次认证-微信登录',
+            notAuth: true, //  不需要身份验证
         }
     },
     {
@@ -109,6 +110,10 @@ const routes = [
             require.ensure([], () => {
                 resolve(require('./views/Test.vue'))
             })
+        },
+        meta: {
+            title: '二次认证-微信登录',
+            notAuth: true, //  不需要身份验证
         }
     },
 ]

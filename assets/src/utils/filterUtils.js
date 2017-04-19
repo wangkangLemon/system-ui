@@ -7,6 +7,7 @@ import config from '../utils/config'
 
 // 默认头像
 export const defaultAvatar = Vue.filter('defaultAvatar', function (urlObj) {
+    if (!urlObj) return ''
     if (urlObj.url && urlObj.url.indexOf('http') != -1) {
         return urlObj.url
     } else {

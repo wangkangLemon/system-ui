@@ -1,5 +1,15 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
+let fs = require('fs')
+
+let apiHost = ''
+let content = fs.readFileSync(path.resolve('../conf/app.ini'))
+content.toString().split('\n').map((item) => {
+    let arrRet = item.split('=')
+    if (arrRet.length > 1 && arrRet[0].indexOf('apiHost') > -1) {
+        apiHost = arrRet[1].trim()
+    }
+})
 
 module.exports = {
     build: {
@@ -19,7 +29,8 @@ module.exports = {
         // View the bundle analyzer report after build finishes:
         // `npm run build --report`
         // Set to `true` or `false` to always turn it on or off
-        bundleAnalyzerReport: process.env.npm_config_report
+        bundleAnalyzerReport: process.env.npm_config_report,
+        apiHost: apiHost,
     },
     dev: {
         env: require('./dev.env'),
