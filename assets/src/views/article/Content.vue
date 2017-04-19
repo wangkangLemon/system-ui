@@ -249,7 +249,6 @@
         },
         created () {
             this.uploadImgUrl = ArticleService.getArticleUploadUrl()
-            console.log(this.uploadImgUrl)
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

@@ -31,10 +31,9 @@
 </style>
 <template>
     <article class="user-profile">
-        上传头像 有问题
         <section class="upload-avatar">
             <div class="img-container">
-                <img :src="imgUrl"/>
+                <img :src="imgUrl | fillImgPath"/>
             </div>
             <ImagEcropperInput :isRound="1" :aspectRatio="1" :confirmFn="cropperFn"
                                class="upload-btn"></ImagEcropperInput>
@@ -70,7 +69,9 @@
 <script>
     import mineService from '../../services/mineService'
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
+    import * as filterUtils from '../../utils/filterUtils'
     export default {
+        filterUtils,
         components: {
             ImagEcropperInput
         },
@@ -95,6 +96,7 @@
             // 获取个人信息
             mineService.getProfile().then((ret) => {
                 this.form = ret
+                this.imgUrl = ret.avatar
             }).then(() => {
                 xmview.setContentLoading(false)
             })

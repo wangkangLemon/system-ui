@@ -278,7 +278,6 @@
         },
         created () {
             this.userInfo = authUtils.getUserInfo()
-            console.log(this.userInfo)
             xmview.setContentLoading = this.setContentLoading.bind(this)
             this.navMenueActive = this.$route.path // 获取选中的菜单
             this.navMenus = authUtils.getNavMenu() // 获取菜单
