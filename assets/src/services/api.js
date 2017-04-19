@@ -45,7 +45,7 @@ export function del (url, params, needLoading) {
 }
 
 // 下载功能
-export function downLoad (url, params, fileName = '1.xls') {
+export function downLoad (url, params, fileName) {
     return new Promise((resolve, reject) => {
         url = url + '?' + processParams(params)
         let xhr = new window.XMLHttpRequest()
