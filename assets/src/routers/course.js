@@ -80,7 +80,7 @@ export default {
                 })
             },
             meta: {
-                title: '答案分析-培训',
+                title: '课程题目分析',
             }
         },
         {

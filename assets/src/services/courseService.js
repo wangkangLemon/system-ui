@@ -326,6 +326,20 @@ class CourseService {
         let url = `${urlPre}/doc/batchdel`
         return api.del(url, {id: id.join(',')})
     }
+    // 获取课程信息以及选项列表
+    getCourseSubject ({id}) {
+        let finalUrl = `${urlPre}/${id}/subject/stat`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+    // 获取课程题目答案分析
+    getSubjectAnswer ({c_id, s_id}) {
+        let finalUrl = `${urlPre}/${c_id}/subject/${s_id}/stat`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data.stat
+        })
+    }
 }
 
 export default new CourseService()

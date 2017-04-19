@@ -143,7 +143,6 @@
                 // 初始化数据图表
                 this.getLineCahrt()
             })
-            console.log(this.pillarData)
 
             // 工业查询
             this.getData(this.currentPage)
