@@ -123,7 +123,6 @@ function processResponse (promise, url) {
         if (xhr.status === 401) {
             xmview.showTip('error', '登录超时,请重新登录')
             let query = {}
-            console.info(xmrouter.history.current.name)
             if (xmrouter.history.current.name !== 'login') query = {returnUrl: window.location.href}
             // 记录当前的url
             xmrouter.push({name: 'login', query})
@@ -148,7 +147,9 @@ function processCodeError (ret, url) {
     if (ret.code === 10000 || ret.code === 10001 || ret.code === 10002 || ret.code === 10003) {
         xmview.showTip('error', '登录超时,请重新登录')
         // 记录当前的url
-        xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
+        let query = {}
+        if (xmrouter.history.current.name !== 'login') query = {returnUrl: window.location.href}
+        xmrouter.push({name: 'login', query})
     } else if (ret.code >= 100) {
         ret.tipCom = xmview.showTip('error', ret.message)
         return Promise.reject(ret)
