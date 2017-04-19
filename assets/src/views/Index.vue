@@ -175,7 +175,7 @@
                 <!--<div class="question"><i class="iconfont icon-wenti"></i> <em>问题反馈</em></div>-->
                 <el-dropdown trigger="click" @command="handleNickname">
                       <span class="el-dropdown-link nickname">
-                        <img :src="userInfo.avatar | defaultAvatar"> {{userInfo.name}} <i
+                        <img :src="{url:userInfo.avatar, sex: userInfo.sex} | defaultAvatar"> {{userInfo.name}} <i
                               class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                     <el-dropdown-menu slot="dropdown" class="nickname-dropdown">

@@ -35,7 +35,7 @@
             <div class="img-container">
                 <img :src="imgUrl | fillImgPath"/>
             </div>
-            <ImagEcropperInput :isRound="1" :aspectRatio="1" :confirmFn="cropperFn"
+            <ImagEcropperInput :isRound="true" :aspectRatio="1" :confirmFn="cropperFn"
                                class="upload-btn"></ImagEcropperInput>
         </section>
         <section class="submit-form">
