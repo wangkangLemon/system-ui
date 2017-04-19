@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@fdaciuk/ajax": "^2.1.5",
+    "copy-webpack-plugin": "^4.0.1",
     "cropperjs": "^1.0.0-rc",
     "echarts": "^3.4.0",
     "element-ui": "^1.2.7",
