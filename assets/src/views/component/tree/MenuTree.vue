@@ -1,8 +1,23 @@
-<style lang='scss' scoped rel='stylesheet/scss'></style>
+<style lang='scss' rel='stylesheet/scss'>
+    @import "../../../utils/mixins/mixins";
+    .left-menu-container {
+        .menu-icon {
+            width: 15px;
+            height: 15px;
+            position: relative;
+            top: 2px;
+            margin-right: 2px;
+        }
+    }
+</style>
 
 <template>
     <el-submenu :index="data.item.menu_url" v-if="data && data.children != null">
-        <template slot="title"><i class="el-icon-message"></i>{{data.item.menu_name}}</template>
+        <template slot="title">
+            <img class="menu-icon" :src="icons[data.item.menu_icon]" v-if="data.item.parent_id == 0"/>
+            <i class="el-icon-message" v-else></i>
+            {{data.item.menu_name}}
+        </template>
 
         <MenuTree v-for="item in hasChildCItems" :key="item.item.id" :data="item"></MenuTree>
 
@@ -13,12 +28,12 @@
     </el-submenu>
 
     <el-menu-item :index="data.item.menu_url" v-else-if="data && data.children == null">
-        <i class="el-icon-menu"></i>
+        <img class="menu-icon" :src="icons[data.item.menu_icon]"/>
         {{data.item.menu_name}}
     </el-menu-item>
 </template>
 
-<script lang='babel'>
+<script>
     import MenuTree from './MenuTree.vue'
     export default{
         name: 'MenuTree',
@@ -28,7 +43,7 @@
                 hasChildCItems: [], // 有子节点的item
             }
         },
-        props: ['data'],
+        props: ['data', 'icons'],
         created () {
             let hasChildCItems = []
             let leafChildren = []

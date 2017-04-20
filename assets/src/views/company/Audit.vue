@@ -50,16 +50,20 @@
                 <p><i class="title">GSP/GSM认证：</i><span class="value"><img :src="show.detail.gsp" alt=""></span></p>
                 <p><i class="title">负责人身份证：</i><span class="value"><img :src="show.detail.id_card" alt=""></span></p>
                 <p class="select">
-                    <span>审核结果：</span>
-                    <el-select v-model="form.status">
+                    <i class="title">审核结果：</i>
+                    <span class="value">
+                        <el-select v-model="form.status">
                         <el-option label="待审核" :value="1"></el-option>
                         <el-option label="审核通过" :value="2"></el-option>
                         <el-option label="审核失败" :value="3"></el-option>
                     </el-select>
+                    </span>
                 </p>
                 <p class="select">
-                    <span>备注：</span>
-                    <el-input type="textarea" v-model="form.note" :rows="3"></el-input>
+                    <i class="title">备注：</i>
+                    <span class="value">
+                        <el-input type="textarea" v-model="form.note" :rows="3"></el-input>
+                    </span>
                 </p>
             </div>
             <div slot="footer" class="dialog-footer">

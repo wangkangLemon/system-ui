@@ -229,7 +229,7 @@
             <el-menu :default-active="navMenueActive" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
                      :router="true">
                 <div class="nav-title">导航</div>
-                <MenuTree v-for="item in navMenus" :data="item" :key="item.item.id"></MenuTree>
+                <MenuTree v-for="item in navMenus" :icons="icons" :data="item" :key="item.item.id"></MenuTree>
             </el-menu>
 
             <!--右边内容-->
@@ -265,6 +265,7 @@
                 subTitle: this.$store.state.index.webpathSub,
                 navMenueActive: '', // 激活的菜单选项
                 navMenus: null, // 所有的菜单
+                icons: {}
             }
         },
         computed: {
@@ -281,6 +282,16 @@
             }
         },
         created () {
+            this.icons.main = require('./images/main.png')
+            this.icons.course = require('./images/course.png')
+            this.icons.company = require('./images/company.png')
+            this.icons.finance = require('./images/finance.png')
+            this.icons.sale = require('./images/sale.png')
+            this.icons.client = require('./images/client.png')
+            this.icons.data = require('./images/data.png')
+            this.icons.system = require('./images/system.png')
+            this.icons.service = require('./images/service.png')
+            this.icons.article = require('./images/article.png')
             // 如果没有用户信息
             if (!this.userInfo) {
                 this.$router.push({name: 'login'})
