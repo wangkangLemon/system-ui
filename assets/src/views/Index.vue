@@ -2,7 +2,7 @@
     @import "../utils/mixins/mixins";
 
     .index-container {
-        background: #fff;
+        background: #d9e0e7;
 
         @media (max-width: 767px) {
             .header-wap {
@@ -93,11 +93,6 @@
         }
 
         .content {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
             @media (max-width: 767px) {
                 margin-top: 55px;
             }
@@ -105,19 +100,14 @@
             .left-menu-container {
                 width: 220px;
                 z-index: 10;
-                height: 100%;
-                position: absolute;
-                overflow-y: auto;
+                /*height: 100%;*/
+                /*overflow-y: auto;*/
                 transition: all 300ms ease;
                 transform: translateX(0);
                 @media (max-width: 767px) {
                     transform: translateX(-100%);
                     top: -55px;
                     z-index: 12;
-                }
-                @media (min-width: 768px) {
-                    top: 0;
-                    padding-top: 55px;
                 }
 
                 > div.nav-title {
@@ -226,7 +216,7 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu :default-active="navMenueActive" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
+            <el-menu :default-active="navMenueActive" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }" :unique-opened="true"
                      :router="true">
                 <div class="nav-title">导航</div>
                 <MenuTree v-for="item in navMenus" :icons="icons" :data="item" :key="item.item.id"></MenuTree>
