@@ -2,24 +2,8 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
+    @import "../../../utils/mixins/showDetail";
     .system-manage {
-        .showDetail {
-            .info {
-                p {
-                    line-height: 30px;
-                }
-                .remark {
-                    margin-bottom: 10px;
-                    > * {
-                        display: inline-block;
-                        vertical-align: top;
-                    }
-                    textarea {
-                        width: 40%;
-                    }
-                }
-            }
-        }
         .box-card {
             margin-bottom: 20px;
             .clearfix {
@@ -46,27 +30,30 @@
 </style>
 <template>
     <article class="system-manage">
-        接口显示状态 说明不详
         <!--详情-->
         <el-dialog title="查看详情" class="showDetail" v-model="showDetail">
             <div class="info" v-if="details != null">
-                <p><span>问题类型：</span>{{details.category}}</p>
-                <p><span>提交时间：</span>{{details.create_time}}</p>
-                <p><span>提交人：</span>{{details.ContactName}}</p>
-                <p><span>联系方式：</span> {{details.contact}}</p>
-                <p><span>问题描述：</span> {{details.content}}</p>
-                <p><span>手机型号：</span> {{details.app_version}}</p>
-                <p><span>系统版本：</span> {{details.system_version}}</p>
-                <p class="remark">
-                    <span>备注：</span>
-                    <el-input type="textarea" :rows="3" v-model="form.note"></el-input>
+                <p><i class="title">问题类型：</i><span class="value">{{details.category}}</span></p>
+                <p><i class="title">提交时间：</i><span class="value">{{details.create_time}}</span></p>
+                <p><i class="title">提交人：</i><span class="value">{{details.ContactName}}</span></p>
+                <p><i class="title">联系方式：</i> <span class="value">{{details.contact}}</span></p>
+                <p><i class="title">问题描述：</i> <span class="value">{{details.content}}</span></p>
+                <p><i class="title">手机型号：</i> <span class="value">{{details.app_version}}</span></p>
+                <p><i class="title">系统版本：</i> <span class="value">{{details.system_version}}</span></p>
+                <p class="select remark">
+                    <i class="title">备注：</i>
+                    <span class="value">
+                        <el-input type="textarea" :rows="3" v-model="form.note"></el-input>
+                    </span>
                 </p>
-                <p>
-                    <span>状态：</span>
-                    <el-select clearable v-model="form.status">
-                        <el-option label="待处理" :value="1"></el-option>
-                        <el-option label="已处理" :value="2"></el-option>
-                    </el-select>
+                <p class="select">
+                    <i class="title">状态：</i>
+                    <span class="value">
+                        <el-select clearable v-model="form.status">
+                            <el-option label="待处理" :value="1"></el-option>
+                            <el-option label="已处理" :value="2"></el-option>
+                        </el-select>
+                    </span>
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -82,6 +69,7 @@
                 <section>
                     <i>类型：</i>
                     <el-select clearable @change="getData" v-model="search.category">
+                        <el-option label="全部" :value="0"></el-option>
                         <el-option label="建议" :value="1"></el-option>
                         <el-option label="操作体验不好" :value="2"></el-option>
                         <el-option label="闪退" :value="3"></el-option>
@@ -91,7 +79,9 @@
                 <section>
                     <i>状态：</i>
                     <el-select @change="getData" clearable v-model="search.status">
-                        <el-option label="待处理" :value="1"></el-option>
+                        <el-option label="全部" :value="-1"></el-option>
+                        <el-option label="待处理" :value="0"></el-option>
+                        <el-option label="处理中" :value="1"></el-option>
                         <el-option label="已处理" :value="2"></el-option>
                     </el-select>
                 </section>
@@ -111,13 +101,12 @@
                 </el-table-column>
                 <el-table-column
                         prop="content"
-                        label="说明"
-                        width="180">
+                        label="问题描述">
                 </el-table-column>
                 <el-table-column
                         prop="app_version"
                         label="APP版本"
-                        width="180">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="system_version"
@@ -133,7 +122,8 @@
                         prop="status"
                         label="状态">
                     <template scope="scope">
-                        <el-tag type="primary" v-if="scope.row.status == 1">待处理</el-tag>
+                        <el-tag type="gray" v-if="scope.row.status == 0">待处理</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == 1">处理中</el-tag>
                         <el-tag type="success" v-if="scope.row.status == 2">已处理</el-tag>
                     </template>
                 </el-table-column>
@@ -182,8 +172,8 @@
                 total: 0,
                 search: {
                     keyword: '',
-                    status: '',
-                    category: '',
+                    status: -1,
+                    category: 0,
                     time_start: '',
                     time_end: ''
                 },

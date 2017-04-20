@@ -2,6 +2,7 @@
 <style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
+    @import "../../utils/mixins/showDetail";
 
     .el-upload {
         width: 100%;
@@ -34,26 +35,6 @@
             .block {
                 text-align: right;
                 margin-top: 10px;
-            }
-        }
-        .showDetail {
-            .avatar {
-                border: 1px solid #ededed;
-                display: inline-block;
-                vertical-align: top;
-            }
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    line-height: 30px;
-                    > span {
-                        display: inline-block;
-                        width: px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
-                    }
-                }
             }
         }
         .show-sum-count {
@@ -115,13 +96,13 @@
         <el-dialog class="showDetail" title="连锁详情" v-model="showDetial">
             <div class="info" v-if="currentItems">
                 <h2>{{currentItems.name}}</h2>
-                <p><span>门店数量：</span>{{currentItems.department_number}}</p>
-                <p><span>签约店员数量：</span>{{currentItems.user_number}}</p>
-                <p><span>对方联系人：</span>{{currentItems.concact}}</p>
-                <p><span>联系方式：</span> {{currentItems.mobile}}</p>
-                <p><span>签约人：</span> {{currentItems.user_name}}</p>
-                <p><span>签约时间：</span>{{currentItems.sign_time_str}}</p>
-                <p><span>录入系统时间：</span>{{currentItems.create_time}}</p>
+                <p><i class="title">门店数量：</i><span class="value">{{currentItems.department_number}}</span></p>
+                <p><i class="title">签约店员数量：</i><span class="value">{{currentItems.user_number}}</span></p>
+                <p><i class="title">对方联系人：</i><span class="value">{{currentItems.concact}}</span></p>
+                <p><i class="title">联系方式：</i><span class="value">{{currentItems.mobile}}</span></p>
+                <p><i class="title">签约人：</i><span class="value">{{currentItems.user_name}}</span></p>
+                <p><i class="title">签约时间：</i><span class="value">{{currentItems.sign_time_str}}</span></p>
+                <p><i class="title">录入系统时间：</i><span class="value">{{currentItems.create_time}}</span></p>
             </div>
         </el-dialog>
         <el-card class="box-card">

@@ -5,22 +5,37 @@
     .system-manage {
         .showDetail {
             .info {
-                p {
-                    line-height: 30px;
+                display: inline-block;
+                vertical-align: top;
+                text-align: center;
+                width: 100%;
+                h2 {
+                    margin-bottom: 10px;
                 }
-                .question {
+                p {
+                    text-align: left;
+                    line-height:35px;
                     > * {
                         display: inline-block;
                         vertical-align: top;
                     }
-                    span {
-                        line-height: 30px;
+                    i.title {
+                        width: 16%;
+                        margin-right: 10px;
+                        text-align: right;
                     }
-                    .img-wrap {
-                        img {
-                            width: 200px;
-                            height: 150px;
-                            margin-right: 5px;
+                    span.value {
+                        text-align: left;
+                    }
+                }
+                > p.question {
+                    .value {
+                        width: 70%;
+                        .img-wrap {
+                            img {
+                                width: 100px;
+                                height: 100px;
+                            }
                         }
                     }
                 }
@@ -55,25 +70,29 @@
         <!--详情-->
         <el-dialog title="查看详情" class="showDetail" v-model="showDetail">
             <div class="info" v-if="details != null">
-                <p><span>企业名称：</span>{{details.company_name}}</p>
-                <p><span>门店：</span>{{details.department_name}}</p>
-                <p><span>提交人：</span>{{details.user_name}}</p>
-                <p><span>联系方式：</span> {{details.contact}}</p>
-                <p><span>问题描述：</span> {{details.description}}</p>
-                <div class="question">
-                    <span>问题截取：</span>
-                    <div class="img-wrap">
-                        <img :src="item" alt="" v-for="item in details.image_group">
-                    </div>
-                </div>
+                <p><i class="title">企业名称：</i><span class="value">{{details.company_name}}</span></p>
+                <p><i class="title">门店：</i><span class="value">{{details.department_name}}</span></p>
+                <p><i class="title">提交人：</i><span class="value">{{details.user_name}}</span></p>
+                <p><i class="title">联系方式：</i> <span class="value">{{details.contact}}</span></p>
+                <p><i class="title">问题描述：</i> <span class="value">{{details.description}}</span></p>
+                <p class="question">
+                    <i class="title">问题截取：</i>
+                    <span class="value">
+                        <div class="img-wrap">
+                            <img :src="item" alt="" v-for="item in details.image_group">
+                        </div>
+                    </span>
+                </p>
                 <p>
-                    <span>状态：</span>
-                    <el-select clearable v-model="form.status">
-                        <el-option label="待处理" :value="0"></el-option>
-                        <el-option label="处理中" :value="1"></el-option>
-                        <el-option label="已处理" :value="2"></el-option>
-                        <el-option label="待分配" :value="3"></el-option>
-                    </el-select>
+                    <i class="title">状态：</i>
+                    <span class="value">
+                        <el-select clearable v-model="form.status">
+                            <el-option label="待处理" :value="0"></el-option>
+                            <el-option label="处理中" :value="1"></el-option>
+                            <el-option label="已处理" :value="2"></el-option>
+                            <el-option label="待分配" :value="3"></el-option>
+                        </el-select>
+                    </span>
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -86,11 +105,21 @@
                     <i>关键字</i>
                     <el-input @change="getData" v-model="search.keyword"></el-input>
                 </section>
+                <DateRange title="提交时间" :start="search.createTime" :end="search.endTime"
+                           v-on:changeStart="val=> search.createTime=val"
+                           v-on:changeEnd="val=> search.endTime=val"
+                           :change="getData">
+                </DateRange>
             </section>
             <el-table
                     v-loading="loading"
                     border
                     :data="listData">
+                <el-table-column
+                        prop="description"
+                        label="问题描述"
+                        width="180">
+                </el-table-column>
                 <el-table-column
                         prop="company_name"
                         label="连锁"
@@ -119,6 +148,12 @@
                 <el-table-column
                         prop="status_name"
                         label="状态">
+                    <template scope="scope">
+                        <el-tag type="gray" v-if="scope.row.status == 0">待处理</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == 1">处理中</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == 2">已处理</el-tag>
+                        <el-tag type="warning" v-if="scope.row.status == 3">待分配</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="operate"
@@ -147,9 +182,13 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import feedBackService from '../../../services/feedBackService'
+    import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
+        components: {
+            DateRange
+        },
         data () {
             return {
                 showDetail: false,
@@ -160,7 +199,9 @@
                 listData: [],
                 total: 0,
                 search: {
-                    keyword: ''
+                    keyword: '',
+                    createTime: '',
+                    endTime: ''
                 },
                 form: {
                     status: 0
@@ -216,7 +257,9 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    keyword: this.search.keyword
+                    keyword: this.search.keyword,
+                    time_start: this.search.createTime,
+                    time_end: this.search.endTime
                 }
                 return feedBackService.getChainBackList(params).then((ret) => {
                     this.listData = ret.data

@@ -7,9 +7,9 @@ const urlPre = config.apiHost + '/sys/feedback'
 
 class FeedBackService {
     // 获取连锁后台列表
-    getChainBackList ({page, page_size, keyword = ''}) {
+    getChainBackList ({page, page_size, keyword, time_start, time_end}) {
         let finalUrl = `${urlPre}/search`
-        return api.get(finalUrl, {page, page_size, keyword}).then((ret) => {
+        return api.get(finalUrl, {page, page_size, keyword, time_start, time_end}).then((ret) => {
             return ret.data
         })
     }

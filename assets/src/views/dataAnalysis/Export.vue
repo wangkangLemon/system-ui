@@ -89,7 +89,10 @@
                         label="状态"
                         width="180">
                     <template scope="scope">
-                        <el-tag type="success">{{statusArr[scope.row.status]}}</el-tag>
+                        <el-tag type="gray" v-if="scope.row.status == 3">{{statusArr[scope.row.status]}}</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == 1">{{statusArr[scope.row.status]}}</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == 0">{{statusArr[scope.row.status]}}</el-tag>
+                        <el-tag type="warning" v-if="scope.row.status == 2">{{statusArr[scope.row.status]}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -119,7 +122,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import DateRange from '../component/form/DateRangePicker.vue'
     import analysisService from '../../services/analysisService'
     import authUtils from '../../utils/authUtils'
