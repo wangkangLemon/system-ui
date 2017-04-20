@@ -28,6 +28,13 @@
 </style>
 <template>
     <article class="financeManage-money-draw">
+        <!--详情-->
+        <el-dialog class="showDetail" title="提供凭据" v-model="showDetail">
+            <div v-if="currentData != null">{{currentData.receipts || '未提供凭据'}}</div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="showDetail = false">关 闭</el-button>
+            </div>
+        </el-dialog>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
@@ -84,6 +91,10 @@
                 <el-table-column
                         prop="status"
                         label="状态">
+                    <template scope="scope">
+                        <el-tag type="success" v-if="scope.row.status">{{scope.row.status}}</el-tag>
+                        <el-tag type="gray" v-else>待提现</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="admin_name"
@@ -97,8 +108,8 @@
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small">
-                            查看数据
+                        <el-button type="text" size="small" v-if="scope.row.status == '已完成'" @click="showFn(scope.row)">
+                            凭据
                         </el-button>
                     </template>
                 </el-table-column>
@@ -128,6 +139,8 @@
         },
         data () {
             return {
+                currentData: null,
+                showDetail: false,
                 loading: false,
                 drawStatusSelect: '',
                 userSelect: '',
@@ -167,6 +180,10 @@
             })
         },
         methods: {
+            showFn (row) {
+                this.showDetail = true
+                this.currentData = row
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()

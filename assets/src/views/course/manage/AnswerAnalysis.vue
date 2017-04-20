@@ -4,9 +4,6 @@
 
     #course-manage-answer-analysis {
         @extend %content-container;
-        .back {
-            text-align: right;
-        }
         .header {
             text-align: left;
             font-size: 25px;
@@ -57,7 +54,6 @@
 
 <template>
     <article id="course-manage-answer-analysis">
-        <div class="back"><el-button @click="goBack">返回</el-button></div>
         <div class="header">{{courseName}}</div>
         <article class="subject-container">
             <section class="subject-list" v-for="subject in resultData">

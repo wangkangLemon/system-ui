@@ -73,7 +73,7 @@ export default [
             })
         },
         meta: {
-            title: '红包总览-红包',
+            title: '提现管理-红包',
         }
     },
     {

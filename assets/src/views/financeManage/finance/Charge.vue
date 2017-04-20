@@ -32,6 +32,13 @@
 </style>
 <template>
     <article class="financeManage-finance-charge">
+        <!--详情-->
+        <el-dialog class="showDetail" title="充值收据" v-model="showDetail">
+            <div v-if="currentData">{{currentData.desc}}</div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="showDetail = false">关 闭</el-button>
+            </div>
+        </el-dialog>
         <!--充值表单-->
         <el-dialog v-model="addForm" title="充值" size="tiny">
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
@@ -106,7 +113,7 @@
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small">
+                        <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看数据
                         </el-button>
                     </template>
@@ -139,6 +146,8 @@
         },
         data () {
             return {
+                currentData: null,
+                showDetail: false,
                 loading: false,
                 industrySelect: '',
                 managerSelect: '',
@@ -182,6 +191,10 @@
             })
         },
         methods: {
+            showFn (row) {
+                this.showDetail = true
+                this.currentData = row
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
