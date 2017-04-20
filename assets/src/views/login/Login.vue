@@ -1,4 +1,4 @@
-<style lang='scss' scoped rel="stylesheet/scss">
+<style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
 
     .login-container {
@@ -21,7 +21,7 @@
                 margin-top: px2rem(100);
                 .login-header {
                     width: 90%;
-                    margin-bottom: 15%;
+                    margin-bottom: 60px;
                     img {
                         width: 28px;
                         height: 28px;
@@ -39,7 +39,8 @@
                         }
                     }
                     p {
-                        font-size: 12px;
+                        margin-top: 5px;
+                        font-size: 14px;
                     }
                     > i {
                         float: right;
@@ -48,7 +49,7 @@
                 }
                 .form {
                     border-radius: 5px;
-                    padding: px2rem(20) 0;
+                    padding: 30px 0;
                     background: rgba(0, 0, 0, 0.6);
                     width: 100%;
                     display: block;
@@ -70,7 +71,7 @@
             }
             @media (max-width: 767px) {
                 .content {
-                    margin-top: 25%;
+                    margin-top: 20px;
                     .login-header {
                         > div {
                             width: 50%;
@@ -94,7 +95,7 @@
             <el-row :gutter="10" type="flex" justify="center">
                 <el-col :xs="23" :sm="13" :md="10" :lg="6" class="content">
                     <div class="login-header">
-                        <el-col :offset="2" :span="10" class="title">
+                        <el-col :offset="1" :span="20" class="title">
                             <h1><img src="../images/logo.png"/>药视通 </h1>
                             <p>登录到系统管理平台</p>
                         </el-col>
