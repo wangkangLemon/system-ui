@@ -129,7 +129,7 @@
                     width="200"
                     label="操作">
                 <template scope="scope">
-                    <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
+                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>

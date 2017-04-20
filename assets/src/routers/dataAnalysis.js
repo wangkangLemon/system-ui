@@ -10,7 +10,7 @@ export default [
         name: 'dataAnalysis-export',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/dataAnalysis/Export'))
+                resolve(require('../views/dataAnalysis/Export.vue'))
             })
         },
         meta: {
@@ -23,7 +23,7 @@ export default [
         name: 'dataAnalysis-sign',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/dataAnalysis/ContractMessage'))
+                resolve(require('../views/dataAnalysis/ContractMessage.vue'))
             })
         },
         meta: {

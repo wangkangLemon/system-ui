@@ -10,7 +10,7 @@ export default [
         name: 'sys-admin',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/system/admin'))
+                resolve(require('../views/system/Admin.vue'))
             })
         },
         meta: {
@@ -23,7 +23,7 @@ export default [
         name: 'sys-setting',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/system/set'))
+                resolve(require('../views/system/Set.vue'))
             })
         },
         meta: {
@@ -41,7 +41,7 @@ export default [
                 name: 'systemManage',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('../views/system/logSub/SystemManage'))
+                        resolve(require('../views/system/logSub/SystemManage.vue'))
                     })
                 },
                 meta: {
@@ -53,7 +53,7 @@ export default [
                 name: 'companyManage',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('../views/system/logSub/CompanyManage'))
+                        resolve(require('../views/system/logSub/CompanyManage.vue'))
                     })
                 },
                 meta: {
@@ -65,7 +65,7 @@ export default [
                 name: 'systemBack',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('../views/system/logSub/SystemBack'))
+                        resolve(require('../views/system/logSub/SystemBack.vue'))
                     })
                 },
                 meta: {
@@ -77,7 +77,7 @@ export default [
                 name: 'companyBack',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('../views/system/logSub/CompanyBack'))
+                        resolve(require('../views/system/logSub/CompanyBack.vue'))
                     })
                 },
                 meta: {
@@ -89,7 +89,7 @@ export default [
                 name: 'frontDest',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('../views/system/logSub/FrontDest'))
+                        resolve(require('../views/system/logSub/FrontDest.vue'))
                     })
                 },
                 meta: {
@@ -101,7 +101,7 @@ export default [
                 name: 'mobileCode',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('../views/system/logSub/MobileCode'))
+                        resolve(require('../views/system/logSub/MobileCode.vue'))
                     })
                 },
                 meta: {
@@ -113,7 +113,7 @@ export default [
                 name: 'emailCode',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('../views/system/logSub/EmailCode'))
+                        resolve(require('../views/system/logSub/EmailCode.vue'))
                     })
                 },
                 meta: {
@@ -128,7 +128,7 @@ export default [
         name: 'sys-feedBack-admin',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/system/feedBack/ChainBack'))
+                resolve(require('../views/system/feedBack/ChainBack.vue'))
             })
         },
         meta: {
@@ -141,7 +141,7 @@ export default [
         name: 'sys-feedBack-mobile',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/system/feedBack/App'))
+                resolve(require('../views/system/feedBack/App.vue'))
             })
         },
         meta: {

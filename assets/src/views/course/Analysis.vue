@@ -159,7 +159,10 @@
                 <el-table-column
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small">答案分析</el-button>
+                        <el-button type="text" size="small"
+                                   @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.course_id}})">
+                            <i>答案分析</i>
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>

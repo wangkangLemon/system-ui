@@ -9,7 +9,7 @@ export default [
         name: 'financeManage-finance-amount',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/finance/Amount'))
+                resolve(require('../views/financeManage/finance/Amount.vue'))
             })
         },
         meta: {
@@ -21,7 +21,7 @@ export default [
         name: 'financeManage-finance-history',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/finance/History'))
+                resolve(require('../views/financeManage/finance/History.vue'))
             })
         },
         meta: {
@@ -33,7 +33,7 @@ export default [
         name: 'financeManage-finance-charge',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/finance/Charge'))
+                resolve(require('../views/financeManage/finance/Charge.vue'))
             })
         },
         meta: {
@@ -45,7 +45,7 @@ export default [
         name: 'financeManage-finance-price',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/finance/Price'))
+                resolve(require('../views/financeManage/finance/Price.vue'))
             })
         },
         meta: {
@@ -57,7 +57,7 @@ export default [
         name: 'financeManage-money-amount',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/money/Amount'))
+                resolve(require('../views/financeManage/money/Amount.vue'))
             })
         },
         meta: {
@@ -69,7 +69,7 @@ export default [
         name: 'financeManage-money-draw',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/money/Draw'))
+                resolve(require('../views/financeManage/money/Draw.vue'))
             })
         },
         meta: {
@@ -81,7 +81,7 @@ export default [
         name: 'financeManage-money-income',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/money/Income'))
+                resolve(require('../views/financeManage/money/Income.vue'))
             })
         },
         meta: {
@@ -93,7 +93,7 @@ export default [
         name: 'financeManage-money-charge',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/money/Charge'))
+                resolve(require('../views/financeManage/money/Charge.vue'))
             })
         },
         meta: {

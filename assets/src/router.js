@@ -52,7 +52,7 @@ const routes = [
                 name: 'main',
                 component: resolve => {
                     require.ensure([], () => {
-                        resolve(require('./views/index/main'))
+                        resolve(require('./views/index/Main.vue'))
                     })
                 },
                 meta: {
