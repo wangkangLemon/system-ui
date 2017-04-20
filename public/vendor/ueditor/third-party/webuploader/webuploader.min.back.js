@@ -6218,7 +6218,7 @@
                     xhr.open(opts.method, server);
                 }
 
-                xhr.setRequestHeader('Authorization', 'Bearer' + window.parent.xmconfig.getAuthToken())
+                xhr.setRequestHeader('Authorization', 'Bearer ' + window.parent.xmconfig.getAuthToken())
                 xhr.setRequestHeader('TwoStep', 'Bearer ' + window.parent.xmconfig.getTwiceToken())
                 delete opts.headers.X_Requested_With
                 opts.headers['X-Requested-With'] = "XMLHttpRequest"
