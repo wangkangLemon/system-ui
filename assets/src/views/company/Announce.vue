@@ -144,7 +144,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import companyService from '../../services/companyService'
     import IndustryCompanySelect from '../component/select/IndustryCompany'
     export default {

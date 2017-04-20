@@ -413,7 +413,6 @@
             filterArray (value) {
                 let newVal = ''
                 _this.tags.forEach((item) => {
-                    console.log(item.value)
                     if (item['value'] == value) {
                         newVal = item['name']
                     }
@@ -424,10 +423,11 @@
         created () {
             _this = this
             this.getLeftCategoryData().then((ret) => {
-                this.sectionChange(ret.data[0]).then(() => {
-                    xmview.setContentLoading(false)
-                })
+                this.sectionChange(ret.data[0])
+            }).then(() => {
+                xmview.setContentLoading(false)
             })
+            this.uploadReqUrl = sectionService.getContentUploadImg()
         },
         methods: {
             // 保持同步
@@ -540,6 +540,7 @@
                 }
                 this.form = item
                 this.addForm = true
+                console.log(this.form)
             },
             addCourse (form) {
                 if (this.section.loading || this.result.loading) {
@@ -561,8 +562,8 @@
                 this.addForm = true
                 this.formTitle = '添加内容'
             },
-            handleImgUploaded () {
-                console.log('上传图片成功之后的回调')
+            handleImgUploaded (response) {
+                this.form.image = response.data.url
             }
         }
     }

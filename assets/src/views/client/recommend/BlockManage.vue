@@ -69,8 +69,8 @@
                 <router-link tag="el-button" :to="{name: 'client-recommend-classifyManage'}">管理分类</router-link>
             </div>
             <div class="classify-tree">
-                <el-tree class="leftSubTree" :highlight-current="true" :data="category.data"
-                         :props="defaultProps" @node-click="leftClassifyClick"></el-tree>
+                <el-tree class="leftSubTree" :expand-on-click-node="false" :highlight-current="true" :data="category.data"
+                         :props="defaultProps" @node-expand="leftClassifyExpend" @node-click="leftClassifyClick"></el-tree>
             </div>
         </section>
         <section class="right-content">
@@ -182,6 +182,11 @@
             },
             leftClassifyClick (item) { // 左侧列表按照分类搜索
                 this.category.title = item.name
+                // 获取区块数据
+                this.category.currentData = item
+                this.getSectionData()
+            },
+            leftClassifyExpend (item) {
                 if (item.has_children) {
                     this.category.loading = true
                     this.getCategoryTree(item.id).then((ret) => {
@@ -190,9 +195,6 @@
                         this.category.loading = false
                     })
                 }
-                // 获取区块数据
-                this.category.currentData = item
-                this.getSectionData()
             },
             getSectionData () {
                 this.section.loading = true

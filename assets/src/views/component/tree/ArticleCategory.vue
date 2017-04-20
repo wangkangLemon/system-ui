@@ -1,7 +1,7 @@
 <!--课程栏目-->
 
 <template>
-    <el-tree v-loading="loading" :data="data" :expand-on-click-node="false" @node-click="handleNodeClick"
+    <el-tree v-loading="loading" :data="data" @node-click="handleNodeClick"
              @node-expand="handleNodeExpand"
              ref="container">
     </el-tree>

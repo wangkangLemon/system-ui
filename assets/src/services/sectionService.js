@@ -160,5 +160,10 @@ class SectionService {
         let finalUrl = `${urlPre}/category/${id}/move/content`
         return api.put(finalUrl, {to})
     }
+    // 内容维护-添加内容-上传图片
+    getContentUploadImg () {
+        let finalUrl = `${config.apiHost}/sys/course/category/image`
+        return finalUrl
+    }
 }
 export default new SectionService()
