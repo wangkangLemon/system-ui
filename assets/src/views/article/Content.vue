@@ -226,12 +226,7 @@
                 editor: null,
                 showDetial: false,     // 是否显示详情对话框
                 uploadImgUrl: '',      // 要上传图片的请求地址
-                form: {                // 表单属性值
-                    title: '',          // 标题
-                    category: '',       // 分类
-                    cover: '',        // 图片地址
-                    content: '',         // 正文内容
-                },
+                form: getOriginData(),
                 rules: {
                     title: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -269,6 +264,12 @@
                 }
             },
             addArticle () {
+                this.form = {
+                    title: '',
+                    category: '',
+                    cover: '',
+                    content: ''
+                }
                 this.addForm = true
                 setTimeout(() => {
                     this.$refs['form'].resetFields()
@@ -347,6 +348,14 @@
             ueReady (ue) {
                 this.editor = ue
             }
+        }
+    }
+    function getOriginData() {
+        return {
+            title: '',
+            category: '',
+            cover: '',
+            content: ''
         }
     }
 </script>

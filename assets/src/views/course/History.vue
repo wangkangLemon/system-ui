@@ -30,7 +30,7 @@
 
 <template>
     <article id="course-history-container">
-        <el-button class="export"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
+        <el-button class="export" @click="exportData"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
 
         <article class="search">
             <section>
@@ -159,6 +159,17 @@
                     this.data = ret.data
                     this.total = ret.total
                     this.loadingData = false
+                })
+            },
+            exportData () {
+                testingService.exportTesting({
+                    course_id: this.fetchParam.course_id,
+                    company_id: this.fetchParam.company_id,
+                    department_id: this.fetchParam.department_id,
+                    account: this.fetchParam.account,
+                    time_start: this.fetchParam.time_start,
+                    time_end: this.fetchParam.time_end,
+                    grade: this.fetchParam.grade
                 })
             }
         },

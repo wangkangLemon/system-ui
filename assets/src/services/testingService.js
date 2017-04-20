@@ -39,5 +39,11 @@ class TestingService {
             return ret.data
         })
     }
+
+    // 导出考试记录
+    exportTesting (reqObj) {
+        let finalUrl = urlPre + '/history/search'
+        api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '考试记录.xls')
+    }
 }
 export default new TestingService()

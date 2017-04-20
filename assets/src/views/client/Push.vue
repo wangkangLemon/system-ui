@@ -1,7 +1,8 @@
 <!--企业列表-管理员-->
-<style lang='scss' scoped rel="stylesheet/scss">
+<style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
+    @import "../../utils/mixins/showDetail";
 
     .client-push-container {
         border: 1px solid #ededed;
@@ -22,21 +23,6 @@
                 margin-top: 10px;
             }
         }
-        .showDetail {
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                p {
-                    line-height: 30px;
-                    span {
-                        display: inline-block;
-                        width: px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
-                    }
-                }
-            }
-        }
     }
 </style>
 <template>
@@ -44,13 +30,13 @@
         <!--详情-->
         <el-dialog class="showDetail" title="推送详情" v-model="showDetail">
             <div class="info">
-                <p><span>标题 </span>{{details.title}}</p>
-                <p><span>内容 </span>{{details.content}}</p>
-                <p><span>类型 </span>{{details.ModelName}}</p>
-                <p v-if="details.courses"><span>课程名称 </span>{{details.courses}}</p>
-                <p v-if="details.links"><span>课程名称 </span>{{details.links}}</p>
+                <p><i class="title">标题： </i><span class="value">{{details.title}}</span></p>
+                <p><i class="title">内容： </i><span class="value">{{details.content}}</span></p>
+                <p><i class="title">类型： </i><span class="value">{{details.ModelName}}</span></p>
+                <p v-if="details.courses"><i class="title">课程名称：</i><span class="value">{{details.courses}}</span></p>
+                <p v-if="details.links"><i class="title">链接：</i><span class="value">{{details.links}}</span></p>
                 <div v-if="details.Tags != null">
-                    <p v-for="item in details.Tags"><span>{{item.Name}} </span>{{item.Value}}</p>
+                    <p v-for="item in details.Tags"><i class="title">{{item.Name}}：</i><span class="value">{{item.Value}}</span></p>
                 </div>
             </div>
         </el-dialog>

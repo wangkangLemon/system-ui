@@ -30,9 +30,6 @@
 <template>
     <article class="company-manager">
         <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
-            </div>
             <section class="search">
                 <section>
                     <i>姓名</i>
@@ -158,16 +155,6 @@
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false
-                })
-            },
-            exportData () {
-                ManagerService.exportManager({
-                    company_id: this.searchParams.companySelect,
-                    time_start: this.searchParams.createTime,
-                    time_end: this.searchParams.endTime,
-                    deleted: this.searchParams.status,
-                    manager_name: this.searchParams.name,
-                    manager_mobile: this.searchParams.mobile,
                 })
             }
         }

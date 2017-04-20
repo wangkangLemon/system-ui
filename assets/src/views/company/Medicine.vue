@@ -60,7 +60,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import companyService from '../../services/companyService'
     export default {
         data () {
@@ -72,7 +72,7 @@
                 total: 0,
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

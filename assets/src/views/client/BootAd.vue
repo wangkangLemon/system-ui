@@ -1,6 +1,6 @@
 <!--启动广告-->
-<style lang='scss' scoped rel='stylesheet/scss'>
-    .contaienr {
+<style lang='scss' rel='stylesheet/scss'>
+    #client-bootad-contaienr {
         background: #fff;
         padding: 15px;
         border-radius: 5px;
@@ -60,7 +60,7 @@
 </style>
 
 <template>
-    <article class="contaienr">
+    <article id="client-bootad-contaienr">
         <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px">
             <el-form-item label="广告图片" v-loading="uploadingImg"
                           element-loading-text="图片上传中">
@@ -128,6 +128,7 @@
         },
         created () {
             this.user = authUtls.getUserInfo()
+            xmview.setContentLoading(false)
         },
         methods: {
             cropperFn(data) {

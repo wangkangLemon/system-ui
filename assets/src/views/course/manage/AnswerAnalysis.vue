@@ -63,7 +63,7 @@
                     <p v-for="(item, index) in subject.answers">
                         <i>{{index + 1}}</i>
                         <span>{{item.description}}</span>
-                        <em>{{item.subject_option_count}}%</em>
+                        <em>{{(item.subject_option_count/subject.subject_count * 100).toFixed(2)}}%</em>
                     </p>
                 </div>
             </section>
@@ -92,6 +92,7 @@
                 ret.subjects.forEach((item) => {
                     courseService.getSubjectAnswer({c_id: this.courseID, s_id: item.id}).then((ret) => {
                         item.answers = ret.answers
+                        item.subject_count = ret.subject_count
                         this.resultData.push(item)
                     })
                 })

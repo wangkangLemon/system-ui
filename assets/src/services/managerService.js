@@ -22,10 +22,6 @@ class ManagerService {
             return ret.data
         })
     }
-    exportManager (reqObj) {
-        let finalUrl = `${urlPre}/search`
-        api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), 'manager.xls')
-    }
 }
 
 export default new ManagerService()

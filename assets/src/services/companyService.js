@@ -140,7 +140,7 @@ class CompanyService {
     }
     // 导出统计表
     exportStat () {
-        let finalUrl = `${urlPre}/search`
+        let finalUrl = `${urlPre}/analytics/grow/search`
         api.downLoad(finalUrl, {export: 1}, 'stat.xls')
     }
 

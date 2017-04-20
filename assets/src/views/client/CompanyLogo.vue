@@ -1,6 +1,6 @@
 <!--企业LOGO页面-->
-<style lang='scss' scoped rel='stylesheet/scss'>
-    .container {
+<style lang='scss' rel='stylesheet/scss'>
+    #client-logo-container {
         background: #fff;
         padding: 15px;
 
@@ -57,7 +57,7 @@
 </style>
 
 <template>
-    <article class="container">
+    <article id="client-logo-container">
         <table>
             <tr>
                 <td>企业LOGO</td>
@@ -92,6 +92,9 @@
             return {
                 imgData: ''
             }
+        },
+        created () {
+            xmview.setContentLoading(false)
         },
         methods: {
             // 裁切后的回调
