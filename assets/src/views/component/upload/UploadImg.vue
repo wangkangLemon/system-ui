@@ -1,7 +1,7 @@
 <!--使用ex.-->
 <!--<el-form-item label="课程封面图" prop="image">-->
-    <!--<UploadImg :defaultImg="fetchParam.image" :url="uploadImgUrl"-->
-               <!--:on-success="res=> fetchParam.image = res.data.url"></UploadImg>-->
+<!--<UploadImg :defaultImg="fetchParam.image" :url="uploadImgUrl"-->
+<!--:on-success="res=> fetchParam.image = res.data.url"></UploadImg>-->
 <style lang="scss" rel="stylesheet/scss">
     @import "../../../utils/mixins/mixins";
 
@@ -143,7 +143,7 @@
                 }
             },
             'defaultImg' (val) {
-                this.currImg = val ? [{name: val, url: val}] : []
+                this.currImg = val ? [{name: val, url: config.apiHost + val}] : []
             },
             'disabled' (val) {
                 this.isShowDelAndPreview(!val)
