@@ -10,6 +10,10 @@ class MobileService {
         let finalUrl = urlPre + '/uploadboot'
         return api.post(finalUrl, {company_id, image, alias: +new Date() + '.png'}, false)
     }
+    // 查询接口
+    menuSearch () {
+
+    }
 }
 
 export default new MobileService()

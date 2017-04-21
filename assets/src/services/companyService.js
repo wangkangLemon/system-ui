@@ -226,6 +226,27 @@ class CompanyService {
         let finalUrl = `${urlPre}/${company_id}/admin/${id}`
         return api.del(finalUrl)
     }
+
+    // 上传企业logo
+    CompanyLogoUpload ({company_id, image, alias}) {
+        let finalUrl = `${config.apiHost}/com/${company_id}/mobile/logo/upload`
+        return api.post(finalUrl, {image, alias}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取企业logo
+    getCompanyLogo ({company_id}) {
+        let finalUrl = `${config.apiHost}/com/${company_id}/mobile/logo`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+    // 设置企业logo
+    setCompanyLogo ({company_id, logo}) {
+        let finalUrl = `${config.apiHost}/com/${company_id}/mobile/logo`
+        return api.put(finalUrl, {logo})
+    }
 }
 
 export default new CompanyService()

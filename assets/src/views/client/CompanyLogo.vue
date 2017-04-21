@@ -63,14 +63,14 @@
                 <td>企业LOGO</td>
                 <td>
                     <div class="img-container">
-                        <img :src="imgData" v-show="imgData">
+                        <img :src="imgData | fillImgPath" v-show="imgData">
                     </div>
                     <span class="img-tip">
                         建议上传图片尺寸为 100x100 <br>
                         该 Logo 用于联系人我的企业前面的图标显示
                         <br>
 
-                        <ImagEcropperInput :isRound="1" :aspectRatio="1" :confirmFn="cropperFn"
+                        <ImagEcropperInput :isRound="true" :aspectRatio="1" :confirmFn="cropperFn"
                                            class="upload-btn"></ImagEcropperInput>
                     </span>
                 </td>
@@ -87,21 +87,50 @@
 
 <script>
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
+    import authUtils from '../../utils/authUtils'
+    import config from '../../utils/config'
+    import companyService from '../../services/companyService'
+    import {fillImgPath} from '../../utils/filterUtils'
     export default{
+        filters: {
+            fillImgPath
+        },
         data () {
             return {
-                imgData: ''
+                imgData: '',
+                companyID: authUtils.getUserInfo().company_id
             }
         },
         created () {
-            xmview.setContentLoading(false)
+            companyService.getCompanyLogo({company_id: this.companyID}).then((ret) => {
+                this.imgData = ret.data.logo.indexOf(config.apiHost) > -1 ? ret.data.logo : config.apiHost + ret.data.logo
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             // 裁切后的回调
             cropperFn(data) {
-                this.imgData = data
+                companyService.CompanyLogoUpload({
+                    company_id: this.companyID,
+                    image: data,
+                    alias: Date.now() + '.jpg'
+                }).then((ret) => {
+                    this.imgData = ret.url
+                    xmview.showTip('success', '上传成功')
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             submit() {
+                companyService.setCompanyLogo({
+                    company_id: this.companyID,
+                    logo: this.imgData
+                }).then(() => {
+                    xmview.showTip('success', '修改成功')
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             }
         },
         components: {ImagEcropperInput}

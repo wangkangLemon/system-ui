@@ -36,8 +36,13 @@ class ArticleService {
     }
 
     // 获取文章上传图片url
-    getArticleUploadUrl () {
-        return `${urlPre}/cover`
+    ArticleUploadUrl ({avatar, alias}) {
+        let url = `${urlPre}/cover`
+        return api.post(url, {avatar, alias}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
     }
 
     // 创建文章

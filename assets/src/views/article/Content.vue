@@ -30,8 +30,19 @@
         height: 178px;
         display: block;
     }
-    .table-container {
+    .article-content-container {
         border: 1px solid #ededed;
+        .addForm {
+            z-index: 99999999999999999999 !important;
+            .img-wrap {
+                width: 150px;
+                height: 150px;
+                > img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
         .add {
             background: #f0f3f5;
             padding: px2rem(10) px2rem(20);
@@ -90,7 +101,7 @@
     }
 </style>
 <template>
-    <article class="table-container">
+    <article class="article-content-container">
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
             <div class="avatar">
@@ -107,7 +118,7 @@
             </div>
         </el-dialog>
         <!--添加/编辑表单-->
-        <el-dialog v-model="addForm">
+        <el-dialog v-model="addForm" class="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
                     <ArticleCategorySelect :placeholder="currCategoryName" v-model="form.category"></ArticleCategorySelect>
@@ -116,8 +127,11 @@
                     <el-input v-model="form.title" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="imgUrl" label="封面" :label-width="formLabelWidth">
-                    <UploadImg ref="uploadImg" :defaultImg="form.cover" :url="uploadImgUrl"
-                               :onSuccess="handleImgUploaded"></UploadImg>
+                    <div class="img-wrap" v-if="form.cover">
+                        <img :src="form.cover" alt="" />
+                    </div>
+                    <ImagEcropperInput :isRound="true" :aspectRatio="1" :confirmFn="cropperFn"
+                                       class="upload-btn"></ImagEcropperInput>
                 </el-form-item>
                 <el-form-item prop="content" label="正文内容" id="editor" :label-width="formLabelWidth">
                     <vue-editor @ready="ueReady"></vue-editor>
@@ -204,14 +218,14 @@
     import VueEditor from '../component/form/UEditor.vue'
     import ArticleService from '../../services/articleService'
     import ArticleCategorySelect from '../component/select/ArticleCategory.vue'
-    import UploadImg from '../component/upload/UploadImg.vue'
+    import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
 
     export default {
         components: {
             DateRange,
             VueEditor,
             ArticleCategorySelect,
-            UploadImg
+            ImagEcropperInput
         },
         data () {
             return {
@@ -225,7 +239,6 @@
                 },
                 editor: null,
                 showDetial: false,     // 是否显示详情对话框
-                uploadImgUrl: '',      // 要上传图片的请求地址
                 form: getOriginData(),
                 rules: {
                     title: [
@@ -243,7 +256,6 @@
             }
         },
         created () {
-            this.uploadImgUrl = ArticleService.getArticleUploadUrl()
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -264,16 +276,11 @@
                 }
             },
             addArticle () {
-                this.form = {
-                    title: '',
-                    category: '',
-                    cover: '',
-                    content: ''
-                }
+                this.currCategoryName = ''
+//                this.editor.setContent('')
+                console.log(this.eidtor)
+                this.form = getOriginData()
                 this.addForm = true
-                setTimeout(() => {
-                    this.$refs['form'].resetFields()
-                }, 0)
             },
             editArticle (row) {
                 ArticleService.getEditDetail(row.id).then((ret) => {
@@ -340,10 +347,19 @@
                     this.loading = false
                 })
             },
-            handleImgUploaded(response) {
-                this.form.cover = response.data.url
-                console.log(response)
-                console.log(this.form.cover)
+            cropperFn(data) {
+                ArticleService.ArticleUploadUrl({
+                    avatar: data,
+                    alias: Date.now() + '.jpg'
+                }).then((ret) => {
+                    xmview.showTip('success', '上传成功')
+                    this.form.cover = data // 显示图片
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
+            },
+            uploadSuccess (url) {
+                console.log(url)
             },
             ueReady (ue) {
                 this.editor = ue

@@ -65,7 +65,7 @@ export default [
         }
     },
     {
-        path: pathPre + '/indexnav', // 企业logo
+        path: pathPre + '/indexnav',
         name: 'client-indexnav',
         component: resolve => {
             require.ensure([], () => {
@@ -73,7 +73,7 @@ export default [
             })
         },
         meta: {
-            title: '企业导航-手机客户端',
+            title: '首页导航管理',
         }
     },
     {
