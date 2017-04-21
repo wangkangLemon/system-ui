@@ -17,6 +17,10 @@
             }
         }
 
+        .note{
+            margin-bottom: 10px;
+            color: #F7BA2A;
+        }
         .search {
             @extend %top-search-container
         }
@@ -32,6 +36,7 @@
     <article id="course-history-container">
         <el-button class="export" @click="exportData"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
 
+        <div class="note">说明：企业选项为内训与工业课程的考试情况</div>
         <article class="search">
             <section>
                 <i>课程</i>

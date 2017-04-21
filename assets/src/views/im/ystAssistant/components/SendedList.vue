@@ -97,6 +97,11 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    width="80"
+                    prop="success_count"
+                    label="成功数">
+            </el-table-column>
+            <el-table-column
                     width="190"
                     prop="create_time"
                     label="时间">

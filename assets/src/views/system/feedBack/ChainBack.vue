@@ -116,11 +116,6 @@
                     border
                     :data="listData">
                 <el-table-column
-                        prop="description"
-                        label="问题描述"
-                        width="180">
-                </el-table-column>
-                <el-table-column
                         prop="company_name"
                         label="连锁"
                         width="180">

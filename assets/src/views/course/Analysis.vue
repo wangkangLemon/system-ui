@@ -201,7 +201,13 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column v-if="type == 3" prop="complete_name" label="学习进度"></el-table-column>
+                <el-table-column v-if="type == 3" prop="job" label="职务"></el-table-column>
+                <el-table-column v-if="type == 3" prop="department_name" label="门店名称"></el-table-column>
+                <el-table-column v-if="type == 3" label="学习进度">
+                    <template scope="scope">
+                        <i>{{scope.row.complete_rate}} %</i>
+                    </template>
+                </el-table-column>
                 <el-table-column v-if="type == 3" prop="testing" label="考试次数"></el-table-column>
                 <el-table-column v-if="type == 3" prop="grade_name" label="最高成绩"></el-table-column>
                 <el-table-column v-if="type == 3" prop="score_max" label="最高分数"></el-table-column>
