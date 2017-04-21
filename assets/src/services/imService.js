@@ -93,6 +93,12 @@ class IMService {
         return api.post(url, reqParam)
     }
 
+    // 发送预览
+    sendPreview ({mobile, type, media_id, text}) {
+        let url = urlPre + '/mass/preview'
+        return api.post(url, {mobile, type, media_id, text})
+    }
+
     // 已经发送的群消息列表
     getMassSendedMList ({page, page_size, type, receiver, time_start, time_end}) {
         let url = urlPre + '/mass/search'

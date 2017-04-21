@@ -133,7 +133,7 @@
             <el-input v-model="dialogPewviewMsg.mobile" placeholder="预览人手机号"></el-input>
             <div slot="footer">
                 <el-button @click="dialogPewviewMsg.isShow = false">取 消</el-button>
-                <el-button type="primary" @click="previewSend" :disabled="isSending">
+                <el-button type="primary" @click="send(1)" :disabled="isSending">
                     <i v-show="!isSending">确 定</i>
                     <i v-show="isSending">发送中...</i>
                 </el-button>
@@ -206,7 +206,7 @@
                     this.$refs.imglist.fetchData()
                 })
             },
-            send () {
+            send (type = 0) { // 0- 群发 1-预览
                 // 群发图文
                 if (this.fetchParamSend.type === 'text') {
                     if (!this.fetchParamSend.text) {
@@ -223,19 +223,22 @@
                 }
 
                 this.isSending = true
-                imService.mass(this.fetchParamSend).then(() => {
-                    this.fetchParamSend = getOrignFetchParamSend()
-                    this.isSending = false
-                }).catch(() => {
-                    this.isSending = false
-                })
+                if (type === 0) {
+                    imService.mass(this.fetchParamSend).then(() => {
+                        this.fetchParamSend = getOrignFetchParamSend()
+                        this.isSending = false
+                    }).catch(() => {
+                        this.isSending = false
+                    })
+                } else if (type === 1) {
+                    imService.sendPreview(Object.assign({}, this.fetchParamSend, {mobile: this.dialogPewviewMsg.mobile})).then((ret) => {
+                        this.dialogPewviewMsg.isShow = false
+                        xmview.showTip('success', '发送成功, 请注意查收')
+                    }).catch(() => {
+                        this.isSending = false
+                    })
+                }
             },
-            // 发送预览
-            previewSend () {
-                this.isSending = true
-                console.info(this.dialogPewviewMsg.mobile)
-                this.dialogPewviewMsg.isShow = false
-            }
         },
         components: {MaterialList, ImgList, NewsInfo, SendedList}
     }

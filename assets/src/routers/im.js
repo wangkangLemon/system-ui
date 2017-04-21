@@ -35,7 +35,6 @@ export default {
             },
             meta: {
                 title: '素材信息-服务号管理',
-                noback: true
             }
         },
         {
@@ -48,6 +47,7 @@ export default {
             },
             meta: {
                 title: '素材管理-服务号管理',
+                noback: true
             }
         },
         {
