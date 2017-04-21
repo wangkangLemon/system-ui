@@ -14,6 +14,7 @@ export default [
         },
         meta: {
             title: '内容维护-推荐',
+            noback: true
         }
     },
     {
@@ -26,6 +27,7 @@ export default [
         },
         meta: {
             title: '区块管理-推荐',
+            noback: true
         }
     },
     {
@@ -38,6 +40,7 @@ export default [
         },
         meta: {
             title: '分类管理-推荐',
+            noback: true
         }
     },
     {
@@ -50,6 +53,7 @@ export default [
         },
         meta: {
             title: '启动广告-手机客户端',
+            noback: true
         }
     },
     {
@@ -62,6 +66,7 @@ export default [
         },
         meta: {
             title: '企业LOGO-手机客户端',
+            noback: true
         }
     },
     {
@@ -73,7 +78,8 @@ export default [
             })
         },
         meta: {
-            title: '首页导航管理',
+            title: '首页导航管理-手机客户端',
+            noback: true
         }
     },
     {
@@ -86,6 +92,7 @@ export default [
         },
         meta: {
             title: '消息推送',
+            noback: true
         }
     },
     {

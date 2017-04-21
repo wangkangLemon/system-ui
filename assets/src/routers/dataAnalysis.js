@@ -15,6 +15,7 @@ export default [
         },
         meta: {
             title: '导出',
+            noback: true
         }
     },
     // 企业签约信息
@@ -28,6 +29,7 @@ export default [
         },
         meta: {
             title: '企业签约信息',
+            noback: true
         }
     }
 ]

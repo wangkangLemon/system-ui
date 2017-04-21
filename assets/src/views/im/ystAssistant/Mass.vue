@@ -108,6 +108,9 @@
                     <i v-if="!isSending">群发</i>
                     <i v-else>发送中</i>
                 </el-button>
+                <el-button type="warning" @click="dialogPewviewMsg.isShow = true">
+                    <i>预览</i>
+                </el-button>
                 <el-button type="danger" @click="currNewsInfo = currImg = void 0" v-show="currNewsInfo || currImg">
                     <i>删除</i>
                 </el-button>
@@ -124,6 +127,17 @@
 
         <el-dialog title="选择图片" v-model="dialogImg.isShow">
             <ImgList ref="imglist" :type="1" :onSelected="selectedImg"></ImgList>
+        </el-dialog>
+
+        <el-dialog title="输入预览人手机号" v-model="dialogPewviewMsg.isShow" size="tiny">
+            <el-input v-model="dialogPewviewMsg.mobile" placeholder="预览人手机号"></el-input>
+            <div slot="footer">
+                <el-button @click="dialogPewviewMsg.isShow = false">取 消</el-button>
+                <el-button type="primary" @click="previewSend" :disabled="isSending">
+                    <i v-show="!isSending">确 定</i>
+                    <i v-show="isSending">发送中...</i>
+                </el-button>
+            </div>
         </el-dialog>
     </article>
 </template>
@@ -145,6 +159,11 @@
                 },
                 dialogImg: {
                     isShow: false
+                },
+                // 预览消息
+                dialogPewviewMsg: {
+                    isShow: false,
+                    mobile: ''
                 },
                 currNewsInfo: void 0,
                 currImg: void 0,
@@ -210,6 +229,12 @@
                 }).catch(() => {
                     this.isSending = false
                 })
+            },
+            // 发送预览
+            previewSend () {
+                this.isSending = true
+                console.info(this.dialogPewviewMsg.mobile)
+                this.dialogPewviewMsg.isShow = false
             }
         },
         components: {MaterialList, ImgList, NewsInfo, SendedList}

@@ -14,6 +14,7 @@ export default [
         },
         meta: {
             title: '晒单总览-晒单',
+            noback: true
         }
     },
     {
@@ -26,6 +27,7 @@ export default [
         },
         meta: {
             title: '药品列表-晒单',
+            noback: true
         }
     },
     {
@@ -38,6 +40,7 @@ export default [
         },
         meta: {
             title: '流水记录-晒单',
+            noback: true
         }
     },
 ]

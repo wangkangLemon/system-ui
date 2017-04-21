@@ -15,6 +15,7 @@ export default [
         },
         meta: {
             title: '分类管理',
+            noback: true
         }
     },
     {
@@ -27,6 +28,7 @@ export default [
         },
         meta: {
             title: '内容管理',
+            noback: true
         }
     }
 ]

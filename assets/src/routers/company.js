@@ -21,6 +21,7 @@ export default {
             },
             meta: {
                 title: '企业',
+                noback: true
             }
         },
         {
@@ -45,6 +46,7 @@ export default {
             },
             meta: {
                 title: '门店',
+                noback: true
             }
         },
         {
@@ -57,6 +59,7 @@ export default {
             },
             meta: {
                 title: '店长管理',
+                noback: true
             }
         },
         {
@@ -77,6 +80,7 @@ export default {
                     },
                     meta: {
                         title: '店员列表-店员',
+                        noback: true
                     }
                 },
                 {
@@ -115,6 +119,7 @@ export default {
             },
             meta: {
                 title: '公告-企业',
+                noback: true
             }
         },
         {
@@ -127,6 +132,7 @@ export default {
             },
             meta: {
                 title: '拿药练习-企业',
+                noback: true
             }
         },
         {
@@ -139,6 +145,7 @@ export default {
             },
             meta: {
                 title: '课程任务-企业',
+                noback: true
             }
         },
         {
@@ -151,6 +158,7 @@ export default {
             },
             meta: {
                 title: '新增统计-企业',
+                noback: true
             }
         },
         {
@@ -163,6 +171,7 @@ export default {
             },
             meta: {
                 title: '入驻审核-企业',
+                noback: true
             }
         },
     ]

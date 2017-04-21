@@ -59,7 +59,8 @@ const routes = [
                     })
                 },
                 meta: {
-                    title: '控制台'
+                    title: '控制台',
+                    noback: true
                 }
             },
             // ============系统==================
@@ -138,6 +139,11 @@ router.afterEach((route) => {
 router.beforeEach((to, from, next) => {
     xmview.setContentLoading && xmview.setContentLoading(true)
     setTitle(to.meta.title)
+
+    xmview.setContentBack && xmview.setContentBack(true)
+    // 如果不需要back 则干掉返回按钮
+    if (to.matched.some(record => record.meta.noback))
+        xmview.setContentBack && xmview.setContentBack(false)
 
     next()
 })

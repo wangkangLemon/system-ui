@@ -134,6 +134,14 @@
                     /*top: 110px;*/
                 }
 
+                .back-btn {
+                    cursor: pointer;
+                    color: #58B7FF;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
                 .right-title {
                     font-size: 24px;
                     margin-bottom: 15px;
@@ -216,7 +224,8 @@
 
         <article class="content">
             <!--左边菜单栏-->
-            <el-menu :default-active="navMenueActive" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }" :unique-opened="true"
+            <el-menu :default-active="navMenueActive" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
+                     :unique-opened="true"
                      :router="true">
                 <div class="nav-title">导航</div>
                 <MenuTree v-for="item in navMenus" :icons="icons" :data="item" :key="item.item.id"></MenuTree>
@@ -225,7 +234,10 @@
             <!--右边内容-->
             <section class="index-right-content" @click="handleIsShowMenue(false)">
                 <h2 class="right-title">
+                    <i class="back-btn" v-show="isShowBack" @click="$router.back()">返回</i> <i v-show="isShowBack">|</i>
                     {{mainTitle}}
+
+
 
 
                     <small>{{subTitle}}</small>
@@ -255,7 +267,8 @@
                 subTitle: this.$store.state.index.webpathSub,
                 navMenueActive: '', // 激活的菜单选项
                 navMenus: null, // 所有的菜单
-                icons: {}
+                icons: {},
+                isShowBack: false
             }
         },
         computed: {
@@ -288,6 +301,7 @@
                 return
             }
             xmview.setContentLoading = this.setContentLoading.bind(this)
+            xmview.setContentBack = this.showContentBack.bind(this)
             this.navMenueActive = this.$route.path // 获取选中的菜单
             this.navMenus = authUtils.getNavMenu() // 获取菜单
         },
@@ -347,6 +361,10 @@
                     console.log('开启loading', loading)
                     this.contentLoading = loading
                 }
+            },
+            // 是否显示
+            showContentBack (isShow) {
+                this.isShowBack = isShow
             }
         },
         components: {

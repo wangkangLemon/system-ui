@@ -21,6 +21,7 @@ export default {
             },
             meta: {
                 title: '课程分析-培训',
+                noback: true
             }
         },
         {
@@ -33,6 +34,7 @@ export default {
             },
             meta: {
                 title: '考试记录-培训',
+                noback: true
             }
         },
         {
@@ -45,6 +47,7 @@ export default {
             },
             meta: {
                 title: '公开课管理-培训',
+                noback: true
             }
         },
         {
@@ -105,6 +108,7 @@ export default {
             },
             meta: {
                 title: '企业课管理-培训',
+                noback: true
             }
         },
         {
@@ -117,6 +121,7 @@ export default {
             },
             meta: {
                 title: '视频管理-培训',
+                noback: true
             }
         },
         {
@@ -141,6 +146,7 @@ export default {
             },
             meta: {
                 title: '文档管理-培训',
+                noback: true
             }
         },
     ]

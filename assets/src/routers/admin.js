@@ -15,6 +15,7 @@ export default [
         },
         meta: {
             title: '管理员-系统',
+            noback: true
         }
     },
     // 设置
@@ -28,6 +29,7 @@ export default [
         },
         meta: {
             title: '设置',
+            noback: true
         }
     },
     // 日志
@@ -46,6 +48,7 @@ export default [
                 },
                 meta: {
                     title: '系统管理操作-日志',
+                    noback: true
                 }
             },
             {   // 企业管理
@@ -58,6 +61,7 @@ export default [
                 },
                 meta: {
                     title: '企业管理操作-日志',
+                    noback: true
                 }
             },
             {   // 系统后台登录
@@ -70,6 +74,7 @@ export default [
                 },
                 meta: {
                     title: '系统后台登录-日志',
+                    noback: true
                 }
             },
             {   // 企业后台登录
@@ -82,6 +87,7 @@ export default [
                 },
                 meta: {
                     title: '企业后台登录-日志',
+                    noback: true
                 }
             },
             {   // 前台登录
@@ -94,6 +100,7 @@ export default [
                 },
                 meta: {
                     title: '前台登录-日志',
+                    noback: true
                 }
             },
             {   // 手机验证码
@@ -106,6 +113,7 @@ export default [
                 },
                 meta: {
                     title: '手机验证码-日志',
+                    noback: true
                 }
             },
             {   // 邮箱验证码
@@ -118,6 +126,7 @@ export default [
                 },
                 meta: {
                     title: '邮件验证码-日志',
+                    noback: true
                 }
             },
         ]
@@ -133,6 +142,7 @@ export default [
         },
         meta: {
             title: '问题反馈-连锁后台',
+            noback: true
         }
     },
     // 客户端
@@ -146,6 +156,7 @@ export default [
         },
         meta: {
             title: '问题反馈-客户端',
+            noback: true
         }
     }
 ]

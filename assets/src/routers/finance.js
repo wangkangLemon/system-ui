@@ -14,6 +14,7 @@ export default [
         },
         meta: {
             title: '财务总览-财务',
+            noback: true
         }
     },
     {
@@ -26,6 +27,7 @@ export default [
         },
         meta: {
             title: '流水记录-财务',
+            noback: true
         }
     },
     {
@@ -38,6 +40,7 @@ export default [
         },
         meta: {
             title: '充值管理-财务',
+            noback: true
         }
     },
     {
@@ -50,6 +53,7 @@ export default [
         },
         meta: {
             title: '价格调整-财务',
+            noback: true
         }
     },
     {
@@ -62,6 +66,7 @@ export default [
         },
         meta: {
             title: '红包总览-红包',
+            noback: true
         }
     },
     {
@@ -74,6 +79,7 @@ export default [
         },
         meta: {
             title: '提现管理-红包',
+            noback: true
         }
     },
     {
@@ -86,6 +92,7 @@ export default [
         },
         meta: {
             title: '流水记录-红包',
+            noback: true
         }
     },
     {
@@ -98,6 +105,7 @@ export default [
         },
         meta: {
             title: '充值管理-红包',
+            noback: true
         }
     },
 ]

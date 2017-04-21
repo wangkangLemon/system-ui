@@ -22,6 +22,7 @@ export default {
             },
             meta: {
                 title: '群发功能-服务号管理',
+                noback: true
             }
         },
         {
@@ -34,6 +35,7 @@ export default {
             },
             meta: {
                 title: '素材信息-服务号管理',
+                noback: true
             }
         },
         {
@@ -58,6 +60,7 @@ export default {
             },
             meta: {
                 title: '资料设置-服务号管理',
+                noback: true
             }
         },
     ]
