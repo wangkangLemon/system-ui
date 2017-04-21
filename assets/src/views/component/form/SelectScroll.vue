@@ -11,8 +11,11 @@
 
 <template>
     <el-select v-model="selectVal" :placeholder="currPlaceholder" ref="container" @visible-change="handleVisibleChange"
-               :filter-method="filter" filterable @change="handleChange" :clearable="true" no-data-text="暂无数据"
+               @change="handleChange" :clearable="true" no-data-text="暂无数据"
                no-match-text="没有数据">
+        <el-option :disabled="true" value="xmystinputval" style="height: 50px">
+            <el-input @change="filter" placeholder="搜索内容"></el-input>
+        </el-option>
         <el-option v-loading="loading"
                    v-for="item in data"
                    :label="item.name"
@@ -70,8 +73,6 @@
         methods: {
             // 筛选数据
             filter (val) {
-                // 该名字是否在数据中出现过 则不进行搜索
-                if (this.data.some(item => item.name == val)) return
                 this.loading = true
                 this.keyword = val
                 this.requestCb(val, 0).then(ret => {
@@ -80,8 +81,6 @@
                 })
             },
             initGetMore () { // 初始化更多按钮
-                this.currPlaceholder = '输入内容进行搜索'
-
                 let _this = this
                 this.$nextTick(() => {
                     let option = this.$refs.domLoading.parentNode
