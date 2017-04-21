@@ -34,7 +34,6 @@
                 this.$emit('input', val)
             },
             fetchData (val, length) {
-                console.info('当前长度')
                 let keyword = val
                 let page = parseInt(length / this.pageSize) + 1
                 return courseService.courseList(keyword, page, this.pageSize)

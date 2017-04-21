@@ -33,6 +33,9 @@ const scrollBehavior = (to, from, savedPosition) => {
 
 const routes = [
     {
+        path: '/', redirect: '/main'
+    },
+    {
         path: '/showdoc', // 文档管理
         name: 'showdoc',
         component: resolve => {
@@ -48,7 +51,7 @@ const routes = [
         children: [
             // 首页
             {
-                path: '',
+                path: '/main',
                 name: 'main',
                 component: resolve => {
                     require.ensure([], () => {
