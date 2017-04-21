@@ -1,11 +1,8 @@
 <!--门店下拉框-->
 
 <template>
-    <section>
-        <i>门店</i>
-        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="value">
-        </SelectScroll>
-    </section>
+    <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData">
+    </SelectScroll>
 </template>
 
 <script>

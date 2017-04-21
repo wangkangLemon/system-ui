@@ -72,7 +72,6 @@
             filter (val) {
                 // 该名字是否在数据中出现过 则不进行搜索
                 if (this.data.some(item => item.name == val)) return
-
                 this.loading = true
                 this.keyword = val
                 this.requestCb(val, 0).then(ret => {

@@ -65,6 +65,10 @@ export function downLoad (url, params, fileName) {
                 aLink.download = fileName
                 aLink.href = window.URL.createObjectURL(blob)
                 aLink.dispatchEvent(evt)
+                setTimeout(() => {
+                    aLink = null
+                    evt = null
+                }, 0)
                 resolve(blob)
             } else {
                 reject(xhr)
@@ -82,14 +86,15 @@ function sendRequest (method, url, params, needLoding = false) {
     needLoding && xmview.setLoading(true)
 
     let pRequest = new Promise((resolve, reject) => {
+        // 根据是否有token 添加header
+        let headers = {}
+        if (authUtils.getAuthToken()) headers['Authorization'] = 'Bearer ' + authUtils.getAuthToken() // 登录凭证
+        if (authUtils.getTwiceToken()) headers['TwoStep'] = `Bearer ` + authUtils.getTwiceToken() // 二次验证的token
         ajax({
             method: method,
             url: url,
             data: method === 'GET' ? {} : params,
-            headers: {
-                'Authorization': 'Bearer ' + authUtils.getAuthToken(), // 登录凭证
-                'TwoStep': `Bearer ` + authUtils.getTwiceToken() // 二次验证的token
-            }
+            headers
         }).then((ret, xhr) => {
             resolve(ret, xhr)
         }).catch((err, xhr) => {

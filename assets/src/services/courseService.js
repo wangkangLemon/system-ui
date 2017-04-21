@@ -15,6 +15,54 @@ class CourseService {
         })
     }
 
+    // 导出课程分析
+    exportAnalysis ({type, course_id, date, page, page_size}) {
+        let url = `${urlPre}/stat/search`
+        return api.downLoad(url, {type, course_id, date, page, page_size, export: 1}, '课程分析.xls')
+    }
+
+    // 获取连锁学习情况
+    getStoreLearn ({date, page, page_size, store_id, course_id}) {
+        let url = `${urlPre}/stat/${course_id}/store/search`
+        return api.get(url, {date, store_id, page, page_size}).then(ret => {
+            return ret.data
+        })
+    }
+
+    // 导出连锁学习情况
+    exportStoreLearn ({date, page, page_size, store_id, course_id}) {
+        let url = `${urlPre}/stat/${course_id}/store/search`
+        return api.downLoad(url, {date, store_id, page, page_size, export: 1}, '连锁店学习情况.xls')
+    }
+
+    // 获取门店学习情况
+    getDepLearn ({date, page, page_size, department_id, store_id, course_id}) {
+        let url = `${urlPre}/stat/${course_id}/${store_id}/department/search`
+        return api.get(url, {date, page, page_size, department_id}).then(ret => {
+            return ret.data
+        })
+    }
+
+    // 导出门店学习情况
+    exportDepLearn ({date, page, page_size, department_id, store_id, course_id}) {
+        let url = `${urlPre}/stat/${course_id}/${store_id}/department/search`
+        return api.downLoad(url, {date, page, page_size, department_id, export: 1}, '门店学习情况.xls')
+    }
+
+    // 获取店员学习情况
+    getUserLearn ({date, page, page_size, department_id, store_id, course_id}) {
+        let url = `${urlPre}/stat/${course_id}/${store_id}/${department_id}/user/search`
+        return api.get(url, {date, page, page_size}).then(ret => {
+            return ret.data
+        })
+    }
+
+    // 导出店员学习情况
+    exportUserLearn ({date, page, page_size, department_id, store_id, course_id}) {
+        let url = `${urlPre}/stat/${course_id}/${store_id}/${department_id}/user/search`
+        return api.downLoad(url, {date, page, page_size, export: 1}, '店员学习情况.xls')
+    }
+
     // 获取管理员列表
     courseList (keyword, page, pageSize) {
         let url = `${urlPre}/search/name`
@@ -326,6 +374,7 @@ class CourseService {
         let url = `${urlPre}/doc/batchdel`
         return api.del(url, {id: id.join(',')})
     }
+
     // 获取课程信息以及选项列表
     getCourseSubject ({id}) {
         let finalUrl = `${urlPre}/${id}/subject/stat`
@@ -333,6 +382,7 @@ class CourseService {
             return ret.data
         })
     }
+
     // 获取课程题目答案分析
     getSubjectAnswer ({c_id, s_id}) {
         let finalUrl = `${urlPre}/${c_id}/subject/${s_id}/stat`

@@ -1,5 +1,5 @@
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="value">
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData">
     </SelectScroll>
 </template>
 

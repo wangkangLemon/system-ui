@@ -6,6 +6,8 @@
     #course-analysis-container {
 
         .yestoday-container {
+            height: 134px;
+            margin-bottom: 5px;
             i {
 
             }
@@ -42,6 +44,15 @@
             }
         }
 
+        .export {
+            float: right;
+            margin-top: 7px;
+        }
+
+        .el-tabs {
+            display: inline-block;
+        }
+
         .table-container {
             @extend %content-container;
 
@@ -54,7 +65,7 @@
 
 <template>
     <article id="course-analysis-container">
-        <el-card class="yestoday-container" v-if="false">
+        <el-card v-if="false" class="yestoday-container">
             <i>今日数据</i>
             <section class="yestoday-container-item">
                 <h5>考试次数</h5>
@@ -106,7 +117,6 @@
                 </i>
             </section>
         </el-card>
-
         <el-tabs v-model="fetchParam.date" @tab-click="fetchData">
             <el-tab-pane label="昨日" name="yesterday"></el-tab-pane>
             <el-tab-pane label="本周" name="week"></el-tab-pane>
@@ -114,10 +124,11 @@
             <el-tab-pane label="本月" name="month"></el-tab-pane>
             <el-tab-pane label="上月" name="prevmonth"></el-tab-pane>
         </el-tabs>
+        <el-button class="export" @click="exportClick"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
 
         <article class="table-container">
             <article class="search">
-                <section>
+                <section v-if="type == 0">
                     <i>课程类型</i>
                     <el-select :clearable="true" v-model="fetchParam.type" placeholder="请选择" @change="fetchData">
                         <el-option label="公开课" value="public"></el-option>
@@ -125,10 +136,19 @@
                         <el-option label="工业课" value="industry"></el-option>
                     </el-select>
                 </section>
-
-                <section>
+                <section v-if="type == 0">
                     <i>课程</i>
-                    <CourseSelect v-model="fetchParam.course_id" @change="fetchData"></CourseSelect>
+                    <CourseSelect @change="val=>{ fetchParam.course_id = val;fetchData() }"></CourseSelect>
+                </section>
+
+                <section v-if="type == 1">
+                    <i>连锁部门</i>
+                    <StoreSelect :type="2" @change="val=>{ fetchParam.store_id=val; fetchData() }"></StoreSelect>
+                </section>
+
+                <section v-if="type == 2">
+                    <i>门店名称</i>
+                    <DepSelect @change="val=>{ fetchParam.department_id=val; fetchData() }"></DepSelect>
                 </section>
             </article>
 
@@ -136,28 +156,43 @@
                       :data="tableData"
                       :fit="true"
                       border>
-                <el-table-column
-                        label="课程名称">
+                <el-table-column v-if="type == 0" label="课程名称">
                     <template scope="scope">
-                        <i>{{scope.row.name}}</i>
+                        <el-tag type="success" v-if="scope.row.course_type === 'public'">公开课</el-tag>
+                        <el-tag type="primary" v-else-if="scope.row.course_type === 'industry'">工业课</el-tag>
+                        <el-tag type="warning" v-else>私有课</el-tag>
+                        <el-button type="text"
+                                   @click="$router.push({name:'course-analysis', query:{ type:1,course_id: scope.row.course_id }})">
+                            <i> {{scope.row.name}}</i>
+                        </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column
-                        prop="study_user_count"
-                        label="学习人数">
+                <el-table-column v-if="type == 1 || type == 2" :label="type == 1 ? '连锁名称' : '门店名称'">
+                    <template scope="scope">
+                        <el-button type="text"
+                                   @click="$router.push({name:'course-analysis',
+                                   query:{ type:type+1,course_id: scope.row.course_id, store_id:scope.row.company_id, department_id:scope.row.department_id }})">
+                            <i> {{scope.row.name}}</i>
+                        </el-button>
+                    </template>
                 </el-table-column>
-                <el-table-column
-                        prop="testing_count"
-                        label="考试人数">
+                <el-table-column prop="name" label="店员姓名" v-if="type == 3"></el-table-column>
+
+                <el-table-column prop="study_user_count" label="学习人数" v-if="type != 3"></el-table-column>
+                <el-table-column v-if="type == 1 || type == 2"
+                                 prop="unstudy_user_count"
+                                 label="未学习人数">
                 </el-table-column>
-                <el-table-column
-                        label="及格率">
+                <el-table-column prop="testing_count" label="考试人数" v-if="type != 3"></el-table-column>
+                <el-table-column prop="passed" label="及格人数" v-if="type != 3"></el-table-column>
+                <el-table-column v-if="type != 3"
+                                 label="及格率">
                     <template scope="scope">
                         <i>{{scope.row.passed_rate ? scope.row.passed_rate : 0}}%</i>
                     </template>
                 </el-table-column>
-                <el-table-column
-                        label="操作">
+                <el-table-column v-if="type == 0"
+                                 label="操作">
                     <template scope="scope">
                         <el-button type="text" size="small"
                                    @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.course_id}})">
@@ -165,11 +200,16 @@
                         </el-button>
                     </template>
                 </el-table-column>
+
+                <el-table-column v-if="type == 3" prop="complete_name" label="学习进度"></el-table-column>
+                <el-table-column v-if="type == 3" prop="testing" label="考试次数"></el-table-column>
+                <el-table-column v-if="type == 3" prop="grade_name" label="最高成绩"></el-table-column>
+                <el-table-column v-if="type == 3" prop="score_max" label="最高分数"></el-table-column>
             </el-table>
 
             <el-pagination class="pagin"
-                           @size-change="val => fetchParam.page_size = val "
-                           @current-change="val => fetchParam.page = val"
+                           @size-change="val => {fetchParam.page_size = val; fetchData() }"
+                           @current-change="val => {fetchParam.page = val; fetchData() }"
                            :current-page="fetchParam.page"
                            :page-size="fetchParam.page_size"
                            :page-sizes="[15, 30, 60, 100]"
@@ -184,6 +224,8 @@
     import testingService from '../../services/testingService'
     import courseService from '../../services/courseService'
     import CourseSelect from '../component/select/Course.vue'
+    import DepSelect from '../component/select/Department.vue'
+    import StoreSelect from '../component/select/IndustryCompany.vue'
 
     export default{
         data () {
@@ -192,20 +234,26 @@
                 total: 0,
                 loadingData: false,
                 tableData: [],
+                type: 0,
+                pageType: 0, // 0-课程分析 1-连锁学习情况 2-门店学习情况  3-店员学习情况
                 fetchParam: {
                     date: 'yesterday',
                     page: 1,
                     page_size: 15,
                     type: void 0,
                     course_id: void 0,
+                    department_id: void 0,
+                    store_id: void 0
                 }
             }
         },
         watch: {
-            'fetchParam.page_size'() {
-                this.fetchData()
-            },
-            'fetchParam.page'() {
+            '$route' () {
+                this.type = this.$route.query.type || 0
+                this.fetchParam.course_id = this.$route.query.course_id
+                this.fetchParam.department_id = this.$route.query.department_id
+                this.fetchParam.store_id = this.$route.query.store_id
+                this.fetchParam.page = 1
                 this.fetchData()
             }
         },
@@ -214,24 +262,40 @@
                 this.analysis = ret
             })
 
-            this.fetchData().then(() => {
-                xmview.setContentLoading(false)
-            })
+            this.type = this.$route.query.type || 0
+            this.fetchParam.course_id = this.$route.query.course_id
+            this.fetchParam.department_id = this.$route.query.department_id
+            this.fetchParam.store_id = this.$route.query.store_id
+            // 页面加载一次
+            this.fetchData()
         },
         methods: {
-            testenter () {
-                console.info(111)
-            },
             fetchData () {
                 this.loadingData = true
-                return courseService.getAnalysis(this.fetchParam).then((ret) => {
+                let p
+                if (this.type == 0) p = courseService.getAnalysis(this.fetchParam)
+                else if (this.type == 1) p = courseService.getStoreLearn(this.fetchParam)
+                else if (this.type == 2) p = courseService.getDepLearn(this.fetchParam)
+                else p = courseService.getUserLearn(this.fetchParam)
+
+                p.then((ret) => {
                     this.total = ret.total
                     this.tableData = ret.data
                     this.loadingData = false
+                    xmview.setContentLoading(false)
                 })
+
+                return p
+            },
+            // 导出点击
+            exportClick () {
+                if (this.type == 0) courseService.exportAnalysis(this.fetchParam)
+                else if (this.type == 1) courseService.exportStoreLearn(this.fetchParam)
+                else if (this.type == 2) courseService.exportDepLearn(this.fetchParam)
+                else courseService.exportUserLearn(this.fetchParam)
             }
         },
-        components: {CourseSelect}
+        components: {CourseSelect, DepSelect, StoreSelect}
     }
 
 </script>
