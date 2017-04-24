@@ -1,0 +1,71 @@
+//
+//@font-face {font-family: "iconfont";
+//    src: url('./iconfont.eot'),
+//    url('./iconfont.woff') format('woff'),
+//    url('./iconfont.ttf') format('truetype') /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+//}
+
+@font-face {
+    font-family: 'iconfont';
+    src: url('~base/utils/mixins/font/iconfont.ttf') format("woff"), url('~base/utils/mixins/font/iconfont.ttf') format("truetype");
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 0;
+    line-height: 0;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    vertical-align: middle;
+
+    &:before {
+        font-size: 16px;
+        vertical-align: middle;
+    }
+}
+
+// 手机
+.icon-oslash:before {
+    content: "\e618";
+}
+// 问题
+.icon-wenti:before {
+    content: "\e63d";
+}
+// 消息中心
+.icon-xiaoxizhongxin:before {
+    content: "\e665";
+}
+// 卡片
+.icon-cart:before {
+    content: "\e68e";
+}
+// 刷新
+.icon-refresh:before {
+    content: "\e640";
+}
+
+// 警告
+.icon-warn:before {
+    content: "\e653";
+}
+
+// 列表
+.icon-list:before {
+    content: "\e600";
+}
+
+//excel
+.icon-iconfontexcel:before {
+    content: "\e622";
+}
+
+//编辑
+.icon-edit:before {
+    content: "\e602";
+}
+
+
+

@@ -1,0 +1,570 @@
+<!--内容维护-->
+<style lang='scss' rel="stylesheet/scss">
+    @import "../../../utils/mixins/mixins";
+
+    .client-content-manage {
+        .cell {
+            overflow: visible !important;
+        }
+        .el-input {
+            .el-input__icon {
+                text-align: center;
+                text-align-last: center;
+            }
+        }
+        /*上传图片的样式*/
+        .avatar-uploader {
+            .el-upload {
+                border: 1px dashed #d9d9d9;
+                border-radius: 6px;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+
+                &:hover {
+                    border-color: #20a0ff;
+                }
+            }
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 150px;
+            height: 150px;
+            line-height: 150px;
+            text-align: center;
+        }
+        .avatar {
+            width: 150px;
+            height: 150px;
+            display: block;
+        }
+        // 同步时候的遮罩层
+        .keep {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            height: 360px;
+            z-index: 99;
+            background: rgba(255, 255, 255, 0.7);
+            top: 140px;
+        }
+        .synchronize {
+            background: cornflowerblue;
+            color: #fff;
+            padding: 10px;
+            line-height: 35px;
+            margin-bottom: 20px;
+            .el-button {
+                float: right;
+            }
+        }
+        .addForm {
+            text-align: left;
+            text-align-last: left;
+            .tag {
+                span {
+                    padding: 10px;
+                    border: 1px solid #e2e7eb;
+                    background: #fff;
+                    border-right: none;
+                    &:last-of-type {
+                        border-right: 1px solid #e2e7eb;
+                    }
+                    &:hover {
+                        background: #e2e7eb;
+                    }
+                    &.active {
+                        background: #e2e7eb;
+                    }
+                }
+            }
+        }
+        .dialog-footer {
+            text-align: right;
+            float: right;
+            margin-bottom: 30px;
+        }
+        @extend %justify;
+        .main-container {
+            background: transparent;
+
+            .search {
+                position: relative;
+                padding-top: 0;
+                .categorySubTree {
+                    position: absolute;
+                    z-index: 9;
+                    width: 20%;
+                }
+            }
+        }
+        .left-content {
+            display: inline-block;
+            vertical-align: top;
+            width: 35%;
+
+            .title {
+                padding: 10px 20px;
+                background: #f0f3f5;
+                position: relative;
+            }
+            .left-list {
+                background: #fff;
+                padding: 20px;
+
+                .list {
+                    margin-bottom: 10px;
+                    .name {
+                        font-size: 16px;
+                        padding-top: 10px;
+                    }
+                    .class {
+                        color: #ddd;
+                        font-size: 12px;
+                        padding-bottom: 10px;
+                    }
+                }
+            }
+        }
+        .right-content {
+            width: 62%;
+            display: inline-block;
+            vertical-align: top;
+            background: #fff;
+
+            .title {
+                padding: 10px 20px;
+                background: #f0f3f5;
+                text-align: right;
+                line-height: 35px;
+                span {
+                    float: right;
+                    display: block;
+                }
+            }
+            .right-list {
+                padding: 20px;
+                padding-bottom: 60px;
+                .cell {
+                    i.tag {
+                        padding: 5px;
+                        background: cornflowerblue;
+                        color: #fff;
+                        border-radius: 5px;
+                    }
+                    i.el-icon-picture {
+                        position: relative;
+                        .img-wrap {
+                            padding: 5px;
+                            border: 1px solid #ededed;
+                            width: 213px;
+                            height: 123px;
+                            position: absolute;
+                            bottom: -123px;
+                            right: -213px;
+                            z-index: 999 !important;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                            }
+                        }
+                    }
+                }
+            }
+            .el-pagination {
+                float: right;
+                margin-top: 10px;
+            }
+        }
+    }
+</style>
+<template>
+    <article class="client-content-manage">
+        <!--添加/编辑课程-->
+        <el-dialog v-model="addForm" :title="formTitle">
+            <section v-if="form.ref_id">
+                <div class="keep" v-if="form.ref_sync"></div>
+                <div class="synchronize">课程：{{form.course.name}}
+                    <el-button @click="form.ref_sync = 0" v-if="form.ref_sync">关闭同步</el-button>
+                    <el-button @click="keepSync" v-if="!form.ref_sync">开启同步</el-button>
+                </div>
+            </section>
+            <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
+                <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
+                    <el-input v-model="form.title" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item v-if="!form.ref_id" prop="url" label="链接" :label-width="formLabelWidth">
+                    <el-input v-model="form.url" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item prop="image" label="图片" :label-width="formLabelWidth">
+                    <!--图片上传-->
+                    <UploadImg ref="uploadImg" :defaultImg="form.image" :url="uploadReqUrl"
+                                :onSuccess="handleImgUploaded"></UploadImg>
+                </el-form-item>
+                <el-form-item prop="desc" label="描述" :label-width="formLabelWidth">
+                    <el-input type="textarea" :rows="3" v-model="form.desc" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item class="tag" label="标签" :label-width="formLabelWidth">
+                    <span @click="toggleTag(item.value)" :class="{'active': item.value == form.tags}"
+                          v-for="(item, index) in tags">{{item.name}}</span>
+                </el-form-item>
+                <el-form-item prop="date" label="日期" :label-width="formLabelWidth">
+                    <el-date-picker v-model="form.date" type="date"/>
+                </el-form-item>
+                <el-form-item prop="sort" label="排序" :label-width="formLabelWidth">
+                    <el-input v-model="form.sort" auto-complete="off" placeholder="排序越大越靠前，留空则自动设为最靠前的排序"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addForm = false">取 消</el-button>
+                <el-button type="primary" @click="submit('form')">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!--选取课程-->
+        <ChooseCourse v-model="course.isShow" v-on:result="courseConfirm"></ChooseCourse>
+        <section class="left-content">
+            <div class="classify title">
+                <SectionCategorySelect :onchange="getLeftCategoryData" v-model="section.category_id"></SectionCategorySelect>
+            </div>
+            <div class="left-list">
+                <div class="list">
+                    <el-table v-loading="section.loading" @row-click="sectionChange" :show-header="false" :highlight-current-row="true" :data="section.classifyData" border>
+                        <el-table-column>
+                            <template scope="scope">
+                                <h2 class="name">{{scope.row.name}}</h2>
+                                <p class="class">{{scope.row.categorys}}</p>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <el-pagination
+                        @current-change="sectionPageChange"
+                        :current-page="section.page"
+                        :page-size="section.page_size"
+                        small
+                        layout="prev, pager, next"
+                        :total="section.total">
+                </el-pagination>
+            </div>
+        </section>
+        <section class="right-content">
+            <div class="title">
+                {{result.title.name}}-内容列表<i v-if="result.title.category">(绑定公开课栏目:{{result.title.category}})</i>
+                <span>
+                    <el-button @click="chooseCourse">选取课程</el-button>
+                    <el-button @click="addCourse('form')">添加内容</el-button>
+                </span>
+            </div>
+            <div class="right-list">
+                <el-table v-loading="result.loading" border :data="result.data">
+                    <el-table-column
+                            label="序号"
+                            type="index"
+                            width="100">
+                    </el-table-column>
+                    <el-table-column
+                            class="course-column"
+                            label="标题">
+                        <template scope="scope">
+                            <el-tag type="primary" class="tag" v-if="scope.row.ref_type == 'course'">课程</el-tag>
+                            <el-tag type="gray" class="tag" v-if="scope.row.ref_type == 'link'">链接</el-tag>
+                            {{scope.row.title}}
+                            <i class="el-icon-picture" v-if="scope.row.image">
+                                <!--<div class="img-wrap">-->
+                                    <!--<img src="http://localhost:7010/static/img/logo.11729c9.png"/>-->
+                                <!--</div>-->
+                            </i>
+                            <el-tooltip v-if="scope.row.ref_sync" class="item" effect="dark" content="与引用内容保持同步" placement="top">
+                                <i class="iconfont icon-refresh"></i>
+                            </el-tooltip>
+                            <el-tag type="gray" v-if="scope.row.tags">{{scope.row.tags | filterArray}}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="sort"
+                            label="排序"
+                            width="100">
+                    </el-table-column>
+                    <el-table-column
+                            prop="date"
+                            label="日期"
+                            width="200">
+                    </el-table-column>
+                    <el-table-column prop="operate" label="操作">
+                        <template scope="scope">
+                            <el-button type="text" size="small" @click="updateCourse(scope.$index, scope.row)">
+                                编辑
+                            </el-button>
+                            <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                        @current-change="resultPageChange"
+                        :current-page="result.page"
+                        :page-size="result.page_size"
+                        small
+                        layout="prev, pager, next"
+                        :total="result.total">
+                </el-pagination>
+            </div>
+        </section>
+    </article>
+</template>
+<script>
+    import ChooseCourse from '../component/ChooseCourse.vue'
+    import SectionCategorySelect from '../../component/select/SectionCategory.vue'
+    import sectionService from '../../../services/sectionService'
+    import UploadImg from '../../component/upload/UploadImg.vue'
+    import {date2Str} from '../../../utils/timeUtils'
+    let _this
+    export default {
+        components: {
+            ChooseCourse,
+            SectionCategorySelect,
+            UploadImg
+        },
+        data () {
+            return {
+                // 左侧分类
+                section: {
+                    loading: false,
+                    category_id: '',
+                    classifyData: [],  // 左侧显示的列表数据
+                    total: 0,
+                    page: 1,
+                    page_size: 15,
+                    currentID: '' // 当前选中的区块ID
+                },
+                // 右侧结果
+                result: {
+                    loading: false,
+                    title: {
+                        name: '',
+                        category: ''
+                    },
+                    data: [],
+                    page: 1,
+                    page_size: 15,
+                    total: 0
+                },
+                // 选取课程
+                course: {
+                    isShow: false
+                },
+                // 表单相关属性
+                formTitle: '添加内容',
+                addForm: false, // 表单弹窗是否显示
+                formLabelWidth: '50px', // 表单label的宽度
+                uploadReqUrl: '', // 上传图片的请求地址
+                form: {                // 表单属性值
+                    title: '',          // 标题
+                    url: '', // 链接地址
+                    ref_type: '',       // 引用类型
+                    ref_id: '',       // 引用ID
+                    ref_sync: 0,       // 是否与引用同步
+                    image: '',        // 图片
+                    desc: '',         // 描述
+                    date: '',       // 日期
+                    sort: '',            // 排序
+                    tags: ''
+                },
+                tags: [
+                    {
+                        name: '无',
+                        value: ''
+                    },
+                    {
+                        name: '热门',
+                        value: 'hot'
+                    },
+                    {
+                        name: '最新',
+                        value: 'new'
+                    },
+                    {
+                        name: '推荐',
+                        value: 'recommend'
+                    }
+                ],
+                rules: {
+                    title: [
+                        {
+                            required: true,
+                            message: '标题不能为空',
+                            trigger: 'blur'
+                        }
+                    ],
+                    url: [
+                        {
+                            required: true,
+                            message: '链接不能为空',
+                            trigger: 'blur'
+                        }
+                    ]
+                }
+            }
+        },
+        filters: {
+            // 过滤标签名
+            filterArray (value) {
+                let newVal = ''
+                _this.tags.forEach((item) => {
+                    if (item['value'] == value) {
+                        newVal = item['name']
+                    }
+                })
+                return newVal
+            }
+        },
+        created () {
+            _this = this
+            this.getLeftCategoryData().then((ret) => {
+                this.sectionChange(ret.data[0])
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
+            this.uploadReqUrl = sectionService.getContentUploadImg()
+        },
+        methods: {
+            // 保持同步
+            keepSync () {
+                this.form.ref_sync = 1
+                this.form.title = this.form.course.name
+                this.form.image = this.form.course.image
+                this.form.des = this.form.course.description
+            },
+            chooseCourse () {
+                this.course.isShow = true
+            },
+            // 区块当前页
+            sectionPageChange (val) {
+                this.section.page = val
+                this.getLeftCategoryData()
+            },
+            // 结果当前页
+            resultPageChange (val) {
+                this.result.page = val
+                this.getSectionData(this.section.currentID)
+            },
+            // 点击分类获取列表
+            sectionChange (row) {
+                this.result.title = {
+                    name: row.name,
+                    category: row.course_category_name
+                }
+                this.section.currentID = row.id
+                this.getSectionData(row.id)
+            },
+            // 结果列表
+            getSectionData (sectionID) {
+                this.result.loading = true
+                sectionService.getSectionDataList({
+                    page: this.result.page,
+                    page_size: this.result.page_size,
+                    section_id: sectionID
+                }).then((ret) => {
+                    this.result.data = ret.data
+                    this.result.total = ret.total
+                    this.result.loading = false
+                })
+            },
+            // 获取左侧分类列表
+            getLeftCategoryData () {
+                this.section.loading = true
+                return sectionService.getSectionList({
+                    category_id: this.section.category_id
+                }).then((ret) => {
+                    this.section.classifyData = ret.data
+                    this.section.total = ret.total
+                    this.section.loading = false
+                    return ret
+                })
+            },
+            courseConfirm (item) { // 点击确定的时候，进行搜索结果
+                this.form.course = item
+                this.form.ref_id = item.id
+                this.form.ref_sync = 1
+                this.keepSync()
+                this.addForm = true
+            },
+            handleDelete (index, row) {
+                xmview.showDialog(`你确定要将内容 【<i style="color:red">${row.title}</i>】 从区块中删除吗？`, () => {
+                    sectionService.delSectionData({
+                        id: row.id,
+                        section_id: this.section.currentID
+                    }).then(() => {
+                        xmview.showTip('success', '删除成功')
+                        this.getSectionData(this.section.currentID)
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
+                })
+            },
+            submit (form) { // 表单提交
+                this.form.section_id = this.section.currentID
+                this.form.date = this.form.date ? date2Str(this.form.date) : ''
+                this.form.ref_type = this.form.ref_id ? 'course' : 'link'
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        let reqFn = sectionService.createSectionData
+                        let msg = '添加成功'
+                        if (this.form.id) {
+                            reqFn = sectionService.updateSectionData
+                            msg = '修改成功'
+                        }
+                        reqFn(this.form).then(() => {
+                            xmview.showTip('success', msg)
+                            this.addForm = false
+                            this.course.isShow = false
+                            this.getSectionData(this.section.currentID)
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
+                    } else {
+                        return false
+                    }
+                })
+            },
+            toggleTag (value) {
+                this.form.tags = value
+            },
+            updateCourse (index, item) {
+                // 根据item.id获取数据 并赋值给form
+                this.formTitle = '编辑内容'
+                if (item.ref_id) {
+                    this.formTitle = '编辑课程'
+                }
+                this.form = item
+                this.addForm = true
+                console.log(this.form)
+            },
+            addCourse (form) {
+                if (this.section.loading || this.result.loading) {
+                    return
+                }
+//                this.$refs['form'].resetFields() 不起作用
+                this.form = {
+                    title: '',
+                    url: '',
+                    ref_type: '',
+                    ref_id: '',
+                    ref_sync: 0,
+                    image: '',
+                    desc: '',
+                    date: '',
+                    sort: '',
+                    tags: ''
+                }
+                this.addForm = true
+                this.formTitle = '添加内容'
+            },
+            handleImgUploaded (response) {
+                this.form.image = response.data.url
+            }
+        }
+    }
+</script>

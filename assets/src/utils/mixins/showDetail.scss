@@ -1,0 +1,47 @@
+.showDetail {
+    .avatar {
+        position: absolute;
+        border: 1px solid #ededed;
+        display: inline-block;
+        vertical-align: top;
+        width: 150px;
+        height: 130px;
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .info {
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
+        width: 100%;
+        h2 {
+            margin-bottom: 10px;
+        }
+        p {
+            line-height:35px;
+            > * {
+                display: inline-block;
+                vertical-align: top;
+            }
+            i.title {
+                width: 49%;
+                margin-right: 10px;
+                text-align: right;
+            }
+            span.value {
+                width: 40%;
+                text-align: left;
+            }
+        }
+        > p.select {
+            margin-top: 10px;
+            .el-select, .el-textarea {
+                display: inline-block;
+                width: 58%;
+                vertical-align: top;
+            }
+        }
+    }
+}

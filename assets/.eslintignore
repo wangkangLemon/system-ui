@@ -1,0 +1,5 @@
+dist/*.js
+config/*.js
+vendor.js
+vendor
+

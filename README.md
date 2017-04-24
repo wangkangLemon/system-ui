@@ -1,3 +1,14 @@
 # system-ui
 
 药视通系统管理平台界面
+
+###目录结构
+```
+- assets 前端文件目录
+    - src 前端源代码
+    - build 构建代码
+    - config 构建配置
+    - theme elementui的主题样式代码(构建之后)
+    - element-variables.css elementui的样式源代码
+- public 构建后的代码
+```
