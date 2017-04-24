@@ -45,17 +45,17 @@
             </div>
             <article class="content-container">
                 <section>
-                    <i>手机号码:</i>
+                    <i><el-tag type="danger">推荐</el-tag> 微信:</i>
                     <div>
                         <span v-if="!wechat || !wechat.data">
                             <el-tag type="gray">未绑定</el-tag>
                             <el-button type="text" @click="bindWechat">绑定</el-button>
                         </span>
                         <span v-else>
-                            <el-tag type="primary">已绑定手机号码: {{wechat.data}}</el-tag>
+                            <el-tag type="primary">已绑定微信号: {{wechat.data}}</el-tag>
                             <el-button type="text" @click="changeWechat">更换</el-button>
                         </span>
-                        <div>绑定后，登录药视通平台用该手机号码接收登录验证码。</div>
+                        <div>绑定后，登录药视通平台可用绑定微信账号扫码进行安全验证。</div>
                     </div>
                 </section>
                 <section>
