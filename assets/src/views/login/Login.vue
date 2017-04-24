@@ -192,7 +192,7 @@
                             xmview.showTip('success', '登录成功')
                             setTimeout(() => {
                                 // 如果需要二次登录
-                                if (ret.need_two_step) {
+                                if (ret.need_two_step || !authUtils.getTwiceToken()) {
                                     this.$router.replace({name: 'login-twice'})
                                 } else if (this.$route.query.returnUrl) {  // 判断是否需要回到上个页面
                                     window.location.href = this.$route.query.returnUrl

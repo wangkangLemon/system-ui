@@ -64,7 +64,7 @@
                         <i>您设置的手机号码是 ({{sms.data}})</i>
                         <div class="center-slit">
                             <el-input v-model="smsCode" placeholder="填写手机验证码"></el-input>
-                            <el-button :disabled="codeWaitSecond !== 0" @click="sendValidCode(0)" >
+                            <el-button :disabled="codeWaitSecond !== 0" @click="sendValidCode(0)">
                                 <i v-if="codeWaitSecond <= 0">发送验证码</i>
                                 <i v-else>{{codeWaitSecond}} 秒后重发</i>
                             </el-button>
@@ -183,7 +183,10 @@
                 let p = type == 0 ? twiceService.twiceSmsValid({code}) : twiceService.twiceEmailValid({code})
                 p.then((ret) => {
                     authUtils.setTwiceToken(ret)
-                    this.$router.replace({name: 'main'})
+                    let item = authUtils.getNavMenu()[0]
+                    while (item.children && item.children.length > 0)
+                        item = item.children[0]
+                    this.$router.push({path: item.item.menu_url})
                 })
             }
         },
