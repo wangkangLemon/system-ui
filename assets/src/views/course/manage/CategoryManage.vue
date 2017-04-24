@@ -21,6 +21,7 @@
 
         .right-container {
             margin-left: 15px;
+            width: 555px;
             .edit-content {
                 margin: 10px 0 0
             }
@@ -51,7 +52,7 @@
         </section>
 
         <section class="right-container">
-            <div>
+            <div v-show="fetchParam.parent_id != 0">
                 <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改栏目</el-button>
                 <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子栏目</el-button>
 
@@ -60,20 +61,31 @@
                 <el-button type="danger" @click="deleteCategory">删除栏目</el-button>
             </div>
 
+            <div v-show="fetchParam.parent_id === 0">
+                <el-button type="primary">添加根节点</el-button>
+            </div>
+
             <el-card class="edit-content">
                 <el-form label-position="right" label-width="90px" :rules="rules" :model="fetchParam" ref="form">
                     <el-form-item label="分类名称" prop="name">
-                        <el-input v-model="fetchParam.name"></el-input>
+                        <el-input v-model="fetchParam.name" :disabled="fetchParam.parent_id == null"></el-input>
                     </el-form-item>
                     <el-form-item label="栏目logo" prop="image">
                         <UploadImg ref="uploadImg" :defaultImg="fetchParam.image" :url="uploadImgUrl"
                                    :onSuccess="handleImgUploaded"></UploadImg>
                     </el-form-item>
                     <el-form-item label="栏目排序" prop="sort">
-                        <el-input placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
+                        <el-input placeholder="最小的排在前面" :disabled="fetchParam.parent_id == null"
+                                  v-model.number="fetchParam.sort"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="info" @click="submitForm">保存</el-button>
+                        <el-button type="info" @click="submitForm" :disabled="fetchParam.parent_id == null">保存
+
+
+
+
+
+                        </el-button>
                     </el-form-item>
                 </el-form>
             </el-card>
@@ -88,7 +100,7 @@
         </el-dialog>
 
         <!--移动子栏目的弹出框-->
-        <div class="el-dialog__wrapper" v-show="dialogTree.isShow">
+        <div class="el-dialog__wrapper" v-if="dialogTree.isShow">
             <article class="el-dialog el-dialog--tiny">
                 <section class="el-dialog__header">
                     移动栏目【
@@ -122,7 +134,7 @@
         data () {
             return {
                 activeTab: 'add',
-                uploadImgUrl: void 0,
+                uploadImgUrl: '',
                 nodeSelected: void 0, // 被选中的node节点
                 nodeParentSelected: void 0, // 被选中node节点的父节点
                 moveToNode: void 0, // 将要移动到最终的栏目
@@ -136,13 +148,7 @@
                     isShow: false,
                     confirmClick: {}
                 },
-                fetchParam: {
-                    parent_id: void 0,
-                    name: void 0,
-                    image: void 0,
-                    sort: void 0,
-                    id: 0
-                },
+                fetchParam: getFetchParam(),
                 rules: {
                     name: [
                         {required: true, message: '请输入栏目名称', trigger: 'blur'},
@@ -188,6 +194,7 @@
             // 左边的节点被点击
             treeNodeClick (type, data, node, store) {
                 if (type == 1) {
+                    if (this.nodeSelected && this.nodeSelected.value === data.value) return
                     this.nodeParentSelected = node.parent// 记录父节点
                     this.nodeSelected = data // 记录当前节点
                     this.$refs.uploadImg.clearFiles()
@@ -235,11 +242,10 @@
                             }
 
                             // 如果是添加的根节点
-                            if (this.fetchParam.parent_id === 0) this.treeData.push(addedItem)
+                            if (this.fetchParam.parent_id === 0) this.$refs.courseCategory.initData()
                             else if (!this.nodeSelected.children) this.nodeSelected.children = [{label: '加载中...'}]
-                            else if (this.nodeSelected.children[0].value) {
-                                this.nodeSelected.children.push(addedItem)
-                            }
+                            else if (this.nodeSelected.children[0].value) this.nodeSelected.children.push(addedItem)
+                            this.fetchParam = getFetchParam()
                         }
                     })
                 })
@@ -303,5 +309,15 @@
             }
         },
         components: {CourseCategoryTree, UploadImg}
+    }
+
+    function getFetchParam () {
+        return {
+            parent_id: void 0,
+            name: void 0,
+            image: void 0,
+            sort: void 0,
+            id: 0
+        }
     }
 </script>

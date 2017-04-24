@@ -352,7 +352,8 @@
                 wapData: [],
                 appData: [],
                 testData: [],
-                timeData: []
+                timeData: [],
+                maxResult: 0
             }
         },
         mounted () {
@@ -368,6 +369,22 @@
                 })
             }).then(() => {
                 this.getLineChart()
+                var max1 = this.appData.reduce(function(a, b) {
+                    return Math.max(a, b)
+                })
+                var max2 = this.wapData.reduce(function(a, b) {
+                    return Math.max(a, b)
+                })
+                var max3 = this.testData.reduce(function(a, b) {
+                    return Math.max(a, b)
+                })
+                var max4 = this.timeData.reduce(function(a, b) {
+                    return Math.max(a, b)
+                })
+                var arr = [max1, max2, max3, max4]
+                this.maxResult = arr.reduce(function(a, b) {
+                    return Math.max(a, b)
+                })
             }).then(() => {
                 xmview.setContentLoading(false)
             })
@@ -407,7 +424,7 @@
                         yAxis: [
                             {
                                 type: 'value',
-                                max: 40
+                                max: this.maxResult * 1.2
                             }
                         ],
                         series: [

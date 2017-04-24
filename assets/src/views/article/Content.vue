@@ -39,6 +39,7 @@
 
     .article-content-container {
         .img-wrap {
+            margin-bottom: 10px;
             width: 150px !important;
             height: 150px !important;
             img {

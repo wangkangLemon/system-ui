@@ -192,7 +192,7 @@
                             xmview.showTip('success', '登录成功')
                             setTimeout(() => {
                                 // 如果需要二次登录
-                                if (ret.need_two_step) {
+                                if (ret.need_two_step || !authUtils.getTwiceToken()) {
                                     this.$router.replace({name: 'login-twice'})
                                 } else if (this.$route.query.returnUrl) {  // 判断是否需要回到上个页面
                                     window.location.href = this.$route.query.returnUrl
@@ -202,7 +202,8 @@
                                     let item = treeUtls.arr2Tree(ret.auth_menu)[0]
                                     while (item.children && item.children.length > 0)
                                         item = item.children[0]
-                                    window.location = item.item.menu_url
+//                                    window.location = item.item.menu_url
+                                    this.$router.push({path: item.item.menu_url})
                                 }
                             }, 400)
                         }).catch((ret) => {
