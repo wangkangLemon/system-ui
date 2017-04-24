@@ -1,0 +1,76 @@
+<!--预览视频-->
+<style lang='scss' rel='stylesheet/scss'>
+    .comp-dialog-videopreview {
+
+    }
+</style>
+
+<template>
+    <el-dialog title="视频预览" v-model="isShow">
+        <div id="J_prismPlayer" class="prism-player"></div>
+    </el-dialog>
+</template>
+
+<script>
+    export default{
+        props: {
+            url: String
+        },
+        data () {
+            return {
+                isShow: false,
+                player: void 0
+            }
+        },
+        beforeCreate () {
+            if (window.prismplayer) return
+
+            let loadCount = 0
+            let script = document.createElement('script')
+            script.src = '//g.alicdn.com/de/prismplayer/1.5.7/prism-min.js'
+            script.onload = () => {
+                loadCount++
+                loadCount >= 2 && this.initPlayer()
+            }
+
+            let link = document.createElement('link')
+            link.href = '//g.alicdn.com/de/prismplayer/1.5.7/skins/default/index.css'
+            link.rel = 'stylesheet'
+            link.onload = () => {
+                loadCount++
+                loadCount >= 2 && this.initPlayer()
+            }
+            document.head.appendChild(script)
+            document.head.appendChild(link)
+        },
+        created () {
+            this.initPlayer()
+        },
+        watch: {
+            'isShow' (val) {
+                if (val && !this.player) {
+                    this.initPlayer()
+                }
+            }
+        },
+        methods: {
+            show () {
+                this.isShow = true
+            },
+            initPlayer () {
+                if (!window.prismplayer || !this.url) return
+                /* eslint-disable no-new,new-cap */
+                this.$nextTick(() => {
+                    this.player = new window.prismplayer({
+                        id: 'J_prismPlayer', // 容器id
+                        source: this.url, // 视频地址
+                        autoplay: true,    // 自动播放：否
+                        width: '100%',       // 播放器宽度
+                        height: '360px'      // 播放器高度
+                    })
+                })
+            }
+        },
+        components: {}
+    }
+</script>

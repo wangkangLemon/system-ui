@@ -197,7 +197,12 @@
                                 } else if (this.$route.query.returnUrl) {  // 判断是否需要回到上个页面
                                     window.location.href = this.$route.query.returnUrl
                                 } else {
-                                    this.$router.replace({name: 'main'})
+//                                    this.$router.replace({name: 'main'})
+                                    // 拿到左边的叶子节点
+                                    let item = treeUtls.arr2Tree(ret.auth_menu)[0]
+                                    while (item.children && item.children.length > 0)
+                                        item = item.children[0]
+                                    window.location = item.item.menu_url
                                 }
                             }, 400)
                         }).catch((ret) => {

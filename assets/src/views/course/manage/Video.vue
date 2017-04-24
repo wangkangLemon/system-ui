@@ -107,6 +107,7 @@
                     width="200"
                     label="操作">
                 <template scope="scope">
+                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>
@@ -154,18 +155,22 @@
                 <el-button type="primary" @click="dialogAdd.confirmFn">确 定</el-button>
             </div>
         </el-dialog>
+
+        <VideoPreview :url="videoUrl" ref="videoPreview"></VideoPreview>
     </article>
 </template>
 
 <script>
     import vInput from '../../component/form/Input.vue'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
-    import courseService from '../../../services/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import vTags from '../../component/form/Tags.vue'
+    import VideoPreview from '../../component/dialog/VideoPreview.vue'
     import UploadImg from '../../component/upload/UploadImg.vue'
+
     import config from '../../../utils/config'
+    import courseService from '../../../services/courseService'
 
     function getVideoModel () {
         return {
@@ -196,7 +201,8 @@
                     title: '添加课程',
                     confirmFn: {}
                 },
-                videoModel: getVideoModel()
+                videoModel: getVideoModel(),
+                videoUrl: '' // 预览的视频url
             }
         },
         watch: {
@@ -267,13 +273,21 @@
                     })
                 })
             },
+            // 预览视频
+            preview (index, row) {
+                // 拿到播放地址
+                courseService.getVideoPreviewUrl(row.id).then((ret) => {
+                    this.videoUrl = ret.video
+                    this.$refs.videoPreview.show()
+                })
+            },
             // 处理图片上传完毕
             handleOnUploaded (ret) {
                 this.videoModel.cover = config.apiHost + ret.data.url
             },
         },
         components: {
-            vInput, CourseCategorySelect, DateRange, IndustryCompanySelect, vTags, UploadImg
+            vInput, CourseCategorySelect, DateRange, IndustryCompanySelect, vTags, UploadImg, VideoPreview
         }
     }
 </script>
