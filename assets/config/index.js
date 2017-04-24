@@ -2,15 +2,6 @@
 var path = require('path')
 let fs = require('fs')
 
-let apiHost = ''
-let content = fs.readFileSync(path.resolve('../conf/app.ini'))
-content.toString().split('\n').map((item) => {
-    let arrRet = item.split('=')
-    if (arrRet.length > 1 && arrRet[0].indexOf('apiHost') > -1) {
-        apiHost = arrRet[1].trim()
-    }
-})
-
 module.exports = {
     build: {
         env: require('./prod.env'),
@@ -30,7 +21,16 @@ module.exports = {
         // `npm run build --report`
         // Set to `true` or `false` to always turn it on or off
         bundleAnalyzerReport: process.env.npm_config_report,
-        apiHost: apiHost,
+        getApiHost: function () {
+            let apiHost = ''
+            var options = process.argv;
+            for (let i = 0; i < options.length; i++) {
+                if (options[i] === '-h') {
+                    return `'${options[i + 1]}'`
+                }
+            }
+            throw new Error('请指定接口地址参数 如 npm run build -- -h http://yst.com')
+        },
     },
     dev: {
         env: require('./dev.env'),
@@ -49,6 +49,7 @@ module.exports = {
         // (https://github.com/webpack/css-loader#sourcemaps)
         // In our experience, they generally work as expected,
         // just be aware of this issue when enabling this option.
-        cssSourceMap: false
+        cssSourceMap: false,
+        apiHost: "'http://10.1.2.140'"
     }
 }
