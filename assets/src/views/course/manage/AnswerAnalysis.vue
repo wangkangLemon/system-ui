@@ -30,6 +30,9 @@
                     }
                     p {
                         border-bottom: 1px solid #ededed;
+                        &.correct {
+                            color: #01e6e6;
+                        }
                     }
                     h2, p {
                         > * {
@@ -56,14 +59,14 @@
     <article id="course-manage-answer-analysis">
         <div class="header">{{courseName}}</div>
         <article class="subject-container">
-            <section class="subject-list" v-for="subject in resultData">
+            <section class="subject-list" v-for="(subject,pIndex) in resultData">
                 <h1 class="subject-title"><el-tag type="success">{{category[subject.category]}}</el-tag>{{subject.description}}</h1>
                 <div class="subject-item">
                     <h2><i>#</i><span>选项</span><em>比例</em></h2>
-                    <p v-for="(item, index) in subject.answers">
+                    <p :class="{'correct': index == subject.correct}" v-for="(item, index) in subject.answers">
                         <i>{{index + 1}}</i>
                         <span>{{item.description}}</span>
-                        <em>{{(item.subject_option_count/subject.subject_count * 100).toFixed(2)}}%</em>
+                        <em>{{item.percent}}%</em>
                     </p>
                 </div>
             </section>
@@ -87,12 +90,17 @@
             }
         },
         activated () {
+            this.resultData = []
             courseService.getCourseSubject({id: this.courseID}).then((ret) => {
                 this.courseName = ret.course.name
                 ret.subjects.forEach((item) => {
                     courseService.getSubjectAnswer({c_id: this.courseID, s_id: item.id}).then((ret) => {
-                        item.answers = ret.answers
-                        item.subject_count = ret.subject_count
+                        item.answers = []
+                        ret.answers.map((val) => {
+                            let el = val.subject_option_count / ret.subject_count * 100
+                            val.percent = isNaN(el) ? 0 : el.toFixed(2)
+                            item.answers.push(val)
+                        })
                         this.resultData.push(item)
                     })
                 })

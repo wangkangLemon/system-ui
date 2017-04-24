@@ -2,9 +2,13 @@
 <style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
+    .v-modal {
+        z-index: 1000 !important;
+    }
     .edui-editor {
         width: 100% !important;
     }
+
     .avatar-uploader {
         .el-upload {
             border: 1px dashed #d9d9d9;
@@ -17,6 +21,7 @@
             }
         }
     }
+
     .avatar-uploader-icon {
         font-size: 28px;
         color: #8c939d;
@@ -25,26 +30,28 @@
         line-height: 178px;
         text-align: center;
     }
+
     .avatar {
         width: 178px;
         height: 178px;
         display: block;
     }
+
     .article-content-container {
+        .img-wrap {
+            width: 150px !important;
+            height: 150px !important;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
         border: 1px solid #ededed;
         .addForm {
             z-index: 99999999999999999999 !important;
-            .img-wrap {
-                width: 150px;
-                height: 150px;
-                > img {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
         }
         .add {
-            background: #f0f3f5;
+            background: #ededed;
             padding: px2rem(10) px2rem(20);
             border-bottom: 1px solid #ededed;
         }
@@ -59,49 +66,12 @@
                 margin-top: 10px;
             }
         }
-        .showDetail {
-            .avatar {
-                border: 1px solid #ededed;
-                display: inline-block;
-                vertical-align: top;
-            }
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    > span {
-                        display: inline-block;
-                        width: px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
-                    }
-                }
-            }
-        }
-        .forbidden-content {
-            text-align: center;
-            i {
-                &:before {
-                    display: block;
-                    font-size: px2rem(60);
-                    color: #f8bb86;
-                    padding-bottom: px2rem(40);
-                }
-            }
-            h1 {
-                font-size: px2rem(20);
-            }
-            p {
-                margin: px2rem(10);
-                span {
-                    color: red;
-                }
-            }
-        }
     }
 </style>
 <template>
     <article class="article-content-container">
+        <!--删除弹窗-->
+        <delete-dialog :text="itemName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
             <div class="avatar">
@@ -118,7 +88,7 @@
             </div>
         </el-dialog>
         <!--添加/编辑表单-->
-        <el-dialog v-model="addForm" class="addForm">
+        <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
                     <ArticleCategorySelect :placeholder="currCategoryName" v-model="form.category"></ArticleCategorySelect>
@@ -128,9 +98,9 @@
                 </el-form-item>
                 <el-form-item prop="imgUrl" label="封面" :label-width="formLabelWidth">
                     <div class="img-wrap" v-if="form.cover">
-                        <img :src="form.cover" alt="" />
+                        <img :src="form.cover | fillImgPath" alt="" />
                     </div>
-                    <ImagEcropperInput :isRound="true" :aspectRatio="1" :confirmFn="cropperFn"
+                    <ImagEcropperInput :isRound="false" :aspectRatio="1" :confirmFn="cropperFn"
                                        class="upload-btn"></ImagEcropperInput>
                 </el-form-item>
                 <el-form-item prop="content" label="正文内容" id="editor" :label-width="formLabelWidth">
@@ -150,7 +120,7 @@
             <section class="search">
                 <section>
                     <i>标题</i>
-                    <el-input @change="getData" class="name" v-model="search.title" />
+                    <el-input @change="getData" class="name" v-model="search.title"/>
                 </section>
                 <section>
                     <i>类别</i>
@@ -214,14 +184,20 @@
     </article>
 </template>
 <script>
+    import deleteDialog from '../component/dialog/Delete'
     import DateRange from '../component/form/DateRangePicker.vue'
     import VueEditor from '../component/form/UEditor.vue'
     import ArticleService from '../../services/articleService'
     import ArticleCategorySelect from '../component/select/ArticleCategory.vue'
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
+    import {fillImgPath} from '../../utils/filterUtils'
 
     export default {
+        filters: {
+            fillImgPath
+        },
         components: {
+            deleteDialog,
             DateRange,
             VueEditor,
             ArticleCategorySelect,
@@ -238,8 +214,16 @@
                     endTime: '',
                 },
                 editor: null,
+                itemName: '',           // 要删除项名称
+                deletDialog: false,     // 删除弹窗
                 showDetial: false,     // 是否显示详情对话框
-                form: getOriginData(),
+                uploadImgUrl: '',      // 要上传图片的请求地址
+                form: {                // 表单属性值
+                    title: '',          // 标题
+                    category: '',       // 分类
+                    cover: '',        // 图片地址
+                    content: '',         // 正文内容
+                },
                 rules: {
                     title: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -261,6 +245,17 @@
             })
         },
         methods: {
+            addArticle () {
+                this.editor.setContent('')
+                this.currCategoryName = ''
+                this.addForm = true
+                this.form = {
+                    title: '',
+                    category: '',
+                    cover: '',
+                    content: '',
+                }
+            },
             handleDelete (index, row) {
                 xmview.showDialog(`你将要删除文章【<i style="color:red">${row.title || ''}</i>】操作不可恢复确认吗？`, this.deleteItem(row.id))
             },
@@ -275,19 +270,12 @@
                     })
                 }
             },
-            addArticle () {
-                this.currCategoryName = ''
-//                this.editor.setContent('')
-                console.log(this.eidtor)
-                this.form = getOriginData()
-                this.addForm = true
-            },
             editArticle (row) {
                 ArticleService.getEditDetail(row.id).then((ret) => {
                     this.addForm = true
                     this.form.category = ret.data.category_id
                     this.form.title = ret.data.title
-                    this.form.cover = ret.category.cover
+                    this.form.cover = ret.data.cover
                     this.form.content = ret.data.content
                     this.form.id = ret.data.id
                     this.currCategoryName = ret.category.name
@@ -303,16 +291,8 @@
                         }
                         this.form.content = this.editor.getContentTxt()
                         this.form.draft = status
-
-                        let reqFn = ArticleService.addArticle
-                        let msg = '发布成功'
-                        if (this.form.id) {
-                            reqFn = ArticleService.updateArticle
-                            msg = '修改成功'
-                        }
-
-                        reqFn(this.form).then((ret) => {
-                            xmview.showTip('success', msg)
+                        ArticleService.addArticle(this.form).then((ret) => {
+                            xmview.showTip('success', '发布成功')
                             this.addForm = false
                             this.getData()
                         }).catch((ret) => {
@@ -324,12 +304,14 @@
                 })
             },
             handleSizeChange (val) {
-                this.pageSize = val
-                this.getData()
+                console.log(`每页 ${val} 条`)
+                // 当切换每页条数得时候 获取当前第一页得数据
+                this.handleCurrentChange(1)
             },
             handleCurrentChange (val) {
                 this.currentPage = val
-                this.getData()
+                console.log(`当前页: ${val}`)
+                // 以下获取当页数据
             },
             getData () {
                 this.loading = true
@@ -347,31 +329,24 @@
                     this.loading = false
                 })
             },
+            handleImgUploaded(response) {
+                this.form.cover = response.data.url
+            },
             cropperFn(data) {
                 ArticleService.ArticleUploadUrl({
                     avatar: data,
                     alias: Date.now() + '.jpg'
                 }).then((ret) => {
+                    console.log(ret)
                     xmview.showTip('success', '上传成功')
-                    this.form.cover = data // 显示图片
+                    this.form.cover = ret.data.url // 显示图片
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
                 })
             },
-            uploadSuccess (url) {
-                console.log(url)
-            },
             ueReady (ue) {
                 this.editor = ue
             }
-        }
-    }
-    function getOriginData() {
-        return {
-            title: '',
-            category: '',
-            cover: '',
-            content: ''
         }
     }
 </script>

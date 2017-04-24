@@ -39,10 +39,13 @@
                     <i>手机</i>
                     <el-input @change="getData" v-model="searchParams.mobile" auto-complete="off"></el-input>
                 </section>
-                <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
-                                       v-on:change="val=>searchParams.companySelect=val"
-                                       :change="getData">
-                </IndustryCompanySelect>
+                <section>
+                    <i>连锁</i>
+                    <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
+                                           v-on:change="val=>searchParams.companySelect=val"
+                                           :change="getData"></IndustryCompanySelect>
+
+                </section>
                 <section>
                     <i>是否删除</i>
                     <el-select v-model="searchParams.status" @change="getData">

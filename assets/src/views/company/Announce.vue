@@ -63,10 +63,13 @@
         </el-dialog>
         <el-card class="box-card">
             <section class="search">
-                <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
-                                       v-on:change="val=>searchParams.companySelect=val"
-                                       :change="getData">
-                </IndustryCompanySelect>
+                <section>
+                    <i>连锁</i>
+                    <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
+                                           v-on:change="val=>searchParams.companySelect=val"
+                                           :change="getData">
+                    </IndustryCompanySelect>
+                </section>
                 <section>
                     <i>类型</i>
                     <el-select v-model="searchParams.type" @change="getData">

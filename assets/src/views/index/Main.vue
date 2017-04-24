@@ -73,6 +73,7 @@
             }
         }
         .course-analytics {
+            @extend %justify;
             margin: 15px 0;
             height: 120px;
             border: 1px solid #ddd;
@@ -96,6 +97,7 @@
                     width: 55px;
                     height: 55px;
                     text-align: center;
+                    text-align-last: center;
                     border-radius: 50%;
                     margin:10px 20px;
                     &.test {

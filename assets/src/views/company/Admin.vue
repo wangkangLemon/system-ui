@@ -1,8 +1,12 @@
 <!--企业列表-管理员-->
 <style lang='scss' scoped rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
+    @import "../../utils/mixins/topSearch";
     .company-admin-container {
         border: 1px solid #ededed;
+        .search {
+            @extend %top-search-container;
+        }
         .add {
             background: #ededed;
             padding: px2rem(10) px2rem(20);
@@ -122,10 +126,10 @@
         </section>
         <div class="main-container">
             <section class="search">
-                <div>
-                    <label>姓名</label>
+                <section>
+                    <i>姓名</i>
                     <el-input @change="getData" class="name" v-model="search.name" placeholder="请输入姓名"></el-input>
-                </div>
+                </section>
             </section>
             <el-table border v-loading="loading" :data="adminData">
                 <el-table-column

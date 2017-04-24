@@ -6,10 +6,16 @@
         v-on:areaChange="val => areaChange = val"
         :change="getData"></Region>-->
 
-<style lang='scss' scoped rel='stylesheet/scss'></style>
+<style lang='scss' rel='stylesheet/scss'>
+    .region-container {
+        .el-select {
+            max-width: 130px !important;
+        }
+    }
+</style>
 
 <template>
-    <section>
+    <section class="region-container">
         <i>{{title}}</i>
         <el-select :disabled="disabled" :placeholder="placeholderVal.province" clearable @change="setCurrVal(0, provinceSelect)" v-model="provinceSelect">
             <el-option v-for="(item, index) in provinces"
