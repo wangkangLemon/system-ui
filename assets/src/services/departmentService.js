@@ -23,6 +23,7 @@ class DepartmentService {
             return ret.data
         })
     }
+
     // 获取详情接口
     getDepInfo (val) {
         let finalUrl = `${urlPre}/${val}`

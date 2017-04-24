@@ -126,7 +126,8 @@
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="200"
+                    fixed="right"
+                    width="207"
                     label="操作">
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->

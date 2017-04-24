@@ -17,7 +17,7 @@
             }
         }
 
-        .note{
+        .note {
             margin-bottom: 10px;
             color: #F7BA2A;
         }
@@ -39,9 +39,27 @@
         <div class="note">说明：企业选项为内训与工业课程的考试情况</div>
         <article class="search">
             <section>
+                <i>企业</i>
+                <CompanySelect v-model="fetchParam.enterprise_id" :change="fetchData">
+                </CompanySelect>
+            </section>
+            <section>
                 <i>课程</i>
                 <CourseSelect :change="fetchData" @change="val => fetchParam.course_id=val"
                               v-model="fetchParam.course_id"></CourseSelect>
+            </section>
+            <section>
+                <i>连锁</i>
+                <CompanySelect v-model="fetchParam.company_id" :change="fetchData">
+                </CompanySelect>
+            </section>
+            <section>
+                <i>门店</i>
+                <DepSelect v-model="fetchParam.department_id" :change="fetchData"></DepSelect>
+            </section>
+            <section>
+                <i>账号</i>
+                <el-input placeholder="邮箱或手机号" @keyup.enter.native="fetchData" v-model="fetchParam.account"></el-input>
             </section>
             <section>
                 <i>成绩</i>
@@ -59,9 +77,9 @@
             </DateRange>
 
             <!--<section>-->
-                <!--<i>账号</i>-->
-                <!--<v-input @changeVal="val=>fetchParam.account=val" :enter="fetchData" v-model="fetchParam.account"-->
-                         <!--placeholder="账号"></v-input>-->
+            <!--<i>账号</i>-->
+            <!--<v-input @changeVal="val=>fetchParam.account=val" :enter="fetchData" v-model="fetchParam.account"-->
+            <!--placeholder="账号"></v-input>-->
             <!--</section>-->
         </article>
 
@@ -125,6 +143,9 @@
     import CourseSelect from '../component/select/Course.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
     import vInput from '../component/form/Input.vue'
+    import CompanySelect from '../component/select/IndustryCompany.vue'
+    import DepSelect from '../component/select/Department.vue'
+
     export default{
         data () {
             return {
@@ -134,6 +155,7 @@
                 fetchParam: {
                     page: void 0,
                     page_size: 15,
+                    enterprise_id: void 0,
                     course_id: void 0,
                     company_id: void 0, // 连锁
                     department_id: void 0,
@@ -178,6 +200,6 @@
                 })
             }
         },
-        components: {CourseSelect, DateRange, vInput}
+        components: {CourseSelect, DateRange, vInput, CompanySelect, DepSelect}
     }
 </script>
