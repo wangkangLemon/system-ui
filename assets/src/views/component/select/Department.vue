@@ -7,9 +7,9 @@
 
 <script>
     import SelectScroll from '../../component/form/SelectScroll.vue'
-    import companyService from '../../../services/companyService'
+    import depService from '../../../services/departmentService'
     export default{
-        props: ['value', 'change', 'type'],
+        props: ['value', 'change'],
         data () {
             return {
                 currVal: this.value,
@@ -23,9 +23,8 @@
         },
         methods: {
             fetchData (val, length) {
-                return companyService.getIndrustrySelectList({
+                return depService.getDepartment({
                     keyword: val,
-                    category: this.type,
                     page_size: this.pageSize,
                     page: parseInt(length / this.pageSize) + 1
                 })
@@ -37,6 +36,7 @@
             setCurrentValue (val) {
                 if (this.curVal == val) return
                 this.currVal = val
+                this.$emit('input', val)
                 this.$emit('change', val)
             }
         },

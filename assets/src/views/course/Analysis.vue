@@ -158,11 +158,11 @@
                       border>
                 <el-table-column v-if="type == 0" label="课程名称">
                     <template scope="scope">
-                        <el-tag type="success" v-if="scope.row.course_type === 'public'">公开课</el-tag>
-                        <el-tag type="primary" v-else-if="scope.row.course_type === 'industry'">工业课</el-tag>
-                        <el-tag type="warning" v-else>私有课</el-tag>
                         <el-button type="text"
                                    @click="$router.push({name:'course-analysis', query:{ type:1,course_id: scope.row.course_id }})">
+                            <el-tag type="success" v-if="scope.row.course_type === 'public'">公开课</el-tag>
+                            <el-tag type="primary" v-else-if="scope.row.course_type === 'industry'">工业课</el-tag>
+                            <el-tag type="warning" v-else>私有课</el-tag>
                             <i> {{scope.row.name}}</i>
                         </el-button>
                     </template>
@@ -178,21 +178,17 @@
                 </el-table-column>
                 <el-table-column prop="name" label="店员姓名" v-if="type == 3"></el-table-column>
 
-                <el-table-column prop="study_user_count" label="学习人数" v-if="type != 3"></el-table-column>
-                <el-table-column v-if="type == 1 || type == 2"
-                                 prop="unstudy_user_count"
-                                 label="未学习人数">
+                <el-table-column prop="study_user_count" label="学习人数" v-if="type != 3" width="100"></el-table-column>
+                <el-table-column v-if="type == 1 || type == 2" prop="unstudy_user_count" width="120" label="未学习人数">
                 </el-table-column>
-                <el-table-column prop="testing_count" label="考试人数" v-if="type != 3"></el-table-column>
-                <el-table-column prop="passed" label="及格人数" v-if="type != 3"></el-table-column>
-                <el-table-column v-if="type != 3"
-                                 label="及格率">
+                <el-table-column prop="testing_count" label="考试人数" v-if="type != 3" width="100"></el-table-column>
+                <el-table-column prop="passed" label="及格人数" v-if="type != 3" width="100"></el-table-column>
+                <el-table-column v-if="type != 3" label="及格率" width="100">
                     <template scope="scope">
                         <i>{{scope.row.passed_rate ? scope.row.passed_rate : 0}}%</i>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="type == 0"
-                                 label="操作">
+                <el-table-column v-if="type == 0" label="操作" width="100">
                     <template scope="scope">
                         <el-button type="text" size="small"
                                    @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.course_id}})">
