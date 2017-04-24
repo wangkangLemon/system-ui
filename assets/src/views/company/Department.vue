@@ -53,10 +53,13 @@
                         v-on:cityChange="val => searchParams.citySelect = val"
                         v-on:areaChange="val => searchParams.areaChange = val"
                         :change="getData"></Region>
-                <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
-                                       v-on:change="val=>searchParams.companySelect=val"
-                                       :change="getData">
-                </IndustryCompanySelect>
+                <section>
+                    <i>连锁</i>
+                    <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
+                                           v-on:change="val=>searchParams.companySelect=val"
+                                           :change="getData">
+                    </IndustryCompanySelect>
+                </section>
                 <DateRange title="创建时间" :start="searchParams.createTime" :end="searchParams.endTime"
                            v-on:changeStart="val=> searchParams.createTime=val"
                            v-on:changeEnd="val=> searchParams.endTime"

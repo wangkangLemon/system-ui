@@ -28,6 +28,7 @@
             xhr.onreadystatechange = handler
             xhr.responseType = 'blob'
             xhr.setRequestHeader('Authorization', 'Bearer ' + authUtils.getAuthToken())
+            xhr.setRequestHeader('TwoStep', `Bearer ${authUtils.getTwiceToken()}`)
             xhr.send()
             let _this = this
 

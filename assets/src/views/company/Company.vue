@@ -370,6 +370,13 @@
             },
             // 添加
             add () {
+                this.sign = {
+                    department_number: '', // 门店数量
+                    user_number: '', // 店员数量
+                    signatory: '', // 签约人
+                    sign_time: '', // 签约日期
+                    expire_time: '' // 合同到期日
+                }
                 this.addForm = true
                 this.companyID = ''
                 setTimeout(() => {

@@ -174,7 +174,7 @@
             },
             changeFn (list, index, id) {
                 this.form = {
-                    url: list[index].icon,
+                    url: list[index].icon.indexOf('http') > -1 ? list[index].icon : 'http://10.1.2.140' + list[index].icon,
                     name: list[index].name
                 }
                 this.currentData = {list, index, id}

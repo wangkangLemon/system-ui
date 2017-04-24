@@ -29,9 +29,12 @@
                     }
 
                     img {
-                        width: 100%;
                         height: 100%;
                         z-index: 9;
+                        position: absolute;
+                        width: 198px;
+                        top: 0;
+                        left: 1px;
                     }
                 }
 
@@ -66,7 +69,7 @@
                           element-loading-text="图片上传中">
                 <section class="uploadimg">
                     <div class="img-container">
-                        <img :src="imgData" v-show="imgData">
+                        <img :src="imgData | fillImgPath" v-show="imgData">
                     </div>
                     <div class="img-desc">
                         <span>
@@ -78,13 +81,13 @@
                 </section>
             </el-form-item>
             <el-form-item label="跳转链接" prop="logo_app_boot">
-                <el-input type="password" v-model="form.logo_app_boot" auto-complete="off"></el-input>
+                <el-input v-model="form.logo_app_boot" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="展示方式" prop="logo_app_priority">
                 <el-radio-group v-model="form.logo_app_priority">
-                    <el-radio v-model="form.logo_app_priority" label="1">优先展示企业启动图</el-radio>
-                    <el-radio v-model="form.logo_app_priority" label="2">优先展示广告</el-radio>
-                    <el-radio v-model="form.logo_app_priority" label="3">关闭广告</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="0">优先展示企业启动图</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="1">优先展示广告</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="2">关闭广告</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item>
@@ -107,6 +110,12 @@
     import mobileService from '../../services/mobileService'
     import authUtls from '../../utils/authUtils'
     export default{
+        filters: {
+            fillImgPath (url) {
+                let httpVal = 'http://10.1.2.140'
+                return url.indexOf('http') > -1 ? url : httpVal + url
+            }
+        },
         data() {
             return {
                 imgData: '',
@@ -114,29 +123,35 @@
                 isShowImgSample: false, // 是否显示图片示例
                 form: {
                     logo_app_boot: '', // 跳转链接
-                    logo_app_priority: '1', // 展示方式优先级
+                    logo_app_priority: 1, // 展示方式优先级
                 },
                 rules: {
                     logo_app_boot: [
                         {required: true, message: '请输入跳转链接', trigger: 'blur'}
                     ],
                     logo_app_priority: [
-                        {required: true, message: '请选择展示方式', trigger: 'blur'}
+                        {type: 'number', required: true, message: '请选择展示方式', trigger: 'blur'}
                     ],
                 }
             }
         },
         created () {
             this.user = authUtls.getUserInfo()
-            xmview.setContentLoading(false)
+            mobileService.getBoot({company_id: this.user.company_id}).then((ret) => {
+                this.imgData = ret.data.image
+                this.form = {
+                    logo_app_boot: ret.data.url,
+                    logo_app_priority: ret.data.status
+                }
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             cropperFn(data) {
                 this.uploadingImg = true
-
                 // 上传图片
                 mobileService.uploadboot({company_id: this.user.company_id, image: data}).then(ret => {
-                    console.info(ret)
                     this.imgData = ret.data.url
                 }).then(() => {
                     this.uploadingImg = false
@@ -147,9 +162,17 @@
             submitForm() {
                 this.$refs['ruleForm'].validate((valid) => {
                     if (valid) {
-                        alert('submit!')
+                        mobileService.updateBoot({
+                            company_id: this.user.company_id,
+                            image: this.imgData,
+                            url: this.form.logo_app_boot,
+                            status: this.form.logo_app_priority
+                        }).then((ret) => {
+                            xmview.showTip('success', '提交成功')
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
-                        console.log('error submit!!')
                         return false
                     }
                 })

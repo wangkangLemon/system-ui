@@ -7,8 +7,20 @@ const urlPre = config.apiHost + '/sys/mobile'
 
 class MobileService {
     uploadboot ({company_id, image}) {
-        let finalUrl = urlPre + '/uploadboot'
+        let finalUrl = `${config.apiHost}/com/${company_id}/mobile/boot/upload`
         return api.post(finalUrl, {company_id, image, alias: +new Date() + '.png'}, false)
+    }
+    // 获取启动图
+    getBoot ({company_id}) {
+        let finalUrl = `${urlPre}/boot`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+    // 更新启动图
+    updateBoot ({company_id, image, url, status}) {
+        let finalUrl = `${urlPre}/boot`
+        return api.put(finalUrl, {image, url, status})
     }
     // 查询接口
     menuSearch ({page, page_size}) {

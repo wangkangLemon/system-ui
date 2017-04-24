@@ -356,6 +356,14 @@ class CourseService {
         return api.del(url)
     }
 
+    // 获取视频预览地址
+    getVideoPreviewUrl (id) {
+        let url = `${urlPre}/video/${id}/preview`
+        return api.get(url).then((ret) => {
+            return ret.data
+        })
+    }
+
     // ============================================= 文档管理部分 开始 ======================================================
     getDocList ({page, page_size, keyword, company_id, file_type, time_start, time_end}) {
         let url = `${urlPre}/doc/search`
