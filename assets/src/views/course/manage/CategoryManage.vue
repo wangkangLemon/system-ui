@@ -80,6 +80,11 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="info" @click="submitForm" :disabled="fetchParam.parent_id == null">保存
+
+
+
+
+
                         </el-button>
                     </el-form-item>
                 </el-form>
@@ -143,13 +148,7 @@
                     isShow: false,
                     confirmClick: {}
                 },
-                fetchParam: {
-                    parent_id: void 0,
-                    name: void 0,
-                    image: void 0,
-                    sort: void 0,
-                    id: 0
-                },
+                fetchParam: getFetchParam(),
                 rules: {
                     name: [
                         {required: true, message: '请输入栏目名称', trigger: 'blur'},
@@ -195,6 +194,7 @@
             // 左边的节点被点击
             treeNodeClick (type, data, node, store) {
                 if (type == 1) {
+                    if (this.nodeSelected && this.nodeSelected.value === data.value) return
                     this.nodeParentSelected = node.parent// 记录父节点
                     this.nodeSelected = data // 记录当前节点
                     this.$refs.uploadImg.clearFiles()
@@ -242,13 +242,10 @@
                             }
 
                             // 如果是添加的根节点
-                            if (this.fetchParam.parent_id === 0) {
-                                this.$refs.courseCategory.initData()
-                            }
+                            if (this.fetchParam.parent_id === 0) this.$refs.courseCategory.initData()
                             else if (!this.nodeSelected.children) this.nodeSelected.children = [{label: '加载中...'}]
-                            else if (this.nodeSelected.children[0].value) {
-                                this.nodeSelected.children.push(addedItem)
-                            }
+                            else if (this.nodeSelected.children[0].value) this.nodeSelected.children.push(addedItem)
+                            this.fetchParam = getFetchParam()
                         }
                     })
                 })
@@ -312,5 +309,15 @@
             }
         },
         components: {CourseCategoryTree, UploadImg}
+    }
+
+    function getFetchParam () {
+        return {
+            parent_id: void 0,
+            name: void 0,
+            image: void 0,
+            sort: void 0,
+            id: 0
+        }
     }
 </script>
