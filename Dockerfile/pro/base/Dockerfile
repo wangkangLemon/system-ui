@@ -8,7 +8,7 @@ RUN mkdir -p $GOPATH/src/git.vodjk.com/yst \
 
 RUN cd git.vodjk.com/yst/system-ui/ \
     && git checkout master \
-    && git pull origin master
+    && git pull origin master \
     && CGO_ENABLED=0 go build -a
 
 RUN cd git.vodjk.com/yst/system-ui/assets \
