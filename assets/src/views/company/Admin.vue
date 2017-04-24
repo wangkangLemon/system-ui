@@ -212,7 +212,7 @@
                     create_time_name: ''
                 },
                 departmentData: [],
-                companyID: this.$route.params.company_id,
+//                companyID: this.$route.params.company_id,
                 showDetail: false,     // 是否显示详情对话框
                 form: {                // 表单属性值
                     name: '',          // 姓名
@@ -249,7 +249,12 @@
                 adminData: []
             }
         },
-        created () {
+        computed: {
+            companyID () {
+                return this.$route.params.company_id
+            }
+        },
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
