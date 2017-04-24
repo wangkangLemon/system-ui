@@ -13,4 +13,4 @@ RUN cd git.vodjk.com/yst/system-ui/ \
 
 RUN cd git.vodjk.com/yst/system-ui/assets \
     && yarn install \
-    && yarn run build
+    && yarn run build -- -h http://192.168.140.34
