@@ -20,6 +20,11 @@ func main() {
 		}))
 	}
 
+	// 应用状态监测
+	app.Get("/ping", func(c *baa.Context) {
+		c.Text(200, []byte("PONG"))
+	})
+
 	// accesslog
 	if setting.Config.MustBool("http.access_open", false) {
 		app.Use(accesslog.Logger())
