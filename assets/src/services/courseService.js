@@ -398,6 +398,12 @@ class CourseService {
             return ret.data.stat
         })
     }
+
+    // 查看文档
+    readDoc ({doc_id}) {
+        let finalUrl = `${urlPre}/doc/${doc_id}/view`
+        return api.get(finalUrl)
+    }
 }
 
 export default new CourseService()

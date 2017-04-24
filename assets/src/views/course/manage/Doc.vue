@@ -140,7 +140,7 @@
     import courseService from '../../../services/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
-    import config from '../../../utils/config'
+//    import config from '../../../utils/config'
 
     export default{
         data () {
@@ -201,7 +201,9 @@
             },
             // 查看
             show (index, row) {
-                window.open(`${window.location.origin}/showdoc?url=${config.apiHost}/sys/course/doc/${row.id}/view`)
+                console.log(row)
+                courseService.readDoc({doc_id: row.id})
+//                window.open(`${window.location.origin}/showdoc?url=${config.apiHost}/sys/course/doc/${row.id}/view`)
             },
             // 批量删除
             delMulti () {
