@@ -28,5 +28,5 @@ npm run dev
 
 ``` bash
 # build for production with minification
-npm run build
+npm run build -- -h http://vodjk.com
 ```

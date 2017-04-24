@@ -7,6 +7,7 @@
 
 <template>
     <div id="testview-container">
+        <input type="file" accept=".jpg,.png">
     </div>
 </template>
 

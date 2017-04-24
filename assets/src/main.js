@@ -8,6 +8,7 @@ import {sync} from 'vuex-router-sync'
 import config from './utils/config'
 import authUtils from './utils/authUtils'
 
+console.info(config.apiHost, '指定接口地址')
 // keep router and vuex store in sync
 sync(store, router)
 Vue.config.devtools = config.debug

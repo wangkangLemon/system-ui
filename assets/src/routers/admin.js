@@ -28,7 +28,7 @@ export default [
             })
         },
         meta: {
-            title: '设置',
+            title: '设置-系统',
             noback: true
         }
     },
@@ -156,6 +156,20 @@ export default [
         },
         meta: {
             title: '问题反馈-客户端',
+            noback: true
+        }
+    },
+    // 内测应用管理
+    {
+        path: pathPre + '/alpha',
+        name: 'sys-alpha',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/system/Alpha.vue'))
+            })
+        },
+        meta: {
+            title: '内测应用管理-系统',
             noback: true
         }
     }

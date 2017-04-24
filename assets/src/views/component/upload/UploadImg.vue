@@ -97,6 +97,7 @@
                    :on-error="handleRemove"
                    :on-preview="handlePictureCardPreview"
                    :on-remove="handleRemove"
+                   accept="image/*"
                    :file-list="currImg">
             <i class="el-icon-plus"></i>
         </el-upload>

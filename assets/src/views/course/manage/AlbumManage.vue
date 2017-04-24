@@ -130,10 +130,10 @@
                    v-loading="dialogAdd.loadingData">
             <section>
                 <i>专辑名称</i>
-                <el-input v-model="dialogAdd.name"></el-input>
+                <el-input v-model="dialogAdd.name" style="vertical-align: middle"></el-input>
             </section>
             <div class="dialog-add-item">
-                <h5>未选择</h5>
+                <h5>未选择 <el-input placeholder="搜索" v-model="dialogAdd.keyword" style="width: 80%" @keyup.enter.native="fetchData4dialogCourse(true)"></el-input></h5>
                 <el-table :data="dialogAdd.data" :show-header="false" :height="500" :fit="true"
                           v-loading="dialogAdd.loading"
                           row-class-name="dialogadd-notselect-row"

@@ -7,11 +7,11 @@ const urlPre = config.apiHost + '/sys/admin'
 
 class AdminService {
     // 获取管理员列表
-    adminList({
-        keyword = '',
-        page,
-        page_size
-    }) {
+    adminList ({
+                   keyword = '',
+                   page,
+                   page_size
+               }) {
         let url = urlPre + '/search'
         return api.get(url, {keyword, page, page_size}, false).then(ret => {
             if (ret.code == 0) {
@@ -21,6 +21,7 @@ class AdminService {
             }
         })
     }
+
     // 新增管理员
     addAdmin ({role_id, name, sex = '', mobile = '', passwd, email = '', address = '', disabled = ''}) {
         return api.post(urlPre, {role_id, name, sex, mobile, email, passwd, address, disabled}).then((ret) => {
@@ -29,6 +30,7 @@ class AdminService {
             }
         })
     }
+
     // 编辑管理员获取信息
     editAdmin (adminID) {
         let finalUrl = `${urlPre}/${adminID}`
@@ -36,6 +38,7 @@ class AdminService {
             return ret.data.data
         })
     }
+
     // 修改管理员获取信息
     updateAdmin ({id, role_id, name, sex = '', mobile = '', passwd = '', email = '', address = '', disabled = ''}) {
         console.log(disabled)
@@ -46,8 +49,9 @@ class AdminService {
             }
         })
     }
+
     // 删除管理员
-    adminDelete(userID) {
+    adminDelete (userID) {
         let finalUrl = `${urlPre}/${userID}`
         return api.del(finalUrl, {}).then((ret) => {
             if (ret.code) {
@@ -55,6 +59,7 @@ class AdminService {
             }
         })
     }
+
     // 获取管理员详情
     adminDetail (adminID) {
         let finalUrl = `${urlPre}/${adminID}`
@@ -62,11 +67,12 @@ class AdminService {
             return ret.data
         })
     }
+
     // 禁用管理员
-    adminDisable({
-        adminID,
-        disabled
-    }) {
+    adminDisable ({
+                      adminID,
+                      disabled
+                  }) {
         let finalUrl = `${urlPre}/${adminID}/disable`
         return api.put(finalUrl, {disabled}).then((ret) => {
             if (ret.code) {
@@ -77,14 +83,30 @@ class AdminService {
 
     // 获取签约人
     getSignatoryList ({
-        page,
-        page_size,
-        keyword = ''
-    }) {
+                          page,
+                          page_size,
+                          keyword = ''
+                      }) {
         let finalUrl = `${urlPre}/search/sale`
         return api.get(finalUrl, {page, page_size, keyword}).then((ret) => {
             return ret.data
         })
+    }
+
+    // ============================内测应用部分============================
+    // 获取内测应用申请列表
+    getAlphaApplyList ({page, page_size, appid}) {
+        appid = appid || -1
+        let finalUrl = `${config.apiHost}/sys/alpha/companyapp/search`
+        return api.get(finalUrl, {page, page_size, appid}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 删除内测应用申请
+    delAlphaApply (id) {
+        let finalUrl = `${config.apiHost}/sys/alpha/companyapp/${id}`
+        return api.del(finalUrl)
     }
 }
 export default new AdminService()

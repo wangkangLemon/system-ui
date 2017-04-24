@@ -7,6 +7,7 @@
                :headers="headers"
                :action="url"
                :file-list="fileList"
+               :accept="accept"
                :on-success="handleUploadMedia" :multiple="false">
         <el-button size="small" :disabled="disabled" type="primary"><i><i class="el-icon-upload el-icon--left"></i></i>{{btnTitle}}
         </el-button>
@@ -31,6 +32,10 @@
             btnTitle: { // 按钮的title
                 type: String,
                 default: '点击上传'
+            },
+            accept: {
+                type: String,
+                default: '*/*'
             }
         },
         data () {

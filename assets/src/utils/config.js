@@ -8,7 +8,7 @@ const config = {
     isMobile () {
         return window.innerWidth < 767
     },
-    apiHost: debug ? 'http://10.1.2.140' : process.apiHost,
+    apiHost: process.apiHost,
     debug
 }
 

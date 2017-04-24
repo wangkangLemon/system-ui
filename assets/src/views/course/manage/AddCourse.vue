@@ -76,7 +76,8 @@
                                    :on-success="res=> fetchParam.image = res.data.url"></UploadImg>
                     </el-form-item>
                     <el-form-item label="课程类型">
-                        <el-select v-model="fetchParam.material_type" placeholder="请选择" :clearable="true">
+                        <el-select v-model="fetchParam.material_type" @change="typeChange" placeholder="请选择"
+                                   :clearable="true">
                             <el-option label="视频" value="video"></el-option>
                             <el-option label="WORD" value="doc"></el-option>
                             <el-option label="PPT" value="ppt"></el-option>
@@ -85,6 +86,7 @@
                     </el-form-item>
                     <el-form-item label="课程文件" prop="material_id">
                         <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl"
+                                    :accept="accept"
                                     :disabled="fetchParam.material_type == null"
                                     v-show="fetchParam.material_type !== 'video'"></UploadFile>
                         <el-button v-show="fetchParam.material_type === 'video'" @click="isShowVideoDialog=true">
@@ -249,7 +251,7 @@
                     material_id: {required: true, type: 'number', message: '请上传课程文件', trigger: 'change'},
                     need_testing: {required: true, type: 'number', message: '请选择是否需要课后考试', trigger: 'change'},
                 },
-
+                accept: '*.doc,*.docx', // 上传的文件格式
                 // 考试设置部分
                 fetchTesting: []
             }
@@ -368,6 +370,16 @@
             },
             handleUploadDoc (rep) { // 文档上传完毕
                 this.fetchParam.material_id = rep.data.id
+            },
+            // 课程类型改变
+            typeChange (val) {
+                if (val === 'doc') {
+                    this.accept = '.doc,.docx'
+                } else if (val === 'ppt') {
+                    this.accept = '.ppt,pptx'
+                } else if (val === 'pdf') {
+                    this.accept = '.pdf'
+                }
             }
         },
         components: {UploadImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}

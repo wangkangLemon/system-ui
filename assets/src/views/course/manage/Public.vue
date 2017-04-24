@@ -78,6 +78,15 @@
                        @changeStart="val=> fetchParam.time_start=val "
                        @changeEnd="val=> fetchParam.time_end=val" :change="fetchData">
             </DateRange>
+
+            <section>
+                <i>课后考试</i>
+                <el-select v-model="fetchParam.need_testing" placeholder="未选择"
+                           @change="fetchData" :clearable="true">
+                    <el-option label="不需要" value="0"></el-option>
+                    <el-option label="需要" value="1"></el-option>
+                </el-select>
+            </section>
         </article>
 
         <el-table class="data-table" v-loading="loadingData"
@@ -139,6 +148,7 @@
                     <el-button v-if="scope.row.subject_num > 0"
                                @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.id}})"
                                type="text" size="small">答案分析
+
 
                     </el-button>
                 </template>
@@ -206,6 +216,7 @@
                     page_size: 15,
                     time_start: void 0,
                     time_end: void 0,
+                    need_testing: void 0, //  不赋值则表示全部，0为不需要，1为需要
                     keyword: void 0, // 课程名称
                 },
                 dialogTree: {

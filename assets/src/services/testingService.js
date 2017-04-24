@@ -3,6 +3,8 @@
  */
 import * as api from './api'
 import config from '../utils/config'
+import authUtils from '../utils/authUtils'
+
 const urlPre = config.apiHost + '/sys/testing'
 
 class TestingService {
@@ -45,6 +47,13 @@ class TestingService {
     exportTesting (reqObj) {
         let finalUrl = urlPre + '/history/search'
         api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '考试记录.xls')
+    }
+
+    // 异步导出考试记录
+    exportTestingHistoryAsync ({name = '全部_考试记录'} = {}) {
+        let companyid = authUtils.getUserInfo().company_id
+        let url = `${config.apiHost}/com/${companyid}/export/testing`
+        return api.post(url, {name})
     }
 }
 export default new TestingService()

@@ -226,7 +226,7 @@
         </el-card>
     </article>
 </template>
-<script lang='babel'>
+<script>
     import companyService from '../../services/companyService'
     import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
