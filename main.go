@@ -20,11 +20,6 @@ func main() {
 		}))
 	}
 
-	// 应用状态监测
-	app.Get("/ping", func(c *baa.Context) {
-		c.Text(200, []byte("PONG"))
-	})
-
 	// accesslog
 	if setting.Config.MustBool("http.access_open", false) {
 		app.Use(accesslog.Logger())
@@ -43,8 +38,13 @@ func main() {
 		c.HTML(200, "./public/index.html")
 	})
 
+	// 应用状态监测
+	app.Get("/ping", func(c *baa.Context) {
+		c.Text(200, []byte("PONG"))
+	})
+
 	// run
-	addr := setting.Config.MustString("http.address", "0.0.0.0")
+	addr := setting.Config.MustString("http.address", "0.0ls.0.0")
 	port := setting.Config.MustString("http.port", "8001")
 	app.Run(addr + ":" + port)
 }
