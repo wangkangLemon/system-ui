@@ -115,7 +115,6 @@
             // 要上传的url地址
             url: {
                 type: String,
-                default: 'https://jsonplaceholder.typicode.com/posts/'
             },
             // 上传成功后的回调
             onSuccess: Function,
@@ -158,7 +157,6 @@
             }
         },
         activated () {
-            console.info(this.disabled)
             this.uploadBtn && (this.uploadBtn = this.$refs.container.querySelector('.el-upload--picture-card'))
             this.isShowDelAndPreview(!this.disabled)
         },
@@ -184,6 +182,7 @@
                     xmview.showTip('error', response.message)
                     this.handleRemove()
                 }
+                this.$refs.container.querySelector('.el-upload__input').value = null
             },
             clearFiles() {
                 this.uploadBtn.style.display = 'block'
