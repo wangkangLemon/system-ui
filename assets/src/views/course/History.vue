@@ -34,7 +34,8 @@
 
 <template>
     <article id="course-history-container">
-        <el-button class="export" @click="exportData"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
+        <el-button class="export" @click="exportData"><i class="iconfont icon-iconfontexcel" :disabled="exporting"></i>
+            <i>导出</i></el-button>
 
         <div class="note">说明：企业选项为内训与工业课程的考试情况</div>
         <article class="search">
@@ -163,7 +164,8 @@
                     time_start: void 0,
                     time_end: void 0,
                     grade: void 0, // 不赋值则为未选择，1位满分，2为及格，3为不及格
-                }
+                },
+                exporting: false
             }
         },
         activated () {
@@ -189,15 +191,22 @@
                 })
             },
             exportData () {
-                testingService.exportTesting({
-                    course_id: this.fetchParam.course_id,
-                    company_id: this.fetchParam.company_id,
-                    department_id: this.fetchParam.department_id,
-                    account: this.fetchParam.account,
-                    time_start: this.fetchParam.time_start,
-                    time_end: this.fetchParam.time_end,
-                    grade: this.fetchParam.grade
+                this.exporting = true
+                testingService.exportTestingHistoryAsync().then(() => {
+                    xmview.showTip('success', '任务创建成功! 请到数据分析中查看')
+                }, () => {
+                }).then(() => {
+                    this.exporting = false
                 })
+//                testingService.exportTesting({
+//                    course_id: this.fetchParam.course_id,
+//                    company_id: this.fetchParam.company_id,
+//                    department_id: this.fetchParam.department_id,
+//                    account: this.fetchParam.account,
+//                    time_start: this.fetchParam.time_start,
+//                    time_end: this.fetchParam.time_end,
+//                    grade: this.fetchParam.grade
+//                })
             }
         },
         components: {CourseSelect, DateRange, vInput, CompanySelect, DepSelect}
