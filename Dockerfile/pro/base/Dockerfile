@@ -13,4 +13,4 @@ RUN cd git.vodjk.com/yst/system-ui/ \
 
 RUN cd git.vodjk.com/yst/system-ui/assets \
     && yarn install \
-    && yarn run build -- -h http://api.sys.yst.vodjk.com
+    && yarn run build -- -h http://sysapi.yst.vodjk.com
