@@ -359,13 +359,13 @@
         mounted () {
             mainService.getMain().then((ret) => {
                 this.mainData = ret.stat
-                let chartData = ret.chart.testing
+                let chartData = ret.chart.active
                 chartData.forEach((item) => {
                     this.xData.push(item.day)
-                    this.appData.push(item.x)
-                    this.wapData.push(item.h)
-                    this.testData.push(item.y)
-                    this.timeData.push(item.z)
+                    this.appData.push(item.x)  // x: app活跃
+                    this.wapData.push(item.h)  // h: wap活跃
+                    this.testData.push(item.y) // y: 考试人数
+                    this.timeData.push(item.z) // z: 考试次数
                 })
             }).then(() => {
                 this.getLineChart()
@@ -400,11 +400,6 @@
                         legend: {
                             data: ['app活跃人数', 'wap活跃人数', '考试人数', '考试次数']
                         },
-                        toolbox: {
-                            feature: {
-                                saveAsImage: {}
-                            }
-                        },
                         grid: {
                             left: '3%',
                             right: '0%',
@@ -424,7 +419,7 @@
                         yAxis: [
                             {
                                 type: 'value',
-                                max: this.maxResult * 1.2
+                                max: Math.ceil(this.maxResult * 1.2)
                             }
                         ],
                         series: [

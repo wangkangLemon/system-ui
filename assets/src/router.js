@@ -12,6 +12,7 @@ import sales from './routers/sales' // 晒单
 import company from './routers/company' // 企业
 import user from './routers/user' // 企业
 import im from './routers/im'
+import authUtils from './utils/authUtils'
 
 Vue.use(VueRouter)
 
@@ -31,9 +32,21 @@ const scrollBehavior = (to, from, savedPosition) => {
     return position
 }
 
+// 拿到左边的叶子节点
+let item = authUtils.getNavMenu()
+let firstLeafMenu
+if (item) {
+    item = item[0]
+    while (item.children && item.children.length > 0)
+        item = item.children[0]
+    firstLeafMenu = item.item.menu_url
+} else {
+    firstLeafMenu = '/login'
+}
+
 const routes = [
     {
-        path: '/', redirect: '/main'
+        path: '/', redirect: firstLeafMenu || '/main'
     },
     {
         path: '/showdoc', // 文档管理
@@ -116,7 +129,7 @@ const routes = [
             })
         },
         meta: {
-            title: '二次认证-微信登录',
+            title: '测试页面',
             notAuth: true, //  不需要身份验证
         }
     },
@@ -137,6 +150,14 @@ router.afterEach((route) => {
 })
 
 router.beforeEach((to, from, next) => {
+    let user = authUtils.getUserInfo()
+    // 如果需要登录
+    if (!to.matched.some(record => record.meta.notAuth) && (!user || !authUtils.getAuthToken() || !authUtils.getTwiceToken())) {
+        xmview.showTip('error', '未登录或登录已超时, 请重新登录!')
+        next({name: 'login'})
+        return
+    }
+
     xmview.setContentLoading && xmview.setContentLoading(true)
     setTitle(to.meta.title)
 

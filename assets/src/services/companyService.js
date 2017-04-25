@@ -61,7 +61,7 @@ class CompanyService {
                     description,
                     department_number,
                     user_number,
-                    user_name,
+                    signatory,
                     sign_time,
                     expire_time
                 }) {
@@ -82,7 +82,7 @@ class CompanyService {
             description,
             department_number,
             user_number,
-            user_name,
+            signatory,
             sign_time,
             expire_time
         }).then((ret) => {
@@ -101,7 +101,7 @@ class CompanyService {
     }
 
     // 更新企业信息
-    updateCompany ({category, name, concact, mobile, email, tel, fax, province, city, area, address, zip, url, description, department_number, user_number, user_name, sign_time, expire_time, company_id}) {
+    updateCompany ({category, name, concact, mobile, email, tel, fax, province, city, area, address, zip, url, description, department_number, user_number, signatory, sign_time, expire_time, company_id}) {
         let finalUrl = `${urlPre}/${company_id}`
         return api.put(finalUrl, {
             category,
@@ -120,7 +120,7 @@ class CompanyService {
             description,
             department_number,
             user_number,
-            user_name,
+            signatory,
             sign_time,
             expire_time
         }).then((ret) => {

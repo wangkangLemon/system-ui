@@ -34,6 +34,7 @@
             }
         },
         created () {
+            this.currVal = this.value
             if (window.UE !== undefined) {
                 // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
                 this.scriptTagStatus = 2

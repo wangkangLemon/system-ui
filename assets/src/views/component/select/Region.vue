@@ -72,6 +72,20 @@
                         this.placeholderVal.province = provinceObj.name
                         this.placeholderVal.city = cityObj.name
                         this.placeholderVal.area = areaObj.name
+                        this.provinceSelect = val[0]
+                        this.citySelect = val[1]
+                        this.areaSelect = val[2]
+//                        debugger
+                        this.setCurrVal(0, val[0])
+                    } else {
+                        this.provinceSelect = ''
+                        this.citySelect = ''
+                        this.areaSelect = ''
+                        this.placeholderVal = {
+                            province: '全部',
+                            city: '全部',
+                            area: '全部'
+                        }
                     }
                 }
             },
@@ -103,13 +117,6 @@
                     this.curItem = treeUtils.findItem(cityData, levelPath)
                     if (this.curItem.children && this.curItem.children.length > 0) {
                         this.citys = this.curItem.children
-                        this.citySelect = ''
-                        this.areaSelect = ''
-                        this.placeholderVal = {
-                            province: '全部',
-                            city: '全部',
-                            area: '全部'
-                        }
                     }
                 } else if (this.provinceSelect && type == 1) {
                     if (this.citys && this.citys.length > 0) {

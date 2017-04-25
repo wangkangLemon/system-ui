@@ -1,4 +1,4 @@
-<!--管理员-->
+<!--文章内容管理-->
 <style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
@@ -71,8 +71,6 @@
 </style>
 <template>
     <article class="article-content-container">
-        <!--删除弹窗-->
-        <delete-dialog :text="itemName" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
             <div class="avatar">
@@ -105,7 +103,7 @@
                                        class="upload-btn"></ImagEcropperInput>
                 </el-form-item>
                 <el-form-item prop="content" label="正文内容" id="editor" :label-width="formLabelWidth">
-                    <vue-editor @ready="ueReady"></vue-editor>
+                    <vue-editor v-model="form.content" @ready="ueReady"></vue-editor>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -185,7 +183,6 @@
     </article>
 </template>
 <script>
-    import deleteDialog from '../component/dialog/Delete'
     import DateRange from '../component/form/DateRangePicker.vue'
     import VueEditor from '../component/form/UEditor.vue'
     import ArticleService from '../../services/articleService'
@@ -198,7 +195,6 @@
             fillImgPath
         },
         components: {
-            deleteDialog,
             DateRange,
             VueEditor,
             ArticleCategorySelect,
@@ -292,8 +288,14 @@
                         }
                         this.form.content = this.editor.getContentTxt()
                         this.form.draft = status
-                        ArticleService.addArticle(this.form).then((ret) => {
-                            xmview.showTip('success', '发布成功')
+                        let reqFn = ArticleService.addArticle
+                        let msg = '发布成功'
+                        if (this.form.id) {
+                            reqFn = ArticleService.updateArticle
+                            msg = '修改成功'
+                        }
+                        reqFn(this.form).then((ret) => {
+                            xmview.showTip('success', msg)
                             this.addForm = false
                             this.getData()
                         }).catch((ret) => {
@@ -305,14 +307,12 @@
                 })
             },
             handleSizeChange (val) {
-                console.log(`每页 ${val} 条`)
-                // 当切换每页条数得时候 获取当前第一页得数据
-                this.handleCurrentChange(1)
+                this.pageSize = val
+                this.getData()
             },
             handleCurrentChange (val) {
                 this.currentPage = val
-                console.log(`当前页: ${val}`)
-                // 以下获取当页数据
+                this.getData()
             },
             getData () {
                 this.loading = true
