@@ -220,7 +220,7 @@
             <div>
                 <i><img src="./images/r_user.png" /></i>
                 <h2>{{mainData.register_user}}</h2>
-                <p>注册用户数</p>
+                <p>用户总数量</p>
                 <div>
                     <i>昨日新增{{mainData.register_user_inc}}</i>
                     <router-link tag="a" :to="{name: 'company-user-list'}">查看详情</router-link>

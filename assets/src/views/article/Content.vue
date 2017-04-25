@@ -71,21 +71,6 @@
 </style>
 <template>
     <article class="article-content-container">
-        <!--详情-->
-        <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetial">
-            <div class="avatar">
-                <img src="http://sys.yst.vodjk.dev/assets/img/user-default-female.jpg?00da903dc4d95b13b46f"/>
-            </div>
-            <div class="info">
-                <p><span>测试营销员</span></p>
-                <p><span>Mobile：</span> <i class="iconfont icon-oslash"></i>13012332324</p>
-                <p><span>Email：</span><i class="el-icon-message"></i> 12@vodjk.com</p>
-                <p><span>状态：</span> 正常</p>
-                <p><span>性别：</span> 女</p>
-                <p><span>地址：</span> 北京市朝阳区</p>
-                <p><span>注册时间：</span>2017-03-17 12:333</p>
-            </div>
-        </el-dialog>
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
@@ -212,8 +197,6 @@
                 },
                 editor: null,
                 itemName: '',           // 要删除项名称
-                deletDialog: false,     // 删除弹窗
-                showDetial: false,     // 是否显示详情对话框
                 uploadImgUrl: '',      // 要上传图片的请求地址
                 form: {                // 表单属性值
                     title: '',          // 标题
