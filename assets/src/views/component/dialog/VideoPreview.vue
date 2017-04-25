@@ -19,7 +19,6 @@
         data () {
             return {
                 isShow: false,
-                player: void 0
             }
         },
         beforeCreate () {
@@ -48,7 +47,7 @@
         },
         watch: {
             'isShow' (val) {
-                if (val && !this.player) {
+                if (val) {
                     this.initPlayer()
                 }
             }
@@ -61,7 +60,7 @@
                 if (!window.prismplayer || !this.url) return
                 /* eslint-disable no-new,new-cap */
                 this.$nextTick(() => {
-                    this.player = new window.prismplayer({
+                    new window.prismplayer({
                         id: 'J_prismPlayer', // 容器id
                         source: this.url, // 视频地址
                         autoplay: true,    // 自动播放：否
