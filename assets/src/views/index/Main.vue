@@ -424,7 +424,7 @@
                         yAxis: [
                             {
                                 type: 'value',
-                                max: this.maxResult * 1.2
+                                max: Math.ceil(this.maxResult * 1.2)
                             }
                         ],
                         series: [
