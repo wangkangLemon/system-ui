@@ -110,7 +110,7 @@
                     <el-input placeholder="签约店员数量" type="number" v-model="sign.user_number" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="signatory" label="签约人" :label-width="formLabelWidth">
-                    <SignatorySelect v-model="sign.signatory"></SignatorySelect>
+                    <SignatorySelect :placeholder="sign.user_name" v-model="sign.signatory"></SignatorySelect>
                 </el-form-item>
                 <el-form-item prop="sign_time" label="签约时间" :label-width="formLabelWidth">
                     <el-date-picker v-model="sign.sign_time"
@@ -411,6 +411,16 @@
                             this.form.company_id = this.companyID
                             reqFn = companyService.updateCompany
                             msg = '修改成功'
+                        }
+                        // 如果没有签约人 清空其他签约选项
+                        if (!this.sign.signatory) {
+                            this.sign = {
+                                department_number: '', // 门店数量
+                                user_number: '', // 店员数量
+                                signatory: '', // 签约人
+                                sign_time: '', // 签约日期
+                                expire_time: '' // 合同到期日
+                            }
                         }
                         reqFn(this.form).then(() => {
                             xmview.showTip('success', msg)

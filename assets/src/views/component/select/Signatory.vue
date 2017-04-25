@@ -1,6 +1,6 @@
 <!--签约人下拉框-->
 <template>
-    <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="currVal">
+    <SelectScroll :placeholder="placeholder" @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="currVal">
     </SelectScroll>
 </template>
 
@@ -8,7 +8,7 @@
     import SelectScroll from '../../component/form/SelectScroll.vue'
     import adminService from '../../../services/adminService'
     export default{
-        props: ['value', 'change'],
+        props: ['value', 'change', 'placeholder'],
         data () {
             return {
                 currVal: this.value,

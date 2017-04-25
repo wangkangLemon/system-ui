@@ -52,5 +52,6 @@ module.exports = {
         // just be aware of this issue when enabling this option.
         cssSourceMap: false,
         apiHost: "'http://10.1.2.140'"
+        // apiHost: "'http://10.1.2.13:8002'"
     }
 }
