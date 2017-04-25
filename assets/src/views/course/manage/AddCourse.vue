@@ -111,8 +111,8 @@
                         <el-radio class="radio" v-model="fetchParam.need_testing" :label="0">不需要</el-radio>
                     </el-form-item>
                     <el-form-item label="考试时间" prop="limit_time">
-                        <el-input :disabled="fetchParam.need_testing == 0" placeholder="以分钟为单位"
-                                  v-model="fetchParam.limit_time"></el-input>
+                        <el-input-number :min="0" size="small" :disabled="fetchParam.need_testing == 0" placeholder="以分钟为单位"
+                                         v-model="fetchParam.limit_time"></el-input-number>
                     </el-form-item>
                     <el-form-item label="考试次数限制">
                         <el-input :disabled="fetchParam.need_testing == 0" placeholder="留空或0位不限制"
