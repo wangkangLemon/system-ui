@@ -14,6 +14,7 @@ export default [
         },
         meta: {
             title: '安全设置-我的',
+            notAuth: true, //  不需要身份验证
         }
     },
     {

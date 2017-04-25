@@ -20,8 +20,9 @@ npm install
 ## Develop
 
 ``` bash
-# serve with hot reload at localhost:8010
-npm run dev
+# serve with hot reload at localhost:7010  
+npm run dev  
+后台接口地址 在 config/index.js 中的 dev-apihost节点
 ```
 
 ## Build

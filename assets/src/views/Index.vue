@@ -240,6 +240,7 @@
 
 
 
+
                     <small>{{subTitle}}</small>
                 </h2>
 
@@ -295,18 +296,15 @@
             this.icons.system = require('./images/system.png')
             this.icons.service = require('./images/service.png')
             this.icons.article = require('./images/article.png')
-            // 如果没有用户信息
-            if (!this.userInfo) {
-                this.$router.push({name: 'login'})
-                return
-            }
+
+            if (authUtils.getTwiceToken())
+                authUtils.authRefreshtoken() // 开启自动更新token
             xmview.setContentLoading = this.setContentLoading.bind(this)
             xmview.setContentBack = this.showContentBack.bind(this)
             this.navMenueActive = this.$route.path // 获取选中的菜单
             this.navMenus = authUtils.getNavMenu() // 获取菜单
         },
         mounted () {
-            authUtils.authRefreshtoken() // 开启自动更新token
             window.onresize = () => {
                 this.handleIsShowMenue(document.documentElement.clientWidth > 767)
             }
