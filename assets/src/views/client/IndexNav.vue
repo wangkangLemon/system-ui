@@ -125,10 +125,11 @@
     import mobileService from '../../services/mobileService'
     import formUtils from '../../utils/formUtils'
     import clone from 'clone'
+//    import config from '../../utils/config'
     export default{
         filters: {
             fillImgPath (url) {
-                let httpVal = 'http://10.1.2.140'
+                let httpVal = 'http://sysapi.yst.vodjk.com'
                 return url.indexOf('http') > -1 ? url : httpVal + url
             }
         },
