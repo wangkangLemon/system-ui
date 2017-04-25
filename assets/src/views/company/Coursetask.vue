@@ -60,14 +60,14 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import companyService from '../../services/companyService'
     export default {
         data () {
             return {
                 loading: false,
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 15,
                 courseData: [],
                 total: 0,
             }
