@@ -80,7 +80,10 @@
                                 <i v-else>{{codeWaitSecond}} 秒后重发</i>
                             </el-button>
                         </div>
-                        <el-button type="primary" @click="login(1)">登录</el-button>
+                        <el-button type="primary" @click="login(1)" :disabled="logining">
+                            <i v-if="!logining">登录</i>
+                            <i v-else>登录中...</i>
+                        </el-button>
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -106,6 +109,7 @@
                 smsCode: void 0,
                 emailCode: void 0,
                 tabSelected: 'first', // 选中的tab
+                logining: false, // 正在登录请求的状态
             }
         },
         created () {
@@ -152,7 +156,7 @@
                     wechatSdk.initLogin(this.wechatConfig)
                 })
             }).catch((err) => {
-                this.loadingdata = true
+                this.loadingdata = false
                 console.info('出错', err)
             })
         },
@@ -179,6 +183,7 @@
             },
             // type 0- 手机 1-邮箱
             login (type) {
+                this.logining = true
                 let code = type == 0 ? this.smsCode : this.emailCode
                 let p = type == 0 ? twiceService.twiceSmsValid({code}) : twiceService.twiceEmailValid({code})
                 p.then((ret) => {
@@ -187,6 +192,9 @@
                     while (item.children && item.children.length > 0)
                         item = item.children[0]
                     this.$router.push({path: item.item.menu_url})
+                }, () => {
+                }).then(() => {
+                    this.logining = false
                 })
             }
         },
