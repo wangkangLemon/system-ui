@@ -104,6 +104,13 @@
                 /*overflow-y: auto;*/
                 transition: all 300ms ease;
                 transform: translateX(0);
+
+                // 左边菜单的样式
+                .el-menu-item, .el-submenu__title {
+                    height: 40px;
+                    line-height: 40px;
+                    font-size: 14px;
+                }
                 @media (max-width: 767px) {
                     transform: translateX(-100%);
                     top: -55px;
@@ -173,7 +180,8 @@
                 <!--<div class="question"><i class="iconfont icon-wenti"></i> <em>问题反馈</em></div>-->
                 <el-dropdown trigger="click" @command="handleNickname">
                       <span class="el-dropdown-link nickname">
-                        <img v-if="userInfo.avatar" :src="{url:userInfo.avatar, sex: userInfo.sex} | defaultAvatar"> {{userInfo.name}} <i
+                        <img v-if="userInfo.avatar"
+                             :src="{url:userInfo.avatar, sex: userInfo.sex} | defaultAvatar"> {{userInfo.name}} <i
                               class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                     <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
@@ -236,11 +244,6 @@
                 <h2 class="right-title">
                     <i class="back-btn" v-show="isShowBack" @click="$router.back()">返回</i> <i v-show="isShowBack">|</i>
                     {{mainTitle}}
-
-
-
-
-
                     <small>{{subTitle}}</small>
                 </h2>
 
