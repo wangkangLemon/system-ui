@@ -90,19 +90,18 @@
                   :fit="true"
                   border>
             <el-table-column
-                    width="300"
-                    prop="course_name"
+                    min-width="300"
                     label="课程">
-            </el-table-column>
-            <el-table-column
-                    prop="store_name"
-                    label="连锁" width="180">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.enterprise_id == 1">公开</el-tag>
                     <el-tag type="primary" v-else-if="scope.row.enterprise_id == scope.row.store_id">内训</el-tag>
                     <el-tag type="warning" v-else>工业</el-tag>
-                    {{scope.row.store_name}}
+                    <i>{{scope.row.course_name}}</i>
                 </template>
+            </el-table-column>
+            <el-table-column
+                    prop="store_name"
+                    label="连锁" min-width="180">
             </el-table-column>
             <el-table-column
                     prop="dep_name"
@@ -110,7 +109,7 @@
             </el-table-column>
             <el-table-column
                     prop="user_name"
-                    label="店员" width="100">
+                    label="店员" width="150">
             </el-table-column>
             <el-table-column
                     width="80"
