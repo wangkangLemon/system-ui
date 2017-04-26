@@ -31,3 +31,31 @@ npm run dev
 # build for production with minification
 npm run build -- -h http://vodjk.com
 ```
+
+### 全局对象
+#### xmview
+  
+##### setContentLoading(Boolean)
+```
+设置内容区域的loading状态
+```
+
+##### setLoading (Boolean)
+```
+设置全屏的loading状态
+```
+
+##### showDialog (content, confirmFn, title = '操作提示', isShow = true)
+```
+弹出提示的对话框
+```
+| 参数  | 类型  | 名称  |   
+| ------------ | ------------ | ------------ |
+| content  | String  | 对话框的内容文本  |
+|  confirmFn | Function  |  点击确认按钮的回调  |
+
+
+##### setContentBack (Boolean)
+```
+设置是否显示内容部分的返回按钮
+```
