@@ -13,6 +13,10 @@ RUN cd git.vodjk.com/yst/system-ui/ \
     && git pull origin master \
     && CGO_ENABLED=0 go build -a
 
+RUN cd git.vodjk.com/yst/system-ui/ \
+    && CGO_ENABLED=0 go build -a
+
 RUN cd git.vodjk.com/yst/system-ui/assets \
+    && cp config/config.js.default config/config.js \
     && yarn install \
-    && yarn run build -- -h http://sysapi.yst.vodjk.com
+    && yarn run build

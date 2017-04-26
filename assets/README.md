@@ -17,19 +17,21 @@
 npm install
 ```
 
-## Develop
+## 开发环境
+
+### 修改配置文件
+
+``` bash
+cp config/config.js.default config/config.js
+```
+
+并修改其中的 `API_HOST_DEV` 为你调试使用的接口地址，如果是本机开发，一般为：`http://127.0.0.1:8002`
+
+### 运行前端热构建
 
 ``` bash
 # serve with hot reload at localhost:7010  
-npm run dev  
-后台接口地址 在 config/index.js 中的 dev-apihost节点
-```
-
-## Build
-
-``` bash
-# build for production with minification
-npm run build -- -h http://vodjk.com
+npm run dev
 ```
 
 ### 全局对象
@@ -49,13 +51,14 @@ npm run build -- -h http://vodjk.com
 ```
 弹出提示的对话框
 ```
-| 参数  | 类型  | 名称  |   
-| ------------ | ------------ | ------------ |
-| content  | String  | 对话框的内容文本  |
-|  confirmFn | Function  |  点击确认按钮的回调  |
+| 参数      | 类型       | 名称             |
+|-----------|-----------|---------------- |
+| content   | String    | 对话框的内容文本   |
+| confirmFn | Function  | 点击确认按钮的回调 |
 
 
 ##### setContentBack (Boolean)
+
 ```
 设置是否显示内容部分的返回按钮
 ```
