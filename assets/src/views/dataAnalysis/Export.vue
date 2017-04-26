@@ -169,6 +169,7 @@
                     time_end: this.search.endTime,
                     company_id: authUtils.getUserInfo().company_id
                 }).then((ret) => {
+                    this.total = ret.total
                     this.exportData = ret.data
                 }).then(() => {
                     this.loading = false

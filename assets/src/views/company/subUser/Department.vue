@@ -79,7 +79,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import companyUserService from '../../../services/companyUserService'
     import {date2Str} from '../../../utils/timeUtils'
     export default {

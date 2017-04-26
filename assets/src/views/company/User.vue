@@ -40,7 +40,7 @@
                 return this.$route.query.tabIndex || '1'
             }
         },
-        mounted () {
+        activated () {
             this.$router.push({name: 'company-user-list', query: {tabIndex: '1'}})
         },
         methods: {

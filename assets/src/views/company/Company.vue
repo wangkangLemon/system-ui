@@ -172,7 +172,7 @@
                     style="width: 100%">
                 <el-table-column
                         prop="name"
-                        label="名称">
+                        label="名称" min-width="150">
                     <template scope="scope">
                         <el-tag type="gray">{{companyType[scope.row.category]}}</el-tag>
                         {{scope.row.name}}
@@ -201,7 +201,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="operate"
-                        label="操作">
+                        label="操作" min-width="100">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="adminPage(scope.$index, scope.row)">
                             管理员
