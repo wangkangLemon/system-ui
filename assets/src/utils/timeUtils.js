@@ -137,6 +137,7 @@ export function date2Str (date, split = '-', {hashour = false, hasDay = true} = 
 }
 
 // 比较两个日期的大小(不比较具体的时间)
+// 传入的参数必须是 Date 类型
 export function compareDate (date1, date2) {
     let years = [date1.getFullYear(), date2.getFullYear()]
     let months = [date1.getMonth(), date2.getMonth()]

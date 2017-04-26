@@ -7,26 +7,41 @@
 
 <template>
     <div id="testview-container">
-        <el-button @click="$refs.preview.show()">点击出现</el-button>
-        <VideoPreview
-                url="http://vodcdn.yst.vodjk.com/201704241854/8a4fadbe211fb7f98ff4bde6c1f2014b/company/1/2017/3/27/174034t3m0mnm9ria30qmy4x6r/sd/5adbbde5630845629772657d6f143636.m3u8"
-                ref="preview"></VideoPreview>
+        <vTest v-model="inoutVal" ref="text" :subChangelist="changeList"></vTest>
+        <vTest :value="inoutVal" @input="val=>inoutVal = val "></vTest>
+        <vTest value="true"></vTest>
+        <vTest :value="123"></vTest>
+
+        <input type="file" ref="file">
     </div>
 </template>
 
 <script>
     import VideoPreview from './component/dialog/VideoPreview.vue'
+    import vTest from './component/Test.vue'
     export default {
         data() {
             return {
-                isShow: false
+                inoutVal: 11,
+                isShow: false,
+                list: [{name: '11', age: 18}, {name: '12', age: 18}]
             }
         },
         created () {
+//            xmview.showDialog('<span style="color: red">shit</span>')
+            console.info(this.$refs.file, 'created')
+            console.info(this.$refs.text, 'created')
         },
         mounted () {
+            console.info(this.$refs.file)
+            console.info(this.$refs.text)
         },
-        methods: {},
-        components: {VideoPreview}
+        methods: {
+            changeList () {
+                console.info(this.$refs.file)
+                this.$refs.text.showVal()
+            }
+        },
+        components: {VideoPreview, vTest}
     }
 </script>

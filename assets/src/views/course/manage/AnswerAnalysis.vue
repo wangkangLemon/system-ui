@@ -31,7 +31,7 @@
                     p {
                         border-bottom: 1px solid #ededed;
                         &.correct {
-                            color: #01e6e6;
+                            color: #58B7FF;
                         }
                     }
                     h2, p {
@@ -63,7 +63,7 @@
                 <h1 class="subject-title"><el-tag type="success">{{category[subject.category]}}</el-tag>{{subject.description}}</h1>
                 <div class="subject-item">
                     <h2><i>#</i><span>选项</span><em>比例</em></h2>
-                    <p :class="{'correct': subject.category == 0 && index == subject.correct}" v-for="(item, index) in subject.answers">
+                    <p :class="{'correct': (subject.category !== 0 && item.correct) || (subject.category === 0 && subject.correct == index)}" v-for="(item, index) in subject.answers">
                         <i>{{index + 1}}</i>
                         <span>{{item.description}}</span>
                         <em>{{item.percent}}%</em>
@@ -107,11 +107,6 @@
             }).then(() => {
                 xmview.setContentLoading(false)
             })
-        },
-        methods: {
-            goBack () {
-                this.$router.go(-1)
-            }
         }
     }
 </script>

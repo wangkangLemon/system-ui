@@ -1,3 +1,4 @@
+<!--考试记录-->
 <style lang='scss' rel='stylesheet/scss'>
     @import "../../utils/mixins/topSearch";
     @import "../../utils/mixins/common";
@@ -94,17 +95,22 @@
                     label="课程">
             </el-table-column>
             <el-table-column
-                    prop="ent_name"
-                    label="连锁">
+                    prop="store_name"
+                    label="连锁" width="180">
+                <template scope="scope">
+                    <el-tag type="success" v-if="scope.row.enterprise_id == 1">公开</el-tag>
+                    <el-tag type="primary" v-else-if="scope.row.enterprise_id == scope.row.store_id">内训</el-tag>
+                    <el-tag type="warning" v-else>工业</el-tag>
+                    {{scope.row.store_name}}
+                </template>
             </el-table-column>
             <el-table-column
                     prop="dep_name"
                     label="门店">
             </el-table-column>
             <el-table-column
-                    width="100"
                     prop="user_name"
-                    label="店员">
+                    label="店员" width="100">
             </el-table-column>
             <el-table-column
                     width="80"

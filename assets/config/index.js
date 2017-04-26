@@ -1,6 +1,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 let fs = require('fs')
+let apiConfig = require('./config')
 
 module.exports = {
     build: {
@@ -22,16 +23,7 @@ module.exports = {
         // Set to `true` or `false` to always turn it on or off
         bundleAnalyzerReport: process.env.npm_config_report,
         // 获取接口地址
-        getApiHost: function () {
-            let apiHost = ''
-            var options = process.argv;
-            for (let i = 0; i < options.length; i++) {
-                if (options[i] === '-h') {
-                    return `'${options[i + 1]}'`
-                }
-            }
-            throw new Error('请指定接口地址参数 如 npm run build -- -h http://yst.com')
-        },
+        apiHost: apiConfig.API_HOST_PROD,
     },
     dev: {
         env: require('./dev.env'),
@@ -41,7 +33,7 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/vendor': {
-                target: 'http://localhost:8001',
+                target: apiConfig.VENDOR_HOST,
                 changeOrigin: true
             }
         },
@@ -51,7 +43,6 @@ module.exports = {
         // In our experience, they generally work as expected,
         // just be aware of this issue when enabling this option.
         cssSourceMap: false,
-        apiHost: "'http://10.1.2.9:8002'"
-        // apiHost: "'http://10.1.2.13:8002'"
+        apiHost: apiConfig.API_HOST_DEV,
     }
 }

@@ -4,6 +4,18 @@
     @import "../../../utils/mixins/topSearch";
     @import "../../../utils/mixins/showDetail";
     .system-manage {
+        .showDetail {
+            .info {
+                padding-bottom: 40px;
+                p.select {
+                    span.value {
+                        > div {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
         .box-card {
             margin-bottom: 20px;
             .clearfix {
@@ -43,7 +55,7 @@
                 <p class="select remark">
                     <i class="title">备注：</i>
                     <span class="value">
-                        <el-input type="textarea" :rows="3" v-model="form.note"></el-input>
+                        <el-input type="textarea" :rows="6" v-model="form.note"></el-input>
                     </span>
                 </p>
                 <p class="select">

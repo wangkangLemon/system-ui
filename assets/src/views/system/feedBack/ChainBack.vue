@@ -33,6 +33,8 @@
                         width: 70%;
                         .img-wrap {
                             img {
+                                cursor: pointer;
+                                margin-right: 10px;
                                 width: 100px;
                                 height: 100px;
                             }
@@ -79,7 +81,9 @@
                     <i class="title">问题截取：</i>
                     <span class="value">
                         <div class="img-wrap">
-                            <img :src="item" alt="" v-for="item in details.image_group">
+                            <img :src="item | fillImgPath" alt="" v-for="item in details.image_group" @click="screenImg(item)">
+                            <!--示例-->
+                            <!--<img src="http://img.vodjk.com/templates/vodjk/images/2017img/logo.jpg" alt="" @click="screenImg('http://img.vodjk.com/templates/vodjk/images/2017img/logo.jpg')">-->
                         </div>
                     </span>
                 </p>
@@ -178,14 +182,21 @@
                 </el-pagination>
             </div>
         </el-card>
+        <screenImg></screenImg>
     </article>
 </template>
 <script>
     import feedBackService from '../../../services/feedBackService'
     import DateRange from '../../component/form/DateRangePicker.vue'
+    import {fillImgPath} from '../../../utils/filterUtils'
+    import screenImg from '../../component/dialog/FullScreenImg.vue'
     export default {
+        filters: {
+            fillImgPath
+        },
         components: {
-            DateRange
+            DateRange,
+            screenImg
         },
         data () {
             return {
@@ -212,6 +223,9 @@
             })
         },
         methods: {
+            screenImg (image) {
+                screenImg.setShow(image)
+            },
             deleteFn (row) {
                 xmview.showDialog('你将要执行删除操作且不可恢复确认吗？', () => {
                     feedBackService.deleteData(row.id).then(() => {

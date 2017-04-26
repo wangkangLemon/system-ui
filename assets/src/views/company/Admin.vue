@@ -11,7 +11,7 @@
             background: #ededed;
             padding: px2rem(10) px2rem(20);
             border-bottom: 1px solid #ededed;
-
+            text-align: right;
             .back {
                 float: right;
             }
@@ -122,7 +122,6 @@
         <section class="add">
             <!--点击添加 form数据取邮箱/手机号 密码-->
             <el-button icon="plus" @click="addAdmin">添加</el-button>
-            <router-link class="back" tag="el-button" :to="{name: 'company-index'}">返回</router-link>
         </section>
         <div class="main-container">
             <section class="search">
@@ -148,7 +147,7 @@
                         width="200">
                 </el-table-column>
                 <el-table-column
-                        prop="last_login_time"
+                        prop="last_login_time_name"
                         label="上次登录时间"
                         width="200">
                 </el-table-column>
