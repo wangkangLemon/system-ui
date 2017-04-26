@@ -251,6 +251,7 @@
         },
         watch: {
             '$route' () {
+                if (this.$route.name !== 'course-analysis') return
                 this.type = this.$route.query.type || 0
                 this.fetchParam.course_id = this.$route.query.course_id
                 this.fetchParam.department_id = this.$route.query.department_id
