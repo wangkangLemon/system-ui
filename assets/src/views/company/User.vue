@@ -8,7 +8,9 @@
                     :name="item.name"
                     :key="item.id">
             </el-tab-pane>
-            <router-view></router-view>
+            <keep-alive>
+                <router-view></router-view>
+            </keep-alive>
         </el-tabs>
     </article>
 </template>
