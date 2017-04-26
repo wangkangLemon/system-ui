@@ -187,7 +187,8 @@
                 <div><i class="iconfont icon-bell"></i> <em>消息</em></div>
                 <el-dropdown trigger="click" @command="handleFeedback">
                     <span class="el-dropdown-link feedback">
-                        <i class="iconfont icon-service"></i> <em>工单系统</em> <i class="el-icon-caret-bottom el-icon--right"></i>
+                        <i class="iconfont icon-service"></i> <em>工单系统</em> <i
+                            class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                     <el-dropdown-menu slot="dropdown" class="feedback-dropdown">
                         <el-dropdown-item command="index">我的工单</el-dropdown-item>
@@ -260,6 +261,9 @@
                 <h2 class="right-title">
                     <i class="back-btn" v-show="isShowBack" @click="$router.back()">返回</i> <i v-show="isShowBack">|</i>
                     {{mainTitle}}
+
+
+
                     <small>{{subTitle}}</small>
                 </h2>
 
@@ -352,7 +356,6 @@
             // 注销登录
             handleNickname (type) {
                 /* eslint-disable indent  */
-                console.log(type)
                 switch (type) {
                     case 'loginout': {
                         userService.loginout()
@@ -376,7 +379,7 @@
                         break
                     }
                     default: {
-                        console.info('3')
+                        throw new Error('index.vue, handleNickname not support type')
                     }
                 }
             },
@@ -384,12 +387,10 @@
                 if (!loading) {
                     this.$nextTick(() => {
                         setTimeout(() => {
-                            console.log('关闭loading', loading)
                             this.contentLoading = loading
                         }, 300)
                     })
                 } else {
-                    console.log('开启loading', loading)
                     this.contentLoading = loading
                 }
             },

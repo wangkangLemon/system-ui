@@ -97,6 +97,7 @@
                   border>
             <el-table-column type="selection"></el-table-column>
             <el-table-column
+                    width="200"
                     prop="name"
                     label="课程">
             </el-table-column>
