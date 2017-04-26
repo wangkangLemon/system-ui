@@ -326,7 +326,7 @@ class CourseService {
     // 添加视频
     addVideo ({name, company_id, tags, source_type, source_url}) {
         company_id = company_id || authUtils.getUserInfo().company_id
-        let url = `${urlPre}/video/`
+        let url = `${config.apiHost}/com/${company_id}/course/video`
         return api.post(url, {name, company_id, tags, source_type, source_url})
     }
 
@@ -344,6 +344,13 @@ class CourseService {
         return api.get(finalUrl).then((ret) => {
             return ret.data
         })
+    }
+
+    // 刷新视频状态
+    refreshVideoStatus ({companyid, id} = {}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/video/refresh/aliyun/status`
+        return api.post(finalUrl, {id})
     }
 
     // 获取上传封面的url

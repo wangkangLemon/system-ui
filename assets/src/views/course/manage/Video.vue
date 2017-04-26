@@ -50,8 +50,8 @@
             <section>
                 <i>状态</i>
                 <el-select :clearable="true" v-model="fetchParam.status" placeholder="请选择" @change="fetchData">
-                    <el-option label="转码中" :value="2"></el-option>
-                    <el-option label="下线" :value="1"></el-option>
+                    <el-option label="转码中" :value="1"></el-option>
+                    <el-option label="转码失败" :value="2"></el-option>
                     <el-option label="正常" :value="0"></el-option>
                 </el-select>
             </section>
@@ -76,11 +76,12 @@
                   border>
             <el-table-column type="selection"></el-table-column>
             <el-table-column
+                    min-width="230"
                     prop="name"
                     label="视频名称">
             </el-table-column>
             <el-table-column
-                    width="200"
+                    min-width="200"
                     prop="company"
                     label="所属企业">
             </el-table-column>
@@ -90,12 +91,16 @@
                     label="时长">
             </el-table-column>
             <el-table-column
-                    width="100"
+                    width="120"
                     label="状态">
                 <template scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
-                    <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
-                    <el-tag v-else>已下线</el-tag>
+                    <el-tag v-else-if="scope.row.status == 1" type="primary">转码中</el-tag>
+                    <el-tag v-else>转码失败</el-tag>
+                    <el-button type="text" v-if="scope.row.status == 1" size="small"
+                               @click="refreshStatus(scope.$index, scope.row)">刷新
+
+                    </el-button>
                 </template>
             </el-table-column>
             <el-table-column
@@ -104,10 +109,13 @@
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="200"
+                    width="150"
                     label="操作">
                 <template scope="scope">
-                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>
+                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
+                               v-if="scope.row.status == 0">预览
+
+                    </el-button>
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>
@@ -285,6 +293,12 @@
             handleOnUploaded (ret) {
                 this.videoModel.cover = config.apiHost + ret.data.url
             },
+            // 刷新视频状态
+            refreshStatus (index, row) {
+                courseService.refreshVideoStatus({id: row.id}).then((ret) => {
+                    row.status = 0
+                })
+            }
         },
         components: {
             vInput, CourseCategorySelect, DateRange, IndustryCompanySelect, vTags, UploadImg, VideoPreview
