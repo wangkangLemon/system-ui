@@ -95,5 +95,26 @@ class LogService {
             return ret.data
         })
     }
+
+    // 行为日志
+    getBehaviorList ({
+        page,
+        page_size,
+    }) {
+        let finalUrl = `${urlPre}/behavior/search`
+        return api.get(finalUrl, {page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取详细行为日志
+    getBehaviorInfo ({
+        record_id,
+    }) {
+        let finalUrl = `${urlPre}/behavior/${record_id}/steps`
+        return api.get(finalUrl, {}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 export default new LogService()
