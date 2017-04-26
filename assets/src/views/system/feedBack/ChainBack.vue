@@ -2,45 +2,8 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
+    @import "../../../utils/mixins/showDetail";
     .system-manage {
-        .showDetail {
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                text-align: center;
-                width: 100%;
-                h2 {
-                    margin-bottom: 10px;
-                }
-                p {
-                    text-align: left;
-                    line-height:35px;
-                    > * {
-                        display: inline-block;
-                        vertical-align: top;
-                    }
-                    i.title {
-                        width: 16%;
-                        margin-right: 10px;
-                        text-align: right;
-                    }
-                    span.value {
-                        text-align: left;
-                    }
-                }
-                > p.question {
-                    .value {
-                        width: 70%;
-                        .img-wrap {
-                            img {
-                                width: 100px;
-                                height: 100px;
-                            }
-                        }
-                    }
-                }
-            }
-        }
         .box-card {
             margin-bottom: 20px;
             .clearfix {

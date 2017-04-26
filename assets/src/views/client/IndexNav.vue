@@ -74,7 +74,7 @@
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="name" label="导航图标" label-width="120px">
                     <div class="img-wrap">
-                        <img :src="form.url" alt="" />
+                        <img :src="form.url | fillImgPath" alt="" />
                     </div>
                     <p class="tip">建议上传图片尺寸为 140*140</p>
                     <ImagEcropperInput :isShowBtn="true" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
@@ -125,13 +125,10 @@
     import mobileService from '../../services/mobileService'
     import formUtils from '../../utils/formUtils'
     import clone from 'clone'
-//    import config from '../../utils/config'
+    import {fillImgPath} from '../../utils/filterUtils'
     export default{
         filters: {
-            fillImgPath (url) {
-                let httpVal = 'http://sysapi.yst.vodjk.com'
-                return url.indexOf('http') > -1 ? url : httpVal + url
-            }
+            fillImgPath
         },
         data () {
             return {
@@ -175,7 +172,7 @@
             },
             changeFn (list, index, id) {
                 this.form = {
-                    url: list[index].icon.indexOf('http') > -1 ? list[index].icon : 'http://10.1.2.140' + list[index].icon,
+                    url: list[index].icon,
                     name: list[index].name
                 }
                 this.currentData = {list, index, id}

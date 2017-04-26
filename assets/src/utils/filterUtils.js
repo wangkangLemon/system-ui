@@ -3,7 +3,7 @@
  */
 import Vue from 'vue'
 import * as timeUtils from '../utils/timeUtils'
-// import config from '../utils/config'
+import config from '../../config/config'
 
 // 默认头像
 export const defaultAvatar = Vue.filter('defaultAvatar', function (urlObj) {
@@ -28,6 +28,6 @@ export const tamp2Str = Vue.filter('tamp2Str', function (timetamp) {
 // 填充图片的url
 export const fillImgPath = Vue.filter('fillImgPath', function (url) {
     if (!url) return url
-    let apiUrl = 'http://sysapi.yst.vodjk.com'
+    let apiUrl = config.API_HOST_PROD.replace(/(^")|("$)/g, '')
     return url.indexOf('http') > -1 ? url : apiUrl + url
 })
