@@ -15,7 +15,7 @@ class FeedBackService {
     }
     // 查看连锁后台数据详情
     getChainBackDetail (feedbackId) {
-        let finalUrl = `${urlPre}/${feedbackId}/view`
+        let finalUrl = `${urlPre}/${feedbackId}`
         return api.get(finalUrl, {}).then((ret) => {
             return ret.data
         })
@@ -71,7 +71,7 @@ class FeedBackService {
 
     // 查看客户端数据详情
     getMobileDetail (feedbackId) {
-        let finalUrl = `${urlPre}/mobile/${feedbackId}/view`
+        let finalUrl = `${urlPre}/mobile/${feedbackId}`
         return api.get(finalUrl, {}).then((ret) => {
             return ret.data
         })
