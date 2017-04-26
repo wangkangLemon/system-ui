@@ -22,7 +22,7 @@ function getTimeoutPromise (url) {
 
             // 删除这个url的引用
             delete requestedUrls[url]
-        }, 20000)
+        }, 50000)
     })
 }
 

@@ -7,6 +7,7 @@ import admin from './routers/admin'
 import dataAnalysis from './routers/dataAnalysis'
 import course from './routers/course' // 培训管理
 import client from './routers/client' // 客户端
+import feedback from './routers/feedback' // 工单系统
 import finance from './routers/finance' // 财务
 import sales from './routers/sales' // 晒单
 import company from './routers/company' // 企业
@@ -84,6 +85,8 @@ const routes = [
             ...client,
             // ============晒单==================
             ...sales,
+            // ============ 工单系统 ==================
+            ...feedback,
             // ============财务管理部分==================
             ...finance,
             // ============文章管理部分==================
@@ -150,9 +153,8 @@ router.afterEach((route) => {
 })
 
 router.beforeEach((to, from, next) => {
-    let user = authUtils.getUserInfo()
     // 如果需要登录
-    if (!to.matched.some(record => record.meta.notAuth) && (!user || !authUtils.getAuthToken() || !authUtils.getTwiceToken())) {
+    if (!to.matched.some(record => record.meta.notAuth) && (!authUtils.getUserInfo() || !authUtils.getAuthToken() || !authUtils.getTwiceToken())) {
         xmview.showTip('error', '未登录或登录已超时, 请重新登录!')
         next({name: 'login'})
         return

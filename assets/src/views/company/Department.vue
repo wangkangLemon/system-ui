@@ -34,14 +34,14 @@
         <el-dialog v-if="show.detail" class="showDetail" title="查看门店" v-model="show.showDetail">
             <div class="info">
                 <h2>测试营销员</h2>
-                <p><i>店长：</i><span>{{show.detail.concact || '无'}}</span></p>
-                <p><i>手机：</i><span>{{show.detail.mobile || '无'}}</span></p>
-                <p><i>电话：</i><span>{{show.detail.tel || '无'}}</span></p>
-                <p><i>传真：</i><span>{{show.detail.fax || '无'}}</span></p>
-                <p><i>地区：</i><span>{{show.detail.area_name || '无'}}</span></p>
-                <p><i>地址：</i><span>{{show.detail.address || '无'}}</span></p>
-                <p><i>邮编：</i><span>{{show.detail.zip || '无'}}</span></p>
-                <p><i>描述：</i><span>{{show.detail.description || '无'}}</span></p>
+                <p><i class="title">店长：</i><span class="value">{{show.detail.concact || '无'}}</span></p>
+                <p><i class="title">手机：</i><span class="value">{{show.detail.mobile || '无'}}</span></p>
+                <p><i class="title">电话：</i><span class="value">{{show.detail.tel || '无'}}</span></p>
+                <p><i class="title">传真：</i><span class="value">{{show.detail.fax || '无'}}</span></p>
+                <p><i class="title">地区：</i><span class="value">{{show.detail.area_name || '无'}}</span></p>
+                <p><i class="title">地址：</i><span class="value">{{show.detail.address || '无'}}</span></p>
+                <p><i class="title">邮编：</i><span class="value">{{show.detail.zip || '无'}}</span></p>
+                <p><i class="title">描述：</i><span class="value">{{show.detail.description || '无'}}</span></p>
             </div>
         </el-dialog>
         <el-card class="box-card">
@@ -166,7 +166,7 @@
                 },
                 loading: false,
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 15,
                 departmentData: [],
                 total: 0,
                 searchParams: {

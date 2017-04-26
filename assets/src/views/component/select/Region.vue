@@ -68,6 +68,7 @@
                     let provinceObj = treeUtils.findItem(cityData, [`${val[0]}`])
                     let cityObj = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`])
                     let areaObj = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`, `${val[2]}`])
+                    console.log(provinceObj, cityObj, areaObj)
                     if (provinceObj != undefined && cityObj != undefined && areaObj != undefined) {
                         this.placeholderVal.province = provinceObj.name
                         this.placeholderVal.city = cityObj.name

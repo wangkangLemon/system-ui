@@ -251,12 +251,16 @@
         },
         watch: {
             '$route' () {
+                if (this.$route.name !== 'course-analysis') return
                 this.type = this.$route.query.type || 0
                 this.fetchParam.course_id = this.$route.query.course_id
                 this.fetchParam.department_id = this.$route.query.department_id
                 this.fetchParam.store_id = this.$route.query.store_id
                 this.fetchParam.page = 1
                 this.fetchData()
+
+                // 设置返回按钮
+                xmview.setContentBack(this.type > 0)
             }
         },
         activated () {
@@ -270,6 +274,8 @@
             this.fetchParam.store_id = this.$route.query.store_id
             // 页面加载一次
             this.fetchData()
+
+            xmview.setContentBack(this.type > 0)
         },
         methods: {
             fetchData () {

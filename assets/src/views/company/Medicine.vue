@@ -67,7 +67,7 @@
             return {
                 loading: false,
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 15,
                 medicineData: [],
                 total: 0,
             }

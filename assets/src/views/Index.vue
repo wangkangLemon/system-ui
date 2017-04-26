@@ -66,8 +66,16 @@
                     }
 
                     // 问题反馈
-                    .question {
+                    .feedback {
+                        cursor: pointer;
                         margin: 0 5px 0 15px
+                    }
+
+                    @at-root {
+                        .feedback-dropdown {
+                            top: 35px !important;
+                            width: 120px;
+                        }
                     }
 
                     .nickname {
@@ -104,6 +112,13 @@
                 /*overflow-y: auto;*/
                 transition: all 300ms ease;
                 transform: translateX(0);
+
+                // 左边菜单的样式
+                .el-menu-item, .el-submenu__title {
+                    height: 40px;
+                    line-height: 40px;
+                    font-size: 14px;
+                }
                 @media (max-width: 767px) {
                     transform: translateX(-100%);
                     top: -55px;
@@ -169,11 +184,20 @@
                 <h2>药视通</h2>
             </el-col>
             <el-col :span="8" class="header-right">
-                <!--<div><i class="iconfont icon-xiaoxizhongxin"></i> <em>消息</em></div>-->
-                <!--<div class="question"><i class="iconfont icon-wenti"></i> <em>问题反馈</em></div>-->
+                <div><i class="iconfont icon-bell"></i> <em>消息</em></div>
+                <el-dropdown trigger="click" @command="handleFeedback">
+                    <span class="el-dropdown-link feedback">
+                        <i class="iconfont icon-service"></i> <em>工单系统</em> <i class="el-icon-caret-bottom el-icon--right"></i>
+                      </span>
+                    <el-dropdown-menu slot="dropdown" class="feedback-dropdown">
+                        <el-dropdown-item command="index">我的工单</el-dropdown-item>
+                        <el-dropdown-item command="add">提交工单</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
                 <el-dropdown trigger="click" @command="handleNickname">
                       <span class="el-dropdown-link nickname">
-                        <img v-if="userInfo.avatar" :src="{url:userInfo.avatar, sex: userInfo.sex} | defaultAvatar"> {{userInfo.name}} <i
+                        <img v-if="userInfo.avatar"
+                             :src="{url:userInfo.avatar, sex: userInfo.sex} | defaultAvatar"> {{userInfo.name}} <i
                               class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                     <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
@@ -204,7 +228,7 @@
                 </el-col>
                 <el-col :span="24" class="header-right">
                     <div><i class="iconfont icon-xiaoxizhongxin"></i> <em></em></div>
-                    <div class="question"><i class="iconfont icon-wenti"></i> <em></em></div>
+                    <div class="feedback"><i class="iconfont icon-wenti"></i> <em></em></div>
                     <el-dropdown trigger="click" @command="handleNickname">
                       <span class="el-dropdown-link nickname">
                         <img src="./images/user-default-male.jpg"><i
@@ -236,11 +260,6 @@
                 <h2 class="right-title">
                     <i class="back-btn" v-show="isShowBack" @click="$router.back()">返回</i> <i v-show="isShowBack">|</i>
                     {{mainTitle}}
-
-
-
-
-
                     <small>{{subTitle}}</small>
                 </h2>
 
@@ -315,6 +334,20 @@
         methods: {
             handleIsShowMenue (val) {
                 this.isShowMenue = val
+            },
+            handleFeedback (type) {
+                /* eslint-disable indent  */
+                switch (type) {
+                    case 'index':
+                        this.$router.push({name: 'feedback-index'})
+                        break
+                    case 'add':
+                        this.$router.push({name: 'feedback-add'})
+                        break
+                    default:
+                        console.info('handleFeedback not support type')
+                        break
+                }
             },
             // 注销登录
             handleNickname (type) {

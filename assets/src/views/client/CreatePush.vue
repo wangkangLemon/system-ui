@@ -1,3 +1,4 @@
+<!--新建消息推送-->
 <style lang="scss">
     @import "../../utils/mixins/mixins";
     .client-createpush-container{
@@ -204,6 +205,11 @@
                         id: 2,
                         name: '2.2.0',
                         value: '2.2.0'
+                    },
+                    {
+                        id: 3,
+                        name: '最新3.0',
+                        value: '最新3.0'
                     }
                 ],
                 role: [ // 发送对象

@@ -44,7 +44,7 @@ func main() {
 	})
 
 	// run
-	addr := setting.Config.MustString("http.address", "0.0ls.0.0")
+	addr := setting.Config.MustString("http.address", "0.0.0.0")
 	port := setting.Config.MustString("http.port", "8001")
 	app.Run(addr + ":" + port)
 }

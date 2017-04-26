@@ -109,12 +109,10 @@
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../services/mobileService'
     import authUtls from '../../utils/authUtils'
+    import {fillImgPath} from '../../utils/filterUtils'
     export default{
         filters: {
-            fillImgPath (url) {
-                let httpVal = 'http://10.1.2.140'
-                return url.indexOf('http') > -1 ? url : httpVal + url
-            }
+            fillImgPath
         },
         data() {
             return {
@@ -154,8 +152,10 @@
                 mobileService.uploadboot({company_id: this.user.company_id, image: data}).then(ret => {
                     this.imgData = ret.data.url
                 }).then(() => {
+                    xmview.showTip('success', '上传成功')
                     this.uploadingImg = false
-                }).catch(() => {
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
                     this.uploadingImg = false
                 })
             },

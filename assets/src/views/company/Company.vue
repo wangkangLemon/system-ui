@@ -275,12 +275,12 @@
                     typeSelect: '',
                     types: [ // 类型
                         {
-                            name: '工业',
-                            id: 1
-                        },
-                        {
                             name: '连锁',
                             id: 2
+                        },
+                        {
+                            name: '工业',
+                            id: 1
                         }
                     ],
                     provinceSelect: '',
@@ -289,7 +289,7 @@
                     name: ''
                 },
                 form: {
-                    category: 1, // 类型
+                    category: 2, // 类型
                     name: '', // 名称
                     concact: '', // 联系人
                     mobile: '', // 联系人手机

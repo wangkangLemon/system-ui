@@ -54,11 +54,7 @@ class MineService {
     // 修改个人信息
     updateProfile ({name, address, sex}) {
         let url = `${urlPre}/profile`
-        return api.put(url, {name, address, sex}).then((ret) => {
-            if (ret.code) {
-                return Promise.reject(ret)
-            }
-        })
+        return api.put(url, {name, address, sex})
     }
 
     // 上传头像
@@ -114,7 +110,9 @@ class MineService {
     modifyPassword ({origin_password, new_password, re_password}) {
         let url = `${urlPre}/password`
         return api.put(url, {origin_password, new_password, re_password}).then((ret) => {
-            return ret.data.data
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
         })
     }
 }

@@ -68,7 +68,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="account_type"
-                        label="登录方式">
+                        label="登录方式" width="100">
                     <template scope="scope">
                         <el-tag type="primary" v-if="scope.row.account_type == 'email'">邮箱</el-tag>
                         <el-tag type="success" v-if="scope.row.account_type == 'mobile'">手机号</el-tag>

@@ -33,21 +33,12 @@
         },
         created () {
             xmview.setLoading = this.setLoading.bind(this)
-            xmview.showTip = this.showTip.bind(this)
             xmview.showDialog = this.showDialog.bind(this)
         },
         methods: {
             // 全屏的loading
             setLoading (isloading) {
                 this.fullscreenLoading = isloading
-            },
-            // success/warning/info/error
-            showTip (type, msg, msgDuring = 3000) {
-                return this.$message({
-                    type,
-                    message: msg,
-                    duration: msgDuring
-                })
             },
             // 显示dialog
             showDialog (content, confirmFn, title = '操作提示', isShow = true) {

@@ -158,11 +158,6 @@
                     tooltip: {
                         trigger: 'axis'
                     },
-                    toolbox: {
-                        feature: {
-                            saveAsImage: {}
-                        }
-                    },
                     grid: {
                         left: '1%',
                         right: '0%',

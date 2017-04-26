@@ -18,7 +18,7 @@
         .left-content {
             display: inline-block;
             vertical-align: top;
-            width: 35%;
+            width: 25%;
             background: #fff;
 
             .classify-tree {
@@ -27,7 +27,7 @@
         }
 
         .right-content {
-            width: 62%;
+            width: 74%;
             display: inline-block;
             vertical-align: top;
             background: #fff;
@@ -86,9 +86,9 @@
                             {{scope.row.course_category_name || '无'}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="sort" label="排序" width="150"></el-table-column>
-                    <el-table-column prop="update_time_name" label="更新时间" width="150"></el-table-column>
-                    <el-table-column prop="operate" label="操作">
+                    <el-table-column prop="sort" label="排序" width="100"></el-table-column>
+                    <el-table-column prop="update_time_name" label="更新时间" width="200"></el-table-column>
+                    <el-table-column prop="operate" label="操作" width="100">
                         <template scope="scope">
                             <el-button type="text" size="small" @click="update(scope.$index, scope.row)">
                                 编辑

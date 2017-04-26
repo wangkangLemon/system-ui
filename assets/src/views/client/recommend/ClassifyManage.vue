@@ -122,7 +122,7 @@
         data () {
             return {
                 activeTab: 'add',
-                uploadImgUrl: void 0,
+                uploadImgUrl: '',
                 nodeSelected: void 0, // 被选中的node节点
                 nodeParentSelected: void 0, // 被选中node节点的父节点
                 moveToNode: void 0, // 将要移动到最终的分类
@@ -157,7 +157,7 @@
                 }
             },
         },
-        activated () {
+        created () {
             xmview.setContentLoading(false)
             this.uploadImgUrl = sectionService.getCategoryImageUrl()
         },

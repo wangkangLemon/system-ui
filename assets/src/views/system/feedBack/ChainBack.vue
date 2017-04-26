@@ -87,10 +87,12 @@
                     <i class="title">状态：</i>
                     <span class="value">
                         <el-select clearable v-model="form.status">
-                            <el-option label="待处理" :value="0"></el-option>
+                            <el-option label="待分配" :value="0"></el-option>
                             <el-option label="处理中" :value="1"></el-option>
-                            <el-option label="已处理" :value="2"></el-option>
-                            <el-option label="待分配" :value="3"></el-option>
+                            <el-option label="待补充" :value="2"></el-option>
+                            <el-option label="已补充待处理" :value="3"></el-option>
+                            <el-option label="已处理待确认" :value="4"></el-option>
+                            <el-option label="已关闭" :value="9"></el-option>
                         </el-select>
                     </span>
                 </p>
@@ -117,8 +119,7 @@
                     :data="listData">
                 <el-table-column
                         prop="company_name"
-                        label="连锁"
-                        width="180">
+                        label="连锁">
                 </el-table-column>
                 <el-table-column
                         prop="department_name"
@@ -128,12 +129,12 @@
                 <el-table-column
                         prop="user_name"
                         label="提交人"
-                        width="180">
+                        width="150">
                 </el-table-column>
                 <el-table-column
                         prop="contact"
                         label="联系方式"
-                        width="180">
+                        width="150">
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
@@ -142,17 +143,19 @@
                 </el-table-column>
                 <el-table-column
                         prop="status_name"
-                        label="状态">
+                        label="状态" width="120">
                     <template scope="scope">
-                        <el-tag type="gray" v-if="scope.row.status == 0">待处理</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == 0">待分配</el-tag>
                         <el-tag type="primary" v-if="scope.row.status == 1">处理中</el-tag>
-                        <el-tag type="success" v-if="scope.row.status == 2">已处理</el-tag>
-                        <el-tag type="warning" v-if="scope.row.status == 3">待分配</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == 2">待补充</el-tag>
+                        <el-tag type="warning" v-if="scope.row.status == 3">已补充待处理</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == 4">已处理待确认</el-tag>
+                        <el-tag type="gray" v-if="scope.row.status == 9">已关闭</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
                         prop="operate"
-                        label="操作">
+                        label="操作" width="100">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看
