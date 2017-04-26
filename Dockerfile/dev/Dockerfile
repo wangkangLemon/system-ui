@@ -10,6 +10,8 @@ RUN mkdir -p $GOPATH/src/git.vodjk.com/yst/ \
 RUN cd  $GOPATH/src/git.vodjk.com/yst/system-ui/ \
     && git pull origin develop
 
+ADD "http://192.168.40.231/yst/system-ui.atom?private_token=7XxYJqdG_LGy7poftisV" git.vodjk.com/yst/
+
 RUN cd $GOPATH/src/git.vodjk.com/yst/system-ui/assets && yarn install
 
 RUN cd $GOPATH/src/git.vodjk.com/yst/system-ui \
