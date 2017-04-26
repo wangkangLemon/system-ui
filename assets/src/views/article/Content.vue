@@ -226,7 +226,7 @@
         },
         methods: {
             addArticle () {
-                this.editor.setContent('')
+//                this.editor.setContent('')
                 this.currCategoryName = ''
                 this.addForm = true
                 this.form = {
@@ -235,6 +235,9 @@
                     cover: '',
                     content: '',
                 }
+                setTimeout(() => {
+                    this.editor.setContent('')
+                }, 0)
             },
             handleDelete (index, row) {
                 xmview.showDialog(`你将要删除文章【<i style="color:red">${row.title || ''}</i>】操作不可恢复确认吗？`, this.deleteItem(row.id))
