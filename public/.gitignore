@@ -1,5 +1,2 @@
-*
-!.gitignore
-!favicon.ico
-!robots.txt
-!vendor/
+static
+index.html
