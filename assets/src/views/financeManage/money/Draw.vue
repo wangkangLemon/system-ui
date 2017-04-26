@@ -29,7 +29,7 @@
 <template>
     <article class="financeManage-money-draw">
         <!--详情-->
-        <el-dialog class="showDetail" title="提供凭据" v-model="showDetail">
+        <el-dialog size="tiny" class="showDetail" title="提供凭据" v-model="showDetail">
             <div v-if="currentData != null">{{currentData.receipts || '未提供凭据'}}</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>

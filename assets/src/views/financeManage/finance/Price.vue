@@ -35,7 +35,7 @@
 <template>
     <article class="financeManage-finance-charge">
         <!--详情-->
-        <el-dialog class="showDetail" title="调整依据" v-model="showDetail">
+        <el-dialog size="tiny"  class="showDetail" title="调整依据" v-model="showDetail">
             <div v-if="currentData != null">{{currentData.desc}}</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>

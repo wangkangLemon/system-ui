@@ -32,7 +32,7 @@
 <template>
     <article class="company-index">
         <!--详情-->
-        <el-dialog v-if="details != null" class="showDetail" v-model="showDetail" title="企业信息">
+        <el-dialog size="small" v-if="details != null" class="showDetail" v-model="showDetail" title="企业信息">
             <div class="info">
                 <h2>
                     {{details.name}}
@@ -51,9 +51,9 @@
                 <p><i class="title">企业网址：</i><span class="value">{{details.url || '无'}}</span></p>
                 <p><i class="title">企业介绍：</i><span class="value">{{details.description || '无'}}</span></p>
             </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="showDetail = false">确 定</el-button>
-            </div>
+            <!--<div slot="footer" class="dialog-footer">-->
+                <!--<el-button type="primary" @click="showDetail = false">关 闭</el-button>-->
+            <!--</div>-->
         </el-dialog>
         <!--添加表单-->
         <el-dialog v-model="addForm" title="添加企业" v-loading="editloading">

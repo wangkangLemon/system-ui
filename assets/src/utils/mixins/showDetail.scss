@@ -1,9 +1,14 @@
 .showDetail {
+    .el-dialog__body {
+        display: flex;
+        -webkit-display: flex;
+        -moz-display: flex;
+    }
     .avatar {
-        position: absolute;
+        flex-grow: 0;
+        -webkit-flex-grow: 0;
+        -moz-flex-grow: 0;
         border: 1px solid #ededed;
-        display: inline-block;
-        vertical-align: top;
         width: 150px;
         height: 130px;
         img {
@@ -12,12 +17,14 @@
         }
     }
     .info {
-        display: inline-block;
-        vertical-align: top;
-        text-align: center;
-        width: 100%;
+        flex-grow: 1;
+        -webkit-flex-grow: 1;
+        -moz-flex-grow: 1;
+        text-align: left;
+        padding: 20px;
         h2 {
             margin-bottom: 10px;
+            padding-left: 100px;
         }
         p {
             line-height:35px;
@@ -26,13 +33,16 @@
                 vertical-align: top;
             }
             i.title {
-                width: 49%;
+                width: 25%;
                 margin-right: 10px;
                 text-align: right;
             }
             span.value {
-                width: 40%;
+                width: 70%;
                 text-align: left;
+                > i {
+                    margin-right: 5px;
+                }
                 > img {
                     width: 150px;
                     cursor: pointer;

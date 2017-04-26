@@ -31,7 +31,7 @@
 <template>
     <article class="company-department">
         <!--详情-->
-        <el-dialog v-if="show.detail" class="showDetail" title="查看门店" v-model="show.showDetail">
+        <el-dialog size="small" v-if="show.detail" class="showDetail" title="查看门店" v-model="show.showDetail">
             <div class="info">
                 <h2>测试营销员</h2>
                 <p><i class="title">店长：</i><span class="value">{{show.detail.concact || '无'}}</span></p>
