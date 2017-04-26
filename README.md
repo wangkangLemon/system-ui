@@ -6,6 +6,8 @@
 ```
 - assets 前端文件目录
     - src 前端源代码
+        - assets 存放图片类的资源文件
+        - components 公共组件
     - build 构建代码
     - config 构建配置
     - theme elementui的主题样式代码(构建之后)

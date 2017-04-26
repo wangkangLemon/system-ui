@@ -50,13 +50,13 @@
                 pickerOptionsStart: {
                     disabledDate(time) {
                         return !_this.timespan[1] ? null
-                            : time.getTime() > new Date(_this.timespan[1]).getTime()
+                            : (time.getTime() - 1000 * 60 * 60 * 4 >= new Date(_this.timespan[1]).getTime() && timeUtls.compareDate(time, new Date(_this.timespan[0])) !== 0)
                     }
                 },
                 pickerOptionsEnd: {
                     disabledDate(time) {
                         return !_this.timespan[0] ? null
-                            : time.getTime() < new Date(_this.timespan[0]).getTime()
+                            : (time.getTime() <= new Date(_this.timespan[0]).getTime() && timeUtls.compareDate(time, new Date(_this.timespan[0])) !== 0)
                     }
                 },
             }

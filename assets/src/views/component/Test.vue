@@ -2,24 +2,28 @@
 
 <template>
     <article>
-        <input type="text" @change="changeVal" v-model="currVal">
+        <input type="text" :value="currVal">
 
     </article>
 </template>
 
 <script>
     export default{
-        props: ['value'],
+        props: ['value', 'subChangelist'],
         data () {
             return {
                 currVal: this.value
             }
         },
         created () {
+            this.currVal = 123456
+            this.$emit('input', 123456)
+
+            this.showVal()
         },
         methods: {
-            changeVal () {
-                this.$emit('input', this.currVal)
+            showVal () {
+                console.info(this.currVal)
             }
         },
         components: {}

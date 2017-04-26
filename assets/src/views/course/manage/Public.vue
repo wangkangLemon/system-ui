@@ -97,12 +97,12 @@
                   border>
             <el-table-column type="selection"></el-table-column>
             <el-table-column
-                    width="200"
+                    min-width="200"
                     prop="name"
                     label="课程">
             </el-table-column>
             <el-table-column
-                    width="200"
+                    min-width="200"
                     prop="cat_name"
                     label="所属栏目">
             </el-table-column>

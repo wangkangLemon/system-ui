@@ -70,11 +70,12 @@
                   border>
             <el-table-column type="selection"></el-table-column>
             <el-table-column
+                    min-width="230"
                     prop="file_name"
                     label="文档名称">
             </el-table-column>
             <el-table-column
-                    width="200"
+                    min-width="230"
                     prop="company_name"
                     label="所属企业">
             </el-table-column>
@@ -201,7 +202,7 @@
             },
             // 查看
             show (index, row) {
-                window.open(`${window.location.origin}/showdoc?url=${config.apiHost}/sys/course/doc/${row.id}/view`)
+                window.open(`${window.location.origin}/view/showdoc?url=${config.apiHost}/sys/course/doc/${row.id}/view`)
             },
             // 批量删除
             delMulti () {
