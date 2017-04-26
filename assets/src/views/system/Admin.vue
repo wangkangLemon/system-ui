@@ -1,6 +1,7 @@
 <!--系统-管理员-->
 <style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
+    @import "../../utils/mixins/showDetail";
     .admin-container {
         border: 1px solid #ededed;
         .add {
@@ -31,35 +32,6 @@
                 margin-top: 10px;
             }
         }
-        .showDetail {
-            .avatar {
-                border: 1px solid #ededed;
-                display: inline-block;
-                vertical-align: top;
-                width: 150px;
-                height: 130px;
-                img {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    line-height: 30px;
-                    > span {
-                        display: inline-block;
-                        width:px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
-                        &.status {
-                            width: auto;
-                        }
-                    }
-                }
-            }
-        }
         .forbidden-content {
             text-align: center;
             i {
@@ -86,24 +58,24 @@
     <article class="admin-container">
         <!--详情-->
         <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetail">
-            <section v-if="clerkDetail != null">
-                <div class="avatar">
-                    <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar" />
-                </div>
-                <div class="info">
-                    <p><span></span>{{clerkDetail.name}}({{clerkDetail.company}})</p>
-                    <p><span>Mobile：</span> <i class="iconfont icon-oslash"></i>{{clerkDetail.mobile}}</p>
-                    <p><span>Email：</span> <i class="el-icon-message"></i>{{clerkDetail.email}}</p>
-                    <p>
-                        <span>状态：</span>
+            <div class="avatar" v-if="clerkDetail != null">
+                <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar"/>
+            </div>
+            <div class="info" v-if="clerkDetail != null">
+                <h2>{{clerkDetail.name}}({{clerkDetail.company}})</h2>
+                <p><i class="title">Mobile：</i><span class="value"><i class="iconfont icon-oslash"></i>{{clerkDetail.mobile}}</span></p>
+                <p><i class="title">Email：</i><span class="value"><i class="el-icon-message"></i>{{clerkDetail.email}}</span></p>
+                <p>
+                    <i class="title">状态：</i>
+                    <span class="value">
                         <el-tag class="status" type="danger" v-if="clerkDetail.disabled">禁用</el-tag>
-                        <el-tag class="status"  type="success" v-if="!clerkDetail.disabled">正常</el-tag>
-                    </p>
-                    <p><span>性别：</span> {{clerkDetail.sex ? '男' : '女'}}</p>
-                    <p><span>地址：</span> {{clerkDetail.address}}</p>
-                    <p><span>注册时间：</span>{{clerkDetail.create_time_name}}</p>
-                </div>
-            </section>
+                        <el-tag class="status" type="success" v-if="!clerkDetail.disabled">正常</el-tag>
+                    </span>
+                </p>
+                <p><i class="title">性别：</i><span class="value">{{clerkDetail.sex ? '男' : '女'}}</span></p>
+                <p><i class="title">地址：</i><span class="value">{{clerkDetail.address}}</span></p>
+                <p><i class="title">注册时间：</i><span class="value">{{clerkDetail.create_time_name}}</span></p>
+            </div>
         </el-dialog>
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">

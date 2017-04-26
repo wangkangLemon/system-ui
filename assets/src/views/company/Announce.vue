@@ -55,11 +55,8 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog class="showDetail" :title="currentItem.title" v-model="showDetail">
+        <el-dialog size="tiny" class="showDetail" :title="currentItem.title" v-model="showDetail">
             <div>{{currentItem.content}}</div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="showDetail = false">关 闭</el-button>
-            </div>
         </el-dialog>
         <el-card class="box-card">
             <section class="search">
@@ -182,7 +179,6 @@
         },
         methods: {
             showFn (row) {
-                console.log(1)
                 this.showDetail = true
                 setTimeout(() => {
                     this.currentItem.title = `查看公告:${row.title}`
