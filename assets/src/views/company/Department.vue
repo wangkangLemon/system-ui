@@ -138,8 +138,6 @@
                 </el-pagination>
             </div>
         </el-card>
-        <!--删除弹窗-->
-        <delete-dialog v-if="currentItem" :text="currentItem.text" v-model="deletDialog" v-on:callback="deleteItem"></delete-dialog>
     </article>
 </template>
 <script>
@@ -148,18 +146,14 @@
     import IndustryCompanySelect from '../component/select/IndustryCompany'
     import DateRange from '../component/form/DateRangePicker.vue'
     import Region from '../component/select/Region.vue'
-    import deleteDialog from '../component/dialog/Delete'
     export default {
         components: {
             IndustryCompanySelect,
             DateRange,
-            Region,
-            deleteDialog
+            Region
         },
         data () {
             return {
-                deletDialog: false,
-                currentItem: null,
                 show: {
                     detail: null,
                     showDetail: false, // 显示详情
@@ -195,23 +189,14 @@
                 })
             },
             handleDelete (row) {
-                this.deletDialog = true
-                this.currentItem = row
-                this.currentItem.text = `你将要删除门店 ${row.name} 并且同时删除店长 操作不可恢复确认吗？`
-            },
-            // 删除操作
-            deleteItem (confirm) {
-                if (!confirm) {
-                    this.deletDialog = false
-                    return false
-                }
-                // 以下执行接口删除动作
-                departmentService.depDelete(this.currentItem.id).then(() => {
-                    this.deletDialog = false
-                    xmview.showTip('success', '删除成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
+                xmview.showDialog(`你将要删除门店<i style="color:red">${row.name}</i>并且同时删除店长 操作不可恢复确认吗？`, () => {
+                    // 以下执行接口删除动作
+                    departmentService.depDelete(row.id).then(() => {
+                        xmview.showTip('success', '删除成功')
+                        this.getData()
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
             },
             handleSizeChange (val) {
