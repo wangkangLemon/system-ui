@@ -119,8 +119,7 @@
                     :data="listData">
                 <el-table-column
                         prop="company_name"
-                        label="连锁"
-                        width="180">
+                        label="连锁">
                 </el-table-column>
                 <el-table-column
                         prop="department_name"
@@ -130,12 +129,12 @@
                 <el-table-column
                         prop="user_name"
                         label="提交人"
-                        width="180">
+                        width="150">
                 </el-table-column>
                 <el-table-column
                         prop="contact"
                         label="联系方式"
-                        width="180">
+                        width="150">
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
@@ -144,7 +143,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="status_name"
-                        label="状态">
+                        label="状态" width="120">
                     <template scope="scope">
                         <el-tag type="primary" v-if="scope.row.status == 0">待分配</el-tag>
                         <el-tag type="primary" v-if="scope.row.status == 1">处理中</el-tag>
@@ -156,7 +155,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="operate"
-                        label="操作">
+                        label="操作" width="100">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看

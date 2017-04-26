@@ -120,7 +120,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="status"
-                        label="状态">
+                        label="状态" width="100">
                     <template scope="scope">
                         <el-tag type="gray" v-if="scope.row.status == 0">待处理</el-tag>
                         <el-tag type="primary" v-if="scope.row.status == 1">处理中</el-tag>
@@ -129,7 +129,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="operate"
-                        label="操作">
+                        label="操作" width="100">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看
