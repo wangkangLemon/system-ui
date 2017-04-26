@@ -129,6 +129,19 @@ export default [
                     noback: true
                 }
             },
+            {   // 操作行为
+                path: 'operationBehavior',
+                name: 'operationBehavior',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/logSub/OperationBehavior.vue'))
+                    })
+                },
+                meta: {
+                    title: '操作行为-日志',
+                    noback: true
+                }
+            },
         ]
     },
     // 连锁后台

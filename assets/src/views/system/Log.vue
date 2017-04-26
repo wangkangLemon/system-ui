@@ -51,6 +51,11 @@
                         id: 7,
                         title: '邮件验证码',
                         name: '7'
+                    },
+                    {
+                        id: 8,
+                        title: '操作行为记录',
+                        name: '8'
                     }
                 ],
             }
@@ -65,7 +70,7 @@
         },
         methods: {
             tabClick (target) {
-                let urlArr = ['', 'systemManage', 'companyManage', 'systemBack', 'companyBack', 'frontDest', 'mobileCode', 'emailCode']
+                let urlArr = ['', 'systemManage', 'companyManage', 'systemBack', 'companyBack', 'frontDest', 'mobileCode', 'emailCode', 'operationBehavior']
                 this.$router.push({name: urlArr[parseInt(target.name)], query: {tabIndex: target.name}})
             }
         }

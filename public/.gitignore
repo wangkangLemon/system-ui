@@ -1,4 +1,2 @@
-*
-!.gitignore
-!robots.txt
-!vendor/
+static
+index.html
