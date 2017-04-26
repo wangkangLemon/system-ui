@@ -148,7 +148,7 @@
                         width="200">
                 </el-table-column>
                 <el-table-column
-                        prop="last_login_time"
+                        prop="last_login_time_name"
                         label="上次登录时间"
                         width="200">
                 </el-table-column>
