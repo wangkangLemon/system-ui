@@ -1,4 +1,5 @@
 *
 !.gitignore
+!favicon.ico
 !robots.txt
 !vendor/

@@ -38,6 +38,9 @@ func main() {
 		c.HTML(200, "./public/index.html")
 	})
 
+	// favicon
+	app.StaticFile("/favicon.ico", "./public/favicon.ico")
+
 	// 应用状态监测
 	app.Get("/ping", func(c *baa.Context) {
 		c.Text(200, []byte("PONG"))
