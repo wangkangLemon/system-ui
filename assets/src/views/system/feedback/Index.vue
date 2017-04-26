@@ -2,15 +2,42 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
-    @import "../../../utils/mixins/showDetail";
     .system-manage {
-        .showDetail {
+        .show-detail {
             .info {
-                padding-bottom: 40px;
-                p.select {
+                display: inline-block;
+                vertical-align: top;
+                text-align: center;
+                width: 100%;
+                h2 {
+                    margin-bottom: 10px;
+                }
+                p {
+                    text-align: left;
+                    line-height:35px;
+                    > * {
+                        display: inline-block;
+                        vertical-align: top;
+                    }
+                    i.title {
+                        width: 16%;
+                        margin-right: 10px;
+                        text-align: right;
+                    }
                     span.value {
-                        > div {
-                            width: 100%;
+                        text-align: left;
+                    }
+                }
+                > p.question {
+                    .value {
+                        width: 70%;
+                        .img-wrap {
+                            img {
+                                cursor: pointer;
+                                margin-right: 10px;
+                                width: 100px;
+                                height: 100px;
+                            }
                         }
                     }
                 }
@@ -43,33 +70,40 @@
 <template>
     <article class="system-manage">
         <!--详情-->
-        <el-dialog title="查看详情" class="showDetail" v-model="showDetail">
-            <div class="info" v-if="details != null">
-                <p><i class="title">问题类型：</i><span class="value">{{details.category}}</span></p>
-                <p><i class="title">提交时间：</i><span class="value">{{details.create_time}}</span></p>
-                <p><i class="title">提交人：</i><span class="value">{{details.ContactName}}</span></p>
-                <p><i class="title">联系方式：</i> <span class="value">{{details.contact}}</span></p>
-                <p><i class="title">问题描述：</i> <span class="value">{{details.content}}</span></p>
-                <p><i class="title">手机型号：</i> <span class="value">{{details.app_version}}</span></p>
-                <p><i class="title">系统版本：</i> <span class="value">{{details.system_version}}</span></p>
-                <p class="select remark">
-                    <i class="title">备注：</i>
+        <el-dialog title="查看详情" class="show-detail" v-model="showDetail">
+            <div class="info" v-if="detail != null">
+                <p><i class="title">问题类型：</i><span class="value">{{detail.category_name}}</span></p>
+                <p><i class="title">企业名称：</i><span class="value">{{detail.company_name}}</span></p>
+                <p><i class="title">门店：</i><span class="value">{{detail.department_name}}</span></p>
+                <p><i class="title">提交人：</i><span class="value">{{detail.user_name}}</span></p>
+                <p><i class="title">联系方式：</i> <span class="value">{{detail.contact}}</span></p>
+                <p><i class="title">问题描述：</i> <span class="value">{{detail.content}}</span></p>
+                <p class="question">
+                    <i class="title">问题截取：</i>
                     <span class="value">
-                        <el-input type="textarea" :rows="6" v-model="form.note"></el-input>
+                        <div class="img-wrap">
+                            <img :src="item | fillImgPath" alt="" v-for="item in detail.upload_group" @click="screenImg(item)">
+                            <!--示例-->
+                            <!--<img src="http://img.vodjk.com/templates/vodjk/images/2017img/logo.jpg" alt="" @click="screenImg('http://img.vodjk.com/templates/vodjk/images/2017img/logo.jpg')">-->
+                        </div>
                     </span>
                 </p>
-                <p class="select">
+                <p>
                     <i class="title">状态：</i>
                     <span class="value">
                         <el-select clearable v-model="form.status">
-                            <el-option label="待处理" :value="1"></el-option>
-                            <el-option label="已处理" :value="2"></el-option>
+                            <el-option label="待分配" :value="0"></el-option>
+                            <el-option label="处理中" :value="1"></el-option>
+                            <el-option label="待补充" :value="2"></el-option>
+                            <el-option label="已补充待处理" :value="3"></el-option>
+                            <el-option label="已处理待确认" :value="4"></el-option>
+                            <el-option label="已关闭" :value="9"></el-option>
                         </el-select>
                     </span>
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="updateFn(details.id)">提交修改</el-button>
+                <el-button type="primary" @click="updateFn(detail.id)">提交修改</el-button>
             </span>
         </el-dialog>
         <el-card class="box-card">
@@ -78,65 +112,50 @@
                     <i>关键字</i>
                     <el-input @change="getData" v-model="search.keyword"></el-input>
                 </section>
-                <section>
-                    <i>类型：</i>
-                    <el-select clearable @change="getData" v-model="search.category">
-                        <el-option label="全部" :value="0"></el-option>
-                        <el-option label="建议" :value="1"></el-option>
-                        <el-option label="操作体验不好" :value="2"></el-option>
-                        <el-option label="闪退" :value="3"></el-option>
-                        <el-option label="视频无法播放" :value="4"></el-option>
-                    </el-select>
-                </section>
-                <section>
-                    <i>状态：</i>
-                    <el-select @change="getData" clearable v-model="search.status">
-                        <el-option label="全部" :value="-1"></el-option>
-                        <el-option label="待处理" :value="0"></el-option>
-                        <el-option label="处理中" :value="1"></el-option>
-                        <el-option label="已处理" :value="2"></el-option>
-                    </el-select>
-                </section>
-                <DateRange title="日期" :start="search.time_start" :end="search.time_end"
-                           v-on:changeStart="val=>search.time_start=val "
-                           v-on:changeEnd="val=>search.time_end=val "
-                           :change="getData"></DateRange>
+                <DateRange title="提交时间" :start="search.createTime" :end="search.endTime"
+                           v-on:changeStart="val=> search.createTime=val"
+                           v-on:changeEnd="val=> search.endTime=val"
+                           :change="getData">
+                </DateRange>
             </section>
             <el-table
                     v-loading="loading"
                     border
                     :data="listData">
                 <el-table-column
-                        prop="category"
-                        label="类型"
+                        prop="company_name"
+                        label="连锁">
+                </el-table-column>
+                <el-table-column
+                        prop="department_name"
+                        label="门店"
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="content"
-                        label="问题描述">
+                        prop="user_name"
+                        label="提交人"
+                        width="150">
                 </el-table-column>
                 <el-table-column
-                        prop="app_version"
-                        label="APP版本"
-                        width="100">
+                        prop="contact"
+                        label="联系方式"
+                        width="150">
                 </el-table-column>
                 <el-table-column
-                        prop="system_version"
-                        label="系统版本"
+                        prop="create_time_name"
+                        label="提交时间"
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="create_time"
-                        label="时间"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="status"
-                        label="状态" width="100">
+                        prop="status_name"
+                        label="状态" width="120">
                     <template scope="scope">
-                        <el-tag type="gray" v-if="scope.row.status == 0">待处理</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == 0">待分配</el-tag>
                         <el-tag type="primary" v-if="scope.row.status == 1">处理中</el-tag>
-                        <el-tag type="success" v-if="scope.row.status == 2">已处理</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == 2">待补充</el-tag>
+                        <el-tag type="warning" v-if="scope.row.status == 3">已补充待处理</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == 4">已处理待确认</el-tag>
+                        <el-tag type="gray" v-if="scope.row.status == 9">已关闭</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -164,19 +183,26 @@
                 </el-pagination>
             </div>
         </el-card>
+        <screenImg></screenImg>
     </article>
 </template>
 <script>
-    import feedBackService from '../../../services/feedBackService'
+    import feedbackService from '../../../services/feedback/system'
     import DateRange from '../../component/form/DateRangePicker.vue'
+    import {fillImgPath} from '../../../utils/filterUtils'
+    import screenImg from '../../component/dialog/FullScreenImg.vue'
     export default {
+        filters: {
+            fillImgPath
+        },
         components: {
-            DateRange
+            DateRange,
+            screenImg
         },
         data () {
             return {
                 showDetail: false,
-                details: null,
+                detail: null,
                 loading: false,
                 currentPage: 1,
                 pageSize: 15,
@@ -184,13 +210,10 @@
                 total: 0,
                 search: {
                     keyword: '',
-                    status: -1,
-                    category: 0,
-                    time_start: '',
-                    time_end: ''
+                    createTime: '',
+                    endTime: ''
                 },
                 form: {
-                    note: '',
                     status: 0
                 }
             }
@@ -201,9 +224,12 @@
             })
         },
         methods: {
+            screenImg (image) {
+                screenImg.setShow(image)
+            },
             deleteFn (row) {
                 xmview.showDialog('你将要执行删除操作且不可恢复确认吗？', () => {
-                    feedBackService.deleteMobileData(row.id).then(() => {
+                    feedbackService.delete(row.id).then(() => {
                         xmview.showTip('success', '删除成功')
                         this.getData()
                     }).catch((ret) => {
@@ -212,10 +238,9 @@
                 })
             },
             updateFn (id) {
-                feedBackService.updateMobile({
+                feedbackService.update({
                     id,
-                    status: this.form.status,
-                    note: this.form.note
+                    status: this.form.status
                 }).then((ret) => {
                     this.showDetail = false
                     xmview.showTip('success', '提交成功')
@@ -225,10 +250,9 @@
                 })
             },
             showFn (row) {
-                feedBackService.getMobileDetail(row.id).then((ret) => {
-                    this.details = ret.data
+                feedbackService.view(row.id).then((ret) => {
+                    this.detail = ret.data
                     this.form.status = ret.data.status
-                    this.form.note = ret.data.note
                 }).then(() => {
                     this.showDetail = true
                 })
@@ -247,12 +271,10 @@
                     page: this.currentPage,
                     page_size: this.pageSize,
                     keyword: this.search.keyword,
-                    category: this.search.category,
-                    status: this.search.status,
-                    time_start: this.search.time_start,
-                    time_end: this.search.time_end
+                    time_start: this.search.createTime,
+                    time_end: this.search.endTime
                 }
-                return feedBackService.getMobileList(params).then((ret) => {
+                return feedbackService.search(params).then((ret) => {
                     this.listData = ret.data
                     this.total = ret.total
                 }).then(() => {
