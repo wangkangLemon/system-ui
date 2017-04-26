@@ -257,6 +257,9 @@
                 this.fetchParam.store_id = this.$route.query.store_id
                 this.fetchParam.page = 1
                 this.fetchData()
+
+                // 设置返回按钮
+                xmview.setContentBack(this.type > 0)
             }
         },
         activated () {
@@ -270,6 +273,8 @@
             this.fetchParam.store_id = this.$route.query.store_id
             // 页面加载一次
             this.fetchData()
+
+            xmview.setContentBack(this.type > 0)
         },
         methods: {
             fetchData () {

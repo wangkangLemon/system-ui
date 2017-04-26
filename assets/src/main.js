@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import '../theme/index.css'
-import ElementUI from 'element-ui'
+import ElementUI, {Message} from 'element-ui'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -14,7 +14,16 @@ Vue.config.devtools = config.debug
 
 document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
 Vue.use(ElementUI)
-window.xmview = {}
+window.xmview = {
+    // success/warning/info/error
+    showTip: function (type, msg, msgDuring = 3000) {
+        return Message({
+            type,
+            message: msg,
+            duration: msgDuring
+        })
+    },
+}
 window.xmrouter = router
 window.xmconfig = {
     apiHost: config.apiHost,
