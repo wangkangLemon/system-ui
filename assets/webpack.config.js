@@ -9,7 +9,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (options = {}) => ({
     entry: [
-        'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+        'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&overlay=false',
         // './src/vendor',
         './src/main.js'
     ],
