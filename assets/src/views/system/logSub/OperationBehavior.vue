@@ -34,7 +34,7 @@
             <section class="search">
                 <section>
                     <i>企业</i>
-                    <CompanySelect v-model="fetchParam.company_id" :change="getData"></CompanySelect>
+                    <CompanySelect v-model="fetchParam.company_id" :change="getData" :list="companyList" @changelist="val=>companyList=val"></CompanySelect>
                 </section>
                 <section>
                     <i>门店</i>
@@ -113,7 +113,7 @@
                 <el-tab-pane>
                     <span slot="label">高级设置</span>
                         <el-form-item label="选择企业">
-                            <CompanySelect v-model="fetchParam.company_id" :change="getData"></CompanySelect>
+                            <CompanySelect v-model="fetchParam.company_id" :change="getData" :list="companyList" @changelist="val=>companyList=val"></CompanySelect>
                         </el-form-item>
                     <el-form-item label="选择门店">
                         <DepSelect v-model="fetchParam.department_id" :change="getData"></DepSelect>
@@ -181,7 +181,8 @@
                     user_id: void 0,
                     admin_id: void 0,
                 },
-                moreSettingShow: false // 更多设置是否显示
+                moreSettingShow: false, // 更多设置是否显示
+                companyList: []
             }
         },
         created () {
