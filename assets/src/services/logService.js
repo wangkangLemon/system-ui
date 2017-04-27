@@ -98,11 +98,29 @@ class LogService {
 
     // 行为日志
     getBehaviorList ({
-        page,
-        page_size,
+         page,
+         page_size,
+         company_id,
+         department_id,
+         action,
+         time_start,
+         time_end,
+         level,
+         user_id,
+         admin_id,
     }) {
         let finalUrl = `${urlPre}/behavior/search`
-        return api.get(finalUrl, {page, page_size}).then((ret) => {
+        return api.get(finalUrl, {page,
+            page_size,
+            company_id,
+            department_id,
+            action,
+            time_start,
+            time_end,
+            level,
+            user_id,
+            admin_id,
+        }).then((ret) => {
             return ret.data
         })
     }
