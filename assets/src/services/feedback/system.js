@@ -76,14 +76,14 @@ class FeedbackSystemService {
     mobileSearch({
                      page,
                      page_size,
-                     category = '',
+                     category_id = '',
                      keyword = '',
                      status = '',
                      time_start = '',
                      time_end = ''
                  }) {
         let url = `${urlPre}/mobile/search`
-        return api.get(url, {page, page_size, category, keyword, status, time_start, time_end}).then((ret) => {
+        return api.get(url, {page, page_size, category_id, keyword, status, time_start, time_end}).then((ret) => {
             return ret.data
         })
     }

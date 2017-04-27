@@ -45,9 +45,9 @@
         <!--详情-->
         <el-dialog title="查看详情" class="show-detail" v-model="showDetail">
             <div class="info" v-if="detail != null">
-                <p><i class="title">问题类型：</i><span class="value">{{detail.category}}</span></p>
-                <p><i class="title">提交时间：</i><span class="value">{{detail.create_time}}</span></p>
-                <p><i class="title">提交人：</i><span class="value">{{detail.ContactName}}</span></p>
+                <p><i class="title">问题类型：</i><span class="value">{{detail.category_name}}</span></p>
+                <p><i class="title">提交时间：</i><span class="value">{{detail.create_time_name}}</span></p>
+                <p><i class="title">提交人：</i><span class="value">{{detail.user_name}}</span></p>
                 <p><i class="title">联系方式：</i> <span class="value">{{detail.contact}}</span></p>
                 <p><i class="title">问题描述：</i> <span class="value">{{detail.content}}</span></p>
                 <p><i class="title">手机型号：</i> <span class="value">{{detail.app_version}}</span></p>
@@ -80,7 +80,7 @@
                 </section>
                 <section>
                     <i>类型：</i>
-                    <el-select clearable @change="getData" v-model="search.category">
+                    <el-select clearable @change="getData" v-model="search.category_id">
                         <el-option label="全部" :value="0"></el-option>
                         <el-option label="建议" :value="1"></el-option>
                         <el-option label="操作体验不好" :value="2"></el-option>
@@ -107,7 +107,7 @@
                     border
                     :data="listData">
                 <el-table-column
-                        prop="category"
+                        prop="category_name"
                         label="类型"
                         width="180">
                 </el-table-column>
@@ -126,7 +126,7 @@
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="create_time"
+                        prop="create_time_name"
                         label="时间"
                         width="180">
                 </el-table-column>
@@ -185,7 +185,7 @@
                 search: {
                     keyword: '',
                     status: -1,
-                    category: 0,
+                    category_id: 0,
                     time_start: '',
                     time_end: ''
                 },
@@ -247,7 +247,7 @@
                     page: this.currentPage,
                     page_size: this.pageSize,
                     keyword: this.search.keyword,
-                    category: this.search.category,
+                    category_id: this.search.category_id,
                     status: this.search.status,
                     time_start: this.search.time_start,
                     time_end: this.search.time_end
