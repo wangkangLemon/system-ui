@@ -110,7 +110,7 @@
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="200"
+                    width="120"
                     label="操作">
                 <template scope="scope">
                     <el-button type="text" @click="show(scope.$index, scope.row)" size="small">查看</el-button>

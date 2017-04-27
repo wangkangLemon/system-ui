@@ -72,8 +72,11 @@
                         <el-input v-model="fetchParam.name"></el-input>
                     </el-form-item>
                     <el-form-item label="课程封面图" prop="image">
-                        <UploadImg :defaultImg="fetchParam.image" :url="uploadImgUrl"
-                                   :on-success="res=> fetchParam.image = res.data.url"></UploadImg>
+                        <img :src="fetchParam.image | fillImgPath" width="200" height="112" v-show="fetchParam.image">
+                        <CropperImg ref="imgcropper" :confirmFn="cropperImgSucc"
+                                    :aspectRatio="16/9"></CropperImg>
+                        <!--<UploadImg :defaultImg="fetchParam.image" :url="uploadImgUrl"-->
+                        <!--:on-success="res=> fetchParam.image = res.data.url"></UploadImg>-->
                     </el-form-item>
                     <el-form-item label="课程类型">
                         <el-select v-model="fetchParam.material_type" @change="typeChange" placeholder="请选择"
@@ -111,7 +114,8 @@
                         <el-radio class="radio" v-model="fetchParam.need_testing" :label="0">不需要</el-radio>
                     </el-form-item>
                     <el-form-item label="考试时间" prop="limit_time">
-                        <el-input-number :min="0" size="small" :disabled="fetchParam.need_testing == 0" placeholder="以分钟为单位"
+                        <el-input-number :min="0" size="small" :disabled="fetchParam.need_testing == 0"
+                                         placeholder="以分钟为单位"
                                          v-model="fetchParam.limit_time"></el-input-number>
                     </el-form-item>
                     <el-form-item label="考试次数限制">
@@ -226,7 +230,8 @@
 
 <script>
     import courseService from '../../../services/courseService'
-    import UploadImg from '../../component/upload/UploadImg.vue'
+    //    import UploadImg from '../../component/upload/UploadImg.vue'
+    import CropperImg from '../../component/upload/ImagEcropperInput.vue'
     import DialogVideo from '../component/DialogVideo.vue'
     import UploadFile from '../../component/upload/UploadFiles.vue'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
@@ -240,7 +245,6 @@
             return {
                 activeTab: 'first',
                 uploadDocUrl: '', // 上传文档的url
-                uploadImgUrl: '', // 上传封面的url
                 isShowVideoDialog: false, // 是否显示视频列表弹出框
                 fetchParam: getOrignData(),
                 rulesFirst: { // 课程信息的校验规则
@@ -258,7 +262,6 @@
         },
         created () {
             this.uploadDocUrl = courseService.getCourseDocUploadUrl()
-            this.uploadImgUrl = courseService.getManageImgUploadUrl()
             if (this.$route.params.courseInfo) this.fetchParam = this.$route.params.courseInfo
             xmview.setContentLoading(false)
         },
@@ -313,6 +316,12 @@
             // 处理上传文档
             handleUploadMedia (response) {
                 this.fetchParam.material_id = response.data.id
+            },
+            // 图片裁切成功回调
+            cropperImgSucc (imgData) {
+                this.uploadImgUrl = courseService.uploadCover4addCourse({avatar: imgData}).then((ret) => {
+                    this.fetchParam.image = ret.url
+                })
             },
             // 处理视频选取
             handleVideoSelected (row) {
@@ -382,7 +391,7 @@
                 }
             }
         },
-        components: {UploadImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}
+        components: {CropperImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}
     }
 
     function getOrignData () {

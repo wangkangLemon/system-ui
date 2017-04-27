@@ -150,7 +150,7 @@ export default [
         name: 'sys-feedback-admin',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/system/feedback/index.vue'))
+                resolve(require('../views/system/feedback/Index.vue'))
             })
         },
         meta: {
