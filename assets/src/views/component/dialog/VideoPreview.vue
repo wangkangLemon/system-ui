@@ -6,7 +6,7 @@
 </style>
 
 <template>
-    <el-dialog title="视频预览" v-model="isShow">
+    <el-dialog :title="title || '视频预览'" v-model="isShow">
         <div id="J_prismPlayer" class="prism-player"></div>
     </el-dialog>
 </template>
@@ -19,6 +19,7 @@
         data () {
             return {
                 isShow: false,
+                title: '',
             }
         },
         beforeCreate () {
@@ -53,7 +54,8 @@
             }
         },
         methods: {
-            show () {
+            show (title) {
+                this.title = title
                 this.isShow = true
             },
             initPlayer () {
