@@ -181,11 +181,11 @@
                 <el-table-column prop="study_user_count" label="学习人数" v-if="type != 3" width="100"></el-table-column>
                 <el-table-column v-if="type == 1 || type == 2" prop="unstudy_user_count" width="120" label="未学习人数">
                 </el-table-column>
-                <el-table-column prop="testing_count" label="考试人数" v-if="type != 3" width="100"></el-table-column>
-                <el-table-column prop="passed" label="及格人数" v-if="type != 3" width="100"></el-table-column>
+                <el-table-column prop="testing_user_count" label="考试人数" v-if="type != 3" width="100"></el-table-column>
+                <el-table-column prop="passed_user_count" label="及格人数" v-if="type != 3" width="100"></el-table-column>
                 <el-table-column v-if="type != 3" label="及格率" width="100">
                     <template scope="scope">
-                        <i>{{scope.row.passed_rate ? scope.row.passed_rate : 0}}%</i>
+                        <i>{{scope.row.testing_user_count / scope.row.passed_user_count | passedPercent}} </i>
                     </template>
                 </el-table-column>
                 <el-table-column v-if="type == 0" label="操作" width="100">
@@ -230,6 +230,12 @@
     import StoreSelect from '../component/select/IndustryCompany.vue'
 
     export default{
+        filters: {
+            passedPercent (val) {
+                if (val) return parseInt(val * 100) + '%'
+                else return '-'
+            }
+        },
         data () {
             return {
                 analysis: {},
