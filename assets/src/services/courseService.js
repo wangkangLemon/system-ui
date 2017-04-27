@@ -316,9 +316,9 @@ class CourseService {
 
     // ============================================= 视频页面部分 开始 ======================================================
     // 获取视频
-    getVideo ({company_id, status, keyword, page, page_size}) {
+    getVideo ({company_id, status, keyword, page, page_size, time_start, time_end}) {
         let url = `${urlPre}/video/search`
-        return api.get(url, {company_id, status, keyword, page, page_size}).then((ret) => {
+        return api.get(url, {company_id, status, keyword, page, page_size, time_start, time_end}).then((ret) => {
             return ret.data
         })
     }

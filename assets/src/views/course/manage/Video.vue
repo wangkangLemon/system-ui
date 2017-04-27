@@ -202,7 +202,9 @@
                     status: void 0,
                     keyword: void 0,
                     page: 1,
-                    page_size: 15
+                    page_size: 15,
+                    time_start: '',
+                    time_end: ''
                 },
                 dialogAdd: {
                     isShow: false,

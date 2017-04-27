@@ -20,6 +20,13 @@ class ArticleService {
         })
     }
 
+    // 查看文章
+    getArticleDetail ({article_id}) {
+        let finalUrl = `${config.apiHost}/article/${article_id}`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
     // 删除文章
     deleteArticle (articleID) {
         let finalUrl = `${urlPre}/${articleID}`

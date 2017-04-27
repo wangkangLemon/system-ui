@@ -104,7 +104,7 @@
                     </el-tab-pane>
                 </el-tabs>
 
-                <el-button type="primary" @click="send" :disabled="isSending">
+                <el-button type="primary" @click="send(0)" :disabled="isSending">
                     <i v-if="!isSending">群发</i>
                     <i v-else>发送中</i>
                 </el-button>
@@ -227,6 +227,7 @@
                     imService.mass(this.fetchParamSend).then(() => {
                         this.fetchParamSend = getOrignFetchParamSend()
                         this.isSending = false
+                        xmview.showTip('success', '发送成功!')
                     }).catch(() => {
                         this.isSending = false
                     })

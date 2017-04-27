@@ -34,6 +34,18 @@ cp config/config.js.default config/config.js
 npm run dev
 ```
 
+## 正式环境
+
+通过docker设置配置文件 `config/config.js`
+
+然后运行  
+
+``` bash
+npm run build
+```
+
+如果要编译`dev`环境，可以通过指定`RUN_ENV=dev`环境变量来使用dev环境接口域名。
+
 ### 全局对象
 #### xmview
   

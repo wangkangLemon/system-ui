@@ -2,6 +2,7 @@
 var path = require('path')
 let fs = require('fs')
 let apiConfig = require('./config')
+let runENV = process.env.RUN_ENV
 
 module.exports = {
     build: {
@@ -23,7 +24,7 @@ module.exports = {
         // Set to `true` or `false` to always turn it on or off
         bundleAnalyzerReport: process.env.npm_config_report,
         // 获取接口地址
-        apiHost: apiConfig.API_HOST_PROD,
+        apiHost: runENV == 'dev' ? apiConfig.API_HOST_DEV : apiConfig.API_HOST_PROD,
     },
     dev: {
         env: require('./dev.env'),

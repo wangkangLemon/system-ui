@@ -80,7 +80,7 @@
                         <img :src="scope.row.articles.length > 0 ? scope.row.articles[0].thumb: '' | fillImgPath">
                         <section>
                             <div v-for="item in scope.row.articles" class="newsinfo">
-                                <a :href="item.source_url" v-text="item.title"></a>
+                                <a :href="item.source_url" v-text="item.title" target="_blank"></a>
                                 <div>阅读: {{item.hits}}</div>
                             </div>
                         </section>
