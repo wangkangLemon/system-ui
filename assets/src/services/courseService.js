@@ -196,10 +196,13 @@ class CourseService {
         return `${config.apiHost}/com/${companyid}/course/doc/upload`
     }
 
-    // 获取添加编辑课程上传图片的url
-    getManageImgUploadUrl ({companyid} = {}) {
+    // 添加编辑课程上传图片
+    uploadCover4addCourse ({companyid, avatar, alias = Date.now() + '.jpg'}) {
         companyid = companyid || authUtils.getUserInfo().company_id
-        return `${config.apiHost}/com/${companyid}/course/image`
+        let url = `${config.apiHost}/com/${companyid}/course/image`
+        return api.post(url, {avatar, alias}).then((ret) => {
+            return ret.data
+        })
     }
 
     // 获取课程题目

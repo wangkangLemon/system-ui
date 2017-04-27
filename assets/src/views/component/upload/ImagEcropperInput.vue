@@ -22,7 +22,7 @@
             </span>
         </el-dialog>
 
-        <input type="file" style="display: none" @change="fileChange($event)" ref="file">
+        <input accept="image/*" type="file" style="display: none" @change="fileChange($event)" ref="file">
     </article>
 </template>
 
@@ -32,12 +32,12 @@
 
     export default{
         props: {
-            confirmFn: Function, // 点击确认后的回调
+            confirmFn: Function, // 点击确认后的回调 参数: imgData-base64的数据
             aspectRatio: { // 长宽比例 16/9
                 type: Number,
                 default: 16 / 9
             },
-            isRound: { // 是否原型
+            isRound: { // 是否圆形裁切
                 type: Boolean,
                 default: false
             },
