@@ -1,3 +1,4 @@
+<!--素材信息-->
 <style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/common";
 
@@ -28,7 +29,7 @@
                     <el-input v-model="model.title"></el-input>
                 </el-form-item>
                 <el-form-item label="封面图片">
-                    <UploadImg :defaultImg="model.thumb | fillImgPath" :url="uploadImgUrl"
+                    <UploadImg :defaultImg="model.thumb" :url="uploadImgUrl"
                                :on-success="uploadImgSucc"></UploadImg>
                 </el-form-item>
                 <el-form-item label="内容">
@@ -64,14 +65,18 @@
         },
         created () {
             this.id = this.$route.query.id
+            /* eslint-disable indent */
             this.articles = this.$route.params.articles || []
             this.uploadImgUrl = imService.getNewsUploadImgUrl()
             xmview.setContentLoading(false)
         },
+        mounted () {
+
+        },
         methods: {
             itemClick(index, item) {
                 this.model = item
-                this.$refs.ue.setContent(item.content)
+                this.$refs.ue && this.$refs.ue.setContent(item.content)
             },
             save () {
                 let p = this.id ? imService.editNews(this.articles, this.id) : imService.addNews(this.articles)

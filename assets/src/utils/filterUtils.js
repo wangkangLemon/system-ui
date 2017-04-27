@@ -29,5 +29,5 @@ export const tamp2Str = Vue.filter('tamp2Str', function (timetamp) {
 export const fillImgPath = Vue.filter('fillImgPath', function (url) {
     if (!url) return url
     let apiUrl = config.API_HOST_PROD.replace(/(^")|("$)/g, '')
-    return url.indexOf('http') > -1 ? url : apiUrl + url
+    return url.indexOf('http://') > -1 ? url : apiUrl + url
 })
