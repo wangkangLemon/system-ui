@@ -72,7 +72,6 @@
                 })
             },
             expandRow (row, expanded) {
-                console.log(!row.before && !row.after)
                 if (!row.before && !row.after) {
                     return
                 }
