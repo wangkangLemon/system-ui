@@ -252,7 +252,7 @@
         watch: {
             '$route' () {
                 if (this.$route.name !== 'course-analysis') return
-                this.type = this.$route.query.type || 0
+                this.type = parseInt(this.$route.query.type) || 0
                 this.fetchParam.course_id = this.$route.query.course_id
                 this.fetchParam.department_id = this.$route.query.department_id
                 this.fetchParam.store_id = this.$route.query.store_id
@@ -268,7 +268,7 @@
                 this.analysis = ret
             })
 
-            this.type = this.$route.query.type || 0
+            this.type = parseInt(this.$route.query.type) || 0
             this.fetchParam.course_id = this.$route.query.course_id
             this.fetchParam.department_id = this.$route.query.department_id
             this.fetchParam.store_id = this.$route.query.store_id
