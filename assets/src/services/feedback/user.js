@@ -7,9 +7,9 @@ const urlPre = config.apiHost + '/feedback'
 
 class FeedbackUserService {
     // 获取我的工单列表
-    search({page, page_size, keyword, time_start, time_end}) {
+    search({page, page_size, status, category_id, time_start, time_end}) {
         let url = `${urlPre}/search`
-        return api.get(url, {page, page_size, keyword, time_start, time_end}).then((ret) => {
+        return api.get(url, {page, page_size, status, category_id, time_start, time_end}).then((ret) => {
             return ret.data
         })
     }
@@ -29,7 +29,6 @@ class FeedbackUserService {
             return ret.data
         })
     }
-
 
     // 确认已解决
     confirm(id) {
