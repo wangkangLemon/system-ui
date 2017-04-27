@@ -228,14 +228,16 @@
                         this.fetchParamSend = getOrignFetchParamSend()
                         this.isSending = false
                         xmview.showTip('success', '发送成功!')
-                    }).catch(() => {
+                    }, () => {
+                    }).then(() => {
                         this.isSending = false
                     })
                 } else if (type === 1) {
                     imService.sendPreview(Object.assign({}, this.fetchParamSend, {mobile: this.dialogPewviewMsg.mobile})).then((ret) => {
                         this.dialogPewviewMsg.isShow = false
                         xmview.showTip('success', '发送成功, 请注意查收')
-                    }).catch(() => {
+                    }, () => {
+                    }).then(() => {
                         this.isSending = false
                     })
                 }

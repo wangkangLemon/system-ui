@@ -191,27 +191,6 @@
 
 <script>
     import {fillImgPath} from '../../../../utils/filterUtils'
-    function getModel () {
-        return {
-            'title': '标题',
-            'cover': void 0,
-            'thumb': void 0,
-            'content': void 0,
-            selected: false,
-            showManage: false,
-        }
-    }
-    // 添加需要响应的属性
-    function processList (list) {
-        let ret = []
-        list.map((item) => {
-            ret.push(Object.assign({}, item, {
-                selected: false,
-                showManage: false
-            }))
-        })
-        return ret
-    }
 
     export default{
         filters: {
@@ -278,12 +257,15 @@
             setCurrList (val) {
                 if (!val || val.length < 1) {
                     this.listData = [getModel()]
+                    this.listData.selected = true
+                    this.handleItemClick(0, this.listData[0])
                     this.$emit('input', this.listData)
                     return
                 }
-                if (this.type === 0)
+                if (this.type === 0) {
                     this.listData = processList(val)
-                else {
+                    this.handleItemClick(0, this.listData[0])
+                } else {
                     this.listData = val
                     this.listData.map((data) => {
                         data.selected = false
@@ -292,5 +274,27 @@
             }
         },
         components: {}
+    }
+
+    function getModel () {
+        return {
+            'title': '标题',
+            'cover': void 0,
+            'thumb': void 0,
+            'content': void 0,
+            selected: false,
+            showManage: false,
+        }
+    }
+    // 添加需要响应的属性
+    function processList (list) {
+        let ret = []
+        list.map((item) => {
+            ret.push(Object.assign({}, {
+                selected: false,
+                showManage: false
+            }, item))
+        })
+        return ret
     }
 </script>

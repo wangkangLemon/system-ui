@@ -1,5 +1,5 @@
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData">
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :list="list" v-model="currVal">
     </SelectScroll>
 </template>
 
@@ -7,7 +7,7 @@
     import courseService from '../../../services/courseService'
     import SelectScroll from '../../component/form/SelectScroll.vue'
     export default{
-        props: ['value', 'change'],
+        props: ['value', 'change', 'list'],
         components: {
             SelectScroll
         },
@@ -19,24 +19,24 @@
         },
         watch: {
             'value'(val, oldValue) {
-                this.setCurrentValue(val)
-            }
+                if (this.curVal == val) return
+                this.currVal = val
+            },
         },
         methods: {
             handleChange(val) {
-                this.setCurrentValue(val)
-                this.change && this.change()
-            },
-            setCurrentValue (val) {
-                if (this.curVal == val) return
                 this.currVal = val
                 this.$emit('change', val)
                 this.$emit('input', val)
+                this.change && this.change()
             },
             fetchData (val, length) {
                 let keyword = val
                 let page = parseInt(length / this.pageSize) + 1
-                return courseService.courseList(keyword, page, this.pageSize)
+                return courseService.courseList(keyword, page, this.pageSize).then((ret) => {
+                    this.$emit('changeList', ret.data)
+                    return ret
+                })
             }
         }
     }

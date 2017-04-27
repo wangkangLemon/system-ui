@@ -27,6 +27,7 @@ func main() {
 
 	// static file
 	app.Use(static.Static("/", "./public", false, nil))
+	app.Static("/upload", setting.Config.MustString("upload.basePath", "../storage/upload/"), false, nil)
 
 	// 首页
 	app.Get("/", func(c *baa.Context) {

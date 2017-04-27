@@ -149,6 +149,32 @@ export default {
             }
         },
         {
+            path: 'coursetask/template',
+            name: 'company-coursetasktemplate',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/Coursetasktemplate.vue'))
+                })
+            },
+            meta: {
+                title: '课程任务模板-企业',
+                noback: true
+            }
+        },
+        {
+            path: 'coursetask/template/category',
+            name: 'company-coursetasktemplate-category',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/Coursetasktemplatecategory.vue'))
+                })
+            },
+            meta: {
+                title: '课程任务模板分类-企业',
+                noback: true
+            }
+        },
+        {
             path: 'analytics',
             name: 'company-analytics',
             component: resolve => {

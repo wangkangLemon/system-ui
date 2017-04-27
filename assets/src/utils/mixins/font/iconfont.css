@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1493119549708'); /* IE9*/
-  src: url('iconfont.eot?t=1493119549708#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1493119549708') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1493119549708') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1493119549708#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1493282013667'); /* IE9*/
+  src: url('iconfont.eot?t=1493282013667#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1493282013667') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1493282013667') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1493282013667#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -38,6 +38,8 @@
 .icon-feedback1:before { content: "\e6d6"; }
 
 .icon-feedback2:before { content: "\e609"; }
+
+.icon-signin:before { content: "\e7fa"; }
 
 .icon-cart:before { content: "\e68e"; }
 

@@ -100,7 +100,7 @@
                         this.instance.addListener('ready', () => {
                             this.$emit('ready', this.instance)
 
-                            this.setContent(this.currVal)
+                            this.setContent(this.currVal || this.value)
                             // 监听文本变化
                             this.instance.addListener('contentChange', () => {
                                 this.$emit('input', this.instance.getContent())

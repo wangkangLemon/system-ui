@@ -43,13 +43,14 @@
             placeholder: {
                 type: String,
                 default: '请选择'
-            }
+            },
+            list: Array, // 已有的数据集合
         },
         data () {
             return {
                 keyword: void 0, // 搜索关键字
                 selectVal: this.value,
-                data: [],
+                data: this.list == null ? [] : this.list,
                 loading: false,
                 currPlaceholder: this.placeholder,
                 input: null,
@@ -65,6 +66,9 @@
             },
             'placeholder' (val) {
                 this.currPlaceholder = val
+            },
+            'value' (val) {
+                this.selectVal != val && (this.selectVal = val)
             }
         },
         mounted () {

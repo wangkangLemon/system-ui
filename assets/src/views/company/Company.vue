@@ -5,12 +5,12 @@
     @import "../../utils/mixins/showDetail";
 
     .company-index {
+        .add {
+            text-align: right;
+            padding-bottom: 20px;
+        }
         .box-card {
             margin-bottom: 20px;
-            .el-card__header {
-                padding: 10px 15px;
-                background: #f0f3f5;
-            }
             .search {
                 @extend %top-search-container;
             }
@@ -134,10 +134,10 @@
                 <el-button type="primary" @click="submit('form')">提交</el-button>
             </div>
         </el-dialog>
+        <div class="add">
+            <el-button type="primary" icon="plus" class="recharge" @click="add">添加</el-button>
+        </div>
         <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <el-button class="recharge" @click="add"><i class="el-icon-plus"></i>添加</el-button>
-            </div>
             <section class="search">
                 <section>
                     <i>类型</i>
@@ -347,6 +347,19 @@
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
+        },
+        mounted () {
+            if (this.condition != undefined) {
+                let d = new Date()
+                this.$nextTick(() => {
+                    this.searchParms.createTime = timeUtils.date2Str(new Date(d.setTime(Date.now() - 24 * 60 * 60 * 1000)))
+                })
+            }
+        },
+        computed: {
+            condition () {
+                return this.$route.query.condition
+            }
         },
         methods: {
             // 修改企业信息

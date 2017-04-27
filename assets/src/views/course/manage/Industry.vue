@@ -56,8 +56,12 @@
                         </el-select>
                     </section>
 
-                    <IndustryCompanySelect v-model="fetchParams[0].company_id"
-                                           :change="fetchData"></IndustryCompanySelect>
+                    <section>
+                        <i v-if="currTab">连锁</i>
+                        <i v-if="!currTab">工业</i>
+                        <IndustryCompanySelect v-model="fetchParams[0].company_id"
+                                               :change="fetchData"></IndustryCompanySelect>
+                    </section>
 
                     <DateRange title="创建时间" :start="fetchParams[0].time_start" :end="fetchParams[0].time_end"
                                @changeStart="val=> fetchParams[0].time_start=val "
@@ -238,7 +242,7 @@
             },
             tabClick (tab) {
                 if (tab.index == this.currTab) return
-                this.currTab = tab.index
+                this.currTab = parseInt(tab.index)
                 this.fetchData()
             },
             handlePageSizeChange (val) {

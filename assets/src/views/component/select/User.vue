@@ -3,14 +3,10 @@
 </style>
 
 <template>
-    <section>
-        <i>用户</i>
-        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="currVal">
-        </SelectScroll>
-    </section>
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" ></SelectScroll>
 </template>
 
-<script lang='babel'>
+<script>
     import {userList} from '../../../services/userService'
     import SelectScroll from '../../component/form/SelectScroll.vue'
     export default{
@@ -37,7 +33,7 @@
             setCurrentValue (val) {
                 if (this.curVal == val) return
                 this.currVal = val
-                this.$emit('change', val)
+                this.$emit('input', val)
             },
             fetchData (val, length) {
                 let keyword = val

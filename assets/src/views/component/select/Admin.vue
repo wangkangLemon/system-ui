@@ -3,11 +3,7 @@
 </style>
 
 <template>
-    <section>
-        <i>管理员</i>
-        <SelectScroll @changeVal="setCurrentValue" :changeCb="handleChange" :requestCb="fetchData" v-model="currVal">
-        </SelectScroll>
-    </section>
+    <SelectScroll  :changeCb="handleChange" :requestCb="fetchData"></SelectScroll>
 </template>
 
 <script>
