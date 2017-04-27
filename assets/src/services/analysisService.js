@@ -24,7 +24,7 @@ class AnalysisService {
     // 下载接口
     exportDownload ({company_id, job_id}) {
         let finalUrl = `${urlPre}/${company_id}/export/${job_id}/download`
-        return api.get(finalUrl, {})
+        return api.downLoad(finalUrl)
     }
 }
 
