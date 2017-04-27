@@ -7,7 +7,8 @@
 <!--</IndustryCompanySelect>-->
 
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder">
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" :list="list"
+                  v-model="currVal">
     </SelectScroll>
 </template>
 
@@ -16,7 +17,7 @@
     import companyService from '../../../services/companyService'
     export default{
         //                          0-企业 1-工业 2-连锁
-        props: ['value', 'change', 'type', 'placeholder'],
+        props: ['value', 'change', 'type', 'placeholder', 'list'],
         data () {
             return {
                 currVal: this.value,
@@ -25,7 +26,7 @@
         },
         watch: {
             'value'(val, oldValue) {
-                this.setCurrentValue(val)
+                this.currVal !== val && (this.currVal = val)
             }
         },
         methods: {
@@ -35,6 +36,9 @@
                     category: this.type,
                     page_size: this.pageSize,
                     page: parseInt(length / this.pageSize) + 1
+                }).then((ret) => {
+                    this.$emit('changelist', ret.data)
+                    return ret
                 })
             },
             handleChange(val) {
@@ -42,7 +46,6 @@
                 this.change && this.change()
             },
             setCurrentValue (val) {
-                if (this.curVal == val) return
                 this.currVal = val
                 this.$emit('input', val)
                 this.$emit('change', val)

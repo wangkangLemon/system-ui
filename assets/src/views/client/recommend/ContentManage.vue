@@ -290,6 +290,9 @@
                             prop="date"
                             label="日期"
                             width="200">
+                        <template scope="scope">
+                            {{scope.row.date.slice(0, 10)}}
+                        </template>
                     </el-table-column>
                     <el-table-column prop="operate" label="操作" width="100">
                         <template scope="scope">
@@ -490,6 +493,7 @@
                 this.form.course = item
                 this.form.ref_id = item.id
                 this.form.ref_sync = 1
+                if (this.form.id) delete this.form.id
                 this.keepSync()
                 this.addForm = true
             },

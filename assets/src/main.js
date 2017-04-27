@@ -36,3 +36,5 @@ new Vue({
     router,
     render: h => h(App)
 })
+
+console.info(process.buildTime)

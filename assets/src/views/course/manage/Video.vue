@@ -100,6 +100,7 @@
                     <el-button type="text" v-if="scope.row.status == 1" size="small"
                                @click="refreshStatus(scope.$index, scope.row)">刷新
 
+
                     </el-button>
                 </template>
             </el-table-column>
@@ -114,6 +115,7 @@
                 <template scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
                                v-if="scope.row.status == 0">预览
+
 
                     </el-button>
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
@@ -288,7 +290,7 @@
                 // 拿到播放地址
                 courseService.getVideoPreviewUrl(row.id).then((ret) => {
                     this.videoUrl = ret.video
-                    this.$refs.videoPreview.show()
+                    this.$refs.videoPreview.show(row.name)
                 })
             },
             // 处理图片上传完毕
