@@ -15,13 +15,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-
+            background: rgba(0, 0, 0, 0.4);
             .content {
                 margin-top: px2rem(100);
                 .login-header {
+                    position: relative;
                     width: 90%;
-                    margin-bottom: 60px;
+                    margin-bottom: 80px;
                     img {
                         width: 28px;
                         height: 28px;
@@ -29,9 +29,9 @@
                     }
                     * {
                         color: #fff;
+                        font-weight: 300;
                     }
                     h1 {
-                        font-weight: normal;
                         font-size: 22px;
                         * {
                             display: inline-block;
@@ -42,15 +42,23 @@
                         margin-top: 5px;
                         font-size: 14px;
                     }
-                    > i {
-                        float: right;
-                        margin-top: 5%;
+                    .icon {
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        opacity: .4;
+                        filter: alpha(opacity=40);
+                    }
+                    .icon > i {
+                        font-size: 50px;
+                        line-height: 52px;
+                        color: #ccc;
                     }
                 }
                 .form {
                     border-radius: 5px;
                     padding: 30px 0;
-                    background: rgba(0, 0, 0, 0.6);
+                    background: rgba(0, 0, 0, 0.4);
                     width: 100%;
                     display: block;
                     margin: 0 auto !important;
@@ -63,6 +71,17 @@
                         &:first-of-type {
                             margin-top: 0;
                         }
+                    }
+                    input {
+                        background: rgba(0,0,0,0.4);
+                        color: #fff;
+                        border: none;
+                    }
+                    input:focus {
+                        box-shadow: none;
+                    }
+                    ::-webkit-input-placeholder {
+                        color: #999;
                     }
                     .submit {
                         width: 100%;
@@ -99,7 +118,9 @@
                             <h1><img src="../images/logo.png"/>药视通 </h1>
                             <p>登录到系统管理平台</p>
                         </el-col>
-                        <i class="el-icon-d-arrow-right"></i>
+                        <div class="icon">
+                            <i class="iconfont icon-signin"></i>
+                        </div>
                     </div>
                     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="demo-ruleForm form">
                         <el-form-item prop="account">
