@@ -26,7 +26,7 @@
 
             let loadCount = 0
             let script = document.createElement('script')
-            script.src = '//g.alicdn.com/de/prismplayer/1.5.7/prism-min.js'
+            script.src = '//g.alicdn.com/de/prismplayer/1.5.7/prism-flash-min.js'
             script.onload = () => {
                 loadCount++
                 loadCount >= 2 && this.initPlayer()
