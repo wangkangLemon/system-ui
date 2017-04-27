@@ -436,6 +436,8 @@
                 this.form.title = this.form.course.name
                 this.form.image = this.form.course.image
                 this.form.des = this.form.course.description
+                this.form.date = this.form.course.create_time_name
+                this.form.sort = ''
             },
             chooseCourse () {
                 this.course.isShow = true

@@ -62,7 +62,7 @@
         }
         .add {
             text-align: right;
-            padding: 20px 0;
+            padding-bottom: 20px;
         }
         .main-container {
             padding: 20px;

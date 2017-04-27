@@ -7,7 +7,7 @@
     .company-index {
         .add {
             text-align: right;
-            padding: 20px 0;
+            padding-bottom: 20px;
         }
         .box-card {
             margin-bottom: 20px;
@@ -344,13 +344,17 @@
         },
         activated () {
             _this = this
-            if (this.condition != undefined) {
-                let d = new Date()
-                this.searchParms.createTime = timeUtils.date2Str(new Date(d.setTime(Date.now() - 24 * 60 * 60 * 1000)))
-            }
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
+        },
+        mounted () {
+            if (this.condition != undefined) {
+                let d = new Date()
+                this.$nextTick(() => {
+                    this.searchParms.createTime = timeUtils.date2Str(new Date(d.setTime(Date.now() - 24 * 60 * 60 * 1000)))
+                })
+            }
         },
         computed: {
             condition () {
