@@ -178,7 +178,8 @@
             downLoad (item) {
                 analysisService.exportDownload({
                     company_id: item.company_id,
-                    job_id: item.last_run.job_id
+                    job_id: item.last_run.job_id,
+                    name: item.name
                 })
             }
         }
