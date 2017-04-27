@@ -34,14 +34,20 @@
                 <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <IndustryCompanySelect v-model="companySelect"
-                                       v-on:change="val=>companySelect=val"
-                                       :change="getData">
-                </IndustryCompanySelect>
-                <course-list v-model="courseSelect"
-                             v-on:change="val=>courseSelect=val"
-                             :change="getData">
-                </course-list>
+                <section>
+                    <i>工业</i>
+                    <IndustryCompanySelect v-model="companySelect"
+                                           v-on:change="val=>companySelect=val"
+                                           :change="getData">
+                    </IndustryCompanySelect>
+                </section>
+                <section>
+                    <i>课程</i>
+                    <course-list v-model="courseSelect"
+                                 v-on:change="val=>courseSelect=val"
+                                 :change="getData">
+                    </course-list>
+                </section>
                 <UserList v-model="userSelect"
                           v-on:change="val=>userSelect=val"
                           :change="getData">

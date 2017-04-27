@@ -2,54 +2,21 @@
 <style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/showDetail";
+    @import "../../utils/mixins/topSearch";
     .admin-container {
-        border: 1px solid #ededed;
         .add {
-            background: #f0f3f5;
-            padding: px2rem(10) px2rem(20);
-            border-bottom: 1px solid #ededed;
             text-align: right;
+            padding: 0 0 20px 0;
         }
         .main-container {
             background: #fff;
             padding: 20px;
             .search {
-                display: flex;
-                padding: 0 px2rem(20) px2rem(15);
-                > div {
-                    display: inline-block;
-                    vertical-align: top;
-                    label {
-                        margin-right: 2%;
-                    }
-                    .name {
-                        width: 80%;
-                    }
-                }
+                @extend %top-search-container;
             }
             .block {
                 text-align: right;
                 margin-top: 10px;
-            }
-        }
-        .forbidden-content {
-            text-align: center;
-            i {
-                &:before {
-                    display: block;
-                    font-size: px2rem(60);
-                    color: #f8bb86;
-                    padding-bottom: px2rem(40);
-                }
-            }
-            h1 {
-                font-size: px2rem(20);
-            }
-            p {
-                margin: px2rem(10);
-                span {
-                    color: red;
-                }
             }
         }
     }
@@ -117,51 +84,51 @@
             </div>
         </el-dialog>
         <section class="add">
-            <el-button icon="plus" @click="addAdmin">添加</el-button>
+            <el-button type="primary" icon="plus" @click="addAdmin">添加</el-button>
         </section>
         <div class="main-container">
             <section class="search">
-                <div>
-                    <label>姓名</label>
+                <section>
+                    <i>姓名</i>
                     <el-input @change="getData" class="name" v-model="search.name" placeholder="请输入姓名"></el-input>
-                </div>
+                </section>
             </section>
             <el-table border :data="adminData" v-loading="loading">
                 <el-table-column
                         prop="name"
                         label="姓名"
-                        width="100%">
+                        width="150">
                 </el-table-column>
                 <el-table-column
                         prop="mobile"
                         label="手机"
-                        width="200">
+                        width="180">
                 </el-table-column>
                 <el-table-column
                         prop="email"
                         label="邮箱"
-                        width="200">
+                        width="180">
                 </el-table-column>
                 <el-table-column
                         prop="last_login_time_name"
                         label="上次登录时间"
-                        width="200">
+                        width="180">
                 </el-table-column>
                 <el-table-column
                         prop="last_login_ip"
                         label="上次登录IP"
-                        width="200">
+                        width="180">
                 </el-table-column>
                 <el-table-column
                         prop="disabled"
                         label="状态"
-                        width="200">
+                        width="80">
                     <template scope="scope">
                         <el-tag type="danger" v-if="scope.row.disabled">禁用</el-tag>
                         <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="operate" label="操作">
+                <el-table-column prop="operate" label="操作" min-width="200">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
                             详情

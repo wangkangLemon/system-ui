@@ -64,10 +64,13 @@
                 <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
             </div>
             <section class="search">
-                <IndustryCompanySelect type="1" v-model="industrySelect"
-                                       v-on:change="val=>industrySelect=val"
-                                       :change="getData">
-                </IndustryCompanySelect>
+                <section>
+                    <i>工业</i>
+                    <IndustryCompanySelect type="1" v-model="industrySelect"
+                                           v-on:change="val=>industrySelect=val"
+                                           :change="getData">
+                    </IndustryCompanySelect>
+                </section>
                 <admin v-model="managerSelect"
                        v-on:change="val=>managerSelect=val"
                        :change="getData">

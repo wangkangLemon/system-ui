@@ -8,7 +8,7 @@
         .content-title {
             padding: 10px 20px;
             background: #f0f3f5;
-            text-align: right;
+            text-align: left;
             line-height: 35px;
             button {
                 float: right;

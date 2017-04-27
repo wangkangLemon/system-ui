@@ -57,14 +57,12 @@
                 height: 100%;
             }
         }
-        border: 1px solid #ededed;
         .addForm {
             z-index: 99999999999999999999 !important;
         }
         .add {
-            background: #ededed;
-            padding: px2rem(10) px2rem(20);
-            border-bottom: 1px solid #ededed;
+            text-align: right;
+            padding: 20px 0;
         }
         .main-container {
             padding: 20px;
@@ -112,8 +110,7 @@
             </div>
         </el-dialog>
         <section class="add">
-            <!--点击添加 form数据取邮箱/手机号 密码-->
-            <el-button icon="plus" @click="addArticle">添加</el-button>
+            <el-button type="primary" icon="plus" @click="addArticle">添加</el-button>
         </section>
         <div class="main-container">
             <section class="search">
@@ -260,18 +257,15 @@
                 })
             },
             addArticle () {
-//                this.editor.setContent('')
                 this.currCategoryName = ''
-                this.addForm = true
                 this.form = {
                     title: '',
                     category: '',
                     cover: '',
                     content: '',
                 }
-                setTimeout(() => {
-                    this.editor.setContent('')
-                }, 0)
+                this.addForm = true
+                this.editor && this.editor.setContent('')
             },
             handleDelete (index, row) {
                 xmview.showDialog(`你将要删除文章【<i style="color:red">${row.title || ''}</i>】操作不可恢复确认吗？`, this.deleteItem(row.id))
@@ -296,7 +290,7 @@
                     this.form.content = ret.data.content
                     this.form.id = ret.data.id
                     this.currCategoryName = ret.category.name
-                    this.editor.setContent(ret.data.content)
+                    this.editor && this.editor.setContent(ret.data.content)
                 })
             },
             submit (form, status = 0) {

@@ -55,6 +55,7 @@
                 p {
                     font-size: 16px;
                     padding-right: 10px;
+                    cursor: pointer;
                 }
                 > div {
                     position: absolute;
@@ -193,10 +194,10 @@
             <div>
                 <i><img src="./images/company.png" /></i>
                 <h2>{{mainData.company}}</h2>
-                <p>连锁总数量</p>
+                <router-link tag="p" :to="{name: 'company-index'}">连锁总数量</router-link>
                 <div>
                     <i>昨日新增{{mainData.company_inc}}</i>
-                    <router-link tag="a" :to="{name: 'company-index'}">查看详情</router-link>
+                    <router-link tag="a" :to="{name: 'company-index', query: {condition: 1}}">查看详情</router-link>
                 </div>
             </div>
             <div>

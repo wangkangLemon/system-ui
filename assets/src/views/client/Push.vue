@@ -5,12 +5,9 @@
     @import "../../utils/mixins/showDetail";
 
     .client-push-container {
-        border: 1px solid #ededed;
         .add {
-            background: #f0f3f5;
-            padding: 10px 20px;
-            border-bottom: 1px solid #ededed;
             text-align: right;
+            padding: 20px 0;
         }
         .main-container {
             background: #fff;
@@ -41,7 +38,7 @@
             </div>
         </el-dialog>
         <section class="add">
-            <router-link tag="el-button" icon="plus" :to="{name: 'client-push-create'}">新建推送</router-link>
+            <el-button icon="plus" type="primary" @click="createPush">新建推送</el-button>
         </section>
         <div class="main-container">
             <section class="search">
@@ -186,6 +183,9 @@
             })
         },
         methods: {
+            createPush () {
+                this.$router.push({name: 'client-push-create'})
+            },
             getData () {
                 this.loading = true
                 return pushService.getPushList({
