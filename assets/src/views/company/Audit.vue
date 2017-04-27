@@ -56,10 +56,12 @@
                 <p><i class="title">运营联系人：</i><span class="value">{{show.detail.contact}}</span></p>
                 <p><i class="title">联系人电话：</i><span class="value">{{show.detail.phone}}</span></p>
                 <p><i class="title">联系人邮箱：</i><span class="value">{{show.detail.email}}</span></p>
-                <p><i class="title">营业执照：</i><span class="value"><img :src="show.detail.business_license | fillImgPath" alt="" @click="screenImg(show.detail.business_license)"></span></p>
-                <p><i class="title">经营许可证：</i><span class="value"><img :src="show.detail.business_permit | fillImgPath" alt="" @click="screenImg(show.detail.business_license)"></span></p>
-                <p><i class="title">GSP/GSM认证：</i><span class="value"><img :src="show.detail.gsp | fillImgPath" alt="" @click="screenImg(show.detail.business_license)"></span></p>
-                <p><i class="title">负责人身份证：</i><span class="value"><img :src="show.detail.id_card | fillImgPath" alt="" @click="screenImg(show.detail.business_license)"></span></p>
+                <p>
+                    <i class="title">营业执照：</i><span class="value">
+                    <img :src="show.detail.business_license | fillImgPath" alt="" @click="screenImg(show.detail.business_license)"></span></p>
+                <p><i class="title">经营许可证：</i><span class="value"><img :src="show.detail.business_permit | fillImgPath" alt="" @click="screenImg(show.detail.business_permit)"></span></p>
+                <p><i class="title">GSP/GSM认证：</i><span class="value"><img :src="show.detail.gsp | fillImgPath" alt="" @click="screenImg(show.detail.gsp)"></span></p>
+                <p><i class="title">负责人身份证：</i><span class="value"><img :src="show.detail.id_card | fillImgPath" alt="" @click="screenImg(show.detail.id_card)"></span></p>
                 <p class="select">
                     <i class="title">审核结果：</i>
                     <span class="value">

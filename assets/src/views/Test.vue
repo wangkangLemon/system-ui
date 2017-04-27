@@ -7,18 +7,14 @@
 
 <template>
     <div id="testview-container">
-        <vTest v-model="inoutVal" ref="text" :subChangelist="changeList"></vTest>
-        <vTest :value="inoutVal" @input="val=>inoutVal = val "></vTest>
-        <vTest value="true"></vTest>
-        <vTest :value="123"></vTest>
+        <VideoPreview ref="videopreview"
+                      url="http://vodcdn.yst.vodjk.com/201704262042/ff5e19c59b89b2d600bd016980dfe450/company/93/2017/4/21/15242uv6en6r5mf4yikxx0f6r/sd/993dda18b8f54dc98302e2158f1bd2a5.m3u8"></VideoPreview>
 
-        <input type="file" ref="file">
     </div>
 </template>
 
 <script>
     import VideoPreview from './component/dialog/VideoPreview.vue'
-    import vTest from './component/Test.vue'
     export default {
         data() {
             return {
@@ -28,20 +24,11 @@
             }
         },
         created () {
-//            xmview.showDialog('<span style="color: red">shit</span>')
-            console.info(this.$refs.file, 'created')
-            console.info(this.$refs.text, 'created')
         },
         mounted () {
-            console.info(this.$refs.file)
-            console.info(this.$refs.text)
+            this.$refs.videopreview.show()
         },
-        methods: {
-            changeList () {
-                console.info(this.$refs.file)
-                this.$refs.text.showVal()
-            }
-        },
-        components: {VideoPreview, vTest}
+        methods: {},
+        components: {VideoPreview}
     }
 </script>

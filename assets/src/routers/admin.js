@@ -146,29 +146,29 @@ export default [
     },
     // 连锁后台
     {
-        path: pathPre + '/feedBack/admin',
-        name: 'sys-feedBack-admin',
+        path: pathPre + '/feedback/admin',
+        name: 'sys-feedback-admin',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/system/feedBack/ChainBack.vue'))
+                resolve(require('../views/system/feedback/index.vue'))
             })
         },
         meta: {
-            title: '问题反馈-连锁后台',
+            title: '工单系统 - 连锁后台',
             noback: true
         }
     },
     // 客户端
     {
-        path: pathPre + '/feedBack/mobile',
-        name: 'sys-feedBack-mobile',
+        path: pathPre + '/feedback/mobile',
+        name: 'sys-feedback-mobile',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/system/feedBack/App.vue'))
+                resolve(require('../views/system/feedback/App.vue'))
             })
         },
         meta: {
-            title: '问题反馈-客户端',
+            title: '问题反馈 - 客户端',
             noback: true
         }
     },

@@ -7,7 +7,7 @@ function resolve (dir) {
     return path.join(__dirname, '..', dir)
 }
 
-console.info('路径:asdlkjalsdas', resolve('src'))
+console.info('source path:', resolve('src'))
 
 module.exports = {
     entry: {
