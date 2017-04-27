@@ -2,3 +2,4 @@
 npm-debug.log
 conf/app.ini
 system-ui
+.eslintrc.json
