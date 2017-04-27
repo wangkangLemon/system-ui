@@ -87,6 +87,14 @@
                            v-on:changeEnd="val=> searchParams.endTime = val"
                            :change="getData">
                 </DateRange>
+                <section>
+                    <i>使用环境</i>
+                    <el-select clearable v-model="searchParams.last_appstart" @change="getData">
+                        <el-option label="App" :value="1"></el-option>
+                        <el-option label="IOS" :value="2"></el-option>
+                        <el-option label="Android" :value="3"></el-option>
+                    </el-select>
+                </section>
             </section>
             <el-table
                     v-loading="loading"
@@ -121,6 +129,10 @@
                         <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
                         <el-tag type="danger" v-if="scope.row.disabled">异常</el-tag>
                     </template>
+                </el-table-column>
+                <el-table-column
+                        prop="last_appstart"
+                        label="使用环境">
                 </el-table-column>
                 <el-table-column
                         prop="operate"
@@ -175,7 +187,8 @@
                     name: '',
                     mobile: '',
                     status: '',
-                    email: ''
+                    email: '',
+                    last_appstart: ''
                 }
             }
         },
@@ -212,7 +225,8 @@
                     time_end: this.searchParams.endTime,
                     mobile: this.searchParams.mobile,
                     email: this.searchParams.email,
-                    user_type: this.searchParams.status
+                    user_type: this.searchParams.status,
+                    last_appstart: this.searchParams.last_appstart
                 }
                 return CompanyUserService.getUserList(params).then((ret) => {
                     this.companyUserData = ret.data
