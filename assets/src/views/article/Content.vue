@@ -38,6 +38,16 @@
     }
 
     .article-content-container {
+        .showDetail {
+            h2 {
+                text-align: center;
+            }
+            .info {
+                p {
+                    line-height: 35px;
+                }
+            }
+        }
         .img-wrap {
             margin-bottom: 10px;
             width: 150px !important;
@@ -71,6 +81,11 @@
 </style>
 <template>
     <article class="article-content-container">
+        <!--详情-->
+        <el-dialog class="showDetail" :title="currentItem.type" v-model="showDetail">
+            <h2>{{currentItem.title}}</h2>
+            <div class="info" ref="info"></div>
+        </el-dialog>
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
@@ -143,9 +158,11 @@
                     </el-table-column>
                     <el-table-column prop="operate" label="操作">
                         <template scope="scope">
+                            <el-button type="text" size="small" @click="showFn(scope.row)">
+                                查看
+                            </el-button>
                             <el-button type="text" size="small" @click="editArticle(scope.row)">
                                 修改
-                                <!--点击详情 form数据变成当前管理员的信息-->
                             </el-button>
                             <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
                                 删除
@@ -187,6 +204,11 @@
         },
         data () {
             return {
+                showDetail: false,
+                currentItem: {
+                    title: '',
+                    type: ''
+                },
                 currCategoryName: '',
                 loading: false,
                 search: {
@@ -225,6 +247,18 @@
             })
         },
         methods: {
+            showFn (row) {
+                ArticleService.getArticleDetail({article_id: row.id}).then((ret) => {
+                    this.currentItem.type = ret.category.name
+                    this.currentItem.title = ret.data.title
+                    this.currentItem.content = ret.data.content
+                    this.$nextTick(() => {
+                        this.$refs.info.innerHTML = ret.data.content
+                    })
+                }).then(() => {
+                    this.showDetail = true
+                })
+            },
             addArticle () {
 //                this.editor.setContent('')
                 this.currCategoryName = ''
