@@ -116,6 +116,8 @@
                     this.data = ret.data
                     this.total = ret.total
                     this.loading = false
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
                 })
             },
         }

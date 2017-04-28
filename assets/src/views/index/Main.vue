@@ -160,8 +160,8 @@
                         font-weight: normal;
                     }
                     .cell {
-                        text-align: center;
-                        text-align-last: center;
+                        text-align: left;
+                        text-align-last: left;
                         height: 30px !important;
                         line-height: 30px !important;
                         @extend %singline;

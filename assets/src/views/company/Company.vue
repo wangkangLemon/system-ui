@@ -84,7 +84,9 @@
                     <el-input v-model="form.fax" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="地区" :label-width="formLabelWidth">
-                    <Region :placeholder="[form.province, form.city, form.area]"
+                    <Region :province="form.province"
+                            :city="form.city"
+                            :area="form.area"
                             title=""
                             v-on:provinceChange="val => form.province = val"
                             v-on:cityChange="val => form.city = val"
