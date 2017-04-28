@@ -35,7 +35,7 @@
         <main class="search">
             <section>
                 <i>工单状态</i>
-                <el-select v-model="selectStatus" placeholder="未选择" @change="fetchData" :clearable="true">
+                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
                     <el-option label="未分配" value="0"></el-option>
                     <el-option label="处理中" value="1"></el-option>
                     <el-option label="待补充" value="2"></el-option>
@@ -93,7 +93,6 @@
                 loadingData: false,
                 data: [], // 表格数据
                 total: 0,
-                selectStatus: void 0,
                 dialogVisible: false,
                 fetchParam: {
                     status: -1,
@@ -106,11 +105,9 @@
             }
         },
         watch: {
-            'selectStatus': function (newVal) {
+            'fetchParam.status': function (newVal) {
                 if (newVal == '') {
                     this.fetchParam.status = -1
-                } else {
-                    this.fetchParam.status = newVal
                 }
             }
         },
