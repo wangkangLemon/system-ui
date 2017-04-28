@@ -7,9 +7,12 @@ const urlPre = config.apiHost + '/sys/feedback'
 
 class FeedbackSystemService {
     // 管理工单列表
-    search({page, page_size, keyword, time_start, time_end}) {
+    search({ page, page_size, status, category_id, keyword, time_start, time_end }) {
         let url = `${urlPre}/search`
-        return api.get(url, {page, page_size, keyword, time_start, time_end}).then((ret) => {
+        if (status == '') {
+            status = -1
+        }
+        return api.get(url, { page, page_size, status, category_id, keyword, time_start, time_end }).then((ret) => {
             return ret.data
         })
     }
@@ -23,9 +26,9 @@ class FeedbackSystemService {
     }
 
     // 更新状态
-    update({id, status}) {
+    update({ id, status }) {
         let url = `${urlPre}/${id}`
-        return api.put(url, {status}).then((ret) => {
+        return api.put(url, { status }).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             } else {
@@ -35,9 +38,9 @@ class FeedbackSystemService {
     }
 
     // 回复工单
-    reply({id, status, content, images, confirm}) {
+    reply({ id, status, content, images, confirm }) {
         let url = `${urlPre}/${id}/reply`
-        return api.put(url, {status, content, images, confirm}).then((ret) => {
+        return api.put(url, { status, content, images, confirm }).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             } else {
@@ -75,15 +78,15 @@ class FeedbackSystemService {
     // 客户端查询
     mobileSearch({
                      page,
-                     page_size,
-                     category_id = '',
-                     keyword = '',
-                     status = '',
-                     time_start = '',
-                     time_end = ''
+        page_size,
+        category_id = '',
+        keyword = '',
+        status = '',
+        time_start = '',
+        time_end = ''
                  }) {
         let url = `${urlPre}/mobile/search`
-        return api.get(url, {page, page_size, category_id, keyword, status, time_start, time_end}).then((ret) => {
+        return api.get(url, { page, page_size, category_id, keyword, status, time_start, time_end }).then((ret) => {
             return ret.data
         })
     }
@@ -99,11 +102,11 @@ class FeedbackSystemService {
     // 客户端数据修改
     mobileUpdate({
                      id,
-                     status = '',
-                     note = ''
+        status = '',
+        note = ''
                  }) {
         let url = `${urlPre}/mobile/${id}`
-        return api.put(url, {status, note}).then((ret) => {
+        return api.put(url, { status, note }).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             }

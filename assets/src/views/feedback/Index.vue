@@ -95,19 +95,12 @@
                 total: 0,
                 dialogVisible: false,
                 fetchParam: {
-                    status: -1,
+                    status: void '',
                     category_id: void 0,
                     page: 1,
                     page_size: 15,
                     time_start: void '',
                     time_end: void ''
-                }
-            }
-        },
-        watch: {
-            'fetchParam.status': function (newVal) {
-                if (newVal == '') {
-                    this.fetchParam.status = -1
                 }
             }
         },
