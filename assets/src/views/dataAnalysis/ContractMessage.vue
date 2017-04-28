@@ -93,7 +93,7 @@
             </div>
         </el-dialog>
         <!--详情-->
-        <el-dialog class="showDetail" title="连锁详情" v-model="showDetial">
+        <el-dialog class="show-detail" title="连锁详情" v-model="showDetial">
             <div class="info" v-if="currentItems">
                 <h2>{{currentItems.name}}</h2>
                 <p><i class="title">门店数量：</i><span class="value">{{currentItems.department_number}}</span></p>

@@ -29,7 +29,7 @@
 <template>
     <article class="company-index">
         <!--详情-->
-        <el-dialog size="small" v-if="details != null" class="showDetail" v-model="showDetail" title="企业信息">
+        <el-dialog size="small" v-if="details != null" class="show-detail" v-model="showDetail" title="企业信息">
             <div class="info">
                 <h2>
                     {{details.name}}

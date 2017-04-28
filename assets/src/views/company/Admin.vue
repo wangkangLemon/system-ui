@@ -44,7 +44,7 @@
 <template>
     <article class="company-admin-container">
         <!--详情-->
-        <el-dialog class="showDetail" title="查看店员" v-model="showDetail">
+        <el-dialog class="show-detail" title="查看店员" v-model="showDetail">
             <div class="avatar">
                 <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar" />
             </div>

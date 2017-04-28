@@ -42,7 +42,7 @@
         .add {
             @extend %right-top-btnContainer;
         }
-        .showDetail {
+        .show-detail {
             h2 {
                 text-align: center;
             }
@@ -80,7 +80,7 @@
 <template>
     <article class="article-content-container">
         <!--详情-->
-        <el-dialog class="showDetail" :title="currentItem.type" v-model="showDetail">
+        <el-dialog class="show-detail" :title="currentItem.type" v-model="showDetail">
             <h2>{{currentItem.title}}</h2>
             <div class="info" ref="info"></div>
         </el-dialog>

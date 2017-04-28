@@ -18,7 +18,7 @@
 <template>
     <article class="financeManage-finance-charge">
         <!--详情-->
-        <el-dialog size="tiny"  class="showDetail" title="充值收据" v-model="showDetail">
+        <el-dialog size="tiny"  class="show-detail" title="充值收据" v-model="showDetail">
             <div v-if="currentData">{{currentData.desc}}</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>

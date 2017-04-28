@@ -162,23 +162,23 @@
 
 .el-dialog__close{
     cursor: pointer;
-    color: rgb(191, 206, 217);
+    color: rgb(191, 203, 217);
 }
 
 .el-dialog__close:hover{
-    color: #52bff1;
+    color: #20a0ff;
 }
 
 .el-dialog__title{
     line-height: 1;
     font-size: 16px;
     font-weight: 700;
-    color: rgb(31, 48, 61);
+    color: rgb(31, 45, 61);
 }
 
 .el-dialog__body{
     padding: 30px 20px;
-    color: rgb(72, 90, 106);
+    color: rgb(72, 87, 106);
     font-size: 14px;
 }
 

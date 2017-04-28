@@ -7,12 +7,12 @@ const urlPre = config.apiHost + '/feedback'
 
 class FeedbackUserService {
     // 获取我的工单列表
-    search({ page, page_size, status = -1, category_id, time_start, time_end }) {
+    search({page, page_size, status = -1, category_id, time_start, time_end}) {
         let url = `${urlPre}/search`
         if (status == '') {
             status = -1
         }
-        return api.get(url, { page, page_size, status, category_id, time_start, time_end }).then((ret) => {
+        return api.get(url, {page, page_size, status, category_id, time_start, time_end}).then((ret) => {
             return ret.data
         })
     }
@@ -26,9 +26,9 @@ class FeedbackUserService {
     }
 
     // 提交工单
-    create({ category_id, content, images, contact }) {
+    create({category_id, content, images, contact}) {
         let url = `${urlPre}/create`
-        return api.post(url, { category_id, content, images, contact }).then((ret) => {
+        return api.post(url, {category_id, content, images, contact}).then((ret) => {
             return ret.data
         })
     }

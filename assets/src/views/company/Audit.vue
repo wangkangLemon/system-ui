@@ -4,7 +4,7 @@
     @import "../../utils/mixins/topSearch";
     @import "../../utils/mixins/showDetail";
     .company-user-list {
-        .showDetail {
+        .show-detail {
             .info {
                 p.select {
                     span.value {
@@ -48,7 +48,7 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog class="showDetail" :title="show.title" v-model="show.showDetail">
+        <el-dialog class="show-detail" :title="show.title" v-model="show.showDetail">
             <div class="info" v-if="show.detail">
                 <p><i class="title">药店地址：</i><span class="value">{{show.detail.address}}</span></p>
                 <p><i class="title">门店数量：</i><span class="value">{{show.detail.department_range}}</span></p>

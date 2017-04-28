@@ -39,8 +39,8 @@
                     <el-option label="未分配" value="0"></el-option>
                     <el-option label="处理中" value="1"></el-option>
                     <el-option label="待补充" value="2"></el-option>
-                    <el-option label="已补充待处理" value="3"></el-option>
-                    <el-option label="已处理待确认" value="4"></el-option>
+                    <el-option label="待处理" value="3"></el-option>
+                    <el-option label="待确认" value="4"></el-option>
                     <el-option label="已关闭" value="9"></el-option>
                 </el-select>
             </section>
@@ -57,11 +57,20 @@
             <el-table-column width="120" prop="category_name" label="问题分类"></el-table-column>
             <el-table-column prop="content" label="问题描述"></el-table-column>
             <el-table-column width="180" prop="create_time_name" label="提交时间"></el-table-column>
-            <el-table-column width="100" prop="status_name" label="状态"></el-table-column>
+            <el-table-column width="100" prop="status_name" label="状态">
+                <template scope="scope">
+                    <el-tag type="warning" v-if="scope.row.status == 2 || scope.row.status == 4">
+                        {{ scope.row.status_name }}
+                    </el-tag>
+                    <el-tag type="gray" v-else>{{ scope.row.status_name }}</el-tag>
+                </template>
+            </el-table-column>
             <el-table-column width="100" prop="operate" label="操作">
                 <template scope="scope">
-                    <el-button type="text" size="small" @click="showFn(scope.row)">查看</el-button>
-                    <el-button type="text" size="small" @click="deleteFn(scope.row)">删除</el-button>
+                    <el-button type="text" size="small" @click="viewFn(scope.row.id)">查看</el-button>
+                    <el-button type="text" size="small" @click="deleteFn(scope, scope.row.id)"
+                               v-if="[0, 9].indexOf(scope.row.status) > -1">删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -104,6 +113,9 @@
                 }
             }
         },
+        activated () {
+            xmview.setContentLoading(false)
+        },
         created () {
             this.fetchData()
         },
@@ -123,6 +135,19 @@
                     this.total = ret.total
                     this.loadingData = false
                     xmview.setContentLoading(false)
+                })
+            },
+            viewFn (id) {
+                this.$router.push({name: 'feedback-view', query: {feedback_id: id}})
+            },
+            deleteFn (index, id) {
+                xmview.showDialog('你将要执行删除操作且不可恢复确认吗？', () => {
+                    feedbackService.delete(id).then(() => {
+                        xmview.showTip('success', '删除成功')
+                        this.data.splice(index, 1)
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
             }
         }

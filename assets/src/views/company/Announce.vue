@@ -3,7 +3,7 @@
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
     .company-user-list {
-        .showDetail {
+        .show-detail {
             .avatar {
                 border: 1px solid #ededed;
                 display: inline-block;
@@ -55,7 +55,7 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog size="tiny" class="showDetail" :title="currentItem.title" v-model="showDetail">
+        <el-dialog size="tiny" class="show-detail" :title="currentItem.title" v-model="showDetail">
             <div>{{currentItem.content}}</div>
         </el-dialog>
         <el-card class="box-card">

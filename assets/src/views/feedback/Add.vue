@@ -29,7 +29,7 @@
 <template>
     <article id="feedback-index">
         <div class="manage-container">
-        返回列表
+            <el-button type="info" @click="$router.push({name: 'feedback-index'})">返回列表</el-button>
         </div>
 
         <el-input

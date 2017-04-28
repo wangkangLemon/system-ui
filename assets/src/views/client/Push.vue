@@ -21,7 +21,7 @@
 <template>
     <article class="client-push-container">
         <!--详情-->
-        <el-dialog class="showDetail" title="推送详情" v-model="showDetail">
+        <el-dialog class="show-detail" title="推送详情" v-model="showDetail">
             <div class="info">
                 <p><i class="title">标题： </i><span class="value">{{details.title}}</span></p>
                 <p><i class="title">内容： </i><span class="value">{{details.content}}</span></p>

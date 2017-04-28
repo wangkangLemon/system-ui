@@ -20,7 +20,7 @@
 <template>
     <article class="admin-container">
         <!--详情-->
-        <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetail">
+        <el-dialog class="show-detail" title="查看管理员账号" v-model="showDetail">
             <div class="avatar" v-if="clerkDetail != null">
                 <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar"/>
             </div>
