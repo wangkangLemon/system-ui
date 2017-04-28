@@ -1,24 +1,13 @@
 <style lang="scss" rel='stylesheet/scss'>
-    @import "../../../utils/mixins/mixins";
+    @import "../../../utils/mixins/common";
     @import "../../../utils/mixins/topSearch";
     .financeManage-money-draw {
+        @extend %content-container;
         .search {
             @extend %top-search-container;
         }
-        .box-card {
-            margin-bottom: 20px;
-            .clearfix {
-                text-align: right;
-            }
-            .el-card__header {
-                padding: 10px 15px;
-                background: #f0f3f5;
-                .icon-iconfontexcel {
-                    position: relative;
-                    top: -2px;
-                    margin-right: 5px;
-                }
-            }
+        .header-button {
+            @extend %right-top-btnContainer;
         }
         .block {
             text-align: right;
@@ -35,97 +24,95 @@
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>
             </div>
         </el-dialog>
-        <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
-            </div>
-            <section class="search">
-                <UserList v-model="userSelect"
-                          v-on:change="val=>userSelect=val"
-                          :change="getData">
-                </UserList>
-                <section>
-                    <label>提现状态</label>
-                    <el-select @change="getData" clearable v-model="drawStatusSelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in drawStatus"
-                                :label="item.name"
-                                :value="item.value"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </section>
-                <DateRange title="申请时间" :start="createTime" :end="endTime"
-                           v-on:changeStart="val=> createTime=val"
-                           v-on:changeEnd="val=> endTime"
-                           :change="getData">
-                </DateRange>
+        <div class="header-button">
+            <el-button type="primary" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+        </div>
+        <section class="search">
+            <UserList v-model="userSelect"
+                      v-on:change="val=>userSelect=val"
+                      :change="getData">
+            </UserList>
+            <section>
+                <label>提现状态</label>
+                <el-select @change="getData" clearable v-model="drawStatusSelect" placeholder="未选择">
+                    <el-option
+                            v-for="(item, index) in drawStatus"
+                            :label="item.name"
+                            :value="item.value"
+                            :key="item.id">
+                    </el-option>
+                </el-select>
             </section>
-            <el-table
-                    v-loading="loading"
-                    border
-                    :data="drawData"
-                    stripe
-                    style="width: 100%">
-                <el-table-column
-                        prop="draw_no"
-                        label="编号">
-                </el-table-column>
-                <el-table-column
-                        prop="money"
-                        label="金额"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="user_name"
-                        label="姓名">
-                </el-table-column>
-                <el-table-column
-                        prop="bank_name"
-                        label="银行">
-                </el-table-column>
-                <el-table-column
-                        prop="card_name"
-                        label="卡号">
-                </el-table-column>
-                <el-table-column
-                        prop="status"
-                        label="状态">
-                    <template scope="scope">
-                        <el-tag type="success" v-if="scope.row.status">{{scope.row.status}}</el-tag>
-                        <el-tag type="gray" v-else>待提现</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        prop="admin_name"
-                        label="管理员">
-                </el-table-column>
-                <el-table-column
-                        prop="completed_name"
-                        label="申请时间">
-                </el-table-column>
-                <el-table-column
-                        prop="operate"
-                        label="操作">
-                    <template scope="scope">
-                        <el-button type="text" size="small" v-if="scope.row.status == '已完成'" @click="showFn(scope.row)">
-                            凭据
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="block">
-                <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-sizes="[15, 30, 60, 100]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next"
-                        :total="total">
-                </el-pagination>
-            </div>
-        </el-card>
+            <DateRange title="申请时间" :start="createTime" :end="endTime"
+                       v-on:changeStart="val=> createTime=val"
+                       v-on:changeEnd="val=> endTime"
+                       :change="getData">
+            </DateRange>
+        </section>
+        <el-table
+                v-loading="loading"
+                border
+                :data="drawData"
+                stripe
+                style="width: 100%">
+            <el-table-column
+                    prop="draw_no"
+                    label="编号">
+            </el-table-column>
+            <el-table-column
+                    prop="money"
+                    label="金额"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="user_name"
+                    label="姓名">
+            </el-table-column>
+            <el-table-column
+                    prop="bank_name"
+                    label="银行">
+            </el-table-column>
+            <el-table-column
+                    prop="card_name"
+                    label="卡号">
+            </el-table-column>
+            <el-table-column
+                    prop="status"
+                    label="状态">
+                <template scope="scope">
+                    <el-tag type="success" v-if="scope.row.status">{{scope.row.status}}</el-tag>
+                    <el-tag type="gray" v-else>待提现</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="admin_name"
+                    label="管理员">
+            </el-table-column>
+            <el-table-column
+                    prop="completed_name"
+                    label="申请时间">
+            </el-table-column>
+            <el-table-column
+                    prop="operate"
+                    label="操作">
+                <template scope="scope">
+                    <el-button type="text" size="small" v-if="scope.row.status == '已完成'" @click="showFn(scope.row)">
+                        凭据
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class="block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[15, 30, 60, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next"
+                    :total="total">
+            </el-pagination>
+        </div>
     </article>
 </template>
 <script>

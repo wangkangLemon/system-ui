@@ -1,19 +1,16 @@
 <!--企业列表-->
 <style lang="scss" rel='stylesheet/scss'>
-    @import "../../utils/mixins/mixins";
+    @import "../../utils/mixins/common";
     @import "../../utils/mixins/topSearch";
     @import "../../utils/mixins/showDetail";
 
     .company-index {
+        @extend %content-container;
         .add {
-            text-align: right;
-            padding-bottom: 20px;
+            @extend %right-top-btnContainer;
         }
-        .box-card {
-            margin-bottom: 20px;
-            .search {
-                @extend %top-search-container;
-            }
+        .search {
+            @extend %top-search-container;
         }
         .block {
             text-align: right;
@@ -139,96 +136,94 @@
         <div class="add">
             <el-button type="primary" icon="plus" class="recharge" @click="add">添加</el-button>
         </div>
-        <el-card class="box-card">
-            <section class="search">
-                <section>
-                    <i>类型</i>
-                    <el-select @change="getData" clearable v-model="searchParms.typeSelect" placeholder="未选择">
-                        <el-option
-                                v-for="(item, index) in searchParms.types"
-                                :label="item.name"
-                                :value="item.id"
-                                :key="item.id">
-                        </el-option>
-                    </el-select>
-                </section>
-                <Region title="地区" v-on:provinceChange="val => searchParms.provinceSelect = val"
-                        v-on:cityChange="val => searchParms.citySelect = val"
-                        v-on:areaChange="val => searchParms.areaSelect = val"
-                        :change="getData"></Region>
-                <section>
-                    <i>名称：</i>
-                    <el-input @change="getData" v-model="searchParms.name" auto-complete="off"></el-input>
-                </section>
-                <DateRange title="创建时间" :start="searchParms.createTime" :end="searchParms.endTime"
-                           v-on:changeStart="val=> searchParms.createTime = val"
-                           v-on:changeEnd="val=> searchParms.endTime = val"
-                           :change="getData">
-                </DateRange>
+        <section class="search">
+            <section>
+                <i>类型</i>
+                <el-select @change="getData" clearable v-model="searchParms.typeSelect" placeholder="未选择">
+                    <el-option
+                            v-for="(item, index) in searchParms.types"
+                            :label="item.name"
+                            :value="item.id"
+                            :key="item.id">
+                    </el-option>
+                </el-select>
             </section>
-            <el-table
-                    v-loading="loading"
-                    border
-                    :data="companyData"
-                    stripe
-                    style="width: 100%">
-                <el-table-column
-                        prop="name"
-                        label="名称" min-width="150">
-                    <template scope="scope">
-                        <el-tag type="gray">{{companyType[scope.row.category]}}</el-tag>
-                        {{scope.row.name}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        prop="area_name"
-                        label="地区"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="concact"
-                        label="联系人">
-                </el-table-column>
-                <el-table-column
-                        prop="mobile"
-                        label="手机">
-                </el-table-column>
-                <el-table-column
-                        prop="email"
-                        label="邮箱">
-                </el-table-column>
-                <el-table-column
-                        prop="create_time_name"
-                        label="创建时间">
-                </el-table-column>
-                <el-table-column
-                        prop="operate"
-                        label="操作" min-width="100">
-                    <template scope="scope">
-                        <el-button type="text" size="small" @click="adminPage(scope.$index, scope.row)">
-                            管理员
-                        </el-button>
-                        <el-button type="text" size="small" @click="showFn(scope.$index, scope.row)">
-                            详情
-                        </el-button>
-                        <el-button type="text" size="small" @click="editCompany(scope.$index, scope.row)">
-                            修改
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="block">
-                <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-sizes="[15, 30, 60, 100]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next"
-                        :total="total">
-                </el-pagination>
-            </div>
-        </el-card>
+            <Region title="地区" v-on:provinceChange="val => searchParms.provinceSelect = val"
+                    v-on:cityChange="val => searchParms.citySelect = val"
+                    v-on:areaChange="val => searchParms.areaSelect = val"
+                    :change="getData"></Region>
+            <section>
+                <i>名称：</i>
+                <el-input @change="getData" v-model="searchParms.name" auto-complete="off"></el-input>
+            </section>
+            <DateRange title="创建时间" :start="searchParms.createTime" :end="searchParms.endTime"
+                       v-on:changeStart="val=> searchParms.createTime = val"
+                       v-on:changeEnd="val=> searchParms.endTime = val"
+                       :change="getData">
+            </DateRange>
+        </section>
+        <el-table
+                v-loading="loading"
+                border
+                :data="companyData"
+                stripe
+                style="width: 100%">
+            <el-table-column
+                    prop="name"
+                    label="名称" min-width="150">
+                <template scope="scope">
+                    <el-tag type="gray">{{companyType[scope.row.category]}}</el-tag>
+                    {{scope.row.name}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="area_name"
+                    label="地区"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="concact"
+                    label="联系人">
+            </el-table-column>
+            <el-table-column
+                    prop="mobile"
+                    label="手机">
+            </el-table-column>
+            <el-table-column
+                    prop="email"
+                    label="邮箱">
+            </el-table-column>
+            <el-table-column
+                    prop="create_time_name"
+                    label="创建时间">
+            </el-table-column>
+            <el-table-column
+                    prop="operate"
+                    label="操作" min-width="100">
+                <template scope="scope">
+                    <el-button type="text" size="small" @click="adminPage(scope.$index, scope.row)">
+                        管理员
+                    </el-button>
+                    <el-button type="text" size="small" @click="showFn(scope.$index, scope.row)">
+                        详情
+                    </el-button>
+                    <el-button type="text" size="small" @click="editCompany(scope.$index, scope.row)">
+                        修改
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class="block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[15, 30, 60, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next"
+                    :total="total">
+            </el-pagination>
+        </div>
     </article>
 </template>
 <script>
@@ -371,6 +366,8 @@
                 companyService.editCompany(row.id).then((ret) => {
                     this.form = ret.data
                     this.sign = ret.sign
+                    this.sign.sign_time = ret.sign.sign_time_str
+                    this.sign.expire_time = ret.sign.expire_time_str
                     this.companyID = row.id
                 }).then(() => {
                     this.editloading = false

@@ -1,6 +1,6 @@
 <!--文章内容管理-->
 <style lang='scss' rel="stylesheet/scss">
-    @import "../../utils/mixins/mixins";
+    @import "../../utils/mixins/common";
     @import "../../utils/mixins/topSearch";
     .v-modal {
         z-index: 1000 !important;
@@ -38,6 +38,10 @@
     }
 
     .article-content-container {
+        @extend %content-container;
+        .add {
+            @extend %right-top-btnContainer;
+        }
         .showDetail {
             h2 {
                 text-align: center;
@@ -59,10 +63,6 @@
         }
         .addForm {
             z-index: 99999999999999999999 !important;
-        }
-        .add {
-            text-align: right;
-            padding-bottom: 20px;
         }
         .main-container {
             padding: 20px;
@@ -128,56 +128,54 @@
                            :change="getData">
                 </DateRange>
             </section>
-            <el-card class="box-card">
-                <el-table border :data="articleData" v-loading="loading">
-                    <el-table-column
-                            prop="title"
-                            label="标题">
-                    </el-table-column>
-                    <el-table-column
-                            prop="category_name"
-                            label="类别"
-                            width="200">
-                    </el-table-column>
-                    <el-table-column
-                            prop="status_name"
-                            label="状态"
-                            width="200">
-                        <template scope="scope">
-                            <el-tag type="gray" v-if="scope.row.status">{{scope.row.status_name}}</el-tag>
-                            <el-tag type="success" v-if="!scope.row.status">{{scope.row.status_name}}</el-tag>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="create_time_name"
-                            label="创建时间"
-                            width="200">
-                    </el-table-column>
-                    <el-table-column prop="operate" label="操作">
-                        <template scope="scope">
-                            <el-button type="text" size="small" @click="showFn(scope.row)">
-                                查看
-                            </el-button>
-                            <el-button type="text" size="small" @click="editArticle(scope.row)">
-                                修改
-                            </el-button>
-                            <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
-                                删除
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <section class="block">
-                    <el-pagination
-                            @size-change="handleSizeChange"
-                            @current-change="handleCurrentChange"
-                            :current-page="currentPage"
-                            :page-sizes="[15, 30, 60, 100]"
-                            layout="total, sizes, ->, prev, pager, next, jumper"
-                            :total="total">
-                    </el-pagination>
-                </section>
-            </el-card>
+            <el-table border :data="articleData" v-loading="loading">
+                <el-table-column
+                        prop="title"
+                        label="标题">
+                </el-table-column>
+                <el-table-column
+                        prop="category_name"
+                        label="类别"
+                        width="200">
+                </el-table-column>
+                <el-table-column
+                        prop="status_name"
+                        label="状态"
+                        width="200">
+                    <template scope="scope">
+                        <el-tag type="gray" v-if="scope.row.status">{{scope.row.status_name}}</el-tag>
+                        <el-tag type="success" v-if="!scope.row.status">{{scope.row.status_name}}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="create_time_name"
+                        label="创建时间"
+                        width="200">
+                </el-table-column>
+                <el-table-column prop="operate" label="操作">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="showFn(scope.row)">
+                            查看
+                        </el-button>
+                        <el-button type="text" size="small" @click="editArticle(scope.row)">
+                            修改
+                        </el-button>
+                        <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <section class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
+                        layout="total, sizes, ->, prev, pager, next, jumper"
+                        :total="total">
+                </el-pagination>
+            </section>
         </div>
     </article>
 </template>

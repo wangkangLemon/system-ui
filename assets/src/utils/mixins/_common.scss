@@ -22,4 +22,15 @@
     position: absolute;
     right: 0;
     top: -50px;
+    &.header-button {
+        > .el-button {
+            i {
+                margin-right: 5px;
+                &:before {
+                    position: relative;
+                    top: -1px;
+                }
+            }
+        }
+    }
 }
