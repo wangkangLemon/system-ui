@@ -263,7 +263,6 @@
             checkClerkDetail (index, row) {
                 adminService.adminDetail(row.id).then((ret) => {
                     this.clerkDetail = ret.data
-                    console.log(this.clerkDetail)
                 }).then(() => {
                     this.showDetail = true
                 })
@@ -296,7 +295,6 @@
                 }
             },
             submit (form) {
-                console.log(this.form)
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         if (!this.form.id && !this.form.passwd) {

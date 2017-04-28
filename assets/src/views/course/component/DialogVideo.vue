@@ -134,7 +134,6 @@
             fetchData () {
                 this.loadingData = true
                 courseService.getVideo4Dialog(this.fetchParam).then((ret) => {
-                    console.info(ret)
                     this.data = ret.data.data
                     this.total = ret.data.total
                     this.loadingData = false

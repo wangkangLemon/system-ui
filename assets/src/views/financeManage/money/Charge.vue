@@ -213,7 +213,6 @@
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        console.log(this.form)
                         moneyCharge(this.form).then(() => {
                             this.addForm = false
                             xmview.showTip('success', '充值成功')

@@ -7,6 +7,7 @@ const KEY_AUTHUSERINFO = 'KEY_AUTH_UTILS_USERINFO' // 用户信息
 const KEY_AUTHSETNAVMENU = 'KEY_AUTH_UTILS_SETNAVMENU' // 菜单
 const KEY_TWICE_AUTH = 'KEY_AUTH_UTILS_TWICEAUTH' // 二次验证的key
 
+import message from './message'
 import * as userApi from '../services/userService'
 // import config from '../utils/config'
 
@@ -64,7 +65,10 @@ let authUtls = {
                 authUtls.setAuthToken(ret.data.auth_token)
             })
         } else {
-            xmview.showTip('error', '登录超时,请重新登录')
+            if (xmrouter.history.current.name === 'login') {
+                return
+            }
+            xmview.showTip('error', message.MESSAGE_AUTH_INVALID)
             // 记录当前的url
             xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
         }

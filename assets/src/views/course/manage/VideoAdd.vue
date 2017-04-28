@@ -145,7 +145,6 @@
                         ossSdk.uploadFile(item.name, item.file, function (progress) {
                             item.process = progress
                         }, ret => {
-                            console.info(ret)
                             // 创建视频
                             courseService.addVideo({
                                 name: item.name,

@@ -53,7 +53,6 @@ class MobileService {
     }
     // 更新方案
     updateMenu ({info, scheme_id}) {
-        console.log(info)
         let finalUrl = `${urlPre}/menu/scheme/${scheme_id}`
         return api.put(finalUrl, info)
     }

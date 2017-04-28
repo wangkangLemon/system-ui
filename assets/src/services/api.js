@@ -2,6 +2,7 @@
  * Created by huanghuixin on 2017/3/20.
  */
 
+import message from '../utils/message'
 import authUtils from '../utils/authUtils'
 import config from '../utils/config'
 import * as typeUtils from '../utils/typeUtls'
@@ -124,13 +125,9 @@ function processResponse (promise, url) {
             return p
         return json
     }, ({ex, xhr}) => {
-        // 如果登录验证失败
+        // 如果登录验证不通过
         if (xhr.status === 401) {
-            xmview.showTip('error', '登录超时,请重新登录')
-            let query = {}
-            if (xmrouter.history.current.name !== 'login' && window.location.href.indexOf('/login') < 0) query = {returnUrl: window.location.href}
-            // 记录当前的url
-            xmrouter.push({name: 'login', query})
+            processLoginOut(xhr)
             return true
         } else if (xhr.status === 404) {
             xmview.showTip('error', '未找到该请求地址')
@@ -150,11 +147,7 @@ function processCodeError (ret, url) {
 
     // 如果过期
     if (ret.code === 10000 || ret.code === 10001 || ret.code === 10002 || ret.code === 10003) {
-        xmview.showTip('error', '登录超时,请重新登录')
-        // 记录当前的url
-        let query = {}
-        if (xmrouter.history.current.name !== 'login' && window.location.href.indexOf('/login') < 0) query = {returnUrl: window.location.href}
-        xmrouter.push({name: 'login', query})
+        return processLoginOut(ret)
     } else if (ret.code >= 100) {
         ret.tipCom = xmview.showTip('error', ret.message)
         return Promise.reject(ret)
@@ -175,4 +168,19 @@ export function processParams (params) {
     }
 
     return data.join('&')
+}
+
+// 处理登录超时
+function processLoginOut (ret) {
+    // 如果已经在登录页面 不做任何处理
+    if (xmrouter.history.current.name === 'login') {
+        return Promise.reject(ret)
+    }
+    setTimeout(() => {
+        xmview.showTip('error', message.MESSAGE_AUTH_INVALID)
+        // 记录当前的url
+        let query = {}
+        if (xmrouter.history.current.name !== 'login' && window.location.href.indexOf('/login') < 0) query = {returnUrl: window.location.href}
+        xmrouter.push({name: 'login', query})
+    }, 0)
 }
