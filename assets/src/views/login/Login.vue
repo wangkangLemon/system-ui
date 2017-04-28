@@ -183,8 +183,8 @@
             }
             return {
                 ruleForm2: {
-                    account: '',
-                    checkPass: ''
+                    account: 'huanghx@vodjk.com',
+                    checkPass: '123456'
                 },
                 rules2: {
                     account: [

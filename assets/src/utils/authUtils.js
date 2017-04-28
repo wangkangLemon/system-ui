@@ -65,6 +65,9 @@ let authUtls = {
                 authUtls.setAuthToken(ret.data.auth_token)
             })
         } else {
+            if (xmrouter.history.current.name === 'login') {
+                return
+            }
             xmview.showTip('error', message.MESSAGE_AUTH_INVALID)
             // 记录当前的url
             xmrouter.push({name: 'login', query: {returnUrl: window.location.href}})
