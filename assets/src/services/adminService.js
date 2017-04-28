@@ -41,7 +41,6 @@ class AdminService {
 
     // 修改管理员获取信息
     updateAdmin ({id, role_id, name, sex = '', mobile = '', passwd = '', email = '', address = '', disabled = ''}) {
-        console.log(disabled)
         let finalUrl = `${urlPre}/${id}`
         return api.put(finalUrl, {role_id, name, sex, mobile, passwd, email, address, disabled}).then((ret) => {
             if (ret.code) {

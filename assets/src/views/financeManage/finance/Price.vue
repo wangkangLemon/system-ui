@@ -204,11 +204,9 @@
             },
             formIndustryChange (val) {
                 this.form.name = val
-                console.log(val)
             },
             handleCurrentChange(val) {
                 this.currentPage = val
-                console.log(`当前页: ${val}`)
             },
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {

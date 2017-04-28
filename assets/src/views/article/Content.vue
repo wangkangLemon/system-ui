@@ -352,7 +352,6 @@
                     avatar: data,
                     alias: Date.now() + '.jpg'
                 }).then((ret) => {
-                    console.log(ret)
                     xmview.showTip('success', '上传成功')
                     this.form.cover = ret.data.url // 显示图片
                 }).catch((ret) => {
