@@ -37,7 +37,7 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog class="show-detail" title="查看店员" v-model="show-detail">
+        <el-dialog class="show-detail" title="查看店员" v-model="showDetail">
             <div class="avatar" v-if="details != null">
                 <img :src="{url: details.avatar, sex: details.sex} | defaultAvatar"/>
             </div>
