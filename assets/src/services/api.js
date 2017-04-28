@@ -2,6 +2,7 @@
  * Created by huanghuixin on 2017/3/20.
  */
 
+import message from '../utils/message'
 import authUtils from '../utils/authUtils'
 import config from '../utils/config'
 import * as typeUtils from '../utils/typeUtls'
@@ -126,7 +127,7 @@ function processResponse (promise, url) {
     }, ({ex, xhr}) => {
         // 如果登录验证失败
         if (xhr.status === 401) {
-            xmview.showTip('error', '登录超时,请重新登录')
+            xmview.showTip('error', message.MESSAGE_AUTH_INVALID)
             let query = {}
             if (xmrouter.history.current.name !== 'login' && window.location.href.indexOf('/login') < 0) query = {returnUrl: window.location.href}
             // 记录当前的url
@@ -150,7 +151,7 @@ function processCodeError (ret, url) {
 
     // 如果过期
     if (ret.code === 10000 || ret.code === 10001 || ret.code === 10002 || ret.code === 10003) {
-        xmview.showTip('error', '登录超时,请重新登录')
+        xmview.showTip('error', message.MESSAGE_AUTH_INVALID)
         // 记录当前的url
         let query = {}
         if (xmrouter.history.current.name !== 'login' && window.location.href.indexOf('/login') < 0) query = {returnUrl: window.location.href}
