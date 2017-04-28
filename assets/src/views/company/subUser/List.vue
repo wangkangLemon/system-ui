@@ -182,11 +182,11 @@
                 total: 0,
                 searchParams: {
                     companySelect: '',
-                    createTime: '',
-                    endTime: '',
+                    createTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
+                    endTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
                     name: '',
                     mobile: '',
-                    status: '',
+                    status: this.$route.query.status ? this.$route.query.status : '',
                     email: '',
                     last_appstart: ''
                 }

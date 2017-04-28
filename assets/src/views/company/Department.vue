@@ -161,8 +161,8 @@
                 total: 0,
                 searchParams: {
                     companySelect: '',
-                    createTime: '',
-                    endTime: '',
+                    createTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
+                    endTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
                     provinceSelect: '',
                     citySelect: '',
                     areaSelect: '',

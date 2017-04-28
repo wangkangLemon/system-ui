@@ -267,8 +267,8 @@
                 companyData: [],
                 addForm: false, // 表单弹窗是否显示
                 searchParms: {
-                    createTime: '',
-                    endTime: '',
+                    createTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
+                    endTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
                     typeSelect: '',
                     types: [ // 类型
                         {
@@ -344,19 +344,6 @@
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
-        },
-        mounted () {
-            if (this.condition != undefined) {
-                let d = new Date()
-                this.$nextTick(() => {
-                    this.searchParms.createTime = timeUtils.date2Str(new Date(d.setTime(Date.now() - 24 * 60 * 60 * 1000)))
-                })
-            }
-        },
-        computed: {
-            condition () {
-                return this.$route.query.condition
-            }
         },
         methods: {
             // 修改企业信息

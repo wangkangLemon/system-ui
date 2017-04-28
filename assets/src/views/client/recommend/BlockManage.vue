@@ -1,5 +1,5 @@
 <!--区块管理-->
-<style lang='scss' scoped rel="stylesheet/scss">
+<style lang='scss' rel="stylesheet/scss">
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/table";
 
