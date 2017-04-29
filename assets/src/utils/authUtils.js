@@ -6,6 +6,7 @@ const KEY_AUTHTOKEN = 'KEY_AUTH_UTILS_TOKEN' // jwt的token
 const KEY_AUTHUSERINFO = 'KEY_AUTH_UTILS_USERINFO' // 用户信息
 const KEY_AUTHSETNAVMENU = 'KEY_AUTH_UTILS_SETNAVMENU' // 菜单
 const KEY_TWICE_AUTH = 'KEY_AUTH_UTILS_TWICEAUTH' // 二次验证的key
+const KEY_AUTHTOKEN_TTL = 3600 // jwt的token 有效期，过期作废，一个小时
 
 import message from './message'
 import * as userApi from '../services/userService'
@@ -15,10 +16,18 @@ let refreshIntervalId
 let authUtls = {
     // 身份凭证操作
     getAuthToken () {
-        return localStorage.getItem(KEY_AUTHTOKEN)
+        let str = localStorage.getItem(KEY_AUTHTOKEN)
+        if (str == '') {
+            return null
+        }
+        str = JSON.parse(str)
+        if (str && str.ttl > Date.now()) {
+            return str.token
+        }
+        return null
     },
     setAuthToken (token) {
-        localStorage.setItem(KEY_AUTHTOKEN, token)
+        localStorage.setItem(KEY_AUTHTOKEN, JSON.stringify({token: token, ttl: Date.now() + KEY_AUTHTOKEN_TTL * 1000}))
     },
     getUserInfo () {
         let str = localStorage.getItem(KEY_AUTHUSERINFO)
@@ -80,7 +89,6 @@ let authUtls = {
         authUtls.setAuthToken('')
         authUtls.setNavMenu('')
         authUtls.setUserInfo('')
-        // authUtls.setTwiceToken('')
     }
 }
 
