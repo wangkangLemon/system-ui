@@ -25,10 +25,6 @@ func main() {
 		app.Use(accesslog.Logger())
 	}
 
-	// static file
-	app.Use(static.Static("/", "./public", false, nil))
-	app.Static("/upload", setting.Config.MustString("upload.basePath", "../storage/upload/"), false, nil)
-
 	// 首页
 	app.Get("/", func(c *baa.Context) {
 		c.HTML(200, "index.html")
@@ -39,8 +35,9 @@ func main() {
 		c.HTML(200, "./public/index.html")
 	})
 
-	// favicon
-	app.StaticFile("/favicon.ico", "./public/favicon.ico")
+    // static file
+    app.Use(static.Static("/", "./public", false, nil))
+	app.Static("/upload", setting.Config.MustString("upload.basePath", "../storage/upload/"), false, nil)
 
 	// 应用状态监测
 	app.Get("/ping", func(c *baa.Context) {
