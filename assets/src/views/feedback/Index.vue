@@ -12,17 +12,6 @@
         .search {
             @extend %top-search-container;
         }
-
-        // 底部的管理按钮
-        .bottom-manage {
-            margin-top: 15px;
-        }
-
-        .el-dialog__wrapper {
-            padding-top: 15px;
-            background: rgba(0, 0, 0, .5);
-            z-index: 1000;
-        }
     }
 </style>
 

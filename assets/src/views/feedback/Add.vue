@@ -8,14 +8,11 @@
         .manage-container {
             @extend %right-top-btnContainer;
         }
-
-        .search {
-            @extend %top-search-container;
-        }
-
-        // 底部的管理按钮
-        .bottom-manage {
-            margin-top: 15px;
+        .feedback-form {
+            width: 90%;
+            .input {
+                max-width: 300px;
+            }
         }
 
         .el-dialog__wrapper {
@@ -27,38 +24,112 @@
 </style>
 
 <template>
-    <article id="feedback-index">
+    <main id="feedback-add">
         <div class="manage-container">
             <el-button type="info" @click="$router.push({name: 'feedback-index'})">返回列表</el-button>
         </div>
 
-        <el-input
-  type="textarea"
-  autosize
-  placeholder="请输入内容"
-  v-model="textarea2">
-</el-input>
-<div style="margin: 20px 0;"></div>
-<el-input
-  type="textarea"
-  :autosize="{ minRows: 2, maxRows: 4}"
-  placeholder="请输入内容"
-  v-model="textarea3">
-</el-input>
+        <main class="feedback-form">
+            <el-form ref="form" :model="form" :rules="rules" :label-width="formLabelWidth">
+                <el-form-item prop="category_id" label="问题分类">
+                    <el-select v-model="form.category_id" placeholder="未选择">
+                        <el-option v-for="cate in categories" :label="cate.name" :value="cate.id"
+                                   :key="cate.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item prop="content" label="问题描述">
+                    <el-input type="textarea" v-model="form.content" :rows="5"
+                              placeholder="请详细描述您所遇到的问题或优化建议"></el-input>
+                </el-form-item>
+                <el-form-item prop="imgUrl" label="上传截图(选填)">
+                    <UploadImages ref="uploadImg"
+                                  :url="uploadImgUrl"
+                                  :fileNum="fileNum"
+                                  :onSuccess="handleImgUploaded"
+                                  :onRemove="handleImgRemoved"
+                                  class="upload-btn">
+                    </UploadImages>
+                </el-form-item>
+                <el-form-item prop="contact" label="联系方式">
+                    <el-input class="input" type="input" v-model="form.contact" placeholder="请留下联系方式用于问题跟进"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('form')">提交</el-button>
+                    <el-button @click="resetForm('form')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </main>
 
-    </article>
+    </main>
 </template>
 
 <script>
+    import articleService from '../../services/articleService'
+    import {fillImgPath} from '../../utils/filterUtils'
+    import UploadImages from '../component/upload/UploadImages.vue'
     export default {
+        name: 'feedback-add',
+        filters: {
+            fillImgPath
+        },
+        components: {
+            UploadImages
+        },
         data() {
             return {
-                textarea2: '',
-                textarea3: ''
+                form: {
+                    category_id: '',    // 分类
+                    content: '',        // 标题
+                    contact: '',        // 正文内容
+                    images: [],         // 图片地址
+                },
+                rules: {
+                    category_id: {type: 'number', required: true, message: '请选择栏目', trigger: 'blur'},
+                    content: {type: 'string', required: true, message: '请描述您遇到的问题', trigger: 'change'},
+                    contact: {type: 'string', required: true, message: '请填写联系方式', trigger: 'change'}
+                },
+                formLabelWidth: '120px', // 表单label的宽度
+                categories: [{id: 1, name: '分类1'}, {id: 2, name: '分类2'}],
+                uploadImgUrl: void 0,
+                fileNum: 2,
+            }
+        },
+        watch: {
+            'form.images' (val) {
+                console.log('watch images:', val)
             }
         },
         created() {
             xmview.setContentLoading(false)
+            this.uploadImgUrl = articleService.getCategoryImageUrl()
+        },
+        methods: {
+            handleImgUploaded(ret, file, fileList) {
+                console.log('handleImgUploaded', ret)
+                if (this.form.images.indexOf(ret.data.url) == -1) {
+                    this.form.images.push(ret.data.url)
+                }
+            },
+            handleImgRemoved(file, fileList) {
+                console.log('handleRemove', file, fileList)
+                let index = this.form.images.indexOf(file.response.data.url)
+                if (index > -1) {
+                    this.form.images.splice(index, 1)
+                }
+            },
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        console.log(this.form)
+                    } else {
+                        console.log('error submit!!')
+                        return false
+                    }
+                })
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields()
+            }
         }
     }
 </script>
