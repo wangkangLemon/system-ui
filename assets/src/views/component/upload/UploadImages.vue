@@ -1,6 +1,6 @@
 <!--使用ex.-->
 <!--<el-form-item label="反馈附件" prop="image">-->
-<!--<UploadImages :url="uploadImgUrl" :fileNum="fileNum"-->
+<!--<UploadImages :url="uploadImgUrl" :fileNum="fileNum" :name="file"-->
 <!--:on-success="res => form.images.push(res.data.url)"-->
 <!--:on-remove="file => form.images.splice(form.images.indexOf(file.response.data.url),1)" ></UploadImg>-->
 <style lang="scss" rel="stylesheet/scss">
@@ -13,6 +13,7 @@
     <div class="component-upload-uploadimages" ref="container">
         <el-upload :headers="headers"
                    :action="url"
+                   :name="name"
                    list-type="picture-card"
                    :multiple="multiple"
                    :on-success="handleSuccess"
@@ -35,8 +36,11 @@
     export default{
         props: {
             // 要上传的url地址
-            url: {
+            url: String,
+            // 上传的文件字段名
+            name: {
                 type: String,
+                default: 'file',
             },
             // 上传成功后的回调
             onSuccess: Function,
@@ -93,6 +97,7 @@
                 console.log('handleRemove', file, fileList)
                 this.onRemove && this.onRemove(file, fileList)
                 this.imgList = fileList
+                this.$refs.container.querySelector('.el-upload__input').value = null
             },
             handleSuccess (response, file, fileList) {
                 console.log('handleSuccess', response, file, fileList)

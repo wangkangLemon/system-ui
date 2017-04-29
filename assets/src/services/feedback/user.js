@@ -17,6 +17,14 @@ class FeedbackUserService {
         })
     }
 
+    // 获取工单分类
+    category() {
+        let url = `${urlPre}/category`
+        return api.get(url, {}).then((ret) => {
+            return ret.data
+        })
+    }
+
     // 查看工单
     view(id) {
         let url = `${urlPre}/${id}`
@@ -26,10 +34,27 @@ class FeedbackUserService {
     }
 
     // 提交工单
-    create({category_id, content, images, contact}) {
-        let url = `${urlPre}/create`
+    create({category_id = 1, content, images = [], contact}) {
+        let url = `${urlPre}/`
+        if (images) {
+            images = JSON.stringify(images)
+        }
         return api.post(url, {category_id, content, images, contact}).then((ret) => {
-            return ret.data
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+
+    // 回复工单
+    reply({id, status, content, images, confirm}) {
+        let url = `${urlPre}/${id}/reply`
+        return api.put(url, {status, content, images, confirm}).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            } else {
+                return ret.data
+            }
         })
     }
 
@@ -37,7 +62,9 @@ class FeedbackUserService {
     confirm(id) {
         let url = `${urlPre}/${id}/confirm`
         return api.put(url, {}).then((ret) => {
-            return ret.data
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
         })
     }
 
@@ -49,6 +76,11 @@ class FeedbackUserService {
                 return Promise.reject(ret)
             }
         })
+    }
+
+    // 获取上传图片地址
+    uploadImageUrl() {
+        return `${urlPre}/image`
     }
 }
 

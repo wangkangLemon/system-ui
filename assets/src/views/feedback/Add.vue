@@ -44,6 +44,7 @@
                 <el-form-item prop="imgUrl" label="上传截图(选填)">
                     <UploadImages ref="uploadImg"
                                   :url="uploadImgUrl"
+                                  :name="uploadName"
                                   :fileNum="fileNum"
                                   :onSuccess="handleImgUploaded"
                                   :onRemove="handleImgRemoved"
@@ -64,8 +65,9 @@
 </template>
 
 <script>
-    import articleService from '../../services/articleService'
+    import feedbackService from '../../services/feedback/user'
     import {fillImgPath} from '../../utils/filterUtils'
+    import authUtils from '../../utils/authUtils'
     import UploadImages from '../component/upload/UploadImages.vue'
     export default {
         name: 'feedback-add',
@@ -89,9 +91,10 @@
                     contact: {type: 'string', required: true, message: '请填写联系方式', trigger: 'change'}
                 },
                 formLabelWidth: '120px', // 表单label的宽度
-                categories: [{id: 1, name: '分类1'}, {id: 2, name: '分类2'}],
+                categories: [],
                 uploadImgUrl: void 0,
-                fileNum: 2,
+                uploadName: 'file',
+                fileNum: 3,
             }
         },
         watch: {
@@ -100,8 +103,17 @@
             }
         },
         created() {
+            this.uploadImgUrl = feedbackService.uploadImageUrl()
+            feedbackService.category().then((ret) => {
+                this.categories = ret.categories
+            }).catch((ret) => {
+                xmview.showTip('error', ret.message)
+            })
+            let userInfo = authUtils.getUserInfo()
+            if (userInfo) {
+                this.form.contact = userInfo.mobile ? userInfo.mobile : userInfo.email
+            }
             xmview.setContentLoading(false)
-            this.uploadImgUrl = articleService.getCategoryImageUrl()
         },
         methods: {
             handleImgUploaded(ret, file, fileList) {
@@ -120,9 +132,13 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        console.log(this.form)
+                        feedbackService.create(this.form).then(() => {
+                            xmview.showTip('success', '提交成功')
+                            this.$router.push({name: 'feedback-index', params: {reload: true}})
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
-                        console.log('error submit!!')
                         return false
                     }
                 })

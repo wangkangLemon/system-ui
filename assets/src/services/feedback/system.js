@@ -53,7 +53,9 @@ class FeedbackSystemService {
     processing(id) {
         let url = `${urlPre}/${id}/processing`
         return api.put(url, {}).then((ret) => {
-            return ret.data
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
         })
     }
 
@@ -61,7 +63,9 @@ class FeedbackSystemService {
     confirm(id) {
         let url = `${urlPre}/${id}/confirm`
         return api.put(url, {}).then((ret) => {
-            return ret.data
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
         })
     }
 
@@ -74,6 +78,15 @@ class FeedbackSystemService {
             }
         })
     }
+
+    // 获取上传图片地址
+    uploadImageUrl() {
+        return `${urlPre}/image`
+    }
+
+    // =====================================
+    // 客户端
+    // =====================================
 
     // 客户端查询
     mobileSearch({
