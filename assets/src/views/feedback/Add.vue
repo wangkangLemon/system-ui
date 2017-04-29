@@ -41,7 +41,7 @@
                     <el-input type="textarea" v-model="form.content" :rows="5"
                               placeholder="请详细描述您所遇到的问题或优化建议"></el-input>
                 </el-form-item>
-                <el-form-item prop="imgUrl" label="上传截图(选填)">
+                <el-form-item prop="images" label="上传截图(选填)">
                     <UploadImages ref="uploadImg"
                                   :url="uploadImgUrl"
                                   :name="uploadName"
@@ -56,7 +56,6 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('form')">提交</el-button>
-                    <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
         </main>
@@ -92,7 +91,7 @@
                 },
                 formLabelWidth: '120px', // 表单label的宽度
                 categories: [],
-                uploadImgUrl: void 0,
+                uploadImgUrl: '',
                 uploadName: 'file',
                 fileNum: 3,
             }
