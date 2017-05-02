@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/usr/local/server/yst/system-ui/system-ui
+cd /usr/local/server/yst/system-ui && npm run start

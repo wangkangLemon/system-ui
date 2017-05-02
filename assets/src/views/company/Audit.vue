@@ -2,25 +2,7 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
-    @import "../../utils/mixins/showDetail";
     .company-user-list {
-        .show-detail {
-            .info {
-                p.select {
-                    span.value {
-                        .note {
-                            width: 100%;
-                        }
-                    }
-                }
-            }
-        }
-        .status {
-            padding: 2px 5px;
-            background: #00acac;
-            border-radius: 5px;
-            color: #fff;
-        }
         .box-card {
             margin-bottom: 20px;
             .clearfix {
@@ -47,42 +29,6 @@
 </style>
 <template>
     <article class="company-user-list">
-        <!--详情-->
-        <el-dialog class="show-detail" :title="show.title" v-model="show.showDetail">
-            <div class="info" v-if="show.detail">
-                <p><i class="title">药店地址：</i><span class="value">{{show.detail.address}}</span></p>
-                <p><i class="title">门店数量：</i><span class="value">{{show.detail.department_range}}</span></p>
-                <p><i class="title">店员数量：</i><span class="value">{{show.detail.user_range}}</span></p>
-                <p><i class="title">运营联系人：</i><span class="value">{{show.detail.contact}}</span></p>
-                <p><i class="title">联系人电话：</i><span class="value">{{show.detail.phone}}</span></p>
-                <p><i class="title">联系人邮箱：</i><span class="value">{{show.detail.email}}</span></p>
-                <p>
-                    <i class="title">营业执照：</i><span class="value">
-                    <img :src="show.detail.business_license | fillImgPath" alt="" @click="screenImg(show.detail.business_license)"></span></p>
-                <p><i class="title">经营许可证：</i><span class="value"><img :src="show.detail.business_permit | fillImgPath" alt="" @click="screenImg(show.detail.business_permit)"></span></p>
-                <p><i class="title">GSP/GSM认证：</i><span class="value"><img :src="show.detail.gsp | fillImgPath" alt="" @click="screenImg(show.detail.gsp)"></span></p>
-                <p><i class="title">负责人身份证：</i><span class="value"><img :src="show.detail.id_card | fillImgPath" alt="" @click="screenImg(show.detail.id_card)"></span></p>
-                <p class="select">
-                    <i class="title">审核结果：</i>
-                    <span class="value">
-                        <el-select v-model="form.status">
-                        <el-option label="待审核" :value="1"></el-option>
-                        <el-option label="审核通过" :value="2"></el-option>
-                        <el-option label="审核失败" :value="3"></el-option>
-                    </el-select>
-                    </span>
-                </p>
-                <p class="select">
-                    <i class="title">备注：</i>
-                    <span class="value">
-                        <el-input class="note" type="textarea" v-model="form.note" :rows="6"></el-input>
-                    </span>
-                </p>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="submit">提 交</el-button>
-            </div>
-        </el-dialog>
         <el-card class="box-card">
             <section class="search">
                 <section>
@@ -153,33 +99,21 @@
                 </el-pagination>
             </div>
         </el-card>
-        <screenImg></screenImg>
     </article>
 </template>
 <script>
     import companyService from '../../services/companyService'
     import DateRange from '../component/form/DateRangePicker'
-    import screenImg from '../component/dialog/FullScreenImg.vue'
     import {fillImgPath} from '../../utils/filterUtils'
     export default {
         filters: {
             fillImgPath
         },
         components: {
-            screenImg,
             DateRange
         },
         data () {
             return {
-                show: {
-                    showDetail: false,
-                    detail: null,
-                    title: ''
-                },
-                form: {
-                    status: '',
-                    note: ''
-                },
                 loading: false,
                 currentPage: 1,
                 pageSize: 15,
@@ -199,19 +133,6 @@
             })
         },
         methods: {
-            screenImg (image) {
-                screenImg.setShow(image)
-            },
-            checkDetail (item) {
-                companyService.getAuditDetail(item.id).then((ret) => {
-                    this.show.detail = ret.data
-                    this.show.title = `${ret.data.name}(审核)`
-                    this.form.status = ret.data.status
-                    this.form.note = ret.data.note
-                }).then(() => {
-                    this.show.showDetail = true
-                })
-            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
@@ -219,19 +140,6 @@
             handleCurrentChange(val) {
                 this.currentPage = val
                 this.getData()
-            },
-            submit () {
-                companyService.addAudit({
-                    audit_id: this.show.detail.id,
-                    status: this.form.status,
-                    note: this.form.note
-                }).then((ret) => {
-                    this.show.showDetail = false
-                    xmview.showTip('success', '提交成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
-                })
             },
             getData () {
                 this.loading = true

@@ -213,7 +213,7 @@ export default {
             }
         },
         {
-            path: 'audit/show/:id',
+            path: 'audit/:id',
             name: 'company-audit-show',
             component: resolve => {
                 require.ensure([], () => {

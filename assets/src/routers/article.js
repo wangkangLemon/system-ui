@@ -30,5 +30,29 @@ export default [
             title: '内容管理',
             noback: true
         }
+    },
+    {
+        path: pathPre + '/content/show/:id',
+        name: 'article-content-show',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/article/ContentShow.vue'))
+            })
+        },
+        meta: {
+            title: '内容管理-详情',
+        }
+    },
+    {
+        path: pathPre + '/content/:id',
+        name: 'article-content-operate',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/article/ContentOperate.vue'))
+            })
+        },
+        meta: {
+            title: '内容管理-操作',
+        }
     }
 ]

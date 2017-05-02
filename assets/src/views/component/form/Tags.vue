@@ -19,7 +19,7 @@
         <el-tag
                 :key="tag"
                 v-for="tag in currVal"
-                :closable="true"
+                :closable="closable"
                 :close-transition="false"
                 @close="handleClose(tag)">
             <i>{{tag}}</i>
@@ -40,7 +40,10 @@
 
 <script>
     export default{
-        props: ['value'],
+        props: {
+            value: Array,
+            closable: {type: Boolean, default: true}
+        },
         data () {
             return {
                 currVal: this.value || [],
