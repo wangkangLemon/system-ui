@@ -1,5 +1,4 @@
 .idea
+node_modules
 npm-debug.log
-conf/app.ini
-system-ui
 .eslintrc.json
