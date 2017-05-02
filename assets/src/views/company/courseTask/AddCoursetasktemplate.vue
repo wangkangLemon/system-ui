@@ -91,7 +91,8 @@
                     course_id: void 0,     // 课程
                     status: void 0,       // 状态
                     currCategoryName: '', // 名字
-                    courses: []
+                    courses: [],
+                    coursesIds: void 0
                 },
                 rules: {
                     title: [
@@ -108,6 +109,7 @@
         },
         created () {
             xmview.setContentLoading(false)
+            this.form = this.$route.params.item
         },
         methods: {
             cropperFn(data) {
@@ -126,20 +128,26 @@
             },
             submit() {
                 this.$refs.form.validate((valid) => {
-                    if (valid) {
-                        let reqFn = companyService.addCourseTaskTemplate
-                        if (this.form.id) {
-                            reqFn = companyService.updateCourseTaskTemplate
-                        }
-                        reqFn(this.form).then((ret) => {
-                            xmview.showTip('success', '保存成功')
-                            this.$router.back()
-                        }).catch((ret) => {
-                            xmview.showTip('error', ret.message)
-                        })
-                    } else {
+                    if (!valid) {
                         return false
                     }
+                    // 处理课程id
+                    this.coursesIds = []
+                    this.courses.forEach((c) => {
+                        this.coursesIds.push(c.id)
+                    })
+                    this.coursesIds = this.coursesIds.join(',')
+
+                    let reqFn = companyService.addCourseTaskTemplate
+                    if (this.form.id) {
+                        reqFn = companyService.updateCourseTaskTemplate
+                    }
+                    reqFn(this.form).then((ret) => {
+                        xmview.showTip('success', '保存成功')
+                        this.$router.back()
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
             }
         },

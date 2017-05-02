@@ -196,7 +196,7 @@
                 }
             },
             editItm (row) {
-//                this.$router
+                this.$router.push({name: 'coursetask-template-add', params: {item: row}})
             },
             publishCourseTaskTemplate (row) {
                 xmview.showDialog(`你将要上线课程任务【<i style="color:red">${row.title || ''}</i>】吗？`, this.publishItem(row.id))
