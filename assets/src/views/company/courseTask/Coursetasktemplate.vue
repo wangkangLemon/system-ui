@@ -196,6 +196,7 @@
                 }
             },
             editItm (row) {
+                row.course = row.course || []
                 this.$router.push({name: 'coursetask-template-add', params: {item: row}})
             },
             publishCourseTaskTemplate (row) {
