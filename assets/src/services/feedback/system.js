@@ -7,9 +7,12 @@ const urlPre = config.apiHost + '/sys/feedback'
 
 class FeedbackSystemService {
     // 管理工单列表
-    search({page, page_size, keyword, time_start, time_end}) {
+    search({page, page_size, status, category_id, keyword, time_start, time_end}) {
         let url = `${urlPre}/search`
-        return api.get(url, {page, page_size, keyword, time_start, time_end}).then((ret) => {
+        if (status == '') {
+            status = -1
+        }
+        return api.get(url, {page, page_size, status, category_id, keyword, time_start, time_end}).then((ret) => {
             return ret.data
         })
     }
@@ -50,7 +53,9 @@ class FeedbackSystemService {
     processing(id) {
         let url = `${urlPre}/${id}/processing`
         return api.put(url, {}).then((ret) => {
-            return ret.data
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
         })
     }
 
@@ -58,7 +63,9 @@ class FeedbackSystemService {
     confirm(id) {
         let url = `${urlPre}/${id}/confirm`
         return api.put(url, {}).then((ret) => {
-            return ret.data
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
         })
     }
 
@@ -71,6 +78,15 @@ class FeedbackSystemService {
             }
         })
     }
+
+    // 获取上传图片地址
+    uploadImageUrl() {
+        return `${urlPre}/image`
+    }
+
+    // =====================================
+    // 客户端
+    // =====================================
 
     // 客户端查询
     mobileSearch({

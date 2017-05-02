@@ -147,6 +147,7 @@ function processCodeError (ret, url) {
 
     // 如果过期
     if (ret.code === 10000 || ret.code === 10001 || ret.code === 10002 || ret.code === 10003) {
+        if (ret.code === 10003) authUtils.setTwiceToken('')
         return processLoginOut(ret)
     } else if (ret.code >= 100) {
         ret.tipCom = xmview.showTip('error', ret.message)

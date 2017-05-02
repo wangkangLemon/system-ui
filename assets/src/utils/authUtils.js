@@ -6,19 +6,34 @@ const KEY_AUTHTOKEN = 'KEY_AUTH_UTILS_TOKEN' // jwt的token
 const KEY_AUTHUSERINFO = 'KEY_AUTH_UTILS_USERINFO' // 用户信息
 const KEY_AUTHSETNAVMENU = 'KEY_AUTH_UTILS_SETNAVMENU' // 菜单
 const KEY_TWICE_AUTH = 'KEY_AUTH_UTILS_TWICEAUTH' // 二次验证的key
+const KEY_AUTHTOKEN_TTL = 3600 // jwt的token 有效期，过期作废，一个小时
 
 import message from './message'
 import * as userApi from '../services/userService'
 // import config from '../utils/config'
 
 let refreshIntervalId
+let firstRefreshTimeoutId
 let authUtls = {
     // 身份凭证操作
     getAuthToken () {
-        return localStorage.getItem(KEY_AUTHTOKEN)
+        let str = localStorage.getItem(KEY_AUTHTOKEN)
+        if (str == '') {
+            return null
+        }
+        // try是为了兼容旧代码
+        try {
+            str = JSON.parse(str)
+            if (str && str.ttl > Date.now()) {
+                return str.token
+            }
+            return null
+        } catch (e) {
+            return null
+        }
     },
     setAuthToken (token) {
-        localStorage.setItem(KEY_AUTHTOKEN, token)
+        localStorage.setItem(KEY_AUTHTOKEN, JSON.stringify({token: token, ttl: Date.now() + KEY_AUTHTOKEN_TTL * 1000}))
     },
     getUserInfo () {
         let str = localStorage.getItem(KEY_AUTHUSERINFO)
@@ -51,7 +66,7 @@ let authUtls = {
     // 自动更新用户的token
     authRefreshtoken () {
         authUtls.clearAuthRefreshToken()
-        setTimeout(() => {
+        firstRefreshTimeoutId = setTimeout(() => {
             authUtls.refreshToken()
         }, 1000 * 10)
         refreshIntervalId = setInterval(() => {
@@ -75,12 +90,12 @@ let authUtls = {
     },
     clearAuthRefreshToken () {
         refreshIntervalId && clearInterval(refreshIntervalId)
+        firstRefreshTimeoutId && clearTimeout(firstRefreshTimeoutId)
     },
     clearAuthInfo () {
         authUtls.setAuthToken('')
         authUtls.setNavMenu('')
         authUtls.setUserInfo('')
-        // authUtls.setTwiceToken('')
     }
 }
 

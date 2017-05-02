@@ -3,42 +3,52 @@
  */
 // 财务管理
 const pathPre = '/feedback'
-export default [
-    {
-        path: pathPre + '/index',
-        name: 'feedback-index',
-        component: resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/feedback/Index.vue'))
-            })
-        },
-        meta: {
-            title: '我的工单 - 工单系统',
-            noback: true
-        }
+export default {
+    path: pathPre,
+    component: resolve => {
+        require.ensure([], () => {
+            resolve(require('../views/feedback/Main.vue'))
+        })
     },
-    {
-        path: pathPre + '/add',
-        name: 'feedback-add',
-        component: resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/feedback/Add.vue'))
-            })
+    children: [
+        {
+            path: 'index',
+            name: 'feedback-index',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/feedback/Index.vue'))
+                })
+            },
+            meta: {
+                title: '我的工单 - 工单系统',
+                noback: true
+            }
         },
-        meta: {
-            title: '提交工单 - 工单系统',
-        }
-    },
-    {
-        path: pathPre + '/view',
-        name: 'feedback-view',
-        component: resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/feedback/View.vue'))
-            })
+        {
+            path: 'add',
+            name: 'feedback-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/feedback/Add.vue'))
+                })
+            },
+            meta: {
+                title: '提交工单 - 工单系统',
+                noback: true,
+            }
         },
-        meta: {
-            title: '工单详情 - 工单系统',
-        }
-    },
-]
+        {
+            path: 'view',
+            name: 'feedback-view',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/feedback/View.vue'))
+                })
+            },
+            meta: {
+                title: '工单详情 - 工单系统',
+                noback: true,
+            }
+        },
+    ]
+}

@@ -74,3 +74,8 @@ npm run build
 ```
 设置是否显示内容部分的返回按钮
 ```
+
+#### setContentTile (title)
+```
+title: 形如路由中的 '公开课管理-培训'
+```

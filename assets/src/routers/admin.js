@@ -39,7 +39,7 @@ export default [
         component: require('../views/system/Log.vue'),
         children: [
             {   // 系统管理
-                path: 'systemManage',
+                path: 'system',
                 name: 'systemManage',
                 component: resolve => {
                     require.ensure([], () => {
@@ -52,7 +52,7 @@ export default [
                 }
             },
             {   // 企业管理
-                path: 'companyManage',
+                path: 'company',
                 name: 'companyManage',
                 component: resolve => {
                     require.ensure([], () => {
@@ -65,7 +65,7 @@ export default [
                 }
             },
             {   // 系统后台登录
-                path: 'systemBack',
+                path: 'systemback',
                 name: 'systemBack',
                 component: resolve => {
                     require.ensure([], () => {
@@ -78,7 +78,7 @@ export default [
                 }
             },
             {   // 企业后台登录
-                path: 'companyBack',
+                path: 'companyback',
                 name: 'companyBack',
                 component: resolve => {
                     require.ensure([], () => {
@@ -91,7 +91,7 @@ export default [
                 }
             },
             {   // 前台登录
-                path: 'frontDest',
+                path: 'frontdest',
                 name: 'frontDest',
                 component: resolve => {
                     require.ensure([], () => {
@@ -104,7 +104,7 @@ export default [
                 }
             },
             {   // 手机验证码
-                path: 'mobileCode',
+                path: 'mobilecode',
                 name: 'mobileCode',
                 component: resolve => {
                     require.ensure([], () => {
@@ -117,7 +117,7 @@ export default [
                 }
             },
             {   // 邮箱验证码
-                path: 'emailCode',
+                path: 'emailcode',
                 name: 'emailCode',
                 component: resolve => {
                     require.ensure([], () => {

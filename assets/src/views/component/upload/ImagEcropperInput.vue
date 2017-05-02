@@ -22,7 +22,7 @@
             </span>
         </el-dialog>
 
-        <input accept="image/*" type="file" style="display: none" @change="fileChange($event)" ref="file">
+        <input accept="image/jpg,image/jpeg,image/png" type="file" style="display: none" @change="fileChange($event)" ref="file">
     </article>
 </template>
 

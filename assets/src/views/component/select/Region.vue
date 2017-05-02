@@ -17,21 +17,21 @@
 <template>
     <section class="region-container">
         <i>{{title}}</i>
-        <el-select :disabled="disabled" :placeholder="placeholderVal.province" clearable @change="setCurrVal(0, provinceSelect)" v-model="provinceSelect">
+        <el-select :disabled="disabled" placeholder="全部" clearable @change="setCurrVal(0, provinceSelect)" v-model="provinceSelect">
             <el-option v-for="(item, index) in provinces"
                        :label="item.name"
                        :value="item.id"
                        :key="item.id">
             </el-option>
         </el-select>
-        <el-select :disabled="disabled" :placeholder="placeholderVal.city" clearable @change="setCurrVal(1, citySelect)" v-model="citySelect">
+        <el-select :disabled="disabled" placeholder="全部" clearable @change="setCurrVal(1, citySelect)" v-model="citySelect">
             <el-option v-for="(item, index) in citys"
                        :label="item.name"
                        :value="item.id"
                        :key="item.id">
             </el-option>
         </el-select>
-        <el-select :disabled="disabled" :placeholder="placeholderVal.area" clearable @change="setCurrVal(2, areaSelect)" v-model="areaSelect">
+        <el-select :disabled="disabled" placeholder="全部" clearable @change="setCurrVal(2, areaSelect)" v-model="areaSelect">
             <el-option v-for="(item, index) in areas"
                        :label="item.name"
                        :value="item.id"
@@ -45,7 +45,7 @@
     import cityData from '../../../assets/city'
     import treeUtils from '../../../utils/treeUtils'
     export default{
-        props: ['change', 'title', 'placeholder', 'disabled'],
+        props: ['change', 'title', 'province', 'city', 'area', 'disabled'],
         data () {
             return {
                 provinces: [],
@@ -54,40 +54,31 @@
                 provinceSelect: '',
                 citySelect: '',
                 areaSelect: '',
-                curItem: [],
-                placeholderVal: {
-                    province: '全部',
-                    city: '全部',
-                    area: '全部'
-                }
+                curItem: []
             }
         },
         watch: {
-            placeholder (val) {
-                if (val && val.length > 0) {
-                    let provinceObj = treeUtils.findItem(cityData, [`${val[0]}`])
-                    let cityObj = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`])
-                    let areaObj = treeUtils.findItem(cityData, [`${val[0]}`, `${val[1]}`, `${val[2]}`])
-                    console.log(provinceObj, cityObj, areaObj)
-                    if (provinceObj != undefined && cityObj != undefined && areaObj != undefined) {
-                        this.placeholderVal.province = provinceObj.name
-                        this.placeholderVal.city = cityObj.name
-                        this.placeholderVal.area = areaObj.name
-                        this.provinceSelect = val[0]
-                        this.citySelect = val[1]
-                        this.areaSelect = val[2]
-//                        debugger
-                        this.setCurrVal(0, val[0])
-                    } else {
-                        this.provinceSelect = ''
-                        this.citySelect = ''
-                        this.areaSelect = ''
-                        this.placeholderVal = {
-                            province: '全部',
-                            city: '全部',
-                            area: '全部'
-                        }
-                    }
+            province (val) {
+                if (val) {
+                    this.provinceSelect = val
+                    this.setCurrVal(0, val)
+                } else {
+                    this.provinceSelect = ''
+                }
+            },
+            city (val) {
+                if (this.province && val) {
+                    this.citySelect = val
+                    this.setCurrVal(1, val)
+                } else {
+                    this.citySelect = ''
+                }
+            },
+            area (val) {
+                if (this.province && this.citySelect && val) {
+                    this.areaSelect = val
+                } else {
+                    this.areaSelect = ''
                 }
             },
             disabled (val) {
@@ -121,7 +112,6 @@
                     }
                 } else if (this.provinceSelect && type == 1) {
                     if (this.citys && this.citys.length > 0) {
-                        this.areaSelect = ''
                         this.areas = treeUtils.findItem(this.citys, levelPath).children
                     }
                 }

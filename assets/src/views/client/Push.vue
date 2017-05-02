@@ -1,31 +1,27 @@
 <!--消息推送-->
 <style lang='scss' rel="stylesheet/scss">
-    @import "../../utils/mixins/mixins";
+    @import "../../utils/mixins/common";
     @import "../../utils/mixins/topSearch";
     @import "../../utils/mixins/showDetail";
 
     .client-push-container {
-        .add {
-            text-align: right;
-            padding-bottom: 20px;
+        @extend %content-container;
+        .header-button {
+            @extend %right-top-btnContainer;
         }
-        .main-container {
-            background: #fff;
-            padding: 20px;
-            .search {
-               @extend %top-search-container;
-            }
-            .block {
-                text-align: right;
-                margin-top: 10px;
-            }
+        .search {
+            @extend %top-search-container;
+        }
+        .block {
+            text-align: right;
+            margin-top: 10px;
         }
     }
 </style>
 <template>
     <article class="client-push-container">
         <!--详情-->
-        <el-dialog class="showDetail" title="推送详情" v-model="showDetail">
+        <el-dialog class="show-detail" title="推送详情" v-model="showDetail">
             <div class="info">
                 <p><i class="title">标题： </i><span class="value">{{details.title}}</span></p>
                 <p><i class="title">内容： </i><span class="value">{{details.content}}</span></p>
@@ -37,108 +33,106 @@
                 </div>
             </div>
         </el-dialog>
-        <section class="add">
+        <section class="header-button">
             <el-button icon="plus" type="primary" @click="createPush">新建推送</el-button>
         </section>
-        <div class="main-container">
-            <section class="search">
-                <section>
-                    <i>推送方式</i>
-                    <el-select clearable v-model="search.target" @change="getData">
-                        <el-option label="全局推送" value="all"></el-option>
-                        <el-option label="条件推送" value="tag"></el-option>
-                    </el-select>
-                </section>
-                <section>
-                    <i>类型</i>
-                    <el-select clearable v-model="search.modelid" @change="getData">
-                        <el-option label="全部" :value="100"></el-option>
-                        <el-option label="文本" :value="0"></el-option>
-                        <el-option label="课程" :value="5"></el-option>
-                        <el-option label="链接" :value="20"></el-option>
-                    </el-select>
-                </section>
-                <section>
-                    <i>状态</i>
-                    <el-select clearable v-model="search.status" @change="getData">
-                        <el-option label="待发送" :value="0"></el-option>
-                        <el-option label="成功" :value="1"></el-option>
-                        <el-option label="失败" :value="2"></el-option>
-                    </el-select>
-                </section>
-                <section>
-                    <i>关键字</i>
-                    <el-input @change="getData" class="name" v-model="search.keyword"/>
-                </section>
-                <DateRange title="日期查找" :start="search.time_start" :end="search.time_end"
-                           v-on:changeStart="val=>search.time_start=val"
-                           v-on:changeEnd="val=>search.time_end"
-                           :change="getData">
-                </DateRange>
+        <section class="search">
+            <section>
+                <i>推送方式</i>
+                <el-select clearable v-model="search.target" @change="getData">
+                    <el-option label="全局推送" value="all"></el-option>
+                    <el-option label="条件推送" value="tag"></el-option>
+                </el-select>
             </section>
-            <el-table border v-loading="loading" :data="pushData">
-                <el-table-column
-                        prop="target_type"
-                        label="推送方式"
-                        width="150">
-                    <template scope="scope">
-                        {{scope.row.target_type == 'TAG' ? '条件推送' : '全局推送'}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        prop="model_name"
-                        label="类型"
-                        width="100">
-                </el-table-column>
-                <el-table-column
-                        prop="title"
-                        label="标题"
-                        width="100">
-                </el-table-column>
-                <el-table-column
-                        prop="content"
-                        label="内容"
-                        width="300">
-                </el-table-column>
-                <el-table-column
-                        prop="devices"
-                        label="平台"
-                        width="100">
-                </el-table-column>
-                <el-table-column
-                        prop="send_time"
-                        label="发送时间"
-                        width="200">
-                </el-table-column>
-                <el-table-column
-                        prop="status"
-                        label="状态"
-                        width="200">
-                </el-table-column>
-                <el-table-column
-                        prop="admin"
-                        label="管理员"
-                        width="200">
-                </el-table-column>
-                <el-table-column prop="operate" label="操作">
-                    <template scope="scope">
-                        <el-button type="text" size="small" @click="checkDetail(scope.$index, scope.row)">
-                            详情
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <section class="block">
-                <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-sizes="[15, 30, 60, 100]"
-                        layout="total, sizes, ->, prev, pager, next, jumper"
-                        :total="total">
-                </el-pagination>
+            <section>
+                <i>类型</i>
+                <el-select clearable v-model="search.modelid" @change="getData">
+                    <el-option label="全部" :value="100"></el-option>
+                    <el-option label="文本" :value="0"></el-option>
+                    <el-option label="课程" :value="5"></el-option>
+                    <el-option label="链接" :value="20"></el-option>
+                </el-select>
             </section>
-        </div>
+            <section>
+                <i>状态</i>
+                <el-select clearable v-model="search.status" @change="getData">
+                    <el-option label="待发送" :value="0"></el-option>
+                    <el-option label="成功" :value="1"></el-option>
+                    <el-option label="失败" :value="2"></el-option>
+                </el-select>
+            </section>
+            <section>
+                <i>关键字</i>
+                <el-input @change="getData" class="name" v-model="search.keyword"/>
+            </section>
+            <DateRange title="日期查找" :start="search.time_start" :end="search.time_end"
+                       v-on:changeStart="val=>search.time_start=val"
+                       v-on:changeEnd="val=>search.time_end"
+                       :change="getData">
+            </DateRange>
+        </section>
+        <el-table border v-loading="loading" :data="pushData">
+            <el-table-column
+                    prop="target_type"
+                    label="推送方式"
+                    width="150">
+                <template scope="scope">
+                    {{scope.row.target_type == 'TAG' ? '条件推送' : '全局推送'}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="model_name"
+                    label="类型"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="title"
+                    label="标题"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="content"
+                    label="内容"
+                    width="300">
+            </el-table-column>
+            <el-table-column
+                    prop="devices"
+                    label="平台"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="send_time"
+                    label="发送时间"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="status"
+                    label="状态"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="admin"
+                    label="管理员"
+                    width="200">
+            </el-table-column>
+            <el-table-column prop="operate" label="操作">
+                <template scope="scope">
+                    <el-button type="text" size="small" @click="checkDetail(scope.$index, scope.row)">
+                        详情
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <section class="block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[15, 30, 60, 100]"
+                    layout="total, sizes, ->, prev, pager, next, jumper"
+                    :total="total">
+            </el-pagination>
+        </section>
     </article>
 </template>
 <script>

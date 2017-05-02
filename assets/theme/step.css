@@ -93,6 +93,10 @@
     vertical-align: top;
 }
 
+.el-step:last-child .el-step__main{
+    padding-right: 0;
+}
+
 .el-step.is-vertical{}
 
 .el-step.is-vertical .el-step__head, .el-step.is-vertical .el-step__main{
@@ -111,7 +115,7 @@
     display: inline-block;
     position: absolute;
     border-color: inherit;
-    background-color: rgb(191, 206, 217);
+    background-color: rgb(191, 203, 217);
 }
 
 .el-step__line.is-vertical{
@@ -168,8 +172,8 @@
 }
 
 .el-step__head.is-finish{
-    color: #52bff1;
-    border-color: #52bff1;
+    color: #20a0ff;
+    border-color: #20a0ff;
 }
 
 .el-step__head.is-error{
@@ -183,13 +187,13 @@
 }
 
 .el-step__head.is-wait{
-    color: rgb(191, 206, 217);
-    border-color: rgb(191, 206, 217);
+    color: rgb(191, 203, 217);
+    border-color: rgb(191, 203, 217);
 }
 
 .el-step__head.is-process{
-    color: rgb(191, 206, 217);
-    border-color: rgb(191, 206, 217);
+    color: rgb(191, 203, 217);
+    border-color: rgb(191, 203, 217);
 }
 
 .el-step__head.is-text{
@@ -200,8 +204,8 @@
 
 .el-step__head.is-text.is-finish{
     color: #fff;
-    background-color: #52bff1;
-    border-color: #52bff1;
+    background-color: #20a0ff;
+    border-color: #20a0ff;
 }
 
 .el-step__head.is-text.is-error{
@@ -217,15 +221,15 @@
 }
 
 .el-step__head.is-text.is-wait{
-    color: rgb(191, 206, 217);
+    color: rgb(191, 203, 217);
     background-color: #fff;
-    border-color: rgb(191, 206, 217);
+    border-color: rgb(191, 203, 217);
 }
 
 .el-step__head.is-text.is-process{
     color: #fff;
-    background-color: rgb(191, 206, 217);
-    border-color: rgb(191, 206, 217);
+    background-color: rgb(191, 203, 217);
+    border-color: rgb(191, 203, 217);
 }
 
 .el-step__main{
@@ -242,7 +246,7 @@
 
 .el-step__title.is-finish{
     font-weight: 700;
-    color: #52bff1;
+    color: #20a0ff;
 }
 
 .el-step__title.is-error{
@@ -257,12 +261,12 @@
 
 .el-step__title.is-wait{
     font-weight: 400;
-    color: rgb(151, 171, 190);
+    color: rgb(151, 168, 190);
 }
 
 .el-step__title.is-process{
     font-weight: 700;
-    color: rgb(72, 90, 106);
+    color: rgb(72, 87, 106);
 }
 
 .el-step__description{
@@ -272,7 +276,7 @@
 }
 
 .el-step__description.is-finish{
-    color: #52bff1;
+    color: #20a0ff;
 }
 
 .el-step__description.is-error{
@@ -284,11 +288,11 @@
 }
 
 .el-step__description.is-wait{
-    color: rgb(191, 206, 217);
+    color: rgb(191, 203, 217);
 }
 
 .el-step__description.is-process{
-    color: rgb(131, 148, 165);
+    color: rgb(131, 145, 165);
 }
 :root{
     /* Transition

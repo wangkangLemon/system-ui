@@ -1,6 +1,14 @@
 <!--课程栏目-->
+<style lang="scss">
+    .course-select-container {
+        .el-icon-caret-bottom {
+            text-align: center;
+            text-align-last: center;
+        }
+    }
+</style>
 <template>
-    <el-cascader ref="container" v-loading="loading"
+    <el-cascader class="course-select-container" ref="container" v-loading="loading"
                  :options='options' :show-all-levels="false"
                  :placeholder="placeholder"
                  @active-item-change="handleItemChange"

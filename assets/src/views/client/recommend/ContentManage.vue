@@ -291,7 +291,7 @@
                             label="日期"
                             width="200">
                         <template scope="scope">
-                            {{scope.row.date.slice(0, 10)}}
+                            {{scope.row.date && scope.row.date.slice(0, 10)}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="operate" label="操作" width="100">
@@ -475,6 +475,8 @@
                     this.result.data = ret.data
                     this.result.total = ret.total
                     this.result.loading = false
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
                 })
             },
             // 获取左侧分类列表
@@ -487,6 +489,8 @@
                     this.section.total = ret.total
                     this.section.loading = false
                     return ret
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
                 })
             },
             courseConfirm (item) { // 点击确定的时候，进行搜索结果

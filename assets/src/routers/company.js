@@ -80,7 +80,6 @@ export default {
                     },
                     meta: {
                         title: '店员列表-店员',
-                        noback: true
                     }
                 },
                 {
@@ -140,7 +139,7 @@ export default {
             name: 'company-coursetask',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../views/company/Coursetask.vue'))
+                    resolve(require('../views/company/courseTask/Coursetask.vue'))
                 })
             },
             meta: {
@@ -153,7 +152,7 @@ export default {
             name: 'company-coursetasktemplate',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../views/company/Coursetasktemplate.vue'))
+                    resolve(require('../views/company/courseTask/Coursetasktemplate.vue'))
                 })
             },
             meta: {
@@ -161,12 +160,25 @@ export default {
                 noback: true
             }
         },
+        // 添加修改课程任务模板
+        {
+            path: 'coursetask/template/add',
+            name: 'coursetask-template-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/courseTask/AddCoursetasktemplate.vue'))
+                })
+            },
+            meta: {
+                title: '添加课程任务模板-企业',
+            }
+        },
         {
             path: 'coursetask/template/category',
             name: 'company-coursetasktemplate-category',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../views/company/Coursetasktemplatecategory.vue'))
+                    resolve(require('../views/company/courseTask/Coursetasktemplatecategory.vue'))
                 })
             },
             meta: {
@@ -200,5 +212,18 @@ export default {
                 noback: true
             }
         },
+        {
+            path: 'audit/show/:id',
+            name: 'company-audit-show',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/AuditShow.vue'))
+                })
+            },
+            meta: {
+                title: '入驻审核(审核)'
+            }
+        },
+
     ]
 }

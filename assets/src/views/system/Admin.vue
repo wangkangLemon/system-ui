@@ -1,30 +1,26 @@
 <!--系统-管理员-->
 <style lang='scss' rel="stylesheet/scss">
-    @import "../../utils/mixins/mixins";
+    @import "../../utils/mixins/common";
     @import "../../utils/mixins/showDetail";
     @import "../../utils/mixins/topSearch";
     .admin-container {
-        .add {
-            text-align: right;
-            padding: 0 0 20px 0;
+        @extend %content-container;
+        .header-button {
+            @extend %right-top-btnContainer;
         }
-        .main-container {
-            background: #fff;
-            padding: 20px;
-            .search {
-                @extend %top-search-container;
-            }
-            .block {
-                text-align: right;
-                margin-top: 10px;
-            }
+        .search {
+            @extend %top-search-container;
+        }
+        .block {
+            text-align: right;
+            margin-top: 10px;
         }
     }
 </style>
 <template>
     <article class="admin-container">
         <!--详情-->
-        <el-dialog class="showDetail" title="查看管理员账号" v-model="showDetail">
+        <el-dialog class="show-detail" title="查看管理员账号" v-model="showDetail">
             <div class="avatar" v-if="clerkDetail != null">
                 <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar"/>
             </div>
@@ -83,79 +79,77 @@
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
             </div>
         </el-dialog>
-        <section class="add">
+        <section class="header-button">
             <el-button type="primary" icon="plus" @click="addAdmin">添加</el-button>
         </section>
-        <div class="main-container">
-            <section class="search">
-                <section>
-                    <i>姓名</i>
-                    <el-input @change="getData" class="name" v-model="search.name" placeholder="请输入姓名"></el-input>
-                </section>
+        <section class="search">
+            <section>
+                <i>姓名</i>
+                <el-input @change="getData" class="name" v-model="search.name" placeholder="请输入姓名"></el-input>
             </section>
-            <el-table border :data="adminData" v-loading="loading">
-                <el-table-column
-                        prop="name"
-                        label="姓名"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        prop="mobile"
-                        label="手机"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="email"
-                        label="邮箱"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="last_login_time_name"
-                        label="上次登录时间"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="last_login_ip"
-                        label="上次登录IP"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="disabled"
-                        label="状态"
-                        width="80">
-                    <template scope="scope">
-                        <el-tag type="danger" v-if="scope.row.disabled">禁用</el-tag>
-                        <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="operate" label="操作" min-width="200">
-                    <template scope="scope">
-                        <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
-                            详情
-                        </el-button>
-                        <el-button type="text" size="small" @click="editAdmin(scope.row)">
-                            修改
-                        </el-button>
-                        <el-button type="text" size="small" @click="adminDisable(scope.row)">
-                            禁用
-                        </el-button>
-                        <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <section class="block">
-                <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-sizes="[15, 30, 60, 100]"
-                        layout="total, sizes, ->, prev, pager, next, jumper"
-                        :total="total">
-                </el-pagination>
-            </section>
-        </div>
+        </section>
+        <el-table border :data="adminData" v-loading="loading">
+            <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="mobile"
+                    label="手机"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="email"
+                    label="邮箱"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="last_login_time_name"
+                    label="上次登录时间"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="last_login_ip"
+                    label="上次登录IP"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="disabled"
+                    label="状态"
+                    width="80">
+                <template scope="scope">
+                    <el-tag type="danger" v-if="scope.row.disabled">禁用</el-tag>
+                    <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="operate" label="操作" min-width="200">
+                <template scope="scope">
+                    <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
+                        详情
+                    </el-button>
+                    <el-button type="text" size="small" @click="editAdmin(scope.row)">
+                        修改
+                    </el-button>
+                    <el-button type="text" size="small" @click="adminDisable(scope.row)">
+                        禁用
+                    </el-button>
+                    <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
+                        删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <section class="block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[15, 30, 60, 100]"
+                    layout="total, sizes, ->, prev, pager, next, jumper"
+                    :total="total">
+            </el-pagination>
+        </section>
     </article>
 </template>
 <script>

@@ -1,30 +1,15 @@
 <!--价格调整-->
 <style lang='scss' rel='stylesheet/scss'>
-    @import "../../../utils/mixins/mixins";
+    @import "../../../utils/mixins/common";
     @import "../../../utils/mixins/topSearch";
     .financeManage-finance-charge {
+        @extend %content-container;
         .search {
             @extend %top-search-container;
             margin-bottom: 20px;
         }
-        .box-card {
-            margin: 20px 0;
-            .clearfix {
-                text-align: right;
-            }
-            .el-card__header {
-                padding: 10px 15px;
-                background: #f0f3f5;
-                i {
-                    position: relative;
-                    top: -1px;
-                    margin-right: 5px;
-                    font-size: 12px;
-                }
-                .recharge {
-                    float: left;
-                }
-            }
+        .header-button {
+            @extend %right-top-btnContainer;
         }
         .block {
             text-align: right;
@@ -35,7 +20,7 @@
 <template>
     <article class="financeManage-finance-charge">
         <!--详情-->
-        <el-dialog size="tiny"  class="showDetail" title="调整依据" v-model="showDetail">
+        <el-dialog size="tiny"  class="show-detail" title="调整依据" v-model="showDetail">
             <div v-if="currentData != null">{{currentData.desc}}</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>
@@ -60,80 +45,78 @@
                 <el-button type="primary" @click="submit('form')">调整</el-button>
             </div>
         </el-dialog>
-        <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <el-button class="recharge" @click="addForm = true"><i class="iconfont icon-edit"></i>调整</el-button>
-                <el-button @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
-            </div>
-            <section class="search">
-                <section>
-                    <i>工业</i>
-                    <IndustryCompanySelect
-                            type="1"
-                            v-model="industrySelect"
-                            v-on:change="val=>industrySelect=val"
-                            :change="fetchData">
-                    </IndustryCompanySelect>
-                </section>
-                <admin
-                        :change="fetchData"
-                        v-on:change="val=>managerSelect=val"
-                        v-model="managerSelect">
-                </admin>
-                <DateRange title="创建时间" :start="createTime" :end="endTime"
-                           v-on:changeStart="val=> createTime=val"
-                           v-on:changeEnd="val=> endTime"
-                           :change="fetchData">
-                </DateRange>
+        <div class="header-button">
+            <el-button type="primary" @click="addForm = true"><i class="iconfont icon-edit"></i>调整</el-button>
+            <el-button type="warning" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+        </div>
+        <section class="search">
+            <section>
+                <i>工业</i>
+                <IndustryCompanySelect
+                        type="1"
+                        v-model="industrySelect"
+                        v-on:change="val=>industrySelect=val"
+                        :change="fetchData">
+                </IndustryCompanySelect>
             </section>
-            <el-table
-                    border
-                    :data="industryData"
-                    stripe
-                    style="width: 100%">
-                <el-table-column
-                        prop="company"
-                        label="工业">
-                </el-table-column>
-                <el-table-column
-                        prop="admin_name"
-                        label="管理员"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="val_old"
-                        label="调整前单价">
-                </el-table-column>
-                <el-table-column
-                        prop="val_new"
-                        label="调整后单价">
-                </el-table-column>
-                <el-table-column
-                        prop="create_time_name"
-                        label="调整时间">
-                </el-table-column>
-                <el-table-column
-                        prop="operate"
-                        label="操作">
-                    <template scope="scope">
-                        <el-button type="text" size="small" @click="showFn(scope.row)">
-                            查看数据
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="block">
-                <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-sizes="[15, 30, 60, 100]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next"
-                        :total="total">
-                </el-pagination>
-            </div>
-        </el-card>
+            <admin
+                    :change="fetchData"
+                    v-on:change="val=>managerSelect=val"
+                    v-model="managerSelect">
+            </admin>
+            <DateRange title="创建时间" :start="createTime" :end="endTime"
+                       v-on:changeStart="val=> createTime=val"
+                       v-on:changeEnd="val=> endTime"
+                       :change="fetchData">
+            </DateRange>
+        </section>
+        <el-table
+                border
+                :data="industryData"
+                stripe
+                style="width: 100%">
+            <el-table-column
+                    prop="company"
+                    label="工业">
+            </el-table-column>
+            <el-table-column
+                    prop="admin_name"
+                    label="管理员"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="val_old"
+                    label="调整前单价">
+            </el-table-column>
+            <el-table-column
+                    prop="val_new"
+                    label="调整后单价">
+            </el-table-column>
+            <el-table-column
+                    prop="create_time_name"
+                    label="调整时间">
+            </el-table-column>
+            <el-table-column
+                    prop="operate"
+                    label="操作">
+                <template scope="scope">
+                    <el-button type="text" size="small" @click="showFn(scope.row)">
+                        查看数据
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class="block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[15, 30, 60, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next"
+                    :total="total">
+            </el-pagination>
+        </div>
     </article>
 </template>
 <script>

@@ -3,7 +3,7 @@
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
     .company-user-list {
-        .showDetail {
+        .show-detail {
             .avatar {
                 border: 1px solid #ededed;
                 display: inline-block;

@@ -37,7 +37,7 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog class="showDetail" title="查看店员" v-model="showDetail">
+        <el-dialog class="show-detail" title="查看店员" v-model="showDetail">
             <div class="avatar" v-if="details != null">
                 <img :src="{url: details.avatar, sex: details.sex} | defaultAvatar"/>
             </div>
@@ -182,11 +182,11 @@
                 total: 0,
                 searchParams: {
                     companySelect: '',
-                    createTime: '',
-                    endTime: '',
+                    createTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
+                    endTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
                     name: '',
                     mobile: '',
-                    status: '',
+                    status: this.$route.query.status ? this.$route.query.status : '',
                     email: '',
                     last_appstart: ''
                 }

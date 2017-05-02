@@ -4,7 +4,7 @@
     @import "../../utils/mixins/topSearch";
     @import "../../utils/mixins/showDetail";
     .company-user-list {
-        .showDetail {
+        .show-detail {
             .info {
                 p.select {
                     span.value {
@@ -48,7 +48,7 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog class="showDetail" :title="show.title" v-model="show.showDetail">
+        <el-dialog class="show-detail" :title="show.title" v-model="show.showDetail">
             <div class="info" v-if="show.detail">
                 <p><i class="title">药店地址：</i><span class="value">{{show.detail.address}}</span></p>
                 <p><i class="title">门店数量：</i><span class="value">{{show.detail.department_range}}</span></p>
@@ -133,11 +133,11 @@
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="checkDetail(scope.row)">
+                        <router-link type="text" size="small" :to="{name: 'company-audit-show', params: {id: scope.row.id}}">
                             <el-tag type="primary" v-if="scope.row.status == 1">待审核</el-tag>
                             <el-tag type="success" v-if="scope.row.status == 2">审核通过</el-tag>
                             <el-tag type="danger" v-if="scope.row.status == 3">审核失败</el-tag>
-                        </el-button>
+                        </router-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -193,7 +193,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

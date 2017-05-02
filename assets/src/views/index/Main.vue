@@ -1,6 +1,6 @@
 <style lang='scss' rel="stylesheet/scss">
     @import "../../utils/mixins/mixins";
-    .main-container {
+    .index-main-container {
         .department-analytics {
             height:120px;
             @extend %justify;
@@ -160,8 +160,8 @@
                         font-weight: normal;
                     }
                     .cell {
-                        text-align: center;
-                        text-align-last: center;
+                        text-align: left;
+                        text-align-last: left;
                         height: 30px !important;
                         line-height: 30px !important;
                         @extend %singline;
@@ -189,7 +189,7 @@
     }
 </style>
 <template>
-    <article class="main-container" v-if="mainData != null">
+    <article class="index-main-container" v-if="mainData != null">
         <section class="department-analytics">
             <div>
                 <i><img src="./images/company.png" /></i>
@@ -197,34 +197,34 @@
                 <router-link tag="p" :to="{name: 'company-index'}">连锁总数量</router-link>
                 <div>
                     <i>昨日新增{{mainData.company_inc}}</i>
-                    <router-link tag="a" :to="{name: 'company-index', query: {condition: 1}}">查看详情</router-link>
+                    <router-link tag="a" :to="{name: 'company-index', query: {yesterday}}">查看详情</router-link>
                 </div>
             </div>
             <div>
                 <i><img src="./images/department.png" /></i>
                 <h2>{{mainData.department}}</h2>
-                <p>门店总数量</p>
+                <router-link tag="p" :to="{name: 'company-department'}">门店总数量</router-link>
                 <div>
                     <i>昨日新增{{mainData.department_inc}}</i>
-                    <router-link tag="a" :to="{name: 'company-department'}">查看详情</router-link>
+                    <router-link tag="a" :to="{name: 'company-department', query: {yesterday}}">查看详情</router-link>
                 </div>
             </div>
             <div>
                 <i><img src="./images/user.png" /></i>
                 <h2>{{mainData.user}}</h2>
-                <p>店员总数量</p>
+                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 1}}">店员总数量</router-link>
                 <div>
                     <i>昨日新增{{mainData.user_inc}}</i>
-                    <router-link tag="a" :to="{name: 'company-user-list', query: {status: 2}}">查看详情</router-link>
+                    <router-link tag="a" :to="{name: 'company-user-list', query: {status: 1, yesterday}}">查看详情</router-link>
                 </div>
             </div>
             <div>
                 <i><img src="./images/r_user.png" /></i>
                 <h2>{{mainData.register_user}}</h2>
-                <p>用户总数量</p>
+                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 2}}">用户总数量</router-link>
                 <div>
                     <i>昨日新增{{mainData.register_user_inc}}</i>
-                    <router-link tag="a" :to="{name: 'company-user-list'}">查看详情</router-link>
+                    <router-link tag="a" :to="{name: 'company-user-list', query: {status: 2, yesterday}}">查看详情</router-link>
                 </div>
             </div>
         </section>
@@ -273,6 +273,7 @@
                         :data="mainData.test_course_list"
                         style="width: 100%">
                     <el-table-column
+                            :show-overflow-tooltip="true"
                             prop="item1"
                             label="课程名称">
                     </el-table-column>
@@ -301,6 +302,7 @@
                         :data="mainData.test_company_list"
                         style="width: 100%">
                     <el-table-column
+                            :show-overflow-tooltip="true"
                             prop="item1"
                             label="连锁名称">
                     </el-table-column>
@@ -324,6 +326,7 @@
                         :data="mainData.act_company_list"
                         style="width: 100%">
                     <el-table-column
+                            :show-overflow-tooltip="true"
                             prop="item1"
                             label="连锁名称">
                     </el-table-column>
@@ -345,9 +348,12 @@
 <script>
     import Echars from 'echarts'
     import mainService from '../../services/mainService'
+    import * as timeUtils from '../../utils/timeUtils'
+    let d = new Date()
     export default {
         data () {
             return {
+                yesterday: timeUtils.date2Str(new Date(d.setTime(Date.now() - 24 * 60 * 60 * 1000))),
                 mainData: null,
                 xData: [],
                 wapData: [],
