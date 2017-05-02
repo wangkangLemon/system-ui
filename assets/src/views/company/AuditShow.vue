@@ -77,7 +77,6 @@
                     note: ''
                 },
                 detail: null,
-//                auditID: this.$route.params.id
             }
         },
         computed: {
@@ -90,6 +89,7 @@
                 this.detail = ret.data
                 this.form.status = ret.data.status
                 this.form.note = ret.data.note
+                xmview.setContentTile(`${ret.data.name} - 审核`)
             }).then(() => {
                 xmview.setContentLoading(false)
             })
