@@ -246,7 +246,7 @@
                                 <li class="left">
                                     <span class="date-time">{{ data.create_time_name }}</span>
                                     <a href="#" class="name">{{ data.user_name }}</a>
-                                    <a href="javascript:;" class="image"><img alt="" :src="data.user_avatar"></a>
+                                    <a href="javascript:;" class="image"><img alt="" :src="data.user_avatar | fillImgPath"></a>
                                     <div class="message">
                                         <p v-html="data.content"></p>
                                         <label class="text-inline" v-for="item in data.images"><a target="_blank" :href="item"><img width="200" :src="item" alt=""></a></label>
