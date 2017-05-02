@@ -8,8 +8,9 @@ import config from '../../config/config'
 // 默认头像
 export const defaultAvatar = Vue.filter('defaultAvatar', function (urlObj) {
     if (!urlObj) return ''
-    if (urlObj.url && urlObj.url.indexOf('http') != -1) {
-        return urlObj.url
+    if (urlObj.url && urlObj.url.indexOf('/user-default') == -1) {
+        let apiUrl = config.API_HOST_PROD.replace(/(^")|("$)/g, '')
+        return urlObj.url.indexOf('http://') > -1 ? urlObj.url : apiUrl + urlObj.url
     } else {
         if (urlObj.sex) {
             // 男默认头像

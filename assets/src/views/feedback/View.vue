@@ -58,9 +58,16 @@
                 height: 300px;
             }
         }
+        .feedback-charts .el-card__body {
+            padding: 0;
+        }
 
         .pull-right {
             float: right;
+        }
+        .feedback-form {
+            border-top: 1px solid #d1dbe5;
+            padding: 20px 15px 0 15px;
         }
 
         dl {
@@ -174,7 +181,7 @@
             margin-left: 75px;
         }
         .chats .message {
-            border: 1px solid #ccd0d4;
+            border: 1px solid #d1dbe5;
             padding: 7px 12px;
             font-size: 12px;
             position: relative;
@@ -190,11 +197,14 @@
             top: 10px;
             left: -14px;
             border: 7px solid transparent;
-            border-right-color: #ccd0d4;
+            border-right-color: #d1dbe5;
         }
         .chats .message:after {
             left: -13px;
             border-right-color: #fff;
+        }
+        .chats .message p {
+            line-height: 1.5;
         }
         .chats .right .name {
             text-align: right;
@@ -214,7 +224,7 @@
             left: auto;
             right: -14px;
             border-right-color: transparent;
-            border-left-color: #ccd0d4;
+            border-left-color: #d1dbe5;
         }
         .chats .right .message:after {
             right: -13px;
@@ -232,7 +242,7 @@
         <el-row :gutter="20">
             <el-col :span="18">
                 <div class="grid-content">
-                    <el-card class="box-card">
+                    <el-card class="box-card feedback-charts">
                         <div slot="header" class="clearfix">
                             沟通记录
                             <el-button type="primary" size="mini" class="pull-right"
@@ -241,43 +251,58 @@
                                 确认已解决
                             </el-button>
                         </div>
-                        <section id="feedback-chats">
-                            <ul class="chats">
-                                <li class="left">
-                                    <span class="date-time">{{ data.create_time_name }}</span>
-                                    <a href="#" class="name">{{ data.user_name }}</a>
-                                    <a href="javascript:;" class="image"><img alt="" :src="data.user_avatar | fillImgPath"></a>
-                                    <div class="message">
-                                        <p v-html="data.content"></p>
-                                        <label class="text-inline" v-for="item in data.images"><a target="_blank" :href="item"><img width="200" :src="item" alt=""></a></label>
-                                    </div>
-                                </li>
-                            </ul>
-                            <el-form ref="form" :model="form" :rules="rules"
-                                     :label-width="formLabelWidth"
-                                     v-if="data.status < 9">
-                                <el-form-item prop="content" label="问题描述">
-                                    <el-input type="textarea" v-model="form.content" :rows="5"
-                                              placeholder="问题补充"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="images" label="上传截图(选填)">
-                                    <UploadImages ref="uploadImg"
-                                                  :url="uploadImgUrl"
-                                                  :name="uploadName"
-                                                  :fileNum="fileNum"
-                                                  :onSuccess="handleImgUploaded"
-                                                  :onRemove="handleImgRemoved"
-                                                  class="upload-btn">
-                                    </UploadImages>
-                                </el-form-item>
-                                <el-form-item v-if="data.status == 4">
-                                    <el-checkbox v-model="form.confirm">确认已解决并关闭工单</el-checkbox>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button type="primary" @click="submitForm('form')">回复</el-button>
-                                </el-form-item>
-                            </el-form>
-                        </section>
+                        <ul class="chats">
+                            <li class="left">
+                                <span class="date-time">{{ data.create_time_name }}</span>
+                                <a href="#" class="name">{{ data.user_name }}</a>
+                                <a href="javascript:;" class="image"><img alt=""
+                                                                          :src="{ url: data.user_avatar, sex: data.user_sex } | defaultAvatar "></a>
+                                <div class="message">
+                                    <p v-html="data.content"></p>
+                                    <label class="text-inline" v-for="img in data.upload_group"><a href="javascript:;"
+                                                                                                   @click="handlePreview(img)"><img
+                                            width="100" :src="img | fillImgPath" alt=""></a></label>
+                                </div>
+                            </li>
+
+                            <li :class="{left: item.user_id == data.user_id, right: item.user_id != data.user_id }"
+                                v-for="item in replies" :key="item.id">
+                                <span class="date-time">{{ item.create_time_name }}</span>
+                                <a href="#" class="name">{{ item.user_name }}</a>
+                                <a href="javascript:;" class="image"><img alt=""
+                                                                          :src="{ url: item.user_avatar, sex: item.user_sex } | defaultAvatar "></a>
+                                <div class="message">
+                                    <p v-html="item.content"></p>
+                                    <label class="text-inline" v-for="img in item.upload_group"><a href="javascript:;"
+                                                                                                   @click="handlePreview(img)"><img
+                                            width="100" :src="img | fillImgPath" alt=""></a></label>
+                                </div>
+                            </li>
+                        </ul>
+                        <el-form ref="form" :model="form" :rules="rules" class="feedback-form"
+                                 :label-width="formLabelWidth"
+                                 v-if="data.status < 9">
+                            <el-form-item prop="content" label="问题描述">
+                                <el-input type="textarea" v-model="form.content" :rows="5"
+                                          placeholder="问题补充"></el-input>
+                            </el-form-item>
+                            <el-form-item prop="images" label="上传截图(选填)">
+                                <UploadImages ref="uploadImg"
+                                              :url="uploadImgUrl"
+                                              :name="uploadName"
+                                              :fileNum="fileNum"
+                                              :onSuccess="handleImgUploaded"
+                                              :onRemove="handleImgRemoved"
+                                              class="upload-btn">
+                                </UploadImages>
+                            </el-form-item>
+                            <el-form-item v-if="data.status == 4">
+                                <el-checkbox v-model="form.confirm">确认已解决并关闭工单</el-checkbox>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('form')">回复</el-button>
+                            </el-form-item>
+                        </el-form>
                     </el-card>
                 </div>
             </el-col>
@@ -342,18 +367,22 @@
             </el-col>
         </el-row>
 
+        <el-dialog v-model="dialogVisible" size="tiny">
+            <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+
     </article>
 </template>
 
 <script>
-    import feedbackService from '../../services/feedback/user'
-    import {fillImgPath} from '../../utils/filterUtils'
-    // import authUtils from '../../utils/authUtils'
+    import feedbackUserService from '../../services/feedback/user'
+    import {fillImgPath, defaultAvatar} from '../../utils/filterUtils'
     import UploadImages from '../component/upload/UploadImages.vue'
     export default {
         name: 'feedback-view',
         filters: {
-            fillImgPath
+            fillImgPath,
+            defaultAvatar
         },
         components: {
             UploadImages
@@ -368,20 +397,23 @@
                     department_name: '',
                     user_id: 0,
                     user_name: '',
+                    user_sex: 0,
                     user_avatar: '',
                     contact: '',
                     category_name: '',
                     content: '',
-                    images: [],
+                    upload_group: [],
                     status: 0,
                     create_time: 0,
                     create_time_name: '',
                 },
                 replies: [],
                 form: {
+                    id: 0,
+                    status: 0,
                     content: '',
                     images: [],
-                    confirm: 0,
+                    confirm: false,
                 },
                 rules: {
                     content: {type: 'string', required: true, message: '请补充信息', trigger: 'change'}
@@ -390,6 +422,8 @@
                 uploadImgUrl: '',
                 uploadName: 'file',
                 fileNum: 3,
+                dialogImageUrl: '',
+                dialogVisible: false,
             }
         },
         activated () {
@@ -401,16 +435,17 @@
             console.log('view-created')
             console.log(this.$route.query)
             this.id = this.$route.query['feedback_id']
-            feedbackService.view(this.id).then((ret) => {
-                console.log(ret)
-                this.data = ret.data
-                this.replies = ret.replies
-            }).catch((ret) => {
-                xmview.showTip('error', ret.message)
-            })
+            this.uploadImgUrl = feedbackUserService.uploadImageUrl()
+            this.loadData()
             xmview.setContentLoading(false)
         },
         methods: {
+            handlePreview (url) {
+                console.log(url)
+                console.log(fillImgPath(url))
+                this.dialogImageUrl = fillImgPath(url)
+                this.dialogVisible = true
+            },
             handleImgUploaded(ret, file, fileList) {
                 console.log('handleImgUploaded', ret)
                 if (this.form.images.indexOf(ret.data.url) == -1) {
@@ -423,6 +458,37 @@
                 if (index > -1) {
                     this.form.images.splice(index, 1)
                 }
+            },
+            loadData() {
+                feedbackUserService.view(this.id).then((ret) => {
+                    console.log(ret)
+                    this.data = ret.data
+                    this.replies = ret.replies
+                    this.form.id = ret.data.id
+                    this.form.status = ret.data.status
+                    if (ret.data.status == 4) {
+                        this.form.confirm = true
+                    }
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
+            },
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        feedbackUserService.reply(this.form).then(() => {
+                            xmview.showTip('success', '提交成功')
+                            this.loadData()
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
+                    } else {
+                        return false
+                    }
+                })
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields()
             },
             confirmFn () {
                 console.log(this.id)

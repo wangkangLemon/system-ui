@@ -167,7 +167,7 @@
     </article>
 </template>
 <script>
-    import feedbackService from '../../../services/feedback/system'
+    import feedbackSystemService from '../../../services/feedback/system'
     import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
         components: {
@@ -203,7 +203,7 @@
         methods: {
             deleteFn (row) {
                 xmview.showDialog('你将要执行删除操作且不可恢复确认吗？', () => {
-                    feedbackService.mobileDelete(row.id).then(() => {
+                    feedbackSystemService.mobileRemove(row.id).then(() => {
                         xmview.showTip('success', '删除成功')
                         this.getData()
                     }).catch((ret) => {
@@ -212,7 +212,7 @@
                 })
             },
             updateFn (id) {
-                feedbackService.mobileUpdate({
+                feedbackSystemService.mobileUpdate({
                     id,
                     status: this.form.status,
                     note: this.form.note
@@ -225,7 +225,7 @@
                 })
             },
             showFn (row) {
-                feedbackService.mobileView(row.id).then((ret) => {
+                feedbackSystemService.mobileView(row.id).then((ret) => {
                     this.detail = ret.data
                     this.form.status = ret.data.status
                     this.form.note = ret.data.note
@@ -252,7 +252,7 @@
                     time_start: this.search.time_start,
                     time_end: this.search.time_end
                 }
-                return feedbackService.mobileSearch(params).then((ret) => {
+                return feedbackSystemService.mobileSearch(params).then((ret) => {
                     this.listData = ret.data
                     this.total = ret.total
                 }).then(() => {

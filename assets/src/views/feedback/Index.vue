@@ -78,7 +78,7 @@
 </template>
 
 <script>
-    import feedbackService from '../../services/feedback/user'
+    import feedbackUserService from '../../services/feedback/user'
     import vInput from '../component/form/Input.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
     export default {
@@ -122,7 +122,7 @@
             },
             fetchData (val) {
                 this.loadingData = true
-                return feedbackService.search(this.fetchParam).then((ret) => {
+                return feedbackUserService.search(this.fetchParam).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
                     this.loadingData = false
@@ -134,7 +134,7 @@
             },
             deleteFn (index, id) {
                 xmview.showDialog('你将要执行删除操作且不可恢复确认吗？', () => {
-                    feedbackService.delete(id).then(() => {
+                    feedbackUserService.remove(id).then(() => {
                         xmview.showTip('success', '删除成功')
                         this.data.splice(index, 1)
                     }).catch((ret) => {

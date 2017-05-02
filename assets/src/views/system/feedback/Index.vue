@@ -187,7 +187,7 @@
     </article>
 </template>
 <script>
-    import feedbackService from '../../../services/feedback/system'
+    import feedbackSystemService from '../../../services/feedback/system'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import {fillImgPath} from '../../../utils/filterUtils'
     import screenImg from '../../component/dialog/FullScreenImg.vue'
@@ -229,7 +229,7 @@
             },
             deleteFn (row) {
                 xmview.showDialog('你将要执行删除操作且不可恢复确认吗？', () => {
-                    feedbackService.delete(row.id).then(() => {
+                    feedbackSystemService.remove(row.id).then(() => {
                         xmview.showTip('success', '删除成功')
                         this.getData()
                     }).catch((ret) => {
@@ -238,7 +238,7 @@
                 })
             },
             updateFn (id) {
-                feedbackService.update({
+                feedbackSystemService.update({
                     id,
                     status: this.form.status
                 }).then((ret) => {
@@ -250,7 +250,7 @@
                 })
             },
             showFn (row) {
-                feedbackService.view(row.id).then((ret) => {
+                feedbackSystemService.view(row.id).then((ret) => {
                     this.detail = ret.data
                     this.form.status = ret.data.status
                 }).then(() => {
@@ -274,7 +274,7 @@
                     time_start: this.search.createTime,
                     time_end: this.search.endTime
                 }
-                return feedbackService.search(params).then((ret) => {
+                return feedbackSystemService.search(params).then((ret) => {
                     this.listData = ret.data
                     this.total = ret.total
                 }).then(() => {

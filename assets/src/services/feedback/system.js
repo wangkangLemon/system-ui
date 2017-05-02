@@ -40,6 +40,14 @@ class FeedbackSystemService {
     // 回复工单
     reply({id, status, content, images, confirm}) {
         let url = `${urlPre}/${id}/reply`
+        if (images) {
+            images = JSON.stringify(images)
+        }
+        if (confirm) {
+            confirm = 1
+        } else {
+            confirm = 0
+        }
         return api.put(url, {status, content, images, confirm}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
@@ -70,7 +78,7 @@ class FeedbackSystemService {
     }
 
     // 删除数据
-    delete(id) {
+    remove(id) {
         let url = `${urlPre}/${id}`
         return api.del(url, {}).then((ret) => {
             if (ret.code) {
@@ -127,7 +135,7 @@ class FeedbackSystemService {
     }
 
     // 客户端删除数据
-    mobileDelete(id) {
+    mobileRemove(id) {
         let url = `${urlPre}/mobile/${id}`
         return api.del(url, {}).then((ret) => {
             if (ret.code) {
