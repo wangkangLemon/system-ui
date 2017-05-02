@@ -13,6 +13,7 @@ import * as userApi from '../services/userService'
 // import config from '../utils/config'
 
 let refreshIntervalId
+let firstRefreshTimeoutId
 let authUtls = {
     // 身份凭证操作
     getAuthToken () {
@@ -65,7 +66,7 @@ let authUtls = {
     // 自动更新用户的token
     authRefreshtoken () {
         authUtls.clearAuthRefreshToken()
-        setTimeout(() => {
+        firstRefreshTimeoutId = setTimeout(() => {
             authUtls.refreshToken()
         }, 1000 * 10)
         refreshIntervalId = setInterval(() => {
@@ -89,6 +90,7 @@ let authUtls = {
     },
     clearAuthRefreshToken () {
         refreshIntervalId && clearInterval(refreshIntervalId)
+        firstRefreshTimeoutId && clearTimeout(firstRefreshTimeoutId)
     },
     clearAuthInfo () {
         authUtls.setAuthToken('')
