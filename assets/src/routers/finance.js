@@ -2,7 +2,7 @@
  * Created by huangrui on 2017/3/30.
  */
 // 财务管理
-const pathPre = '/financeManage'
+const pathPre = '/financemanage'
 export default [
     {
         path: pathPre + '/finance/amount',

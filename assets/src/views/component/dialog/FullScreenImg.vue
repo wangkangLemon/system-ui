@@ -45,6 +45,11 @@
         },
         created () {
             _this = this
+            document.addEventListener('keyup', (e) => {
+                if (e.keyCode == 27) {
+                    this.isShow = false
+                }
+            })
         },
         mounted () {
             let container = this.container = this.$refs.container

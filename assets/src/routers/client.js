@@ -5,7 +5,7 @@ const pathPre = '/client'
 // 客户端部分
 export default [
     {
-        path: pathPre + '/recommend/contentManage', // 内容维护
+        path: pathPre + '/recommend/content', // 内容维护
         name: 'client-recommend-contentManage',
         component: resolve => {
             require.ensure([], () => {
@@ -18,7 +18,7 @@ export default [
         }
     },
     {
-        path: pathPre + '/recommend/blockManage', // 区块管理
+        path: pathPre + '/recommend/block', // 区块管理
         name: 'client-recommend-blockManage',
         component: resolve => {
             require.ensure([], () => {
@@ -31,7 +31,7 @@ export default [
         }
     },
     {
-        path: pathPre + '/recommend/classifyManage', // 分类管理
+        path: pathPre + '/recommend/classify', // 分类管理
         name: 'client-recommend-classifyManage',
         component: resolve => {
             require.ensure([], () => {

@@ -59,7 +59,7 @@
             </section>
             <DateRange title="创建时间" :start="searchParams.createTime" :end="searchParams.endTime"
                        v-on:changeStart="val=> searchParams.createTime=val"
-                       v-on:changeEnd="val=> searchParams.endTime"
+                       v-on:changeEnd="val=> searchParams.endTime=val"
                        :change="getData">
             </DateRange>
             <section>

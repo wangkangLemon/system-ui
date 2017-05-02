@@ -2,7 +2,7 @@
  * Created by huangrui on 2017/4/1.
  */
 // 数据分析路由
-const pathPre = '/dataAnalysis'
+const pathPre = '/analysis'
 export default [
     // 导出
     {

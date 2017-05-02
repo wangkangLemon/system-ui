@@ -133,11 +133,11 @@
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="checkDetail(scope.row)">
+                        <router-link type="text" size="small" :to="{name: 'company-audit-show', params: {id: scope.row.id}}">
                             <el-tag type="primary" v-if="scope.row.status == 1">待审核</el-tag>
                             <el-tag type="success" v-if="scope.row.status == 2">审核通过</el-tag>
                             <el-tag type="danger" v-if="scope.row.status == 3">审核失败</el-tag>
-                        </el-button>
+                        </router-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -193,7 +193,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

@@ -199,5 +199,18 @@ export default {
                 noback: true
             }
         },
+        {
+            path: 'audit/show/:id',
+            name: 'company-audit-show',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/AuditShow.vue'))
+                })
+            },
+            meta: {
+                title: '入驻审核(审核)'
+            }
+        },
+
     ]
 }
