@@ -1,6 +1,9 @@
 FROM hub.docker.vodjk.com/node:6.10-alpine
 MAINTAINER coldstar yanghf@vodjk.com
 
+ENV NODE_ENV production
+ENV PORT 80
+
 RUN mkdir -p /usr/local/server/yst/system-ui
 
 WORKDIR /usr/local/server/yst/system-ui
@@ -14,6 +17,5 @@ ADD system-ui/app.js .
 ADD system-ui/package.json .
 
 EXPOSE 80
-
 
 CMD ["npm run start"]
