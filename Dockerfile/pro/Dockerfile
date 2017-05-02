@@ -18,4 +18,4 @@ ADD system-ui/package.json .
 
 EXPOSE 80
 
-CMD ["npm run start"]
+CMD ["/entrypoint.sh"]
