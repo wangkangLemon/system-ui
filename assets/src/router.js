@@ -163,10 +163,7 @@ router.beforeEach((to, from, next) => {
     xmview.setContentLoading && xmview.setContentLoading(true)
     setTitle(to.meta.title)
 
-    xmview.setContentBack && xmview.setContentBack(true)
-    // 如果不需要back 则干掉返回按钮
-    if (to.matched.some(record => record.meta.noback))
-        xmview.setContentBack && xmview.setContentBack(false)
+    showBackContent(to, from, next)
 
     next()
 })
@@ -181,6 +178,23 @@ function setTitle (title) {
         titles[1] = ''
     }
     action.setIndexWebpath(store, {main: titles[0], sub: titles[1]})
+}
+
+xmview.setContentTile = setTitle
+
+// 设置是否显示返回按钮
+function showBackContent (to, from, next) {
+    if (!xmview.setContentBack) {
+        setTimeout(() => {
+            showBackContent(to)
+        }, 30)
+        return
+    }
+    xmview.setContentBack(true)
+    // 如果不需要back 则干掉返回按钮
+    if (to.matched.some(record => record.meta.noback)) {
+        xmview.setContentBack && xmview.setContentBack(false)
+    }
 }
 
 export default router
