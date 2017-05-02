@@ -4,7 +4,7 @@ set -e
 
 docker build -t hub.docker.vodjk.com/yst/system-ui:probase ./base/
 docker create --name yst-system-ui-probase hub.docker.vodjk.com/yst/system-ui:probase
-docker cp yst-system-ui-probase:/go/src/git.vodjk.com/yst/system-ui .
+docker cp yst-system-ui-probase:/node/src/git.vodjk.com/yst/system-ui .
 
 tag=`git rev-parse --short=12 HEAD`
 
