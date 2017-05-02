@@ -1,7 +1,7 @@
 <!--分类管理-->
 <style lang='scss' rel='stylesheet/scss'>
-    @import "../../utils/mixins/common";
-    @import "../../utils/mixins/mixins";
+    @import "../../../utils/mixins/common";
+    @import "../../../utils/mixins/mixins";
 
     #course-task-template-category {
         @extend %content-container;
@@ -47,7 +47,7 @@
 
         <section class="left-container">
             <CourseTaskTemplateCategoryTree v-model="treeData" ref="articleCategory"
-                                :onNodeClick="treeNodeClick.bind(this,1)"></CourseTaskTemplateCategoryTree>
+                                            :onNodeClick="treeNodeClick.bind(this,1)"></CourseTaskTemplateCategoryTree>
         </section>
 
         <section class="right-container">
@@ -98,7 +98,7 @@
                 </section>
                 <section class="el-dialog__body">
                     <CourseTaskTemplateCategoryTree v-model="treeData" node-key="id"
-                                        :onNodeClick="treeNodeClick.bind(this,2)"></CourseTaskTemplateCategoryTree>
+                                                    :onNodeClick="treeNodeClick.bind(this,2)"></CourseTaskTemplateCategoryTree>
                 </section>
 
                 <section class="el-dialog__footer">
@@ -113,10 +113,10 @@
 </template>
 
 <script type="text/jsx">
-    import companyService from '../../services/companyService'
-    import treeUtils from '../../utils/treeUtils'
-    import CourseTaskTemplateCategoryTree from '../component/tree/CourseTaskTemplateCategory.vue'
-    import UploadImg from '../component/upload/UploadImg.vue'
+    import companyService from '../../../services/companyService'
+    import treeUtils from '../../../utils/treeUtils'
+    import CourseTaskTemplateCategoryTree from '../../component/tree/CourseTaskTemplateCategory.vue'
+    import UploadImg from '../../component/upload/UploadImg.vue'
 
     export default{
         data () {

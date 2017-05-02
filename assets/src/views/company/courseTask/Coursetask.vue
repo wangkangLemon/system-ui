@@ -1,6 +1,6 @@
 <!--课程任务-->
 <style lang="scss" rel='stylesheet/scss'>
-    @import "../../utils/mixins/mixins";
+    @import "../../../utils/mixins/mixins";
     .company-manager {
         .box-card {
             margin-bottom: 20px;
@@ -61,7 +61,7 @@
     </article>
 </template>
 <script>
-    import companyService from '../../services/companyService'
+    import companyService from '../../../services/companyService'
     export default {
         data () {
             return {

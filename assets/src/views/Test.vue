@@ -9,6 +9,8 @@
     <div id="testview-container">
         <CourseSelect v-model='selected' :list="courseList" @changeList="val=> courseList=val"></CourseSelect>
         <CourseSelect v-model='selected' :list="courseList" @changeList="val=> courseList=val"></CourseSelect>
+        <router-link :to="{name:'main'}">我走</router-link>
+        <a href="//52hhx.com">我走2</a>
     </div>
 </template>
 
@@ -22,9 +24,13 @@
             }
         },
         created () {
+            window.onbeforeunload = function () {
+                return 'shit'
+            }
         },
         mounted () {
         },
+
         methods: {},
         components: {CourseSelect}
     }

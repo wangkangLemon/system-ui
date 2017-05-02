@@ -261,9 +261,7 @@
                 <h2 class="right-title">
                     <i class="back-btn" v-show="isShowBack" @click="$router.back()">返回</i> <i v-show="isShowBack">|</i>
                     {{mainTitle}}
-
-
-
+                    <!--asd-->
                     <small>{{subTitle}}</small>
                 </h2>
 
