@@ -20,11 +20,16 @@ let authUtls = {
         if (str == '') {
             return null
         }
-        str = JSON.parse(str)
-        if (str && str.ttl > Date.now()) {
-            return str.token
+        // try是为了兼容旧代码
+        try {
+            str = JSON.parse(str)
+            if (str && str.ttl > Date.now()) {
+                return str.token
+            }
+            return null
+        } catch (e) {
+            return null
         }
-        return null
     },
     setAuthToken (token) {
         localStorage.setItem(KEY_AUTHTOKEN, JSON.stringify({token: token, ttl: Date.now() + KEY_AUTHTOKEN_TTL * 1000}))
