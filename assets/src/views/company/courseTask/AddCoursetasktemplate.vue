@@ -135,11 +135,11 @@
                         return false
                     }
                     // 处理课程id
-                    this.coursesIds = []
-                    this.courses.forEach((c) => {
-                        this.coursesIds.push(c.id)
+                    this.form.coursesIds = []
+                    this.form.courses.forEach((c) => {
+                        this.form.coursesIds.push(c.id)
                     })
-                    this.coursesIds = this.coursesIds.join(',')
+                    this.form.coursesIds = this.form.coursesIds.join(',')
 
                     let reqFn = companyService.addCourseTaskTemplate
                     if (this.form.id) {
