@@ -109,7 +109,10 @@
         },
         created () {
             xmview.setContentLoading(false)
-            this.form = this.$route.params.item
+            if (this.$route.params.item) {
+                this.form = this.$route.params.item
+                xmview.setContentTile('编辑课程任务模板-企业')
+            }
         },
         methods: {
             cropperFn(data) {
