@@ -178,9 +178,9 @@ function setTitle (title) {
         titles[1] = ''
     }
     action.setIndexWebpath(store, {main: titles[0], sub: titles[1]})
-}
 
-xmview.setContentTile = setTitle
+    !xmview.setContentTile && (xmview.setContentTile = setTitle)
+}
 
 // 设置是否显示返回按钮
 function showBackContent (to, from, next) {
