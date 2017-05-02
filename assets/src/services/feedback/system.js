@@ -7,7 +7,7 @@ const urlPre = config.apiHost + '/sys/feedback'
 
 class FeedbackSystemService {
     // 管理工单列表
-    search({page, page_size, status, category_id, keyword, time_start, time_end}) {
+    search({page, page_size, status = -1, category_id, keyword, time_start, time_end}) {
         let url = `${urlPre}/search`
         if (status == '') {
             status = -1

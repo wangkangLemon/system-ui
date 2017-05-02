@@ -1,8 +1,8 @@
 <style lang='scss' rel='stylesheet/scss'>
-    @import "../../utils/mixins/common";
-    @import "../../utils/mixins/topSearch";
+    @import "../../../utils/mixins/common";
+    @import "../../../utils/mixins/topSearch";
 
-    #feedback-view {
+    #sys-feedback-view {
         @extend %content-container;
 
         background-color: #d9e0e7;
@@ -226,6 +226,10 @@
             border-right-color: transparent;
             border-left-color: #d1dbe5;
         }
+        .chats .right .message:after {
+            right: -13px;
+            border-left-color: #fff;
+        }
 
         .chats .right .message:after {
             right: -13px;
@@ -244,9 +248,9 @@
 </style>
 
 <template>
-    <article id="feedback-view">
+    <article id="sys-feedback-view">
         <div class="manage-container">
-            <el-button type="info" @click="$router.push({name: 'feedback-index'})">返回列表</el-button>
+            <el-button type="info" @click="$router.push({name: 'sys-feedback-admin'})">返回列表</el-button>
         </div>
 
         <el-row :gutter="20">
@@ -385,11 +389,11 @@
 </template>
 
 <script>
-    import feedbackUserService from '../../services/feedback/user'
-    import {fillImgPath, defaultAvatar} from '../../utils/filterUtils'
-    import UploadImages from '../component/upload/UploadImages.vue'
+    import feedbackSystemService from '../../../services/feedback/system'
+    import {fillImgPath, defaultAvatar} from '../../../utils/filterUtils'
+    import UploadImages from '../../component/upload/UploadImages.vue'
     export default {
-        name: 'feedback-view',
+        name: 'sys-feedback-view',
         filters: {
             fillImgPath,
             defaultAvatar
@@ -445,7 +449,7 @@
             console.log('view-created')
             console.log(this.$route.query)
             this.id = this.$route.query['feedback_id']
-            this.uploadImgUrl = feedbackUserService.uploadImageUrl()
+            this.uploadImgUrl = feedbackSystemService.uploadImageUrl()
             this.loadData()
             xmview.setContentLoading(false)
         },
@@ -470,7 +474,7 @@
                 }
             },
             loadData() {
-                feedbackUserService.view(this.id).then((ret) => {
+                feedbackSystemService.view(this.id).then((ret) => {
                     console.log(ret)
                     this.data = ret.data
                     this.replies = ret.replies
@@ -486,7 +490,7 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        feedbackUserService.reply(this.form).then(() => {
+                        feedbackSystemService.reply(this.form).then(() => {
                             xmview.showTip('success', '提交成功')
                             this.loadData()
                         }).catch((ret) => {
