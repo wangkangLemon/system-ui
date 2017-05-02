@@ -10,5 +10,4 @@ git pull origin $BRANCH
 cd $GOPATH/src/git.vodjk.com/yst/system-ui/assets
 yarn run build
 cd $GOPATH/src/git.vodjk.com/yst/system-ui
-go build
-./system-ui
+npm run start

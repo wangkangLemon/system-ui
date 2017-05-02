@@ -1,4 +1,4 @@
-FROM hub.docker.vodjk.com/node/golang
+FROM hub.docker.vodjk.com/node/common
 MAINTAINER jingziming fenghk@vodjk.com
 
 WORKDIR $GOPATH/src/
@@ -19,7 +19,7 @@ RUN cd $GOPATH/src/git.vodjk.com/yst/system-ui/assets \
 RUN cd $GOPATH/src/git.vodjk.com/yst/system-ui \
     && git checkout develop \
     && git pull origin develop \
-    && go build
+    && yarn install
 
 ADD entrypoint.sh /
 

@@ -1,4 +1,4 @@
-FROM hub.docker.vodjk.com/node/golang
+FROM hub.docker.vodjk.com/node/common
 
 MAINTAINER $GOPATH/src/
 
@@ -10,8 +10,7 @@ ADD "http://192.168.40.231/yst/system-ui.atom?private_token=7XxYJqdG_LGy7poftisV
 
 RUN cd git.vodjk.com/yst/system-ui/ \
     && git checkout master \
-    && git pull origin master \
-    && CGO_ENABLED=0 go build -a
+    && git pull origin master
 
 RUN cd git.vodjk.com/yst/system-ui/assets \
     && cp config/config.js.default config/config.js \

@@ -1,4 +1,4 @@
-image: hub.docker.vodjk.com/golang/common
+image: hub.docker.vodjk.com/node/common
 
 before_script:
 

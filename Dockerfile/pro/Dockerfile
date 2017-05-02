@@ -1,15 +1,19 @@
-FROM hub.docker.vodjk.com/alpine:xinma
+FROM hub.docker.vodjk.com/node:6.10-alpine
 MAINTAINER coldstar yanghf@vodjk.com
 
 RUN mkdir -p /usr/local/server/yst/system-ui
 
 WORKDIR /usr/local/server/yst/system-ui
 
-ADD system-ui/conf ./conf/
+ADD system-ui/bin ./bin/
+ADD system-ui/node_modules ./node_modules/
 ADD system-ui/public ./public/
-ADD system-ui/system-ui .
-ADD entrypoint.sh /
+ADD system-ui/routes ./routes/
+ADD system-ui/views ./views/
+ADD system-ui/app.js .
+ADD system-ui/package.json .
 
 EXPOSE 80
 
-ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["npm run start"]
