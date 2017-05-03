@@ -16,6 +16,8 @@ ADD system-ui/views ./views/
 ADD system-ui/app.js .
 ADD system-ui/package.json .
 
+ADD entrypoint.sh /
+
 EXPOSE 80
 
 CMD ["/entrypoint.sh"]
