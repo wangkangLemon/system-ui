@@ -125,11 +125,7 @@
     import mobileService from '../../services/mobileService'
     import formUtils from '../../utils/formUtils'
     import clone from 'clone'
-    import {fillImgPath} from '../../utils/filterUtils'
     export default{
-        filters: {
-            fillImgPath
-        },
         data () {
             return {
                 currentData: {

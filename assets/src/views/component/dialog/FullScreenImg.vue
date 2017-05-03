@@ -30,11 +30,7 @@
 
 <script>
     let _this
-    import {fillImgPath} from '../../../utils/filterUtils'
     export default{
-        filters: {
-            fillImgPath
-        },
         data () {
             return {
                 imgsrc: '',
