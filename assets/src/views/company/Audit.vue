@@ -104,11 +104,7 @@
 <script>
     import companyService from '../../services/companyService'
     import DateRange from '../component/form/DateRangePicker'
-    import {fillImgPath} from '../../utils/filterUtils'
     export default {
-        filters: {
-            fillImgPath
-        },
         components: {
             DateRange
         },

@@ -1,17 +1,18 @@
 <!--图片裁切上传-->
 <!--<ImgCropper :isShowBtn="false" ref="imgcropper" :confirmFn="cropperImgSucc" :aspectRatio="1"-->
-            <!--:isRound="true"></ImgCropper>-->
+<!--:isRound="true"></ImgCropper>-->
 <style lang='scss' scoped rel='stylesheet/scss'>
     .croppercontainer {
         img {
-            max-width: 100%; /* This rule is very important, please do not ignore this! */
+            max-height: 600px;
         }
     }
 </style>
 
 <template>
     <article ref="container">
-        <el-button v-show="isShowBtn" type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+        <el-button v-show="isShowBtn" type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i>
+        </el-button>
         <el-dialog :close-on-click-modal="false" title="裁切图片" v-model="showCropper" size="large" top="15px">
             <div class="croppercontainer">
                 <img @load="startCropper()" class="image-preview" :src="imgData">
@@ -22,7 +23,8 @@
             </span>
         </el-dialog>
 
-        <input accept="image/jpg,image/jpeg,image/png" type="file" style="display: none" @change="fileChange($event)" ref="file">
+        <input accept="image/jpg,image/jpeg,image/png" type="file" style="display: none" @change="fileChange($event)"
+               ref="file">
     </article>
 </template>
 
@@ -56,7 +58,10 @@
         },
         watch: {
             'showCropper'(val) {
-                if (!val) this.cropper.destroy()
+                if (!val) {
+                    this.cropper.destroy()
+                    this.imgData = null
+                }
             }
         },
         created () {
@@ -87,7 +92,7 @@
             // 确定裁剪尺寸
             confirmCropper () {
                 this.showCropper = false
-                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL())
+                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL('image/jpeg', 0.8))
                 this.imgData = null
             },
             startCropper () {

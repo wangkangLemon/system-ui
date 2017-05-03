@@ -51,7 +51,7 @@
                     this.$refs.info.innerHTML = ret.data.content
                     let images = this.$refs.info.querySelectorAll('img')
                     if (images == null) return
-                    images.forEach((item) => {
+                    Array.from(images).forEach((item) => {
                         item.addEventListener('click', function () {
                             screenImg.setShow(this.getAttribute('src'))
                         })
