@@ -6,8 +6,10 @@
         .show-detail {
             h2 {
                 text-align: center;
+                margin-bottom: 10px;
             }
             .info {
+                border: 1px solid #ededed;
                 p {
                     line-height: 35px;
                 }
@@ -22,11 +24,16 @@
             <h2>{{currentItem.data.title}}</h2>
             <div class="info" ref="info"></div>
         </section>
+        <screenImg></screenImg>
     </article>
 </template>
 <script>
     import articleService from '../../services/articleService'
+    import screenImg from '../component/dialog/FullScreenImg.vue'
     export default {
+        components: {
+            screenImg
+        },
         data () {
             return {
                 currentItem: null
@@ -42,6 +49,13 @@
                 this.currentItem = ret
                 this.$nextTick(() => {
                     this.$refs.info.innerHTML = ret.data.content
+                    let images = this.$refs.info.querySelectorAll('img')
+                    if (images == null) return
+                    images.forEach((item) => {
+                        item.addEventListener('click', function () {
+                            screenImg.setShow(this.getAttribute('src'))
+                        })
+                    })
                 })
                 xmview.setContentTile(`${ret.category.name}`)
             }).then(() => {
