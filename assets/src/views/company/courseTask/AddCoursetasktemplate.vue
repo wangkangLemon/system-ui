@@ -54,8 +54,8 @@
                 <el-input-number v-model="form.sort" auto-complete="off"></el-input-number>
             </el-form-item>
             <el-form-item prop="sort">
-                <el-button type="primary" @click="submit">提交</el-button>
-                <el-button type="warning">存草稿</el-button>
+                <el-button type="primary" @click="submit(0)">提交</el-button>
+                <el-button type="warning" @click="submit(1)">存草稿</el-button>
             </el-form-item>
         </el-form>
 
@@ -128,7 +128,7 @@
             fetchCourse (params) {
                 return courseService.getPublicCourselist(Object.assign({}, this.dialogCourse, params))
             },
-            submit() {
+            submit(s) {
                 this.$refs.form.validate((valid) => {
                     if (!valid) {
                         return false
@@ -139,7 +139,9 @@
                         this.form.course_id.push(c.id)
                     })
                     this.form.course_id = this.form.course_id.join(',')
-
+                    if (s > 0) {
+                        this.form.status = s
+                    }
                     let reqFn = companyService.addCourseTaskTemplate
                     if (this.form.id) {
                         reqFn = companyService.updateCourseTaskTemplate

@@ -76,13 +76,17 @@
                     this.data = this.data.filter((curr) => {
                         return curr.value != item.value
                     })
-                    return
-                }
-                parent.data.children = parent.data.children.filter((curr) => {
-                    return curr.value != item.value
-                })
+                } else {
+                    parent.data.children = parent.data.children.filter((curr) => {
+                        return curr.value != item.value
+                    })
 
-                if (parent.data.children.length < 1) parent.data.children = null
+                    if (parent.data.children.length < 1) parent.data.children = null
+                }
+
+                this.setAllNodes()
+                // 重新给父容器赋值  不然数据不同步
+                this.$emit('input', this.data)
             },
             setCurrVal (val) {
                 if (val === this.data) return

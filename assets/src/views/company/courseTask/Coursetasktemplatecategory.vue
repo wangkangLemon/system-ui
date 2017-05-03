@@ -46,7 +46,7 @@
         </section>
 
         <section class="left-container">
-            <CourseTaskTemplateCategoryTree v-model="treeData" ref="articleCategory"
+            <CourseTaskTemplateCategoryTree v-model="treeData" ref="courseTaskTemplateCategory"
                                             :onNodeClick="treeNodeClick.bind(this,1)"></CourseTaskTemplateCategoryTree>
         </section>
 
@@ -178,7 +178,7 @@
                 this.dialogConfirm.confirmClick = () => {
                     companyService.delCategory({id: node.value}).then(() => {
                         xmview.showTip('success', '操作成功!')
-                        this.$refs.articleCategory.removeItem(node, this.nodeParentSelected)
+                        this.$refs.courseTaskTemplateCategory.removeItem(node, this.nodeParentSelected)
                         node = null
                         this.dialogConfirm.isShow = false
                         this.resetForm()
@@ -207,7 +207,7 @@
             addRootCategory () {
                 this.activeTab = 'add'
                 // 清空选中项
-                this.$refs.articleCategory.clearSelected()
+                this.$refs.courseTaskTemplateCategory.clearSelected()
                 this.fetchParam.parent_id = 0
             },
             // 提交表单
@@ -270,7 +270,7 @@
                         // 重新渲染树节点
                         if (ret.code === 0) {
                             xmview.showTip('success', '操作成功!')
-                            this.$refs.articleCategory.initData()
+                            this.$refs.courseTaskTemplateCategory.initData()
                             this.dialogTree.isShow = false
                         } else if (ret.code === 1) {
                             xmview.showTip('error', ret.message)
