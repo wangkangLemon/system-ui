@@ -1,91 +1,159 @@
 <!--公告-->
-<style lang="scss" rel='stylesheet/scss'>
-    @import "../../utils/mixins/mixins";
-    @import "../../utils/mixins/topSearch";
-    .company-user-list {
-        .show-detail {
-            .avatar {
-                border: 1px solid #ededed;
+<style lang="scss" rel="stylesheet/scss">
+    @import "../../../utils/mixins/mixins";
+    @import "../../../utils/mixins/topSearch";
+    .analysis-company-announce {
+        .department-analytics {
+            height:120px;
+            @extend %justify;
+            > div {
+                height: 100%;
+                color: #fff;
+                position: relative;
+                width: 24%;
                 display: inline-block;
                 vertical-align: top;
-            }
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    > span {
-                        display: inline-block;
-                        width:px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
+                border-radius: 5px;
+                font-size: 12px;
+                text-align: right;
+                text-align-last: right;
+                &:first-of-type {
+                    background: #FF9966;
+                }
+                &:nth-child(2) {
+                    background: #2DB6F4;
+                }
+                &:nth-child(3) {
+                    background: #7DC856;
+                }
+                &:nth-child(4) {
+                    background: #5D6977;
+                }
+                > i {
+                    display: block;
+                    line-height: 82px;
+                    width: 55px;
+                    height: 55px;
+                    position: absolute;
+                    left: 20px;
+                    top: 25px;
+                    background: rgba(0, 0, 0, 0.1);
+                    border-radius: 50%;
+                    text-align: center;
+                    text-align-last: center;
+                    .icon-xiaoxizhongxin:before {
+                        font-size: 30px;
+                    }
+                    img {
+                        width: 35px;
+                        height: 35px;
+                    }
+                }
+                > h2 {
+                    margin-top: 20px;
+                    font-size: 25px;
+                    padding-right: 10px;
+                }
+                p {
+                    font-size: 16px;
+                    padding-right: 10px;
+                    cursor: pointer;
+                }
+                > div {
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    background: rgba(255, 255, 255, 0.3);
+                    padding: 5px 10px;
+                    text-align: left;
+                    text-align-last: left;
+                    > a {
+                        float: right;
+                        color: #fff;
                     }
                 }
             }
         }
-        .status {
-            padding: 2px 5px;
-            background: #00acac;
-            border-radius: 5px;
-            color: #fff;
+        .search {
+            @extend %top-search-container;
         }
         .box-card {
-            margin-bottom: 20px;
-            .clearfix {
-                text-align: right;
-            }
+            margin-top: 20px;
             .el-card__header {
                 padding: 10px 15px;
                 background: #f0f3f5;
-                .icon-iconfontexcel {
-                    position: relative;
-                    top: -2px;
-                    margin-right: 5px;
-                }
             }
-            .search {
-                @extend %top-search-container;
+            .block {
+                text-align: right;
+                margin-top: 15px;
             }
-        }
-        .block {
-            text-align: right;
-            margin-top: 15px;
         }
     }
 </style>
 <template>
-    <article class="company-user-list">
-        <!--详情-->
-        <el-dialog size="tiny" class="show-detail" :title="currentItem.title" v-model="showDetail">
-            <div>{{currentItem.content}}</div>
-        </el-dialog>
+    <article class="analysis-company-announce">
+        <section class="department-analytics">
+            <div>
+                <i><img src="./images/company.png" /></i>
+                <h2>134</h2>
+                <router-link tag="p" :to="{name: 'company-index'}">使用连锁数量</router-link>
+                <div>
+                    <i>占连锁总数的12%</i>
+                </div>
+            </div>
+            <div>
+                <i><img src="./images/department.png" /></i>
+                <h2>222</h2>
+                <router-link tag="p" :to="{name: 'company-department'}">使用门店数量</router-link>
+                <div>
+                    <i>占门店总数的12%</i>
+                </div>
+            </div>
+            <div>
+                <i><img src="./images/user.png" /></i>
+                <h2>454</h2>
+                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 1}}">企业公告数量</router-link>
+                <div>
+                    <i>占公告总数的12%</i>
+                </div>
+            </div>
+            <div>
+                <i><img src="./images/r_user.png" /></i>
+                <h2>1212</h2>
+                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 2}}">分店公告数量</router-link>
+                <div>
+                    <i>占公告总数的12</i>
+                </div>
+            </div>
+        </section>
         <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>公告记录列表</span>
+            </div>
             <section class="search">
                 <section>
-                    <i>连锁</i>
-                    <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
-                                           v-on:change="val=>searchParams.companySelect=val"
-                                           :change="getData">
-                    </IndustryCompanySelect>
-                </section>
-                <section>
                     <i>类型</i>
-                    <el-select clearable v-model="searchParams.type" @change="getData">
+                    <el-select clearable v-model="search.type" @change="getData">
                         <el-option label="企业公告" value="company"></el-option>
                         <el-option label="分店公告" value="department"></el-option>
                     </el-select>
                 </section>
                 <section>
-                    <i>标题</i>
-                    <el-input @change="getData" v-model="searchParams.title" auto-complete="off"></el-input>
+                    <i>企业</i>
+                    <CompanySelect  :change="getData" v-model="search.company_id"
+                                    v-on:change="val=>search.company_id=val">
+                    </CompanySelect>
                 </section>
                 <section>
-                    <i>状态</i>
-                    <el-select clearable v-model="searchParams.status" @change="getData">
-                        <el-option label="正常" value="0"></el-option>
-                        <el-option label="草稿" value="1"></el-option>
-                        <el-option label="撤销" value="2"></el-option>
-                    </el-select>
+                    <i>门店</i>
+                    <DepSelect v-model="search.department_id" :change="getData"></DepSelect>
                 </section>
+                <DateRange title="发送时间" :start="search.createTime" :end="search.endTime"
+                           v-on:changeStart="val=> search.createTime=val"
+                           v-on:changeEnd="val=> search.endTime=val"
+                           :change="getData">
+                </DateRange>
             </section>
             <el-table
                     v-loading="loading"
@@ -94,40 +162,29 @@
                     stripe
                     style="width: 100%">
                 <el-table-column
-                        prop="company_name"
-                        label="连锁">
+                        prop="title"
+                        min-width="200"
+                        label="公告标题">
                 </el-table-column>
                 <el-table-column
                         prop="type"
-                        label="类型">
-                    <template scope="scope">
-                        <el-tag type="primary" v-if="scope.row.type == 'company'">企业公告</el-tag>
-                        <el-tag type="success" v-if="scope.row.type == 'department'">分店公告</el-tag>
-                    </template>
+                        label="公告类型"
+                        min-width="100">
                 </el-table-column>
                 <el-table-column
-                        prop="title"
-                        label="标题">
+                        prop="company_name"
+                        min-width="180"
+                        label="企业">
+                </el-table-column>
+                <el-table-column
+                        prop="department"
+                        min-width="180"
+                        label="门店">
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
-                        label="创建时间">
-                </el-table-column>
-                <el-table-column
-                        prop="status"
-                        label="状态">
-                    <template scope="scope">
-                        <el-tag type="gray">{{statusArr[scope.row.status]}}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        prop="operate"
-                        label="操作">
-                    <template scope="scope">
-                        <el-button type="text" size="small" @click="showFn(scope.row)">
-                            查看公告
-                        </el-button>
-                    </template>
+                        min-width="180"
+                        label="发送时间">
                 </el-table-column>
             </el-table>
             <div class="block">
@@ -145,70 +202,43 @@
     </article>
 </template>
 <script>
-    import companyService from '../../services/companyService'
-    import IndustryCompanySelect from '../component/select/IndustryCompany'
+    import DateRange from '../../component/form/DateRangePicker.vue'
+    import CompanySelect from '../../component/select/IndustryCompany.vue'
+    import DepSelect from '../../component/select/Department.vue'
     export default {
         components: {
-            IndustryCompanySelect
+            DepSelect,
+            CompanySelect,
+            DateRange
         },
         data () {
             return {
-                currentItem: {
-                    title: '',
-                    content: ''
-                },
-                statusArr: ['正常', '草稿', '撤销'],
-                showDetail: false,
                 loading: false,
+                announceData: [],
                 currentPage: 1,
                 pageSize: 15,
-                announceData: [],
                 total: 0,
-                searchParams: {
-                    companySelect: '',
-                    title: '',
-                    type: '',
-                    status: '',
+                search: {
+                    company_id: '',
+                    createTime: '',
+                    endTime: '',
+                    department_id: '',
+                    type: ''
                 }
             }
         },
-        activated () {
-            this.getData().then(() => {
-                xmview.setContentLoading(false)
-            })
+        created () {
+            xmview.setContentLoading(false)
         },
         methods: {
-            showFn (row) {
-                this.showDetail = true
-                setTimeout(() => {
-                    this.currentItem.title = `查看公告:${row.title}`
-                    this.currentItem.content = row.content
-                }, 10)
-            },
             handleSizeChange (val) {
                 this.pageSize = val
-                this.getData()
             },
-            handleCurrentChange(val) {
+            handleCurrentChange (val) {
                 this.currentPage = val
-                this.getData()
             },
             getData () {
-                this.loading = true
-                let params = {
-                    page: this.currentPage,
-                    page_size: this.pageSize,
-                    company_id: this.searchParams.companySelect,
-                    keyword: this.searchParams.title,
-                    status: this.searchParams.status,
-                    type: this.searchParams.type,
-                }
-                return companyService.getAnnounceList(params).then((ret) => {
-                    this.announceData = ret.data
-                    this.total = ret.total
-                }).then(() => {
-                    this.loading = false
-                })
+                console.log(1)
             }
         }
     }
