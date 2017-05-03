@@ -144,33 +144,55 @@ export default [
             },
         ]
     },
-    // 连锁后台
+    // 工单管理
     {
-        path: pathPre + '/feedback/admin',
-        name: 'sys-feedback-admin',
+        path: pathPre + '/feedback',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/system/feedback/Index.vue'))
+                resolve(require('../views/system/feedback/Main.vue'))
             })
         },
-        meta: {
-            title: '工单系统 - 连锁后台',
-            noback: true
-        }
-    },
-    // 客户端
-    {
-        path: pathPre + '/feedback/mobile',
-        name: 'sys-feedback-mobile',
-        component: resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/system/feedback/App.vue'))
-            })
-        },
-        meta: {
-            title: '问题反馈 - 客户端',
-            noback: true
-        }
+        children: [
+            {
+                path: 'admin',
+                name: 'sys-feedback-admin',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/feedback/Admin.vue'))
+                    })
+                },
+                meta: {
+                    title: '工单管理 - 工单系统',
+                    noback: true
+                }
+            },
+            {
+                path: 'view',
+                name: 'sys-feedback-view',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/feedback/View.vue'))
+                    })
+                },
+                meta: {
+                    title: '工单详情 - 工单系统',
+                    noback: true,
+                }
+            },
+            {
+                path: 'mobile',
+                name: 'sys-feedback-mobile',
+                component: resolve => {
+                    require.ensure([], () => {
+                        resolve(require('../views/system/feedback/App.vue'))
+                    })
+                },
+                meta: {
+                    title: '客户端意见反馈 - 工单系统',
+                    noback: true,
+                }
+            },
+        ]
     },
     // 内测应用管理
     {

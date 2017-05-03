@@ -22,8 +22,8 @@
     <article id="company-coursetask-addcoursetamplte">
         <el-form :model="form" :rules="rules" label-position="right" ref="form" label-width="120px" style="width: 60%">
             <el-form-item prop="category" label="分类">
-                <CourseTaskTemplateCategorySelect :placeholder="form.currCategoryName"
-                                                  v-model="form.category"></CourseTaskTemplateCategorySelect>
+                <CourseTaskTemplateCategorySelect :placeholder="form.category_name"
+                                                  v-model="form.category_id"></CourseTaskTemplateCategorySelect>
             </el-form-item>
             <el-form-item prop="title" label="标题">
                 <el-input v-model="form.title" auto-complete="off"></el-input>
@@ -40,7 +40,7 @@
             </el-form-item>
             <el-form-item prop="course" label="选择课程">
                 <el-tag style="margin-right: 3px"
-                        v-for="(c,index) in form.courses" :key="index"
+                        v-for="(c,index) in form.course" :key="index"
                         :closable="true"
                         @close="form.courses.splice(index,1)"
                         type="success">
@@ -60,7 +60,7 @@
         </el-form>
 
         <dialogSelectData ref="dialogSelect" v-model="dialogCourse.isShow" :getData="fetchCourse" title="选择课程"
-                          :selectedList="form.courses" @changeSelected="val=>form.courses=val">
+                          :selectedList="form.course" @changeSelected="val=>form.course=val">
             <div slot="search" class="course-search">
                 <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogCourse.keyword"
                           icon="search"
@@ -84,21 +84,20 @@
                 form: {                // 表单属性值
                     id: void 0,
                     title: void 0,          // 标题
-                    category: void 0,       // 分类
+                    category_id: void 0,       // 分类
                     image: void 0,        // 图片地址
                     description: void 0,  // 简介
                     sort: void 0,         // 排序
                     course_id: void 0,     // 课程
                     status: void 0,       // 状态
-                    currCategoryName: '', // 名字
-                    courses: [],
-                    coursesIds: void 0
+                    category_name: '', // 名字
+                    course: [],
                 },
                 rules: {
                     title: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    category: {type: 'number', required: true, message: '请选择栏目', trigger: 'change'}
+                    category_id: {type: 'number', required: true, message: '请选择栏目', trigger: 'change'}
                 },
                 dialogCourse: {
                     loading: false,
@@ -135,11 +134,11 @@
                         return false
                     }
                     // 处理课程id
-                    this.form.coursesIds = []
-                    this.form.courses.forEach((c) => {
-                        this.form.coursesIds.push(c.id)
+                    this.form.course_id = []
+                    this.form.course.forEach((c) => {
+                        this.form.course_id.push(c.id)
                     })
-                    this.form.coursesIds = this.form.coursesIds.join(',')
+                    this.form.course_id = this.form.course_id.join(',')
 
                     let reqFn = companyService.addCourseTaskTemplate
                     if (this.form.id) {

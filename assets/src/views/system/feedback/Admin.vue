@@ -1,8 +1,8 @@
 <style lang='scss' rel='stylesheet/scss'>
-    @import "../../utils/mixins/common";
-    @import "../../utils/mixins/topSearch";
+    @import "../../../utils/mixins/common";
+    @import "../../../utils/mixins/topSearch";
 
-    #feedback-index {
+    #sys-feedback-admin {
         @extend %content-container;
 
         .manage-container {
@@ -16,10 +16,7 @@
 </style>
 
 <template>
-    <main id="feedback-index">
-        <section class="manage-container">
-            <el-button type="primary" icon="plus" @click="$router.push({name:'feedback-add'})"><i>提交工单</i></el-button>
-        </section>
+    <main id="sys-feedback-admin">
 
         <main class="search">
             <section>
@@ -44,6 +41,7 @@
         <el-table class="data-table" v-loading="loadingData" :data="data" border>
             <el-table-column width="100" prop="id" label="工单编号"></el-table-column>
             <el-table-column width="120" prop="category_name" label="问题分类"></el-table-column>
+            <el-table-column width="120" prop="user_name" label="提交人"></el-table-column>
             <el-table-column prop="content" label="问题描述"></el-table-column>
             <el-table-column width="180" prop="create_time_name" label="提交时间"></el-table-column>
             <el-table-column width="100" prop="status_name" label="状态">
@@ -78,9 +76,9 @@
 </template>
 
 <script>
-    import feedbackUserService from '../../services/feedback/user'
-    import vInput from '../component/form/Input.vue'
-    import DateRange from '../component/form/DateRangePicker.vue'
+    import feedbackSystemService from '../../../services/feedback/system'
+    import vInput from '../../component/form/Input.vue'
+    import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
         components: {
             vInput,
@@ -122,7 +120,7 @@
             },
             fetchData (val) {
                 this.loadingData = true
-                return feedbackUserService.search(this.fetchParam).then((ret) => {
+                return feedbackSystemService.search(this.fetchParam).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
                     this.loadingData = false
@@ -130,11 +128,11 @@
                 })
             },
             viewFn (id) {
-                this.$router.push({name: 'feedback-view', query: {feedback_id: id}})
+                this.$router.push({name: 'sys-feedback-view', query: {feedback_id: id}})
             },
             deleteFn (index, id) {
                 xmview.showDialog('你将要执行删除操作且不可恢复确认吗？', () => {
-                    feedbackUserService.remove(id).then(() => {
+                    feedbackSystemService.remove(id).then(() => {
                         xmview.showTip('success', '删除成功')
                         this.data.splice(index, 1)
                     }).catch((ret) => {

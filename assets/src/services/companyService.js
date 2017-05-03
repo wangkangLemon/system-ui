@@ -213,9 +213,9 @@ class CompanyService {
     }
 
     // 创建课程任务模板
-    addCourseTaskTemplate ({category, title, description, image, course_id, sort, status}) {
+    addCourseTaskTemplate ({category_id, title, description, image, course_id, sort, status}) {
         let finalUrl = config.apiHost + `/sys/coursetask/template`
-        return api.post(finalUrl, {category, title, description, image, course_id, sort, status}).then((ret) => {
+        return api.post(finalUrl, {category_id, title, description, image, course_id, sort, status}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -223,10 +223,10 @@ class CompanyService {
     }
 
     // 更新课程任务模板
-    updateCourseTaskTemplate ({category, title, description, image, course_id, sort, id, status}) {
+    updateCourseTaskTemplate ({category_id, title, description, image, course_id, sort, id, status}) {
         let finalUrl = config.apiHost + `/sys/coursetask/template/${id}`
         return api.put(finalUrl, {
-            category,
+            category_id,
             title,
             description,
             image,

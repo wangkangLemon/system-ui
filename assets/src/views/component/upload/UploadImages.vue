@@ -7,14 +7,14 @@
     @import "../../../utils/mixins/mixins";
 
     .component-upload-uploadimages {
-        height: 90px;
+        height: 100px;
         .el-upload-list__item,
         .el-upload--picture-card {
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
         }
         .el-upload--picture-card {
-            line-height: 90px;
+            line-height: 100px;
         }
     }
 </style>

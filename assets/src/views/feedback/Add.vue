@@ -64,7 +64,7 @@
 </template>
 
 <script>
-    import feedbackService from '../../services/feedback/user'
+    import feedbackUserService from '../../services/feedback/user'
     import {fillImgPath} from '../../utils/filterUtils'
     import authUtils from '../../utils/authUtils'
     import UploadImages from '../component/upload/UploadImages.vue'
@@ -102,8 +102,8 @@
             }
         },
         created() {
-            this.uploadImgUrl = feedbackService.uploadImageUrl()
-            feedbackService.category().then((ret) => {
+            this.uploadImgUrl = feedbackUserService.uploadImageUrl()
+            feedbackUserService.category().then((ret) => {
                 this.categories = ret.categories
             }).catch((ret) => {
                 xmview.showTip('error', ret.message)
@@ -131,7 +131,7 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        feedbackService.create(this.form).then(() => {
+                        feedbackUserService.create(this.form).then(() => {
                             xmview.showTip('success', '提交成功')
                             this.$router.push({name: 'feedback-index', params: {reload: true}})
                         }).catch((ret) => {

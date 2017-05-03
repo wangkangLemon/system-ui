@@ -49,6 +49,14 @@ class FeedbackUserService {
     // 回复工单
     reply({id, status, content, images, confirm}) {
         let url = `${urlPre}/${id}/reply`
+        if (images) {
+            images = JSON.stringify(images)
+        }
+        if (confirm) {
+            confirm = 1
+        } else {
+            confirm = 0
+        }
         return api.put(url, {status, content, images, confirm}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
@@ -69,7 +77,7 @@ class FeedbackUserService {
     }
 
     // 删除工单
-    delete(id) {
+    remove(id) {
         let url = `${urlPre}/${id}`
         return api.del(url, {}).then((ret) => {
             if (ret.code) {
