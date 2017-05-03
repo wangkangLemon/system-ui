@@ -33,7 +33,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
-                <el-button type="primary" @click="submit('form', 1)">存为草稿</el-button>
+                <el-button type="warning" @click="submit('form', 1)">存为草稿</el-button>
             </div>
         </section>
     </article>
@@ -79,11 +79,7 @@
         },
         created () {
             xmview.setContentLoading(false)
-            if (this.articleID == undefined) {
-                xmview.setContentTile('内容管理 - 添加')
-                return false
-            }
-            xmview.setContentTile('内容管理 - 修改')
+            if (this.articleID == undefined) return
             ArticleService.getEditDetail(this.articleID).then((ret) => {
                 this.addForm = true
                 this.form.category = ret.data.category_id

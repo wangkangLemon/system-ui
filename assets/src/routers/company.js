@@ -25,6 +25,30 @@ export default {
             }
         },
         {
+            path: 'operate/add',
+            name: 'company-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/CompanyOperate.vue'))
+                })
+            },
+            meta: {
+                title: '企业-添加',
+            }
+        },
+        {
+            path: 'edit/:id',
+            name: 'company-edit',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/CompanyOperate.vue'))
+                })
+            },
+            meta: {
+                title: '内容管理-编辑',
+            }
+        },
+        {
             path: 'admin/:company_id',
             name: 'company-admin',
             component: resolve => {

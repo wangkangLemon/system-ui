@@ -45,14 +45,26 @@ export default [
     },
     {
         path: pathPre + '/content/:id',
-        name: 'article-content-operate',
+        name: 'article-content-edit',
         component: resolve => {
             require.ensure([], () => {
                 resolve(require('../views/article/ContentOperate.vue'))
             })
         },
         meta: {
-            title: '内容管理-操作',
+            title: '内容管理-编辑',
+        }
+    },
+    {
+        path: pathPre + '/content/add',
+        name: 'article-content-add',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/article/ContentOperate.vue'))
+            })
+        },
+        meta: {
+            title: '内容管理-添加',
         }
     }
 ]

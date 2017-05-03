@@ -128,10 +128,10 @@
                 this.$router.push({name: 'article-content-show', params: {id: row.id}})
             },
             addArticle () {
-                this.$router.push({name: 'article-content-operate'})
+                this.$router.push({name: 'article-content-add'})
             },
             editArticle (row) {
-                this.$router.push({name: 'article-content-operate', params: {id: row.id}})
+                this.$router.push({name: 'article-content-edit', params: {id: row.id}})
             },
             handleDelete (index, row) {
                 xmview.showDialog(`你将要删除文章【<i style="color:red">${row.title || ''}</i>】操作不可恢复确认吗？`, this.deleteItem(row.id))
