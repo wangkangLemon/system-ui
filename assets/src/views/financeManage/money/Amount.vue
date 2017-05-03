@@ -72,7 +72,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import AmountPanel from '../../component/panel/AmountPanel'
     import {getMoney, industry} from '../../../services/fianace/money'
     export default {

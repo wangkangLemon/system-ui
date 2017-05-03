@@ -14,7 +14,7 @@ router.get('/view/*', function(req, res, next){
 })
 
 /* ping for heartbeat */
-router.get('ping', function (re, res) {
+router.get('/ping', function (re, res) {
     res.send('PONG');
 })
 

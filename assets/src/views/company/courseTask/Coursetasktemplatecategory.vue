@@ -46,12 +46,12 @@
         </section>
 
         <section class="left-container">
-            <CourseTaskTemplateCategoryTree v-model="treeData" ref="articleCategory"
+            <CourseTaskTemplateCategoryTree v-model="treeData" ref="courseTaskTemplateCategory"
                                             :onNodeClick="treeNodeClick.bind(this,1)"></CourseTaskTemplateCategoryTree>
         </section>
 
         <section class="right-container">
-            <div>
+            <div v-if="fetchParam.parent_id != 0">
                 <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改分类</el-button>
                 <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子分类</el-button>
 
@@ -60,20 +60,23 @@
                 <el-button type="danger" @click="deleteCategory">删除分类</el-button>
             </div>
 
+            <div v-if="fetchParam.parent_id === 0">
+                <el-button type="primary">添加根节点</el-button>
+            </div>
             <el-card class="edit-content">
                 <el-form label-position="right" label-width="90px" :rules="rules" :model="fetchParam" ref="form">
                     <el-form-item label="分类名称" prop="name">
-                        <el-input v-model="fetchParam.name"></el-input>
+                        <el-input v-model="fetchParam.name" :disabled="fetchParam.parent_id == null"></el-input>
                     </el-form-item>
                     <el-form-item label="图片" prop="image">
                         <UploadImg ref="uploadImg" :defaultImg="fetchParam.image" :url="uploadImgUrl"
                                    :onSuccess="handleImgUploaded"></UploadImg>
                     </el-form-item>
                     <el-form-item label="分类排序" prop="sort">
-                        <el-input placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
+                        <el-input :disabled="fetchParam.parent_id == null" placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="info" @click="submitForm">保存</el-button>
+                        <el-button :disabled="fetchParam.parent_id == null" type="info" @click="submitForm">保存</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>
@@ -175,7 +178,7 @@
                 this.dialogConfirm.confirmClick = () => {
                     companyService.delCategory({id: node.value}).then(() => {
                         xmview.showTip('success', '操作成功!')
-                        this.$refs.articleCategory.removeItem(node, this.nodeParentSelected)
+                        this.$refs.courseTaskTemplateCategory.removeItem(node, this.nodeParentSelected)
                         node = null
                         this.dialogConfirm.isShow = false
                         this.resetForm()
@@ -185,6 +188,7 @@
             // 左边的节点被点击
             treeNodeClick (type, data, node, store) {
                 if (type == 1) {
+                    if (this.nodeSelected && this.nodeSelected.value === data.value) return
                     this.nodeParentSelected = node.parent// 记录父节点
                     this.nodeSelected = data // 记录当前节点
                     this.$refs.uploadImg.clearFiles()
@@ -203,7 +207,7 @@
             addRootCategory () {
                 this.activeTab = 'add'
                 // 清空选中项
-                this.$refs.articleCategory.clearSelected()
+                this.$refs.courseTaskTemplateCategory.clearSelected()
                 this.fetchParam.parent_id = 0
             },
             // 提交表单
@@ -266,7 +270,7 @@
                         // 重新渲染树节点
                         if (ret.code === 0) {
                             xmview.showTip('success', '操作成功!')
-                            this.$refs.articleCategory.initData()
+                            this.$refs.courseTaskTemplateCategory.initData()
                             this.dialogTree.isShow = false
                         } else if (ret.code === 1) {
                             xmview.showTip('error', ret.message)

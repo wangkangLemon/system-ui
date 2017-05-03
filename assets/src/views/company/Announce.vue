@@ -69,9 +69,9 @@
                 </section>
                 <section>
                     <i>类型</i>
-                    <el-select v-model="searchParams.type" @change="getData">
-                        <el-option label="企业公告" value="0"></el-option>
-                        <el-option label="分店公告" value="1"></el-option>
+                    <el-select clearable v-model="searchParams.type" @change="getData">
+                        <el-option label="企业公告" value="company"></el-option>
+                        <el-option label="分店公告" value="department"></el-option>
                     </el-select>
                 </section>
                 <section>
@@ -80,7 +80,7 @@
                 </section>
                 <section>
                     <i>状态</i>
-                    <el-select v-model="searchParams.status" @change="getData">
+                    <el-select clearable v-model="searchParams.status" @change="getData">
                         <el-option label="正常" value="0"></el-option>
                         <el-option label="草稿" value="1"></el-option>
                         <el-option label="撤销" value="2"></el-option>

@@ -31,5 +31,109 @@ export default [
             title: '企业签约信息',
             noback: true
         }
+    },
+    {
+        path: pathPre + '/company/coursetask',
+        name: 'analysis-company-coursetask',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/company/CourseTask.vue'))
+            })
+        },
+        meta: {
+            title: '课程任务',
+            noback: true
+        }
+    },
+    {
+        path: pathPre + '/company/startimg',
+        name: 'analysis-company-startimg',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/company/StartImage.vue'))
+            })
+        },
+        meta: {
+            title: '客户端启动图',
+            noback: true
+        }
+    },
+    {
+        path: pathPre + '/company/dynamic',
+        name: 'analysis-company-dynamic',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/company/Dynamic.vue'))
+            })
+        },
+        meta: {
+            title: '企业动态',
+            noback: true
+        }
+    },
+    {
+        path: pathPre + '/company/announce',
+        name: 'analysis-company-announce',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/company/Announce.vue'))
+            })
+        },
+        meta: {
+            title: '公告',
+            noback: true
+        }
+    },
+    {
+        path: pathPre + '/company/hybrid',
+        name: 'analysis-company-hybrid',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/company/Hybrid.vue'))
+            })
+        },
+        meta: {
+            title: '小应用',
+            noback: true
+        }
+    },
+    {
+        path: pathPre + '/company/attendance',
+        name: 'analysis-company-attendance',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/company/Attendance.vue'))
+            })
+        },
+        meta: {
+            title: '考勤打卡',
+            noback: true
+        }
+    },
+    {
+        path: pathPre + '/company/medicine',
+        name: 'analysis-company-medicine',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/company/Medicine.vue'))
+            })
+        },
+        meta: {
+            title: '拿药练习',
+            noback: true
+        }
+    },
+    {
+        path: pathPre + '/company/approval',
+        name: 'analysis-company-approval',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/dataAnalysis/company/Approval.vue'))
+            })
+        },
+        meta: {
+            title: '流程审批',
+            noback: true
+        }
     }
 ]
