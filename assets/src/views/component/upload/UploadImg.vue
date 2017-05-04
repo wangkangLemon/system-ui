@@ -209,7 +209,6 @@
             },
             // 设置是否启动
             setDisabled (b) {
-                console.info(this.$refs.container.querySelector('input'))
                 if (b)
                     this.$refs.container.querySelector('input').setAttribute('disabled', 'disabled')
                 else
