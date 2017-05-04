@@ -58,6 +58,15 @@ const routes = [
             })
         }
     },
+    {
+        path: '/articleshow/:id', // 文章详情
+        name: 'articleshow',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('./views/article/ContentShow.vue'))
+            })
+        }
+    },
     {   // 首页
         path: '/',
         name: 'index',

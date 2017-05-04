@@ -18,6 +18,12 @@
                 text-align: right;
                 margin-top: 10px;
             }
+            a {
+                color: #20a0ff;
+                font-size: 12px;
+                margin-right: 10px;
+                text-decoration: none;
+            }
         }
     }
 </style>
@@ -68,9 +74,9 @@
                 </el-table-column>
                 <el-table-column prop="operate" label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="showFn(scope.row)">
+                        <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
                             查看
-                        </el-button>
+                        </router-link>
                         <el-button type="text" size="small" @click="editArticle(scope.row)">
                             修改
                         </el-button>
@@ -124,9 +130,9 @@
             })
         },
         methods: {
-            showFn (row) {
-                this.$router.push({name: 'article-content-show', params: {id: row.id}})
-            },
+//            showFn (row) {
+//                this.$router.push({name: 'articleshow', params: {id: row.id}})
+//            },
             addArticle () {
                 this.$router.push({name: 'article-content-add'})
             },
