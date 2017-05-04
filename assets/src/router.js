@@ -159,6 +159,9 @@ router.afterEach((route) => {
     if (title) {
         document.title = title + ' - 药视通'
     }
+
+    // 设置选中的菜单
+    if (route.matched.some(record => record.meta.noback)) store.dispatch('setIndexMenuActive', route.path)
 })
 
 router.beforeEach((to, from, next) => {

@@ -45,7 +45,9 @@
             </div>
             <article class="content-container">
                 <section>
-                    <i><el-tag type="danger">推荐</el-tag> 微信:</i>
+                    <i>
+                        <el-tag type="danger">推荐</el-tag>
+                        微信:</i>
                     <div>
                         <span v-if="!wechat || !wechat.data">
                             <el-tag type="gray">未绑定</el-tag>
@@ -209,6 +211,7 @@
                         // 保存二次验证的token
                         authUtils.setTwiceToken(data.data.adminTwoStepAuthToken)
                         this.initData()
+                        this.$store.dispatch('setIndexNavMenu', {menu: authUtils.getNavMenu()}) // 获取菜单
                         xmview.showTip('success', '操作成功', 5000)
                     } else {
                         xmview.showTip('error', data.message)
@@ -260,6 +263,7 @@
                     this[this.fetchParam.type] = {data: this.fetchParam.receiver}
                     this.dialogBind.isShow = false
                     this.dialogChange.isShow = false
+                    this.$store.dispatch('setIndexNavMenu', {menu: authUtils.getNavMenu()}) // 获取菜单
                     xmview.showTip('success', '操作成功')
                 }).catch((err) => {
                     console.info(err)
@@ -283,7 +287,8 @@
             },
             initData () {
                 minepService.getSafeSetInfo().then((ret) => {
-                    if (ret) {
+                    // 如果已经绑定
+                    if (ret && ret.stepTypes) {
                         ret.stepTypes.forEach((item) => {
                             if (item.type === 'sms') {
                                 this.sms = item
@@ -295,6 +300,11 @@
                                 this.wechat = item
                             }
                         })
+                    } else { // 如果没有任何绑定
+                        // 把菜单置空
+                        this.$store.dispatch('setIndexNavMenu', {menu: []})
+                        // 干掉返回按钮
+                        xmview.setContentBack(false)
                     }
                     xmview.setContentLoading(false)
                 }).catch((err) => {
