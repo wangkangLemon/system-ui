@@ -32,6 +32,10 @@
                 type: String,
                 default: '请选择'
             },
+            showNotCat: { // 是否显示未分类的选项
+                type: Boolean,
+                default: true
+            }
         },
         data () {
             return {
@@ -60,6 +64,13 @@
                     this.loading = true
                     courseService.getCategoryTree({companyid: this.companyid})
                         .then(ret => {
+                            // 不显示未分类那一项
+                            if (!this.showNotCat) {
+                                ret = ret.filter((item) => {
+                                    return item.id != 0
+                                })
+                            }
+
                             this.options = treeUtils.arr2Cascader(ret, 0, void 0, void 0, 'name', 'id')
                             this.loading = false
                         })

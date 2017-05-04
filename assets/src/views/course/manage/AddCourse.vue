@@ -65,7 +65,7 @@
             <el-tab-pane label="课程信息" name="first">
                 <el-form label-width="120px" ref="formFirst" :rules="rulesFirst" :model="fetchParam">
                     <el-form-item label="所属栏目" prop="category_id">
-                        <CourseCategorySelect :placeholder="fetchParam.cat_name" :autoClear="true"
+                        <CourseCategorySelect :placeholder="fetchParam.cat_name" :autoClear="true" :showNotCat="false"
                                               v-model="fetchParam.category_id"></CourseCategorySelect>
                     </el-form-item>
                     <el-form-item label="课程名称" prop="name">
