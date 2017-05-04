@@ -24,6 +24,9 @@ window.xmview = {
             duration: msgDuring
         })
     },
+    closeAllTip () {
+        Message.closeAll()
+    }
 }
 
 window.xmrouter = router
