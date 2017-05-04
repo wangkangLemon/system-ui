@@ -71,25 +71,28 @@
                     * 以下信息会关联到营销数据中心，如果是营销人员签约连锁，请务必填写。
                 </div>
                 <el-form-item prop="department_number" label="签约门店数量" :label-width="formLabelWidth">
-                    <el-input placeholder="签约门店数量" type="number" v-model="sign.department_number"
+                    <el-input min="0" placeholder="签约门店数量" type="number" v-model="sign.department_number"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="user_number" label="签约店员数量" :label-width="formLabelWidth">
-                    <el-input placeholder="签约店员数量" type="number" v-model="sign.user_number"
+                    <el-input min="0" placeholder="签约店员数量" type="number" v-model="sign.user_number"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="signatory" label="签约人" :label-width="formLabelWidth">
                     <SignatorySelect :placeholder="sign.user_name" v-model="sign.signatory"></SignatorySelect>
                 </el-form-item>
                 <el-form-item prop="sign_time" label="签约时间" :label-width="formLabelWidth">
-                    <el-date-picker v-model="sign.sign_time"
-                                    type="date"
-                                    :picker-options="pickerOptionsStart"
-                                    placeholder="开始日期">
+                    <el-date-picker
+                            :editable="false"
+                            v-model="sign.sign_time"
+                            type="date"
+                            :picker-options="pickerOptionsStart"
+                            placeholder="开始日期">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item prop="expire_time" label="合同到期日" :label-width="formLabelWidth">
                     <el-date-picker v-model="sign.expire_time"
+                                    :editable="false"
                                     type="date"
                                     :picker-options="pickerOptionsEnd"
                                     placeholder="合同到期日">

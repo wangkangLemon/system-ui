@@ -69,7 +69,10 @@
                         <el-input v-model="fetchParam.name" :disabled="fetchParam.parent_id == null"></el-input>
                     </el-form-item>
                     <el-form-item label="图片" prop="image">
-                        <UploadImg ref="uploadImg" :defaultImg="fetchParam.image" :url="uploadImgUrl"
+                        <UploadImg ref="uploadImg"
+                                   :disabled="fetchParam.parent_id == null"
+                                   :defaultImg="fetchParam.image"
+                                   :url="uploadImgUrl"
                                    :onSuccess="handleImgUploaded"></UploadImg>
                     </el-form-item>
                     <el-form-item label="分类排序" prop="sort">
@@ -139,13 +142,7 @@
                     isShow: false,
                     confirmClick: {}
                 },
-                fetchParam: {
-                    parent_id: void 0,
-                    name: void 0,
-                    image: void 0,
-                    sort: void 0,
-                    id: 0
-                },
+                fetchParam: getFetchParam(),
                 rules: {
                     name: [
                         {required: true, message: '请输入分类名称', trigger: 'blur'},
@@ -184,6 +181,7 @@
                         this.resetForm()
                     })
                 }
+                this.fetchParam = getFetchParam()
             },
             // 左边的节点被点击
             treeNodeClick (type, data, node, store) {
@@ -243,6 +241,7 @@
                             } else if (this.nodeSelected.children[0].value) {
                                 this.nodeSelected.children.push(addedItem)
                             }
+                            this.fetchParam = getFetchParam()
                         }
                     })
                 })
@@ -306,5 +305,14 @@
             }
         },
         components: {ArticleCategoryTree, UploadImg}
+    }
+    function getFetchParam () {
+        return {
+            parent_id: void 0,
+            name: void 0,
+            image: void 0,
+            sort: void 0,
+            id: 0
+        }
     }
 </script>
