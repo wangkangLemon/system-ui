@@ -72,6 +72,7 @@
                     </el-form-item>
                     <el-form-item label="栏目logo" prop="image">
                         <UploadImg ref="uploadImg" :defaultImg="fetchParam.image" :url="uploadImgUrl"
+                                   :disabled="fetchParam.parent_id == null"
                                    :onSuccess="handleImgUploaded"></UploadImg>
                     </el-form-item>
                     <el-form-item label="栏目排序" prop="sort">
@@ -80,11 +81,7 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="info" @click="submitForm" :disabled="fetchParam.parent_id == null">保存
-
-
-
-
-
+                            <!--zhankeng-->
                         </el-button>
                     </el-form-item>
                 </el-form>
@@ -253,6 +250,7 @@
             // 重置表单
             resetForm () {
                 this.$refs.form.resetFields()
+                this.fetchParam = getFetchParam()
             },
             // 移动子栏目点击
             moveSubCategory () {
