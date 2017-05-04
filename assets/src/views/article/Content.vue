@@ -50,8 +50,13 @@
             </section>
             <el-table border :data="articleData" v-loading="loading">
                 <el-table-column
-                        prop="title"
                         label="标题">
+                    <template scope="scope">
+                        <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
+                            {{scope.row.title}}
+                            <!--占坑-->
+                        </router-link>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="category_name"
@@ -76,12 +81,15 @@
                     <template scope="scope">
                         <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
                             查看
+                            <!--zhankeng-->
                         </router-link>
                         <el-button type="text" size="small" @click="editArticle(scope.row)">
                             修改
+                            <!--zhankeng-->
                         </el-button>
                         <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
                             删除
+                            <!--zhankeng-->
                         </el-button>
                     </template>
                 </el-table-column>
