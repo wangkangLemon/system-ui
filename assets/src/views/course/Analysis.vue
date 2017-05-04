@@ -185,7 +185,7 @@
                 <el-table-column prop="passed_user_count" label="及格人数" v-if="type != 3" width="100"></el-table-column>
                 <el-table-column v-if="type != 3" label="及格率" width="100">
                     <template scope="scope">
-                        <i>{{scope.row.testing_user_count / scope.row.passed_user_count | passedPercent}} </i>
+                        <i>{{ scope.row.passed_user_count / scope.row.testing_user_count | passedPercent}} </i>
                     </template>
                 </el-table-column>
                 <el-table-column v-if="type == 0" label="操作" width="100">
