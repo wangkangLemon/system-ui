@@ -57,9 +57,8 @@
                     </section>
 
                     <section>
-                        <i v-if="currTab">连锁</i>
-                        <i v-if="!currTab">工业</i>
-                        <IndustryCompanySelect v-model="fetchParams[0].company_id"
+                        <i>工业</i>
+                        <IndustryCompanySelect :type="1" v-model="fetchParams[0].company_id"
                                                :change="fetchData"></IndustryCompanySelect>
                     </section>
 
@@ -84,9 +83,11 @@
                             <el-option label="正常" :value="0"></el-option>
                         </el-select>
                     </section>
-
-                    <IndustryCompanySelect v-model="fetchParams[1].company_id"
-                                           :change="fetchData"></IndustryCompanySelect>
+                    <section>
+                        <i>连锁</i>
+                        <IndustryCompanySelect :type="2" v-model="fetchParams[1].company_id"
+                                               :change="fetchData"></IndustryCompanySelect>
+                    </section>
 
                     <DateRange title="创建时间" :start="fetchParams[1].time_start" :end="fetchParams[1].time_end"
                                @changeStart="val=> fetchParams[1].time_start=val "

@@ -20,6 +20,7 @@
         }
 
         .right-container {
+            width: 50%;
             margin-left: 15px;
             .edit-content {
                 margin: 10px 0 0

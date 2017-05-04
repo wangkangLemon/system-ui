@@ -18,6 +18,12 @@
                 text-align: right;
                 margin-top: 10px;
             }
+            a {
+                color: #20a0ff;
+                font-size: 12px;
+                margin-right: 10px;
+                text-decoration: none;
+            }
         }
     }
 </style>
@@ -44,8 +50,13 @@
             </section>
             <el-table border :data="articleData" v-loading="loading">
                 <el-table-column
-                        prop="title"
                         label="标题">
+                    <template scope="scope">
+                        <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
+                            {{scope.row.title}}
+                            <!--占坑-->
+                        </router-link>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="category_name"
@@ -68,14 +79,17 @@
                 </el-table-column>
                 <el-table-column prop="operate" label="操作">
                     <template scope="scope">
-                        <el-button type="text" size="small" @click="showFn(scope.row)">
+                        <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
                             查看
-                        </el-button>
+                            <!--zhankeng-->
+                        </router-link>
                         <el-button type="text" size="small" @click="editArticle(scope.row)">
                             修改
+                            <!--zhankeng-->
                         </el-button>
                         <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
                             删除
+                            <!--zhankeng-->
                         </el-button>
                     </template>
                 </el-table-column>
@@ -124,9 +138,9 @@
             })
         },
         methods: {
-            showFn (row) {
-                this.$router.push({name: 'article-content-show', params: {id: row.id}})
-            },
+//            showFn (row) {
+//                this.$router.push({name: 'articleshow', params: {id: row.id}})
+//            },
             addArticle () {
                 this.$router.push({name: 'article-content-add'})
             },
