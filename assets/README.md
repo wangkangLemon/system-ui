@@ -79,3 +79,19 @@ npm run build
 ```
 title: 形如路由中的 '公开课管理-培训'
 ```
+
+#### showTip(type, msg, msgDuring = 3000)
+```
+弹出消息提示
+```
+| 参数      | 类型       | 名称             |
+|-----------|-----------|---------------- |
+| type   | String    | 消息类型   |
+| msg | String  | 消息内容 |
+| msgDuring | Int | 持续时间(毫秒) |
+`type` 值范围: success/warning/info/error
+
+#### closeAllTip ()
+``` 
+关闭当前存在的所有消息提示
+```

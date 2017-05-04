@@ -275,20 +275,16 @@
 
 <script>
     import * as userService from '../services/userService'
-    import config from '../utils/config'
     import MenuTree from './component/tree/MenuTree.vue'
     import authUtils from '../utils/authUtils'
 
     export default {
         data () {
             return {
-                isMobile: config.isMobile(),
                 isShowMenue: false,
                 contentLoading: false,
                 mainTitle: this.$store.state.index.webpathMain,
                 subTitle: this.$store.state.index.webpathSub,
-                navMenueActive: '', // 激活的菜单选项
-                navMenus: null, // 所有的菜单
                 icons: {},
                 isShowBack: false
             }
@@ -296,6 +292,14 @@
         computed: {
             userInfo () {
                 return authUtils.getUserInfo()
+            },
+            // 当前用户可见de所有的菜单
+            navMenus () {
+                return this.$store.state.index.navMenu
+            },
+            // 激活的菜单选项
+            navMenueActive () {
+                return this.$store.state.index.navMenueActive
             }
         },
         watch: {
@@ -322,8 +326,8 @@
                 authUtils.authRefreshtoken() // 开启自动更新token
             xmview.setContentLoading = this.setContentLoading.bind(this)
             xmview.setContentBack = this.showContentBack.bind(this)
-            this.navMenueActive = this.$route.path // 获取选中的菜单
-            this.navMenus = authUtils.getNavMenu() // 获取菜单
+//            this.$store.dispatch('setIndexMenuActive', this.$route.path) // 设置选中的菜单
+            this.$store.dispatch('setIndexNavMenu', {menu: authUtils.getNavMenu()}) // 获取菜单
         },
         mounted () {
             window.onresize = () => {
@@ -347,7 +351,7 @@
                         this.$router.push({name: 'feedback-add'})
                         break
                     default:
-                        console.info('handleFeedback not support type')
+                        console.error('handleFeedback not support type')
                         break
                 }
             },
