@@ -10,6 +10,14 @@
         height: 100px;
         display: inline-block;
 
+        &.uploaddisabled {
+            *{
+                color: #ededed;
+                border-color: #ededed !important;
+                cursor: auto;
+            }
+        }
+
         %commSize {
             width: 100% !important;
             height: 100% !important;
@@ -87,8 +95,8 @@
     }
 </style>
 <template>
-    <div class="component-upload-uploadimg" ref="container">
-        <el-upload :headers="headers"
+    <div class="component-upload-uploadimg" ref="container" :class="{'uploaddisabled':disabled }">
+        <el-upload :headers="headers" :disabled="disabled"
                    :action="url"
                    list-type="picture-card"
                    :multiple="false"
@@ -147,6 +155,7 @@
             },
             'disabled' (val) {
                 this.isShowDelAndPreview(!val)
+                this.setDisabled(val)
             }
         },
         created () {
@@ -159,8 +168,10 @@
         activated () {
             this.uploadBtn && (this.uploadBtn = this.$refs.container.querySelector('.el-upload--picture-card'))
             this.isShowDelAndPreview(!this.disabled)
+            this.setDisabled(this.disabled)
         },
         mounted () {
+            this.setDisabled(this.disabled)
             this.uploadBtn = this.$refs.container.querySelector('.el-upload--picture-card')
         },
         methods: {
@@ -195,6 +206,14 @@
                     uploadList.style.display = isShow ? 'block' : 'none'
                 }
 //                this.$refs.container.querySelector('.el-upload-list__item-actions').style.display = isShow ? 'block' : 'none'
+            },
+            // 设置是否启动
+            setDisabled (b) {
+                console.info(this.$refs.container.querySelector('input'))
+                if (b)
+                    this.$refs.container.querySelector('input').setAttribute('disabled', 'disabled')
+                else
+                    this.$refs.container.querySelector('input').removeAttribute('disabled')
             }
         },
     }
