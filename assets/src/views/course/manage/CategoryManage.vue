@@ -185,6 +185,7 @@
                         node = null
                         this.dialogConfirm.isShow = false
                         this.resetForm()
+                        this.fetchParam = getFetchParam()
                     })
                 }
             },
@@ -250,7 +251,6 @@
             // 重置表单
             resetForm () {
                 this.$refs.form.resetFields()
-                this.fetchParam = getFetchParam()
             },
             // 移动子栏目点击
             moveSubCategory () {

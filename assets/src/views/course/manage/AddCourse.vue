@@ -261,7 +261,11 @@
         created () {
             this.uploadDocUrl = courseService.getCourseDocUploadUrl()
             this.uploadImgUrl = courseService.getManageImgUploadUrl()
-            if (this.$route.params.courseInfo) this.fetchParam = this.$route.params.courseInfo
+            if (this.$route.params.courseInfo) {
+                this.fetchParam = this.$route.params.courseInfo
+                xmview.setContentTile('编辑课程-培训')
+            }
+            this.$route.params.tab && (this.activeTab = this.$route.params.tab)
             xmview.setContentLoading(false)
         },
         watch: {

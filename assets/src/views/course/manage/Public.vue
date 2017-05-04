@@ -107,9 +107,14 @@
                     label="所属栏目">
             </el-table-column>
             <el-table-column
-                    prop="subject_num"
                     width="80"
                     label="题目数">
+                <template scope="scope">
+                    <el-button style="width: 100%"
+                            @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second'}})"
+                            type="text" size="small">{{scope.row.subject_num}}  <!--a-->
+                    </el-button>
+                </template>
             </el-table-column>
             <el-table-column
                     width="80"
@@ -141,16 +146,16 @@
                     label="操作">
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
-                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
+                    <el-button @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row}})"
+                               type="text" size="small">编辑 <!--a-->
+                    </el-button>
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                     <el-button v-if="scope.row.subject_num > 0"
                                @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.id}})"
-                               type="text" size="small">答案分析
-
-
+                               type="text" size="small">答案分析 <!--ff-->
                     </el-button>
                 </template>
             </el-table-column>
@@ -226,6 +231,9 @@
                 }
             }
         },
+        created () {
+//            this.fetchData()
+        },
         activated () {
             this.fetchData()
         },
@@ -254,13 +262,6 @@
                     ret.push(item.id)
                 })
                 this.selectedIds = ret
-            },
-            // 预览
-            preview () {
-            },
-            // 编辑
-            edit (index, row) {
-                this.$router.push({name: 'course-manage-addCourse', params: {courseInfo: row}})
             },
             // 下线 或者上线课程 0为下线，1为上线
             offline (index, row) {

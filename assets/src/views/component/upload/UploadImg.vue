@@ -10,11 +10,15 @@
         height: 100px;
         display: inline-block;
 
+        // 当禁用的样式
         &.uploaddisabled {
-            *{
+            * {
                 color: #ededed;
                 border-color: #ededed !important;
                 cursor: auto;
+            }
+            .el-upload-list__item-delete {
+                display: none !important;
             }
         }
 
