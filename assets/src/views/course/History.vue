@@ -105,6 +105,7 @@
             </el-table-column>
             <el-table-column
                     prop="dep_name"
+                    width="330"
                     label="门店">
             </el-table-column>
             <el-table-column
