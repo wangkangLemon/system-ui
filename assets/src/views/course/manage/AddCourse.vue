@@ -124,7 +124,7 @@
                         <el-input :disabled="fetchParam.need_testing == 0" v-model="fetchParam.score_pass"></el-input>
                     </el-form-item>
 
-                    <el-form-item label="">
+                    <el-form-item label="" v-if="!readonly">
                         <el-button style="float: right" type="primary" @click="btnNextClick">
                             <i>{{ fetchParam.need_testing == 0 ? '保存' : '保存并下一步' }}</i>
                         </el-button>
@@ -134,7 +134,7 @@
             <el-tab-pane :disabled="!fetchParam.id" label="考试题目设置" name="second" class="testing-set">
                 <el-form>
                     <el-form label-width="120px" v-for="(item,index) in fetchTesting" :key="index">
-                        <el-form-item label="">
+                        <el-form-item label="" v-if="!readonly">
                             <el-button icon="plus" @click='addTesting(0, index)'>判断题</el-button>
                             <el-button icon="plus" @click='addTesting(1, index)'>单选题</el-button>
                             <el-button icon="plus" @click='addTesting(2, index)'>多选题</el-button>
@@ -207,7 +207,7 @@
                     </el-form>
                 </el-form>
 
-                <el-form label-width="120px">
+                <el-form label-width="120px" v-if="!readonly">
                     <el-form-item label="">
                         <el-button icon="plus" @click='addTesting(0, fetchTesting.length)'>判断题</el-button>
                         <el-button icon="plus" @click='addTesting(1, fetchTesting.length)'>单选题</el-button>
@@ -215,7 +215,7 @@
                     </el-form-item>
                 </el-form>
 
-                <div class="bottom-btns">
+                <div class="bottom-btns" v-if="!readonly">
                     <el-button @click="btnPreClick">上一步</el-button>
                     <el-button class="submit" type="primary" @click="handleSubmitTesting">发布</el-button>
                 </div>
@@ -255,7 +255,8 @@
                 },
                 accept: '*.doc,*.docx', // 上传的文件格式
                 // 考试设置部分
-                fetchTesting: []
+                fetchTesting: [],
+                readonly: false, // 只读模式
             }
         },
         created () {
@@ -266,6 +267,7 @@
                 xmview.setContentTile('编辑课程-培训')
             }
             this.$route.params.tab && (this.activeTab = this.$route.params.tab)
+            this.readonly = this.$route.params.readonly
             xmview.setContentLoading(false)
         },
         watch: {

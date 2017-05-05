@@ -110,7 +110,7 @@ const routes = [
             // ============服务号==================
             im,
             // ============药我说==================
-            ...speaking,
+            speaking,
         ]
     },
     {   // 登录
@@ -197,10 +197,12 @@ function setTitle (title) {
     !xmview.setContentTile && (xmview.setContentTile = setTitle)
 }
 
+let backContentTimeoutid
 // 设置是否显示返回按钮
 function showBackContent (to, from, next) {
+    clearTimeout(backContentTimeoutid)
     if (!xmview.setContentBack) {
-        setTimeout(() => {
+        backContentTimeoutid = setTimeout(() => {
             showBackContent(to)
         }, 30)
         return

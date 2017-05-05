@@ -35,11 +35,10 @@
                                    class="upload-btn"></ImagEcropperInput>
             </el-form-item>
             <el-form-item prop="end_time" label="截止日期">
-                 <el-date-picker
-                    v-model="form.end_time"
-                    type="date"
-                    placeholder="选择截止日期"
-                    :picker-options="pickerOptions0">
+                <el-date-picker
+                        v-model="form.end_time"
+                        type="date"
+                        placeholder="选择截止日期">
                 </el-date-picker>
             </el-form-item>
             <el-form-item prop="price_enabled" label="是否设置红包">
@@ -49,22 +48,25 @@
                 </template>
             </el-form-item>
             <el-form-item prop="price_company_id" label="红包赞助工业">
-                 <CompanySelect v-model="form.price_company_id"></CompanySelect>
+                <CompanySelect v-model="form.price_company_id" :placeholder="!form.price_company_id? void 0:form.price_company_id+''" :disabled="!form.price_enabled"></CompanySelect>
             </el-form-item>
             <el-form-item label="红包设置">
                 <span>*为药我说添加红包可在下面填写，不填写默认为不添加红包，药我说满分后用户可领取该红包</span>
             </el-form-item>
             <el-form-item prop="price_total" label="总额预算">
-                <el-input-number v-model="form.price_total" auto-complete="off"></el-input-number>
+                <el-input-number v-model="form.price_total" auto-complete="off"
+                                 :disabled="!form.price_enabled"></el-input-number>
             </el-form-item>
             <el-form-item prop="price" label="单价">
-                <el-input-number v-model="form.price" auto-complete="off"></el-input-number>
+                <el-input-number v-model="form.price" auto-complete="off"
+                                 :disabled="!form.price_enabled"></el-input-number>
             </el-form-item>
             <el-form-item prop="price_float" label="浮动">
-                <el-input-number v-model="form.price_float" auto-complete="off"></el-input-number>
+                <el-input-number v-model="form.price_float" auto-complete="off"
+                                 :disabled="!form.price_enabled"></el-input-number>
             </el-form-item>
             <el-form-item prop="sort">
-                <el-button type="primary" @click="submit(0)">保存并上线</el-button>
+                <el-button type="primary" @click="submit(0)" :disabled="submiting">保存并上线</el-button>
                 <!--<el-button type="warning" @click="submit(1)">存草稿</el-button>-->
             </el-form-item>
         </el-form>
@@ -77,9 +79,10 @@
     import speakingContentService from '../../../services/speaking/contentService'
 
     export default{
-        name: 'coursetask-template-add',
+        name: 'speaking-content-add',
         data () {
             return {
+                submiting: false, // 提交中
                 form: {                // 表单属性值
                     id: void 0,
                     title: void '',          // 标题
@@ -91,7 +94,7 @@
                     price_total: void 0, // 总额预算
                     price: void 0, // 红包单价
                     price_float: void 0, // 红包浮动范围
-                    status: void 0 // 状态
+                    status: void 0, // 状态
                 },
                 rules: {
                     title: [
@@ -103,7 +106,7 @@
                     image: [
                         {required: true, message: '必须上传图片', trigger: 'blur'}
                     ],
-                    price_company_id: {type: 'number', required: true, message: '请选择红包赞助企业', trigger: 'change'}
+                    price_enabled: {required: true, type: 'number', message: '请选择是否设置红包', trigger: 'blur'}
                 },
                 dialogCourse: {
                     loading: false,
@@ -112,8 +115,22 @@
                 },
             }
         },
+        watch: {
+            'form.price_enabled' (val) {
+                if (val) {
+                    this.rules.price_company_id = {
+                        type: 'number',
+                        required: true,
+                        message: '请选择红包赞助企业',
+                        trigger: 'change'
+                    }
+                } else {
+                    delete this.rules.price_company_id
+                    this.form.price_company_id = this.form.price_total = this.form.price = this.form.price_float = void 0
+                }
+            }
+        },
         created () {
-            xmview.setContentLoading(false)
             if (this.$route.params.speaking_id) {
                 speakingContentService.getSpeakingById({
                     speaking_id: this.$route.params.speaking_id
@@ -121,7 +138,11 @@
                     this.form = ret.data.speaking
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
+                }).then(() => {
+                    xmview.setContentLoading(false)
                 })
+            } else {
+                xmview.setContentLoading(false)
             }
         },
         methods: {
@@ -137,6 +158,7 @@
                 })
             },
             submit(s) {
+                this.submiting = true
                 this.$refs.form.validate((valid) => {
                     if (!valid) {
                         return false
@@ -150,6 +172,7 @@
                         this.$router.back()
                     }).catch((ret) => {
                         xmview.showTip('error', ret.message)
+                        this.submiting = false
                     })
                 })
             }

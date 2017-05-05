@@ -3,43 +3,51 @@
  */
 const pathPre = '/speaking'
 // 客户端部分
-export default [
-    {
-        path: pathPre + '/content', // 内容管理
-        name: 'speaking-content-index',
-        component: resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/speaking/content/Index.vue'))
-            })
-        },
-        meta: {
-            title: '内容管理',
-            noback: true,
-        }
+export default {
+    path: pathPre, // 内容管理
+    component: resolve => {
+        require.ensure([], () => {
+            resolve(require('../views/speaking/Index.vue'))
+        })
     },
-    {
-        path: pathPre + '/content/add', // 药我说添加或编辑
-        name: 'speaking-content-add',
-        component: resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/speaking/content/Add.vue'))
-            })
+    children: [
+        {
+            path: 'content', // 内容管理
+            name: 'speaking-content-index',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/speaking/content/Index.vue'))
+                })
+            },
+            meta: {
+                title: '内容管理',
+                noback: true,
+            }
         },
-        meta: {
-            title: '添加药我说',
-        }
-    },
-    {
-        path: pathPre + '/record', // 录音记录
-        name: 'speaking-record-index',
-        component: resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/speaking/record/Index.vue'))
-            })
+        {
+            path: 'content/add', // 药我说添加或编辑
+            name: 'speaking-content-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/speaking/content/Add.vue'))
+                })
+            },
+            meta: {
+                title: '添加药我说',
+            }
         },
-        meta: {
-            title: '录音记录',
-            noback: true,
+        {
+            path: 'record', // 录音记录
+            name: 'speaking-record-index',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/speaking/record/Index.vue'))
+                })
+            },
+            meta: {
+                title: '录音记录',
+                noback: true,
+            }
         }
-    }
-]
+    ]
+}

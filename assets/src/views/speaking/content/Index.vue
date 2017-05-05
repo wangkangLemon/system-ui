@@ -119,12 +119,6 @@
             }
         },
         activated () {
-            if (this.$route.params['reload']) {
-                this.fetchData()
-            }
-            xmview.setContentLoading(false)
-        },
-        created () {
             this.fetchData()
         },
         methods: {

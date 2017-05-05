@@ -124,7 +124,7 @@
                     </div>
                     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="demo-ruleForm form">
                         <el-form-item prop="account">
-                            <el-input size="large" placeholder="手机号或邮箱" type="text" v-model="ruleForm2.account"
+                            <el-input size="large" placeholder="手机号或邮箱" type="text" v-model="ruleForm2.account" :autofocus="true"
                                       auto-complete="off"></el-input>
                         </el-form-item>
                         <el-form-item prop="checkPass">

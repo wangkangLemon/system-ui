@@ -63,7 +63,7 @@
                     <el-tab-pane label="手机号码验证" name="sms" v-if="sms">
                         <i>您设置的手机号码是 ({{sms.data}})</i>
                         <div class="center-slit">
-                            <el-input v-model="smsCode" placeholder="填写手机验证码"></el-input>
+                            <el-input v-model="smsCode" placeholder="填写手机验证码" @keyup.enter.native="login(0)"></el-input>
                             <el-button :disabled="codeWaitSecond !== 0" @click="sendValidCode(0)">
                                 <i v-if="codeWaitSecond <= 0">发送验证码</i>
                                 <i v-else>{{codeWaitSecond}} 秒后重发</i>
@@ -74,7 +74,8 @@
                     <el-tab-pane label="邮箱验证" name="email" v-if="email">
                         <i>您设置的邮箱码是 ({{email.data}})</i>
                         <div class="center-slit">
-                            <el-input v-model="emailCode" placeholder="填写邮箱验证码"></el-input>
+                            <el-input v-model="emailCode" placeholder="填写邮箱验证码"
+                                      @keyup.enter.native="login(1)"></el-input>
                             <el-button :disabled="codeWaitSecond !== 0" @click="sendValidCode(1)">
                                 <i v-if="codeWaitSecond <= 0">发送验证码</i>
                                 <i v-else>{{codeWaitSecond}} 秒后重发</i>
@@ -198,7 +199,9 @@
 
                     xmview.showTip('success', '验证成功, 跳转中...', 1e9)
                 }).catch(() => {
-                    this.logining = false
+                    setTimeout(() => {
+                        this.logining = false
+                    }, 300)
                 })
             }
         },

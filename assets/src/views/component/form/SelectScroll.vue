@@ -11,7 +11,7 @@
 
 <template>
     <el-select v-model="selectVal" :placeholder="currPlaceholder" ref="container" @visible-change="handleVisibleChange"
-               @change="handleChange" :clearable="true" no-data-text="暂无数据"
+               @change="handleChange" :clearable="true" no-data-text="暂无数据" :disabled="disabled"
                no-match-text="没有数据">
         <el-option :disabled="true" value="xmystinputval" style="height: 50px">
             <el-input @change="filter" placeholder="搜索内容"></el-input>
@@ -25,7 +25,8 @@
         <el-option v-loading="loading" value="xmyst2" :disabled="true" v-show="!this.data || this.data.length < 1">
             <span>暂无数据</span>
         </el-option>
-        <el-option value="xmyst1" :disabled="true" v-show="isShowGetMore && this.data && this.data.length > 0" v-loading="loading">
+        <el-option value="xmyst1" :disabled="true" v-show="isShowGetMore && this.data && this.data.length > 0"
+                   v-loading="loading">
             <span ref="domLoading" class="component-form-selectscroll-more" v-show="!loading">点击加载更多</span>
             <span v-show="loading">加载中...</span>
         </el-option>
@@ -43,6 +44,10 @@
             placeholder: {
                 type: String,
                 default: '请选择'
+            },
+            disabled: {
+                type: Boolean,
+                default: false
             },
             list: Array, // 已有的数据集合
         },
