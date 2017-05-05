@@ -142,6 +142,7 @@
                     speaking_id: this.$route.query.id
                 }).then((ret) => {
                     this.form = ret.data.speaking
+                    this.$forceUpdate()
                 }, () => {
                 }).then(() => {
                     xmview.setContentLoading(false)
