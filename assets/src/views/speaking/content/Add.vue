@@ -48,7 +48,9 @@
                 </template>
             </el-form-item>
             <el-form-item prop="price_company_id" label="红包赞助工业">
-                <CompanySelect v-model="form.price_company_id" :placeholder="!form.price_company_id? void 0:form.price_company_id+''" :disabled="!form.price_enabled"></CompanySelect>
+                <CompanySelect v-model="form.price_company_id"
+                               :placeholder="form.price_company_name"
+                               :disabled="!form.price_enabled"></CompanySelect>
             </el-form-item>
             <el-form-item label="红包设置">
                 <span>*为药我说添加红包可在下面填写，不填写默认为不添加红包，药我说满分后用户可领取该红包</span>
@@ -90,6 +92,7 @@
                     content: void '',  // 内容
                     end_time: void 0,         // 截止日期
                     price_enabled: void 0,     // 是否启用红包
+                    price_company_name: void 0, // 赞助企业名
                     price_company_id: void 0,       // 红包赞助工业
                     price_total: void 0, // 总额预算
                     price: void 0, // 红包单价
@@ -131,16 +134,16 @@
             }
         },
         created () {
-            if (this.$route.params.speaking_id) {
+            if (this.$route.query.id) {
                 speakingContentService.getSpeakingById({
-                    speaking_id: this.$route.params.speaking_id
+                    speaking_id: this.$route.query.id
                 }).then((ret) => {
                     this.form = ret.data.speaking
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
+                }, () => {
                 }).then(() => {
                     xmview.setContentLoading(false)
                 })
+                xmview.setContentTile('编辑药我说-药我说')
             } else {
                 xmview.setContentLoading(false)
             }

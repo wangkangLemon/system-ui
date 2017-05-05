@@ -160,7 +160,7 @@
             },
              // 编辑
             edit (index, row) {
-                this.$router.push({name: 'speaking-content-add', params: {speaking_id: row.id}})
+                this.$router.push({name: 'speaking-content-add', query: {id: row.id}})
             },
         }
     }

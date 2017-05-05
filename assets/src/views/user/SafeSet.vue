@@ -98,7 +98,7 @@
                               :placeholder="fetchParam.type == 'email' ? '请输入邮箱地址' : '请输入手机号码'"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码">
-                    <div style="display: inline-block;width: 60%">
+                    <div style="display: inline-block;width: 60%;vertical-align: top">
                         <el-input v-model="fetchParam.code" placeholder="输入验证码"></el-input>
                     </div>
                     <el-button type="primary" @click="sendBindValidCode" :disabled="dialogBind.validWait > 0">
@@ -120,7 +120,7 @@
                     <i>{{(fetchParam.type == 'email' ? '电子邮箱' : '手机号码') + ' (' + fetchParam.receiver + ')'}}</i>
                 </el-form-item>
                 <el-form-item label="验证码">
-                    <div style="display: inline-block;width: 60%">
+                    <div style="display: inline-block;width: 60%;vertical-align: top">
                         <el-input v-model="fetchParam.code" placeholder="输入验证码"></el-input>
                     </div>
                     <el-button type="primary" @click="sendBindValidCode" :disabled="dialogBind.validWait > 0">

@@ -20,7 +20,7 @@ export default {
                 })
             },
             meta: {
-                title: '内容管理',
+                title: '内容管理-药我说',
                 noback: true,
             }
         },
@@ -33,7 +33,7 @@ export default {
                 })
             },
             meta: {
-                title: '添加药我说',
+                title: '添加药我说-药我说',
             }
         },
         {
@@ -45,7 +45,7 @@ export default {
                 })
             },
             meta: {
-                title: '录音记录',
+                title: '录音记录-药我说',
                 noback: true,
             }
         }
