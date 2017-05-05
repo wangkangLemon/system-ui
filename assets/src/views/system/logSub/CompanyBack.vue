@@ -31,8 +31,14 @@
     <article class="system-manage">
         <el-card class="box-card">
             <section class="search">
-                <CompanySelect v-model="search.company_id" :change="getData"></CompanySelect>
-                <UserSelect v-model="search.admin_id" :change="getData"></UserSelect>
+                <section>
+                    <i>企业</i>
+                    <CompanySelect v-model="search.company_id" :change="getData"></CompanySelect>
+                </section>
+                <section>
+                    <i>用户</i>
+                    <UserSelect v-model="search.admin_id" :change="getData"></UserSelect>
+                </section>
                 <section>
                     <i>登录方式</i>
                     <el-select clearable @change="getData" v-model="search.account_type">

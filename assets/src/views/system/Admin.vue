@@ -26,8 +26,8 @@
             </div>
             <div class="info" v-if="clerkDetail != null">
                 <h2>{{clerkDetail.name}}({{clerkDetail.company}})</h2>
-                <p><i class="title">Mobile：</i><span class="value"><i class="iconfont icon-oslash"></i>{{clerkDetail.mobile}}</span></p>
-                <p><i class="title">Email：</i><span class="value"><i class="el-icon-message"></i>{{clerkDetail.email}}</span></p>
+                <p><i class="title">Mobile：</i><span class="value">{{clerkDetail.mobile}}</span></p>
+                <p><i class="title">Email：</i><span class="value">{{clerkDetail.email}}</span></p>
                 <p>
                     <i class="title">状态：</i>
                     <span class="value">
@@ -95,6 +95,11 @@
                     width="150">
             </el-table-column>
             <el-table-column
+                    prop="role_name"
+                    label="角色"
+                    width="150">
+            </el-table-column>
+            <el-table-column
                     prop="mobile"
                     label="手机"
                     width="180">
@@ -131,7 +136,10 @@
                     <el-button type="text" size="small" @click="editAdmin(scope.row)">
                         修改
                     </el-button>
-                    <el-button type="text" size="small" @click="adminDisable(scope.row)">
+                    <el-button type="text" size="small" v-if="scope.row.disabled" @click="adminDisable(scope.row, 0)">
+                        启用
+                    </el-button>
+                    <el-button type="text" size="small" v-if="!scope.row.disabled" @click="adminDisable(scope.row, 1)">
                         禁用
                     </el-button>
                     <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
@@ -261,11 +269,12 @@
                     this.showDetail = true
                 })
             },
-            adminDisable (row) {
-                xmview.showDialog(`你将要禁用管理员【<i style="color: red">${row.name}</i>】确认吗？`, () => {
+            adminDisable (row, val) {
+                let state = val ? '禁用' : '启用'
+                xmview.showDialog(`你将要${state}管理员【<i style="color: red">${row.name}</i>】确认吗？`, () => {
                     adminService.adminDisable({
                         adminID: row.id,
-                        disabled: 1
+                        disabled: val
                     }).then(() => {
                         xmview.showTip('success', '禁用成功')
                         this.getData()

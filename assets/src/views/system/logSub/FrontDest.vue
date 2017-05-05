@@ -31,7 +31,10 @@
     <article class="system-manage">
         <el-card class="box-card">
             <section class="search">
-                <UserSelect v-model="search.admin_id" :change="getData"></UserSelect>
+                <section>
+                    <i>用户</i>
+                    <UserSelect v-model="search.admin_id" :change="getData"></UserSelect>
+                </section>
                 <section>
                     <i>登录方式</i>
                     <el-select clearable @change="getData" v-model="search.account_type">
@@ -55,15 +58,16 @@
                 <el-table-column
                         prop="user_name"
                         label="用户"
-                        width="180">
+                        width="120">
                 </el-table-column>
                 <el-table-column
                         prop="company"
                         label="连锁"
-                        width="180">
+                        min-width="180">
                 </el-table-column>
                 <el-table-column
                         prop="department"
+                        min-width="180"
                         label="门店">
                 </el-table-column>
                 <el-table-column
@@ -75,10 +79,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                        width="120"
                         prop="login_ip_name"
                         label="登录IP">
                 </el-table-column>
                 <el-table-column
+                        width="180"
                         prop="login_time_name"
                         label="登录时间">
                 </el-table-column>

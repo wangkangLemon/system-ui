@@ -31,7 +31,10 @@
     <article class="system-manage">
         <el-card class="box-card">
             <section class="search">
-                <AdminSelect v-model="search.admin_id" :change="getData"></AdminSelect>
+                <section>
+                    <i>管理员</i>
+                    <AdminSelect v-model="search.admin_id" :change="getData"></AdminSelect>
+                </section>
                 <section>
                     <i>操作IP</i>
                     <el-input @change="getData" v-model="search.ip"></el-input>
