@@ -13,6 +13,7 @@ import sales from './routers/sales' // 晒单
 import company from './routers/company' // 企业
 import user from './routers/user' // 企业
 import im from './routers/im'
+import speaking from './routers/speaking' // 药我说
 import authUtils from './utils/authUtils'
 
 Vue.use(VueRouter)
@@ -99,6 +100,8 @@ const routes = [
             ...user,
             // ============服务号==================
             im,
+            // ============药我说==================
+            ...speaking,
         ]
     },
     {   // 登录
