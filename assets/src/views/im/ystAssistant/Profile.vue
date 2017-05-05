@@ -9,7 +9,7 @@
         }
         .left-container {
             width: 171px;
-            img {
+            >img {
                 width: 171px;
                 height: 171px;
                 border-radius: 50%;
