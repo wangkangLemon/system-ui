@@ -1,38 +1,18 @@
 <!--企业列表-管理员-->
 <style lang='scss' rel="stylesheet/scss">
-    @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
     @import "../../utils/mixins/showDetail";
+    @import "../../utils/mixins/common";
     .company-admin-container {
-        border: 1px solid #ededed;
-        .search {
-            @extend %top-search-container;
-        }
+        @extend %content-container;
         .add {
-            background: #ededed;
-            padding: px2rem(10) px2rem(20);
-            border-bottom: 1px solid #ededed;
-            text-align: right;
-            .back {
-                float: right;
-            }
+            @extend %right-top-btnContainer;
         }
         .main-container {
             background: #fff;
             padding: 20px;
             .search {
-                display: flex;
-                padding: 0 px2rem(20) px2rem(15);
-                > div {
-                    display: inline-block;
-                    vertical-align: top;
-                    label {
-                        margin-right: 2%;
-                    }
-                    .name {
-                        width: 80%;
-                    }
-                }
+                @extend %top-search-container;
             }
             .block {
                 text-align: right;
@@ -44,15 +24,15 @@
 <template>
     <article class="company-admin-container">
         <!--详情-->
-        <el-dialog class="show-detail" title="查看店员" v-model="showDetail">
+        <el-dialog class="show-detail" title="查看管理员" v-model="showDetail">
             <div class="avatar">
                 <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar" />
             </div>
             <div class="info">
                 <h2>{{clerkDetail.name}}({{clerkDetail.company}})</h2>
                 <p><i class="title">所属门店：</i><span class="value">{{clerkDetail.dep_name}}</span></p>
-                <p><i class="title">Mobile：</i> <span class="value"><i class="iconfont icon-oslash"></i>{{clerkDetail.mobile}}</span></p>
-                <p><i class="title">Email：</i> <span class="value"><i class="el-icon-message"></i>{{clerkDetail.email}}222</span></p>
+                <p><i class="title">Mobile：</i> <span class="value">{{clerkDetail.mobile}}</span></p>
+                <p><i class="title">Email：</i> <span class="value">{{clerkDetail.email}}</span></p>
                 <p>
                     <i class="title">状态：</i>
                     <span class="value">
@@ -100,8 +80,7 @@
             </div>
         </el-dialog>
         <section class="add">
-            <!--点击添加 form数据取邮箱/手机号 密码-->
-            <el-button icon="plus" @click="addAdmin">添加</el-button>
+            <el-button icon="plus" type="primary" @click="addAdmin">添加</el-button>
         </section>
         <div class="main-container">
             <section class="search">

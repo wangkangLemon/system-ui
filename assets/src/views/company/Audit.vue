@@ -33,7 +33,7 @@
             <section class="search">
                 <section>
                     <i>审核结果</i>
-                    <el-select v-model="searchParams.result" @change="getData">
+                    <el-select clearable v-model="searchParams.result" @change="getData">
                         <el-option label="待审核" :value="1"></el-option>
                         <el-option label="审核通过" :value="2"></el-option>
                         <el-option label="审核失败" :value="3"></el-option>

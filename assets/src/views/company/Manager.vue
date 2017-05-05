@@ -83,6 +83,10 @@
                         label="手机">
                 </el-table-column>
                 <el-table-column
+                        prop="last_login_time_name"
+                        label="上次登录时间">
+                </el-table-column>
+                <el-table-column
                         prop="create_time_name"
                         label="注册时间">
                 </el-table-column>

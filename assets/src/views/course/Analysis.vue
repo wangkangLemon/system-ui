@@ -124,7 +124,7 @@
             <el-tab-pane label="本月" name="month"></el-tab-pane>
             <el-tab-pane label="上月" name="prevmonth"></el-tab-pane>
         </el-tabs>
-        <el-button class="export" @click="exportClick"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
+        <el-button type="warning" class="export" @click="exportClick"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
 
         <article class="table-container">
             <article class="search">

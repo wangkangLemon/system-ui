@@ -104,10 +104,12 @@
                     style="width: 100%">
                 <el-table-column
                         prop="name"
+                        width="100"
                         label="姓名">
                 </el-table-column>
                 <el-table-column
                         prop="mobile"
+                        width="150"
                         label="手机">
                 </el-table-column>
                 <el-table-column
@@ -120,10 +122,12 @@
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
+                        width="180"
                         label="注册时间">
                 </el-table-column>
                 <el-table-column
                         prop="disabled"
+                        width="100"
                         label="状态">
                     <template scope="scope">
                         <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
@@ -132,10 +136,12 @@
                 </el-table-column>
                 <el-table-column
                         prop="last_appstart"
+                        width="100"
                         label="使用环境">
                 </el-table-column>
                 <el-table-column
                         prop="operate"
+                        width="100"
                         label="操作">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">

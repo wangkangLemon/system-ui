@@ -24,6 +24,13 @@
             text-align: right;
             margin-top: 15px;
         }
+        .show-detail {
+            .sub-title {
+                color: #999;
+                font-size: 12px;
+                margin-left: 10px;
+            }
+        }
     }
 </style>
 <template>
@@ -31,7 +38,7 @@
         <!--详情-->
         <el-dialog size="small" v-if="show.detail" class="show-detail" title="查看门店" v-model="show.showDetail">
             <div class="info">
-                <h2>测试营销员</h2>
+                <h2>{{show.detail.name}}<i class="sub-title">{{show.detail.company}}</i></h2>
                 <p><i class="title">店长：</i><span class="value">{{show.detail.concact || '无'}}</span></p>
                 <p><i class="title">手机：</i><span class="value">{{show.detail.mobile || '无'}}</span></p>
                 <p><i class="title">电话：</i><span class="value">{{show.detail.tel || '无'}}</span></p>
@@ -101,10 +108,6 @@
             <el-table-column
                     prop="mobile"
                     label="手机">
-            </el-table-column>
-            <el-table-column
-                    prop="emial"
-                    label="邮箱">
             </el-table-column>
             <el-table-column
                     prop="create_time_name"

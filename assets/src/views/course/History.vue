@@ -35,7 +35,7 @@
 
 <template>
     <article id="course-history-container">
-        <el-button class="export" @click="exportData"><i class="iconfont icon-iconfontexcel" :disabled="exporting"></i>
+        <el-button type="warning" class="export" @click="exportData"><i class="iconfont icon-iconfontexcel" :disabled="exporting"></i>
             <i>导出</i></el-button>
 
         <div class="note">说明：企业选项为内训与工业课程的考试情况</div>

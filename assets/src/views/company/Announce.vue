@@ -1,50 +1,21 @@
 <!--公告-->
 <style lang="scss" rel='stylesheet/scss'>
-    @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
     .company-user-list {
         .show-detail {
-            .avatar {
-                border: 1px solid #ededed;
-                display: inline-block;
-                vertical-align: top;
-            }
             .info {
-                display: inline-block;
-                vertical-align: top;
-                > p {
-                    > span {
-                        display: inline-block;
-                        width:px2rem(100);
-                        text-align: right;
-                        padding-right: px2rem(10);
-                    }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+                > div {
+                    text-indent: 2em;
+                    line-height: 28px;
                 }
             }
         }
-        .status {
-            padding: 2px 5px;
-            background: #00acac;
-            border-radius: 5px;
-            color: #fff;
-        }
-        .box-card {
-            margin-bottom: 20px;
-            .clearfix {
-                text-align: right;
-            }
-            .el-card__header {
-                padding: 10px 15px;
-                background: #f0f3f5;
-                .icon-iconfontexcel {
-                    position: relative;
-                    top: -2px;
-                    margin-right: 5px;
-                }
-            }
-            .search {
-                @extend %top-search-container;
-            }
+        .search {
+            @extend %top-search-container;
         }
         .block {
             text-align: right;
@@ -55,8 +26,13 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog size="tiny" class="show-detail" :title="currentItem.title" v-model="showDetail">
-            <div>{{currentItem.content}}</div>
+        <el-dialog size="tiny" title="查看公告" class="show-detail" v-model="showDetail">
+            <div class="info">
+                <h2>{{currentItem.title}}</h2>
+                <div>
+                    {{currentItem.content}}
+                </div>
+            </div>
         </el-dialog>
         <el-card class="box-card">
             <section class="search">
@@ -99,6 +75,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="type"
+                        width="100"
                         label="类型">
                     <template scope="scope">
                         <el-tag type="primary" v-if="scope.row.type == 'company'">企业公告</el-tag>
@@ -111,10 +88,12 @@
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
+                        width="180"
                         label="创建时间">
                 </el-table-column>
                 <el-table-column
                         prop="status"
+                        width="100"
                         label="状态">
                     <template scope="scope">
                         <el-tag type="gray">{{statusArr[scope.row.status]}}</el-tag>
@@ -122,6 +101,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="operate"
+                        width="100"
                         label="操作">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
@@ -181,7 +161,7 @@
             showFn (row) {
                 this.showDetail = true
                 setTimeout(() => {
-                    this.currentItem.title = `查看公告:${row.title}`
+                    this.currentItem.title = row.title
                     this.currentItem.content = row.content
                 }, 10)
             },
