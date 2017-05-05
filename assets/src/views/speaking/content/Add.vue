@@ -56,7 +56,7 @@
                 </IndustryCompanySelect>
             </el-form-item>
             <el-form-item label="红包设置">
-                <span>*为药我说添加红包可在下面填写，不填写默认为不添加红包，药我说满分后用户可领取该红包</span>
+                <span style="color: red">*为药我说添加红包可在下面填写，不填写默认为不添加红包，药我说满分后用户可领取该红包</span>
             </el-form-item>
             <el-form-item prop="price_total" label="总额预算">
                 <el-input-number v-model="form.price_total" auto-complete="off"
@@ -132,7 +132,7 @@
                     }
                 } else {
                     delete this.rules.price_company_id
-                    this.form.price_company_id = this.form.price_total = this.form.price = this.form.price_float = void 0
+                    this.form.price_company_id = this.form.price_total = this.form.price = this.form.price_float = this.form.price_company_name = void 0
                 }
             }
         },
@@ -142,7 +142,6 @@
                     speaking_id: this.$route.query.id
                 }).then((ret) => {
                     this.form = ret.data.speaking
-                    this.$forceUpdate()
                 }, () => {
                 }).then(() => {
                     xmview.setContentLoading(false)
