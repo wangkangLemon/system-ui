@@ -28,10 +28,13 @@
             <el-button type="primary" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
         <section class="search">
-            <UserList v-model="userSelect"
-                      v-on:change="val=>userSelect=val"
-                      :change="getData">
-            </UserList>
+            <section>
+                <i>用户</i>
+                <UserList v-model="userSelect"
+                          v-on:change="val=>userSelect=val"
+                          :change="getData">
+                </UserList>
+            </section>
             <section>
                 <label>提现状态</label>
                 <el-select @change="getData" clearable v-model="drawStatusSelect" placeholder="未选择">
@@ -57,27 +60,32 @@
                 style="width: 100%">
             <el-table-column
                     prop="draw_no"
+                    width="200"
                     label="编号">
             </el-table-column>
             <el-table-column
                     prop="money"
                     label="金额"
-                    width="180">
+                    width="100">
             </el-table-column>
             <el-table-column
                     prop="user_name"
+                    width="100"
                     label="姓名">
             </el-table-column>
             <el-table-column
                     prop="bank_name"
+                    width="180"
                     label="银行">
             </el-table-column>
             <el-table-column
                     prop="card_name"
+                    width="200"
                     label="卡号">
             </el-table-column>
             <el-table-column
                     prop="status"
+                    width="100"
                     label="状态">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.status">{{scope.row.status}}</el-tag>
@@ -86,10 +94,12 @@
             </el-table-column>
             <el-table-column
                     prop="admin_name"
+                    width="100"
                     label="管理员">
             </el-table-column>
             <el-table-column
                     prop="completed_name"
+                    width="120"
                     label="申请时间">
             </el-table-column>
             <el-table-column

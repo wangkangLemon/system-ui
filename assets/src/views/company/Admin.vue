@@ -147,6 +147,7 @@
     import companyUserService from '../../services/companyUserService'
     import {defaultAvatar} from '../../utils/filterUtils'
     export default {
+        name: 'company-admin',
         filters: {
             defaultAvatar
         },
@@ -216,7 +217,7 @@
                 return this.$route.params.company_id
             }
         },
-        activated () {
+        created () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

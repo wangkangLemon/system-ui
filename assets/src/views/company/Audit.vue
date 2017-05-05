@@ -25,6 +25,11 @@
             text-align: right;
             margin-top: 15px;
         }
+        .show-link {
+            font-size: 12px;
+            color: #20a0ff;
+            text-decoration: none;
+        }
     }
 </style>
 <template>
@@ -76,13 +81,22 @@
                         label="申请时间">
                 </el-table-column>
                 <el-table-column
+                        prop="status"
+                        width="100"
+                        label="状态">
+                    <template scope="scope">
+                        <el-tag type="primary" v-if="scope.row.status == 1">待审核</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == 2">审核通过</el-tag>
+                        <el-tag type="danger" v-if="scope.row.status == 3">审核失败</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
                         prop="operate"
+                        width="100"
                         label="操作">
                     <template scope="scope">
-                        <router-link type="text" size="small" :to="{name: 'company-audit-show', params: {id: scope.row.id}}">
-                            <el-tag type="primary" v-if="scope.row.status == 1">待审核</el-tag>
-                            <el-tag type="success" v-if="scope.row.status == 2">审核通过</el-tag>
-                            <el-tag type="danger" v-if="scope.row.status == 3">审核失败</el-tag>
+                        <router-link class="show-link" :to="{name: 'company-audit-show', params: {id: scope.row.id}}">
+                            查看
                         </router-link>
                     </template>
                 </el-table-column>

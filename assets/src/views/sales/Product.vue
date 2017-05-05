@@ -26,9 +26,12 @@
 <template>
     <article id="sales-procuct-container">
         <article class="search">
-            <IndustryCompanySelect type="1" v-model="fetchParam.enterprise_id"
-                                   :change="fetchData">
-            </IndustryCompanySelect>
+            <section>
+                <i>工业</i>
+                <IndustryCompanySelect type="1" v-model="fetchParam.enterprise_id"
+                                       :change="fetchData">
+                </IndustryCompanySelect>
+            </section>
             <section>
                 <i>名称</i>
                 <el-input @change="fetchData" v-model="fetchParam.keyword" placeholder="药品名称"></el-input>

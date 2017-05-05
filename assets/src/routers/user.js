@@ -14,7 +14,7 @@ export default [
         },
         meta: {
             title: '安全设置-我的',
-            notAuth: true, //  不需要身份验证
+            noback: true, //  不需要身份验证
         }
     },
     {
@@ -27,6 +27,7 @@ export default [
         },
         meta: {
             title: '个人信息',
+            noback: true
         }
     },
     {
@@ -39,6 +40,7 @@ export default [
         },
         meta: {
             title: '企业信息',
+            noback: true
         }
     },
     {
@@ -51,6 +53,7 @@ export default [
         },
         meta: {
             title: '修改密码',
+            noback: true
         }
     },
 ]

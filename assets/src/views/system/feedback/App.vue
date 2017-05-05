@@ -62,8 +62,10 @@
                     <i class="title">状态：</i>
                     <span class="value">
                         <el-select clearable v-model="form.status">
-                            <el-option label="待处理" :value="1"></el-option>
+                            <el-option label="待处理" :value="0"></el-option>
+                            <el-option label="处理中" :value="1"></el-option>
                             <el-option label="已处理" :value="2"></el-option>
+                            <el-option label="待分配" :value="3"></el-option>
                         </el-select>
                     </span>
                 </p>
@@ -195,7 +197,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

@@ -36,10 +36,13 @@
                              :change="getData">
                 </course-list>
             </section>
-            <UserList v-model="userSelect"
-                      v-on:change="val=>userSelect=val"
-                      :change="getData">
-            </UserList>
+            <section>
+                <i>用户</i>
+                <UserList v-model="userSelect"
+                          v-on:change="val=>userSelect=val"
+                          :change="getData">
+                </UserList>
+            </section>
             <DateRange title="创建时间" :start="createTime" :end="endTime"
                        v-on:changeStart="val=> createTime=val"
                        v-on:changeEnd="val=> endTime"

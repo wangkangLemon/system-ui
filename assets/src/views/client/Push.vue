@@ -16,6 +16,12 @@
             text-align: right;
             margin-top: 10px;
         }
+        .show-detail {
+            .hr {
+                border-bottom: 1px solid #ddd;
+                margin: 20px 0;
+            }
+        }
     }
 </style>
 <template>
@@ -26,8 +32,16 @@
                 <p><i class="title">标题： </i><span class="value">{{details.title}}</span></p>
                 <p><i class="title">内容： </i><span class="value">{{details.content}}</span></p>
                 <p><i class="title">类型： </i><span class="value">{{details.ModelName}}</span></p>
-                <p v-if="details.courses"><i class="title">课程名称：</i><span class="value">{{details.courses}}</span></p>
-                <p v-if="details.links"><i class="title">链接：</i><span class="value">{{details.links}}</span></p>
+                <p v-if="details.model_id == 5"><i class="title">课程名称：</i><span class="value">{{details.Course.name}}</span></p>
+                <p v-if="details.model_id == 20"><i class="title">链接：</i><span class="value">{{details.model_value}}</span></p>
+                <div class="hr"></div>
+                <p>
+                    <i class="title">推送方式：</i>
+                    <span class="value">
+                        {{details.Tags && details.Tags.length > 0 ? '条件推送' : '全局推送'}}
+                    </span>
+                </p>
+                <p v-if="details.devices"><i class="title">平台：</i><span class="value">{{details.devices}}</span></p>
                 <div v-if="details.Tags != null">
                     <p v-for="item in details.Tags"><i class="title">{{item.Name}}：</i><span class="value">{{item.Value}}</span></p>
                 </div>
@@ -75,7 +89,7 @@
             <el-table-column
                     prop="target_type"
                     label="推送方式"
-                    width="150">
+                    width="100">
                 <template scope="scope">
                     {{scope.row.target_type == 'TAG' ? '条件推送' : '全局推送'}}
                 </template>
@@ -83,7 +97,7 @@
             <el-table-column
                     prop="model_name"
                     label="类型"
-                    width="100">
+                    width="120">
             </el-table-column>
             <el-table-column
                     prop="title"
@@ -92,13 +106,12 @@
             </el-table-column>
             <el-table-column
                     prop="content"
-                    label="内容"
-                    width="300">
+                    label="内容">
             </el-table-column>
             <el-table-column
                     prop="devices"
                     label="平台"
-                    width="100">
+                    width="120">
             </el-table-column>
             <el-table-column
                     prop="send_time"
@@ -108,14 +121,14 @@
             <el-table-column
                     prop="status"
                     label="状态"
-                    width="200">
+                    width="100">
             </el-table-column>
             <el-table-column
                     prop="admin"
                     label="管理员"
-                    width="200">
+                    width="100">
             </el-table-column>
-            <el-table-column prop="operate" label="操作">
+            <el-table-column prop="operate" label="操作" width="100">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="checkDetail(scope.$index, scope.row)">
                         详情
@@ -129,7 +142,7 @@
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
                     :page-sizes="[15, 30, 60, 100]"
-                    layout="total, sizes, ->, prev, pager, next, jumper"
+                    layout="total, sizes, prev, pager, next, jumper"
                     :total="total">
             </el-pagination>
         </section>

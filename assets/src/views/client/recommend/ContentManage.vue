@@ -296,7 +296,7 @@
                     <el-table-column
                             prop="date"
                             label="日期"
-                            width="200">
+                            width="120">
                         <template scope="scope">
                             {{scope.row.date && scope.row.date.slice(0, 10)}}
                         </template>

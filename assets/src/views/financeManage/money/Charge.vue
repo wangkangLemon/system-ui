@@ -48,14 +48,20 @@
             <el-button type="warning" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
         <section class="search">
-            <IndustryCompanySelect type="1" v-model="industrySelect"
-                                   v-on:change="val=>industrySelect=val"
-                                   :change="getData">
-            </IndustryCompanySelect>
-            <admin v-model="managerSelect"
-                   v-on:change="val=>managerSelect=val"
-                   :change="getData">
-            </admin>
+            <section>
+                <i>工业</i>
+                <IndustryCompanySelect type="1" v-model="industrySelect"
+                                       v-on:change="val=>industrySelect=val"
+                                       :change="getData">
+                </IndustryCompanySelect>
+            </section>
+            <section>
+                <i>管理员</i>
+                <admin v-model="managerSelect"
+                       v-on:change="val=>managerSelect=val"
+                       :change="getData">
+                </admin>
+            </section>
             <DateRange title="创建时间" :start="createTime" :end="endTime"
                        v-on:changeStart="val=> createTime=val"
                        v-on:changeEnd="val=> endTime"
@@ -98,7 +104,7 @@
                     label="操作">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="showFn(scope.row)">
-                        查看数据
+                        查看收据
                     </el-button>
                 </template>
             </el-table-column>
