@@ -74,6 +74,14 @@
             },
             'value' (val) {
                 this.selectVal != val && (this.selectVal = val)
+                if (this.value != null && this.currPlaceholder && this.data.length < 1) {
+                    this.data.push({id: this.value, name: this.placeholder})
+                }
+            }
+        },
+        created () {
+            if (this.value != null && this.currPlaceholder && this.data.length < 1) {
+                this.data.push({id: this.value, name: this.placeholder})
             }
         },
         mounted () {
@@ -120,7 +128,7 @@
                 }
                 this.initGetMore()
                 // 判断是否有数据
-                if (!this.data || this.data.length < 1) {
+                if (!this.data || this.data.length < 2) {
                     this.loading = true
                     this.requestCb(this.keyword, 0).then((ret) => {
                         this.processRequestRet(ret)
@@ -129,9 +137,13 @@
             },
             // 处理请求后的结果 type- 0:追加 1-重新赋值
             processRequestRet (ret, type = 0) {
-                if (type === 0)
+                if (type === 0) {
+                    // 把结果过滤掉当前选中的
+                    ret.data = ret.data.filter((item) => {
+                        return item.id != this.value
+                    })
                     this.data.push(...ret.data)
-                else
+                } else
                     this.data = ret.data
 
                 this.isShowGetMore = this.data.length < ret.total

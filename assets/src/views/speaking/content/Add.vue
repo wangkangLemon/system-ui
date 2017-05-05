@@ -48,9 +48,12 @@
                 </template>
             </el-form-item>
             <el-form-item prop="price_company_id" label="红包赞助工业">
-                <CompanySelect v-model="form.price_company_id"
-                               :placeholder="form.price_company_name"
-                               :disabled="!form.price_enabled"></CompanySelect>
+                <!--<CompanySelect v-model="form.price_company_id"-->
+                               <!--:placeholder="form.price_company_name"-->
+                               <!--:disabled="!form.price_enabled"></CompanySelect>-->
+
+                <IndustryCompanySelect v-model="form.price_company_id" :type="1" :placeholder="form.price_company_name" :disabled="!form.price_enabled">
+                </IndustryCompanySelect>
             </el-form-item>
             <el-form-item label="红包设置">
                 <span>*为药我说添加红包可在下面填写，不填写默认为不添加红包，药我说满分后用户可领取该红包</span>
@@ -77,7 +80,7 @@
 
 <script>
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
-    import CompanySelect from '../component/SpeakingCompany.vue'
+    import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import speakingContentService from '../../../services/speaking/contentService'
 
     export default{
@@ -161,11 +164,11 @@
                 })
             },
             submit(s) {
-                this.submiting = true
                 this.$refs.form.validate((valid) => {
                     if (!valid) {
                         return false
                     }
+                    this.submiting = true
                     let reqFn = speakingContentService.addSpeaking
                     if (this.form.id) {
                         reqFn = speakingContentService.updateSpeaking
@@ -180,6 +183,6 @@
                 })
             }
         },
-        components: {ImagEcropperInput, CompanySelect}
+        components: {ImagEcropperInput, IndustryCompanySelect}
     }
 </script>

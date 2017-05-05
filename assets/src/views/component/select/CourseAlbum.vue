@@ -1,6 +1,6 @@
 <!--课程专辑下拉框-->
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder">
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" v-model="currVal">
     </SelectScroll>
 </template>
 
@@ -20,7 +20,7 @@
         },
         watch: {
             'value'(val, oldValue) {
-                this.setCurrentValue(val)
+                this.currVal !== val && (this.currVal = val)
             }
         },
         methods: {
