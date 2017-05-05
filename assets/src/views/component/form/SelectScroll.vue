@@ -16,8 +16,7 @@
         <el-option :disabled="true" value="xmystinputval" style="height: 50px">
             <el-input @change="filter" placeholder="搜索内容"></el-input>
         </el-option>
-        <el-option v-loading="loading"
-                   v-for="item in data"
+        <el-option v-for="item in data"
                    :label="item.name"
                    :key="item.id"
                    :value="item.id">
@@ -26,8 +25,9 @@
         <el-option v-loading="loading" value="xmyst2" :disabled="true" v-show="!this.data || this.data.length < 1">
             <span>暂无数据</span>
         </el-option>
-        <el-option value="xmyst1" :disabled="true" v-show="isShowGetMore && this.data && this.data.length > 0">
-            <span ref="domLoading" class="component-form-selectscroll-more">点击加载更多</span>
+        <el-option value="xmyst1" :disabled="true" v-show="isShowGetMore && this.data && this.data.length > 0" v-loading="loading">
+            <span ref="domLoading" class="component-form-selectscroll-more" v-show="!loading">点击加载更多</span>
+            <span v-show="loading">加载中...</span>
         </el-option>
     </el-select>
 </template>
