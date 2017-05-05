@@ -160,6 +160,9 @@
                 console.info('出错', err)
             })
         },
+        beforeDestroy () {
+            xmview.closeAllTip()
+        },
         methods: {
             // type 0- 手机 1-邮箱
             sendValidCode (type) {
@@ -192,8 +195,9 @@
                     while (item.children && item.children.length > 0)
                         item = item.children[0]
                     this.$router.push({path: item.item.menu_url})
-                }, () => {
-                }).then(() => {
+
+                    xmview.showTip('success', '验证成功, 跳转中...', 1e9)
+                }).catch(() => {
                     this.logining = false
                 })
             }

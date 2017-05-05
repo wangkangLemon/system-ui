@@ -7,6 +7,7 @@
     <section>
         <i>{{title}}</i>
         <el-date-picker @change="setCurrVal(0)"
+                        :editable="false"
                         clearable
                         v-model="timespan[0]"
                         align="right"
@@ -16,6 +17,7 @@
         </el-date-picker>
         <el-date-picker
                 clearable
+                :editable="false"
                 @change="setCurrVal(1)"
                 v-model="timespan[1]"
                 align="right"

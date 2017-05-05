@@ -65,7 +65,7 @@
             <el-tab-pane label="课程信息" name="first">
                 <el-form label-width="120px" ref="formFirst" :rules="rulesFirst" :model="fetchParam">
                     <el-form-item label="所属栏目" prop="category_id">
-                        <CourseCategorySelect :placeholder="fetchParam.cat_name" :autoClear="true"
+                        <CourseCategorySelect :placeholder="fetchParam.cat_name" :autoClear="true" :showNotCat="false"
                                               v-model="fetchParam.category_id"></CourseCategorySelect>
                     </el-form-item>
                     <el-form-item label="课程名称" prop="name">
@@ -75,8 +75,6 @@
                         <img :src="fetchParam.image | fillImgPath" width="200" height="112" v-show="fetchParam.image">
                         <CropperImg ref="imgcropper" :confirmFn="cropperImgSucc"
                                     :aspectRatio="16/9"></CropperImg>
-                        <!--<UploadImg :defaultImg="fetchParam.image" :url="uploadImgUrl"-->
-                        <!--:on-success="res=> fetchParam.image = res.data.url"></UploadImg>-->
                     </el-form-item>
                     <el-form-item label="课程类型">
                         <el-select v-model="fetchParam.material_type" @change="typeChange" placeholder="请选择"
@@ -230,7 +228,7 @@
 
 <script>
     import courseService from '../../../services/courseService'
-    //    import UploadImg from '../../component/upload/UploadImg.vue'
+    import UploadImg from '../../component/upload/UploadImg.vue'
     import CropperImg from '../../component/upload/ImagEcropperInput.vue'
     import DialogVideo from '../component/DialogVideo.vue'
     import UploadFile from '../../component/upload/UploadFiles.vue'
@@ -262,7 +260,12 @@
         },
         created () {
             this.uploadDocUrl = courseService.getCourseDocUploadUrl()
-            if (this.$route.params.courseInfo) this.fetchParam = this.$route.params.courseInfo
+            this.uploadImgUrl = courseService.getManageImgUploadUrl()
+            if (this.$route.params.courseInfo) {
+                this.fetchParam = this.$route.params.courseInfo
+                xmview.setContentTile('编辑课程-培训')
+            }
+            this.$route.params.tab && (this.activeTab = this.$route.params.tab)
             xmview.setContentLoading(false)
         },
         watch: {
@@ -319,7 +322,7 @@
             },
             // 图片裁切成功回调
             cropperImgSucc (imgData) {
-                this.uploadImgUrl = courseService.uploadCover4addCourse({avatar: imgData}).then((ret) => {
+                courseService.uploadCover4addCourse({avatar: imgData}).then((ret) => {
                     this.fetchParam.image = ret.url
                 })
             },
@@ -391,7 +394,7 @@
                 }
             }
         },
-        components: {CropperImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}
+        components: {CropperImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo, UploadImg}
     }
 
     function getOrignData () {

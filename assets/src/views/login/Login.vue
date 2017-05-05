@@ -73,7 +73,7 @@
                         }
                     }
                     input {
-                        background: rgba(0,0,0,0.4);
+                        background: rgba(0, 0, 0, 0.4);
                         color: #fff;
                         border: none;
                     }
@@ -140,7 +140,11 @@
                             </div>
                         </el-form-item>
                         <el-form-item>
-                            <el-button class="submit" type="primary" @click="submitForm('ruleForm2')">登录</el-button>
+                            <el-button class="submit" type="primary" @click="submitForm('ruleForm2')"
+                                       :disabled="logining">
+                                <i v-if="logining">登录中...</i>
+                                <i v-else>登录</i>
+                            </el-button>
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -193,7 +197,8 @@
                     checkPass: [
                         {validator: validatePass2, trigger: 'blur'}
                     ]
-                }
+                },
+                logining: false, // 是否正在登录
             }
         },
         created () {
@@ -201,16 +206,20 @@
             authUtils.clearAuthInfo()
             xmview.setLoading(false)
         },
+        beforeDestroy () {
+            xmview.closeAllTip()
+        },
         methods: {
             submitForm (formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        this.logining = true
                         // 请求接口
                         login(this.ruleForm2.account, this.ruleForm2.checkPass).then((ret) => {
                             authUtils.setNavMenu(treeUtls.arr2Tree(ret.auth_menu)) // 保存菜单
                             authUtils.setAuthToken(ret.auth_token) // 保存token
                             authUtils.setUserInfo(ret.auth_user) // 保存用户信息
-                            xmview.showTip('success', '登录成功')
+                            xmview.showTip('success', '登录成功, 正在跳转...', 1e9)
                             setTimeout(() => {
                                 // 如果需要二次登录
                                 if (ret.need_two_step || !authUtils.getTwiceToken()) {
@@ -228,6 +237,7 @@
                                 }
                             }, 400)
                         }).catch((ret) => {
+                            this.logining = false
                         }).then(() => {
                             xmview.setLoading(false)
                         })

@@ -21,6 +21,7 @@
 
         .right-container {
             margin-left: 15px;
+            width: 50%;
             .edit-content {
                 margin: 10px 0 0
             }
@@ -51,7 +52,7 @@
         </section>
 
         <section class="right-container">
-            <div>
+            <div  v-if="fetchParam.parent_id != 0">
                 <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改分类</el-button>
                 <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子分类</el-button>
 
@@ -59,21 +60,26 @@
                 <el-button @click="moveSubCategoryContent">移动分类下内容</el-button>
                 <el-button type="danger" @click="deleteCategory">删除分类</el-button>
             </div>
-
+            <div v-if="fetchParam.parent_id === 0">
+                <el-button type="primary">添加根节点</el-button>
+            </div>
             <el-card class="edit-content">
                 <el-form label-position="right" label-width="90px" :rules="rules" :model="fetchParam" ref="form">
                     <el-form-item label="分类名称" prop="name">
-                        <el-input v-model="fetchParam.name"></el-input>
+                        <el-input v-model="fetchParam.name" :disabled="fetchParam.parent_id == null"></el-input>
                     </el-form-item>
                     <el-form-item label="分类logo" prop="image">
-                        <UploadImg ref="uploadImg" :defaultImg="fetchParam.image" :url="uploadImgUrl"
+                        <UploadImg ref="uploadImg"
+                                   :disabled="fetchParam.parent_id == null"
+                                   :defaultImg="fetchParam.image"
+                                   :url="uploadImgUrl"
                                    :onSuccess="handleImgUploaded"></UploadImg>
                     </el-form-item>
                     <el-form-item label="分类排序" prop="sort">
-                        <el-input placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
+                        <el-input placeholder="最小的排在前面" :disabled="fetchParam.parent_id == null" v-model.number="fetchParam.sort"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="info" @click="submitForm">保存</el-button>
+                        <el-button type="info" :disabled="fetchParam.parent_id == null" @click="submitForm">保存</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>
@@ -136,13 +142,7 @@
                     isShow: false,
                     confirmClick: {}
                 },
-                fetchParam: {
-                    parent_id: void 0,
-                    name: void 0,
-                    image: void 0,
-                    sort: void 0,
-                    id: 0
-                },
+                fetchParam: getFetchParam(),
                 rules: {
                     name: [
                         {required: true, message: '请输入分类名称', trigger: 'blur'},
@@ -181,6 +181,7 @@
                         this.resetForm()
                     })
                 }
+                this.fetchParam = getFetchParam()
             },
             // 左边的节点被点击
             treeNodeClick (type, data, node, store) {
@@ -241,6 +242,7 @@
                             else if (this.nodeSelected.children[0].value) {
                                 this.nodeSelected.children.push(addedItem)
                             }
+                            this.fetchParam = getFetchParam()
                         }
                     })
                 })
@@ -304,5 +306,14 @@
             }
         },
         components: {SectionCategoryTree, UploadImg}
+    }
+    function getFetchParam () {
+        return {
+            parent_id: void 0,
+            name: void 0,
+            image: void 0,
+            sort: void 0,
+            id: 0
+        }
     }
 </script>

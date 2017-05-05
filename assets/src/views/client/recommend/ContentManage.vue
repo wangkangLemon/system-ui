@@ -146,27 +146,34 @@
             .right-list {
                 padding: 20px;
                 padding-bottom: 60px;
-                .cell {
-                    i.tag {
-                        padding: 5px;
-                        background: cornflowerblue;
-                        color: #fff;
-                        border-radius: 5px;
+                .el-table {
+                    overflow: visible !important;
+                    .el-table__body-wrapper {
+                        overflow: visible !important;
                     }
-                    i.el-icon-picture {
-                        position: relative;
-                        .img-wrap {
+                    .cell {
+                        i.tag {
                             padding: 5px;
-                            border: 1px solid #ededed;
-                            width: 213px;
-                            height: 123px;
-                            position: absolute;
-                            bottom: -123px;
-                            right: -213px;
-                            z-index: 999 !important;
-                            img {
-                                width: 100%;
-                                height: 100%;
+                            background: cornflowerblue;
+                            color: #fff;
+                            border-radius: 5px;
+                        }
+                        i.el-icon-picture {
+                            position: relative;
+                            .img-wrap {
+                                display: none;
+                                padding: 5px;
+                                background: #fff;
+                                width: 213px;
+                                height: 123px;
+                                position: absolute;
+                                bottom: -123px;
+                                right: -213px;
+                                z-index: 999 !important;
+                                img {
+                                    width: 100%;
+                                    height: 100%;
+                                }
                             }
                         }
                     }
@@ -270,10 +277,10 @@
                             <el-tag type="primary" class="tag" v-if="scope.row.ref_type == 'course'">课程</el-tag>
                             <el-tag type="gray" class="tag" v-if="scope.row.ref_type == 'link'">链接</el-tag>
                             {{scope.row.title}}
-                            <i class="el-icon-picture" v-if="scope.row.image">
-                                <!--<div class="img-wrap">-->
-                                    <!--<img src="http://localhost:7010/static/img/logo.11729c9.png"/>-->
-                                <!--</div>-->
+                            <i class="el-icon-picture" v-if="scope.row.image" @mouseover="showImg" @mouseout="hideImg">
+                                <div class="img-wrap">
+                                    <img :src="scope.row.image | fillImgPath"/>
+                                </div>
                             </i>
                             <el-tooltip v-if="scope.row.ref_sync" class="item" effect="dark" content="与引用内容保持同步" placement="top">
                                 <i class="iconfont icon-refresh"></i>
@@ -433,6 +440,12 @@
             this.uploadReqUrl = sectionService.getContentUploadImg()
         },
         methods: {
+            showImg (e) {
+                e.target.firstChild.style.display = 'block'
+            },
+            hideImg (e) {
+                e.target.firstChild.style.display = 'none'
+            },
             // 保持同步
             keepSync () {
                 this.form.ref_sync = 1
