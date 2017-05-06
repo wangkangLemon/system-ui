@@ -5,7 +5,7 @@
 
 <script>
     import speakingService from '../../../services/speaking/contentService'
-    import SelectScroll from '../../component/form/SelectScroll.vue'
+    import SelectScroll from '../../component/form/TitleSelectScroll.vue'
     export default{
         props: ['value', 'change', 'list'],
         components: {
