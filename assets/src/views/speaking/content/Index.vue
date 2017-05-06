@@ -114,7 +114,8 @@
                     page: 1,
                     page_size: 15,
                     time_start: void '',
-                    time_end: void ''
+                    time_end: void '',
+                    sender_type: 'system'
                 }
             }
         },

@@ -6,8 +6,8 @@ import config from '../../utils/config'
 const urlPre = config.apiHost + '/sys/speaking'
 
 class SpeakingContentService {
-    // 录音记录列表
-    search({page, page_size, status = -1, price_enabled = -1, keyword, time_start, time_end}) {
+    // 药我说记录列表
+    search({page, page_size, status = -1, price_enabled = -1, keyword, time_start, time_end, sender_type = ''}) {
         let url = `${urlPre}/search`
         if (status == '') {
             status = -1
@@ -15,7 +15,7 @@ class SpeakingContentService {
         if (price_enabled == '') {
             price_enabled = -1
         }
-        return api.get(url, {page, page_size, status, price_enabled, keyword, time_start, time_end}).then((ret) => {
+        return api.get(url, {page, page_size, status, price_enabled, keyword, time_start, time_end, sender_type}).then((ret) => {
             return ret.data
         })
     }
