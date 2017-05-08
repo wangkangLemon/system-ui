@@ -29,10 +29,13 @@
                              :change="getData">
                 </speaking-list>
             </section>
-            <UserList v-model="userSelect"
+            <section>
+                <i>用户</i>
+                <UserList v-model="userSelect"
                       v-on:change="val=>userSelect=val"
                       :change="getData">
-            </UserList>
+                </UserList>
+            </section>
             <section>
                 <i>用户所属企业</i>
                 <IndustryCompanySelect v-model="companySelect"
