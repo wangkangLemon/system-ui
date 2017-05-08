@@ -48,6 +48,32 @@ export default {
                 title: '录音记录-药我说',
                 noback: true,
             }
+        },
+        {
+            path: 'company',
+            name: 'speaking-company-index',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/speaking/company/Index.vue'))
+                })
+            },
+            meta: {
+                title: '企业统计-药我说',
+                noback: true
+            }
+        },
+        {
+            path: 'system',
+            name: 'speaking-system-index',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/speaking/system/Index.vue'))
+                })
+            },
+            meta: {
+                title: '系统统计-药我说',
+                noback: true
+            }
         }
     ]
 }
