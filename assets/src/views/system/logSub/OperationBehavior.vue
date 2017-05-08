@@ -43,12 +43,13 @@
                 <section>
                     <i>行为类型</i>
                     <el-select placeholder="未选择" v-model="fetchParam.action" :clearable="true" @change="getData()">
-                        <el-option label="创建" value="CREATED"></el-option>
+                        <el-option label="创建" value="CREATE"></el-option>
                         <el-option label="更新" value="UPDATE"></el-option>
                         <el-option label="删除" value="DELETE"></el-option>
+                        <el-option label="导入" value="IMPORT"></el-option>
                     </el-select>
                 </section>
-                <DateRange title="考试时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
+                <DateRange :start="fetchParam.time_start" :end="fetchParam.time_end"
                            @changeStart="val => fetchParam.time_start=val"
                            @changeEnd="val => fetchParam.time_end=val" :change="getData">
                 </DateRange>
