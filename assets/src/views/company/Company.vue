@@ -67,7 +67,10 @@
                     </el-option>
                 </el-select>
             </section>
-            <Region title="地区" v-on:provinceChange="val => searchParms.provinceSelect = val"
+            <Region :province="searchParms.provinceSelect"
+                    :city="searchParms.citySelect"
+                    :area="searchParms.areaSelect"
+                    title="地区" v-on:provinceChange="val => searchParms.provinceSelect = val"
                     v-on:cityChange="val => searchParms.citySelect = val"
                     v-on:areaChange="val => searchParms.areaSelect = val"
                     :change="getData"></Region>
@@ -80,6 +83,7 @@
                        v-on:changeEnd="val=> searchParms.endTime = val"
                        :change="getData">
             </DateRange>
+            <el-button type="primary" @click="clearFn">清空</el-button>
         </section>
         <el-table
                 v-loading="loading"
@@ -192,6 +196,18 @@
             })
         },
         methods: {
+            clearFn () {
+                this.searchParms = {
+                    createTime: '',
+                    endTime: '',
+                    typeSelect: '',
+                    provinceSelect: '',
+                    citySelect: '',
+                    areaSelect: '',
+                    name: ''
+                }
+                this.getData()
+            },
             // 修改企业信息
             editCompany (index, row) {
                 this.$router.push({name: 'company-edit', params: {id: row.id}})

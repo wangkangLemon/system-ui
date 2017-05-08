@@ -104,7 +104,7 @@
                     style="width: 100%">
                 <el-table-column
                         prop="name"
-                        width="100"
+                        min-width="120"
                         label="姓名">
                 </el-table-column>
                 <el-table-column
@@ -114,10 +114,12 @@
                 </el-table-column>
                 <el-table-column
                         prop="company"
+                        min-width="180"
                         label="连锁">
                 </el-table-column>
                 <el-table-column
                         prop="dep_name"
+                        min-width="180"
                         label="门店">
                 </el-table-column>
                 <el-table-column
@@ -126,12 +128,11 @@
                         label="注册时间">
                 </el-table-column>
                 <el-table-column
-                        prop="disabled"
-                        width="100"
-                        label="状态">
+                        prop="last_active_time_name"
+                        width="180"
+                        label="最后活跃时间">
                     <template scope="scope">
-                        <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
-                        <el-tag type="danger" v-if="scope.row.disabled">异常</el-tag>
+                        {{scope.row.last_active_time_name ? scope.row.last_active_time_name : '未激活'}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -141,7 +142,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="operate"
-                        width="100"
+                        width="80"
                         label="操作">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
