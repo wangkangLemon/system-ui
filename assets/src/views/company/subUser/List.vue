@@ -95,6 +95,7 @@
                         <el-option label="Android" :value="3"></el-option>
                     </el-select>
                 </section>
+                <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
                     v-loading="loading"
@@ -205,6 +206,19 @@
             })
         },
         methods: {
+            clearFn () {
+                this.searchParams = {
+                    companySelect: '',
+                    createTime: '',
+                    endTime: '',
+                    name: '',
+                    mobile: '',
+                    status: '',
+                    email: '',
+                    last_appstart: ''
+                }
+                this.getData()
+            },
             // 显示详情
             showFn (row) {
                 CompanyUserService.userDetail(row.id).then((ret) => {

@@ -81,9 +81,10 @@
             </section>
             <DateRange title="日期查找" :start="search.time_start" :end="search.time_end"
                        v-on:changeStart="val=>search.time_start=val"
-                       v-on:changeEnd="val=>search.time_end"
+                       v-on:changeEnd="val=>search.time_end=val"
                        :change="getData">
             </DateRange>
+            <el-button type="primary" @click="clearFn">清空</el-button>
         </section>
         <el-table border v-loading="loading" :data="pushData">
             <el-table-column
@@ -173,14 +174,7 @@
                 currentPage: 1, // 分页当前显示的页数
                 total: 0,
                 pageSize: 15,
-                search: { // 搜索的姓名
-                    keyword: '',
-                    target: '', // 推送方式
-                    modelid: '', // 推送内容类型
-                    status: '', // 状态
-                    time_start: '',
-                    time_end: '',
-                },
+                search: clearSearch(),
                 pushData: []
             }
         },
@@ -190,6 +184,10 @@
             })
         },
         methods: {
+            clearFn () {
+                this.search = clearSearch()
+                this.getData()
+            },
             createPush () {
                 this.$router.push({name: 'client-push-create'})
             },
@@ -229,6 +227,16 @@
             goBack () {
                 window.history.back()
             }
+        }
+    }
+    function clearSearch() {
+        return { // 搜索的姓名
+            keyword: '',
+            target: '', // 推送方式
+            modelid: '', // 推送内容类型
+            status: '', // 状态
+            time_start: '',
+            time_end: '',
         }
     }
 </script>

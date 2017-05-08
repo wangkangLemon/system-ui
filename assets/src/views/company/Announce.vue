@@ -62,6 +62,7 @@
                         <el-option label="撤销" value="2"></el-option>
                     </el-select>
                 </section>
+                <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
                     v-loading="loading"
@@ -144,12 +145,7 @@
                 pageSize: 15,
                 announceData: [],
                 total: 0,
-                searchParams: {
-                    companySelect: '',
-                    title: '',
-                    type: '',
-                    status: '',
-                }
+                searchParams: clearSearch()
             }
         },
         activated () {
@@ -158,6 +154,10 @@
             })
         },
         methods: {
+            clearFn () {
+                this.searchParams = clearSearch()
+                this.getData()
+            },
             showFn (row) {
                 this.showDetail = true
                 setTimeout(() => {
@@ -190,6 +190,14 @@
                     this.loading = false
                 })
             }
+        }
+    }
+    function clearSearch() {
+        return {
+            companySelect: '',
+            title: '',
+            type: '',
+            status: '',
         }
     }
 </script>

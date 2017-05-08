@@ -58,6 +58,7 @@
                            v-on:changeEnd="val=> searchParams.endTime = val"
                            :change="getData">
                 </DateRange>
+                <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
                     v-loading="loading"
@@ -121,14 +122,7 @@
                 pageSize: 15,
                 managerData: [],
                 total: 0,
-                searchParams: {
-                    companySelect: '',
-                    createTime: '',
-                    endTime: '',
-                    name: '',
-                    mobile: '',
-                    status: 0
-                }
+                searchParams: clearSearch()
             }
         },
         activated () {
@@ -137,6 +131,10 @@
             })
         },
         methods: {
+            clearFn () {
+                this.searchParams = clearSearch()
+                this.getData()
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
@@ -164,6 +162,16 @@
                     this.loading = false
                 })
             }
+        }
+    }
+    function clearSearch() {
+        return {
+            companySelect: '',
+            createTime: '',
+            endTime: '',
+            name: '',
+            mobile: '',
+            status: 0
         }
     }
 </script>

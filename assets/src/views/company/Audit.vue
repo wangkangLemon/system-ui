@@ -46,13 +46,14 @@
                 </section>
                 <DateRange title="日期查找" :start="searchParams.createTime" :end="searchParams.endTime"
                            v-on:changeStart="val=> searchParams.createTime=val"
-                           v-on:changeEnd="val=> searchParams.endTime"
+                           v-on:changeEnd="val=> searchParams.endTime=val"
                            :change="getData">
                 </DateRange>
                 <section>
                     <i>关键字</i>
                     <el-input @change="getData" v-model="searchParams.keyword" auto-complete="off"></el-input>
                 </section>
+                <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
                     v-loading="loading"
@@ -129,12 +130,7 @@
                 pageSize: 15,
                 auditData: [],
                 total: 0,
-                searchParams: {
-                    createTime: '',
-                    endTime: '',
-                    keyword: '', // 关键字
-                    result: '', // 审核结果
-                }
+                searchParams: clearSearch()
             }
         },
         activated () {
@@ -143,6 +139,10 @@
             })
         },
         methods: {
+            clearFn () {
+                this.searchParams = clearSearch()
+                this.getData()
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
@@ -168,6 +168,14 @@
                     this.loading = false
                 })
             }
+        }
+    }
+    function clearSearch() {
+        return {
+            createTime: '',
+            endTime: '',
+            keyword: '', // 关键字
+            result: '', // 审核结果
         }
     }
 </script>
