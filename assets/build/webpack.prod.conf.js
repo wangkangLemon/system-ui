@@ -79,7 +79,7 @@ var webpackConfig = merge(baseWebpackConfig, {
             },
             // necessary to consistently work with multiple chunks via CommonsChunkPlugin
             chunksSortMode: 'dependency',
-            vendorjs: config.build.assetsPublicPath + config.build.assetsSubDirectory + '/' + manifiest.name + '.js'
+            vendorjs: config.build.assetsPublicPath + config.build.assetsSubDirectory + '/' + manifiest.name + '.js?v=' + utils.getMd5(path.resolve('./public/vendor.js'))
         }),
         // copy custom static assets
         new CopyWebpackPlugin([
