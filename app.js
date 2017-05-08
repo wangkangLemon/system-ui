@@ -33,7 +33,7 @@ app.use(compression({
         // fallback to standard filter function
         return compression.filter(req, res)
     },
-    level: 6
+    level: 7
 }))
 app.use('/upload', express.static(path.join(__dirname, '../storage/upload')));
 app.use(express.static(path.join(__dirname, 'public')));

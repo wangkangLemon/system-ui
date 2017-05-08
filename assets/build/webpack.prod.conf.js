@@ -8,6 +8,9 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var manifiest = require('./manifest.json')
+const os = require('os');
+const UglifyJsParallelPlugin = require('webpack-uglify-parallel');
 
 var env = config.build.env
 var webpackConfig = merge(baseWebpackConfig, {
@@ -24,6 +27,10 @@ var webpackConfig = merge(baseWebpackConfig, {
         chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
     },
     plugins: [
+        new webpack.DllReferencePlugin({
+            context: path.resolve('./'),
+            manifest: manifiest,
+        }),
         new webpack.ProvidePlugin({
             Promise: "promise",
             "window.Promise": "promise",
@@ -34,11 +41,20 @@ var webpackConfig = merge(baseWebpackConfig, {
             'process.apiHost': config.build.apiHost,
             'process.buildTime': '"' + new Date().toLocaleString() + '"'
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            },
-            sourceMap: true
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {
+        //         warnings: false
+        //     },
+        //     sourceMap: true
+        // }),
+        new UglifyJsParallelPlugin({
+            workers: os.cpus().length,
+            mangle: true,
+            compressor: {
+                warnings: false,
+                drop_console: true,
+                drop_debugger: true
+            }
         }),
         // extract css into its own file
         new ExtractTextPlugin({
@@ -62,27 +78,8 @@ var webpackConfig = merge(baseWebpackConfig, {
                 // https://github.com/kangax/html-minifier#options-quick-reference
             },
             // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-            chunksSortMode: 'dependency'
-        }),
-        // split vendor js into its own file
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: function (module, count) {
-                // any required modules inside node_modules are extracted to vendor
-                return (
-                    module.resource &&
-                    /\.js$/.test(module.resource) &&
-                    module.resource.indexOf(
-                        path.join(__dirname, '../node_modules')
-                    ) === 0
-                )
-            }
-        }),
-        // extract webpack runtime and module manifest to its own file in order to
-        // prevent vendor hash from being updated whenever app bundle is updated
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'manifest',
-            chunks: ['vendor']
+            chunksSortMode: 'dependency',
+            vendorjs: config.build.assetsPublicPath + config.build.assetsSubDirectory + '/' + manifiest.name + '.js'
         }),
         // copy custom static assets
         new CopyWebpackPlugin([
