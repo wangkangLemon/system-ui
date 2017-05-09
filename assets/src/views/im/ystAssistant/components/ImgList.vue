@@ -1,5 +1,5 @@
 <style lang='scss' rel='stylesheet/scss'>
-    #im-yst-assistant-components-imglist{
+    #im-yst-assistant-components-imglist {
         .material-title {
             > * {
                 display: inline-block;
@@ -93,7 +93,8 @@
         <el-dialog title="编辑图片信息" v-model="dialogImg.isShow">
             <el-form>
                 <el-form-item label="图片名称">
-                    <el-input @keyup.enter.native="dialogImg.confirmFn" v-model="dialogImg.model.name" auto-complete="off"></el-input>
+                    <el-input @keyup.enter.native="dialogImg.confirmFn" v-model="dialogImg.model.name"
+                              auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -185,10 +186,12 @@
                 })
             },
             // 图片上传完毕之后的逻辑
-            uploadImgSucc (res) {
-                xmview.showTip('success', '上传成功')
-                this.fetchData()
+            uploadImg () {
             },
+            // 图片上传完毕
+            uploadImgSucc (ret) {
+                console.info(ret)
+            }
         },
         components: {UploadFile}
     }

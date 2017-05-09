@@ -49,6 +49,7 @@ class IMService {
         return api.put(url, {articles: JSON.stringify(arrParam)})
     }
 
+    // 图文和图片列表的图片上传url
     getNewsUploadImgUrl () {
         return `${urlPre}/media/image/upload`
     }

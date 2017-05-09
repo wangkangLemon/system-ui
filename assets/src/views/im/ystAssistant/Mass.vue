@@ -59,6 +59,7 @@
                     </section>
                 </article>
 
+                <!--// 图片消息-->
                 <!--<el-tabs v-model="fetchParamSend.type" type="border-card">-->
                 <el-tabs v-model="fetchParamSend.type">
                     <el-tab-pane name="news">
@@ -94,11 +95,15 @@
                                 <br>
                                 <h5>从图片库中选择</h5>
                             </section>
-                            <router-link :to="{name:'im-ystAssistant-materialmanage'}" tag="section">
+                            <section @click="$refs.uploadImg.choose()" v-loading="loadingUploadimg">
                                 <div>+</div>
                                 <br>
                                 <h5>上传图片</h5>
-                            </router-link>
+
+                                <UploadFile accept="image/*" ref="uploadImg" v-show="false" :url='uploadImgUrl'
+                                            :onProgress="()=>loadingUploadimg=true"
+                                            :on-success="uploadImgSucc"></UploadFile>
+                            </section>
                         </article>
                         <img :src="currImg.thumb_url | fillImgPath" title="加载失败" v-else>
                     </el-tab-pane>
@@ -148,6 +153,7 @@
     import ImgList from './components/ImgList.vue'
     import NewsInfo from './components/NewsInfo.vue' // 图文消息的展示
     import SendedList from './components/SendedList.vue'
+    import UploadFile from '../../component/upload/UploadFiles.vue'
 
     export default{
         data () {
@@ -168,10 +174,13 @@
                 currNewsInfo: void 0,
                 currImg: void 0,
                 isSending: false, // 是否正在群发中
+                uploadImgUrl: void 0, // 图片上传的url
+                loadingUploadimg: false, // 上传图片中
             }
         },
         created () {
             xmview.setContentLoading(false)
+            this.uploadImgUrl = imService.getNewsUploadImgUrl()
         },
         activated () {
             xmview.setContentLoading(false)
@@ -206,7 +215,8 @@
                     this.$refs.imglist.fetchData()
                 })
             },
-            send (type = 0) { // 0- 群发 1-预览
+            // 0- 群发 1 - 预览
+            send (type = 0) {
                 // 群发图文
                 if (this.fetchParamSend.type === 'text') {
                     if (!this.fetchParamSend.text) {
@@ -242,8 +252,16 @@
                     })
                 }
             },
+            // 图片上传完毕回调
+            uploadImgSucc (ret) {
+                this.fetchParamSend.type = 'image'
+                this.fetchParamSend.media_id = ret.data.id
+                this.currImg = this.currImg || {}
+                this.currImg.thumb_url = ret.data.thumb
+                this.loadingUploadimg = false
+            }
         },
-        components: {MaterialList, ImgList, NewsInfo, SendedList}
+        components: {MaterialList, ImgList, NewsInfo, SendedList, UploadFile}
     }
 
     function getOrignFetchParamSend () {
