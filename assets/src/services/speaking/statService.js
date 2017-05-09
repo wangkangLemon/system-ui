@@ -35,5 +35,20 @@ class SpeakingStatService {
             return ret.data
         })
     }
+
+    // 企业统计查询
+    companySearch ({store_id, date, page, page_size}) {
+        let finalUrl = `${urlPre}/com/search`
+        return api.get(finalUrl, {store_id, date, page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 企业下药我说统计查询
+    companySpeakingSearch ({store_id, speaking_id, date, page, page_size}) {
+        let finalUrl = `${urlPre}/com/${store_id}/speaking/search`
+        return api.get(finalUrl, {speaking_id, date, page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 export default new SpeakingStatService()

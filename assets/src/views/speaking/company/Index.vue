@@ -31,9 +31,20 @@
         <el-button type="warning" class="export"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
         <article class="tab-container">
             <section class="search">
-                <section>
+                <!--统计连锁----------------------------------------->
+                <section v-if="type == 0">
+                    <i>连锁</i>
+                    <IndustrySelect :type="2" v-model="search.store_id"
+                                    v-on:change="val=>search.store_id=val"
+                                    :change="getData">
+                    </IndustrySelect>
+                </section>
+                <section v-if="type == 1">
                     <i>标题</i>
-                    <el-input v-model="search.title" @change="getData"></el-input>
+                    <SpeakingSelect v-model="search.speaking_id"
+                                    v-on:change="val=>search.speaking_id=val"
+                                    :change="getData">
+                    </SpeakingSelect>
                 </section>
                 <section>
                     <i>状态</i>
@@ -44,8 +55,14 @@
                 </section>
             </section>
             <el-table :data="tableData" border v-loading="loading">
-                <el-table-column label="标题" prop="speaking_company_name" min-width="180"></el-table-column>
-                <el-table-column label="内容" prop="speaking_content" min-width="200"></el-table-column>
+                <el-table-column v-if="!type" label="连锁" prop="speaking_company_name" min-width="180">
+                    <template scope="scope">
+                        <el-button type="text" @click="$router.push({name: 'speaking-company-index', query: {type: 1, store_id: scope.row.store_id}})">{{scope.row.speaking_company_name}}</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column v-if="!type" label="药我说条数" prop="speaking_content" width="120"></el-table-column>
+                <el-table-column v-if="type" label="标题" prop="speaking_company_name" min-width="180"></el-table-column>
+                <el-table-column v-if="type" label="内容" prop="speaking_content" min-width="200"></el-table-column>
                 <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
                 <el-table-column label="未练习人数" prop="no_speaking_user_num" width="120"></el-table-column>
                 <el-table-column label="满分人数" prop="high_score_num" width="100"></el-table-column>
@@ -64,14 +81,23 @@
     </article>
 </template>
 <script>
+    import IndustrySelect from '../../component/select/IndustryCompany.vue'
+    import SpeakingSelect from '../../component/select/Speaking.vue'
+    import speakingService from '../../../services/speaking/statService'
     export default {
+        components: {
+            IndustrySelect,
+            SpeakingSelect
+        },
         data () {
             return {
+                type: 0,
                 loading: false,
                 search: {
                     date: 'yesterday',
-                    title: '',
-                    status: ''
+                    speaking_id: '',
+                    status: '',
+                    store_id: ''
                 },
                 tableData: [],
                 total: 0,
@@ -80,11 +106,17 @@
             }
         },
         activated () {
-            xmview.setContentLoading(false)
+            this.type = parseInt(this.$route.query.type) || 0
+            this.search.store_id = this.$route.query.store_id
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             getData () {
-                console.log(1)
+                let p
+                p = this.type ? speakingService.companySpeakingSearch(this.search) : speakingService.companySearch(this.search)
+                return p
             }
         }
     }

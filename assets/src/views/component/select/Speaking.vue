@@ -1,5 +1,5 @@
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :list="list" v-model="currVal">
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData">
     </SelectScroll>
 </template>
 
@@ -7,36 +7,39 @@
     import speakingService from '../../../services/speaking/contentService'
     import SelectScroll from '../../component/form/TitleSelectScroll.vue'
     export default{
-        props: ['value', 'change', 'list'],
+        props: {
+            value: [String, Number],
+            change: Function
+        },
         components: {
             SelectScroll
         },
         data () {
             return {
                 currVal: this.value,
-                pageSize: 10
+                pageSize: 20
             }
         },
         watch: {
             'value'(val, oldValue) {
-                if (this.curVal == val) return
-                this.currVal = val
+                this.setCurrentValue(val)
             },
         },
         methods: {
             handleChange(val) {
-                this.currVal = val
-                this.$emit('change', val)
-                this.$emit('input', val)
+                this.setCurrentValue(val)
                 this.change && this.change()
             },
             fetchData (val, length) {
                 let keyword = val
                 let page = parseInt(length / this.pageSize) + 1
-                return speakingService.search({keyword: keyword, page: page, page_size: this.pageSize, sender_type: 'system'}).then((ret) => {
-                    this.$emit('changeList', ret.data)
-                    return ret
-                })
+                return speakingService.search({keyword, page, page_size: this.pageSize})
+            },
+            setCurrentValue (val) {
+                if (this.curVal == val) return
+                this.currVal = val
+                this.$emit('input', val)
+                this.$emit('change', val)
             }
         }
     }
