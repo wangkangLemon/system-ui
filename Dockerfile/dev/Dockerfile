@@ -12,13 +12,12 @@ RUN mkdir -p /node/src/git.vodjk.com/yst \
 
 ADD "http://192.168.40.231/yst/system-ui.atom?private_token=7XxYJqdG_LGy7poftisV" git.vodjk.com/yst/
 
-RUN cd /node/src/git.vodjk.com/yst/system-ui/assets \
-    && cp config/config.js.default config/config.js \
-    && yarn install
-
 RUN cd /node/src/git.vodjk.com/yst/system-ui \
     && git checkout develop \
-    && git pull origin develop \
+    && git pull origin develop 
+
+RUN cd /node/src/git.vodjk.com/yst/system-ui/assets \
+    && cp config/config.js.default config/config.js \
     && yarn install
 
 ADD entrypoint.sh /
