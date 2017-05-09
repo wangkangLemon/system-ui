@@ -44,12 +44,12 @@
                 </section>
             </section>
             <el-table :data="tableData" border v-loading="loading">
-                <el-table-column label="标题" prop="title" min-width="180"></el-table-column>
-                <el-table-column label="内容" prop="content" min-width="200"></el-table-column>
-                <el-table-column label="练习人数" prop="testing" width="100"></el-table-column>
-                <el-table-column label="未练习人数" prop="no-testing" width="120"></el-table-column>
-                <el-table-column label="满分人数" prop="no-testing" width="100"></el-table-column>
-                <el-table-column label="满分率" prop="no-testing" width="100"></el-table-column>
+                <el-table-column label="标题" prop="speaking_company_name" min-width="180"></el-table-column>
+                <el-table-column label="内容" prop="speaking_content" min-width="200"></el-table-column>
+                <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
+                <el-table-column label="未练习人数" prop="no_speaking_user_num" width="120"></el-table-column>
+                <el-table-column label="满分人数" prop="high_score_num" width="100"></el-table-column>
+                <el-table-column label="满分率" prop="high_score_rate" width="100"></el-table-column>
             </el-table>
             <el-pagination class="pagin"
                            @size-change="val => {page_size = val; getData() }"
