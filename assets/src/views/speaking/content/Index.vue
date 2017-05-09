@@ -53,8 +53,8 @@
             <el-table-column prop="content" label="内容"></el-table-column>
             <el-table-column width="100" prop="price_enabled" label="有无红包">
                 <template scope="scope">
-                    <span v-if="scope.row.price_enabled == 1">有</span>
-                    <span v-else>无</span>
+                    <el-tag type="success" v-if="scope.row.price_enabled">有</el-tag>
+                    <el-tag type="gray" v-else>无</el-tag>
                 </template>
             </el-table-column>
             <el-table-column width="100" label="状态">
