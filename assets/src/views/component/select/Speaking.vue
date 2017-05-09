@@ -33,7 +33,7 @@
             fetchData (val, length) {
                 let keyword = val
                 let page = parseInt(length / this.pageSize) + 1
-                return speakingService.search({keyword: keyword, page: page, page_size: this.pageSize}).then((ret) => {
+                return speakingService.search({keyword: keyword, page: page, page_size: this.pageSize, sender_type: 'system'}).then((ret) => {
                     this.$emit('changeList', ret.data)
                     return ret
                 })
