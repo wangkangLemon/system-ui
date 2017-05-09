@@ -49,10 +49,11 @@
             </el-form-item>
             <el-form-item prop="price_company_id" label="红包赞助工业">
                 <!--<CompanySelect v-model="form.price_company_id"-->
-                               <!--:placeholder="form.price_company_name"-->
-                               <!--:disabled="!form.price_enabled"></CompanySelect>-->
+                <!--:placeholder="form.price_company_name"-->
+                <!--:disabled="!form.price_enabled"></CompanySelect>-->
 
-                <IndustryCompanySelect v-model="form.price_company_id" :type="1" :placeholder="form.price_company_name" :disabled="!form.price_enabled">
+                <IndustryCompanySelect v-model="form.price_company_id" :type="1" :placeholder="form.price_company_name"
+                                       :disabled="!form.price_enabled">
                 </IndustryCompanySelect>
             </el-form-item>
             <el-form-item label="红包设置">
@@ -82,6 +83,7 @@
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import speakingContentService from '../../../services/speaking/contentService'
+    import * as timeUtls from '../../../utils/timeUtils'
 
     export default{
         name: 'speaking-content-add',
@@ -173,6 +175,8 @@
                     if (this.form.id) {
                         reqFn = speakingContentService.updateSpeaking
                     }
+
+                    this.form.end_time = timeUtls.date2Str(this.form.end_time)
                     reqFn(this.form).then((ret) => {
                         xmview.showTip('success', '保存成功')
                         this.$router.back()
