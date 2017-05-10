@@ -105,7 +105,7 @@
                                             :on-success="uploadImgSucc"></UploadFile>
                             </section>
                         </article>
-                        <img :src="currImg.thumb_url | fillImgPath" title="加载失败" v-else>
+                        <img :src="currImg.thumb_url" title="加载失败" v-else>
                     </el-tab-pane>
                 </el-tabs>
 

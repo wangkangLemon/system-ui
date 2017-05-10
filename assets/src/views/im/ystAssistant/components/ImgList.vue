@@ -49,7 +49,7 @@
             <el-table-column label="标题">
                 <template scope="scope">
                     <article class="material-title">
-                        <img :src="scope.row.thumb_url | fillImgPath">
+                        <img :src="scope.row.thumb_url">
                         <section>
                             <div v-text="scope.row.name"></div>
                         </section>

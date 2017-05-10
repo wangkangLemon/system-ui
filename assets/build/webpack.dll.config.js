@@ -20,7 +20,7 @@ const vendors = [
 
 module.exports = {
     output: {
-        path: './public',
+        path: path.resolve('./public'),
         filename: '[name].js',
         library: '[name]',
     },
