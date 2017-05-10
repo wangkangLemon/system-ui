@@ -48,7 +48,7 @@
                 </section>
                 <section>
                     <i>状态</i>
-                    <el-select @change="getData" v-model="search.status">
+                    <el-select @change="getData" clearable v-model="search.status">
                         <el-option label="全部" :value="-1"></el-option>
                         <el-option label="正常" :value="0"></el-option>
                         <el-option label="下线" :value="2"></el-option>
@@ -58,7 +58,7 @@
             <el-table :data="tableData" border v-loading="loading">
                 <el-table-column v-if="!type" label="连锁" prop="company_name" min-width="180">
                     <template scope="scope">
-                        <el-button type="text" @click="$router.push({name: 'speaking-company-index', query: {type: 1, store_id: scope.row.store_id}})">{{scope.row.company_name}}</el-button>
+                        <el-button type="text" @click="$router.push({name: 'speaking-company-index', query: {type: 1, store_id: scope.row.company_id}})">{{scope.row.company_name}}</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column v-if="!type" label="药我说条数" prop="speaking_count" width="120"></el-table-column>
@@ -97,7 +97,7 @@
                 search: {
                     date: 'yesterday',
                     speaking_id: '',
-                    status: '-1',
+                    status: -1,
                     store_id: ''
                 },
                 tableData: [],
@@ -106,12 +106,17 @@
                 page: 1
             }
         },
+        watch: {
+            '$route' () {
+                this.type = parseInt(this.$route.query.type) || 0
+                this.search.store_id = this.$route.query.store_id
+                this.search.status = -1
+                this.getData()
+                xmview.setContentBack(this.type > 0)
+            }
+        },
         activated () {
-            this.type = parseInt(this.$route.query.type) || 0
-            this.search.store_id = this.$route.query.store_id
-            this.getData().then(() => {
-                xmview.setContentLoading(false)
-            })
+            this.getData()
         },
         methods: {
             getData () {
@@ -122,6 +127,7 @@
                     this.tableData = ret.data
                     this.total = this.total
                     this.loading = false
+                    xmview.setContentLoading(false)
                 })
                 return p
             }

@@ -44,9 +44,9 @@ class SpeakingStatService {
         })
     }
     // 企业下药我说统计查询
-    companySpeakingSearch ({store_id, speaking_id, date, page, page_size}) {
+    companySpeakingSearch ({store_id, status, speaking_id, date, page, page_size}) {
         let finalUrl = `${urlPre}/com/${store_id}/speaking/search`
-        return api.get(finalUrl, {speaking_id, date, page, page_size}).then((ret) => {
+        return api.get(finalUrl, {speaking_id, status, date, page, page_size}).then((ret) => {
             return ret.data
         })
     }

@@ -67,13 +67,13 @@
                     <i>店员</i>
                     <UserSelect v-model="search.user_id" :change="getData"></UserSelect>
                 </section>
-                <section  v-if="type == 3">
-                    <i>有无练习</i>
-                    <el-select v-model="search.is_test" @change="getData">
-                        <el-option label="有" :value="1"></el-option>
-                        <el-option label="无" :value="0"></el-option>
-                    </el-select>
-                </section>
+                <!--<section  v-if="type == 3">-->
+                    <!--<i>有无练习</i>-->
+                    <!--<el-select v-model="search.is_test" @change="getData">-->
+                        <!--<el-option label="有" :value="1"></el-option>-->
+                        <!--<el-option label="无" :value="0"></el-option>-->
+                    <!--</el-select>-->
+                <!--</section>-->
             </section>
             <el-table v-if="type == 0 || type == 1 || type == 2" :data="tableData" border v-loading="loading">
                 <el-table-column v-if="type == 0" label="标题" prop="speaking_company_name" min-width="180">
