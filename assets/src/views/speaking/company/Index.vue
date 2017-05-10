@@ -60,7 +60,7 @@
                         <el-button type="text" @click="$router.push({name: 'speaking-company-index', query: {type: 1, store_id: scope.row.store_id}})">{{scope.row.speaking_company_name}}</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="!type" label="药我说条数" prop="speaking_content" width="120"></el-table-column>
+                <el-table-column v-if="!type" label="药我说条数" prop="speaking_count" width="120"></el-table-column>
                 <el-table-column v-if="type" label="标题" prop="speaking_company_name" min-width="180"></el-table-column>
                 <el-table-column v-if="type" label="内容" prop="speaking_content" min-width="200"></el-table-column>
                 <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
@@ -114,8 +114,14 @@
         },
         methods: {
             getData () {
+                this.loading = true
                 let p
                 p = this.type ? speakingService.companySpeakingSearch(this.search) : speakingService.companySearch(this.search)
+                p.then((ret) => {
+                    this.tableData = ret.data
+                    this.total = this.total
+                    this.loading = false
+                })
                 return p
             }
         }
