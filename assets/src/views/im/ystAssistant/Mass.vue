@@ -255,9 +255,9 @@
             // 图片上传完毕回调
             uploadImgSucc (ret) {
                 this.fetchParamSend.type = 'image'
-                this.fetchParamSend.media_id = ret.data.id
                 this.currImg = this.currImg || {}
                 this.currImg.thumb_url = ret.data.thumb
+                this.currImg.id = ret.data.id
                 this.loadingUploadimg = false
             }
         },
