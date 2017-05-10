@@ -3,6 +3,9 @@
 <!--<SelectScroll :changeCb="handleChange" :requestCb="fetchData" v-model="value">-->
 <!--</SelectScroll>-->
 <style lang='scss' rel='stylesheet/scss'>
+    .el-scrollbar {
+        width: 215px;
+    }
     .component-form-selectscroll-more {
         color: #50bfff;
         cursor: pointer;
