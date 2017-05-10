@@ -55,9 +55,9 @@
                 </section>
             </section>
             <el-table :data="tableData" border v-loading="loading">
-                <el-table-column v-if="!type" label="连锁" prop="speaking_company_name" min-width="180">
+                <el-table-column v-if="!type" label="连锁" prop="company_name" min-width="180">
                     <template scope="scope">
-                        <el-button type="text" @click="$router.push({name: 'speaking-company-index', query: {type: 1, store_id: scope.row.store_id}})">{{scope.row.speaking_company_name}}</el-button>
+                        <el-button type="text" @click="$router.push({name: 'speaking-company-index', query: {type: 1, store_id: scope.row.store_id}})">{{scope.row.company_name}}</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column v-if="!type" label="药我说条数" prop="speaking_count" width="120"></el-table-column>
