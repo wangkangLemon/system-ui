@@ -37,9 +37,9 @@ class SpeakingStatService {
     }
 
     // 企业统计查询
-    companySearch ({store_id, date, page, page_size}) {
+    companySearch ({store_id, status, date, page, page_size}) {
         let finalUrl = `${urlPre}/com/search`
-        return api.get(finalUrl, {store_id, date, page, page_size}).then((ret) => {
+        return api.get(finalUrl, {store_id, status, date, page, page_size}).then((ret) => {
             return ret.data
         })
     }

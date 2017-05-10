@@ -49,7 +49,8 @@
                 <section>
                     <i>状态</i>
                     <el-select @change="getData" v-model="search.status">
-                        <el-option label="正常" :value="1"></el-option>
+                        <el-option label="全部" :value="-1"></el-option>
+                        <el-option label="正常" :value="0"></el-option>
                         <el-option label="下线" :value="2"></el-option>
                     </el-select>
                 </section>
@@ -96,7 +97,7 @@
                 search: {
                     date: 'yesterday',
                     speaking_id: '',
-                    status: '',
+                    status: '-1',
                     store_id: ''
                 },
                 tableData: [],
