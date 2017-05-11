@@ -77,12 +77,18 @@
             </section>
             <el-table v-if="type == 0 || type == 1 || type == 2" :data="tableData" border v-loading="loading">
                 <el-table-column v-if="type == 0" label="标题" prop="speaking_name" min-width="180">
-                    <el-button type="text"
-                               @click="$router.push({name: 'speaking-system-index', query: {type: 1, speaking_id: scope.row.speaking_id}})"></el-button>
+                    <template scope="scope">
+                        <el-button type="text"
+                                   @click="$router.push({name: 'speaking-system-index', query: {type: 1, speaking_id: scope.row.speaking_id}})">{{scope.row.speaking_name}}</el-button>
+                    </template>
                 </el-table-column>
-                <el-table-column v-if="type == 1 || type == 2" :label="type == 1 ? '连锁' : '门店'" prop="speaking_company_name" min-width="180">
-                    <el-button type="text"
-                               @click="$router.push({name: 'speaking-system-index', query: {type: type+1, speaking_id: scope.row.speaking_id, company_id: scope.row.company_id, department_id: scope.row.department_id}})"></el-button>
+                <el-table-column v-if="type == 1 || type == 2" :label="type == 1 ? '连锁' : '门店'" prop="name" min-width="180">
+                    <template scope="scope">
+                        <el-button type="text"
+                                   @click="$router.push({name: 'speaking-system-index', query: {type: type+1, speaking_id: scope.row.speaking_id, company_id: scope.row.company_id, department_id: scope.row.department_id}})">
+                            {{type == 1 ? scope.row.company_name : scope.row.department_name}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column v-if="type == 1 || type == 2" label="未练习人数" prop="no_speaking_user_num" width="120"></el-table-column>
                 <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
@@ -92,7 +98,7 @@
             </el-table>
             <el-table v-if="type == 3" :data="tableData" border v-loading="loading">
                 1
-                <el-table-column label="员工姓名" prop="name" width="120"></el-table-column>
+                <el-table-column label="员工姓名" prop="name" width="150"></el-table-column>
                 <el-table-column label="职务" prop="job" width="100"></el-table-column>
                 <el-table-column label="门店" prop="department_name" min-width="180"></el-table-column>
                 <el-table-column label="练习次数" prop="speaking_times" width="100"></el-table-column>
@@ -143,14 +149,18 @@
                 page: 1
             }
         },
+        watch: {
+            '$route' () {
+                this.type = parseInt(this.$route.query.type) || 0
+                this.search.speaking_id = this.$route.query.speaking_id
+                this.search.company_id = this.$route.query.company_id
+                this.search.department_id = this.$route.query.department_id
+                this.getData()
+                xmview.setContentBack(this.type > 0)
+            }
+        },
         activated () {
-            this.type = parseInt(this.$route.query.type) || 0
-            this.search.speaking_id = this.$route.query.speaking_id
-            this.search.company_id = this.$route.query.company_id
-            this.search.department_id = this.$route.query.department_id
-            this.getData().then(() => {
-                xmview.setContentLoading(false)
-            })
+            this.getData()
         },
         methods: {
             getData () {
@@ -164,6 +174,7 @@
                     this.total = ret.total
                     this.tableData = ret.data
                     this.loading = false
+                    xmview.setContentLoading(false)
                 })
                 return p
             }
