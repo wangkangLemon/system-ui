@@ -76,7 +76,7 @@
                 <!--</section>-->
             </section>
             <el-table v-if="type == 0 || type == 1 || type == 2" :data="tableData" border v-loading="loading">
-                <el-table-column v-if="type == 0" label="标题" prop="speaking_company_name" min-width="180">
+                <el-table-column v-if="type == 0" label="标题" prop="speaking_name" min-width="180">
                     <el-button type="text"
                                @click="$router.push({name: 'speaking-system-index', query: {type: 1, speaking_id: scope.row.speaking_id}})"></el-button>
                 </el-table-column>
