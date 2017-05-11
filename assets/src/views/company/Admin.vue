@@ -162,7 +162,6 @@
                 callback()
             }
             return {
-                category: this.$route.query.category,
                 loading: false,
                 // 查看店员详情
                 clerkDetail: {
@@ -216,6 +215,9 @@
         computed: {
             companyID () {
                 return this.$route.params.company_id
+            },
+            category () {
+                return parseInt(this.$route.query.category)
             }
         },
         created () {
