@@ -125,7 +125,7 @@
                 p = this.type ? speakingService.companySpeakingSearch(this.search) : speakingService.companySearch(this.search)
                 p.then((ret) => {
                     this.tableData = ret.data
-                    this.total = this.total
+                    this.total = ret.total
                     this.loading = false
                     xmview.setContentLoading(false)
                 })
