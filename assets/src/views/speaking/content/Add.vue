@@ -56,12 +56,12 @@
                                        :disabled="!form.price_enabled">
                 </IndustryCompanySelect>
             </el-form-item>
-            <el-form-item label="赞助企业账户余额">
+            <el-form-item label="赞助企业余额">
                 <el-tag type="primary">{{this.balance}} 元</el-tag>
             </el-form-item>
-            <el-form-item label="红包设置">
+            <!--el-form-item label="红包设置">
                 <span style="color: red">*为药我说添加红包可在下面填写，不填写默认为不添加红包，药我说满分后用户可领取该红包</span>
-            </el-form-item>
+            </el-form-item-->
             <el-form-item prop="price_total" label="总额预算">
                 <el-input-number v-model="form.price_total" auto-complete="off"
                                  :disabled="!form.price_enabled"></el-input-number>
