@@ -169,7 +169,7 @@ router.afterEach((route) => {
 
 router.beforeEach((to, from, next) => {
     // 如果需要登录
-    if (!to.matched.some(record => record.meta.notAuth) && (!authUtils.getUserInfo() || !authUtils.getAuthToken() || !authUtils.getTwiceToken())) {
+    if (!to.matched.some(record => record.meta.notAuth) && (!authUtils.getUserInfo() || !authUtils.getAuthToken())) {
         xmview.showTip('error', '未登录或登录已超时, 请重新登录!')
         next({name: 'login'})
         return
