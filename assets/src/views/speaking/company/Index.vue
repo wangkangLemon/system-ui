@@ -62,8 +62,8 @@
                     </template>
                 </el-table-column>
                 <el-table-column v-if="!type" label="药我说条数" prop="speaking_count" width="120"></el-table-column>
-                <el-table-column v-if="type" label="标题" prop="speaking_company_name" min-width="180"></el-table-column>
-                <el-table-column v-if="type" label="内容" prop="speaking_content" min-width="200"></el-table-column>
+                <el-table-column v-if="type" label="标题" prop="speaking_name" min-width="180"></el-table-column>
+                <el-table-column v-if="type" label="内容" prop="content" min-width="200"></el-table-column>
                 <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
                 <el-table-column label="未练习人数" prop="no_speaking_user_num" width="120"></el-table-column>
                 <el-table-column label="满分人数" prop="high_score_num" width="100"></el-table-column>
