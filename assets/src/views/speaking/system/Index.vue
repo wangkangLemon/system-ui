@@ -105,10 +105,10 @@
                 <el-table-column label="最高分数" prop="high_score" width="100"></el-table-column>
             </el-table>
             <el-pagination class="pagin"
-                           @size-change="val => {page_size = val; getData() }"
-                           @current-change="val => {page = val; getData() }"
-                           :current-page="page"
-                           :page-size="page_size"
+                           @size-change="val => {search.page_size = val; getData() }"
+                           @current-change="val => {search.page = val; getData() }"
+                           :current-page="search.page"
+                           :page-size="search.page_size"
                            :page-sizes="[15, 30, 60, 100]"
                            layout="sizes,total, prev, pager, next"
                            :total="total">
@@ -141,16 +141,17 @@
                     company_id: '',
                     department_id: '',
                     user_id: '', // 店员
-                    is_test: '' // 有无练习
+                    is_test: '', // 有无练习
+                    page_size: 15,
+                    page: 1
                 },
                 tableData: [],
-                total: 0,
-                page_size: 15,
-                page: 1
+                total: 0
             }
         },
         watch: {
             '$route' () {
+                if (this.$route.name != 'speaking-system-index') return
                 this.type = parseInt(this.$route.query.type) || 0
                 this.search.speaking_id = this.$route.query.speaking_id
                 this.search.company_id = this.$route.query.company_id
@@ -160,6 +161,7 @@
             }
         },
         activated () {
+            this.search.date = 'yesterday'
             this.getData()
         },
         methods: {

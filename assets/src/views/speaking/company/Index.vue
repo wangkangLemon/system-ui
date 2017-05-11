@@ -70,10 +70,10 @@
                 <el-table-column label="满分率" prop="high_score_rate" width="100"></el-table-column>
             </el-table>
             <el-pagination class="pagin"
-                           @size-change="val => {page_size = val; getData() }"
-                           @current-change="val => {page = val; getData() }"
-                           :current-page="page"
-                           :page-size="page_size"
+                           @size-change="val => {search.page_size = val; getData() }"
+                           @current-change="val => {search.page = val; getData() }"
+                           :current-page="search.page"
+                           :page-size="search.page_size"
                            :page-sizes="[15, 30, 60, 100]"
                            layout="sizes,total, prev, pager, next"
                            :total="total">
@@ -98,16 +98,17 @@
                     date: 'yesterday',
                     speaking_id: '',
                     status: -1,
-                    store_id: ''
+                    store_id: '',
+                    page_size: 15,
+                    page: 1
                 },
                 tableData: [],
-                total: 0,
-                page_size: 15,
-                page: 1
+                total: 0
             }
         },
         watch: {
             '$route' () {
+                if (this.$route.name != 'speaking-company-index') return
                 this.type = parseInt(this.$route.query.type) || 0
                 this.search.store_id = this.$route.query.store_id
                 this.search.status = -1
@@ -116,6 +117,7 @@
             }
         },
         activated () {
+            this.search.date = 'yesterday'
             this.getData()
         },
         methods: {
