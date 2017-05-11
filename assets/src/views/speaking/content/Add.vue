@@ -22,7 +22,7 @@
     <article id="speaking-content-addspeaking">
         <el-form :model="form" :rules="rules" label-position="right" ref="form" label-width="120px" style="width: 60%">
             <el-form-item prop="title" label="标题">
-                <el-input v-model="form.title" auto-complete="off"></el-input>
+                <el-input v-model="form.title" auto-complete="off" maxlength="15"></el-input>
             </el-form-item>
             <el-form-item prop="content" label="内容">
                 <el-input v-model="form.content" auto-complete="off" :rows="6" type="textarea"></el-input>
