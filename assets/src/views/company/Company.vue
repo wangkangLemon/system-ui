@@ -220,7 +220,7 @@
                 })
             },
             adminPage (index, item) {
-                this.$router.push({name: 'company-admin', params: {company_id: item.id || 1}})
+                this.$router.push({name: 'company-admin', params: {company_id: item.id || 1}, query: {category: item.category}})
             },
             // 添加
             add () {

@@ -49,7 +49,7 @@
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
-                <el-form-item prop="department_id" label="门店" :label-width="formLabelWidth">
+                <el-form-item v-if="category == 2" prop="department_id" label="门店" :label-width="formLabelWidth">
                     <departmentSelect :type="companyID" v-model="form.department_id"
                     v-on:change="val=>form.department_id = val">
                     </departmentSelect>
@@ -162,6 +162,7 @@
                 callback()
             }
             return {
+                category: this.$route.query.category,
                 loading: false,
                 // 查看店员详情
                 clerkDetail: {
