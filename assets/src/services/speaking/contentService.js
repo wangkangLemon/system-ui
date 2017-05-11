@@ -55,6 +55,12 @@ class SpeakingContentService {
         let finalUrl = `${urlPre}/${id}`
         return api.put(finalUrl, {id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status})
     }
+
+    // 根据红包赞助企业的ID获取该企业的账户余额
+    getBalanceByCompantID ({company_id}) {
+        let finalUrl = config.apiHost + '/sys/money/company/balance'
+        return api.get(finalUrl, {company_id})
+    }
 }
 
 export default new SpeakingContentService()

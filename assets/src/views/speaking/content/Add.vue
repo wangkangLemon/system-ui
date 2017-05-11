@@ -56,6 +56,9 @@
                                        :disabled="!form.price_enabled">
                 </IndustryCompanySelect>
             </el-form-item>
+            <el-form-item label="赞助企业账户余额">
+                <el-tag type="primary">{{this.balance}} 元</el-tag>
+            </el-form-item>
             <el-form-item label="红包设置">
                 <span style="color: red">*为药我说添加红包可在下面填写，不填写默认为不添加红包，药我说满分后用户可领取该红包</span>
             </el-form-item>
@@ -121,6 +124,7 @@
                     isShow: false,
                     keyword: void 0,
                 },
+                balance: 0, // 账户余额
             }
         },
         watch: {
@@ -136,6 +140,9 @@
                     delete this.rules.price_company_id
                     this.form.price_company_id = this.form.price_total = this.form.price = this.form.price_float = this.form.price_company_name = void 0
                 }
+            },
+            'form.price_company_id' (val) {
+                this.getbalance(val)
             }
         },
         created () {
@@ -161,6 +168,15 @@
                 }).then((ret) => {
                     xmview.showTip('success', '上传成功')
                     this.form.image = ret.data.url // 显示图片
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
+            },
+            getbalance(data) {
+                speakingContentService.getBalanceByCompantID({
+                    company_id: data
+                }).then((ret) => {
+                    this.balance = ret.data.balance
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
                 })
