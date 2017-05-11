@@ -31,7 +31,7 @@
                 <div class="img-wrap" v-if="form.image">
                     <img :src="form.image | fillImgPath" alt=""/>
                 </div>
-                <ImagEcropperInput :isRound="false" :aspectRatio="16/9" :confirmFn="cropperFn"
+                <ImagEcropperInput :isRound="false" :aspectRatio="2/1" :confirmFn="cropperFn"
                                    class="upload-btn"></ImagEcropperInput>
             </el-form-item>
             <el-form-item prop="end_time" label="截止日期">
