@@ -161,7 +161,11 @@
             }
         },
         activated () {
-            this.search.date = 'yesterday'
+            this.type = parseInt(this.$route.query.type) || 0
+            this.search.speaking_id = this.$route.query.speaking_id
+            this.search.company_id = this.$route.query.company_id
+            this.search.department_id = this.$route.query.department_id
+            this.search.page = 1
             this.getData()
         },
         methods: {

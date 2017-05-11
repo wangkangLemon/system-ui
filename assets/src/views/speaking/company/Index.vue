@@ -117,7 +117,10 @@
             }
         },
         activated () {
-            this.search.date = 'yesterday'
+            this.type = parseInt(this.$route.query.type) || 0
+            this.search.store_id = this.$route.query.store_id
+            this.search.status = -1
+            this.search.page = 1
             this.getData()
         },
         methods: {
