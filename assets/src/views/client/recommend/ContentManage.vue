@@ -298,7 +298,7 @@
                             label="日期"
                             width="120">
                         <template scope="scope">
-                            {{scope.row.date && scope.row.date.slice(0, 10)}}
+                            {{scope.row.create_time_name && scope.row.create_time_name.slice(0, 10)}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="operate" label="操作" width="100">
