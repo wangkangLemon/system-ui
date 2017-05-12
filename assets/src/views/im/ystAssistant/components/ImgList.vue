@@ -81,8 +81,8 @@
         </el-table>
 
         <el-pagination class="pagin"
-                       @size-change="val => paramImgs.page_size = val "
-                       @current-change="val => paramImgs.page = val"
+                       @size-change="val => {paramImgs.page_size = val; fetchData()}"
+                       @current-change="val => {paramImgs.page = val; fetchData()}"
                        :current-page="paramImgs.page"
                        :page-size="paramImgs.page_size"
                        :page-sizes="[15, 30, 60, 100]"
