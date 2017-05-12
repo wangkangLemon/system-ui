@@ -88,7 +88,11 @@
                 <el-input v-if="form.model_id == 20" v-model="form.model_value" placeholder="请以http://或https://开头"></el-input>
                 <div class="chooseCourse" v-if="form.model_id == 5">
                     <el-button type="primary" @click="course.isShow = true">选取课程</el-button>
-                    <div v-if="course.currCourse != null"><span>已关联课程：{{course.currCourse.name}}</span><el-button @click="course.currCourse = null">清除</el-button></div>
+                    <div v-if="course.currCourse != null"><span>已关联课程：{{course.currCourse.name}}</span><el-button @click="speaking.currentData = null">清除</el-button></div>
+                </div>
+                <div class="chooseCourse" v-if="form.model_id == 9">
+                    <el-button type="primary" @click="speaking.isShow = true">选取药我说</el-button>
+                    <div v-if="speaking.currentData != null"><span>已关联药我说：{{speaking.currentData.title}}</span><el-button @click="speaking.currentData = null">清除</el-button></div>
                 </div>
             </el-form-item>
             <div class="part2">
@@ -142,24 +146,31 @@
             </div>
         </el-dialog>
         <ChooseCourse v-model="course.isShow" v-on:result="courseConfirm"></ChooseCourse>
+        <ChooseSpeaking v-model="speaking.isShow" v-on:speakingResult="speakingConfirm"></ChooseSpeaking>
     </article>
 </template>
 <script>
     import treeUtils from '../../utils/treeUtils'
     import Region from '../component/select/Region.vue'
     import ChooseCourse from './component/ChooseCourse.vue'
+    import ChooseSpeaking from './component/ChooseSpeaking.vue'
     import cityData from '../../assets/city'
     import pushService from '../../services/pushService'
     export default {
         components: {
             Region,
-            ChooseCourse
+            ChooseCourse,
+            ChooseSpeaking
         },
         data () {
             return {
                 course: {
                     isShow: false,
                     currCourse: null
+                },
+                speaking: {
+                    isShow: false,
+                    currentData: null
                 },
                 newTags: [],
                 confirmDialog: false,
@@ -178,6 +189,11 @@
                         id: 3,
                         name: '链接',
                         value: 20
+                    },
+                    {
+                        id: 4,
+                        name: '药我说',
+                        value: 9
                     }
                 ],
                 platform: [ // 平台
@@ -212,6 +228,11 @@
                         id: 3,
                         name: '3.0',
                         value: '3.0'
+                    },
+                    {
+                        id: 4,
+                        name: '3.1.0',
+                        value: '3.1.0'
                     }
                 ],
                 role: [ // 发送对象
@@ -345,6 +366,11 @@
                 this.course.currCourse = course
                 this.course.isShow = false
                 this.form.model_value = course.id
+            },
+            speakingConfirm (speaking) {
+                this.speaking.currentData = speaking
+                this.speaking.isShow = false
+                this.form.model_value = speaking.id
             },
             filterID (arr, id) {
                 let name = ''

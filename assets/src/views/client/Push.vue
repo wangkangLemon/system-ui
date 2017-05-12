@@ -34,11 +34,12 @@
                 <p><i class="title">类型： </i><span class="value">{{details.ModelName}}</span></p>
                 <p v-if="details.model_id == 5"><i class="title">课程名称：</i><span class="value">{{details.Course.name}}</span></p>
                 <p v-if="details.model_id == 20"><i class="title">链接：</i><span class="value">{{details.model_value}}</span></p>
+                <p v-if="details.model_id == 9"><i class="title">药我说：</i><span class="value">{{details.Speaking.title}}</span></p>
                 <div class="hr"></div>
                 <p>
                     <i class="title">推送方式：</i>
                     <span class="value">
-                        {{details.Tags && details.Tags.length > 0 ? '条件推送' : '全局推送'}}
+                        {{details.target_type == 'TAG' ? '条件推送' : '全局推送'}}
                     </span>
                 </p>
                 <p v-if="details.devices"><i class="title">平台：</i><span class="value">{{details.devices}}</span></p>
@@ -212,6 +213,7 @@
             checkDetail (index, row) {
                 pushService.getPushDetail(row.id).then((ret) => {
                     this.details = ret.data
+                    this.details.target_type = row.target_type
                 }).then(() => {
                     this.showDetail = true
                 })

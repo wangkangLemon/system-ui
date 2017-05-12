@@ -1,10 +1,9 @@
 <style lang="scss">
-    @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
     .search {
         @extend %top-search-container;
     }
-    .chooseCourse {
+    .choose-course {
         .block {
             text-align: center !important;
             width: 50%;
@@ -15,7 +14,7 @@
 </style>
 <template>
     <article>
-        <el-dialog :show-close="false" class="chooseCourse main-container" title="选取课程" v-model="value">
+        <el-dialog :show-close="false" class="choose-course main-container" title="选取课程" v-model="value">
             <section class="search">
                 <section>
                     <i>名称</i>
