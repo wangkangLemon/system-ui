@@ -72,7 +72,7 @@
                 total: 0,
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
