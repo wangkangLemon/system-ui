@@ -148,7 +148,9 @@
                 }
             },
             'form.price_company_id' (val) {
-                this.getbalance(val)
+                if (val) {
+                    this.getbalance(val)
+                }
             }
         },
         created () {
