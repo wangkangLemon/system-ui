@@ -127,6 +127,7 @@
             // 要上传的url地址
             url: {
                 type: String,
+                default: ''
             },
             // 上传成功后的回调
             onSuccess: Function,

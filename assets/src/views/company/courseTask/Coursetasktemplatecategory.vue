@@ -160,7 +160,7 @@
                 }
             },
         },
-        created () {
+        activated () {
             xmview.setContentLoading(false)
             this.uploadImgUrl = companyService.getCategoryImageUrl()
         },
