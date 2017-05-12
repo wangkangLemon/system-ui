@@ -28,7 +28,7 @@
             <el-tab-pane label="本月" name="month"></el-tab-pane>
             <el-tab-pane label="上月" name="prevmonth"></el-tab-pane>
         </el-tabs>
-        <el-button type="warning" class="export"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
+        <el-button type="warning" class="export" @click="exportClick"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
         <article class="tab-container">
             <section class="search">
                 <!--统计连锁----------------------------------------->
@@ -135,6 +135,9 @@
                     xmview.setContentLoading(false)
                 })
                 return p
+            },
+            exportClick () {
+                this.type ? speakingService.exportCompanySpeaking(this.search) : speakingService.exportCompany(this.search)
             }
         }
     }
