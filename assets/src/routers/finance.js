@@ -83,15 +83,28 @@ export default [
         }
     },
     {
-        path: pathPre + '/money/income',
-        name: 'financeManage-money-income',
+        path: pathPre + '/money/income/course',
+        name: 'financeManage-money-income-course',
         component: resolve => {
             require.ensure([], () => {
-                resolve(require('../views/financeManage/money/Income.vue'))
+                resolve(require('../views/financeManage/money/CourseIncome.vue'))
             })
         },
         meta: {
-            title: '流水记录-红包',
+            title: '流水记录-课程红包',
+            noback: true
+        }
+    },
+    {
+        path: pathPre + '/money/income/speaking',
+        name: 'financeManage-money-income-speaking',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/financeManage/money/SpeakingIncome.vue'))
+            })
+        },
+        meta: {
+            title: '流水记录-药我说红包',
             noback: true
         }
     },

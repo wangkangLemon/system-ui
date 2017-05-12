@@ -7,31 +7,42 @@
 
 <template>
     <div id="testview-container">
-        <CourseSelect v-model='selected' :list="courseList" @changeList="val=> courseList=val"></CourseSelect>
-        <CourseSelect v-model='selected' :list="courseList" @changeList="val=> courseList=val"></CourseSelect>
-        <router-link :to="{name:'main'}">我走</router-link>
-        <a href="//52hhx.com">我走2</a>
+        <DateRange title="晒单时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
+                   v-on:changeStart="val=> fetchParam.time_start=val "
+                   v-on:changeEnd="val=> fetchParam.time_end=val "
+                   :change="fetchData">
+        </DateRange>
+        <button @click="removedate">干掉日期</button>
     </div>
 </template>
 
 <script>
-    import CourseSelect from './component/select/Course.vue'
+    import DateRange from './component/form/DateRangePicker.vue'
     export default {
         data() {
             return {
                 courseList: [],
-                selected: void 0
+                selected: void 0,
+                fetchParam: {
+                    time_start: void 0,
+                    time_end: void 0,
+                }
             }
         },
         created () {
-            window.onbeforeunload = function () {
-                return 'shit'
-            }
         },
         mounted () {
         },
-
-        methods: {},
-        components: {CourseSelect}
+        methods: {
+            fetchData () {
+                console.info(this.fetchParam)
+            },
+            removedate () {
+                this.fetchParam.time_start = void 0
+                this.fetchParam.time_end = void 0
+//                this.fetchParam.time_end = void 0
+            }
+        },
+        components: {DateRange}
     }
 </script>

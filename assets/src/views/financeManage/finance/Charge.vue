@@ -56,10 +56,13 @@
                                        :change="getData">
                 </IndustryCompanySelect>
             </section>
-            <admin v-model="managerSelect"
-                   v-on:change="val=>managerSelect=val"
-                   :change="getData">
-            </admin>
+            <section>
+                <i>管理员</i>
+                <admin v-model="managerSelect"
+                       v-on:change="val=>managerSelect=val"
+                       :change="getData">
+                </admin>
+            </section>
             <DateRange title="创建时间" :start="createTime" :end="endTime"
                        v-on:changeStart="val=> createTime=val"
                        v-on:changeEnd="val=> endTime = val"
@@ -102,7 +105,7 @@
                     label="操作">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="showFn(scope.row)">
-                        查看数据
+                        查看收据
                     </el-button>
                 </template>
             </el-table-column>

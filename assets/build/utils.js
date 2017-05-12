@@ -21,7 +21,7 @@ exports.cssLoaders = function (options) {
     }
 
     // generate loader string to be used with extract text plugin
-    function generateLoaders(loader, loaderOptions) {
+    function generateLoaders (loader, loaderOptions) {
         var loaders = [cssLoader]
         if (loader) {
             loaders.push({
@@ -68,4 +68,29 @@ exports.styleLoaders = function (options) {
         })
     }
     return output
+}
+
+
+exports.getMd5 = function (filename) {
+    var crypto = require('crypto')
+    var fs = require('fs')
+
+    var BUFFER_SIZE = 8192
+
+    var fd = fs.openSync(filename, 'r')
+    var hash = crypto.createHash('md5')
+    var buffer = new Buffer(BUFFER_SIZE)
+
+    try {
+        var bytesRead
+
+        do {
+            bytesRead = fs.readSync(fd, buffer, 0, BUFFER_SIZE)
+            hash.update(buffer.slice(0, bytesRead))
+        } while (bytesRead === BUFFER_SIZE)
+    } finally {
+        fs.closeSync(fd)
+    }
+
+    return hash.digest('hex')
 }

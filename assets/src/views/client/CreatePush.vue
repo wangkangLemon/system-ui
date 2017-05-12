@@ -26,6 +26,7 @@
                     position: absolute;
                     right: -100px;
                     bottom: 0;
+                    top: 0;
                 }
             }
             .title, .content {
@@ -34,6 +35,7 @@
                     position: absolute;
                     right: 10px;
                     bottom: 0;
+                    top: 0;
                     > i {
                         color: green;
                     }

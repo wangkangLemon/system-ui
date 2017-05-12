@@ -1,5 +1,5 @@
 <template>
-    <keep-alive exclude="coursetask-template-add">
+    <keep-alive exclude="coursetask-template-add,company-admin">
         <router-view></router-view>
     </keep-alive>
 </template>

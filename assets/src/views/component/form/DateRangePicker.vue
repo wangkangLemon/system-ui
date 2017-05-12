@@ -6,7 +6,8 @@
 <template>
     <section>
         <i>{{title}}</i>
-        <el-date-picker @change="setCurrVal(0)"
+        <el-date-picker @change="setCurrVal(0)" ref="start"
+                        :editable="false"
                         clearable
                         v-model="timespan[0]"
                         align="right"
@@ -15,7 +16,9 @@
                         placeholder="开始日期">
         </el-date-picker>
         <el-date-picker
+                ref="end"
                 clearable
+                :editable="false"
                 @change="setCurrVal(1)"
                 v-model="timespan[1]"
                 align="right"
@@ -36,14 +39,6 @@
             end: {}, // 结束时间
             change: Function
         },
-        watch: {
-            'start'(val) {
-                this.setCurrVal(0, val)
-            },
-            'end'(val) {
-                this.setCurrVal(1, val)
-            }
-        },
         data () {
             return {
                 timespan: [this.start, this.end],
@@ -61,21 +56,36 @@
                 },
             }
         },
+        watch: {
+            'start'(val) {
+                if (getTimeStr(this.timespan[0]) != val) {
+                    this.timespan[0] = val
+                    // 置空之后, 控件上面显示的值不会被清空  所以要自己操作dom进行操作
+                    if (!val) this.$refs.start.$el.querySelector('input').value = ''
+                }
+            },
+            'end'(val) {
+                if (getTimeStr(this.timespan[1]) != val) {
+                    this.timespan[1] = val
+                    if (!val) this.$refs.end.$el.querySelector('input').value = ''
+                }
+            }
+        },
         beforeCreate () {
             _this = this
         },
         methods: {
-            setCurrVal (type, val) {
-                if (this.timespan[type] === val && this.timespan[type] != undefined) return
-
-                val = (val || this.timespan[type]) ? timeUtls.date2Str(new Date(val || this.timespan[type])) : ''
-
+            setCurrVal (type) {
                 const emitArr = ['changeStart', 'changeEnd']
-
-                this.timespan[type] = val
-                this.$emit(emitArr[type], val)
+                let val = getTimeStr(this.timespan[type])
+                this.$emit(emitArr[type], getTimeStr(val))
                 this.change && this.change()
             }
         }
+    }
+
+    function getTimeStr (val) {
+        if (!val) return val
+        return timeUtls.date2Str(new Date(val))
     }
 </script>

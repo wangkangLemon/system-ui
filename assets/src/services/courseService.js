@@ -162,6 +162,12 @@ class CourseService {
         return api.put(finalUrl, {disabled})
     }
 
+    // 获取添加编辑课程上传图片的url (与题目里的上传图片的url为同一个)
+    getManageImgUploadUrl ({companyid} = {}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        return `${config.apiHost}/com/${companyid}/course/image`
+    }
+
     // 删除课程
     deleteCourse ({companyid, course_id}) {
         companyid = companyid || authUtils.getUserInfo().company_id

@@ -63,14 +63,16 @@
                 <el-table-column
                         prop="code"
                         label="验证码"
-                        width="180">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="recv_id"
+                        min-width="200"
                         label="编辑短信">
                 </el-table-column>
                 <el-table-column
                         prop="company"
+                        width="180"
                         label="连锁">
                 </el-table-column>
                 <el-table-column
@@ -80,6 +82,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="send_ip_name"
+                        width="120"
                         label="发送IP">
                 </el-table-column>
                 <el-table-column
@@ -90,7 +93,7 @@
                 <el-table-column
                         prop="success"
                         label="状态"
-                        width="180">
+                        width="100">
                     <template scope="scope">
                         <el-tag type="success" v-if="scope.row.success == 1">成功</el-tag>
                         <el-tag type="danger" v-if="!scope.row.success">失败</el-tag>

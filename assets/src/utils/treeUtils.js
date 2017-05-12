@@ -23,7 +23,8 @@ class TreeUtils {
             let nextArr = arr.filter(subitem => {
                 return subitem != item
             })
-            let children = this.arr2Tree(nextArr, item[idKey], pidKey, idKey, processItemFn)
+            // id为0 一般表示未分类
+            let children = item.id == 0 ? null : this.arr2Tree(nextArr, item[idKey], pidKey, idKey, processItemFn)
             if ((children && children.length > 0)) currItem.children = children
             ret.push(currItem)
         })

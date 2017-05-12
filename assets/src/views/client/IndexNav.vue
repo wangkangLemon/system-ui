@@ -91,8 +91,8 @@
         </el-dialog>
         <article class="nav-list" v-for="list in resultData">
             <section class="nav-imgs">
-                <div class="nav-item" v-for="(item,index) in list.info" :class="{'active': !list.active}">
-                    <div v-if="!list.active" @click="changeFn(list.info, index, list.id)">
+                <div class="nav-item" v-for="(item,index) in list.info" :class="{'active': !list.readonly}">
+                    <div v-if="!list.readonly" @click="changeFn(list.info, index, list.id)">
                         <img :src="item.icon | fillImgPath" alt=""/>
                         <p>{{item.name}}</p>
                     </div>
@@ -106,7 +106,7 @@
                 <span v-if="list.active">使用中</span>
                 <el-button type="text" v-if="!list.active" @click="navStart(list.id)">启用</el-button>
                 <el-button type="text" @click="navClone(list.id)">克隆</el-button>
-                <el-button type="text" @click="navDelete(list.id)" v-if="!list.active">删除</el-button>
+                <el-button type="text" @click="navDelete(list.id)" v-if="!list.active && !list.readonly">删除</el-button>
             </section>
         </article>
         <div class="block">

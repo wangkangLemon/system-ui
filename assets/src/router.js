@@ -13,6 +13,7 @@ import sales from './routers/sales' // 晒单
 import company from './routers/company' // 企业
 import user from './routers/user' // 企业
 import im from './routers/im'
+import speaking from './routers/speaking' // 药我说
 import authUtils from './utils/authUtils'
 
 Vue.use(VueRouter)
@@ -108,6 +109,8 @@ const routes = [
             ...user,
             // ============服务号==================
             im,
+            // ============药我说==================
+            speaking,
         ]
     },
     {   // 登录
@@ -166,7 +169,7 @@ router.afterEach((route) => {
 
 router.beforeEach((to, from, next) => {
     // 如果需要登录
-    if (!to.matched.some(record => record.meta.notAuth) && (!authUtils.getUserInfo() || !authUtils.getAuthToken() || !authUtils.getTwiceToken())) {
+    if (!to.matched.some(record => record.meta.notAuth) && (!authUtils.getUserInfo() || !authUtils.getAuthToken())) {
         xmview.showTip('error', '未登录或登录已超时, 请重新登录!')
         next({name: 'login'})
         return
@@ -194,10 +197,12 @@ function setTitle (title) {
     !xmview.setContentTile && (xmview.setContentTile = setTitle)
 }
 
+let backContentTimeoutid
 // 设置是否显示返回按钮
 function showBackContent (to, from, next) {
+    clearTimeout(backContentTimeoutid)
     if (!xmview.setContentBack) {
-        setTimeout(() => {
+        backContentTimeoutid = setTimeout(() => {
             showBackContent(to)
         }, 30)
         return

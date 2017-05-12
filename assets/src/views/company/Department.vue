@@ -24,6 +24,13 @@
             text-align: right;
             margin-top: 15px;
         }
+        .show-detail {
+            .sub-title {
+                color: #999;
+                font-size: 12px;
+                margin-left: 10px;
+            }
+        }
     }
 </style>
 <template>
@@ -31,7 +38,7 @@
         <!--详情-->
         <el-dialog size="small" v-if="show.detail" class="show-detail" title="查看门店" v-model="show.showDetail">
             <div class="info">
-                <h2>测试营销员</h2>
+                <h2>{{show.detail.name}}<i class="sub-title">{{show.detail.company}}</i></h2>
                 <p><i class="title">店长：</i><span class="value">{{show.detail.concact || '无'}}</span></p>
                 <p><i class="title">手机：</i><span class="value">{{show.detail.mobile || '无'}}</span></p>
                 <p><i class="title">电话：</i><span class="value">{{show.detail.tel || '无'}}</span></p>
@@ -46,9 +53,13 @@
             <el-button @click="exportData" type="warning"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
         <section class="search">
-            <Region title="地区" v-on:provinceChange="val => searchParams.provinceSelect = val"
+            <Region title="地区"
+                    :province="searchParams.provinceSelect"
+                    :city="searchParams.citySelect"
+                    :area="searchParams.areaSelect"
+                    v-on:provinceChange="val => searchParams.provinceSelect = val"
                     v-on:cityChange="val => searchParams.citySelect = val"
-                    v-on:areaChange="val => searchParams.areaChange = val"
+                    v-on:areaChange="val => searchParams.areaSelect = val"
                     :change="getData"></Region>
             <section>
                 <i>连锁</i>
@@ -70,6 +81,7 @@
                 <i>店长：</i>
                 <el-input @change="getData" v-model="searchParams.concact" auto-complete="off"></el-input>
             </section>
+            <el-button type="primary" @click="clearFn">清空</el-button>
         </section>
         <el-table
                 v-loading="loading"
@@ -101,10 +113,6 @@
             <el-table-column
                     prop="mobile"
                     label="手机">
-            </el-table-column>
-            <el-table-column
-                    prop="emial"
-                    label="邮箱">
             </el-table-column>
             <el-table-column
                     prop="create_time_name"
@@ -177,6 +185,19 @@
             })
         },
         methods: {
+            clearFn () {
+                this.searchParams = {
+                    companySelect: '',
+                    createTime: '',
+                    endTime: '',
+                    provinceSelect: '',
+                    citySelect: '',
+                    areaSelect: '',
+                    name: '', // 名称
+                    concact: '' // 店长
+                }
+                this.getData()
+            },
             // 显示详情
             showFn (index, row) {
                 this.show.showDetail = true

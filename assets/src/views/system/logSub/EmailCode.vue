@@ -60,14 +60,16 @@
                 </el-table-column>
                 <el-table-column
                         prop="company"
+                        min-width="200"
                         label="连锁">
                 </el-table-column>
                 <el-table-column
                         prop="department"
                         label="门店"
-                        width="180">
+                        min-width="200">
                 </el-table-column>
                 <el-table-column
+                        width="100"
                         prop="send_ip_name"
                         label="发送IP">
                 </el-table-column>

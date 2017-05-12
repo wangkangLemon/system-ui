@@ -31,18 +31,27 @@
             <el-button type="primary" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
         <section class="search">
-            <IndustryCompanySelect v-model="companySelect"
-                                   v-on:change="val=>companySelect=val"
-                                   :change="getData">
-            </IndustryCompanySelect>
-            <course-list v-model="courseSelect"
-                         v-on:change="val=>courseSelect=val"
-                         :change="getData">
-            </course-list>
-            <UserList v-model="userSelect"
-                      v-on:change="val=>userSelect=val"
-                      :change="getData">
-            </UserList>
+            <section>
+                <i>企业</i>
+                <IndustryCompanySelect v-model="companySelect"
+                                       v-on:change="val=>companySelect=val"
+                                       :change="getData">
+                </IndustryCompanySelect>
+            </section>
+            <section>
+                <i>课程</i>
+                <course-list v-model="courseSelect"
+                             v-on:change="val=>courseSelect=val"
+                             :change="getData">
+                </course-list>
+            </section>
+            <section>
+                <i>用户</i>
+                <UserList v-model="userSelect"
+                          v-on:change="val=>userSelect=val"
+                          :change="getData">
+                </UserList>
+            </section>
             <DateRange title="创建时间" :start="createTime" :end="endTime"
                        v-on:changeStart="val=> createTime=val"
                        v-on:changeEnd="val=> endTime"
@@ -62,30 +71,36 @@
             <el-table-column
                     prop="ent_name"
                     label="企业"
-                    width="180">
+                    width="160">
             </el-table-column>
             <el-table-column
                     prop="course_name"
+                    width="160"
                     label="课程">
             </el-table-column>
             <el-table-column
                     prop="store_name"
+                    width="160"
                     label="连锁">
             </el-table-column>
             <el-table-column
                     prop="department_name"
+                    width="160"
                     label="门店">
             </el-table-column>
             <el-table-column
                     prop="user_name"
+                    width="80"
                     label="店员">
             </el-table-column>
             <el-table-column
                     prop="price"
+                    width="80"
                     label="金额">
             </el-table-column>
             <el-table-column
                     prop="balance"
+                    width="80"
                     label="余额">
             </el-table-column>
         </el-table>

@@ -7,8 +7,7 @@
 <!--</IndustryCompanySelect>-->
 
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" :list="list"
-                  v-model="currVal">
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" :list="list" v-model="currVal" :disabled="disabled">
     </SelectScroll>
 </template>
 
@@ -16,12 +15,22 @@
     import SelectScroll from '../../component/form/SelectScroll.vue'
     import companyService from '../../../services/companyService'
     export default{
-        //                          0-企业 1-工业 2-连锁
-        props: ['value', 'change', 'type', 'placeholder', 'list'],
+        props: {
+            value: [String, Number],
+            change: Function,
+            placeholder: String,
+            list: Array,
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+            // 0-企业 1-工业 2-连锁
+            type: [String, Number]
+        },
         data () {
             return {
                 currVal: this.value,
-                pageSize: 20
+                pageSize: 15
             }
         },
         watch: {

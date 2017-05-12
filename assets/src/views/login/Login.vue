@@ -125,6 +125,7 @@
                     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="demo-ruleForm form">
                         <el-form-item prop="account">
                             <el-input size="large" placeholder="手机号或邮箱" type="text" v-model="ruleForm2.account"
+                                      :autofocus="true"
                                       auto-complete="off"></el-input>
                         </el-form-item>
                         <el-form-item prop="checkPass">
@@ -222,7 +223,7 @@
                             xmview.showTip('success', '登录成功, 正在跳转...', 1e9)
                             setTimeout(() => {
                                 // 如果需要二次登录
-                                if (ret.need_two_step || !authUtils.getTwiceToken()) {
+                                if (ret.need_two_step) {
                                     this.$router.replace({name: 'login-twice'})
                                 } else if (this.$route.query.returnUrl) {  // 判断是否需要回到上个页面
                                     window.location.href = this.$route.query.returnUrl

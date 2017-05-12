@@ -11,13 +11,12 @@
 
 <template>
     <el-select v-model="selectVal" :placeholder="currPlaceholder" ref="container" @visible-change="handleVisibleChange"
-               @change="handleChange" :clearable="true" no-data-text="暂无数据"
+               @change="handleChange" :clearable="true" no-data-text="暂无数据" :disabled="disabled"
                no-match-text="没有数据">
         <el-option :disabled="true" value="xmystinputval" style="height: 50px">
             <el-input @change="filter" placeholder="搜索内容"></el-input>
         </el-option>
-        <el-option v-loading="loading"
-                   v-for="item in data"
+        <el-option v-for="item in data"
                    :label="item.name"
                    :key="item.id"
                    :value="item.id">
@@ -26,8 +25,10 @@
         <el-option v-loading="loading" value="xmyst2" :disabled="true" v-show="!this.data || this.data.length < 1">
             <span>暂无数据</span>
         </el-option>
-        <el-option value="xmyst1" :disabled="true" v-show="isShowGetMore && this.data && this.data.length > 0">
-            <span ref="domLoading" class="component-form-selectscroll-more">点击加载更多</span>
+        <el-option value="xmyst1" :disabled="true" v-show="isShowGetMore && this.data && this.data.length > 0"
+                   v-loading="loading">
+            <span ref="domLoading" class="component-form-selectscroll-more" v-show="!loading">点击加载更多</span>
+            <span v-show="loading">加载中...</span>
         </el-option>
     </el-select>
 </template>
@@ -43,6 +44,10 @@
             placeholder: {
                 type: String,
                 default: '请选择'
+            },
+            disabled: {
+                type: Boolean,
+                default: false
             },
             list: Array, // 已有的数据集合
         },
@@ -69,6 +74,14 @@
             },
             'value' (val) {
                 this.selectVal != val && (this.selectVal = val)
+                if (this.value != null && this.currPlaceholder && this.data.length < 1) {
+                    this.data.push({id: this.value, name: this.placeholder})
+                }
+            }
+        },
+        created () {
+            if (this.value != null && this.currPlaceholder && this.data.length < 1) {
+                this.data.push({id: this.value, name: this.placeholder})
             }
         },
         mounted () {
@@ -115,7 +128,7 @@
                 }
                 this.initGetMore()
                 // 判断是否有数据
-                if (!this.data || this.data.length < 1) {
+                if (!this.data || this.data.length < 2) {
                     this.loading = true
                     this.requestCb(this.keyword, 0).then((ret) => {
                         this.processRequestRet(ret)
@@ -124,9 +137,13 @@
             },
             // 处理请求后的结果 type- 0:追加 1-重新赋值
             processRequestRet (ret, type = 0) {
-                if (type === 0)
+                if (type === 0) {
+                    // 把结果过滤掉当前选中的
+                    ret.data = ret.data.filter((item) => {
+                        return item.id != this.value
+                    })
                     this.data.push(...ret.data)
-                else
+                } else
                     this.data = ret.data
 
                 this.isShowGetMore = this.data.length < ret.total

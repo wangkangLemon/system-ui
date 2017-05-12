@@ -59,11 +59,14 @@
                         :change="fetchData">
                 </IndustryCompanySelect>
             </section>
-            <admin
-                    :change="fetchData"
-                    v-on:change="val=>managerSelect=val"
-                    v-model="managerSelect">
-            </admin>
+            <section>
+                <i>管理员</i>
+                <admin
+                        :change="fetchData"
+                        v-on:change="val=>managerSelect=val"
+                        v-model="managerSelect">
+                </admin>
+            </section>
             <DateRange title="创建时间" :start="createTime" :end="endTime"
                        v-on:changeStart="val=> createTime=val"
                        v-on:changeEnd="val=> endTime"

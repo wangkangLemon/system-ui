@@ -36,10 +36,13 @@
 <template>
     <article id="sales-history-container">
         <article class="search">
-            <IndustrySelect v-model="fetchParam.enterprise_id" type="1"
-                            v-on:change="val=>fetchParam.enterprise_id=val"
-                            :change="fetchData">
-            </IndustrySelect>
+            <section>
+                <i>工业</i>
+                <IndustrySelect v-model="fetchParam.enterprise_id" type="1"
+                                v-on:change="val=>fetchParam.enterprise_id=val"
+                                :change="fetchData">
+                </IndustrySelect>
+            </section>
             <section>
                 <span>药品</span>
                 <el-select v-loading="loadingDrug"

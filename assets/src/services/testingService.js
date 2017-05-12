@@ -17,7 +17,7 @@ class TestingService {
     }
 
     // 获取考试记录
-    getHistory ({enterprise_id, page, page_size, course_id, company_id, department_id, account, time_start, time_end, grade}) {
+    getHistory ({enterprise_id, page, page_size, course_id, company_id, department_id, account, time_start, time_end, grade, user_name, course_type}) {
         let finalUrl = urlPre + '/history/search'
         return api.get(finalUrl, {
             page,
@@ -30,6 +30,8 @@ class TestingService {
             time_end,
             enterprise_id,
             grade, // 不赋值则为未选择，1位满分，2为及格，3为不及格
+            user_name, // 用户昵称
+            course_type, // 课程类型  public表示公开课，private为内训，industry为工业课程
         }).then((ret) => {
             return ret.data
         })

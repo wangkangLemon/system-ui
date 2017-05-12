@@ -143,6 +143,8 @@
                 background: #d9e0e7;
                 min-height: 100%;
                 top: 0;
+                height: 100%;
+                overflow: auto;
                 @media (max-width: 767px) {
                     padding: 75px 20px 20px;
                     position: absolute;

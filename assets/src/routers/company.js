@@ -104,6 +104,7 @@ export default {
                     },
                     meta: {
                         title: '店员列表-店员',
+                        noback: true
                     }
                 },
                 {

@@ -1,6 +1,6 @@
 <!--课程专辑下拉框-->
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder">
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" v-model="currVal" :disabled="disabled">
     </SelectScroll>
 </template>
 
@@ -8,7 +8,16 @@
     import courseService from '../../../services/courseService'
     import SelectScroll from '../../component/form/SelectScroll.vue'
     export default{
-        props: ['value', 'change', 'placeholder'],
+        props: {
+            value: [String, Number],
+            change: Function,
+            placeholder: String,
+            list: Array,
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+        },
         components: {
             SelectScroll
         },
@@ -20,7 +29,7 @@
         },
         watch: {
             'value'(val, oldValue) {
-                this.setCurrentValue(val)
+                this.currVal !== val && (this.currVal = val)
             }
         },
         methods: {

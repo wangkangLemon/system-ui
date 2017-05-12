@@ -95,6 +95,7 @@
                         <el-option label="Android" :value="3"></el-option>
                     </el-select>
                 </section>
+                <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
                     v-loading="loading"
@@ -104,38 +105,45 @@
                     style="width: 100%">
                 <el-table-column
                         prop="name"
+                        min-width="120"
                         label="姓名">
                 </el-table-column>
                 <el-table-column
                         prop="mobile"
+                        width="150"
                         label="手机">
                 </el-table-column>
                 <el-table-column
                         prop="company"
+                        min-width="180"
                         label="连锁">
                 </el-table-column>
                 <el-table-column
                         prop="dep_name"
+                        min-width="180"
                         label="门店">
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
+                        width="180"
                         label="注册时间">
                 </el-table-column>
                 <el-table-column
-                        prop="disabled"
-                        label="状态">
+                        prop="last_active_time_name"
+                        width="180"
+                        label="最后活跃时间">
                     <template scope="scope">
-                        <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
-                        <el-tag type="danger" v-if="scope.row.disabled">异常</el-tag>
+                        {{scope.row.last_active_time_name ? scope.row.last_active_time_name : '未激活'}}
                     </template>
                 </el-table-column>
                 <el-table-column
                         prop="last_appstart"
+                        width="100"
                         label="使用环境">
                 </el-table-column>
                 <el-table-column
                         prop="operate"
+                        width="80"
                         label="操作">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
@@ -198,6 +206,19 @@
             })
         },
         methods: {
+            clearFn () {
+                this.searchParams = {
+                    companySelect: '',
+                    createTime: '',
+                    endTime: '',
+                    name: '',
+                    mobile: '',
+                    status: '',
+                    email: '',
+                    last_appstart: ''
+                }
+                this.getData()
+            },
             // 显示详情
             showFn (row) {
                 CompanyUserService.userDetail(row.id).then((ret) => {

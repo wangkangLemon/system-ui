@@ -8,8 +8,9 @@
                :action="url"
                :file-list="fileList"
                :accept="accept"
-               :on-success="handleUploadMedia" :multiple="false">
+               :on-success="handleUploadMedia" :multiple="false" :on-progress="onProgress">
         <el-button size="small" :disabled="disabled" type="primary"><i><i class="el-icon-upload el-icon--left"></i></i>{{btnTitle}}
+
         </el-button>
     </el-upload>
 </template>
@@ -36,7 +37,9 @@
             accept: {
                 type: String,
                 default: '*/*'
-            }
+            },
+            // 文件上传中的回调
+            onProgress: Function
         },
         data () {
             return {
@@ -60,6 +63,9 @@
             handleUploadMedia (response, file) {
                 this.onSuccess && this.onSuccess(response)
                 this.fileList = [{name: file.name}]
+            },
+            choose () {
+                this.$refs.upload.$el.querySelector('input[type=file]').click()
             }
         },
         components: {}

@@ -26,6 +26,11 @@ cp config/config.js.default config/config.js
 ```
 
 并修改其中的 `API_HOST_DEV` 为你调试使用的接口地址，如果是本机开发，一般为：`http://127.0.0.1:8002`
+### 使用webpackdll编译第三方库
+```
+$ npm run dll   
+构建脚本在 ./build/weboack.dll.config.js
+```
 
 ### 运行前端热构建
 

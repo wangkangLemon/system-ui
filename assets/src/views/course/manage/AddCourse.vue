@@ -65,7 +65,7 @@
             <el-tab-pane label="课程信息" name="first">
                 <el-form label-width="120px" ref="formFirst" :rules="rulesFirst" :model="fetchParam">
                     <el-form-item label="所属栏目" prop="category_id">
-                        <CourseCategorySelect :placeholder="fetchParam.cat_name" :autoClear="true"
+                        <CourseCategorySelect :placeholder="fetchParam.cat_name" :autoClear="true" :showNotCat="false"
                                               v-model="fetchParam.category_id"></CourseCategorySelect>
                     </el-form-item>
                     <el-form-item label="课程名称" prop="name">
@@ -75,8 +75,6 @@
                         <img :src="fetchParam.image | fillImgPath" width="200" height="112" v-show="fetchParam.image">
                         <CropperImg ref="imgcropper" :confirmFn="cropperImgSucc"
                                     :aspectRatio="16/9"></CropperImg>
-                        <!--<UploadImg :defaultImg="fetchParam.image" :url="uploadImgUrl"-->
-                        <!--:on-success="res=> fetchParam.image = res.data.url"></UploadImg>-->
                     </el-form-item>
                     <el-form-item label="课程类型">
                         <el-select v-model="fetchParam.material_type" @change="typeChange" placeholder="请选择"
@@ -126,7 +124,7 @@
                         <el-input :disabled="fetchParam.need_testing == 0" v-model="fetchParam.score_pass"></el-input>
                     </el-form-item>
 
-                    <el-form-item label="">
+                    <el-form-item label="" v-if="!readonly">
                         <el-button style="float: right" type="primary" @click="btnNextClick">
                             <i>{{ fetchParam.need_testing == 0 ? '保存' : '保存并下一步' }}</i>
                         </el-button>
@@ -136,7 +134,7 @@
             <el-tab-pane :disabled="!fetchParam.id" label="考试题目设置" name="second" class="testing-set">
                 <el-form>
                     <el-form label-width="120px" v-for="(item,index) in fetchTesting" :key="index">
-                        <el-form-item label="">
+                        <el-form-item label="" v-if="!readonly">
                             <el-button icon="plus" @click='addTesting(0, index)'>判断题</el-button>
                             <el-button icon="plus" @click='addTesting(1, index)'>单选题</el-button>
                             <el-button icon="plus" @click='addTesting(2, index)'>多选题</el-button>
@@ -209,7 +207,7 @@
                     </el-form>
                 </el-form>
 
-                <el-form label-width="120px">
+                <el-form label-width="120px" v-if="!readonly">
                     <el-form-item label="">
                         <el-button icon="plus" @click='addTesting(0, fetchTesting.length)'>判断题</el-button>
                         <el-button icon="plus" @click='addTesting(1, fetchTesting.length)'>单选题</el-button>
@@ -217,7 +215,7 @@
                     </el-form-item>
                 </el-form>
 
-                <div class="bottom-btns">
+                <div class="bottom-btns" v-if="!readonly">
                     <el-button @click="btnPreClick">上一步</el-button>
                     <el-button class="submit" type="primary" @click="handleSubmitTesting">发布</el-button>
                 </div>
@@ -230,7 +228,7 @@
 
 <script>
     import courseService from '../../../services/courseService'
-    //    import UploadImg from '../../component/upload/UploadImg.vue'
+    import UploadImg from '../../component/upload/UploadImg.vue'
     import CropperImg from '../../component/upload/ImagEcropperInput.vue'
     import DialogVideo from '../component/DialogVideo.vue'
     import UploadFile from '../../component/upload/UploadFiles.vue'
@@ -257,12 +255,19 @@
                 },
                 accept: '*.doc,*.docx', // 上传的文件格式
                 // 考试设置部分
-                fetchTesting: []
+                fetchTesting: [],
+                readonly: false, // 只读模式
             }
         },
         created () {
             this.uploadDocUrl = courseService.getCourseDocUploadUrl()
-            if (this.$route.params.courseInfo) this.fetchParam = this.$route.params.courseInfo
+            this.uploadImgUrl = courseService.getManageImgUploadUrl()
+            if (this.$route.params.courseInfo) {
+                this.fetchParam = this.$route.params.courseInfo
+                xmview.setContentTile('编辑课程-培训')
+            }
+            this.$route.params.tab && (this.activeTab = this.$route.params.tab)
+            this.readonly = this.$route.params.readonly
             xmview.setContentLoading(false)
         },
         watch: {
@@ -319,7 +324,7 @@
             },
             // 图片裁切成功回调
             cropperImgSucc (imgData) {
-                this.uploadImgUrl = courseService.uploadCover4addCourse({avatar: imgData}).then((ret) => {
+                courseService.uploadCover4addCourse({avatar: imgData}).then((ret) => {
                     this.fetchParam.image = ret.url
                 })
             },
@@ -391,7 +396,7 @@
                 }
             }
         },
-        components: {CropperImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo}
+        components: {CropperImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo, UploadImg}
     }
 
     function getOrignData () {

@@ -102,17 +102,22 @@
                   :fit="true"
                   border>
             <el-table-column
+                    min-width="200"
                     prop="name"
                     label="课程">
             </el-table-column>
             <el-table-column
+                    min-width="200"
                     prop="company"
                     label="企业">
             </el-table-column>
-            <el-table-column
-                    width="80"
-                    prop="subject_num"
-                    label="题目数">
+            <el-table-column width="80" label="题目数">
+                <template scope="scope">
+                    <el-button style="width: 100%"
+                               @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second', readonly: true}})"
+                               type="text" size="small">{{scope.row.subject_num}}  <!--a-->
+                    </el-button>
+                </template>
             </el-table-column>
             <el-table-column
                     width="80"
@@ -215,10 +220,11 @@
                 fetchParams: [getFetchParam(1), getFetchParam(2)],
             }
         },
+        created () {
+            this.fetchData()
+        },
         activated () {
-            this.fetchData().then(() => {
-                xmview.setContentLoading(false)
-            })
+            xmview.setContentLoading(false)
         },
         methods: {
             fetchData () {

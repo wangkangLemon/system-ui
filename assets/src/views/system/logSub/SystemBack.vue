@@ -31,11 +31,17 @@
     <article class="system-manage">
         <el-card class="box-card">
             <section class="search">
-                <AdminSelect v-model="search.admin_id" :change="getData"></AdminSelect>
-                <el-select clearable @change="getData" v-model="search.account_type">
-                    <el-option label="手机号" value="mobile"></el-option>
-                    <el-option label="邮箱" value="email"></el-option>
-                </el-select>
+                <section>
+                    <i>管理员</i>
+                    <AdminSelect v-model="search.admin_id" :change="getData"></AdminSelect>
+                </section>
+                <section>
+                    <i>登录方式</i>
+                    <el-select clearable @change="getData" v-model="search.account_type">
+                        <el-option label="手机号" value="mobile"></el-option>
+                        <el-option label="邮箱" value="email"></el-option>
+                    </el-select>
+                </section>
                 <section>
                     <i>登录IP</i>
                     <el-input @change="getData" v-model="search.ip"></el-input>
