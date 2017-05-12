@@ -5,7 +5,12 @@
 
     #speaking-content-addspeaking {
         @extend %content-container;
-
+        .img-wrap {
+            width: 70%;
+            img {
+                width: 100%;
+            }
+        }
         .course-search {
             margin-bottom: 12px;
             .el-input {
@@ -22,14 +27,15 @@
     <article id="speaking-content-addspeaking">
         <el-form :model="form" :rules="rules" label-position="right" ref="form" label-width="120px" style="width: 60%">
             <el-form-item prop="title" label="标题">
-                <el-input v-model="form.title" auto-complete="off" maxlength="15" placeholder="标题设置不得超过15个字"></el-input>
+                <el-input v-model="form.title" auto-complete="off" :maxlength="15" placeholder="标题设置不得超过15个字"></el-input>
             </el-form-item>
             <el-form-item prop="content" label="内容">
-                <el-input v-model="form.content" auto-complete="off" :rows="6" type="textarea" maxlength="50" placeholder="内容设置不得超过50个字"></el-input>
+                <el-input v-model="form.content" auto-complete="off" :rows="6" type="textarea" :maxlength="50" placeholder="内容设置不得超过50个字"></el-input>
             </el-form-item>
             <el-form-item prop="image" label="图片">
                 <div class="img-wrap" v-if="form.image">
                     <img :src="form.image | fillImgPath" alt=""/>
+                    <!--<img src="http://sysapidemo.yst.vodjk.com/upload/speaking/images/1494573841285123.jpg" alt="">-->
                 </div>
                 <ImagEcropperInput :isRound="false" :aspectRatio="2/1" :confirmFn="cropperFn"
                                    class="upload-btn"></ImagEcropperInput>
