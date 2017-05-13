@@ -7,7 +7,7 @@ RUN mkdir -p /node/src/git.vodjk.com/yst \
     && cd git.vodjk.com/yst/ \
     && git clone ssh://git@git.vodjk.com:10022/yst/system-ui.git
 
-ADD "http://192.168.40.231/yst/system-ui.atom?private_token=7XxYJqdG_LGy7poftisV" git.vodjk.com/yst/
+ADD "http://git.vodjk.com:10080/yst/system-ui.atom?private_token=7XxYJqdG_LGy7poftisV" git.vodjk.com/yst/
 
 RUN cd /node/src/git.vodjk.com/yst/system-ui/ \
     && git checkout master \
