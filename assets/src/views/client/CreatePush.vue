@@ -99,7 +99,7 @@
                 <p class="tip">*如果需要指定用户推送，请按以下维度进行条件筛选</p>
             </div>
             <el-form-item label="平台">
-                <el-select clearable v-model="form.platform">
+                <el-select clearable v-model="form.platform" @change="filterVersion">
                     <el-option v-for="item in platform" :label="item.name" :value="item.value" :key="item.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -156,6 +156,75 @@
     import ChooseSpeaking from './component/ChooseSpeaking.vue'
     import cityData from '../../assets/city'
     import pushService from '../../services/pushService'
+    let iosArr = [
+        {
+            id: 1,
+            name: '3.0.0',
+            value: '3.0.0'
+        },
+        {
+            id: 2,
+            name: '2.2.0',
+            value: '2.2.0'
+        },
+        {
+            id: 3,
+            name: '2.1.1',
+            value: '2.1.1'
+        },
+        {
+            id: 4,
+            name: '2.1.0',
+            value: '2.1.0'
+        },
+        {
+            id: 5,
+            name: '2.0.0',
+            value: '2.0.0'
+        }
+    ]
+    let androidArr = [
+        {
+            id: 1,
+            name: '3.0.0',
+            value: '3.0.0'
+        },
+        {
+            id: 2,
+            name: '2.2.2',
+            value: '2.2.2'
+        },
+        {
+            id: 3,
+            name: '2.2.1',
+            value: '2.2.1'
+        },
+        {
+            id: 4,
+            name: '2.2.0',
+            value: '2.2.0'
+        },
+        {
+            id: 5,
+            name: '2.1.1',
+            value: '2.1.1'
+        },
+        {
+            id: 6,
+            name: '2.1.0',
+            value: '2.1.0'
+        },
+        {
+            id: 7,
+            name: '2.0.1',
+            value: '2.0.1'
+        },
+        {
+            id: 8,
+            name: '2.0.0',
+            value: '2.0.0'
+        }
+    ]
     export default {
         components: {
             Region,
@@ -213,28 +282,7 @@
                         value: 2
                     },
                 ],
-                appVersion: [ // App版本
-                    {
-                        id: 1,
-                        name: '2.1.0',
-                        value: '2.1.0'
-                    },
-                    {
-                        id: 2,
-                        name: '2.2.0',
-                        value: '2.2.0'
-                    },
-                    {
-                        id: 3,
-                        name: '3.0',
-                        value: '3.0'
-                    },
-                    {
-                        id: 4,
-                        name: '3.1.0',
-                        value: '3.1.0'
-                    }
-                ],
+                appVersion: [],
                 role: [ // 发送对象
                     {
                         id: 1,
@@ -423,6 +471,10 @@
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
                 })
+            },
+            filterVersion () {
+                if (this.form.platform == 1) this.appVersion = androidArr
+                else this.appVersion = iosArr
             }
         }
     }
