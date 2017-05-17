@@ -6,7 +6,7 @@
         .form {
             z-index: 99999999999999999999 !important;
             .img-wrap {
-                border:1px solid #ededed;
+                /*border:1px solid #ededed;*/
                 width: 140px;
                 height: 140px;
                 > img {
@@ -77,7 +77,7 @@
                         <img :src="form.url | fillImgPath" alt="" />
                     </div>
                     <p class="tip">建议上传图片尺寸为 140*140</p>
-                    <ImagEcropperInput :isShowBtn="true" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
+                    <ImagEcropperInput :compress="1" :isShowBtn="true" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
                     :isRound="true"></ImagEcropperInput>
                 </el-form-item>
                 <el-form-item prop="name" label="导航名称" label-width="120px">
