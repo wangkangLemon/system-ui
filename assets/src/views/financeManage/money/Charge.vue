@@ -302,7 +302,7 @@
             companyID: '',          // 工业ID
             money: '',          // 要充值的金额
             desc: '',       // 收据
-            categroy: ''
+            category: ''
         }
     }
 </script>
