@@ -36,7 +36,7 @@
                 <el-form-item v-if="form.category == 'transfer'" label="转入方式">
                     企业财务余额转入
                 </el-form-item>
-                <el-form-item v-if="form.category == 'transfer'" label="企业红包余额">
+                <el-form-item v-if="form.category == 'transfer'" label="企业财务余额">
                     {{balance}}元
                 </el-form-item>
                 <el-form-item v-if="form.category == 'transfer'" prop="money" label="转入金额">
@@ -64,7 +64,7 @@
             </div>
         </el-dialog>
         <div class="header-button">
-            <el-button class="recharge" @click="accountFn"><i class="iconfont icon-zhuanzhang"></i>转入</el-button>
+            <el-button type="success" class="recharge" @click="accountFn"><i class="iconfont icon-zhuanzhang"></i>转入</el-button>
             <el-button type="primary" class="recharge" @click="chargeFn"><i class="el-icon-plus"></i>充值</el-button>
             <el-button type="warning" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
@@ -148,7 +148,8 @@
     </article>
 </template>
 <script>
-    import {chargeData, moneyCharge, exportCharge, balance} from '../../../services/fianace/money'
+    import {chargeData, moneyCharge, exportCharge} from '../../../services/fianace/money'
+    import {balance} from '../../../services/fianace/finance'
     import Admin from '../../component/select/Admin'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'

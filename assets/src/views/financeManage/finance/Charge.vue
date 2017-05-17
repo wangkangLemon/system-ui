@@ -65,7 +65,7 @@
             </div>
         </el-dialog>
         <div class="header-button">
-            <el-button class="recharge" @click="accountFn"><i class="iconfont icon-zhuanzhang"></i>转入</el-button>
+            <el-button type="success" class="recharge" @click="accountFn"><i class="iconfont icon-zhuanzhang"></i>转入</el-button>
             <el-button type="primary" class="recharge" @click="chargeFn"><i class="el-icon-plus"></i>充值</el-button>
             <el-button type="warning" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
@@ -150,7 +150,8 @@
     </article>
 </template>
 <script>
-    import {chargeData, charge, exportCharge, balance} from '../../../services/fianace/finance'
+    import {chargeData, charge, exportCharge} from '../../../services/fianace/finance'
+    import {balance} from '../../../services/fianace/money'
     import Admin from '../../component/select/Admin'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
