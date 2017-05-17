@@ -116,3 +116,10 @@ export function exportPrice (reqObj) {
     let finalUrl = `${urlPre}/price/search`
     api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), '价格调整.xls')
 }
+// 显示余额
+export function balance(company_id) {
+    let finalUrl = urlPre + '/company/balance'
+    return api.get(finalUrl, {company_id}).then((ret) => {
+        return ret.data
+    })
+}
