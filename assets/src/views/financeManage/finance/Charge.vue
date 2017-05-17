@@ -84,6 +84,14 @@
                        :change="getData">
                 </admin>
             </section>
+            <section>
+                <i>类型</i>
+                <el-select v-model="category" placeholder="全部" @change="getData" :clearable="true">
+                    <el-option label="充值" value="balance"></el-option>
+                    <el-option label="转入" value="transfer_in"></el-option>
+                    <el-option label="转出" value="transfer_out"></el-option>
+                </el-select>
+            </section>
             <DateRange title="创建时间" :start="createTime" :end="endTime"
                        v-on:changeStart="val=> createTime=val"
                        v-on:changeEnd="val=> endTime = val"
@@ -112,19 +120,19 @@
             </el-table-column>
             <el-table-column
                     prop="val_old"
-                    label="充值前余额">
+                    label="变更前余额">
             </el-table-column>
             <el-table-column
                     prop="money"
-                    label="充值金额">
+                    label="变更金额">
             </el-table-column>
             <el-table-column
                     prop="val_new"
-                    label="充值后余额">
+                    label="变更后余额">
             </el-table-column>
             <el-table-column
                     prop="create_time_name"
-                    label="充值时间">
+                    label="变更时间">
             </el-table-column>
             <el-table-column
                     prop="operate"
@@ -163,6 +171,7 @@
         },
         data () {
             return {
+                category: '', // 类型
                 balance: 0, // 显示余额
                 currentData: null,
                 showDetail: false,
@@ -264,7 +273,8 @@
                     admin_id: this.managerSelect,
                     company_id: this.industrySelect,
                     time_start: this.createTime,
-                    time_end: this.endTime
+                    time_end: this.endTime,
+                    category: this.category
                 }).then((ret) => {
                     this.industryData = ret.data
                     this.total = ret.total
@@ -277,7 +287,8 @@
                     admin_id: this.managerSelect,
                     company_id: this.industrySelect,
                     time_start: this.createTime,
-                    time_end: this.endTime
+                    time_end: this.endTime,
+                    category: this.category
                 })
             }
         }
