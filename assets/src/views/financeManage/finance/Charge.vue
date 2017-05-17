@@ -26,17 +26,37 @@
             </div>
         </el-dialog>
         <!--充值表单-->
-        <el-dialog v-model="addForm" title="充值" size="tiny">
-            <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
-                <el-form-item label="" prop="companyID">
+        <el-dialog v-model="addForm" :title="form.category == 'transfer' ? '财务转入' : '充值'" size="tiny">
+            <el-form class="addForm" :model="form" :rules="rules" ref="form" label-width="100px">
+                <!--转入表单-->
+                <el-form-item v-if="form.category == 'transfer'" prop="companyID" label="选择企业">
                     <IndustryCompanySelect type="1" v-model="form.companyID"
                                            v-on:change="formIndustryChange">
                     </IndustryCompanySelect>
                 </el-form-item>
-                <el-form-item prop="money" label="充值金额" :label-width="formLabelWidth">
+                <el-form-item v-if="form.category == 'transfer'" label="转入方式">
+                    企业红包余额转入
+                </el-form-item>
+                <el-form-item v-if="form.category == 'transfer'" label="企业红包余额">
+                    {{balance}}元
+                </el-form-item>
+                <el-form-item v-if="form.category == 'transfer'" prop="money" label="转入金额">
                     <el-input v-model="form.money" type="number" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="desc" label="充值收据" :label-width="formLabelWidth">
+                <el-form-item v-if="form.category == 'transfer'" prop="desc" label="操作凭证">
+                    <el-input type="textarea" :rows="3" v-model="form.desc" auto-complete="off"></el-input>
+                </el-form-item>
+
+                <!--充值-->
+                <el-form-item v-if="!form.category" label="" prop="companyID" label="工业">
+                    <IndustryCompanySelect type="1" v-model="form.companyID"
+                                           v-on:change="formIndustryChange">
+                    </IndustryCompanySelect>
+                </el-form-item>
+                <el-form-item v-if="!form.category" prop="money" label="充值金额">
+                    <el-input v-model="form.money" type="number" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item v-if="!form.category" prop="desc" label="充值收据">
                     <el-input type="textarea" :rows="3" v-model="form.desc" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
@@ -45,7 +65,8 @@
             </div>
         </el-dialog>
         <div class="header-button">
-            <el-button type="primary" class="recharge" @click="addForm = true"><i class="el-icon-plus"></i>充值</el-button>
+            <el-button class="recharge" @click="accountFn"><i class="iconfont icon-zhuanzhang"></i>转入</el-button>
+            <el-button type="primary" class="recharge" @click="chargeFn"><i class="el-icon-plus"></i>充值</el-button>
             <el-button type="warning" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
         <section class="search">
@@ -82,6 +103,11 @@
             <el-table-column
                     prop="admin_name"
                     label="管理员"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="category"
+                    label="类型"
                     width="180">
             </el-table-column>
             <el-table-column
@@ -124,7 +150,7 @@
     </article>
 </template>
 <script>
-    import {chargeData, charge, exportCharge} from '../../../services/fianace/finance'
+    import {chargeData, charge, exportCharge, balance} from '../../../services/fianace/finance'
     import Admin from '../../component/select/Admin'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
@@ -136,6 +162,7 @@
         },
         data () {
             return {
+                balance: 0, // 显示余额
                 currentData: null,
                 showDetail: false,
                 loading: false,
@@ -147,12 +174,7 @@
                 pageSize: 15,
                 industryData: [],
                 addForm: false, // 表单弹窗是否显示
-                formLabelWidth: '50px', // 表单label的宽度
-                form: {                // 表单属性值
-                    companyID: '',          // 工业ID
-                    money: '',          // 要充值的金额
-                    desc: ''       // 收据
-                },
+                form: clearForm(),
                 rules: {
                     companyID: [
                         {type: 'number', required: true, message: '必填项', trigger: 'change'}
@@ -181,6 +203,21 @@
             })
         },
         methods: {
+            accountFn () {
+                this.addForm = true
+                this.form = clearForm()
+                setTimeout(() => {
+                    this.$refs.form.resetFields()
+                }, 0)
+                this.form.category = 'transfer'
+            },
+            chargeFn () {
+                this.addForm = true
+                this.form = clearForm()
+                setTimeout(() => {
+                    this.$refs.form.resetFields()
+                }, 0)
+            },
             showFn (row) {
                 this.showDetail = true
                 this.currentData = row
@@ -192,6 +229,11 @@
             formIndustryChange (value) {
                 this.form.companyID = value
                 this.form.company_id = value
+                if (this.form.company_id) {
+                    balance(this.form.company_id).then((ret) => {
+                        this.balance = ret.balance
+                    })
+                }
             },
             handleCurrentChange(val) {
                 this.currentPage = val
@@ -202,7 +244,8 @@
                     if (valid) {
                         charge(this.form).then((ret) => {
                             this.addForm = false
-                            xmview.showTip('success', '调整成功')
+                            if (this.form.category == 'transfer') xmview.showTip('success', '转入成功')
+                            else xmview.showTip('success', '调整成功')
                             this.getData()
                         }).catch((ret) => {
                             xmview.showTip('error', ret.message)
@@ -236,6 +279,14 @@
                     time_end: this.endTime
                 })
             }
+        }
+    }
+    function clearForm() {
+        return {                // 表单属性值
+            companyID: '',          // 工业ID
+            money: '',          // 要充值的金额
+            desc: '',       // 收据
+            category: ''
         }
     }
 </script>

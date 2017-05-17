@@ -94,3 +94,10 @@ export function moneyCharge({
         }
     })
 }
+// 显示余额
+export function balance(company_id) {
+    let finalUrl = urlPre + '/company/balance'
+    return api.get(finalUrl, {company_id}).then((ret) => {
+        return ret.data
+    })
+}

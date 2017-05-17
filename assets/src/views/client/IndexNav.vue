@@ -74,7 +74,7 @@
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="name" label="导航图标" label-width="120px">
                     <div class="img-wrap">
-                        <img :src="form.url | fillImgPath" alt="" />
+                        <img :src="form.url" alt="" />
                     </div>
                     <p class="tip">建议上传图片尺寸为 140*140</p>
                     <ImagEcropperInput :compress="1" :isShowBtn="true" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
