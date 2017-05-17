@@ -46,6 +46,10 @@
             isShowBtn: { // 是否显示上传按钮
                 isShowBtn: Boolean,
                 default: true
+            },
+            compress: {
+                type: Number,
+                default: 0.8
             }
         },
         data () {
@@ -92,7 +96,7 @@
             // 确定裁剪尺寸
             confirmCropper () {
                 this.showCropper = false
-                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL('image/jpeg', 0.8))
+                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`image/jpeg`, this.compress))
                 this.imgData = null
             },
             startCropper () {
