@@ -85,10 +85,11 @@ export function exportDraw(reqObj) {
 export function moneyCharge({
     company_id,
     money,
-    desc
+    desc,
+    category
 }) {
     let url = `${urlPre}/charge`
-    return api.post(url, {company_id, money, desc}).then((ret) => {
+    return api.post(url, {company_id, money, desc, category}).then((ret) => {
         if (ret.code) {
             return Promise.reject(ret)
         }
