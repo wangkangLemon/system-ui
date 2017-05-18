@@ -80,7 +80,7 @@
             }
         },
         created () {
-            if (this.value != null && this.currPlaceholder && this.data.length < 1) {
+            if (this.value && this.currPlaceholder && this.data.length < 1) {
                 this.data.push({id: this.value, name: this.placeholder})
             }
         },
