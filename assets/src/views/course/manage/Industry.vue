@@ -1,4 +1,4 @@
-<!--工业课-->
+<!--企业课程-->
 <style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/common";
     @import "../../../utils/mixins/topSearch";
@@ -40,7 +40,7 @@
 <template>
     <article id="course-manage-industry-container">
         <el-tabs type="card" @tab-click="tabClick">
-            <el-tab-pane label="工业课程">
+            <el-tab-pane label="连锁课程">
                 <article class="search">
                     <section>
                         <i>专辑名称</i>
@@ -49,16 +49,15 @@
 
                     <section>
                         <i>状态</i>
-                        <el-select v-model="fetchParams[0].status" placeholder="请选择" @change="fetchData">
+                        <el-select v-model="fetchParams[0].status" placeholder="请选择" @change="fetchData" :clearable="true">
                             <el-option label="转码中" :value="2"></el-option>
                             <el-option label="下线" :value="1"></el-option>
                             <el-option label="正常" :value="0"></el-option>
                         </el-select>
                     </section>
-
                     <section>
-                        <i>工业</i>
-                        <IndustryCompanySelect :type="1" v-model="fetchParams[0].company_id"
+                        <i>连锁</i>
+                        <IndustryCompanySelect :type="2" v-model="fetchParams[0].company_id"
                                                :change="fetchData"></IndustryCompanySelect>
                     </section>
 
@@ -68,7 +67,7 @@
                     </DateRange>
                 </article>
             </el-tab-pane>
-            <el-tab-pane label="连锁课程">
+            <el-tab-pane label="工业课程">
                 <article class="search">
                     <section>
                         <i>专辑名称</i>
@@ -77,15 +76,16 @@
 
                     <section>
                         <i>状态</i>
-                        <el-select v-model="fetchParams[1].status" placeholder="请选择" @change="fetchData">
+                        <el-select v-model="fetchParams[1].status" placeholder="请选择" @change="fetchData" :clearable="true">
                             <el-option label="转码中" :value="2"></el-option>
                             <el-option label="下线" :value="1"></el-option>
                             <el-option label="正常" :value="0"></el-option>
                         </el-select>
                     </section>
+
                     <section>
-                        <i>连锁</i>
-                        <IndustryCompanySelect :type="2" v-model="fetchParams[1].company_id"
+                        <i>工业</i>
+                        <IndustryCompanySelect :type="1" v-model="fetchParams[1].company_id"
                                                :change="fetchData"></IndustryCompanySelect>
                     </section>
 
@@ -217,7 +217,7 @@
                 loadingData: false,
                 total: 0,
                 currTab: 0,
-                fetchParams: [getFetchParam(1), getFetchParam(2)],
+                fetchParams: [getFetchParam(2), getFetchParam(1)],
             }
         },
         created () {
