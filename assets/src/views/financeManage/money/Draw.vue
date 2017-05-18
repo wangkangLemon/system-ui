@@ -89,7 +89,7 @@
                     label="状态">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.status">{{scope.row.status}}</el-tag>
-                    <el-tag type="gray" v-else>待提现</el-tag>
+                    <el-tag type="gray" v-else>未知</el-tag>
                 </template>
             </el-table-column>
             <el-table-column
