@@ -157,6 +157,7 @@ const router = new VueRouter({
     routes
 })
 
+let loginouted = false
 router.afterEach((route) => {
     let title = route.meta.title
     if (title) {
@@ -170,7 +171,9 @@ router.afterEach((route) => {
 router.beforeEach((to, from, next) => {
     // 如果需要登录
     if (!to.matched.some(record => record.meta.notAuth) && (!authUtils.getUserInfo() || !authUtils.getAuthToken())) {
-        xmview.showTip('error', '未登录或登录已超时, 请重新登录!')
+        // 第一次进来不提示超时
+        loginouted && xmview.showTip('error', '未登录或登录已超时, 请重新登录!')
+        loginouted = true
         next({name: 'login'})
         return
     }
