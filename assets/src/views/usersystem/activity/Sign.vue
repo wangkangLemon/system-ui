@@ -1,18 +1,22 @@
 <!--签到-->
 <style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
+
     .activity-sign-container {
         .el-card {
             margin-bottom: 10px;
             .el-card__header {
-                padding: 10px 15px;
+                padding: 15px;
                 background: #f0f3f5;
+                position: relative;
                 .tip {
                     color: #999;
                     font-size: 12px;
                 }
                 .right-button {
-                    float: right;
+                    position: absolute;
+                    right: 15px;
+                    @extend %verticalCenter;
                 }
             }
             .calendar-main {
@@ -20,26 +24,25 @@
                 width: 70%;
                 .calendar-header {
                     text-align: center;
+                    position: relative;
                     > * {
                         display: inline-block;
                         vertical-align: top;
                     }
                     .operate {
-                        float: right;
+                        position: absolute;
+                        right: 0;
+                        @extend %verticalCenter;
                     }
                 }
             }
             .introduce {
                 border: 1px solid #ededed;
-                .title {
-                    border-bottom: 1px solid #ededed;
-                    font-size: 14px;
-                    padding: 15px;
-                    position: relative;
-                    .right-button {
-                        position: absolute;
-                        right: 15px;
-                        @extend %verticalCenter;
+                .insEdit {
+                    textarea {
+                        resize: none;
+                        border: none;
+                        outline: none;
                     }
                 }
             }
@@ -56,19 +59,28 @@
                     <!--月份切换-->
                     <ToggleMonth @toggleMonth="toggleMonth"></ToggleMonth>
                     <div class="operate">
-                        <el-button type="warning">复制</el-button>
+                        <!--<el-button type="warning" @click="copyData">复制</el-button>-->
                         <el-button type="primary"
                                    v-if="currDate > new Date() || currDate.getMonth() == new Date().getMonth()"
-                                   @click="isEdit = true">编辑</el-button>
-                        <el-button type="success" @click="setIntegral">保存</el-button>
+                                   @click="isEdit = true">编辑
+                        </el-button>
+                        <el-button type="success"
+                                   v-if="currDate > new Date() || currDate.getMonth() == new Date().getMonth()"
+                                   @click="setIntegral">保存
+                        </el-button>
                     </div>
                 </section>
                 <!--月历-->
-                <MonthCalendar @changeEditStatus="val => isEdit = val" :isEdit="isEdit" :listChecked="days" :date="currDate"></MonthCalendar>
+                <MonthCalendar @changeEditStatus="val => isEdit = val" :isEdit="isEdit" :listChecked="days"
+                               :date="currDate"></MonthCalendar>
             </div>
         </el-card>
         <el-card class="box-card">
-            <div slot="header" class="clearfix">月末礼包设置</div>
+            <div slot="header" class="clearfix">
+                月末礼包设置
+                <el-button @click="setAward('monthEnd')" type="primary" class="right-button el-icon-plus">选择奖品
+                </el-button>
+            </div>
             <el-table
                     border
                     :data="monthGift">
@@ -96,7 +108,11 @@
             </el-table>
         </el-card>
         <el-card class="box-card">
-            <div slot="header" class="clearfix">连续签到七天</div>
+            <div slot="header" class="clearfix">
+                连续签到七天
+                <el-button @click="setAward('sevenDay')" type="primary" class="right-button el-icon-plus">选择奖品
+                </el-button>
+            </div>
             <el-table
                     border
                     :data="sevenDaysGift">
@@ -124,21 +140,46 @@
             </el-table>
         </el-card>
         <el-card class="box-card">
-            <div slot="header" class="clearfix">签到说明</div>
-            <div class="introduce">
-                <div class="title">
-                    客户端签到页面底部说明
-                    <div class="right-button">
-                        <el-button type="primary">编辑</el-button>
-                        <el-button type="success">保存</el-button>
-                    </div>
-                </div>
-                <div class="content">
-
+            <div slot="header" class="clearfix">
+                签到说明
+                <i class="tip">客户端签到页面底部说明</i>
+                <div class="right-button">
+                    <el-button type="primary" @click="insEdit = false">编辑</el-button>
+                    <el-button type="success" @click="setIns">保存</el-button>
                 </div>
             </div>
-            <!--<el-input type="textarea" :rows="3"></el-input>-->
+            <div class="introduce">
+                <el-input
+                        :class="{'insEdit': insEdit}"
+                        :readonly="insEdit"
+                        type="textarea"
+                        :rows="5"
+                        v-model="instruction">
+                </el-input>
+            </div>
         </el-card>
+        <!--选择奖品-->
+        <el-dialog v-model="addForm" title="选择奖品" size="tiny">
+            <el-form :model="form" :rules="rules" ref="form" label-width="100px">
+                <el-form-item label="奖品设置" prop="storeid">
+                    <el-select v-model="form.storeid">
+                        <el-option label="充值卡" :value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="库存量">
+                    100
+                </el-form-item>
+                <el-form-item label="中奖概率" prop="percent">
+                    <el-input type="number" v-model="form.percent">
+                        <template slot="append">%</template>
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addForm=false">取消</el-button>
+                <el-button type="primary" @click="submit('form')">保存</el-button>
+            </div>
+        </el-dialog>
     </article>
 </template>
 
@@ -152,11 +193,27 @@
         },
         data () {
             return {
+                addForm: false,
+                insEdit: true,
+                instruction: '', // 签到说明
                 isEdit: false,
                 currDate: new Date(),
                 days: [],
                 monthGift: [], // 月末礼包数据
                 sevenDaysGift: [], // 7天奖品设置
+                form: clearForm(),
+                rules: {
+                    storeid: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    percent: [
+                        {
+                            required: true,
+                            message: '必填项',
+                            trigger: 'blur'
+                        }
+                    ]
+                },
             }
         },
         activated () {
@@ -169,7 +226,38 @@
             // 设置积分
             setIntegral () {
                 this.isEdit = false
+            },
+            // 设置签到
+            setIns () {
+                this.insEdit = true
+                console.log(this.instruction)
+            },
+            submit (form) { // 表单提交
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        console.log(valid)
+                    } else {
+                        return false
+                    }
+                })
+            },
+            // 设置月末礼包
+            setAward (category) {
+                this.addForm = true
+                this.form = clearForm()
+                this.form.category = category
+                setTimeout(() => {
+                    this.$refs.form.resetFields()
+                }, 0)
+                console.log(this.form)
             }
+        }
+    }
+    function clearForm() {
+        return {
+            category: '',
+            storeid: '',
+            percent: ''
         }
     }
 </script>

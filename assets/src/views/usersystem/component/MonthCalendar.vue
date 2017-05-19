@@ -78,7 +78,10 @@
     <article class="monthcalendor-container">
         <a class="day" v-for="item in dateArr" @click="dayClick($event, item.day, item)">
             {{item && item.day}}
-            <div class="operate" v-if="item && item.day">
+            <div class="operate" v-if="item && item.day && item.isMonthEnd">
+                礼包
+            </div>
+            <div class="operate" v-if="item && item.day && !item.isMonthEnd">
                 <i>积分</i>
                 <!--小与当前月不可编辑-->
                 <!--大于当前月并且isEdit=false不可编辑-->
@@ -116,14 +119,12 @@
         },
         computed: {
             calendarEdit () {
-                console.log(this.isEdit)
                 return this.isEdit
             }
         },
         watch: {
             // 监听变化 更改日历显示
             'date': function (newDate) {
-                console.log(this.date >= new Date())
                 this.$emit('changeEditStatus', false)
                 this.initData(newDate)
             },
@@ -133,8 +134,6 @@
             },
         },
         mounted () {
-            console.log(this.date.getMonth())
-            console.log(new Date().getMonth())
             todayDate = new Date()
             if (this.date) {
                 this.initData(this.date)
@@ -185,11 +184,12 @@
                             let currMonthDay = year + '-' + (month < 10 ? '0' : '') + (month + 1) + '-' + (n < 10 ? '0' + n : n)
                             let isCheck = !!this.listChecked.some(item => item == currMonthDay)
                             let isToday = (n == todayDate.getDate() && month == todayDate.getMonth() && year == todayDate.getFullYear())
+                            let isMonthEnd = (curMonthdays == n)
                             if (this.firstLoad && n == checkedDate && month == todayDate.getMonth() && year == todayDate.getFullYear()) {
                                 this.currSelectedDay = n
                             }
 
-                            calenderArr.push({year: year, month: month, day: n, isCheck, isToday})
+                            calenderArr.push({year: year, month: month, day: n, isCheck, isToday, isMonthEnd})
                         } else if (n && n >= curMonthdays) {
                             calenderArr.push(null)
                         }
