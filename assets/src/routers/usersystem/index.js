@@ -2,8 +2,9 @@
  * Created by huanghuixin on 2017/3/30.
  */
 
-const pathPre = '/usersystem'
+const pathPre = '/sys/user'
 import activity from './activity' // 活动
+import integral from './integral' // 积分乐园
 // 用户体系
 export default {
     path: pathPre,
@@ -14,5 +15,6 @@ export default {
     },
     children: [
         activity, // 活动
+        integral, // 积分乐园
     ]
 }
