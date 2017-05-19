@@ -32,3 +32,17 @@ export const fillImgPath = Vue.filter('fillImgPath', function (url) {
     let apiUrl = config.API_HOST_PROD.replace(/(^")|("$)/g, '')
     return url.indexOf('http://') > -1 ? url : apiUrl + url
 })
+
+export const fillZero = Vue.filter('fillZero', function (orignStr, maxLength = 2) {
+    if (!orignStr) {
+        return
+    }
+    orignStr = orignStr + '' // 将非字符串转为字符串
+    let zeroCount = maxLength - orignStr.length
+    let zeroStr = ''
+    for (let i = 0; i < zeroCount; i++) {
+        zeroStr = zeroStr + '0'
+    }
+
+    return zeroStr + orignStr
+})

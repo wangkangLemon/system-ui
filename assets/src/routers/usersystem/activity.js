@@ -2,7 +2,7 @@
  * Created by huanghuixin on 2017/3/30.
  */
 
-const pathPre = '/activity'
+const pathPre = 'activity'
 // 用户体系-活动
 export default {
     path: pathPre,
@@ -14,14 +14,14 @@ export default {
     children: [
         {
             path: 'sign', // 签到
-            name: 'usersys-activity-sign',
+            name: 'sys-user-activity-sign',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../../views/usersystem/activity/Sign.vue'))
                 })
             },
             meta: {
-                title: '文档管理-用户体系',
+                title: '活动管理-签到设置',
                 noback: true
             }
         },
