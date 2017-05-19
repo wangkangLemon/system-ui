@@ -5,6 +5,7 @@
 const pathPre = '/sys/user'
 import activity from './activity' // 活动
 import park from './park' // 积分乐园
+import grow from './grow' // 成长值管理
 // 用户体系
 export default {
     path: pathPre,
@@ -16,5 +17,6 @@ export default {
     children: [
         activity, // 活动
         park, // 积分乐园
+        grow, // 成长值
     ]
 }
