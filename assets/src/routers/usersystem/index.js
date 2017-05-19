@@ -9,7 +9,7 @@ export default {
     path: pathPre,
     component: resolve => {
         require.ensure([], () => {
-            resolve(require('../views/usersystem/Index.vue'))
+            resolve(require('../../views/usersystem/Index.vue'))
         })
     },
     children: [
