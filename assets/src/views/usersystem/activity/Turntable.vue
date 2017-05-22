@@ -1,6 +1,9 @@
 <!--转盘设置-->
 <style lang="scss" rel="stylesheet/scss">
     .activity-turntable-container {
+        .el-select {
+            width: 45% !important;
+        }
         .el-card {
             .el-form-item {
                 .tip {
@@ -10,11 +13,6 @@
                     }
                     font-size: 12px;
                     color: #999;
-                }
-                .el-select {
-                    display: inline-block;
-                    width: 40%;
-                    vertical-align: top;
                 }
             }
             .el-card__header {
@@ -157,12 +155,14 @@
         <el-dialog v-model="addForm" title="奖品设置" size="tiny">
             <el-form :model="form1" :rules="rules1" ref="form1" label-width="100px">
                 <el-form-item label="奖品类型" prop="id">
+                    <!--如果type_id有值就显示select框-->
                     <el-select v-model="form1.type_id">
                         <el-option label="道具卡" :value="1"></el-option>
                         <el-option label="外部卡券" :value="2"></el-option>
                         <el-option label="实物奖品" :value="3"></el-option>
                         <el-option label="谢谢参与" :value="4"></el-option>
                     </el-select>
+                    <!--如果id有值就显示select框-->
                     <el-select v-model="form1.id">
                         <el-option label="太阳伞" :value="1"></el-option>
                     </el-select>
@@ -224,7 +224,6 @@
                 },
                 rules1: {
                     id: {required: true, message: '必填项'},
-                    sort: {required: true, message: '必填项', trigger: 'blur'},
                     percent: {required: true, message: '必填项'}
                 },
             }
@@ -235,7 +234,15 @@
         methods: {
             editFn (row) {
                 this.addForm = true
-                console.log(row)
+                this.form1 = {
+                    type_id: '',
+                    id: '',
+                    sort: '',
+                    percent: ''
+                }
+                this.$nextTick(() => {
+                    this.$refs['form1'].resetFields()
+                })
             },
             awardSet (form) {
                 this.$refs[form].validate((valid) => {
