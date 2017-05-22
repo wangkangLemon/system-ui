@@ -3,7 +3,7 @@
  */
 import * as api from '../api'
 import config from '../../utils/config'
-const urlPre = config.apiHost + '/sys/usr/grow'
+const urlPre = config.apiHost + '/sys/user/grow'
 
 class GrowService {
     // 用户行为成长值记录列表
@@ -14,9 +14,9 @@ class GrowService {
         })
     }
     // 修改用户行为
-    updateBehavior ({id, name, desciption, growth, limit}) {
-        let finalUrl = `${urlPre}/`
-        return api.put(finalUrl, {id, name, desciption, growth, limit})
+    updateBehavior ({id, name, description, growth, limit}) {
+        let finalUrl = `${urlPre}/behavior/`
+        return api.put(finalUrl, {id, name, description, growth, limit})
     }
 }
 

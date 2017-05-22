@@ -17,6 +17,26 @@
 
 <template>
     <main id="usersystem-grow-behavior">
+         <!--修改表单-->
+        <el-dialog v-model="addForm" title="成长值获取方式" size="tiny">
+            <el-form class="addForm" :model="form" :rules="rules" ref="form" label-width="100px">
+                <el-form-item  prop="name" label="用户行为">
+                    <el-input type="text" v-model="form.name" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item  prop="growth" label="完成一次成长值">
+                    <el-input-number v-model="form.growth"  auto-complete="off"></el-input-number>
+                </el-form-item>
+                <el-form-item  prop="limit" label="最多可获取的成长值">
+                    <el-input-number v-model="form.limit"  auto-complete="off"></el-input-number>
+                </el-form-item>
+                <el-form-item  prop="description" label="行为说明">
+                    <el-input type="textarea" :rows="3" v-model="form.description" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="submit('form')">保存</el-button>
+            </div>
+        </el-dialog>
         <main class="search">
             <section>
                 <i>用户行为</i>
@@ -34,7 +54,7 @@
                     width="207"
                     label="操作">
                 <template scope="scope">
-                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
+                    <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -64,11 +84,44 @@
                 loadingData: false,
                 data: [], // 表格数据
                 total: 0,
+                addForm: false, // 表单弹窗是否显示
                 fetchParam: {
                     name: void '',
                     page: 1,
                     page_size: 15
-                }
+                },
+                form: {
+                    id: 0,
+                    name: void '',
+                    growth: 0,
+                    limit: 0,
+                    description: void ''
+                },
+                rules: {
+                    id: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    growth: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    limit: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    name: [
+                        {
+                            required: true,
+                            message: '必填项',
+                            trigger: 'blur'
+                        }
+                    ],
+                    description: [
+                        {
+                            required: true,
+                            message: '必填项',
+                            trigger: 'blur'
+                        }
+                    ]
+                },
             }
         },
         activated () {
@@ -93,8 +146,29 @@
                 })
             },
              // 编辑
-            edit (index, row) {
+            edit (row) {
+                this.addForm = true
+                this.form.id = row.id
+                this.form.name = row.name
+                this.form.growth = row.growth
+                this.form.limit = row.limit
+                this.form.description = row.description
             },
+            submit (form) { // 表单提交
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        growService.updateBehavior(this.form).then((ret) => {
+                            this.addForm = false
+                            xmview.showTip('success', '保存成功')
+                            this.fetchData()
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
+                    } else {
+                        return false
+                    }
+                })
+            }
         }
     }
 </script>

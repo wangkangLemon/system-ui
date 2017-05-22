@@ -2,7 +2,7 @@
  * Created by huanghuixin on 2017/3/30.
  */
 
-const pathPre = '/grow'
+const pathPre = 'grow'
 // 用户体系-活动
 export default {
     path: pathPre,
