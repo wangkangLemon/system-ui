@@ -14,7 +14,7 @@ export default {
     children: [
         {
             path: 'sign', // 签到
-            name: 'sys-user-activity-sign',
+            name: 'activity-sign',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../../views/usersystem/activity/Sign.vue'))
@@ -22,6 +22,19 @@ export default {
             },
             meta: {
                 title: '活动管理-签到设置',
+                noback: true
+            }
+        },
+        {
+            path: 'turntable', // 转盘设置
+            name: 'activity-turntable',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../../views/usersystem/activity/Turntable.vue'))
+                })
+            },
+            meta: {
+                title: '活动管理-转盘设置',
                 noback: true
             }
         },

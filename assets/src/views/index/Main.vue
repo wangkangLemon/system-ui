@@ -212,19 +212,19 @@
             <div>
                 <i><img src="./images/user.png" /></i>
                 <h2>{{mainData.user}}</h2>
-                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 1}}">店员总数量</router-link>
+                <router-link tag="p" :to="{name: 'company-user', query: {status: 1}}">店员总数量</router-link>
                 <div>
                     <i>昨日新增{{mainData.user_inc}}</i>
-                    <router-link tag="a" :to="{name: 'company-user-list', query: {status: 1, yesterday}}">查看详情</router-link>
+                    <router-link tag="a" :to="{name: 'company-user', query: {status: 1, yesterday}}">查看详情</router-link>
                 </div>
             </div>
             <div>
                 <i><img src="./images/r_user.png" /></i>
                 <h2>{{mainData.register_user}}</h2>
-                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 2}}">用户总数量</router-link>
+                <router-link tag="p" :to="{name: 'company-user', query: {status: 2}}">用户总数量</router-link>
                 <div>
                     <i>昨日新增{{mainData.register_user_inc}}</i>
-                    <router-link tag="a" :to="{name: 'company-user-list', query: {status: 2, yesterday}}">查看详情</router-link>
+                    <router-link tag="a" :to="{name: 'company-user', query: {status: 2, yesterday}}">查看详情</router-link>
                 </div>
             </div>
         </section>

@@ -2,62 +2,59 @@
 <template>
     <article>
         <el-tabs v-model="defaultTab"  type="border-card" @tab-click="tabClick">
-            <el-tab-pane
-                    v-for="(item, index) in menu"
-                    :label="item.title"
-                    :name="item.name"
-                    :key="item.id">
+            <el-tab-pane label="系统管理操作" name="1">
+                <SystemManage></SystemManage>
             </el-tab-pane>
-            <router-view></router-view>
+            <el-tab-pane label="企业管理" name="2">
+                <CompanyManage></CompanyManage>
+            </el-tab-pane>
+            <el-tab-pane label="系统后台登录" name="3">
+                <SystemBack></SystemBack>
+            </el-tab-pane>
+            <el-tab-pane label="企业后台登录" name="4">
+                <CompanyBack></CompanyBack>
+            </el-tab-pane>
+            <el-tab-pane label="前台登录" name="5">
+                <FrontDest></FrontDest>
+            </el-tab-pane>
+            <el-tab-pane label="手机验证码" name="6">
+                <MobileCode></MobileCode>
+            </el-tab-pane>
+            <el-tab-pane label="邮件验证码" name="7">
+                <EmailCode></EmailCode>
+            </el-tab-pane>
+            <el-tab-pane label="操作行为" name="8">
+                <OperationBehavior></OperationBehavior>
+            </el-tab-pane>
         </el-tabs>
     </article>
 </template>
-<script lang="babel">
+<script>
+    import SystemManage from './logSub/SystemManage.vue'
+    import CompanyManage from './logSub/CompanyManage.vue'
+    import SystemBack from './logSub/SystemBack.vue'
+    import CompanyBack from './logSub/CompanyBack.vue'
+    import FrontDest from './logSub/FrontDest.vue'
+    import MobileCode from './logSub/MobileCode.vue'
+    import EmailCode from './logSub/EmailCode.vue'
+    import OperationBehavior from './logSub/OperationBehavior.vue'
     export default {
+        components: {
+            SystemManage,
+            CompanyManage,
+            SystemBack,
+            CompanyBack,
+            FrontDest,
+            MobileCode,
+            EmailCode,
+            OperationBehavior
+        },
         data () {
-            return {
-                menu: [
-                    {
-                        id: 1,
-                        title: '系统管理操作',
-                        name: '1'
-                    },
-                    {
-                        id: 2,
-                        title: '企业管理操作',
-                        name: '2'
-                    },
-                    {
-                        id: 3,
-                        title: '系统后台登录',
-                        name: '3'
-                    },
-                    {
-                        id: 4,
-                        title: '企业后台登录',
-                        name: '4'
-                    },
-                    {
-                        id: 5,
-                        title: '前台登录',
-                        name: '5'
-                    },
-                    {
-                        id: 6,
-                        title: '手机验证码',
-                        name: '6'
-                    },
-                    {
-                        id: 7,
-                        title: '邮件验证码',
-                        name: '7'
-                    },
-                    {
-                        id: 8,
-                        title: '操作行为',
-                        name: '8'
-                    }
-                ],
+            return {}
+        },
+        watch: {
+            '$route' () {
+                xmview.setContentLoading(false)
             }
         },
         computed: {
@@ -65,13 +62,12 @@
                 return this.$route.query.tabIndex || '1'
             }
         },
-        mounted () {
-            this.$router.push({name: 'systemManage', query: {tabIndex: '1'}})
+        created () {
+            xmview.setContentLoading(false)
         },
         methods: {
             tabClick (target) {
-                let urlArr = ['', 'systemManage', 'companyManage', 'systemBack', 'companyBack', 'frontDest', 'mobileCode', 'emailCode', 'operationBehavior']
-                this.$router.push({name: urlArr[parseInt(target.name)], query: {tabIndex: target.name}})
+                this.$router.replace({name: 'sys-log', query: {tabIndex: target.name}})
             }
         }
     }

@@ -2,53 +2,47 @@
 <template>
     <article>
         <el-tabs v-model="defaultTab"  type="border-card" @tab-click="tabClick">
-            <el-tab-pane
-                    v-for="(item, index) in menu"
-                    :label="item.title"
-                    :name="item.name"
-                    :key="item.id">
+            <el-tab-pane label="店员列表" name="1">
+                <UserlistComponent></UserlistComponent>
             </el-tab-pane>
-            <keep-alive>
-                <router-view></router-view>
-            </keep-alive>
+            <el-tab-pane label="连锁统计" name="2">
+                <DepartmentComponent></DepartmentComponent>
+            </el-tab-pane>
+            <el-tab-pane label="地域统计" name="3">
+                <AreaComponent></AreaComponent>
+            </el-tab-pane>
         </el-tabs>
     </article>
 </template>
 <script>
+    import AreaComponent from './usercomponent/Area.vue'
+    import DepartmentComponent from './usercomponent/Department.vue'
+    import UserlistComponent from './usercomponent/List.vue'
     export default {
+        components: {
+            AreaComponent,
+            DepartmentComponent,
+            UserlistComponent
+        },
         data () {
-            return {
-                menu: [
-                    {
-                        id: 1,
-                        title: '店员列表',
-                        name: '1'
-                    },
-                    {
-                        id: 2,
-                        title: '连锁统计',
-                        name: '2'
-                    },
-                    {
-                        id: 3,
-                        title: '地域统计',
-                        name: '3'
-                    }
-                ],
-            }
+            return {}
         },
         computed: {
             defaultTab () {
                 return this.$route.query.tabIndex || '1'
             }
         },
+        watch: {
+            '$route' () {
+                xmview.setContentLoading(false)
+            }
+        },
         activated () {
-            this.$router.push({name: 'company-user-list', query: {tabIndex: '1'}})
+            xmview.setContentLoading(false)
         },
         methods: {
             tabClick (target) {
-                let urlArr = ['', 'company-user-list', 'company-user-department', 'company-user-area']
-                this.$router.push({name: urlArr[parseInt(target.name)], query: {tabIndex: target.name}})
+                this.$router.replace({name: 'company-user', query: {tabIndex: target.name}})
             }
         }
     }
