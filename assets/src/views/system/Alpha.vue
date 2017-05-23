@@ -29,6 +29,7 @@
                   :fit="true"
                   border>
             <el-table-column
+                    min-width="250"
                     prop="company_name"
                     label="连锁">
             </el-table-column>

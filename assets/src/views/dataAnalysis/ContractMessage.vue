@@ -142,30 +142,31 @@
             </section>
             <el-table border :data="signData" v-loading="loading">
                 <el-table-column
+                        min-width="200"
                         prop="name"
                         label="连锁名称">
                 </el-table-column>
                 <el-table-column
                         prop="department_number"
                         label="签约门店"
-                        width="200">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="department_count"
                         label="录入门店"
-                        width="200">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="user_number"
                         label="签约店员"
-                        width="200">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="user_count"
                         label="录入店员"
-                        width="200">
+                        width="100">
                 </el-table-column>
-                <el-table-column prop="operate" label="查看">
+                <el-table-column prop="operate" label="查看" width="120">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             连锁信息
