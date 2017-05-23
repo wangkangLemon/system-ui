@@ -27,6 +27,18 @@ export default {
             }
         },
         {
+            path: 'publishprod', // 销售总量
+            name: `${namePre}publishprod`,
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../../views/usersystem/park/PublishProd.vue'))
+                })
+            },
+            meta: {
+                title: '发布商品-用户体系',
+            }
+        },
+        {
             path: 'selling-count', // 销售总量
             name: `${namePre}sellingcount`,
             component: resolve => {

@@ -25,7 +25,7 @@
 <template>
     <main id="usersys-integral-product">
         <article class="manage-container">
-            <el-button type="success" icon="plus">发布商品</el-button>
+            <el-button type="success" icon="plus" @click="$router.push({name:'usersys-park-publishprod'})">发布商品</el-button>
         </article>
 
         <article class="search">
