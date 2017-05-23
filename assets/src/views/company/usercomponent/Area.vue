@@ -1,67 +1,53 @@
-<!--日志-邮件验证码-->
+<!--店员-地域统计-->
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
-    .system-manage {
+    .company-manager {
         padding: 20px;
+        .search {
+            @extend %top-search-container;
+        }
         .block {
             text-align: right;
             margin-top: 15px;
         }
-        .search {
-            @extend %top-search-container;
-        }
     }
 </style>
 <template>
-    <article class="system-manage">
+    <article class="company-manager">
         <section class="search">
             <section>
-                <i>邮件</i>
-                <el-input @change="getData" v-model="search.mail"></el-input>
+                <i>统计时间</i>
+                <el-date-picker
+                        @change="getData"
+                        v-model="searchParams.staticTime"
+                        type="date"
+                        :placeholder="searchParams.currentDate">
+                </el-date-picker>
             </section>
-            <section>
-                <i>发送IP</i>
-                <el-input @change="getData" v-model="search.ip"></el-input>
-            </section>
-            <DateRange title="发送时间" :start="search.time_start" :end="search.time_end"
-                       v-on:changeStart="val=> search.time_start=val "
-                       v-on:changeEnd="val=> search.time_end=val "
-                       :change="getData"></DateRange>
         </section>
         <el-table
                 v-loading="loading"
                 border
-                :data="listData">
+                :data="listData"
+                stripe
+                style="width: 100%">
             <el-table-column
-                    prop="email"
-                    label="邮件"
+                    prop="name"
+                    label="省份">
+            </el-table-column>
+            <el-table-column
+                    prop="increased"
+                    label="新增店员"
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="code"
-                    label="验证码"
-                    width="180">
+                    prop="tested"
+                    label="参与考试店员">
             </el-table-column>
             <el-table-column
-                    prop="company"
-                    min-width="200"
-                    label="连锁">
-            </el-table-column>
-            <el-table-column
-                    prop="department"
-                    label="门店"
-                    min-width="200">
-            </el-table-column>
-            <el-table-column
-                    width="100"
-                    prop="send_ip_name"
-                    label="发送IP">
-            </el-table-column>
-            <el-table-column
-                    prop="send_time_name"
-                    label="发送时间"
-                    width="180">
+                    prop="total"
+                    label="当前店员总数">
             </el-table-column>
         </el-table>
         <div class="block">
@@ -77,29 +63,24 @@
         </div>
     </article>
 </template>
-<script lang="babel">
-    import logService from '../../../services/logService'
-    import DateRange from '../../component/form/DateRangePicker.vue'
+<script>
+    import companyUserService from '../../../services/companyUserService'
+    import {date2Str} from '../../../utils/timeUtils'
     export default {
-        components: {
-            DateRange,
-        },
         data () {
             return {
                 loading: false,
                 currentPage: 1,
-                pageSize: 15,
+                pageSize: 10,
                 listData: [],
                 total: 0,
-                search: {
-                    mail: '',
-                    ip: '',
-                    time_start: '',
-                    time_end: '',
+                searchParams: {
+                    staticTime: '',
+                    currentDate: date2Str(new Date())
                 }
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -118,12 +99,9 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    email: this.search.mail,
-                    ip: this.search.ip,
-                    time_start: this.search.time_start,
-                    time_end: this.search.time_end,
+                    time_start: date2Str(this.searchParams.staticTime),
                 }
-                return logService.getMailCodeList(params).then((ret) => {
+                return companyUserService.getAreaState(params).then((ret) => {
                     this.listData = ret.data
                     this.total = ret.total
                 }).then(() => {
