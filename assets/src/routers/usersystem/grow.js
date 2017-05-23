@@ -25,5 +25,18 @@ export default {
                 noback: true
             }
         },
+        {
+            path: 'grade',
+            name: 'grow-grade',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../../views/usersystem/grow/Grade.vue'))
+                })
+            },
+            meta: {
+                title: '等级特权设置-用户体系',
+                noback: true
+            }
+        },
     ]
 }

@@ -31,9 +31,11 @@
             <section>
                 <i>任务类型</i>
                 <el-select v-model="search.type">
-                    <el-option label="分享资讯" :value="1"></el-option>
+                    <el-option label="考试合格" :value="1"></el-option>
                     <el-option label="观看课程" :value="2"></el-option>
-                    <el-option label="参加考试" :value="3"></el-option>
+                    <el-option label="阅读资讯" :value="3"></el-option>
+                    <el-option label="流利说" :value="4"></el-option>
+                    <el-option label="版本升级" :value="5"></el-option>
                 </el-select>
             </section>
         </section>
@@ -82,21 +84,23 @@
                     :total="total">
             </el-pagination>
         </section>
-        <el-dialog :visible.sync="addForm" size="tiny" title="活动任务" @open="dialogOpen">
+        <el-dialog :visible.sync="addForm" size="tiny" title="活动任务设置" @open="dialogOpen">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item prop="type" label="任务类型">
                     <el-select v-model="form.type">
-                        <el-option label="分享资讯" :value="1"></el-option>
+                        <el-option label="考试合格" :value="1"></el-option>
                         <el-option label="观看课程" :value="2"></el-option>
-                        <el-option label="参加考试" :value="3"></el-option>
+                        <el-option label="阅读资讯" :value="3"></el-option>
+                        <el-option label="流利说"   :value="4"></el-option>
+                        <el-option label="版本升级" :value="5"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="title" label="任务标题">
                     <el-input v-model="form.title"></el-input>
                 </el-form-item>
                 <el-form-item label="选择">
-                    <span class="course-title"></span>
-                    <el-button>选择</el-button>
+                    <span class="course-title" v-if="form.course_id">{{course.currCourse.name}}</span>
+                    <el-button type="primary" @click="course.isShow=true">选取课程</el-button>
                 </el-form-item>
                 <el-form-item prop="integral" label="任务奖励">
                     <el-input type="number" v-model="form.integral">
@@ -109,12 +113,21 @@
                 <el-button type="primary" @click="submit('form')">保 存</el-button>
             </span>
         </el-dialog>
+        <ChooseCourse v-model="course.isShow" v-on:result="courseConfirm"></ChooseCourse>
     </article>
 </template>
 <script>
+    import ChooseCourse from '../../component/dialog/ChooseCourse.vue'
     export default {
+        components: {
+            ChooseCourse
+        },
         data () {
             return {
+                course: {
+                    isShow: false,
+                    currCourse: null
+                },
                 loading: false,
                 addForm: false,
                 search: {
@@ -133,7 +146,7 @@
                 }
             }
         },
-        activity () {
+        activated () {
             xmview.setContentLoading(false)
         },
         methods: {
@@ -152,7 +165,13 @@
                         console.log(valid)
                     }
                 })
-            }
+            },
+            // 选取课程
+            courseConfirm (course) {
+                this.course.currCourse = course
+                this.course.isShow = false
+                this.form.course_id = course.id
+            },
         }
     }
     function clearFn() {

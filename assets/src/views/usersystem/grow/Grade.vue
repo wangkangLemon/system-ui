@@ -1,6 +1,5 @@
-<!--新手任务-->
+<!--等级特权-->
 <style lang="scss">
-    @import "../../../utils/mixins/topSearch";
     @import "../../../utils/mixins/showDetail";
     @import "../../../utils/mixins/common";
 
@@ -8,9 +7,6 @@
         @extend %content-container;
         .add {
             @extend %right-top-btnContainer;
-        }
-        .search {
-            @extend %top-search-container;
         }
         .block {
             margin-top: 10px;
@@ -23,44 +19,34 @@
         <section class="add">
             <el-button icon="plus" type="primary" @click="addForm = true">添加</el-button>
         </section>
-        <section class="search">
-            <section>
-                <i>任务标题</i>
-                <el-input @change="getData" v-model="search.title"></el-input>
-            </section>
-            <section>
-                <i>任务类型</i>
-                <el-select v-model="search.type">
-                    <el-option label="完善资料" :value="1"></el-option>
-                    <el-option label="观看课程" :value="2"></el-option>
-                    <el-option label="分享成绩" :value="3"></el-option>
-                    <el-option label="考试合格" :value="4"></el-option>
-                    <el-option label="参加考试" :value="5"></el-option>
-                    <el-option label="添加好友" :value="6"></el-option>
-                    <el-option label="登录"    :value="7"></el-option>
-                    <el-option label="课程任务" :value="8"></el-option>
-                    <el-option label="流利说"   :value="9"></el-option>
-                </el-select>
-            </section>
-        </section>
         <el-table border v-loading="loading" :data="dataList">
             <el-table-column
-                    prop="title"
-                    label="任务标题">
+                    prop="level"
+                    width="100"
+                    label="用户等级">
             </el-table-column>
             <el-table-column
-                    prop="type"
-                    label="新手任务类型"
+                    prop="grow"
+                    label="所需成长值"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="award"
-                    label="奖励"
+                    label="对应特权">
+            </el-table-column>
+            <el-table-column
+                    prop="last_time_name"
+                    label="积分收益系数"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="last_time_name"
-                    label="上次设置时间"
+                    label="每日启动成长值倍数"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="last_time_name"
+                    label="每日成长值上限"
                     width="180">
             </el-table-column>
             <el-table-column
@@ -68,7 +54,7 @@
                     label="操作"
                     width="180">
                 <template scope="scope">
-                    <el-button type="text" @click="editFn(scope.row)">修改</el-button>
+                    <el-button type="text">修改</el-button>
                     <el-button type="text">删除</el-button>
                 </template>
             </el-table-column>
@@ -83,22 +69,25 @@
                     :total="total">
             </el-pagination>
         </section>
-        <el-dialog :visible.sync="addForm" size="tiny" title="新手任务设置" @open="dialogOpen">
-            <el-form :model="form" :rules="rules" ref="form" label-width="100px">
-                <el-form-item prop="type" label="任务类型">
-                    <el-select v-model="form.type">
-                        <el-option label="分享资讯" :value="1"></el-option>
-                        <el-option label="观看课程" :value="2"></el-option>
-                        <el-option label="参加考试" :value="3"></el-option>
-                    </el-select>
+        <el-dialog :visible.sync="addForm" size="tiny" title="等级特权设置" @open="dialogOpen">
+            <el-form :model="form" :rules="rules" ref="form" label-width="120px">
+                <el-form-item prop="level" label="用户等级">
+                    <el-input v-model="form.level"></el-input>
                 </el-form-item>
-                <el-form-item prop="title" label="任务标题">
-                    <el-input v-model="form.title"></el-input>
+                <el-form-item label="所需成长值">
+                    <el-input v-model="form.level"></el-input>
                 </el-form-item>
-                <el-form-item prop="integral" label="奖励积分">
-                    <el-input type="number" v-model="form.integral">
-                        <template slot="append">积分</template>
-                    </el-input>
+                <el-form-item label="每日成长值上限">
+                    <el-input v-model="form.level"></el-input>
+                </el-form-item>
+                <el-form-item label="每日启动成长值">
+                    <el-input v-model="form.level"></el-input>
+                </el-form-item>
+                <el-form-item label="积分收益系数">
+                    <el-input v-model="form.level"></el-input>
+                </el-form-item>
+                <el-form-item label="成长值增益倍数">
+                    <el-input v-model="form.level"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -149,17 +138,17 @@
                         console.log(valid)
                     }
                 })
-            },
-            editFn (row) {
-                console.log(row)
             }
         }
     }
     function clearFn() {
         return {
-            type: '',
-            title: '',
-            integral: ''
+            level: '',
+            grow: '',
+            up: '',
+            daygrow: '',
+            multiple: '', // 倍数
+            coefficient: '', // 系数
         }
     }
 </script>

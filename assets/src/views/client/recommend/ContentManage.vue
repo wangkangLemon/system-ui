@@ -325,7 +325,7 @@
     </article>
 </template>
 <script>
-    import ChooseCourse from '../component/ChooseCourse.vue'
+    import ChooseCourse from '../../component/dialog/ChooseCourse.vue'
     import SectionCategorySelect from '../../component/select/SectionCategory.vue'
     import sectionService from '../../../services/sectionService'
     import UploadImg from '../../component/upload/UploadImg.vue'

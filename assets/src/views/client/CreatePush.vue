@@ -152,7 +152,7 @@
 <script>
     import treeUtils from '../../utils/treeUtils'
     import Region from '../component/select/Region.vue'
-    import ChooseCourse from './component/ChooseCourse.vue'
+    import ChooseCourse from '../component/dialog/ChooseCourse.vue'
     import ChooseSpeaking from './component/ChooseSpeaking.vue'
     import cityData from '../../assets/city'
     import pushService from '../../services/pushService'
