@@ -18,12 +18,12 @@
 <template>
     <main id="feedback-index">
         <section class="manage-container">
-            <el-button type="primary" icon="plus" @click="$router.push({name:'feedback-add'})"><i>提交工单</i></el-button>
+            <el-button type="primary" icon="plus" @click="$router.push({name:'feedback-add'})"><i>提交问题</i></el-button>
         </section>
 
         <main class="search">
             <section>
-                <i>工单状态</i>
+                <i>反馈状态</i>
                 <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
                     <el-option label="未分配" value="0"></el-option>
                     <el-option label="处理中" value="1"></el-option>
@@ -42,7 +42,7 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" border>
-            <el-table-column width="100" prop="id" label="工单编号"></el-table-column>
+            <el-table-column width="100" prop="id" label="反馈编号"></el-table-column>
             <el-table-column width="120" prop="category_name" label="问题分类"></el-table-column>
             <el-table-column prop="content" label="问题描述"></el-table-column>
             <el-table-column width="180" prop="create_time_name" label="提交时间"></el-table-column>

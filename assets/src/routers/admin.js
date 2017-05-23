@@ -162,7 +162,7 @@ export default [
                     })
                 },
                 meta: {
-                    title: '工单管理 - 工单系统',
+                    title: '后台问题反馈 - 问题反馈',
                     noback: true
                 }
             },
@@ -175,7 +175,7 @@ export default [
                     })
                 },
                 meta: {
-                    title: '工单详情 - 工单系统',
+                    title: '反馈详情 - 问题反馈',
                     noback: true,
                 }
             },
@@ -188,7 +188,7 @@ export default [
                     })
                 },
                 meta: {
-                    title: '客户端意见反馈 - 工单系统',
+                    title: '客户端意见反馈 - 问题反馈',
                     noback: true,
                 }
             },

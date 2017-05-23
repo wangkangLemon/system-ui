@@ -1,7 +1,4 @@
-/**
- * Created by huangrui on 2017/3/30.
- */
-// 财务管理
+// 工单系统
 const pathPre = '/feedback'
 export default {
     path: pathPre,
@@ -20,7 +17,7 @@ export default {
                 })
             },
             meta: {
-                title: '我的工单 - 工单系统',
+                title: '我的反馈 - 问题反馈',
                 noback: true
             }
         },
@@ -33,7 +30,7 @@ export default {
                 })
             },
             meta: {
-                title: '提交工单 - 工单系统',
+                title: '提交问题 - 问题反馈',
                 noback: true,
             }
         },
@@ -46,7 +43,7 @@ export default {
                 })
             },
             meta: {
-                title: '工单详情 - 工单系统',
+                title: '反馈详情 - 问题反馈',
                 noback: true,
             }
         },
