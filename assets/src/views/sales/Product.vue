@@ -69,6 +69,7 @@
                     label="工业">
             </el-table-column>
             <el-table-column
+                    min-width="200"
                     prop="description"
                     label="描述">
             </el-table-column>

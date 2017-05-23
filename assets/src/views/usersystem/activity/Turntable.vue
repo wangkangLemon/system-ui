@@ -94,17 +94,17 @@
                         <template slot="append">次/每天</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="上传图片" prop="url">
-                    <section class="uploadimg">
-                        <div class="img-container">
-                            <img :src="form.url | fillImgPath" v-show="form.url">
-                        </div>
-                        <div class="img-desc">
-                            <ImagEcropperInput :aspectRatio="1280/1706" :confirmFn="cropperFn"></ImagEcropperInput>
-                            <span>图片用于手机客户端转盘页面的背景图更换</span>
-                        </div>
-                    </section>
-                </el-form-item>
+                <!--<el-form-item label="上传图片" prop="url">-->
+                    <!--<section class="uploadimg">-->
+                        <!--<div class="img-container">-->
+                            <!--<img :src="form.url | fillImgPath" v-show="form.url">-->
+                        <!--</div>-->
+                        <!--<div class="img-desc">-->
+                            <!--<ImagEcropperInput :aspectRatio="1280/1706" :confirmFn="cropperFn"></ImagEcropperInput>-->
+                            <!--<span>图片用于手机客户端转盘页面的背景图更换</span>-->
+                        <!--</div>-->
+                    <!--</section>-->
+                <!--</el-form-item>-->
                 <el-form-item label="奖项配置">
                     <p class="tip"><i>*</i>此活动必须配置8个奖品，其中至少有一个谢谢参与</p>
                     <el-table
