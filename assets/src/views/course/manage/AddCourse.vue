@@ -265,6 +265,13 @@
             if (this.$route.params.courseInfo) {
                 this.fetchParam = this.$route.params.courseInfo
                 xmview.setContentTile('编辑课程-培训')
+            } else {
+                courseService.getCourseInfo({course_id: this.$route.query.id}).then((ret) => {
+                    this.fetchParam = ret.course
+                    xmview.setContentTile('编辑课程-培训')
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             }
             this.$route.params.tab && (this.activeTab = this.$route.params.tab)
             this.readonly = this.$route.params.readonly
