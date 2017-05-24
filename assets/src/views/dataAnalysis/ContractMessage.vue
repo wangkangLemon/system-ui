@@ -232,7 +232,7 @@
                 signData: []
             }
         },
-        created () {
+        activated () {
             Promise.all([this.getData(), companyService.getSignMessage()]).then((ret) => {
                 this.signs = ret[1]
             }).then(() => {

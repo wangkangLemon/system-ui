@@ -58,8 +58,8 @@
 
             <section>
                 <i>姓名</i>
-                <v-input :enter="fetchData" v-model="fetchParam.username"
-                         placeholder="请输入内容"></v-input>
+                <el-input :enter="fetchData" v-model="fetchParam.username"
+                         placeholder="请输入内容"></el-input>
             </section>
 
             <DateRange title="晒单时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
@@ -196,7 +196,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.fetchData().then(() => {
                 xmview.setContentLoading(false)
             })

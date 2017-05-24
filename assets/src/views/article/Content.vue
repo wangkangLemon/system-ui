@@ -132,7 +132,7 @@
                 pageSize: 15
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

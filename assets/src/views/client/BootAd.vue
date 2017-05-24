@@ -129,7 +129,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.user = authUtls.getUserInfo()
             mobileService.getBoot({company_id: this.user.company_id}).then((ret) => {
                 this.imgData = ret.data.image

@@ -62,7 +62,7 @@
                 return this.$route.query.tabIndex || '1'
             }
         },
-        created () {
+        activated () {
             xmview.setContentLoading(false)
         },
         methods: {

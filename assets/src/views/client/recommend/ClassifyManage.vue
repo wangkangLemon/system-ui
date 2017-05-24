@@ -157,7 +157,7 @@
                 }
             },
         },
-        created () {
+        activated () {
             xmview.setContentLoading(false)
             this.uploadImgUrl = sectionService.getCategoryImageUrl()
         },

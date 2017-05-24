@@ -97,7 +97,7 @@
                 pageSize: 10
             }
         },
-        mounted () {
+        activated () {
             getMoney().then((ret) => {
                 this.balance.content = ret.balance
                 this.balance.footer = this.balance.footer + ret.total

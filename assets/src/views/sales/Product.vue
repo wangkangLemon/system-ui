@@ -122,7 +122,7 @@
                 },
             }
         },
-        created () {
+        activated () {
             this.fetchData().then(() => {
                 xmview.setContentLoading(false)
             }, () => {

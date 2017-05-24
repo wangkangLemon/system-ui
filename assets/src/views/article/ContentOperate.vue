@@ -77,7 +77,7 @@
                 return this.$route.params.id
             }
         },
-        created () {
+        activated () {
             xmview.setContentLoading(false)
             if (this.articleID == undefined) return
             ArticleService.getEditDetail(this.articleID).then((ret) => {

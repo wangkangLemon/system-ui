@@ -151,6 +151,7 @@
     export default {
         data () {
             return {
+                loading: false,
                 data: [],
                 total: 0,
                 fetchParam: {
@@ -169,7 +170,7 @@
                 companyList: []
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
