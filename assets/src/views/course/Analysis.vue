@@ -124,7 +124,8 @@
             <el-tab-pane label="本月" name="month"></el-tab-pane>
             <el-tab-pane label="上月" name="prevmonth"></el-tab-pane>
         </el-tabs>
-        <el-button type="warning" class="export" @click="exportClick"><i class="iconfont icon-iconfontexcel"></i> <i>导出</i></el-button>
+        <el-button type="warning" class="export" @click="exportClick"><i class="iconfont icon-iconfontexcel"></i>
+            <i>导出</i></el-button>
 
         <article class="table-container">
             <article class="search">
@@ -244,15 +245,7 @@
                 tableData: [],
                 type: 0,
                 pageType: 0, // 0-课程分析 1-连锁学习情况 2-门店学习情况  3-店员学习情况
-                fetchParam: {
-                    date: 'yesterday',
-                    page: 1,
-                    page_size: 15,
-                    type: void 0,
-                    course_id: void 0,
-                    department_id: void 0,
-                    store_id: void 0
-                }
+                fetchParam: getFetchParam()
             }
         },
         watch: {
@@ -284,6 +277,9 @@
             xmview.setContentBack(this.type > 0)
         },
         methods: {
+            initFetchParam () {
+                this.fetchParam = getFetchParam()
+            },
             fetchData () {
                 this.loadingData = true
                 let p
@@ -312,4 +308,15 @@
         components: {CourseSelect, DepSelect, StoreSelect}
     }
 
+    function getFetchParam () {
+        return {
+            date: 'yesterday',
+            page: 1,
+            page_size: 15,
+            type: void 0,
+            course_id: void 0,
+            department_id: void 0,
+            store_id: void 0
+        }
+    }
 </script>
