@@ -38,31 +38,30 @@
             <section class="search">
                 <section>
                     <i>连锁</i>
-                    <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
-                                           v-on:change="val=>searchParams.companySelect=val"
+                    <IndustryCompanySelect :type="2" v-model="fetchParam.companySelect"
+                                           v-on:change="val=>fetchParam.companySelect=val"
                                            :change="getData">
                     </IndustryCompanySelect>
                 </section>
                 <section>
                     <i>类型</i>
-                    <el-select clearable v-model="searchParams.type" @change="getData">
+                    <el-select clearable v-model="fetchParam.type" @change="getData">
                         <el-option label="企业公告" value="company"></el-option>
                         <el-option label="分店公告" value="department"></el-option>
                     </el-select>
                 </section>
                 <section>
                     <i>标题</i>
-                    <el-input @change="getData" v-model="searchParams.title" auto-complete="off"></el-input>
+                    <el-input @keyup.enter.native="getData" v-model="fetchParam.title" auto-complete="off"></el-input>
                 </section>
                 <section>
                     <i>状态</i>
-                    <el-select clearable v-model="searchParams.status" @change="getData">
+                    <el-select clearable v-model="fetchParam.status" @change="getData">
                         <el-option label="正常" value="0"></el-option>
                         <el-option label="草稿" value="1"></el-option>
                         <el-option label="撤销" value="2"></el-option>
                     </el-select>
                 </section>
-                <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
                     v-loading="loading"
@@ -145,7 +144,7 @@
                 pageSize: 15,
                 announceData: [],
                 total: 0,
-                searchParams: clearSearch()
+                fetchParam: clearSearch()
             }
         },
         activated () {
@@ -154,10 +153,6 @@
             })
         },
         methods: {
-            clearFn () {
-                this.searchParams = clearSearch()
-                this.getData()
-            },
             showFn (row) {
                 this.showDetail = true
                 setTimeout(() => {
@@ -178,10 +173,10 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    company_id: this.searchParams.companySelect,
-                    keyword: this.searchParams.title,
-                    status: this.searchParams.status,
-                    type: this.searchParams.type,
+                    company_id: this.fetchParam.companySelect,
+                    keyword: this.fetchParam.title,
+                    status: this.fetchParam.status,
+                    type: this.fetchParam.type,
                 }
                 return companyService.getAnnounceList(params).then((ret) => {
                     this.announceData = ret.data

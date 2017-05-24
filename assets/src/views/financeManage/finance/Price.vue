@@ -54,8 +54,8 @@
                 <i>工业</i>
                 <IndustryCompanySelect
                         type="1"
-                        v-model="industrySelect"
-                        v-on:change="val=>industrySelect=val"
+                        v-model="fetchParam.industrySelect"
+                        v-on:change="val=>fetchParam.industrySelect=val"
                         :change="fetchData">
                 </IndustryCompanySelect>
             </section>
@@ -63,13 +63,13 @@
                 <i>管理员</i>
                 <admin
                         :change="fetchData"
-                        v-on:change="val=>managerSelect=val"
-                        v-model="managerSelect">
+                        v-on:change="val=>fetchParam.managerSelect=val"
+                        v-model="fetchParam.managerSelect">
                 </admin>
             </section>
-            <DateRange title="创建时间" :start="createTime" :end="endTime"
-                       v-on:changeStart="val=> createTime=val"
-                       v-on:changeEnd="val=> endTime"
+            <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                       v-on:changeStart="val=> fetchParam.createTime=val"
+                       v-on:changeEnd="val=> fetchParam.endTime=val"
                        :change="fetchData">
             </DateRange>
         </section>
@@ -135,13 +135,15 @@
         },
         data () {
             return {
+                fetchParam: {
+                    industrySelect: '',
+                    managerSelect: '',
+                    createTime: '',
+                    endTime: '',
+                },
                 currentData: null,
                 showDetail: false,
                 loading: false,
-                industrySelect: '',
-                managerSelect: '',
-                createTime: '',
-                endTime: '',
                 currentPage: 1,
                 pageSize: 15,
                 total: 0,
@@ -215,10 +217,10 @@
                 return priceData({
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    admin_id: this.managerSelect,
-                    company_id: this.industrySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime
+                    admin_id: this.fetchParam.managerSelect,
+                    company_id: this.fetchParam.industrySelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime
                 }).then((ret) => {
                     this.industryData = ret.data
                     this.total = ret.total
@@ -228,10 +230,10 @@
             },
             exportData () {
                 exportPrice({
-                    admin_id: this.managerSelect,
-                    company_id: this.industrySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime
+                    admin_id: this.fetchParam.managerSelect,
+                    company_id: this.fetchParam.industrySelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime
                 })
             }
         }

@@ -84,7 +84,7 @@
         </div>
     </article>
 </template>
-<script lang="babel">
+<script>
     import logService from '../../../services/logService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import UserSelect from '../../component/select/User.vue'

@@ -65,16 +65,16 @@
             <section class="search">
                 <section>
                     <label>状态</label>
-                    <el-select clearable @change="getData" v-model="search.statusSelect">
+                    <el-select clearable @change="getData" v-model="fetchParam.statusSelect">
                         <el-option label="已完成" :value="0"></el-option>
                         <el-option label="待处理" :value="1"></el-option>
                         <el-option label="进行中" :value="2"></el-option>
                         <el-option label="失败" :value="3"></el-option>
                     </el-select>
                 </section>
-                <DateRange title="日期" :start="search.createTime" :end="search.endTime"
-                           v-on:changeStart="val=> search.createTime=val"
-                           v-on:changeEnd="val=> search.endTime"
+                <DateRange title="日期" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                           v-on:changeStart="val=> fetchParam.createTime=val"
+                           v-on:changeEnd="val=> fetchParam.endTime"
                            :change="getData">
                 </DateRange>
             </section>
@@ -137,7 +137,7 @@
                 total: 0,
                 pageSize: 15,
                 currentPage: 1,
-                search: {
+                fetchParam: {
                     statusSelect: '',
                     createTime: '',
                     endTime: '',
@@ -164,9 +164,9 @@
                 return analysisService.getExportList({
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    status: this.search.statusSelect,
-                    time_start: this.search.createTime,
-                    time_end: this.search.endTime,
+                    status: this.fetchParam.statusSelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
                     company_id: authUtils.getUserInfo().company_id
                 }).then((ret) => {
                     this.total = ret.total

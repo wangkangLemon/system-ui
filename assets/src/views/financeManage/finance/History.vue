@@ -33,28 +33,28 @@
         <section class="search">
             <section>
                 <i>企业</i>
-                <IndustryCompanySelect v-model="companySelect"
-                                       v-on:change="val=>companySelect=val"
+                <IndustryCompanySelect v-model="fetchParam.companySelect"
+                                       v-on:change="val=>fetchParam.companySelect=val"
                                        :change="getData">
                 </IndustryCompanySelect>
             </section>
             <section>
                 <i>课程</i>
-                <course-list v-model="courseSelect"
-                             v-on:change="val=>courseSelect=val"
+                <course-list v-model="fetchParam.courseSelect"
+                             v-on:change="val=>fetchParam.courseSelect=val"
                              :change="getData">
                 </course-list>
             </section>
             <section>
                 <i>用户</i>
-                <UserList v-model="userSelect"
-                          v-on:change="val=>userSelect=val"
+                <UserList v-model="fetchParam.userSelect"
+                          v-on:change="val=>fetchParam.userSelect=val"
                           :change="getData">
                 </UserList>
             </section>
-            <DateRange title="创建时间" :start="createTime" :end="endTime"
-                       v-on:changeStart="val=> createTime=val"
-                       v-on:changeEnd="val=> endTime"
+            <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                       v-on:changeStart="val=>fetchParam.createTime=val"
+                       v-on:changeEnd="val=>fetchParam.endTime=val"
                        :change="getData">
             </DateRange>
         </section>
@@ -133,11 +133,13 @@
         data () {
             return {
                 loading: false,
-                companySelect: '',
-                courseSelect: '',
-                userSelect: '',
-                createTime: '',
-                endTime: '',
+                fetchParam: {
+                    companySelect: '',
+                    courseSelect: '',
+                    userSelect: '',
+                    createTime: '',
+                    endTime: '',
+                },
                 currentPage: 1,
                 pageSize: 10,
                 historyData: [],
@@ -163,11 +165,11 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime,
-                    user_id: this.userSelect
+                    course_id: this.fetchParam.courseSelect,
+                    company_id: this.fetchParam.companySelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    user_id: this.fetchParam.userSelect
                 }
                 return history(params).then((ret) => {
                     this.historyData = ret.data
@@ -178,11 +180,11 @@
             },
             exportData () {
                 exportHistory({
-                    course_id: this.courseSelect,
-                    company_id: this.companySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime,
-                    user_id: this.userSelect
+                    course_id: this.fetchParam.courseSelect,
+                    company_id: this.fetchParam.companySelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    user_id: this.fetchParam.userSelect
                 })
             }
         }

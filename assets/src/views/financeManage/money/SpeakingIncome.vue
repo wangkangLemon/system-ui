@@ -24,35 +24,35 @@
         <section class="search">
             <section>
                 <i>药我说</i>
-                <speaking-list v-model="speakingSelect"
-                             v-on:change="val=>speakingSelect=val"
+                <speaking-list v-model="fetchParam.speakingSelect"
+                             v-on:change="val=>fetchParam.speakingSelect=val"
                              :change="getData">
                 </speaking-list>
             </section>
             <section>
                 <i>用户</i>
-                <UserList v-model="userSelect"
-                      v-on:change="val=>userSelect=val"
+                <UserList v-model="fetchParam.userSelect"
+                      v-on:change="val=>fetchParam.userSelect=val"
                       :change="getData">
                 </UserList>
             </section>
             <section>
                 <i>用户所属企业</i>
-                <IndustryCompanySelect v-model="companySelect"
-                                       v-on:change="val=>companySelect=val"
+                <IndustryCompanySelect v-model="fetchParam.companySelect"
+                                       v-on:change="val=>fetchParam.companySelect=val"
                                        :change="getData">
                 </IndustryCompanySelect>
             </section>
             <section>
                 <i>赞助企业</i>
-                <IndustryCompanySelect v-model="moneycompanySelect"
-                                       v-on:change="val=>moneycompanySelect=val"
+                <IndustryCompanySelect v-model="fetchParam.moneycompanySelect"
+                                       v-on:change="val=>fetchParam.moneycompanySelect=val"
                                        :change="getData">
                 </IndustryCompanySelect>
             </section>   
-            <DateRange title="创建时间" :start="createTime" :end="endTime"
-                       v-on:changeStart="val=> createTime=val"
-                       v-on:changeEnd="val=> endTime"
+            <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                       v-on:changeStart="val=> fetchParam.createTime=val"
+                       v-on:changeEnd="val=> fetchParam.endTime=val"
                        :change="getData">
             </DateRange>
         </section>
@@ -117,12 +117,14 @@
         data () {
             return {
                 loading: false,
-                companySelect: '',
-                moneycompanySelect: '',
-                speakingSelect: '',
-                userSelect: '',
-                createTime: '',
-                endTime: '',
+                fetchParam: {
+                    companySelect: '',
+                    moneycompanySelect: '',
+                    speakingSelect: '',
+                    userSelect: '',
+                    createTime: '',
+                    endTime: '',
+                },
                 currentPage: 1,
                 pageSize: 10,
                 historyData: [],
@@ -149,12 +151,12 @@
                     page: this.currentPage,
                     page_size: this.pageSize,
                     type: 'speaking',
-                    type_id: this.speakingSelect,
-                    company_id: this.companySelect,
-                    money_company_id: this.moneycompanySelect,
-                    user_id: this.userSelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime
+                    type_id: this.fetchParam.speakingSelect,
+                    company_id: this.fetchParam.companySelect,
+                    money_company_id: this.fetchParam.moneycompanySelect,
+                    user_id: this.fetchParam.userSelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime
                 }
                 return history(params).then((ret) => {
                     this.historyData = ret.data
@@ -166,10 +168,10 @@
             exportData () { // 导出数据
                 exportData({
                     type: 'speaking',
-                    company_id: this.companySelect,
-                    money_company_id: this.moneycompanySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime
+                    company_id: this.fetchParam.companySelect,
+                    money_company_id: this.fetchParam.moneycompanySelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime
                 })
             }
         }

@@ -69,7 +69,7 @@
         </div>
     </article>
 </template>
-<script lang="babel">
+<script>
     import logService from '../../../services/logService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import AdminSelect from '../../component/select/Admin.vue'
