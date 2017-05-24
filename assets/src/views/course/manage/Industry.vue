@@ -221,13 +221,14 @@
                 fetchParams: [getFetchParam(2), getFetchParam(1)],
             }
         },
-        created () {
-            this.fetchData()
-        },
         activated () {
+            this.fetchData()
             xmview.setContentLoading(false)
         },
         methods: {
+            initFetchParam () {
+                this.fetchParams = [getFetchParam(2), getFetchParam(1)]
+            },
             fetchData () {
                 this.loadingData = true
                 return courseService.getCourseList(this.fetchParams[this.currTab]).then((ret) => {

@@ -15,6 +15,7 @@ import user from './routers/user' // 企业
 import im from './routers/im'
 import speaking from './routers/speaking' // 药我说
 import authUtils from './utils/authUtils'
+import * as typeUtils from './utils/typeUtls'
 
 Vue.use(VueRouter)
 
@@ -167,11 +168,10 @@ router.afterEach((route) => {
     // 如果需要清空筛选条件
     if (store.state.index.clearFetchParam) {
         store.dispatch('clearFetchParam', false)
-        setTimeout(() => {
-            for (let k in route.matched[route.matched.length - 1].instances.default.fetchParam) {
-                route.matched[route.matched.length - 1].instances.default.fetchParam[k] = void 0
-            }
-        }, 0)
+
+        if (route.matched.length < 2) return
+        let vm = route.matched[1].instances.default.$children[0]
+        vm.initFetchParam ? vm.initFetchParam() : clearObj([vm.fetchParam, vm.fetchParams])
     }
 
     // 设置选中的菜单
@@ -192,7 +192,6 @@ router.beforeEach((to, from, next) => {
     setTitle(to.meta.title)
 
     showBackContent(to, from, next)
-
     next()
 })
 
@@ -224,6 +223,17 @@ function showBackContent (to, from, next) {
     // 如果不需要back 则干掉返回按钮
     if (to.matched.some(record => record.meta.noback)) {
         xmview.setContentBack && xmview.setContentBack(false)
+    }
+}
+
+function clearObj (obj) {
+    if (!obj) return
+    if (typeUtils.isArray(obj)) {
+        for (let i = 0; i < obj.length; i++) clearObj(obj[i])
+    } else {
+        for (let k in obj) {
+            if (k !== 'page' && k !== 'page_size') obj[k] = void 0
+        }
     }
 }
 
