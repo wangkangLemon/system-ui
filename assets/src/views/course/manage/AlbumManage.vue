@@ -72,7 +72,7 @@
         <article class="search">
             <section>
                 <i>专辑名称</i>
-                <vInput :enter="fetchData" v-model="fetchParam.keyword"></vInput>
+                <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
             </section>
 
             <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
@@ -136,7 +136,10 @@
                 <el-input v-model="dialogAdd.name" style="vertical-align: middle"></el-input>
             </section>
             <div class="dialog-add-item">
-                <h5>未选择 <el-input placeholder="搜索" v-model="dialogAdd.keyword" style="width: 80%; vertical-align: middle" @keyup.enter.native="fetchData4dialogCourse(true)"></el-input></h5>
+                <h5>未选择
+                    <el-input placeholder="搜索" v-model="dialogAdd.keyword" style="width: 80%; vertical-align: middle"
+                              @keyup.enter.native="fetchData4dialogCourse(true)"></el-input>
+                </h5>
                 <el-table :data="dialogAdd.data" :show-header="false" :height="500" :fit="true"
                           v-loading="dialogAdd.loading"
                           row-class-name="dialogadd-notselect-row"
@@ -182,7 +185,6 @@
 <script>
     import courseService from '../../../services/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
-    import vInput from '../../component/form/Input.vue'
     export default{
         data () {
             return {
@@ -350,6 +352,6 @@
                 this.dialogAdd.data4Selected.splice(index, 1)
             }
         },
-        components: {vInput, DateRange}
+        components: {DateRange}
     }
 </script>

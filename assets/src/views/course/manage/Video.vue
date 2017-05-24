@@ -44,7 +44,7 @@
         <article class="search">
             <section>
                 <i>视频</i>
-                <vInput :enter="fetchData" v-model="fetchParam.keyword"></vInput>
+                <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
             </section>
 
             <section>
@@ -101,6 +101,7 @@
                                @click="refreshStatus(scope.$index, scope.row)">刷新
 
 
+
                     </el-button>
                 </template>
             </el-table-column>
@@ -115,6 +116,7 @@
                 <template scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
                                v-if="scope.row.status == 0">预览
+
 
 
                     </el-button>
@@ -171,7 +173,6 @@
 </template>
 
 <script>
-    import vInput from '../../component/form/Input.vue'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
@@ -305,7 +306,7 @@
             }
         },
         components: {
-            vInput, CourseCategorySelect, DateRange, IndustryCompanySelect, vTags, UploadImg, VideoPreview
+            CourseCategorySelect, DateRange, IndustryCompanySelect, vTags, UploadImg, VideoPreview
         }
     }
 </script>

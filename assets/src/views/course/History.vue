@@ -159,7 +159,6 @@
     import testingService from '../../services/testingService'
     import CourseSelect from '../component/select/Course.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
-    import vInput from '../component/form/Input.vue'
     import CompanySelect from '../component/select/IndustryCompany.vue'
     import DepSelect from '../component/select/Department.vue'
 
@@ -227,6 +226,6 @@
 //                })
             }
         },
-        components: {CourseSelect, DateRange, vInput, CompanySelect, DepSelect}
+        components: {CourseSelect, DateRange, CompanySelect, DepSelect}
     }
 </script>

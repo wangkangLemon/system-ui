@@ -167,9 +167,8 @@
     </article>
 </template>
 
-<script lang='babel'>
+<script>
     import IndustrySelect from '../component/select/IndustryCompany.vue'
-    import vInput from '../component/form/Input.vue'
     import salesService from '../../services/salesService'
     import DateRange from '../component/form/DateRangePicker.vue'
 
@@ -238,7 +237,7 @@
             }
         },
         components: {
-            IndustrySelect, DateRange, vInput
+            IndustrySelect, DateRange
         }
     }
 

@@ -79,11 +79,9 @@
 
 <script>
     import feedbackUserService from '../../services/feedback/user'
-    import vInput from '../component/form/Input.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
     export default {
         components: {
-            vInput,
             DateRange
         },
         data() {

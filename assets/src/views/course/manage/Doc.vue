@@ -38,7 +38,7 @@
         <article class="search">
             <section>
                 <i>文档名称</i>
-                <vInput :enter="fetchData" v-model="fetchParam.keyword"></vInput>
+                <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
             </section>
 
             <section>
@@ -137,7 +137,6 @@
 </template>
 
 <script>
-    import vInput from '../../component/form/Input.vue'
     import courseService from '../../../services/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
@@ -217,6 +216,6 @@
                 })
             },
         },
-        components: {vInput, courseService, DateRange, IndustryCompanySelect}
+        components: {courseService, DateRange, IndustryCompanySelect}
     }
 </script>

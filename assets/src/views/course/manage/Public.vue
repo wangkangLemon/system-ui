@@ -146,8 +146,9 @@
                     label="操作">
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
-                    <el-button @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row}, query: {id: scope.row.id}})"
-                               type="text" size="small">编辑 <!--a-->
+                    <el-button
+                            @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row}, query: {id: scope.row.id}})"
+                            type="text" size="small">编辑 <!--a-->
                     </el-button>
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
@@ -202,7 +203,6 @@
 <script>
     import courseService from '../../../services/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
-    import vInput from '../../component/form/Input.vue'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     import CourseCategoryTree from '../../component/tree/CourseCategory.vue'
 
@@ -307,6 +307,6 @@
                 })
             },
         },
-        components: {vInput, DateRange, CourseCategorySelect, CourseCategoryTree}
+        components: {DateRange, CourseCategorySelect, CourseCategoryTree}
     }
 </script>
