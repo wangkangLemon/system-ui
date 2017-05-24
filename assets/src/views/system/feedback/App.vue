@@ -78,7 +78,7 @@
             <section class="search">
                 <section>
                     <i>关键字</i>
-                    <el-input @change="getData" v-model="search.keyword"></el-input>
+                    <el-input @keyup.enter.native="getData" v-model="search.keyword"></el-input>
                 </section>
                 <section>
                     <i>类型：</i>
