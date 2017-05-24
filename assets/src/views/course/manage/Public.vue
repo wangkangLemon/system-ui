@@ -57,7 +57,7 @@
         <article class="search">
             <section>
                 <i>课程名称</i>
-                <vInput :enter="fetchData" v-model="fetchParam.keyword"></vInput>
+                <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
             </section>
 
             <section>
@@ -111,8 +111,8 @@
                     label="题目数">
                 <template scope="scope">
                     <el-button style="width: 100%"
-                            @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second'}})"
-                            type="text" size="small">{{scope.row.subject_num}}  <!--a-->
+                               @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second'}})"
+                               type="text" size="small">{{scope.row.subject_num}}  <!--a-->
                     </el-button>
                 </template>
             </el-table-column>

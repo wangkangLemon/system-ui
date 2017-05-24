@@ -164,6 +164,16 @@ router.afterEach((route) => {
         document.title = title + ' - 药视通'
     }
 
+    // 如果需要清空筛选条件
+    if (store.state.index.clearFetchParam) {
+        store.dispatch('clearFetchParam', false)
+        setTimeout(() => {
+            for (let k in route.matched[route.matched.length - 1].instances.default.fetchParam) {
+                route.matched[route.matched.length - 1].instances.default.fetchParam[k] = void 0
+            }
+        }, 0)
+    }
+
     // 设置选中的菜单
     if (route.matched.some(record => record.meta.noback)) store.dispatch('setIndexMenuActive', route.path)
 })

@@ -253,6 +253,7 @@
             <!--左边菜单栏-->
             <el-menu :default-active="navMenueActive" class="left-menu-container" :class="{ 'isShowMenue':isShowMenue }"
                      :unique-opened="true"
+                     @select="handleMenuClick"
                      :router="true">
                 <div class="nav-title">导航</div>
                 <MenuTree v-for="item in navMenus" :icons="icons" :data="item" :key="item.item.id"></MenuTree>
@@ -387,6 +388,10 @@
                     }
                 }
             },
+            // 菜单点击
+            handleMenuClick (item) {
+                this.$store.dispatch('clearFetchParam', true)
+            },
             setContentLoading (loading) {
                 if (!loading) {
                     this.$nextTick(() => {
@@ -401,7 +406,7 @@
             // 是否显示
             showContentBack (isShow) {
                 this.isShowBack = isShow
-            }
+            },
         },
         components: {
             MenuTree

@@ -87,6 +87,7 @@
         },
         methods: {
             setCurrVal (val) {
+                if (!val) this.$refs.container.clearValue(new window.Event('click'))
                 if (this.currVal == val || !val) return
                 this.currVal = val
             },
