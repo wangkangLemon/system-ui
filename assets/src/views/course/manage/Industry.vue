@@ -44,12 +44,13 @@
                 <article class="search">
                     <section>
                         <i>专辑名称</i>
-                        <vInput :enter="fetchData" v-model="fetchParams[0].keyword"></vInput>
+                        <el-input v-model="fetchParams[0].keyword" @keyup.enter.native="fetchData"></el-input>
                     </section>
 
                     <section>
                         <i>状态</i>
-                        <el-select v-model="fetchParams[0].status" placeholder="请选择" @change="fetchData" :clearable="true">
+                        <el-select v-model="fetchParams[0].status" placeholder="请选择" @change="fetchData"
+                                   :clearable="true">
                             <el-option label="转码中" :value="2"></el-option>
                             <el-option label="下线" :value="1"></el-option>
                             <el-option label="正常" :value="0"></el-option>
@@ -71,12 +72,13 @@
                 <article class="search">
                     <section>
                         <i>专辑名称</i>
-                        <vInput :enter="fetchData" v-model="fetchParams[1].keyword"></vInput>
+                        <el-input v-model="fetchParams[1].keyword" @keyup.enter.native="fetchData"></el-input>
                     </section>
 
                     <section>
                         <i>状态</i>
-                        <el-select v-model="fetchParams[1].status" placeholder="请选择" @change="fetchData" :clearable="true">
+                        <el-select v-model="fetchParams[1].status" placeholder="请选择" @change="fetchData"
+                                   :clearable="true">
                             <el-option label="转码中" :value="2"></el-option>
                             <el-option label="下线" :value="1"></el-option>
                             <el-option label="正常" :value="0"></el-option>
@@ -195,7 +197,6 @@
 <script>
     import courseService from '../../../services/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
-    import vInput from '../../component/form/Input.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
 
     function getFetchParam (category) {
@@ -220,13 +221,14 @@
                 fetchParams: [getFetchParam(2), getFetchParam(1)],
             }
         },
-        created () {
-            this.fetchData()
-        },
         activated () {
+            this.fetchData()
             xmview.setContentLoading(false)
         },
         methods: {
+            initFetchParam () {
+                this.fetchParams = [getFetchParam(2), getFetchParam(1)]
+            },
             fetchData () {
                 this.loadingData = true
                 return courseService.getCourseList(this.fetchParams[this.currTab]).then((ret) => {
@@ -261,6 +263,6 @@
                 this.fetchData()
             }
         },
-        components: {DateRange, vInput, IndustryCompanySelect}
+        components: {DateRange, IndustryCompanySelect}
     }
 </script>

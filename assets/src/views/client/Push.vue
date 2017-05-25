@@ -54,14 +54,14 @@
         <section class="search">
             <section>
                 <i>推送方式</i>
-                <el-select clearable v-model="search.target" @change="getData">
+                <el-select clearable v-model="fetchParam.target" @change="getData">
                     <el-option label="全局推送" value="all"></el-option>
                     <el-option label="条件推送" value="tag"></el-option>
                 </el-select>
             </section>
             <section>
                 <i>类型</i>
-                <el-select clearable v-model="search.modelid" @change="getData">
+                <el-select clearable v-model="fetchParam.modelid" @change="getData">
                     <el-option label="全部" :value="100"></el-option>
                     <el-option label="文本" :value="0"></el-option>
                     <el-option label="课程" :value="5"></el-option>
@@ -70,7 +70,7 @@
             </section>
             <section>
                 <i>状态</i>
-                <el-select clearable v-model="search.status" @change="getData">
+                <el-select clearable v-model="fetchParam.status" @change="getData">
                     <el-option label="待发送" :value="0"></el-option>
                     <el-option label="成功" :value="1"></el-option>
                     <el-option label="失败" :value="2"></el-option>
@@ -78,14 +78,13 @@
             </section>
             <section>
                 <i>关键字</i>
-                <el-input @change="getData" class="name" v-model="search.keyword"/>
+                <el-input @keyup.enter.native="getData" class="name" v-model="fetchParam.keyword"/>
             </section>
-            <DateRange title="日期查找" :start="search.time_start" :end="search.time_end"
-                       v-on:changeStart="val=>search.time_start=val"
-                       v-on:changeEnd="val=>search.time_end=val"
+            <DateRange title="日期查找" :start="fetchParam.time_start" :end="fetchParam.time_end"
+                       v-on:changeStart="val=>fetchParam.time_start=val"
+                       v-on:changeEnd="val=>fetchParam.time_end=val"
                        :change="getData">
             </DateRange>
-            <el-button type="primary" @click="clearFn">清空</el-button>
         </section>
         <el-table border v-loading="loading" :data="pushData">
             <el-table-column
@@ -175,20 +174,16 @@
                 currentPage: 1, // 分页当前显示的页数
                 total: 0,
                 pageSize: 15,
-                search: clearSearch(),
+                fetchParam: clearSearch(),
                 pushData: []
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
         },
         methods: {
-            clearFn () {
-                this.search = clearSearch()
-                this.getData()
-            },
             createPush () {
                 this.$router.push({name: 'client-push-create'})
             },
@@ -197,12 +192,12 @@
                 return pushService.getPushList({
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    keyword: this.search.keyword,
-                    target: this.search.target,
-                    modelid: this.search.modelid,
-                    status: this.search.status,
-                    time_start: this.search.time_start,
-                    time_end: this.search.time_end
+                    keyword: this.fetchParam.keyword,
+                    target: this.fetchParam.target,
+                    modelid: this.fetchParam.modelid,
+                    status: this.fetchParam.status,
+                    time_start: this.fetchParam.time_start,
+                    time_end: this.fetchParam.time_end
                 }).then((ret) => {
                     this.pushData = ret.data
                     this.total = ret.total

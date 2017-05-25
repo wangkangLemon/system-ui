@@ -160,7 +160,7 @@
                 },
             }
         },
-        created () {
+        activated () {
             this.category.loading = true
             this.getCategoryTree().then((ret) => {
                 this.category.data = ret

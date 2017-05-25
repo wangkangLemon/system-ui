@@ -113,7 +113,7 @@
             <div>
                 <i><img src="./images/user.png" /></i>
                 <h2>454</h2>
-                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 1}}">发布练习次数</router-link>
+                <router-link tag="p" :to="{name: 'company-user', query: {status: 1}}">发布练习次数</router-link>
                 <div>
                     <i>占练习总数的12%</i>
                 </div>

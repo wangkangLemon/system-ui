@@ -20,7 +20,7 @@
 
         <main class="search">
             <section>
-                <i>工单状态</i>
+                <i>反馈状态</i>
                 <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
                     <el-option label="未分配" value="0"></el-option>
                     <el-option label="处理中" value="1"></el-option>
@@ -39,7 +39,7 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" border>
-            <el-table-column width="100" prop="id" label="工单编号"></el-table-column>
+            <el-table-column width="100" prop="id" label="反馈编号"></el-table-column>
             <el-table-column width="120" prop="category_name" label="问题分类"></el-table-column>
             <el-table-column width="120" prop="user_name" label="提交人"></el-table-column>
             <el-table-column prop="content" label="问题描述"></el-table-column>
@@ -77,11 +77,9 @@
 
 <script>
     import feedbackSystemService from '../../../services/feedback/system'
-    import vInput from '../../component/form/Input.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
         components: {
-            vInput,
             DateRange
         },
         data() {

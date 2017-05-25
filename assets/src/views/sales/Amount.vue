@@ -127,7 +127,7 @@
     </article>
 </template>
 
-<script lang='babel'>
+<script>
     import AmountPanel from '../component/panel/AmountPanel.vue'
     import salesService from '../../services/salesService'
     export default{
@@ -141,7 +141,7 @@
                 loadingDrug: false, // 加载药品
             }
         },
-        created () {
+        activated () {
             // 加载数据
             Promise.all([this.getIndustryData(this.activeName),
                 this.getDrugData(this.activeName),

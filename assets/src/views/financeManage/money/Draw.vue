@@ -30,14 +30,14 @@
         <section class="search">
             <section>
                 <i>用户</i>
-                <UserList v-model="userSelect"
-                          v-on:change="val=>userSelect=val"
+                <UserList v-model="fetchParam.userSelect"
+                          v-on:change="val=>fetchParam.userSelect=val"
                           :change="getData">
                 </UserList>
             </section>
             <section>
                 <label>提现状态</label>
-                <el-select @change="getData" clearable v-model="drawStatusSelect" placeholder="未选择">
+                <el-select @change="getData" clearable v-model="fetchParam.drawStatusSelect" placeholder="未选择">
                     <el-option
                             v-for="(item, index) in drawStatus"
                             :label="item.name"
@@ -46,9 +46,9 @@
                     </el-option>
                 </el-select>
             </section>
-            <DateRange title="申请时间" :start="createTime" :end="endTime"
-                       v-on:changeStart="val=> createTime=val"
-                       v-on:changeEnd="val=> endTime"
+            <DateRange title="申请时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                       v-on:changeStart="val=> fetchParam.createTime=val"
+                       v-on:changeEnd="val=> fetchParam.endTime=val"
                        :change="getData">
             </DateRange>
         </section>
@@ -136,13 +136,15 @@
         },
         data () {
             return {
+                fetchParam: {
+                    drawStatusSelect: '',
+                    userSelect: '',
+                    createTime: '',
+                    endTime: '',
+                },
                 currentData: null,
                 showDetail: false,
                 loading: false,
-                drawStatusSelect: '',
-                userSelect: '',
-                createTime: '',
-                endTime: '',
                 currentPage: 1,
                 pageSize: 10,
                 drawData: [],
@@ -171,7 +173,7 @@
                 total: 0
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -194,10 +196,10 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    status: this.drawStatusSelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime,
-                    user_id: this.userSelect
+                    status: this.fetchParam.drawStatusSelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    user_id: this.fetchParam.userSelect
                 }
                 return drawList(params).then((ret) => {
                     let status = {pending: '待提现', complete: '已完成', close: '已关闭'}
@@ -212,10 +214,10 @@
             },
             exportData () {
                 exportDraw({
-                    status: this.drawStatusSelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime,
-                    user_id: this.userSelect
+                    status: this.fetchParam.drawStatusSelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    user_id: this.fetchParam.userSelect
                 })
             }
         }

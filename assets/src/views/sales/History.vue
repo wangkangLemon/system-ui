@@ -58,8 +58,8 @@
 
             <section>
                 <i>姓名</i>
-                <v-input :enter="fetchData" v-model="fetchParam.username"
-                         placeholder="请输入内容"></v-input>
+                <el-input :enter="fetchData" v-model="fetchParam.username"
+                         placeholder="请输入内容"></el-input>
             </section>
 
             <DateRange title="晒单时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
@@ -167,9 +167,8 @@
     </article>
 </template>
 
-<script lang='babel'>
+<script>
     import IndustrySelect from '../component/select/IndustryCompany.vue'
-    import vInput from '../component/form/Input.vue'
     import salesService from '../../services/salesService'
     import DateRange from '../component/form/DateRangePicker.vue'
 
@@ -197,7 +196,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             this.fetchData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -238,7 +237,7 @@
             }
         },
         components: {
-            IndustrySelect, DateRange, vInput
+            IndustrySelect, DateRange
         }
     }
 

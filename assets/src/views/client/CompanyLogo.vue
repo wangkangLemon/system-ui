@@ -101,7 +101,7 @@
                 companyID: authUtils.getUserInfo().company_id
             }
         },
-        created () {
+        activated () {
             companyService.getCompanyLogo({company_id: this.companyID}).then((ret) => {
                 this.imgData = ret.data.logo.indexOf(config.apiHost) > -1 ? ret.data.logo : config.apiHost + ret.data.logo
             }).then(() => {

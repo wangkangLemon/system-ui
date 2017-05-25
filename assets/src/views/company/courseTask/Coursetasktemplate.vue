@@ -86,11 +86,11 @@
             <section>
                 <i>类别</i>
                 <CourseTaskTemplateCategorySelect :onchange="getData"
-                                                  v-model="search.category_id"></CourseTaskTemplateCategorySelect>
+                                                  v-model="fetchParam.category_id"></CourseTaskTemplateCategorySelect>
             </section>
             <section>
                 <i>课程名称</i>
-                <el-input @keyup.enter.native="getData" class="name" v-model="search.title"/>
+                <el-input @keyup.enter.native="getData" class="name" v-model="fetchParam.title"/>
             </section>
         </section>
         <el-table border :data="coursetasktemplateData" v-loading="loading">
@@ -164,7 +164,7 @@
             return {
                 currCategoryName: '',
                 loading: false,
-                search: {
+                fetchParam: {
                     title: '',
                     category_id: '',
                 },
@@ -238,8 +238,8 @@
             getData () {
                 this.loading = true
                 return companyService.getCourseTaskTemplateList({
-                    category_id: this.search.category_id,
-                    title: this.search.title,
+                    category_id: this.fetchParam.category_id,
+                    title: this.fetchParam.title,
                     page: this.currentPage,
                     page_size: this.pageSize
                 }).then((ret) => {

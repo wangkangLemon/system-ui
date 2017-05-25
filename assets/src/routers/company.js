@@ -88,50 +88,16 @@ export default {
         },
         {
             path: 'user',
+            name: 'company-user',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../views/company/User.vue'))
                 })
             },
-            children: [
-                {
-                    path: 'list',
-                    name: 'company-user-list',
-                    component: resolve => {
-                        require.ensure([], () => {
-                            resolve(require('../views/company/subUser/List.vue'))
-                        })
-                    },
-                    meta: {
-                        title: '店员列表-店员',
-                        noback: true
-                    }
-                },
-                {
-                    path: 'department',
-                    name: 'company-user-department',
-                    component: resolve => {
-                        require.ensure([], () => {
-                            resolve(require('../views/company/subUser/Department.vue'))
-                        })
-                    },
-                    meta: {
-                        title: '连锁统计-店员',
-                    }
-                },
-                {
-                    path: 'area',
-                    name: 'company-user-area',
-                    component: resolve => {
-                        require.ensure([], () => {
-                            resolve(require('../views/company/subUser/Area.vue'))
-                        })
-                    },
-                    meta: {
-                        title: '地域统计-店员',
-                    }
-                }
-            ]
+            meta: {
+                title: '店员管理',
+                noback: true
+            }
         },
         {
             path: 'announce',

@@ -19,6 +19,7 @@ RUN cd /node/src/git.vodjk.com/yst/system-ui \
 
 RUN cd /node/src/git.vodjk.com/yst/system-ui/assets \
     && cp config/config.js.default config/config.js \
+    && npm link node-sass \
     && yarn install
 
 ADD entrypoint.sh /

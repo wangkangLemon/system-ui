@@ -51,14 +51,11 @@
                 })
             },
             handleChange(val) {
-                this.setCurrentValue(val)
-                this.change && this.change()
-            },
-            setCurrentValue (val) {
                 this.currVal = val
                 this.$emit('input', val)
                 this.$emit('change', val)
-            }
+                this.change && this.change()
+            },
         },
         components: {
             SelectScroll

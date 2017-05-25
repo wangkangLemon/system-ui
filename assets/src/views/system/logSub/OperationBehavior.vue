@@ -3,23 +3,9 @@
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
     .behavior-manage {
-        .box-card {
-            margin-bottom: 20px;
-            .clearfix {
-                text-align: right;
-            }
-            .el-card__header {
-                padding: 10px 15px;
-                background: #f0f3f5;
-                .icon-iconfontexcel {
-                    position: relative;
-                    top: -2px;
-                    margin-right: 5px;
-                }
-            }
-            .search {
-                @extend %top-search-container;
-            }
+        padding:20px;
+        .search {
+            @extend %top-search-container;
         }
         .block {
             text-align: right;
@@ -30,84 +16,81 @@
 
 <template>
     <article class="behavior-manage">
-        <el-card class="box-card">
-            <section class="search">
-                <section>
-                    <i>企业</i>
-                    <CompanySelect v-model="fetchParam.company_id" :change="getData" :list="companyList" @changelist="val=>companyList=val"></CompanySelect>
-                </section>
-                <section>
-                    <i>门店</i>
-                    <DepSelect v-model="fetchParam.department_id" :change="getData"></DepSelect>
-                </section>
-                <section>
-                    <i>行为类型</i>
-                    <el-select placeholder="未选择" v-model="fetchParam.action" :clearable="true" @change="getData()">
-                        <el-option label="创建" value="CREATE"></el-option>
-                        <el-option label="更新" value="UPDATE"></el-option>
-                        <el-option label="删除" value="DELETE"></el-option>
-                        <el-option label="导入" value="IMPORT"></el-option>
-                    </el-select>
-                </section>
-                <DateRange :start="fetchParam.time_start" :end="fetchParam.time_end"
-                           @changeStart="val => fetchParam.time_start=val"
-                           @changeEnd="val => fetchParam.time_end=val" :change="getData">
-                </DateRange>
-
-                <el-button type="primary" icon="setting" @click="() => { moreSettingShow = true }">更多设置</el-button>
+        <section class="search">
+            <section>
+                <i>企业</i>
+                <CompanySelect v-model="fetchParam.company_id" :change="getData" :list="companyList" @changelist="val=>companyList=val"></CompanySelect>
             </section>
-            <el-table
-                    v-loading="loading"
-                    border
-                    @row-click="fullBehaviorChain"
-                    :data="data">
-                <el-table-column
-                        prop="user_name"
-                        label="管理员"
-                        width="130">
-                </el-table-column>
-                <el-table-column
-                        prop="company_name"
-                        label="企业名称">
-                </el-table-column>
-                <el-table-column
-                        prop="role_name"
-                        label="权限级别"
-                        width="130">
-                </el-table-column>
-                <el-table-column
-                        prop="action"
-                        label="行为类型"
-                        width="130">
-                </el-table-column>
-                <el-table-column
-                        prop="from"
-                        label="触发行为">
-                </el-table-column>
-                <el-table-column
-                        prop="remote_address"
-                        label="IP 地址"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="create_time_name"
-                        label="创建时间">
-                </el-table-column>
-            </el-table>
-            <div class="block">
-                <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="fetchParam.page"
-                        :page-sizes="[15, 30, 60, 100]"
-                        :page-size="fetchParam.page_size"
-                        layout="total, sizes, prev, pager, next"
-                        :total="total">
-                </el-pagination>
-            </div>
-        </el-card>
-        <BehaviorChain ref="behaviorChain"></BehaviorChain>
+            <section>
+                <i>门店</i>
+                <DepSelect v-model="fetchParam.department_id" :change="getData"></DepSelect>
+            </section>
+            <section>
+                <i>行为类型</i>
+                <el-select placeholder="未选择" v-model="fetchParam.action" :clearable="true" @change="getData()">
+                    <el-option label="创建" value="CREATE"></el-option>
+                    <el-option label="更新" value="UPDATE"></el-option>
+                    <el-option label="删除" value="DELETE"></el-option>
+                    <el-option label="导入" value="IMPORT"></el-option>
+                </el-select>
+            </section>
+            <DateRange :start="fetchParam.time_start" :end="fetchParam.time_end"
+                       @changeStart="val => fetchParam.time_start=val"
+                       @changeEnd="val => fetchParam.time_end=val" :change="getData">
+            </DateRange>
 
+            <el-button type="primary" icon="setting" @click="() => { moreSettingShow = true }">更多设置</el-button>
+        </section>
+        <el-table
+                v-loading="loading"
+                border
+                @row-click="fullBehaviorChain"
+                :data="data">
+            <el-table-column
+                    prop="user_name"
+                    label="管理员"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="company_name"
+                    label="企业名称">
+            </el-table-column>
+            <el-table-column
+                    prop="role_name"
+                    label="权限级别"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="action"
+                    label="行为类型"
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="from"
+                    label="触发行为">
+            </el-table-column>
+            <el-table-column
+                    prop="remote_address"
+                    label="IP 地址"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="create_time_name"
+                    label="创建时间">
+            </el-table-column>
+        </el-table>
+        <div class="block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="fetchParam.page"
+                    :page-sizes="[15, 30, 60, 100]"
+                    :page-size="fetchParam.page_size"
+                    layout="total, sizes, prev, pager, next"
+                    :total="total">
+            </el-pagination>
+        </div>
+        <BehaviorChain ref="behaviorChain"></BehaviorChain>
         <el-dialog title="高级筛选" v-model="moreSettingShow" class="more-setting">
             <el-form>
             <el-tabs type="border-card">
@@ -168,6 +151,7 @@
     export default {
         data () {
             return {
+                loading: false,
                 data: [],
                 total: 0,
                 fetchParam: {
@@ -186,7 +170,7 @@
                 companyList: []
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

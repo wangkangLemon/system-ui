@@ -85,7 +85,7 @@
         <section class="search">
             <section>
                 <i>姓名</i>
-                <el-input @change="getData" class="name" v-model="search.name" placeholder="请输入姓名"></el-input>
+                <el-input @change="getData" class="name" v-model="fetchParam.name" placeholder="请输入姓名"></el-input>
             </section>
         </section>
         <el-table border :data="adminData" v-loading="loading">
@@ -209,13 +209,13 @@
                 currentPage: 1, // 分页当前显示的页数
                 total: 0,
                 pageSize: 15,
-                search: { // 搜索的姓名
+                fetchParam: { // 搜索的姓名
                     name: ''
                 },
                 adminData: []
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -253,7 +253,7 @@
                 return adminService.adminList({
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    keyword: this.search.name
+                    keyword: this.fetchParam.name
                 }).then((ret) => {
                     this.adminData = ret.data
                     this.total = ret.total

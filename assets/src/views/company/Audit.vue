@@ -38,22 +38,21 @@
             <section class="search">
                 <section>
                     <i>审核结果</i>
-                    <el-select clearable v-model="searchParams.result" @change="getData">
+                    <el-select clearable v-model="fetchParam.result" @change="getData">
                         <el-option label="待审核" :value="1"></el-option>
                         <el-option label="审核通过" :value="2"></el-option>
                         <el-option label="审核失败" :value="3"></el-option>
                     </el-select>
                 </section>
-                <DateRange title="日期查找" :start="searchParams.createTime" :end="searchParams.endTime"
-                           v-on:changeStart="val=> searchParams.createTime=val"
-                           v-on:changeEnd="val=> searchParams.endTime=val"
+                <DateRange title="日期查找" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                           v-on:changeStart="val=> fetchParam.createTime=val"
+                           v-on:changeEnd="val=> fetchParam.endTime=val"
                            :change="getData">
                 </DateRange>
                 <section>
                     <i>关键字</i>
-                    <el-input @change="getData" v-model="searchParams.keyword" auto-complete="off"></el-input>
+                    <el-input @keyup.enter.native="getData" v-model="fetchParam.keyword" auto-complete="off"></el-input>
                 </section>
-                <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
                     v-loading="loading"
@@ -130,7 +129,7 @@
                 pageSize: 15,
                 auditData: [],
                 total: 0,
-                searchParams: clearSearch()
+                fetchParam: clearSearch()
             }
         },
         activated () {
@@ -139,10 +138,6 @@
             })
         },
         methods: {
-            clearFn () {
-                this.searchParams = clearSearch()
-                this.getData()
-            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
@@ -156,10 +151,10 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    keyword: this.searchParams.keyword,
-                    status: this.searchParams.result,
-                    time_start: this.searchParams.createTime,
-                    time_end: this.searchParams.endTime
+                    keyword: this.fetchParam.keyword,
+                    status: this.fetchParam.result,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime
                 }
                 return companyService.getAuditList(params).then((ret) => {
                     this.auditData = ret.data

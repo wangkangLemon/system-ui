@@ -54,34 +54,33 @@
         </div>
         <section class="search">
             <Region title="地区"
-                    :province="searchParams.provinceSelect"
-                    :city="searchParams.citySelect"
-                    :area="searchParams.areaSelect"
-                    v-on:provinceChange="val => searchParams.provinceSelect = val"
-                    v-on:cityChange="val => searchParams.citySelect = val"
-                    v-on:areaChange="val => searchParams.areaSelect = val"
+                    :province="fetchParam.provinceSelect"
+                    :city="fetchParam.citySelect"
+                    :area="fetchParam.areaSelect"
+                    v-on:provinceChange="val => fetchParam.provinceSelect = val"
+                    v-on:cityChange="val => fetchParam.citySelect = val"
+                    v-on:areaChange="val => fetchParam.areaSelect = val"
                     :change="getData"></Region>
             <section>
                 <i>连锁</i>
-                <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
-                                       v-on:change="val=>searchParams.companySelect=val"
+                <IndustryCompanySelect :type="2" v-model="fetchParam.companySelect"
+                                       v-on:change="val=>fetchParam.companySelect=val"
                                        :change="getData">
                 </IndustryCompanySelect>
             </section>
-            <DateRange title="创建时间" :start="searchParams.createTime" :end="searchParams.endTime"
-                       v-on:changeStart="val=> searchParams.createTime=val"
-                       v-on:changeEnd="val=> searchParams.endTime=val"
+            <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                       v-on:changeStart="val=> fetchParam.createTime=val"
+                       v-on:changeEnd="val=> fetchParam.endTime=val"
                        :change="getData">
             </DateRange>
             <section>
                 <i>名称：</i>
-                <el-input @change="getData" v-model="searchParams.name" auto-complete="off"></el-input>
+                <el-input @keyup.enter.native="getData" v-model="fetchParam.name" auto-complete="off"></el-input>
             </section>
             <section>
                 <i>店长：</i>
-                <el-input @change="getData" v-model="searchParams.concact" auto-complete="off"></el-input>
+                <el-input @keyup.enter.native="getData" v-model="fetchParam.concact" auto-complete="off"></el-input>
             </section>
-            <el-button type="primary" @click="clearFn">清空</el-button>
         </section>
         <el-table
                 v-loading="loading"
@@ -167,7 +166,7 @@
                 pageSize: 15,
                 departmentData: [],
                 total: 0,
-                searchParams: {
+                fetchParam: {
                     companySelect: '',
                     createTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
                     endTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
@@ -185,19 +184,6 @@
             })
         },
         methods: {
-            clearFn () {
-                this.searchParams = {
-                    companySelect: '',
-                    createTime: '',
-                    endTime: '',
-                    provinceSelect: '',
-                    citySelect: '',
-                    areaSelect: '',
-                    name: '', // 名称
-                    concact: '' // 店长
-                }
-                this.getData()
-            },
             // 显示详情
             showFn (index, row) {
                 this.show.showDetail = true
@@ -229,14 +215,14 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    province: this.searchParams.provinceSelect,
-                    city: this.searchParams.citySelect,
-                    area: this.searchParams.areaSelect,
-                    company_id: this.searchParams.companySelect,
-                    time_start: date2Str(this.searchParams.createTime),
-                    time_end: date2Str(this.searchParams.endTime),
-                    keyword: this.searchParams.name,
-                    concact: this.searchParams.concact
+                    province: this.fetchParam.provinceSelect,
+                    city: this.fetchParam.citySelect,
+                    area: this.fetchParam.areaSelect,
+                    company_id: this.fetchParam.companySelect,
+                    time_start: date2Str(this.fetchParam.createTime),
+                    time_end: date2Str(this.fetchParam.endTime),
+                    keyword: this.fetchParam.name,
+                    concact: this.fetchParam.concact
                 }
                 return departmentService.getDepartment(params).then((ret) => {
                     this.departmentData = ret.data
@@ -247,14 +233,14 @@
             },
             exportData () {
                 departmentService.exportDepartment({
-                    province: this.searchParams.provinceSelect,
-                    city: this.searchParams.citySelect,
-                    area: this.searchParams.areaSelect,
-                    company_id: this.searchParams.companySelect,
-                    time_start: date2Str(this.searchParams.createTime),
-                    time_end: date2Str(this.searchParams.endTime),
-                    keyword: this.searchParams.name,
-                    concact: this.searchParams.concact
+                    province: this.fetchParam.provinceSelect,
+                    city: this.fetchParam.citySelect,
+                    area: this.fetchParam.areaSelect,
+                    company_id: this.fetchParam.companySelect,
+                    time_start: date2Str(this.fetchParam.createTime),
+                    time_end: date2Str(this.fetchParam.endTime),
+                    keyword: this.fetchParam.name,
+                    concact: this.fetchParam.concact
                 })
             }
         }

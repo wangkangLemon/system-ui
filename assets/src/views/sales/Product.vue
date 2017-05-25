@@ -98,7 +98,7 @@
     </article>
 </template>
 
-<script lang='babel'>
+<script>
     import salesService from '../../services/salesService'
     import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
     import DateRange from '../component/form/DateRangePicker.vue'
@@ -122,7 +122,7 @@
                 },
             }
         },
-        created () {
+        activated () {
             this.fetchData().then(() => {
                 xmview.setContentLoading(false)
             }, () => {

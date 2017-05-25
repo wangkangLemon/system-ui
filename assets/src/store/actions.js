@@ -12,6 +12,10 @@ const actions = {
     //  设置选中的导航
     setIndexMenuActive (store, url) {
         store.commit(types.INDEX_SET__MENU_ACTIVE, url)
+    },
+    // 清空列表的筛选条件
+    clearFetchParam (store, need) {
+        store.commit(types.INDEX_SET__CLEARFETCHPARAM, need)
     }
 }
 

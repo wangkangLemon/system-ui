@@ -15,6 +15,7 @@ import user from './routers/user' // 企业
 import im from './routers/im'
 import speaking from './routers/speaking' // 药我说
 import authUtils from './utils/authUtils'
+import * as typeUtils from './utils/typeUtls'
 
 Vue.use(VueRouter)
 
@@ -88,19 +89,19 @@ const routes = [
                 }
             },
             // ============系统==================
-            ...admin,
+            admin,
             // ============数据分析==================
-            ...dataAnalysis,
+            dataAnalysis,
             // ============客户端部分==================
-            ...client,
+            client,
             // ============晒单==================
-            ...sales,
+            sales,
             // ============ 工单系统 ==================
             feedback,
             // ============财务管理部分==================
-            ...finance,
+            finance,
             // ============文章管理部分==================
-            ...article,
+            article,
             // ============培训管理==================
             course,
             // ============企业管理==================
@@ -183,6 +184,16 @@ router.beforeEach((to, from, next) => {
 
     showBackContent(to, from, next)
 
+    // 如果需要清空筛选条件
+    if (store.state.index.clearFetchParam) {
+        store.dispatch('clearFetchParam', false)
+
+        if (from.matched.length < 3) return
+        // if (!from.matched[2].instances.default) return
+        let vm = from.matched[2].instances.default
+        vm.initFetchParam ? vm.initFetchParam() : clearObj([vm.fetchParam, vm.fetchParams])
+    }
+
     next()
 })
 
@@ -214,6 +225,17 @@ function showBackContent (to, from, next) {
     // 如果不需要back 则干掉返回按钮
     if (to.matched.some(record => record.meta.noback)) {
         xmview.setContentBack && xmview.setContentBack(false)
+    }
+}
+
+function clearObj (obj) {
+    if (!obj) return
+    if (typeUtils.isArray(obj)) {
+        for (let i = 0; i < obj.length; i++) clearObj(obj[i])
+    } else {
+        for (let k in obj) {
+            if (k !== 'page' && k !== 'page_size') obj[k] = void 0
+        }
     }
 }
 

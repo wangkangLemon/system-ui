@@ -1,59 +1,53 @@
-<!--日志-企业管理-->
+<!--店员-地域统计-->
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
-    .system-manage {
+    .company-manager {
         padding: 20px;
+        .search {
+            @extend %top-search-container;
+        }
         .block {
             text-align: right;
             margin-top: 15px;
         }
-        .search {
-            @extend %top-search-container;
-        }
     }
 </style>
 <template>
-    <article class="system-manage">
+    <article class="company-manager">
         <section class="search">
             <section>
-                <i>用户</i>
-                <UserSelect v-model="search.admin_id" :change="getData"></UserSelect>
+                <i>统计时间</i>
+                <el-date-picker
+                        @change="getData"
+                        v-model="searchParams.staticTime"
+                        type="date"
+                        :placeholder="searchParams.currentDate">
+                </el-date-picker>
             </section>
-            <section>
-                <i>操作IP</i>
-                <el-input @change="getData" v-model="search.ip"></el-input>
-            </section>
-            <DateRange title="操作时间" :start="search.time_start" :end="search.time_end"
-                       v-on:changeStart="val=> search.time_start=val "
-                       v-on:changeEnd="val=> search.time_end=val "
-                       :change="getData"></DateRange>
         </section>
         <el-table
                 v-loading="loading"
                 border
-                :data="listData">
+                :data="listData"
+                stripe
+                style="width: 100%">
             <el-table-column
-                    prop="owner_name"
-                    label="管理员"
+                    prop="name"
+                    label="省份">
+            </el-table-column>
+            <el-table-column
+                    prop="increased"
+                    label="新增店员"
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="action_name"
-                    label="操作"
-                    width="180">
+                    prop="tested"
+                    label="参与考试店员">
             </el-table-column>
             <el-table-column
-                    prop="target_type"
-                    label="目标类型">
-            </el-table-column>
-            <el-table-column
-                    prop="create_ip"
-                    label="操作IP">
-            </el-table-column>
-            <el-table-column
-                    prop="create_time_name"
-                    label="操作时间">
+                    prop="total"
+                    label="当前店员总数">
             </el-table-column>
         </el-table>
         <div class="block">
@@ -70,26 +64,19 @@
     </article>
 </template>
 <script>
-    import logService from '../../../services/logService'
-    import DateRange from '../../component/form/DateRangePicker.vue'
-    import UserSelect from '../../component/select/User.vue'
+    import companyUserService from '../../../services/companyUserService'
+    import {date2Str} from '../../../utils/timeUtils'
     export default {
-        components: {
-            DateRange,
-            UserSelect
-        },
         data () {
             return {
                 loading: false,
                 currentPage: 1,
-                pageSize: 15,
+                pageSize: 10,
                 listData: [],
                 total: 0,
-                search: {
-                    admin_id: '',
-                    ip: '',
-                    time_start: '',
-                    time_end: ''
+                searchParams: {
+                    staticTime: '',
+                    currentDate: date2Str(new Date())
                 }
             }
         },
@@ -112,12 +99,9 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    admin_id: this.search.admin_id,
-                    ip: this.search.ip,
-                    time_start: this.search.time_start,
-                    time_end: this.search.time_end
+                    time_start: date2Str(this.searchParams.staticTime),
                 }
-                return logService.getSystemManageList(params).then((ret) => {
+                return companyUserService.getAreaState(params).then((ret) => {
                     this.listData = ret.data
                     this.total = ret.total
                 }).then(() => {

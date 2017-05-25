@@ -24,7 +24,7 @@
         <main class="search">
             <section>
                 <i>标题</i>
-                <vInput :enter="fetchData" v-model="fetchParam.keyword"></vInput>
+                <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
             </section>
             <DateRange title="有效日期" :start="fetchParam.time_start" :end="fetchParam.time_end"
                        v-on:changeStart="val=> fetchParam.time_start=val"
@@ -94,11 +94,9 @@
 
 <script>
     import speakingContentService from '../../../services/speaking/contentService'
-    import vInput from '../../component/form/Input.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
         components: {
-            vInput,
             DateRange
         },
         data() {

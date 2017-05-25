@@ -27,7 +27,7 @@
 
                 <section>
                     <i>名称</i>
-                    <vInput :enter="fetchData" v-model="fetchParam.keyword"></vInput>
+                    <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
                 </section>
             </article>
 
@@ -93,7 +93,6 @@
 
 <script>
     import courseService from '../../../services/courseService'
-    import vInput from '../../component/form/Input.vue'
 
     export default{
         props: {
@@ -149,6 +148,6 @@
                 this.isShowDialog = val
             }
         },
-        components: {vInput}
+        components: {}
     }
 </script>

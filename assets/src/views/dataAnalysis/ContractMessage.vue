@@ -112,32 +112,32 @@
             <section class="search">
                 <section>
                     <label>连锁名称</label>
-                    <el-input class="name" @change="getData" v-model="search.name"></el-input>
+                    <el-input class="name" @change="getData" v-model="fetchParam.name"></el-input>
                 </section>
                 <section>
                     <label>是否录入门店</label>
-                    <el-select clearable @change="getData" v-model="search.isdepartment">
+                    <el-select clearable @change="getData" v-model="fetchParam.isdepartment">
                         <el-option label="已录入" :value="1"></el-option>
                         <el-option label="未录入" :value="2"></el-option>
                     </el-select>
                 </section>
                 <section>
                     <label>是否录入店员</label>
-                    <el-select clearable @change="getData" v-model="search.isuser">
+                    <el-select clearable @change="getData" v-model="fetchParam.isuser">
                         <el-option label="已录入" :value="1"></el-option>
                         <el-option label="未录入" :value="2"></el-option>
                     </el-select>
                 </section>
                 <section>
-                    <DateRange title="签约时间" :start="search.createTime" :end="search.endTime"
-                               v-on:changeStart="val=> search.createTime=val"
-                               v-on:changeEnd="val=> search.endTime=val"
+                    <DateRange title="签约时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                               v-on:changeStart="val=> fetchParam.createTime=val"
+                               v-on:changeEnd="val=> fetchParam.endTime=val"
                                :change="getData">
                     </DateRange>
                 </section>
                 <section>
                     <label>签约人</label>
-                    <SignatorySelect :change="getData" v-model="search.signatory"></SignatorySelect>
+                    <SignatorySelect :change="getData" v-model="fetchParam.signatory"></SignatorySelect>
                 </section>
             </section>
             <el-table border :data="signData" v-loading="loading">
@@ -206,7 +206,7 @@
                 signs: null,
                 currentItems: null, // 当前预览信息
                 loading: false,
-                search: {
+                fetchParam: {
                     name: '',
                     createTime: '',
                     endTime: '',
@@ -232,7 +232,7 @@
                 signData: []
             }
         },
-        created () {
+        activated () {
             Promise.all([this.getData(), companyService.getSignMessage()]).then((ret) => {
                 this.signs = ret[1]
             }).then(() => {
@@ -268,12 +268,12 @@
                 return companyService.getCompanySignList({
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    keyword: this.search.name,
-                    isdepartment: this.search.isdepartment,
-                    isuser: this.search.isuser,
-                    signatory: this.search.signatory,
-                    time_start: this.search.createTime,
-                    time_end: this.search.endTime,
+                    keyword: this.fetchParam.name,
+                    isdepartment: this.fetchParam.isdepartment,
+                    isuser: this.fetchParam.isuser,
+                    signatory: this.fetchParam.signatory,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
                 }).then((ret) => {
                     this.signData = ret.data
                     this.total = ret.total

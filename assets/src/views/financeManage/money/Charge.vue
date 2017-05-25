@@ -71,29 +71,29 @@
         <section class="search">
             <section>
                 <i>工业</i>
-                <IndustryCompanySelect type="1" v-model="industrySelect"
-                                       v-on:change="val=>industrySelect=val"
+                <IndustryCompanySelect type="1" v-model="fetchParam.industrySelect"
+                                       v-on:change="val=>fetchParam.industrySelect=val"
                                        :change="getData">
                 </IndustryCompanySelect>
             </section>
             <section>
                 <i>管理员</i>
-                <admin v-model="managerSelect"
-                       v-on:change="val=>managerSelect=val"
+                <admin v-model="fetchParam.managerSelect"
+                       v-on:change="val=>fetchParam.managerSelect=val"
                        :change="getData">
                 </admin>
             </section>
             <section>
                 <i>类型</i>
-                <el-select v-model="category" placeholder="全部" @change="getData" :clearable="true">
+                <el-select v-model="fetchParam.category" placeholder="全部" @change="getData" :clearable="true">
                     <el-option label="充值" value="balance"></el-option>
                     <el-option label="转入" value="transfer_in"></el-option>
                     <el-option label="转出" value="transfer_out"></el-option>
                 </el-select>
             </section>
-            <DateRange title="创建时间" :start="createTime" :end="endTime"
-                       v-on:changeStart="val=> createTime=val"
-                       v-on:changeEnd="val=> endTime"
+            <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                       v-on:changeStart="val=> fetchParam.createTime=val"
+                       v-on:changeEnd="val=> fetchParam.endTime=val"
                        :change="getData">
             </DateRange>
         </section>
@@ -169,15 +169,17 @@
         },
         data () {
             return {
-                category: '', // 类型
+                fetchParam: {
+                    category: '', // 类型
+                    industrySelect: '',
+                    managerSelect: '',
+                    createTime: '',
+                    endTime: '',
+                },
                 balance: 0, // 余额
                 showDetail: false,
                 currentData: null,
                 loading: false,
-                industrySelect: '',
-                managerSelect: '',
-                createTime: '',
-                endTime: '',
                 currentPage: 1,
                 pageSize: 10,
                 industryData: [],
@@ -206,7 +208,7 @@
                 total: 0
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -274,11 +276,11 @@
                 return chargeData({
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    admin_id: this.managerSelect,
-                    company_id: this.industrySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime,
-                    category: this.category
+                    admin_id: this.fetchParam.managerSelect,
+                    company_id: this.fetchParam.industrySelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    category: this.fetchParam.category
                 }).then((ret) => {
                     this.industryData = ret.data
                     this.total = ret.total
@@ -288,11 +290,11 @@
             },
             exportData () {
                 exportCharge({
-                    admin_id: this.managerSelect,
-                    company_id: this.industrySelect,
-                    time_start: this.createTime,
-                    time_end: this.endTime,
-                    category: this.category
+                    admin_id: this.fetchParam.managerSelect,
+                    company_id: this.fetchParam.industrySelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    category: this.fetchParam.category
                 })
             }
         }

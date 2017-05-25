@@ -58,32 +58,31 @@
         <section class="search">
             <section>
                 <i>类型</i>
-                <el-select @change="getData" clearable v-model="searchParms.typeSelect" placeholder="未选择">
+                <el-select @change="getData" clearable v-model="fetchParam.typeSelect" placeholder="未选择">
                     <el-option
-                            v-for="(item, index) in searchParms.types"
+                            v-for="(item, index) in types"
                             :label="item.name"
                             :value="item.id"
                             :key="item.id">
                     </el-option>
                 </el-select>
             </section>
-            <Region :province="searchParms.provinceSelect"
-                    :city="searchParms.citySelect"
-                    :area="searchParms.areaSelect"
-                    title="地区" v-on:provinceChange="val => searchParms.provinceSelect = val"
-                    v-on:cityChange="val => searchParms.citySelect = val"
-                    v-on:areaChange="val => searchParms.areaSelect = val"
+            <Region :province="fetchParam.provinceSelect"
+                    :city="fetchParam.citySelect"
+                    :area="fetchParam.areaSelect"
+                    title="地区" v-on:provinceChange="val => fetchParam.provinceSelect = val"
+                    v-on:cityChange="val => fetchParam.citySelect = val"
+                    v-on:areaChange="val => fetchParam.areaSelect = val"
                     :change="getData"></Region>
             <section>
                 <i>名称：</i>
-                <el-input @change="getData" v-model="searchParms.name" auto-complete="off"></el-input>
+                <el-input @keyup.enter.native="getData" v-model="fetchParam.name" auto-complete="off"></el-input>
             </section>
-            <DateRange title="创建时间" :start="searchParms.createTime" :end="searchParms.endTime"
-                       v-on:changeStart="val=> searchParms.createTime = val"
-                       v-on:changeEnd="val=> searchParms.endTime = val"
+            <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                       v-on:changeStart="val=> fetchParam.createTime = val"
+                       v-on:changeEnd="val=> fetchParam.endTime = val"
                        :change="getData">
             </DateRange>
-            <el-button type="primary" @click="clearFn">清空</el-button>
         </section>
         <el-table
                 v-loading="loading"
@@ -161,6 +160,16 @@
         data () {
             return {
                 companyType: ['', '工业', '连锁'],
+                types: [ // 类型
+                    {
+                        name: '连锁',
+                        id: 2
+                    },
+                    {
+                        name: '工业',
+                        id: 1
+                    }
+                ],
                 editloading: false,
                 details: null,
                 showDetail: false, // 显示详情弹窗
@@ -168,20 +177,10 @@
                 currentPage: 1,
                 pageSize: 15,
                 companyData: [],
-                searchParms: {
+                fetchParam: {
                     createTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
                     endTime: this.$route.query.yesterday == undefined ? '' : this.$route.query.yesterday,
                     typeSelect: '',
-                    types: [ // 类型
-                        {
-                            name: '连锁',
-                            id: 2
-                        },
-                        {
-                            name: '工业',
-                            id: 1
-                        }
-                    ],
                     provinceSelect: '',
                     citySelect: '',
                     areaSelect: '',
@@ -196,18 +195,6 @@
             })
         },
         methods: {
-            clearFn () {
-                this.searchParms = {
-                    createTime: '',
-                    endTime: '',
-                    typeSelect: '',
-                    provinceSelect: '',
-                    citySelect: '',
-                    areaSelect: '',
-                    name: ''
-                }
-                this.getData()
-            },
             // 修改企业信息
             editCompany (index, row) {
                 this.$router.push({name: 'company-edit', params: {id: row.id}})
@@ -239,13 +226,13 @@
                 return companyService.getIndrustrySelectList({
                     page_size: this.pageSize,
                     page: this.currentPage,
-                    category: this.searchParms.typeSelect,
-                    keyword: this.searchParms.name,
-                    time_start: this.searchParms.createTime,
-                    time_end: this.searchParms.endTime,
-                    province: this.searchParms.provinceSelect,
-                    city: this.searchParms.citySelect,
-                    area: this.searchParms.areaSelect
+                    category: this.fetchParam.typeSelect,
+                    keyword: this.fetchParam.name,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    province: this.fetchParam.provinceSelect,
+                    city: this.fetchParam.citySelect,
+                    area: this.fetchParam.areaSelect
                 }).then((ret) => {
                     this.companyData = ret.data
                     this.total = ret.total

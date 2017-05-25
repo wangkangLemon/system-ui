@@ -20,7 +20,7 @@
         <main class="search">
             <section>
                 <i>标题</i>
-                <vInput :enter="fetchData" v-model="fetchParam.keyword"></vInput>
+                <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
             </section>
             <section>
                 <i>类型</i>
@@ -69,14 +69,12 @@
 
 <script>
     import speakingRecordService from '../../../services/speaking/recordService'
-    import vInput from '../../component/form/Input.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
 
     export default {
         components: {
-            vInput,
             DateRange,
             CompanySelect,
             DepSelect

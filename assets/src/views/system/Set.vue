@@ -33,7 +33,7 @@
             <section class="search">
                 <section>
                     <i>项目</i>
-                    <el-input @change="getData" v-model="search.name"></el-input>
+                    <el-input @change="getData" v-model="fetchParam.name"></el-input>
                 </section>
             </section>
             <el-table
@@ -73,7 +73,7 @@
         </el-card>
     </article>
 </template>
-<script lang="babel">
+<script>
     import settingService from '../../services/settingService'
     export default {
         data () {
@@ -83,12 +83,12 @@
                 pageSize: 15,
                 listData: [],
                 total: 0,
-                search: {
+                fetchParam: {
                     name: ''
                 }
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -107,7 +107,7 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    keyword: this.search.name,
+                    keyword: this.fetchParam.name,
                 }
                 return settingService.getSettingList(params).then((ret) => {
                     this.listData = ret.data

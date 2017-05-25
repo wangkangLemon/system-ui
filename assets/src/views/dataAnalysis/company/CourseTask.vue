@@ -113,7 +113,7 @@
             <div>
                 <i><img src="./images/user.png" /></i>
                 <h2>454</h2>
-                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 1}}">企业任务数量</router-link>
+                <router-link tag="p" :to="{name: 'company-user', query: {status: 1}}">企业任务数量</router-link>
                 <div>
                     <i>占任务总数的12%</i>
                 </div>
@@ -121,7 +121,7 @@
             <div>
                 <i><img src="./images/r_user.png" /></i>
                 <h2>1212</h2>
-                <router-link tag="p" :to="{name: 'company-user-list', query: {status: 2}}">分店任务数量</router-link>
+                <router-link tag="p" :to="{name: 'company-user', query: {status: 2}}">分店任务数量</router-link>
                 <div>
                     <i>占任务总数的12</i>
                 </div>

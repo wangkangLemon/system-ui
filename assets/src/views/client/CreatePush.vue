@@ -405,7 +405,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             xmview.setContentLoading(false)
         },
         methods: {

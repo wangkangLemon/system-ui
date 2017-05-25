@@ -117,7 +117,7 @@
                 dataTotal: 0
             }
         },
-        mounted () {
+        activated () {
             // 余额和累计支出接口
             finance.getfinance().then((ret) => {
                 this.balance.content = ret.balance

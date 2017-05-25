@@ -78,11 +78,11 @@
             <section class="search">
                 <section>
                     <i>关键字</i>
-                    <el-input @change="getData" v-model="search.keyword"></el-input>
+                    <el-input @keyup.enter.native="getData" v-model="fetchParam.keyword"></el-input>
                 </section>
                 <section>
                     <i>类型：</i>
-                    <el-select clearable @change="getData" v-model="search.category_id">
+                    <el-select clearable @change="getData" v-model="fetchParam.category_id">
                         <el-option label="全部" :value="0"></el-option>
                         <el-option label="建议" :value="1"></el-option>
                         <el-option label="操作体验不好" :value="2"></el-option>
@@ -92,16 +92,16 @@
                 </section>
                 <section>
                     <i>状态：</i>
-                    <el-select @change="getData" clearable v-model="search.status">
+                    <el-select @change="getData" clearable v-model="fetchParam.status">
                         <el-option label="全部" :value="-1"></el-option>
                         <el-option label="待处理" :value="0"></el-option>
                         <el-option label="处理中" :value="1"></el-option>
                         <el-option label="已处理" :value="2"></el-option>
                     </el-select>
                 </section>
-                <DateRange title="日期" :start="search.time_start" :end="search.time_end"
-                           v-on:changeStart="val=>search.time_start=val "
-                           v-on:changeEnd="val=>search.time_end=val "
+                <DateRange title="日期" :start="fetchParam.time_start" :end="fetchParam.time_end"
+                           v-on:changeStart="val=>fetchParam.time_start=val "
+                           v-on:changeEnd="val=>fetchParam.time_end=val "
                            :change="getData"></DateRange>
             </section>
             <el-table
@@ -184,7 +184,7 @@
                 pageSize: 15,
                 listData: [],
                 total: 0,
-                search: {
+                fetchParam: {
                     keyword: '',
                     status: -1,
                     category_id: 0,
@@ -248,11 +248,11 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    keyword: this.search.keyword,
-                    category_id: this.search.category_id,
-                    status: this.search.status,
-                    time_start: this.search.time_start,
-                    time_end: this.search.time_end
+                    keyword: this.fetchParam.keyword,
+                    category_id: this.fetchParam.category_id,
+                    status: this.fetchParam.status,
+                    time_start: this.fetchParam.time_start,
+                    time_end: this.fetchParam.time_end
                 }
                 return feedbackSystemService.mobileSearch(params).then((ret) => {
                     this.listData = ret.data

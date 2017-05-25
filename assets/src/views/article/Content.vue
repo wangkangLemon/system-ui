@@ -36,15 +36,15 @@
             <section class="search">
                 <section>
                     <i>标题</i>
-                    <el-input @change="getData" class="name" v-model="search.title"/>
+                    <el-input @keyup.enter.native="getData" class="name" v-model="fetchParam.title"/>
                 </section>
                 <section>
                     <i>类别</i>
-                    <ArticleCategorySelect :onchange="getData" v-model="search.category_id"></ArticleCategorySelect>
+                    <ArticleCategorySelect :onchange="getData" v-model="fetchParam.category_id"></ArticleCategorySelect>
                 </section>
-                <DateRange title="时间" :start="search.createTime" :end="search.endTime"
-                           v-on:changeStart="val=> search.createTime=val"
-                           v-on:changeEnd="val=> search.endTime=val"
+                <DateRange title="时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                           v-on:changeStart="val=> fetchParam.createTime=val"
+                           v-on:changeEnd="val=> fetchParam.endTime=val"
                            :change="getData">
                 </DateRange>
             </section>
@@ -100,7 +100,7 @@
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-sizes="[15, 30, 60, 100]"
-                        layout="total, sizes, ->, prev, pager, next, jumper"
+                        layout="total, sizes, prev, pager, next, jumper"
                         :total="total">
                 </el-pagination>
             </section>
@@ -119,7 +119,7 @@
         data () {
             return {
                 loading: false,
-                search: {
+                fetchParam: {
                     title: '',
                     category_id: '',
                     createTime: '',
@@ -132,7 +132,7 @@
                 pageSize: 15
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -172,10 +172,10 @@
             getData () {
                 this.loading = true
                 return ArticleService.getArticleList({
-                    category_id: this.search.category_id,
-                    title: this.search.title,
-                    start_time: this.search.createTime,
-                    end_time: this.search.endTime,
+                    category_id: this.fetchParam.category_id,
+                    title: this.fetchParam.title,
+                    start_time: this.fetchParam.createTime,
+                    end_time: this.fetchParam.endTime,
                     page: this.currentPage,
                     page_size: this.pageSize
                 }).then((ret) => {

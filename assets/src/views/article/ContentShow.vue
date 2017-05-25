@@ -44,7 +44,7 @@
                 return this.$route.params.id
             }
         },
-        created () {
+        activated () {
             articleService.getArticleDetail({article_id: this.contentID}).then((ret) => {
                 this.currentItem = ret
                 this.$nextTick(() => {

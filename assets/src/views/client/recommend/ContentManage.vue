@@ -430,7 +430,7 @@
                 return newVal
             }
         },
-        created () {
+        activated () {
             _this = this
             this.getLeftCategoryData().then((ret) => {
                 this.sectionChange(ret.data[0])

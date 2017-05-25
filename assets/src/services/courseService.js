@@ -131,6 +131,14 @@ class CourseService {
         })
     }
 
+    // 修改课程获取课程信息接口
+    getCourseInfo ({course_id}) {
+        let companyid = authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/${course_id}/edit`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
     // 修改课程
     editCourse ({companyid, id, category_id, name, image, material_type, material_id, album_id, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
         companyid = companyid || authUtils.getUserInfo().company_id

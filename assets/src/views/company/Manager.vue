@@ -33,32 +33,31 @@
             <section class="search">
                 <section>
                     <i>姓名</i>
-                    <el-input @change="getData" v-model="searchParams.name" auto-complete="off"></el-input>
+                    <el-input @keyup.enter.native="getData" v-model="fetchParam.name" auto-complete="off"></el-input>
                 </section>
                 <section>
                     <i>手机</i>
-                    <el-input @change="getData" v-model="searchParams.mobile" auto-complete="off"></el-input>
+                    <el-input @keyup.enter.native="getData" v-model="fetchParam.mobile" auto-complete="off"></el-input>
                 </section>
                 <section>
                     <i>连锁</i>
-                    <IndustryCompanySelect :type="2" v-model="searchParams.companySelect"
-                                           v-on:change="val=>searchParams.companySelect=val"
+                    <IndustryCompanySelect :type="2" v-model="fetchParam.companySelect"
+                                           v-on:change="val=>fetchParam.companySelect=val"
                                            :change="getData"></IndustryCompanySelect>
 
                 </section>
                 <section>
                     <i>是否删除</i>
-                    <el-select v-model="searchParams.status" @change="getData">
+                    <el-select v-model="fetchParam.status" @change="getData">
                         <el-option label="未删除" :value="0"></el-option>
                         <el-option label="已删除" :value="1"></el-option>
                     </el-select>
                 </section>
-                <DateRange title="创建时间" :start="searchParams.createTime" :end="searchParams.endTime"
-                           v-on:changeStart="val=> searchParams.createTime = val"
-                           v-on:changeEnd="val=> searchParams.endTime = val"
+                <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                           v-on:changeStart="val=> fetchParam.createTime = val"
+                           v-on:changeEnd="val=> fetchParam.endTime = val"
                            :change="getData">
                 </DateRange>
-                <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
                     v-loading="loading"
@@ -122,7 +121,7 @@
                 pageSize: 15,
                 managerData: [],
                 total: 0,
-                searchParams: clearSearch()
+                fetchParam: clearSearch()
             }
         },
         activated () {
@@ -131,10 +130,6 @@
             })
         },
         methods: {
-            clearFn () {
-                this.searchParams = clearSearch()
-                this.getData()
-            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
@@ -148,12 +143,12 @@
                 let params = {
                     page: this.currentPage,
                     page_size: this.pageSize,
-                    company_id: this.searchParams.companySelect,
-                    time_start: this.searchParams.createTime,
-                    time_end: this.searchParams.endTime,
-                    deleted: this.searchParams.status,
-                    manager_name: this.searchParams.name,
-                    manager_mobile: this.searchParams.mobile,
+                    company_id: this.fetchParam.companySelect,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    deleted: this.fetchParam.status,
+                    manager_name: this.fetchParam.name,
+                    manager_mobile: this.fetchParam.mobile,
                 }
                 return ManagerService.getManager(params).then((ret) => {
                     this.managerData = ret.data
