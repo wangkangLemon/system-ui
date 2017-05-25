@@ -265,7 +265,7 @@
             if (this.$route.params.courseInfo) {
                 this.fetchParam = this.$route.params.courseInfo
                 xmview.setContentTile('编辑课程-培训')
-            } else {
+            } else if (this.$route.query.id) {
                 courseService.getCourseInfo({course_id: this.$route.query.id}).then((ret) => {
                     this.fetchParam = ret.course
                     xmview.setContentTile('编辑课程-培训')
