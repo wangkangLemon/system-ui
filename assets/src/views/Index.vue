@@ -392,9 +392,11 @@
             handleMenuClick (item) {
                 this.$store.dispatch('clearFetchParam', true)
                 if (item === this.$route.path) {
-//                    debugger
+                    debugger
                     this.$router.replace({name: this.$route.name, query: {refreshId: Date.now()}})
                     xmview.setContentLoading(false)
+                } else {
+                    this.$router.push({path: item})
                 }
             },
             setContentLoading (loading) {

@@ -76,6 +76,7 @@
                 <!--</el-select>-->
                 <!--</section>-->
             </section>
+            <br>
             <el-table v-if="type == 0 || type == 1 || type == 2" :data="tableData" border v-loading="loading">
                 <el-table-column v-if="type == 0" label="标题" prop="speaking_name" min-width="180">
                     <template scope="scope">
@@ -163,6 +164,7 @@
                 this.fetchParam.speaking_id = this.$route.query.speaking_id
                 this.fetchParam.company_id = this.$route.query.company_id
                 this.fetchParam.department_id = this.$route.query.department_id
+                this.fetchParam.date = this.fetchParam.date || 'yesterday'
                 this.getData()
                 xmview.setContentBack(this.type > 0)
             }
@@ -173,7 +175,6 @@
             this.fetchParam.company_id = this.$route.query.company_id
             this.fetchParam.department_id = this.$route.query.department_id
             this.fetchParam.page = 1
-            this.fetchParam.date = this.fetchParam.date || 'yesterday'
             this.getData()
         },
         methods: {
