@@ -13,7 +13,7 @@
             display: inline-block;
         }
         .tab-container {
-            @extend %content-container;
+            @extend %content-container;s
             .search {
                 @extend %top-search-container;
             }

@@ -165,15 +165,6 @@ router.afterEach((route) => {
         document.title = title + ' - 药视通'
     }
 
-    // 如果需要清空筛选条件
-    if (store.state.index.clearFetchParam) {
-        store.dispatch('clearFetchParam', false)
-
-        if (route.matched.length < 2) return
-        let vm = route.matched[1].instances.default.$children[0]
-        vm.initFetchParam ? vm.initFetchParam() : clearObj([vm.fetchParam, vm.fetchParams])
-    }
-
     // 设置选中的菜单
     if (route.matched.some(record => record.meta.noback)) store.dispatch('setIndexMenuActive', route.path)
 })
@@ -192,6 +183,17 @@ router.beforeEach((to, from, next) => {
     setTitle(to.meta.title)
 
     showBackContent(to, from, next)
+
+    // 如果需要清空筛选条件
+    if (store.state.index.clearFetchParam) {
+        store.dispatch('clearFetchParam', false)
+
+        if (from.matched.length < 3) return
+        // if (!from.matched[2].instances.default) return
+        let vm = from.matched[2].instances.default
+        vm.initFetchParam ? vm.initFetchParam() : clearObj([vm.fetchParam, vm.fetchParams])
+    }
+
     next()
 })
 
