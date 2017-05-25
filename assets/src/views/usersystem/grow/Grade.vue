@@ -32,6 +32,7 @@
             </el-table-column>
             <el-table-column
                     prop="award"
+                    min-width="100"
                     label="对应特权">
             </el-table-column>
             <el-table-column
@@ -98,14 +99,14 @@
     </article>
 </template>
 <script>
+    import growService from '../../../services/usersystem/growService'
     export default {
         data () {
             return {
                 loading: false,
                 addForm: false,
                 search: {
-                    title: '',
-                    type: '',
+                    name: '',
                     page: 1,
                     page_size: 15
                 },
@@ -120,11 +121,19 @@
             }
         },
         activated () {
-            xmview.setContentLoading(false)
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             getData () {
-                console.log(11)
+                this.loading = true
+                return growService.gradeSearch(this.search).then((ret) => {
+                    this.dataList = ret.data
+                    this.loading = false
+                }).catch((ret) => {
+                    this.xmviex.showTip('error', ret.message)
+                })
             },
             dialogOpen () {
                 this.$nextTick(() => {

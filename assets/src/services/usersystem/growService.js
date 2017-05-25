@@ -18,6 +18,13 @@ class GrowService {
         let finalUrl = `${urlPre}/behavior/`
         return api.put(finalUrl, {id, name, description, growth, limit})
     }
+    // 特权等级查询
+    gradeSearch ({page, page_size, name}) {
+        let finalUrl = `${urlPre}/grad/search`
+        return api.get(finalUrl, {page, page_size, name}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new GrowService()
