@@ -18,4 +18,5 @@ RUN cd /node/src/git.vodjk.com/yst/system-ui/assets \
     && cp config/config.js.default config/config.js \
     && npm link node-sass \
     && yarn install \
-    && yarn run build
+    && yarn run build \
+    && rm -fR node_modules
