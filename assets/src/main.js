@@ -29,6 +29,9 @@ window.xmview = {
     }
 }
 
+// ===保留此处=== 每次构建打印一个日期, 避免app.js的hash值没有变化
+console.info(process.buildTime)
+
 window.xmrouter = router
 window.xmconfig = {
     apiHost: config.apiHost,
@@ -41,5 +44,3 @@ new Vue({
     router,
     render: h => h(App)
 })
-
-console.info(process.buildTime)

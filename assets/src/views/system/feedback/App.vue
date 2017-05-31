@@ -50,7 +50,8 @@
                 <p><i class="title">提交人：</i><span class="value">{{detail.user_name}}</span></p>
                 <p><i class="title">联系方式：</i> <span class="value">{{detail.contact}}</span></p>
                 <p><i class="title">问题描述：</i> <span class="value">{{detail.content}}</span></p>
-                <p><i class="title">手机型号：</i> <span class="value">{{detail.app_version}}</span></p>
+                <p><i class="title">手机型号：</i> <span class="value">{{detail.Device}}</span></p>
+                <p><i class="title">APP版本：</i> <span class="value">{{detail.app_version}}</span></p>
                 <p><i class="title">系统版本：</i> <span class="value">{{detail.system_version}}</span></p>
                 <p class="select remark">
                     <i class="title">备注：</i>
