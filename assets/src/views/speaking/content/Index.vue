@@ -71,7 +71,8 @@
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
-                    <el-button v-if="scope.row.status != 1" @click="offline(scope.$index, scope.row)" type="text" size="small">
+                    <el-button v-if="scope.row.status != 1" @click="offline(scope.$index, scope.row)" type="text"
+                               size="small">
                         <i>{{ scope.row.status == 2 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
@@ -121,6 +122,18 @@
             this.fetchData()
         },
         methods: {
+            initFetchParam () {
+                this.fetchParam = {
+                    price_enabled: void -1,
+                    status: void -1,
+                    keyword: void '',
+                    page: 1,
+                    page_size: 15,
+                    time_start: void '',
+                    time_end: void '',
+                    sender_type: 'system'
+                }
+            },
             handleCurrentChange (val) {
                 this.fetchParam.page = val
                 this.fetchData()
@@ -138,7 +151,7 @@
                     xmview.setContentLoading(false)
                 })
             },
-             // 单条删除
+            // 单条删除
             del (index, row) {
                 xmview.showDialog(`你将要删除药我说 <span style="color:red">${row.title}</span> 操作不可恢复确认吗?`, () => {
                     speakingContentService.deleteSpeaking({speaking_id: row.id}).then(() => {
@@ -157,7 +170,7 @@
                     })
                 })
             },
-             // 编辑
+            // 编辑
             edit (index, row) {
                 this.$router.push({name: 'speaking-content-add', query: {id: row.id}})
             },
