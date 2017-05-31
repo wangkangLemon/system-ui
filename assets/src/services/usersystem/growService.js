@@ -3,7 +3,7 @@
  */
 import * as api from '../api'
 import config from '../../utils/config'
-const urlPre = config.apiHost + '/sys/user/grow'
+const urlPre = config.apiHost + '/sys/grow'
 
 class GrowService {
     // 用户行为成长值记录列表
@@ -19,11 +19,21 @@ class GrowService {
         return api.put(finalUrl, {id, name, description, growth, limit})
     }
     // 特权等级查询
-    gradeSearch ({page, page_size, name}) {
-        let finalUrl = `${urlPre}/grad/search`
-        return api.get(finalUrl, {page, page_size, name}).then((ret) => {
+    gradeSearch ({page, page_size}) {
+        let finalUrl = `${urlPre}/grade/search`
+        return api.get(finalUrl, {page, page_size}).then((ret) => {
             return ret.data
         })
+    }
+    // 修改特权等级
+    updateGrade ({id, level, description, growth_times, credit_times, growth, limit}) {
+        let finalUrl = `${urlPre}/grade/`
+        return api.put(finalUrl, {id, level, description, growth_times, credit_times, growth, limit})
+    }
+    // 新增特权等级
+    addGrade ({id, level, description, growth_times, credit_times, growth, limit}) {
+        let finalUrl = `${urlPre}/grade/`
+        return api.post(finalUrl, {id, level, description, growth_times, credit_times, growth, limit})
     }
 }
 

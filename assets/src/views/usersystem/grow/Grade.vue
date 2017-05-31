@@ -17,7 +17,7 @@
 <template>
     <article class="task-daily-container">
         <section class="add">
-            <el-button icon="plus" type="primary" @click="addForm = true">添加</el-button>
+            <el-button icon="plus" type="primary" @click="add()">添加</el-button>
         </section>
         <el-table border v-loading="loading" :data="dataList">
             <el-table-column
@@ -26,27 +26,27 @@
                     label="用户等级">
             </el-table-column>
             <el-table-column
-                    prop="grow"
+                    prop="growth"
                     label="所需成长值"
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="award"
+                    prop="description"
                     min-width="100"
                     label="对应特权">
             </el-table-column>
             <el-table-column
-                    prop="last_time_name"
+                    prop="credit_times"
                     label="积分收益系数"
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="last_time_name"
+                    prop="growth_times"
                     label="每日启动成长值倍数"
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="last_time_name"
+                    prop="limit"
                     label="每日成长值上限"
                     width="180">
             </el-table-column>
@@ -55,8 +55,7 @@
                     label="操作"
                     width="180">
                 <template scope="scope">
-                    <el-button type="text">修改</el-button>
-                    <el-button type="text">删除</el-button>
+                    <el-button @click="edit(scope.row)" type="text" size="small">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -70,29 +69,29 @@
                     :total="total">
             </el-pagination>
         </section>
-        <el-dialog :visible.sync="addForm" size="tiny" title="等级特权设置" @open="dialogOpen">
+        <el-dialog :visible.sync="updateForm" size="tiny" title="等级特权设置">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
-                <el-form-item prop="level" label="用户等级">
-                    <el-input v-model="form.level"></el-input>
+                <el-form-item label="用户等级">
+                    <el-input-number v-model="form.level" :disabled="flag == 1"></el-input-number>
                 </el-form-item>
                 <el-form-item label="所需成长值">
-                    <el-input v-model="form.level"></el-input>
+                    <el-input-number v-model="form.growth"></el-input-number>
                 </el-form-item>
-                <el-form-item label="每日成长值上限">
-                    <el-input v-model="form.level"></el-input>
-                </el-form-item>
-                <el-form-item label="每日启动成长值">
-                    <el-input v-model="form.level"></el-input>
-                </el-form-item>
-                <el-form-item label="积分收益系数">
-                    <el-input v-model="form.level"></el-input>
+                <el-form-item label="对应特权">
+                    <el-input v-model="form.description" type="textarea"  :rows="6" :disabled="flag == 1"></el-input>
                 </el-form-item>
                 <el-form-item label="成长值增益倍数">
-                    <el-input v-model="form.level"></el-input>
+                    <el-input-number v-model="form.growth_times"></el-input-number>
+                </el-form-item>
+                <el-form-item label="积分收益系数">
+                    <el-input-number v-model="form.credit_times"></el-input-number>
+                </el-form-item>
+                <el-form-item label="每日成长值上限">
+                    <el-input-number v-model="form.limit"></el-input-number>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addForm = false">取 消</el-button>
+                <el-button @click="updateForm = false">取 消</el-button>
                 <el-button type="primary" @click="submit('form')">保 存</el-button>
             </span>
         </el-dialog>
@@ -104,19 +103,41 @@
         data () {
             return {
                 loading: false,
-                addForm: false,
+                updateForm: false,
                 search: {
-                    name: '',
                     page: 1,
                     page_size: 15
                 },
+                flag: 0,
                 form: clearFn(),
                 dataList: [{}],
                 total: 0,
                 rules: {
-                    type: {required: true, message: '必须填', trigger: 'change'},
-                    title: {required: true, message: '必须填', trigger: 'blur'},
-                    integral: {required: true, message: '必须填', trigger: 'blur'}
+                    id: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    level: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    growth: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    limit: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    growth_times: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    credit_times: [
+                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                    ],
+                    description: [
+                        {
+                            required: true,
+                            message: '必填项',
+                            trigger: 'blur'
+                        }
+                    ]
                 }
             }
         },
@@ -135,16 +156,45 @@
                     this.xmviex.showTip('error', ret.message)
                 })
             },
-            dialogOpen () {
-                this.$nextTick(() => {
-                    this.form = clearFn()
-                    this.$refs.form.resetFields()
-                })
+             // 编辑
+            edit (row) {
+                this.flag = 1
+                this.updateForm = true
+                this.form.id = row.id
+                this.form.level = row.level
+                this.form.growth = row.growth
+                this.form.limit = row.limit
+                this.form.growth_times = row.growth_times
+                this.form.credit_times = row.credit_times
+                this.form.description = row.description
+            },
+            add () {
+                this.flag = 0
+                this.form = clearFn()
+                this.updateForm = true
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        console.log(valid)
+                        if (this.flag) {
+                            growService.updateGrade(this.form).then((ret) => {
+                                this.updateForm = false
+                                xmview.showTip('success', '保存成功')
+                                this.getData()
+                            }).catch((ret) => {
+                                xmview.showTip('error', ret.message)
+                            })
+                        } else {
+                            growService.addGrade(this.form).then((ret) => {
+                                this.updateForm = false
+                                xmview.showTip('success', '保存成功')
+                                this.getData()
+                            }).catch((ret) => {
+                                xmview.showTip('error', ret.message)
+                            })
+                        }
+                    } else {
+                        return false
                     }
                 })
             }
@@ -152,12 +202,14 @@
     }
     function clearFn() {
         return {
+            id: '',
             level: '',
             grow: '',
-            up: '',
+            limit: '',
             daygrow: '',
-            multiple: '', // 倍数
-            coefficient: '', // 系数
+            growth_times: '', // 成长值成长倍数
+            credit_times: '', // 积分增益倍数
+            description: '', // 描述
         }
     }
 </script>
