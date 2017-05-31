@@ -2,9 +2,14 @@
 
 set -e
 
+BASE_NAME="yst-system-ui-probase"
+
 docker build -t hub.docker.vodjk.com/yst/system-ui:probase ./base/
-docker create --name yst-system-ui-probase hub.docker.vodjk.com/yst/system-ui:probase
-docker cp yst-system-ui-probase:/node/src/git.vodjk.com/yst/system-ui .
+if [[ ! -z "$(docker ps -a|grep $BASE_NAME)" ]]; then
+    docker rm -f $BASE_NAME
+fi
+docker create --name $BASE_NAME hub.docker.vodjk.com/yst/system-ui:probase
+docker cp $BASE_NAME:/node/src/git.vodjk.com/yst/system-ui .
 
 tag=`git rev-parse --short=12 HEAD`
 
@@ -14,6 +19,6 @@ docker push hub.docker.vodjk.com/yst/system-ui:pro_${tag}
 docker push hub.docker.vodjk.com/yst/system-ui:pro
 
 rm -fR system-ui
-docker rm yst-system-ui-probase
+docker rm $BASE_NAME
 docker rmi hub.docker.vodjk.com/yst/system-ui:pro
 docker rmi hub.docker.vodjk.com/yst/system-ui:pro_${tag}
