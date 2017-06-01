@@ -24,12 +24,13 @@
             </section>
             <section>
                 <i>类型</i>
-                <el-select v-model="fetchParam.speaking_company_id" placeholder="全部" @change="fetchData" :clearable="true">
+                <el-select v-model="fetchParam.speaking_company_id" placeholder="全部" @change="fetchData"
+                           :clearable="true">
                     <el-option label="系统药我说" value="0"></el-option>
                     <el-option label="企业药我说" value="1"></el-option>
                 </el-select>
             </section>
-             <section>
+            <section>
                 <i>连锁</i>
                 <CompanySelect v-model="fetchParam.company_id" :change="fetchData">
                 </CompanySelect>
@@ -99,13 +100,11 @@
             }
         },
         activated () {
-            if (this.$route.params['reload']) {
-                this.fetchData()
-            }
-            xmview.setContentLoading(false)
-        },
-        created () {
+//            if (this.$route.params['reload']) {
+//            this.fetchData()
+//            }
             this.fetchData()
+            xmview.setContentLoading(false)
         },
         methods: {
             handleCurrentChange (val) {
