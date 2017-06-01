@@ -530,7 +530,6 @@
                 this.addForm = true
             },
             handleDelete (index, row) {
-                console.log(row)
                 xmview.showDialog(`你确定要将内容 【<i style="color:red">${row.title}</i>】 从区块中删除吗？`, () => {
                     sectionService.delSectionData({
                         id: row.id,
@@ -572,7 +571,6 @@
                 this.form.tags = value
             },
             updateCourse (index, item) {
-                console.log(item)
                 this.formTitle = `编辑${this.catArr[item.ref_type]}`
                 this.form = item
                 if (item.ref_type != 'link') {
@@ -580,17 +578,12 @@
                     if (item.ref_type == 'course') {
                         this.form.content = item.course
                         this.form.title = item.name
-                        this.form.image = item.image
                         this.form.des = item.description
                     } else if (item.ref_type == 'speaking') {
                         this.form.content = item.speaking
-                        this.form.title = item.title
-                        this.form.image = item.image
                         this.form.des = item.content
                     } else if (item.ref_type == 'article') {
                         this.form.content = item.article
-                        this.form.title = item.title
-                        this.form.image = item.cover
                     }
                 }
                 this.addForm = true
