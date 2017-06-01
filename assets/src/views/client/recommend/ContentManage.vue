@@ -192,7 +192,8 @@
         <el-dialog v-model="addForm" :title="formTitle">
             <section v-if="form.ref_id">
                 <div class="keep" v-if="form.ref_sync"></div>
-                <div class="synchronize">课程：{{form.course.name}}
+                <div class="synchronize">
+                    {{catArr[category]}}：{{category == 'course' ? form.content.name : form.content.title}}
                     <el-button @click="form.ref_sync = 0" v-if="form.ref_sync">关闭同步</el-button>
                     <el-button @click="keepSync" v-if="!form.ref_sync">开启同步</el-button>
                 </div>
@@ -228,8 +229,8 @@
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
             </div>
         </el-dialog>
-        <!--选取课程-->
-        <ChooseCourse v-model="course.isShow" v-on:result="courseConfirm"></ChooseCourse>
+        <!--选取-->
+        <ChooseContent v-model="content.isShow" v-on:result="contentConfirm"></ChooseContent>
         <section class="left-content">
             <div class="classify title">
                 <SectionCategorySelect :onchange="getLeftCategoryData" v-model="section.category_id"></SectionCategorySelect>
@@ -259,7 +260,7 @@
             <div class="title">
                 {{result.title.name}}-内容列表<i v-if="result.title.category">(绑定公开课栏目:{{result.title.category}})</i>
                 <span>
-                    <el-button @click="chooseCourse">选取课程</el-button>
+                    <el-button @click="content.isShow = true">选取内容</el-button>
                     <el-button @click="addCourse('form')">添加内容</el-button>
                 </span>
             </div>
@@ -275,6 +276,8 @@
                             label="标题">
                         <template scope="scope">
                             <el-tag type="primary" class="tag" v-if="scope.row.ref_type == 'course'">课程</el-tag>
+                            <el-tag type="success" class="tag" v-if="scope.row.ref_type == 'speaking'">药我说</el-tag>
+                            <el-tag type="warning" class="tag" v-if="scope.row.ref_type == 'article'">资讯</el-tag>
                             <el-tag type="gray" class="tag" v-if="scope.row.ref_type == 'link'">链接</el-tag>
                             {{scope.row.title}}
                             <i class="el-icon-picture" v-if="scope.row.image" @mouseover="showImg" @mouseout="hideImg">
@@ -325,7 +328,7 @@
     </article>
 </template>
 <script>
-    import ChooseCourse from '../component/ChooseCourse.vue'
+    import ChooseContent from '../component/ChooseContent.vue'
     import SectionCategorySelect from '../../component/select/SectionCategory.vue'
     import sectionService from '../../../services/sectionService'
     import UploadImg from '../../component/upload/UploadImg.vue'
@@ -333,7 +336,7 @@
     let _this
     export default {
         components: {
-            ChooseCourse,
+            ChooseContent,
             SectionCategorySelect,
             UploadImg
         },
@@ -361,8 +364,8 @@
                     page_size: 15,
                     total: 0
                 },
-                // 选取课程
-                course: {
+                // 选取
+                content: {
                     isShow: false
                 },
                 // 表单相关属性
@@ -370,6 +373,8 @@
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
                 uploadReqUrl: '', // 上传图片的请求地址
+                catArr: {'course': '课程', 'article': '资讯', 'speaking': '药我说', 'link': '链接'},
+                category: '',
                 form: {                // 表单属性值
                     title: '',          // 标题
                     url: '', // 链接地址
@@ -449,14 +454,22 @@
             // 保持同步
             keepSync () {
                 this.form.ref_sync = 1
-                this.form.title = this.form.course.name
-                this.form.image = this.form.course.image
-                this.form.des = this.form.course.description
-                this.form.date = this.form.course.create_time_name
+                if (this.category == 'course') {
+                    this.form.title = this.form.content.name
+                    this.form.image = this.form.content.image
+                    this.form.des = this.form.content.description
+                    this.form.date = this.form.content.create_time_name
+                } else if (this.category == 'speaking') {
+                    this.form.title = this.form.content.title
+                    this.form.image = this.form.content.image
+                    this.form.des = this.form.content.content
+                    this.form.date = this.form.content.create_time
+                } else if (this.category == 'article') {
+                    this.form.title = this.form.content.title
+                    this.form.image = this.form.content.cover
+                    this.form.date = this.form.content.create_time_name
+                }
                 this.form.sort = ''
-            },
-            chooseCourse () {
-                this.course.isShow = true
             },
             // 区块当前页
             sectionPageChange (val) {
@@ -506,15 +519,18 @@
                     xmview.showTip('error', ret.message)
                 })
             },
-            courseConfirm (item) { // 点击确定的时候，进行搜索结果
-                this.form.course = item
-                this.form.ref_id = item.id
+            contentConfirm (dataObj) { // 点击确定的时候，进行搜索结果
+                this.form.content = dataObj.data
+                this.form.ref_id = dataObj.data.id
                 this.form.ref_sync = 1
+                this.form.tags = ''
+                this.category = dataObj.category
                 if (this.form.id) delete this.form.id
                 this.keepSync()
                 this.addForm = true
             },
             handleDelete (index, row) {
+                console.log(row)
                 xmview.showDialog(`你确定要将内容 【<i style="color:red">${row.title}</i>】 从区块中删除吗？`, () => {
                     sectionService.delSectionData({
                         id: row.id,
@@ -530,7 +546,7 @@
             submit (form) { // 表单提交
                 this.form.section_id = this.section.currentID
                 this.form.date = this.form.date ? date2Str(this.form.date) : ''
-                this.form.ref_type = this.form.ref_id ? 'course' : 'link'
+                this.form.ref_type = this.form.ref_id ? this.category : 'link'
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         let reqFn = sectionService.createSectionData
@@ -542,7 +558,7 @@
                         reqFn(this.form).then(() => {
                             xmview.showTip('success', msg)
                             this.addForm = false
-                            this.course.isShow = false
+                            this.content.isShow = false
                             this.getSectionData(this.section.currentID)
                         }).catch((ret) => {
                             xmview.showTip('error', ret.message)
@@ -556,20 +572,33 @@
                 this.form.tags = value
             },
             updateCourse (index, item) {
-                // 根据item.id获取数据 并赋值给form
-                this.formTitle = '编辑内容'
-                if (item.ref_id) {
-                    this.formTitle = '编辑课程'
-                }
+                console.log(item)
+                this.formTitle = `编辑${this.catArr[item.ref_type]}`
                 this.form = item
+                if (item.ref_type != 'link') {
+                    this.category = item.ref_type
+                    if (item.ref_type == 'course') {
+                        this.form.content = item.course
+                        this.form.title = item.name
+                        this.form.image = item.image
+                        this.form.des = item.description
+                    } else if (item.ref_type == 'speaking') {
+                        this.form.content = item.speaking
+                        this.form.title = item.title
+                        this.form.image = item.image
+                        this.form.des = item.content
+                    } else if (item.ref_type == 'article') {
+                        this.form.content = item.article
+                        this.form.title = item.title
+                        this.form.image = item.cover
+                    }
+                }
                 this.addForm = true
-                console.log(this.form)
             },
             addCourse (form) {
                 if (this.section.loading || this.result.loading) {
                     return
                 }
-//                this.$refs['form'].resetFields() 不起作用
                 this.form = {
                     title: '',
                     url: '',
