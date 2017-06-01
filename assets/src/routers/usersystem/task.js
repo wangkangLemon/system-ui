@@ -12,10 +12,10 @@ export default {
     children: [
         {
             path: 'daily',
-            name: 'task-daily',
+            name: 'daily',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../../views/usersystem/task/Daily.vue'))
+                    resolve(require('../../views/usersystem/task/Main.vue'))
                 })
             },
             meta: {
@@ -25,10 +25,10 @@ export default {
         },
         {
             path: 'activity',
-            name: 'task-activity',
+            name: 'play',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../../views/usersystem/task/Activity.vue'))
+                    resolve(require('../../views/usersystem/task/Main.vue'))
                 })
             },
             meta: {
@@ -38,10 +38,10 @@ export default {
         },
         {
             path: 'new',
-            name: 'task-new',
+            name: 'newbie',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../../views/usersystem/task/New.vue'))
+                    resolve(require('../../views/usersystem/task/Main.vue'))
                 })
             },
             meta: {
@@ -51,10 +51,10 @@ export default {
         },
         {
             path: 'grow',
-            name: 'task-grow',
+            name: 'growth',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../../views/usersystem/task/Grow.vue'))
+                    resolve(require('../../views/usersystem/task/Main.vue'))
                 })
             },
             meta: {
