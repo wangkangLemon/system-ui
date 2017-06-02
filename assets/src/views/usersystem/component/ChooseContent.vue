@@ -56,10 +56,6 @@
                         layout="total, sizes, prev, pager, next">
                 </el-pagination>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="setValue">取 消</el-button>
-                <el-button type="primary" @click="confirm">确 定</el-button>
-            </span>
         </el-dialog>
     </article>
 </template>
@@ -109,9 +105,6 @@
             }
         },
         methods: {
-            setValue () {
-                this.$emit('input', false)
-            },
             // 课程当前页
             coursePageChange (val) {
                 this.page = val
