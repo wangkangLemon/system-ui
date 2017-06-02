@@ -83,8 +83,11 @@
             </el-table-column>
             <el-table-column
                     min-width="100"
-                    prop="product_name"
                     label="商品名">
+                    <template scope="scope">
+                        <img :src="scope.row.image | fillImgPath" height="30" style="vertical-align: middle">
+                        <i>{{scope.row.product_name}}</i>
+                    </template>
             </el-table-column>
             <el-table-column
                     width="150"
