@@ -373,7 +373,8 @@ class CompanyService {
                             isuser = '',
                             signatory = '',
                             time_start = '',
-                            time_end = ''
+                            time_end = '',
+                            province = ''
                         }) {
         let finalUrl = `${urlPre}/sign/search`
         return api.get(finalUrl, {
@@ -384,7 +385,8 @@ class CompanyService {
             isuser,
             signatory,
             time_start,
-            time_end
+            time_end,
+            province
         }).then((ret) => {
             return ret.data
         })
