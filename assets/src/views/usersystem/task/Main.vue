@@ -21,7 +21,7 @@
 <template>
     <article class="task-daily-container">
         <section class="add">
-            <el-button icon="plus" type="primary" @click="addForm = true">添加</el-button>
+            <el-button icon="plus" type="primary" @click="addFn">添加</el-button>
         </section>
         <section class="search">
             <section>
@@ -88,7 +88,7 @@
                     :total="total">
             </el-pagination>
         </section>
-        <el-dialog :visible.sync="addForm" size="tiny" :title="dialogTitle[search.category]" @open="dialogOpen">
+        <el-dialog :visible.sync="addForm" size="tiny" :title="dialogTitle[search.category]">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item prop="user_action_name" label="任务类型">
                     <el-select v-model="form.user_action_name">
@@ -126,6 +126,7 @@
 <script>
     import ChooseContent from '../component/ChooseContent.vue'
     import TaskService from '../../../services/usersystem/taskService'
+    import clone from 'clone'
     export default {
         components: {
             ChooseContent
@@ -156,7 +157,7 @@
                     title: {required: true, message: '必须填', trigger: 'blur'},
                     count: {required: true, message: '必须填', trigger: 'blur'},
                     user_action_object_id: {type: 'number', required: true, message: '必须填', trigger: 'blur'},
-                    reward: {required: true, message: '必须填', trigger: 'blur'}
+                    reward: {type: 'number', required: true, message: '必须填', trigger: 'blur'}
                 }
             }
         },
@@ -174,11 +175,21 @@
                     xmview.showTip('error', ret.message)
                 })
             },
-            editFn (row) {
-                this.search.category = row.category
-                this.form = row
-                console.log(this.form)
+            addFn () {
                 this.addForm = true
+                this.$nextTick(() => {
+                    this.form = clearFn.call(this)
+                    this.$refs.form.resetFields()
+                })
+            },
+            editFn (row) {
+                this.addForm = true
+                this.$nextTick(() => {
+                    this.form = clearFn.call(this)
+                    this.$refs.form.resetFields()
+                    this.search.category = row.category
+                    this.form = clone(row)
+                })
             },
             chooseFn () {
                 if (!this.form.user_action_name) {
@@ -194,17 +205,17 @@
                     this.total = result[1].total
                 })
             },
-            dialogOpen () {
-                this.$nextTick(() => {
-                    this.form = clearFn.call(this)
-                    this.$refs.form.resetFields()
-                })
-            },
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        TaskService.add(this.form).then(() => {
-                            xmview.showTip('success', '添加成功')
+                        let msg = '添加成功'
+                        let reqFn = TaskService.add
+                        if (this.form.id) {
+                            msg = '修改成功'
+                            reqFn = TaskService.update
+                        }
+                        reqFn(this.form).then(() => {
+                            xmview.showTip('success', msg)
                             this.getData()
                             this.addForm = false
                         }).catch((ret) => {

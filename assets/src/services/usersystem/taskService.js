@@ -25,8 +25,8 @@ class TaskService {
         return api.post(urlPre, {title, category, user_action_name, user_action_object_id, count, reward})
     }
     // 修改任务
-    update({task_id, title, user_action_name, user_action_object_id, count, reward}) {
-        let url = `${urlPre}/${task_id}`
+    update({id, title, user_action_name, user_action_object_id, count, reward}) {
+        let url = `${urlPre}/${id}`
         return api.put(url, {title, user_action_name, user_action_object_id, count, reward})
     }
     // 删除任务
