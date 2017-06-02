@@ -120,9 +120,6 @@
                     logo_app_priority: 1, // 展示方式优先级
                 },
                 rules: {
-                    logo_app_boot: [
-                        {required: true, message: '请输入跳转链接', trigger: 'blur'}
-                    ],
                     logo_app_priority: [
                         {type: 'number', required: true, message: '请选择展示方式', trigger: 'blur'}
                     ],
