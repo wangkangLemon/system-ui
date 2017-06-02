@@ -114,6 +114,9 @@
                     <label>连锁名称</label>
                     <el-input class="name" @change="getData" v-model="fetchParam.name"></el-input>
                 </section>
+                <Province :province="fetchParam.provinceSelect"
+                        title="省份" v-on:provinceChange="val => fetchParam.provinceSelect = val"
+                        :change="getData"></Province>
                 <section>
                     <label>是否录入门店</label>
                     <el-select clearable @change="getData" v-model="fetchParam.isdepartment">
@@ -193,12 +196,14 @@
     import DateRange from '../component/form/DateRangePicker.vue'
     import companyService from '../../services/companyService'
     import SignatorySelect from '../component/select/Signatory.vue'
+    import Province from '../component/select/Province.vue'
     export default {
         components: {
             panel,
             DateRange,
             SignatorySelect,
-            UploadFile
+            UploadFile,
+            Province
         },
         data () {
             return {
@@ -212,7 +217,8 @@
                     endTime: '',
                     isdepartment: '', // 是否录入门店
                     isuser: '', // 是否录入店员
-                    signatory: '' // 签约人
+                    signatory: '', // 签约人
+                    provinceSelect: '' // 省份
                 },
                 constructor: [
                     {
@@ -274,6 +280,7 @@
                     signatory: this.fetchParam.signatory,
                     time_start: this.fetchParam.createTime,
                     time_end: this.fetchParam.endTime,
+                    province: this.fetchParam.provinceSelect,
                 }).then((ret) => {
                     this.signData = ret.data
                     this.total = ret.total
