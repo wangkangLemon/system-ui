@@ -14,7 +14,7 @@
 </style>
 <template>
     <article>
-        <el-dialog :show-close="false" class="choose-course main-container" title="选取内容" v-model="value">
+        <el-dialog class="choose-course main-container" title="选取内容" :visible.sync="curValue">
             <section class="search">
                 <section>
                     <i>名称</i>
@@ -33,7 +33,7 @@
                     <!--<CourseCategorySelect v-model="category_id" :onchange="getCourse"></CourseCategorySelect>-->
                 <!--</section>-->
             </section>
-            <el-table v-if="category == 'course'" v-loading="loading" @row-click="selectCurrent" border :data="data" :highlight-current-row="true">
+            <el-table v-if="category == 'course'" v-loading="loading" border :data="data" :highlight-current-row="true">
                 <el-table-column prop="name" label="课程"></el-table-column>
                 <el-table-column prop="company" label="企业" width="200"></el-table-column>
                 <el-table-column prop="material_type" label="类型" width="150">
@@ -41,12 +41,28 @@
                         {{material_type[scope.row.material_type]}}
                     </template>
                 </el-table-column>
+                <el-table-column
+                        prop="operate"
+                        label="操作"
+                        width="100">
+                    <template scope="scope">
+                        <el-button type="text" @click="confirm(scope.row)">选取</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
-            <el-table v-if="category == 'speaking'" v-loading="loading" @row-click="selectCurrent" border :data="data" :highlight-current-row="true">
+            <el-table v-if="category == 'speaking'" v-loading="loading" border :data="data" :highlight-current-row="true">
                 <el-table-column prop="title" label="标题"></el-table-column>
                 <el-table-column prop="create_time" label="创建时间" width="150"></el-table-column>
+                <el-table-column
+                        prop="operate"
+                        label="操作"
+                        width="100">
+                    <template scope="scope">
+                        <el-button type="text" @click="confirm(scope.row)">选取</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
-            <el-table  v-if="category == 'article'" border :data="data" v-loading="loading" @row-click="selectCurrent" :highlight-current-row="true">
+            <el-table  v-if="category == 'article'" border :data="data" v-loading="loading" :highlight-current-row="true">
                 <el-table-column
                         prop="title"
                         label="标题"></el-table-column>
@@ -60,6 +76,14 @@
                         label="创建时间"
                         width="200">
                 </el-table-column>
+                <el-table-column
+                        prop="operate"
+                        label="操作"
+                        width="100">
+                    <template scope="scope">
+                        <el-button type="text" @click="confirm(scope.row)">选取</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
             <div class="block">
                 <el-pagination
@@ -72,10 +96,6 @@
                         layout="total, sizes, prev, pager, next">
                 </el-pagination>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="setValue">取 消</el-button>
-                <el-button type="primary" @click="confirm">确 定</el-button>
-            </span>
         </el-dialog>
     </article>
 </template>
@@ -83,19 +103,14 @@
     import courseService from '../../../services/courseService'
     import speakingService from '../../../services/speaking/contentService'
     import ArticleService from '../../../services/articleService'
-//    import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     export default {
         props: ['value'],
-        components: {
-//            CourseCategorySelect
-        },
         data () {
             return {
-                currentData: null,
+                curValue: this.value,
                 loading: false,
                 search: {
                     keyword: '',
-//                    category_id: ''
                 },
                 category: 'course',
                 data: [],
@@ -116,20 +131,17 @@
                 this.search.keyword = ''
             },
             value (val) {
-                if (val) this.currentData = null
+                this.curValue = val
+            },
+            curValue (val) {
+                this.curValue = val
+                this.$emit('input', val)
             }
         },
         created () {
             this.getCourse()
         },
         methods: {
-            setValue () {
-                this.$emit('input', false)
-            },
-            selectCurrent (item) { // 选取 点击搜索之后的某一行存储当前选择的id 确定的时候调用
-                console.log(item)
-                this.currentData = item
-            },
             // 课程当前页
             coursePageChange (val) {
                 this.page = val
@@ -140,19 +152,14 @@
                 this.page_size = val
                 this.changeList()
             },
-            confirm () {
-                if (this.currentData == null) {
-                    xmview.showTip('error', '请选取内容')
-                    return
-                }
-                this.$emit('result', {data: this.currentData, category: this.category})
+            confirm (item) {
+                this.$emit('result', {data: item, category: this.category})
             },
             getCourse () {
                 this.loading = true
                 // 获取课程数据
                 return courseService.getPublicCourselist({
                     keyword: this.search.keyword,
-//                    category_id: this.category_id,
                     page: this.page,
                     page_size: this.page_size
                 }).then((ret) => {
