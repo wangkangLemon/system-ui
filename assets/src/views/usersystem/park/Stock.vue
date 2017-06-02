@@ -21,7 +21,7 @@
         }
 
         .el-dialog {
-            top: 15px !important;
+            top: 18px !important;
         }
     }
 </style>
@@ -29,24 +29,16 @@
 <template>
     <main id="usersys-integral-stock">
         <article class="manage-container">
-            <el-button type="success" icon="plus">添加</el-button>
-            <el-button type="info" @click="()=>{dialogReplenishment.isShow=true}"><i class="iconfont icon-daoru"></i> 导入
-
+            <el-button type="success" icon="plus" @click="()=>{dialogReplenishment.isShow=true}">添加</el-button>
+            <el-button type="info" @click="()=>{dialogReplenishment.isShow=true}"><i class="iconfont icon-daoru"></i>
+                导入 <!--a-->
             </el-button>
         </article>
 
         <article class="search">
             <section>
                 <i>商品编号</i>
-                <el-input v-model="fetchParam.prodno" @keyup.enter.native="fetchData"></el-input>
-            </section>
-
-            <section>
-                <i>兑换状态</i>
-                <el-select v-model="fetchParam.prodno" placeholder="全部" :clearable="true">
-                    <el-option label="已兑换" :value="1"></el-option>
-                    <el-option label="未兑换" :value="0"></el-option>
-                </el-select>
+                <el-input v-model="fetchParam.number" @keyup.enter.native="fetchData"></el-input>
             </section>
         </article>
 
@@ -58,23 +50,26 @@
                   border>
             <el-table-column type="selection"></el-table-column>
             <el-table-column
-                    min-width="300"
-                    prop="name"
+                    width="200"
+                    prop="product_stock_number"
                     label="商品编号">
             </el-table-column>
             <el-table-column
                     min-width="200"
-                    prop="cat_name"
+                    prop="product_name"
                     label="商品">
             </el-table-column>
             <el-table-column
                     width="120"
-                    prop="score"
                     label="兑换状态">
+                <template scope="scope">
+                    <el-tag v-if="scope.row.status == 0" type="success">未领取</el-tag>
+                    <el-tag v-else>已领取</el-tag>
+                </template>
             </el-table-column>
             <el-table-column
-                    width="150"
-                    prop="limit_time_string"
+                    width="180"
+                    prop="create_time_name"
                     label="添加时间">
             </el-table-column>
             <!--<el-table-column-->
@@ -87,11 +82,13 @@
             <!--</template>-->
             <!--</el-table-column>-->
             <el-table-column
-                    width="100"
+                    width="130"
                     label="操作">
                 <template scope="scope">
                     <div class="tab-oepratebtns">
-                        <el-button type="text" size="small" @click="()=>{dialogDetail.isShow=true}">详情</el-button>
+                        <el-button type="text" size="small"
+                                   @click="()=>{dialogDetail.model=scope.row; dialogDetail.isShow=true}">详情 <!--a-->
+                        </el-button>
                         <el-button type="text" size="small">删除</el-button>
                     </div>
                 </template>
@@ -120,40 +117,16 @@
                 size="small">
             <el-form label-position="right" label-width="80px">
                 <el-form-item label="商品名称">
-                    <i>iPhone7</i>
+                    <i>{{dialogDetail.model.product_name}}</i>
                 </el-form-item>
                 <el-form-item label="商品编号">
-                    <i>2193819231923</i>
+                    <i>{{dialogDetail.model.product_stock_number}}</i>
                 </el-form-item>
                 <el-form-item label="商品封面">
-                    <img src="http://upload.vodjk.com/2017/0522/1495422898699.jpg" style="width: 120px"/>
+                    <img :src="dialogDetail.model.product_image | fillImgPath" style="width: 120px"/>
                 </el-form-item>
                 <el-form-item label="商品详情">
-                    <pre>商品编号：2017098793287
-                主屏：4.7英寸1334x750
-                摄像：1200万像素
-                系统：iOS10
-                模式：4G网络
-                特性：防水防尘 True Tone闪光灯 4K视频摄录
-                内存：32G</pre>
-                </el-form-item>
-                <el-form-item label="收货人">
-                    <i>黄慧鑫</i>
-                </el-form-item>
-                <el-form-item label="手机号">
-                    <i>18582838596</i>
-                </el-form-item>
-                <el-form-item label="收货地址">
-                    <i>北京市朝阳区三元桥地铁站附近国门大厦C层320新玛互动传媒科技有限公司</i>
-                </el-form-item>
-                <el-form-item label="邮政编码">
-                    <i>1231313</i>
-                </el-form-item>
-                <el-form-item label="物流公司">
-                    <i>暂无</i>
-                </el-form-item>
-                <el-form-item label="快递单号">
-                    <i>暂无</i>
+                    <pre>{{prod.description}}</pre>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -165,13 +138,13 @@
                 size="small">
             <el-form label-position="right" label-width="80px">
                 <el-form-item label="商品类型">
-                    <i>iPhone7</i>
+                    <i>{{prod.name}}</i>
                 </el-form-item>
                 <el-form-item label="奖品图片">
-                    <img src="http://upload.vodjk.com/2017/0522/1495422898699.jpg" style="width: 120px"/>
+                    <img :src="prod.image | fillImgPath" style="width: 120px"/>
                 </el-form-item>
                 <el-form-item label="商品详情">
-                    <pre>OPPO R9plus 这一刻，照亮你的美！</pre>
+                    <pre>{{prod.description}}</pre>
                 </el-form-item>
                 <el-form-item label="库存剩余">
                     <i>100</i>
@@ -180,12 +153,13 @@
                     <i>18582838596</i>
                 </el-form-item>
                 <el-form-item label="选择文件">
-                   <div>
-                       <UploadFile :url='dialogReplenishment.uploadUrl' :on-success="handleImported" accept=".xls, .xlsx"
-                                   btnTitle='点击上传'></UploadFile>
-                       <el-button type="text">*下载模板</el-button>
-                       请导入外部商品Excel表格
-                   </div>
+                    <div>
+                        <UploadFile :url='dialogReplenishment.uploadUrl' :on-success="handleImported"
+                                    accept=".xls, .xlsx"
+                                    btnTitle='点击上传'></UploadFile>
+                        <el-button type="text" @click="downloadTmp">*下载模板</el-button>
+                        请导入外部商品Excel表格 <!--a-->
+                    </div>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -197,22 +171,34 @@
 </template>
 
 <script>
+    import parkService from '../../../services/usersystem/parkService'
     import UploadFile from '../../component/upload/UploadFiles.vue'
     export default{
         data () {
             return {
                 selectedIds: [],
                 loadingData: false,
-                data: [{}], // 表格数据
+                prod: {}, // 商品信息
+                data: [], // 表格数据
                 total: 0,
                 fetchParam: {
-                    prodno: void 0, // 商品编号
+                    number: void 0, // 商品编号
                     page: 1,
                     page_size: 15,
+                    prodId: void 0,
                 },
                 dialogDetail: { // 商品详情的弹出框
                     isShow: false,
-                    model: {}
+                    model: {
+                        create_time_name: void 0,
+                        create_time_unix: void 0,
+                        id: void 0,  // 商品库存ID
+                        product_id: void 0, // 商品ID
+                        product_image: void 0,
+                        product_name: void 0, // 商品名称
+                        product_stock_number: void 0, // 商品编号
+                        status: void 0, // 状态 0 未领取 1 已领取
+                    }
                 },
                 dialogReplenishment: { // 补货弹出框
                     isShow: false,
@@ -230,11 +216,31 @@
             },
         },
         activated () {
-            xmview.setContentLoading(false)
-            this.dialogReplenishment.uploadUrl = '' // 设置上传的url
+            this.fetchParam.prodId = this.$route.query.prodId
+            // 获取商品信息
+            let pProd
+            if (!this.$route.params.prod) {
+                pProd = parkService.prodDetail({id: this.fetchParam.prodId}).then((ret) => {
+                    this.prod = ret
+                })
+            } else {
+                this.prod = this.$route.params.prod
+                pProd = Promise.resolve(true)
+            }
+            this.dialogReplenishment.uploadUrl = parkService.stockImportUrl({prodId: this.fetchParam.prodId}) // 设置上传的url
+
+            this.loadingData = true
+            Promise.all([this.fetchData(), pProd]).then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             fetchData() {
+                return parkService.stockSearch(this.fetchParam).then((ret) => {
+                    this.data = ret.data
+                    this.total = ret.total
+                    this.loadingData = false
+                })
             },
             // 单行被选中
             selectRow (selection) {
@@ -244,9 +250,19 @@
                 })
                 this.selectedIds = ret
             },
+            // 批量删除
             delMulti () {
+                this.loadingData = true
+                parkService.stockDelBatch({prodId: this.fetchParam.prodId, ids: this.selectedIds}).then(() => {
+                    this.loadingData = false
+                })
             },
-            handleImported () {}
+            handleImported () {
+            },
+            // 下载模板
+            downloadTmp () {
+                window.open(require('./assets/importProdTamplate.xlsx'))
+            }
         },
         components: {UploadFile}
     }

@@ -105,7 +105,8 @@
                     label="操作">
                 <template scope="scope">
                     <div class="tab-oepratebtns">
-                        <el-button type="text" size="small" @click="()=>$router.push({name:'usersys-park-stock'})">库存
+                        <el-button type="text" size="small"
+                                   @click="()=>$router.push({name:'usersys-park-stock', query: {prodId: scope.row.id},params: {prod: scope.row}})">库存
                             <!--a-->
                         </el-button>
                         <el-button type="text" size="small"

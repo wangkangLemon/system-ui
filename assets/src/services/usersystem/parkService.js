@@ -6,11 +6,20 @@ import config from '../../utils/config'
 const urlPre = config.apiHost + '/sys'
 
 class ParkService {
+    // ============================商品部分============================
     // 搜索商品
     prodSearch ({name, status = -1, category, page, page_size}) {
         let url = `${urlPre}/product/search`
         return api.get(url, {name, status, category, page, page_size}).then((ret) => {
             return ret.data
+        })
+    }
+
+    // 获取详情
+    prodDetail ({id}) {
+        let url = `${urlPre}/product/${id}`
+        return api.get(url, {}).then((ret) => {
+            return ret.data.data
         })
     }
 
@@ -75,6 +84,7 @@ class ParkService {
         })
     }
 
+    // ============================库存部分============================
     // 添加库存
     stockAdd ({prodId, count}) {
         let url = `${urlPre}/product/${prodId}/stock`
@@ -105,6 +115,11 @@ class ParkService {
         return api.get(url, {number, page, page_size}).then((ret) => {
             return ret.data
         })
+    }
+
+    // 导入url
+    stockImportUrl ({prodId}) {
+        return `${urlPre}/product/${prodId}/stock/import`
     }
 }
 
