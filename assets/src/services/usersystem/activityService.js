@@ -34,6 +34,11 @@ class ActivityService {
             return ret.data
         })
     }
+    // 新增活动奖品
+    addReward ({type, category, play_type, product_id, quota, limit, sort, weight}) {
+        let url = `${urlPre}/reward`
+        return api.post(url, {type, category, play_type, product_id, quota, limit, sort, weight})
+    }
     // 修改活动奖品
     updateReward ({id, type, category, play_type, product_id, quota, limit, sort, weight}) {
         let url = `${urlPre}/reward/${id}`

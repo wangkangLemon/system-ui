@@ -168,7 +168,7 @@
         <el-dialog v-model="addForm" title="奖品设置" size="small">
             <el-form :model="form1" :rules="rules1" ref="form1" label-width="100px">
                 <el-form-item label="奖品类型" prop="type">
-                    <el-select v-model="form1.type">
+                    <el-select @change="changeProduct" v-model="form1.type">
                         <el-option label="商品" value="product"></el-option>
                         <el-option label="谢谢参与" value="thanks"></el-option>
                         <el-option label="积分" value="credit"></el-option>
@@ -186,7 +186,7 @@
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="库存量" v-if="form1.type == 'product'">
+                <el-form-item label="库存量" v-if="form1.product_id">
                     {{form1.quota}}
                 </el-form-item>
                 <el-form-item :label="form1.type == 'product' ? '发放量' : '积分面值'" prop="quota" v-if="form1.type != 'thanks'">
@@ -211,6 +211,7 @@
 <script>
     import clone from 'clone'
     import ActivityService from '../../../services/usersystem/activityService'
+    import ParkService from '../../../services/usersystem/parkService'
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     export default {
         components: {
@@ -258,10 +259,15 @@
                 return ActivityService.getActivity({play_id: 1})
             },
             editFn (row) {
-                console.log(row)
                 this.addForm = true
                 this.form1 = clone(row)
                 this.cloneForm1 = clone(row)
+                if (this.form1.type == 'product') {
+                    // 获取库存量
+                    ParkService.prodDetail({id: this.form1.id}).then((ret) => {
+                        this.form1.quota = ret.stock_count
+                    })
+                }
             },
             awardSet (form) {
                 this.$refs[form].validate((valid) => {
@@ -300,6 +306,12 @@
                 ActivityService.productSearch({category: this.form1.category}).then((ret) => {
                     this.products = ret.data
                 })
+            },
+            changeProduct () {
+                if (this.form.type != 'product') {
+                    this.form.category = ''
+                    this.form.product_id = ''
+                }
             },
             cropperFn(data) {
                 console.log(data)
