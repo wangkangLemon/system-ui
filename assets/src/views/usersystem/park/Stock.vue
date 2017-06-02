@@ -92,7 +92,7 @@
                         <el-button type="text" size="small"
                                    @click="()=>{dialogDetail.model=scope.row; dialogDetail.isShow=true}">详情 <!--a-->
                         </el-button>
-                        <el-button type="text" size="small">删除</el-button>
+                        <el-button @click="del(scope.row, scope.$index)" type="text" size="small">删除</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -243,9 +243,7 @@
                 this.isShowImport = false
                 this.isShowAdd = false
                 let cat = this.prod.category
-                if (cat === 'sign_card' || cat === 'wheel_card' || cat === 'price_plus_card' || cat === 'growth_charge_card' || cat === 'growth_plus_card' || cat === 'entity') {
-                    this.isShowAdd = true
-                }
+                if (cat === 'sign_card' || cat === 'wheel_card' || cat === 'price_plus_card' || cat === 'growth_charge_card' || cat === 'growth_plus_card' || cat === 'entity') this.isShowAdd = true
                 if (cat === 'coupon') this.isShowImport = true
                 if (cat === 'entity') this.isShowImport = true
             })
@@ -269,7 +267,7 @@
             },
             del (row, index) {
                 xmview.showDialog(`你将要删除编号 <span style="color:red">${row.product_stock_number}</span> 的库存 操作不可恢复确认吗?`, () => {
-                    parkService.stockDel({proId: this.fetchParam.prodId, id: row.id}).then(() => {
+                    parkService.stockDel({prodId: this.fetchParam.prodId, id: row.id}).then(() => {
                         xmview.showTip('success', '操作成功')
                         this.data.splice(index, 1)
                     })
@@ -277,12 +275,13 @@
             },
             // 批量删除
             delMulti () {
-                xmview.showDialog(`你将要批量删除选中课程 操作不可恢复确认吗?`, () => {
+                xmview.showDialog(`你将要批量删除选中的 <span style="color:red"> ${this.selectedIds.length}条 </span> 课程 操作不可恢复确认吗?`, () => {
                     this.loadingData = true
                     parkService.stockDelBatch({prodId: this.fetchParam.prodId, ids: this.selectedIds}).then(() => {
                         this.loadingData = false
                         this.fetchData()
                         xmview.showTip('success', '操作成功')
+                        this.selectedIds = []
                     })
                 })
             },

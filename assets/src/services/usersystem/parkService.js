@@ -104,7 +104,7 @@ class ParkService {
     // 删除库存
     stockDelBatch ({prodId, ids}) {
         let url = `${urlPre}/product/${prodId}/stock/batchdel`
-        return api.del(url, {id: ids.join(',')}).then((ret) => {
+        return api.post(url, {id: ids.join(',')}).then((ret) => {
             return ret
         })
     }
