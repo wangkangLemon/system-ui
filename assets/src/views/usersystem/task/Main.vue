@@ -168,11 +168,13 @@
         },
         methods: {
             delFn (row) {
-                TaskService.del({task_id: row.id}).then(() => {
-                    xmview.showTip('success', '删除成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
+                xmview.showDialog(`你将要删除任务 <span style="color:red">${row.title}</span> 操作不可恢复确认吗?`, () => {
+                    TaskService.del({task_id: row.id}).then(() => {
+                        xmview.showTip('success', '删除成功')
+                        this.getData()
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
             },
             addFn () {
