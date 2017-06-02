@@ -21,7 +21,7 @@
         }
 
         .el-dialog {
-            top: 18px !important;
+            top: 38px !important;
         }
     }
 </style>
@@ -29,8 +29,11 @@
 <template>
     <main id="usersys-integral-stock">
         <article class="manage-container">
-            <el-button type="success" icon="plus" @click="()=>{dialogReplenishment.isShow=true}">添加</el-button>
-            <el-button type="info" @click="()=>{dialogReplenishment.isShow=true}"><i class="iconfont icon-daoru"></i>
+            <el-button type="success" icon="plus" v-if="isShowAdd"
+                       @click="showReplenishment('add')">添加  <!--a-->
+            </el-button>
+            <el-button type="info" @click="showReplenishment('import')" v-if="isShowImport"><i
+                    class="iconfont icon-daoru"></i>
                 导入 <!--a-->
             </el-button>
         </article>
@@ -147,12 +150,9 @@
                     <pre>{{prod.description}}</pre>
                 </el-form-item>
                 <el-form-item label="库存剩余">
-                    <i>100</i>
+                    <i>{{prod.stock_count}}</i>
                 </el-form-item>
-                <el-form-item label="手机号">
-                    <i>18582838596</i>
-                </el-form-item>
-                <el-form-item label="选择文件">
+                <el-form-item label="选择文件" v-if="dialogReplenishment.type === 'import'">
                     <div>
                         <UploadFile :url='dialogReplenishment.uploadUrl' :on-success="handleImported"
                                     accept=".xls, .xlsx"
@@ -161,10 +161,13 @@
                         请导入外部商品Excel表格 <!--a-->
                     </div>
                 </el-form-item>
+                <el-form-item label="补货数量" v-if="dialogReplenishment.type === 'add'">
+                    <el-input :autofocus='true' v-model="dialogReplenishment.count"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                         <el-button @click="dialogReplenishment.isShow = false">取 消</el-button>
-                        <el-button type="primary" @click="dialogReplenishment.isShow = false">确 定</el-button>
+                        <el-button type="primary" @click="this.dialogReplenishment.confirmFn">确 定</el-button>
                     </span>
         </el-dialog>
     </main>
@@ -202,9 +205,13 @@
                 },
                 dialogReplenishment: { // 补货弹出框
                     isShow: false,
-                    model: {},
-                    uploadUrl: void 0
-                }
+                    uploadUrl: void 0,
+                    type: void 0, // 补货的类型 add|import
+                    count: 0,
+                    confirmFn: {}
+                },
+                isShowAdd: false,
+                isShowImport: false
             }
         },
         watch: {
@@ -232,10 +239,20 @@
             this.loadingData = true
             Promise.all([this.fetchData(), pProd]).then(() => {
                 xmview.setContentLoading(false)
+            }).then(() => {
+                this.isShowImport = false
+                this.isShowAdd = false
+                let cat = this.prod.category
+                if (cat === 'sign_card' || cat === 'wheel_card' || cat === 'price_plus_card' || cat === 'growth_charge_card' || cat === 'growth_plus_card' || cat === 'entity') {
+                    this.isShowAdd = true
+                }
+                if (cat === 'coupon') this.isShowImport = true
+                if (cat === 'entity') this.isShowImport = true
             })
         },
         methods: {
             fetchData() {
+                this.loadingData = true
                 return parkService.stockSearch(this.fetchParam).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
@@ -250,18 +267,54 @@
                 })
                 this.selectedIds = ret
             },
-            // 批量删除
-            delMulti () {
-                this.loadingData = true
-                parkService.stockDelBatch({prodId: this.fetchParam.prodId, ids: this.selectedIds}).then(() => {
-                    this.loadingData = false
+            del (row, index) {
+                xmview.showDialog(`你将要删除编号 <span style="color:red">${row.product_stock_number}</span> 的库存 操作不可恢复确认吗?`, () => {
+                    parkService.stockDel({proId: this.fetchParam.prodId, id: row.id}).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.data.splice(index, 1)
+                    })
                 })
             },
+            // 批量删除
+            delMulti () {
+                xmview.showDialog(`你将要批量删除选中课程 操作不可恢复确认吗?`, () => {
+                    this.loadingData = true
+                    parkService.stockDelBatch({prodId: this.fetchParam.prodId, ids: this.selectedIds}).then(() => {
+                        this.loadingData = false
+                        this.fetchData()
+                        xmview.showTip('success', '操作成功')
+                    })
+                })
+            },
+            // 文件上传完毕
             handleImported () {
+                this.fetchData()
+                this.dialogReplenishment.isShow = false
+                xmview.showTip('success', '导入成功')
             },
             // 下载模板
             downloadTmp () {
                 window.open(require('./assets/importProdTamplate.xlsx'))
+            },
+            showReplenishment (type) {
+                this.dialogReplenishment.isShow = true
+                this.dialogReplenishment.count = void 0
+                this.dialogReplenishment.type = type
+
+                this.dialogReplenishment.confirmFn = null
+                this.dialogReplenishment.confirmFn = () => {
+                    if (type === 'add') {
+                        parkService.stockAdd({
+                            prodId: this.fetchParam.prodId,
+                            count: this.dialogReplenishment.count
+                        }).then(() => {
+                            this.dialogReplenishment.isShow = false
+                            this.fetchData()
+                        })
+                    } else {
+                        this.dialogReplenishment.isShow = false
+                    }
+                }
             }
         },
         components: {UploadFile}
