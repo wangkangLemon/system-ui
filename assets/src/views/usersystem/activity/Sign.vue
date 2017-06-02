@@ -184,6 +184,7 @@
 </template>
 
 <script>
+    import ActivityService from '../../../services/usersystem/activityService'
     import ToggleMonth from '../component/ToggleMonth.vue'
     import MonthCalendar from '../component/MonthCalendar'
     export default {
@@ -217,9 +218,16 @@
             }
         },
         activated () {
-            xmview.setContentLoading(false)
+            this.getActivity().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
+            getActivity () {
+                return ActivityService.getActivity({play_id: 3}).then((ret) => {
+                    this.instruction = ret.play.description
+                })
+            },
             toggleMonth (val) {
                 this.currDate = val
             },
@@ -229,8 +237,12 @@
             },
             // 设置签到
             setIns () {
-                this.insEdit = true
-                console.log(this.instruction)
+                ActivityService.updateActivity({play_id: 3, description: this.instruction}).then((ret) => {
+                    xmview.showTip('success', '修改成功')
+                    this.insEdit = true
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {

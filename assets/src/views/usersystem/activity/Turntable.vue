@@ -2,7 +2,7 @@
 <style lang="scss" rel="stylesheet/scss">
     .activity-turntable-container {
         .el-select {
-            width: 45% !important;
+            width: 30% !important;
         }
         .el-card {
             .el-form-item {
@@ -22,6 +22,11 @@
             .el-button {
                 display: block;
                 margin: 0 auto;
+            }
+            .img-list {
+                margin-top: 10px;
+                width: 100px;
+                height: 100px;
             }
         }
         /*上传图片部分*/
@@ -85,12 +90,12 @@
     <article class="activity-turntable-container">
         <el-card class="box-card">
             <div class="clearfix" slot="header">活动规则</div>
-            <el-form :model="form" :rules="rules" ref="form" label-width="100px">
+            <el-form :model="activity" :rules="rules" ref="form" label-width="100px">
                 <el-form-item label="活动标题" prop="title">
-                    <el-input v-model="form.title" placeholder="活动标题"></el-input>
+                    <el-input v-model="activity.title" placeholder="活动标题"></el-input>
                 </el-form-item>
-                <el-form-item label="限制次数" prop="times">
-                    <el-input type="number" placeholder="用户每天最多可参与的次数" v-model="form.percent">
+                <el-form-item label="限制次数" prop="limit">
+                    <el-input type="number" placeholder="用户每天最多可参与的次数" v-model="activity.limit">
                         <template slot="append">次/每天</template>
                     </el-input>
                 </el-form-item>
@@ -111,70 +116,87 @@
                             border
                             :data="awardlist">
                         <el-table-column
-                                prop="company"
+                                width="100"
+                                prop="sort"
                                 label="排序">
                         </el-table-column>
                         <el-table-column
-                                prop="balance"
+                                prop="product_image"
                                 label="图片"
-                                width="180">
+                                width="200">
+                            <template scope="scope">
+                                <img v-if="scope.row.product_image" class="img-list" :src="scope.row.product_image" alt="">
+                            </template>
                         </el-table-column>
                         <el-table-column
-                                prop="total"
+                                min-width="180"
+                                prop="product_name"
                                 label="奖品">
                         </el-table-column>
                         <el-table-column
-                                prop="total"
+                                width="100"
+                                prop="weight"
                                 label="中奖概率">
                         </el-table-column>
                         <el-table-column
-                                prop="total"
-                                label="库存量">
+                                prop="quota"
+                                width="100"
+                                label="发放量">
                         </el-table-column>
                         <el-table-column
+                                width="100"
                                 prop="operate"
                                 label="操作">
                             <template scope="scope">
-                                <el-button type="text" @click="editFn(scope.row)">修改</el-button>
+                                <el-button size="small" type="text" @click="editFn(scope.row)">修改</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
                 </el-form-item>
-                <el-form-item label="抽奖规则" prop="rule">
+                <el-form-item label="抽奖规则" prop="description">
                     <p class="tip">转盘页面底部的抽奖说明</p>
                     <el-input
                             type="textarea"
                             :rows="5"
-                            v-model="form.rule">
+                            v-model="activity.description">
                     </el-input>
                 </el-form-item>
             </el-form>
             <el-button type="primary" @click="submit('form')">保存生效</el-button>
         </el-card>
         <!--奖品设置-->
-        <el-dialog v-model="addForm" title="奖品设置" size="tiny">
+        <el-dialog v-model="addForm" title="奖品设置" size="small">
             <el-form :model="form1" :rules="rules1" ref="form1" label-width="100px">
-                <el-form-item label="奖品类型" prop="id">
-                    <!--如果type_id有值就显示select框-->
-                    <el-select v-model="form1.type_id">
-                        <el-option label="道具卡" :value="1"></el-option>
-                        <el-option label="外部卡券" :value="2"></el-option>
-                        <el-option label="实物奖品" :value="3"></el-option>
-                        <el-option label="谢谢参与" :value="4"></el-option>
+                <el-form-item label="奖品类型" prop="type">
+                    <el-select v-model="form1.type">
+                        <el-option label="商品" value="product"></el-option>
+                        <el-option label="谢谢参与" value="thanks"></el-option>
+                        <el-option label="积分" value="credit"></el-option>
                     </el-select>
-                    <!--如果id有值就显示select框-->
-                    <el-select v-model="form1.id">
-                        <el-option label="太阳伞" :value="1"></el-option>
+                    <el-select @change="getSelectPorduct" v-model="form1.category" v-if="form1.type == 'product'">
+                        <el-option label="补签卡" value="sign_card"></el-option>
+                        <el-option label="转盘卡" value="wheel_card"></el-option>
+                        <el-option label="红包加成卡" value="price_plus_card"></el-option>
+                        <el-option label="成长值充值卡" value="growth_charge_card"></el-option>
+                        <el-option label="成长值加倍卡" value="growth_plus_card"></el-option>
+                        <el-option label="实物" value="entity"></el-option>
+                        <el-option label="外部虚拟卡券" value="coupon"></el-option>
+                    </el-select>
+                    <el-select v-if="form1.product_id && form1.type == 'product'" v-model="form1.product_id">
+                        <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="库存量">
-                    100
+                <el-form-item label="库存量" v-if="form1.type == 'product'">
+                    {{form1.quota}}
+                </el-form-item>
+                <el-form-item :label="form1.type == 'product' ? '发放量' : '积分面值'" prop="quota" v-if="form1.type != 'thanks'">
+                    <el-input v-model.number="form1.quota"></el-input>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
                     <el-input v-model="form1.sort"></el-input>
                 </el-form-item>
-                <el-form-item label="中奖概率" prop="percent">
-                    <el-input type="number" v-model="form1.percent">
+                <el-form-item label="中奖概率" prop="weight">
+                    <el-input v-model.number="form1.weight">
                         <template slot="append">%</template>
                     </el-input>
                 </el-form-item>
@@ -187,6 +209,8 @@
     </article>
 </template>
 <script>
+    import clone from 'clone'
+    import ActivityService from '../../../services/usersystem/activityService'
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     export default {
         components: {
@@ -195,59 +219,58 @@
         data () {
             return {
                 addForm: false,
-                awardlist: [
-                    {
-                        sort: 1,
-                        img: '',
-                        award: '',
-                        percent: '',
-                        sum: ''
-                    }
-                ],
-                form: {
+                awardlist: [],
+                products: [], // 产品列表
+                activity: {
                     title: '',
-                    times: '',
-                    url: '',
-                    rule: ''
+                    limit: '',
+//                    url: '',
+                    description: ''
                 },
-                form1: {
-                    type_id: '',
-                    id: '',
-                    sort: '',
-                    percent: ''
-                },
+                form1: {},
+                cloneForm1: {},
                 rules: {
                     title: {required: true, message: '必填项', trigger: 'blur'},
-                    times: {required: true, message: '必填项', trigger: 'blur'},
-                    rule: {required: true, message: '必填项', trigger: 'blur'},
-                    url: {required: true, message: '必填项'}
+                    limit: {type: 'number', required: true, message: '必填项', trigger: 'blur'},
+                    description: {required: true, message: '必填项', trigger: 'blur'},
                 },
                 rules1: {
-                    id: {required: true, message: '必填项'},
-                    percent: {required: true, message: '必填项'}
+                    type: {required: true, message: '必填项'}, // 类型
+                    category: {required: true, message: '必填项'}, // 分类
+                    product_id: {required: true, message: '必填项'}, // 产品
+                    weight: {type: 'number', required: true, message: '必填项'},
+                    quota: {type: 'number', required: true, message: '必填项'},
                 },
             }
         },
         activated () {
-            xmview.setContentLoading(false)
+            // 获取活动详情和奖品配置
+            Promise.all([this.getData(), ActivityService.rewardSearch({play_type: 'wheel'})]).then((ret) => {
+                this.activity = ret[0].play
+                this.awardlist = ret[1].rewards
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
+            this.getSelectPorduct()
         },
         methods: {
+            getData () {
+                return ActivityService.getActivity({play_id: 1})
+            },
             editFn (row) {
+                console.log(row)
                 this.addForm = true
-                this.form1 = {
-                    type_id: '',
-                    id: '',
-                    sort: '',
-                    percent: ''
-                }
-                this.$nextTick(() => {
-                    this.$refs['form1'].resetFields()
-                })
+                this.form1 = clone(row)
+                this.cloneForm1 = clone(row)
             },
             awardSet (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        console.log(valid)
+                        ActivityService.updateReward(this.form1).then((ret) => {
+                            xmview.showTip('success', '修改成功')
+                            this.addForm = false
+                            this.getData()
+                        })
                     } else {
                         return false
                     }
@@ -256,15 +279,31 @@
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        console.log(valid)
+                        ActivityService.updateActivity({
+                            play_id: 1,
+                            title: this.activity.title,
+                            limit: this.activity.limit,
+                            description: this.activity.description,
+                        }).then((ret) => {
+                            xmview.showTip('success', '修改成功')
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
                     } else {
                         return false
                     }
                 })
             },
+            getSelectPorduct () {
+                if (this.form1.category != this.cloneForm1.category) this.form1.product_id = ' '
+                // 获取选中产品列表 products
+                ActivityService.productSearch({category: this.form1.category}).then((ret) => {
+                    this.products = ret.data
+                })
+            },
             cropperFn(data) {
                 console.log(data)
-                this.form.url = data
+//                this.form.url = data
 //                this.uploadingImg = true
 //                // 上传图片
 //                mobileService.uploadboot({company_id: this.user.company_id, image: data}).then(ret => {
