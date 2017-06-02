@@ -47,9 +47,13 @@
                 isShowBtn: Boolean,
                 default: true
             },
-            compress: {
+            compress: { //  压缩比例
                 type: Number,
                 default: 0.8
+            },
+            imgType: { // 图片类型 jpg|png|gif
+                type: String,
+                default: 'jpg'
             }
         },
         data () {
@@ -96,7 +100,7 @@
             // 确定裁剪尺寸
             confirmCropper () {
                 this.showCropper = false
-                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`image/jpeg`, this.compress))
+                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`image/${this.imgType}`, this.compress))
                 this.imgData = null
             },
             startCropper () {
