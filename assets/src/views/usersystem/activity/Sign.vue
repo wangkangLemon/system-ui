@@ -182,7 +182,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form.product_id) && form.product_id > 0">
-                    {{form.quota}}
+                    {{form.stock_count}}
                 </el-form-item>
                 <el-form-item :label="form.type == 'product' ? '发放量' : '积分面值'" prop="quota" v-if="form.type != 'thanks'">
                     <el-input v-model.number="form.quota"></el-input>
@@ -325,7 +325,7 @@
                 if (this.form.product_id) {
                     // 获取库存量
                     ParkService.prodDetail({id: this.form.product_id}).then((ret) => {
-                        this.form.quota = ret.stock_count
+                        this.form.stock_count = ret.stock_count
                     })
                 }
             }
@@ -340,7 +340,8 @@
             quota: '',
             limit: '',
             sort: '',
-            weight: '' // 中奖率
+            weight: '',  // 中奖率
+            stock_count: '' // 库存量，只显示
         }
     }
 </script>
