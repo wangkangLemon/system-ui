@@ -189,8 +189,11 @@
                 <el-form-item label="库存量" v-if="form1.product_id">
                     {{stockCount}}
                 </el-form-item>
-                <el-form-item :label="form1.type == 'product' ? '发放量' : '积分面值'" prop="quota" v-if="form1.type != 'thanks'">
+                <el-form-item label="积分面值" prop="quota" v-if="form1.type == 'credit'">
                     <el-input v-model.number="form1.quota"></el-input>
+                </el-form-item>
+                <el-form-item label="发放量" prop="limit" v-if="form1.type == 'product'">
+                    <el-input v-model.number="form1.limit"></el-input>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
                     <el-input v-model="form1.sort"></el-input>

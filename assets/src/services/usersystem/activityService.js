@@ -60,7 +60,7 @@ class ActivityService {
     getSignSetting ({year, month}) {
         let url = `${urlPre}/sign/view`
         return api.get(url, {year, month}).then((ret) => {
-            return ret.data
+            return ret.data.setting
         })
     }
     // 修改签到活动指定月积分设置

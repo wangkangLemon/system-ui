@@ -74,7 +74,7 @@
                     </div>
                 </section>
                 <!--月历-->
-                <MonthCalendar @changeEditStatus="val => isEdit = val" :isEdit="isEdit" :listChecked="days"
+                <MonthCalendar @changeEditStatus="val => isEdit = val" :isEdit="isEdit" :listChecked="calendarValues"
                                :date="currDate"></MonthCalendar>
             </div>
         </el-card>
@@ -187,8 +187,11 @@
                 <el-form-item label="库存量" v-if="!isNaN(form.product_id) && form.product_id > 0">
                     {{stockCount}}
                 </el-form-item>
-                <el-form-item :label="form.type == 'product' ? '发放量' : '积分面值'" prop="quota" v-if="form.type != 'thanks'">
+                <el-form-item label="积分面值" prop="quota" v-if="form.type == 'credit'">
                     <el-input v-model.number="form.quota"></el-input>
+                </el-form-item>
+                <el-form-item label="发放量" prop="limit" v-if="form.type == 'product'">
+                    <el-input v-model.number="form.limit"></el-input>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
                     <el-input type="number" v-model="form.sort"></el-input>
@@ -226,7 +229,7 @@
                 instruction: '', // 签到说明
                 isEdit: false,
                 currDate: new Date(),
-                days: [],
+                calendarValues: [],
                 monthLoading: false,
                 monthGift: [], // 月末礼包数据
                 seventDayLoading: false,
@@ -240,6 +243,7 @@
                     product_id: {required: true, message: '必填项'}, // 产品
                     weight: {type: 'number', required: true, message: '必填项'},
                     quota: {type: 'number', required: true, message: '必填项'},
+                    limit: {type: 'number', required: true, message: '必填项'},
                 },
             }
         },
@@ -249,6 +253,8 @@
             })
             this.getMonthAward()
             this.getSeventDayAward()
+            // 获取日历积分设置
+            this.getCalendarValue()
         },
         methods: {
             editFn (row) {
@@ -285,6 +291,7 @@
             },
             toggleMonth (val) {
                 this.currDate = val
+                this.getCalendarValue()
             },
             // 设置积分
             setIntegral () {
@@ -340,6 +347,7 @@
                 setTimeout(() => {
                     this.$refs.form.resetFields()
                 }, 0)
+                console.log(this.form)
             },
             changeProduct () {
                 if (this.form.type != 'product') {
@@ -361,6 +369,15 @@
                         this.stockCount = ret.stock_count
                     })
                 }
+            },
+            getCalendarValue () {
+                return ActivityService.getSignSetting(
+                    {
+                        year: this.currDate.getFullYear(),
+                        month: this.currDate.getMonth() + 1
+                    }).then((ret) => {
+                        this.calendarValues = ret.setting ? JSON.parse(ret.setting) : []
+                    })
             }
         }
     }
