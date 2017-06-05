@@ -45,6 +45,9 @@
                 right: 0;
                 bottom: 5px;
                 text-align: center;
+                &.gift {
+                    top: 2px;
+                }
                 > * {
                     display: inline-block;
                     vertical-align: top;
@@ -78,10 +81,10 @@
     <article class="monthcalendor-container">
         <a class="day" v-for="item in dateArr" @click="dayClick($event, item.day, item)">
             {{item && item.day}}
-            <div class="operate" v-if="item && item.day && item.isMonthEnd">
+            <div class="gift operate" v-if="item && item.day && item.isMonthEnd">
                 礼包
             </div>
-            <div class="operate" v-if="item && item.day && !item.isMonthEnd">
+            <div class="operate" v-if="item && item.day">
                 <i>积分</i>
                 <!--小与当前月不可编辑-->
                 <!--大于当前月并且isEdit=false不可编辑-->

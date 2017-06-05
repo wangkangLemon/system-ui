@@ -3,6 +3,9 @@
     @import "../../../utils/mixins/mixins";
 
     .activity-sign-container {
+        .el-select {
+            width: 30% !important;
+        }
         .el-card {
             margin-bottom: 10px;
             .el-card__header {
@@ -94,15 +97,15 @@
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="quota"
-                        label="库存剩余">
+                        prop="limit"
+                        label="发放量">
                 </el-table-column>
                 <el-table-column
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text">修改</el-button>
-                        <el-button type="text" v-if="monthGift.length > 1">删除</el-button>
+                        <el-button type="text" @click="editFn(scope.row)">修改</el-button>
+                        <el-button type="text" @click="delReward(scope.row.id)" v-if="monthGift.length > 1">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -127,15 +130,15 @@
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="quota"
-                        label="库存剩余">
+                        prop="limit"
+                        label="发放量">
                 </el-table-column>
                 <el-table-column
                         prop="operate"
                         label="操作">
                     <template scope="scope">
-                        <el-button type="text">修改</el-button>
-                        <el-button type="text" v-if="sevenDaysGift.length > 1">删除</el-button>
+                        <el-button type="text" @click="editFn(scope.row)">修改</el-button>
+                        <el-button type="text" @click="delReward(scope.row.id)" v-if="sevenDaysGift.length > 1">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -160,12 +163,12 @@
             </div>
         </el-card>
         <!--选择奖品-->
-        <el-dialog v-model="addForm" title="选择奖品" size="tiny">
+        <el-dialog v-model="addForm" title="选择奖品" size="small">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item label="奖品类型" prop="type">
                     <el-select @change="changeProduct" v-model="form.type">
                         <el-option label="商品" value="product"></el-option>
-                        <el-option label="谢谢参与" value="thanks"></el-option>
+                        <!--<el-option label="谢谢参与" value="thanks"></el-option>-->
                         <el-option label="积分" value="credit"></el-option>
                     </el-select>
                     <el-select @change="getSelectPorduct" v-model="form.category" v-if="form.type == 'product'">
@@ -182,7 +185,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form.product_id) && form.product_id > 0">
-                    {{form.stock_count}}
+                    {{stockCount}}
                 </el-form-item>
                 <el-form-item :label="form.type == 'product' ? '发放量' : '积分面值'" prop="quota" v-if="form.type != 'thanks'">
                     <el-input v-model.number="form.quota"></el-input>
@@ -209,7 +212,7 @@
     import ParkService from '../../../services/usersystem/parkService'
     import ToggleMonth from '../component/ToggleMonth.vue'
     import MonthCalendar from '../component/MonthCalendar'
-//    import clone from 'clone'
+    import clone from 'clone'
     export default {
         components: {
             ToggleMonth,
@@ -217,6 +220,7 @@
         },
         data () {
             return {
+                stockCount: 0,
                 addForm: false,
                 insEdit: true,
                 instruction: '', // 签到说明
@@ -247,6 +251,17 @@
             this.getSeventDayAward()
         },
         methods: {
+            editFn (row) {
+                this.addForm = true
+                this.form = clone(row)
+                this.cloneForm1 = clone(row)
+                if (this.form.type == 'product') {
+                    // 获取库存量
+                    ParkService.prodDetail({id: this.form.id}).then((ret) => {
+                        this.stockCount = ret.stock_count
+                    })
+                }
+            },
             getActivity () {
                 return ActivityService.getActivity({play_id: 3}).then((ret) => {
                     this.instruction = ret.play.description
@@ -287,8 +302,18 @@
             submit (form) { // 表单提交
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        ActivityService.addReward(this.form).then((ret) => {
-                            xmview.showTip('success', '添加成功')
+                        if (this.form.type == 'product' && this.stockCount < this.form.quota) {
+                            xmview.showTip('error', '库存不足')
+                            return
+                        }
+                        let msg = '添加成功'
+                        let reqFn = ActivityService.addReward
+                        if (this.form.id) {
+                            msg = '修改成功'
+                            reqFn = ActivityService.updateReward
+                        }
+                        reqFn(this.form).then((ret) => {
+                            xmview.showTip('success', msg)
                             this.addForm = false
                             if (this.form.play_type == 'sign_weekly') this.getSeventDayAward()
                             else this.getMonthAward()
@@ -296,6 +321,15 @@
                     } else {
                         return false
                     }
+                })
+            },
+            delReward (id) {
+                xmview.showDialog('确定要删除该奖品吗？', () => {
+                    ActivityService.delReward({id}).then(() => {
+                        xmview.showTip('success', '删除成功')
+                        let catArr = {'sign_month': 'getMonthAward', 'sign_weekly': 'getSeventDayAward'}
+                        this[catArr[this.form.play_type]]()
+                    })
                 })
             },
             // 设置月末礼包
@@ -319,13 +353,12 @@
                 ActivityService.productSearch({category: this.form.category}).then((ret) => {
                     this.products = ret.data
                 })
-                console.log(this.form)
             },
             getStockCount () {
                 if (this.form.product_id) {
                     // 获取库存量
                     ParkService.prodDetail({id: this.form.product_id}).then((ret) => {
-                        this.form.stock_count = ret.stock_count
+                        this.stockCount = ret.stock_count
                     })
                 }
             }
@@ -340,8 +373,7 @@
             quota: '',
             limit: '',
             sort: '',
-            weight: '',  // 中奖率
-            stock_count: '' // 库存量，只显示
+            weight: '' // 中奖率
         }
     }
 </script>

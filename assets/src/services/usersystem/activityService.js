@@ -44,12 +44,34 @@ class ActivityService {
         let url = `${urlPre}/reward/${id}`
         return api.put(url, {type, category, play_type, product_id, quota, limit, sort, weight})
     }
+    // 删除奖品
+    delReward ({id}) {
+        let url = `${urlPre}/reward/${id}`
+        return api.del(url)
+    }
     // 根据商品类型获取产品
     productSearch ({category, status}) {
         let url = `${config.apiHost}/sys/product/search`
         return api.get(url, {category, status}).then((ret) => {
             return ret.data
         })
+    }
+    // 获取签到活动指定月积分设置
+    getSignSetting ({year, month}) {
+        let url = `${urlPre}/sign/view`
+        return api.get(url, {year, month}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 修改签到活动指定月积分设置
+    updateSignSetting ({year, month, setting}) {
+        let url = `${urlPre}/sign`
+        return api.put(url, {year, month, setting})
+    }
+    // 新增签到活动指定月积分设置
+    addSignSetting ({year, month, setting}) {
+        let url = `${urlPre}/sign`
+        return api.post(url, {year, month, setting})
     }
 }
 

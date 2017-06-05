@@ -187,7 +187,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="form1.product_id">
-                    {{form1.quota}}
+                    {{stockCount}}
                 </el-form-item>
                 <el-form-item :label="form1.type == 'product' ? '发放量' : '积分面值'" prop="quota" v-if="form1.type != 'thanks'">
                     <el-input v-model.number="form1.quota"></el-input>
@@ -219,6 +219,7 @@
         },
         data () {
             return {
+                stockCount: 0, // 库存量
                 addForm: false,
                 awardlist: [],
                 products: [], // 产品列表
@@ -265,13 +266,17 @@
                 if (this.form1.type == 'product') {
                     // 获取库存量
                     ParkService.prodDetail({id: this.form1.id}).then((ret) => {
-                        this.form1.quota = ret.stock_count
+                        this.stockCount = ret.stock_count
                     })
                 }
             },
             awardSet (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
+                        if (this.form1.type == 'product' && this.stockCount < this.form1.quota) {
+                            xmview.showTip('error', '库存不足')
+                            return
+                        }
                         ActivityService.updateReward(this.form1).then((ret) => {
                             xmview.showTip('success', '修改成功')
                             this.addForm = false
