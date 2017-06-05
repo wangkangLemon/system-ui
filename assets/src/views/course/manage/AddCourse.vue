@@ -373,7 +373,7 @@
                     return
                 }
 
-                let requestParam = this.fetchTesting // JSON.parse(JSON.stringify(this.fetchTesting))
+                let requestParam = JSON.parse(JSON.stringify(this.fetchTesting))
                 for (let i = 0; i < requestParam.length, item = requestParam[i]; i++) {
                     // 处理单选题的正确答案选中
                     if (item.category == 1 && item.correct) {
