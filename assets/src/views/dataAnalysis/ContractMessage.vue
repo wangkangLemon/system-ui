@@ -77,8 +77,8 @@
     <article class="table-container">
         <div class="show-sum-count" v-if="signs">
             <panel :content="signs.companyCount" title="签约连锁" bgColor="#00acac" footer="签约连锁总数"></panel>
-            <panel :content="signs.departmentSum" title="签约门店" bgColor="#348fe2" :footer="'已录入'+ signs.departmentCount +'家, 录入率为' + signs.departmentRatio + '%'"></panel>
-            <panel :content="signs.userSum" title="签约店员" bgColor="#727cb6" :footer="'已录入'+signs.userCount+'家, 录入率为'+signs.userRatio + '%'"></panel>
+            <panel :content="signs.departmentSum" title="签约门店" bgColor="#348fe2" :footer="'已录入'+ signs.departmentCount +'家'"></panel>
+            <panel :content="signs.userSum" title="签约店员" bgColor="#727cb6" :footer="'已录入'+signs.userCount+'家'"></panel>
         </div>
         <!--导入弹窗-->
         <el-dialog v-model="isImport" title="导入企业签约信息" size="tiny">
@@ -166,6 +166,11 @@
                 <el-table-column
                         prop="user_count"
                         label="录入店员"
+                        width="200">
+                </el-table-column>
+                <el-table-column
+                        prop="active_count"
+                        label="激活店员"
                         width="200">
                 </el-table-column>
                 <el-table-column prop="operate" label="查看">
