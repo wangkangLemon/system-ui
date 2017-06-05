@@ -78,7 +78,7 @@
 </style>
 
 <template>
-    <article class="monthcalendor-container" ref="calendar">
+    <article class="monthcalendor-container">
         <a class="day" v-for="item in dateArr" @click="dayClick($event, item.day, item)">
             {{item && item.day}}
             <div class="gift operate" v-if="item && item.day && item.isMonthEnd">
@@ -100,11 +100,6 @@
 </template>
 
 <script>
-//    import {date2Str} from 'base/vue/utls/timeUtls'
-
-//    let date2StrMonth = function (date) {
-//        date2Str(date, '-', {hasMonth: false})
-//    }
     let todayDate,
         rendedDate // 已经渲染过的日期
     export default{
@@ -145,15 +140,9 @@
             // 每一个日期被点击后触发
             dayClick (e, day) {
                 // 设置选中日期
-//                this.$set(this, 'currSelectedDay', day)
                 this.calendarClick && this.calendarClick(day)
             },
             initData (date, force = false) {
-                // 同一个月不在渲染第二次
-//                if (!force && (this.isRending && !date || date2StrMonth(rendedDate) == date2StrMonth(date))) {
-//                    return
-//                }
-
                 // 如果不在同一天
                 if (rendedDate != date) {
                     this.currSelectedDay = -1

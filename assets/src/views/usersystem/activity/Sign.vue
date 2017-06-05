@@ -74,7 +74,7 @@
                     </div>
                 </section>
                 <!--月历-->
-                <MonthCalendar @changeEditStatus="val => isEdit = val" :isEdit="isEdit" :listChecked="calendarValues"
+                <MonthCalendar ref="calendar" @changeEditStatus="val => isEdit = val" :isEdit="isEdit" :listChecked="calendarValues"
                                :date="currDate"></MonthCalendar>
             </div>
         </el-card>
@@ -295,8 +295,14 @@
             },
             // 设置积分
             setIntegral () {
-                var settings = '[' + this.calendarValues.toString() + ']'
-                return ActivityService.addSignSetting({year: this.currDate.getFullYear(), month: this.currDate.getMonth() + 1, setting: settings}).then((ret) => {
+                if (!this.isEdit) return
+                let calendarDom = this.$refs.calendar.$el.querySelectorAll('input')
+                let settings = []
+                Array.from(calendarDom).forEach((item) => {
+                    settings.push(item.value)
+                })
+                return ActivityService.addSignSetting({year: this.currDate.getFullYear(), month: this.currDate.getMonth() + 1, setting: JSON.stringify(settings)}).then((ret) => {
+                    xmview.showTip('success', '保存成功')
                     this.isEdit = false
                 })
             },
@@ -383,6 +389,7 @@
                     }).catch((ret) => {
                         if (ret.message === 'record not found') {
                             ret.tipCom.close()
+                            this.calendarValues = []
                         }
                     })
             }
