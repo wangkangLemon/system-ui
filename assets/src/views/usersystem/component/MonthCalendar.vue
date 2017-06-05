@@ -79,7 +79,7 @@
 
 <template>
     <article class="monthcalendor-container">
-        <a class="day" v-for="item in dateArr" @click="dayClick($event, item.day, item)">
+        <a class="day" v-for="item in dateArr">
             {{item && item.day}}
             <div class="gift operate" v-if="item && item.day && item.isMonthEnd">
                 <!--礼包-->
@@ -100,17 +100,14 @@
 </template>
 
 <script>
-    let todayDate,
-        rendedDate // 已经渲染过的日期
     export default{
-        // date:当前的日期  listChecked:被选中的日期(蓝色小点) calendarClick:点击回调
-        props: ['date', 'listChecked', 'calendarClick', 'isEdit'],
+        // date:当前的日期  listChecked:设置积分列表
+        props: ['date', 'listChecked', 'isEdit'],
         data () {
             return {
                 disable: true,
                 dateArr: [],
                 isRending: false, // 是否正在渲染
-                currSelectedDay: -1, // 选中的日期
                 firstLoad: true, // 是否第一次加载
             }
         },
@@ -130,30 +127,16 @@
             },
         },
         mounted () {
-            todayDate = new Date()
             if (this.date) {
                 this.initData(this.date)
             }
         },
         methods: {
-            // 每一个日期被点击后触发
-            dayClick (e, day) {
-                // 设置选中日期
-                this.calendarClick && this.calendarClick(day)
-            },
             initData (date, force = false) {
-                // 如果不在同一天
-                if (rendedDate != date) {
-                    this.currSelectedDay = -1
-                }
-
-                rendedDate = date
-
                 this.isRending = true
 
                 let year = date.getFullYear()
                 let month = date.getMonth()
-                let checkedDate = date.getDate()
                 // 存储日历数据的数组
                 let calenderArr = []
                 // 获取本月的第一天是星期几 周日 0 周一 1...
@@ -173,10 +156,6 @@
                         } else if (n && n <= curMonthdays) {
                             let isMonthEnd = (curMonthdays == n)
                             let value = this.listChecked[n - 1] == undefined ? 5 : this.listChecked[n - 1]
-                            if (this.firstLoad && n == checkedDate && month == todayDate.getMonth() && year == todayDate.getFullYear()) {
-                                this.currSelectedDay = n
-                            }
-
                             calenderArr.push({year: year, month: month, day: n, isMonthEnd, value})
                         } else if (n && n >= curMonthdays) {
                             calenderArr.push(null)

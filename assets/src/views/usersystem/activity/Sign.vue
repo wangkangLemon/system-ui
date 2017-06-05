@@ -95,6 +95,7 @@
                         prop="weight"
                         label="中奖概率"
                         width="180">
+                    <template scope="scope">{{scope.row.weight}}%</template>
                 </el-table-column>
                 <el-table-column
                         prop="limit"
@@ -105,7 +106,7 @@
                         label="操作">
                     <template scope="scope">
                         <el-button type="text" @click="editFn(scope.row)">修改</el-button>
-                        <el-button type="text" @click="delReward(scope.row.id)" v-if="monthGift.length > 1">删除</el-button>
+                        <el-button type="text" @click="delReward(scope.row)" v-if="monthGift.length > 1">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -128,6 +129,7 @@
                         prop="weight"
                         label="中奖概率"
                         width="180">
+                    <template scope="scope">{{scope.row.weight}}%</template>
                 </el-table-column>
                 <el-table-column
                         prop="limit"
@@ -138,7 +140,7 @@
                         label="操作">
                     <template scope="scope">
                         <el-button type="text" @click="editFn(scope.row)">修改</el-button>
-                        <el-button type="text" @click="delReward(scope.row.id)" v-if="sevenDaysGift.length > 1">删除</el-button>
+                        <el-button type="text" @click="delReward(scope.row)" v-if="sevenDaysGift.length > 1">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -312,6 +314,7 @@
                 })
                 return ActivityService.addSignSetting({year: this.currDate.getFullYear(), month: this.currDate.getMonth() + 1, setting: JSON.stringify(settings)}).then((ret) => {
                     xmview.showTip('success', '保存成功')
+                    this.calendarValues = settings
                     this.isEdit = false
                 })
             },
@@ -328,10 +331,24 @@
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
+                        // 判断库存
                         if (this.form.type == 'product' && this.stockCount < this.form.quota) {
                             xmview.showTip('error', '库存不足')
                             return
                         }
+                        // 判断概率
+                        let sumWeight = 0
+                        let dataList = []
+                        if (this.form.play_type == 'sign_weekly') dataList = this.sevenDaysGift
+                        else dataList = this.monthGift
+                        dataList.forEach((item) => {
+                            sumWeight += item.weight
+                        })
+                        if (this.form.weight + sumWeight > 100) {
+                            xmview.showTip('error', '总概率不得超过100%')
+                            return
+                        }
+                        // 请求接口
                         let msg = '添加成功'
                         let reqFn = ActivityService.addReward
                         if (this.form.id) {
@@ -350,12 +367,12 @@
                 })
             },
             // 删除奖品
-            delReward (id) {
+            delReward (row) {
                 xmview.showDialog('确定要删除该奖品吗？', () => {
-                    ActivityService.delReward({id}).then(() => {
+                    ActivityService.delReward({id: row.id}).then(() => {
                         xmview.showTip('success', '删除成功')
-                        let catArr = {'sign_month': 'getMonthAward', 'sign_weekly': 'getSeventDayAward'}
-                        this[catArr[this.form.play_type]]()
+                        if (row.play_type == 'sign_month') this.getMonthAward()
+                        else this.getSeventDayAward()
                     })
                 })
             },
@@ -367,7 +384,6 @@
                 setTimeout(() => {
                     this.$refs.form.resetFields()
                 }, 0)
-                console.log(this.form)
             },
             changeProduct () {
                 if (this.form.type != 'product') {

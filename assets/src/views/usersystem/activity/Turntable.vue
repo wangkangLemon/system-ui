@@ -137,6 +137,7 @@
                                 width="100"
                                 prop="weight"
                                 label="中奖概率">
+                            <template scope="scope">{{scope.row.weight}}%</template>
                         </el-table-column>
                         <el-table-column
                                 prop="quota"
