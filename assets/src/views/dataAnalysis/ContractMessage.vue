@@ -107,7 +107,7 @@
         </el-dialog>
         <el-card class="box-card">
             <!--<div slot="header" class="clearfix">-->
-                <!--<el-button @click="isImport = true"><i class="el-icon-upload2"></i>导入</el-button>-->
+            <!--<el-button @click="isImport = true"><i class="el-icon-upload2"></i>导入</el-button>-->
             <!--</div>-->
             <section class="search">
                 <section>
@@ -115,8 +115,8 @@
                     <el-input class="name" @change="getData" v-model="fetchParam.name"></el-input>
                 </section>
                 <Province :province="fetchParam.provinceSelect"
-                        title="省份" v-on:provinceChange="val => fetchParam.provinceSelect = val"
-                        :change="getData"></Province>
+                          title="省份" v-on:provinceChange="val => fetchParam.provinceSelect = val"
+                          :change="getData"></Province>
                 <section>
                     <label>是否录入门店</label>
                     <el-select clearable @change="getData" v-model="fetchParam.isdepartment">

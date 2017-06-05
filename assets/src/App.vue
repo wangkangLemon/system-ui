@@ -88,5 +88,9 @@
         font-weight: normal;
     }
 
+    .el-message {
+        z-index: 99999 !important;
+    }
+
     @import "./utils/mixins/font/iconfont";
 </style>
