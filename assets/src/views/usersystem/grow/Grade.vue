@@ -55,7 +55,7 @@
                     label="操作"
                     width="180">
                 <template scope="scope">
-                    <el-button @click="edit(scope.row)" type="text" size="small">修改</el-button>
+                    <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
