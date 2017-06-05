@@ -96,7 +96,7 @@
                     </el-form-item>
                     <el-form-item label="所属专辑">
                         <CourseAlbumSelect :placeholder="fetchParam.album_name"
-                                           v-model="fetchParam.album_id"></CourseAlbumSelect>
+                                           v-model="fetchParam.albumid"></CourseAlbumSelect>
                     </el-form-item>
                     <el-form-item label="课程介绍" prop="description">
                         <el-input v-model="fetchParam.description"
@@ -296,9 +296,12 @@
                     })
                 }
             },
-            'fetchParam.album_id' (val) {
+            'fetchParam.albumid' (val) {
                 // 如果专辑id被清空  则干掉专辑名字
-                if (!val) this.fetchParam.album_name = void 0
+                if (!val) {
+                    this.fetchParam.album_name = void 0
+                    this.fetchParam.albumid = void 0
+                }
             }
         },
         methods: {
@@ -432,7 +435,7 @@
             material_type: void 0,
             material_id: void 0,
             material_name: '选择视频',
-            album_id: void 0,
+            albumid: void 0,
             album_name: void 0,
             description: void 0,
             need_testing: void 0,

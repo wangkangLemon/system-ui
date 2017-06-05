@@ -72,7 +72,7 @@ class CourseService {
     }
 
     // 获取公开课列表
-    getPublicCourselist ({companyid = '', page = '', page_size = '', status = '', keyword = '', time_start = '', time_end = '', category_id = '', need_testing = '', album_id = ''}) {
+    getPublicCourselist ({companyid = '', page = '', page_size = '', status = '', keyword = '', time_start = '', time_end = '', category_id = '', need_testing = '', albumid = ''}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         status = status || 0
         let finalUrl = `${config.apiHost}/com/${companyid}/course/search`
@@ -85,7 +85,7 @@ class CourseService {
             time_end,
             category_id,
             need_testing, // 课后考试 不赋值则表示全部，0为不需要，1为需要
-            album_id,
+            albumid,
         }).then(ret => {
             return ret.data
         })
@@ -109,7 +109,7 @@ class CourseService {
     }
 
     // 添加课程
-    addCourse ({companyid, category_id, name, image, material_type, material_id, album_id, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
+    addCourse ({companyid, category_id, name, image, material_type, material_id, albumid, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course`
         return api.post(finalUrl, {
@@ -118,7 +118,7 @@ class CourseService {
             image,
             material_type,
             material_id,
-            album_id,
+            albumid,
             description,
             need_testing,
             limit_time,
@@ -141,7 +141,7 @@ class CourseService {
         })
     }
     // 修改课程
-    editCourse ({companyid, id, category_id, name, image, material_type, material_id, album_id, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
+    editCourse ({companyid, id, category_id, name, image, material_type, material_id, albumid, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/${id}`
         return api.put(finalUrl, {
@@ -150,7 +150,7 @@ class CourseService {
             image,
             material_type,
             material_id,
-            album_id,
+            albumid,
             description,
             need_testing,
             limit_time,
