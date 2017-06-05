@@ -199,7 +199,7 @@
                     <el-input v-model="form1.sort"></el-input>
                 </el-form-item>
                 <el-form-item label="中奖概率" prop="weight">
-                    <el-input v-model.number="form1.weight">
+                    <el-input type="number" :min="0" :max="100" v-model.number="form1.weight">
                         <template slot="append">%</template>
                     </el-input>
                 </el-form-item>
@@ -276,8 +276,18 @@
             awardSet (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
+                        // 判断库存
                         if (this.form1.type == 'product' && this.stockCount < this.form1.quota) {
                             xmview.showTip('error', '库存不足')
+                            return
+                        }
+                        // 判断概率
+                        let sumWeight = 0
+                        this.awardlist.forEach((item) => {
+                            sumWeight += item.weight
+                        })
+                        if (this.form1.weight + sumWeight > 100) {
+                            xmview.showTip('error', '总概率不得超过100%')
                             return
                         }
                         ActivityService.updateReward(this.form1).then((ret) => {

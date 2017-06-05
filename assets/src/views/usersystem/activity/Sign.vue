@@ -190,7 +190,7 @@
                 <el-form-item label="积分面值" prop="quota" v-if="form.type == 'credit'">
                     <el-input v-model.number="form.quota"></el-input>
                 </el-form-item>
-                <el-form-item label="发放量" prop="limit">
+                <el-form-item label="发放量" prop="limit" v-if="form.type == 'product'">
                     <el-input v-model.number="form.limit"></el-input>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
@@ -251,12 +251,19 @@
             this.getActivity().then(() => {
                 xmview.setContentLoading(false)
             })
+            // 获取月末奖品列表
             this.getMonthAward()
+
+            // 获取连续七天奖品列表
             this.getSeventDayAward()
+
             // 获取日历积分设置
             this.getCalendarValue()
+
+            this.getSelectPorduct()
         },
         methods: {
+            // 编辑奖品
             editFn (row) {
                 this.addForm = true
                 this.form = clone(row)
@@ -268,6 +275,7 @@
                     })
                 }
             },
+            // 获取活动的基本信息
             getActivity () {
                 return ActivityService.getActivity({play_id: 3}).then((ret) => {
                     this.instruction = ret.play.description
@@ -289,6 +297,7 @@
                     this.seventDayLoading = false
                 })
             },
+            // 切换月份
             toggleMonth (val) {
                 this.currDate = val
                 this.getCalendarValue()
@@ -315,7 +324,8 @@
                     xmview.showTip('error', ret.message)
                 })
             },
-            submit (form) { // 表单提交
+            // 添加或修改奖品
+            submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         if (this.form.type == 'product' && this.stockCount < this.form.quota) {
@@ -339,6 +349,7 @@
                     }
                 })
             },
+            // 删除奖品
             delReward (id) {
                 xmview.showDialog('确定要删除该奖品吗？', () => {
                     ActivityService.delReward({id}).then(() => {
@@ -364,6 +375,7 @@
                     this.form.product_id = ''
                 }
             },
+            // select获取选择分类的产品列表
             getSelectPorduct () {
                 if (this.form.category != this.cloneForm1.category) this.form.product_id = ' '
                 // 获取选中产品列表 products
@@ -371,6 +383,7 @@
                     this.products = ret.data
                 })
             },
+            // 获取库存值
             getStockCount () {
                 if (this.form.product_id) {
                     // 获取库存量
@@ -379,6 +392,7 @@
                     })
                 }
             },
+            // 获取日历积分值
             getCalendarValue () {
                 return ActivityService.getSignSetting(
                     {

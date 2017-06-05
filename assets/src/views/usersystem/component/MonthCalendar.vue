@@ -82,7 +82,7 @@
         <a class="day" v-for="item in dateArr" @click="dayClick($event, item.day, item)">
             {{item && item.day}}
             <div class="gift operate" v-if="item && item.day && item.isMonthEnd">
-                礼包
+                <!--礼包-->
             </div>
             <div class="operate" v-if="item && item.day">
                 <i>积分</i>
@@ -126,7 +126,6 @@
                 this.initData(newDate)
             },
             listChecked (val) {
-                console.log(val)
                 this.initData(this.date, true)
             },
         },
