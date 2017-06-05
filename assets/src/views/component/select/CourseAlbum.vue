@@ -1,6 +1,7 @@
 <!--课程专辑下拉框-->
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" v-model="currVal" :disabled="disabled">
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" v-model="currVal"
+                  :disabled="disabled">
     </SelectScroll>
 </template>
 
@@ -30,17 +31,16 @@
         watch: {
             'value'(val, oldValue) {
                 this.currVal !== val && (this.currVal = val)
+            },
+            'currVal' (val) {
+                if (this.curVal == val) return
+                this.currVal = val
+                this.$emit('input', val)
             }
         },
         methods: {
             handleChange(val) {
-                this.setCurrentValue(val)
                 this.change && this.change()
-            },
-            setCurrentValue (val) {
-                if (this.curVal == val) return
-                this.currVal = val
-                this.$emit('input', val)
             },
             fetchData (val, length) {
                 let keyword = val

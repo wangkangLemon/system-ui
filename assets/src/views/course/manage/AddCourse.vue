@@ -295,6 +295,10 @@
                         xmview.setContentLoading(false)
                     })
                 }
+            },
+            'fetchParam.album_id' (val) {
+                // 如果专辑id被清空  则干掉专辑名字
+                if (!val) this.fetchParam.album_name = void 0
             }
         },
         methods: {
@@ -304,26 +308,29 @@
                 this.fetchParam.score_pass && (this.fetchParam.score_pass += '')
                 this.$refs.formFirst.validate((isValidate) => {
                     if (!isValidate) return
+                    let p
                     // 如果是编辑
                     if (this.fetchParam.id) {
-                        courseService.editCourse(this.fetchParam).then((ret) => {
+                        p = courseService.editCourse(this.fetchParam).then((ret) => {
                             this.activeTab = 'second'
                         })
                     } else {
-                        courseService.addCourse(this.fetchParam).then((ret) => {
+                        p = courseService.addCourse(this.fetchParam).then((ret) => {
                             this.fetchParam.id = ret.data.id
                             this.activeTab = 'second'
                         })
                     }
+
+                    p.then(() => {
+                        // 如果只是保存不需要考试  跳回去
+                        if (this.fetchParam.need_testing === 0) {
+                            this.$router.back()
+                        }
+                    })
                 })
             },
             btnPreClick () {
                 this.activeTab = 'first'
-            },
-            submit () {
-                courseService.addCourse(this.fetchParam).then((ret) => {
-                    console.info(ret)
-                })
             },
             // 处理上传文档
             handleUploadMedia (response) {
@@ -360,7 +367,14 @@
             handleSubmitTesting () {
                 // 处理当前的数据
                 let item = null
-                for (let i = 0; i < this.fetchTesting.length, item = this.fetchTesting[i]; i++) {
+
+                if (!this.fetchTesting || this.fetchTesting.length < 1) {
+                    this.$router.back()
+                    return
+                }
+
+                let requestParam = this.fetchTesting // JSON.parse(JSON.stringify(this.fetchTesting))
+                for (let i = 0; i < requestParam.length, item = requestParam[i]; i++) {
                     // 处理单选题的正确答案选中
                     if (item.category == 1 && item.correct) {
                         item.options.map((itemOptions) => {
@@ -382,11 +396,13 @@
                 xmview.setContentLoading(true)
                 courseService.addOrEditTesting({
                     course_id: this.fetchParam.id,
-                    subjects: formUtils.serializeArray(this.fetchTesting)
+                    subjects: formUtils.serializeArray(requestParam)
                 }).then((ret) => {
-                    xmview.setContentLoading(false)
                     xmview.showTip('success', '操作成功')
                     this.$router.back()
+                }, () => {
+                }).then(() => {
+                    xmview.setContentLoading(false)
                 })
             },
             handleUploadDoc (rep) { // 文档上传完毕
