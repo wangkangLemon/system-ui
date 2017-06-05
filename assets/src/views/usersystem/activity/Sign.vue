@@ -190,7 +190,7 @@
                 <el-form-item label="积分面值" prop="quota" v-if="form.type == 'credit'">
                     <el-input v-model.number="form.quota"></el-input>
                 </el-form-item>
-                <el-form-item label="发放量" prop="limit" v-if="form.type == 'product'">
+                <el-form-item label="发放量" prop="limit">
                     <el-input v-model.number="form.limit"></el-input>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
@@ -295,7 +295,10 @@
             },
             // 设置积分
             setIntegral () {
-                this.isEdit = false
+                var settings = '[' + this.calendarValues.toString() + ']'
+                return ActivityService.addSignSetting({year: this.currDate.getFullYear(), month: this.currDate.getMonth() + 1, setting: settings}).then((ret) => {
+                    this.isEdit = false
+                })
             },
             // 设置签到
             setIns () {
@@ -377,6 +380,10 @@
                         month: this.currDate.getMonth() + 1
                     }).then((ret) => {
                         this.calendarValues = ret.setting ? JSON.parse(ret.setting) : []
+                    }).catch((ret) => {
+                        if (ret.message === 'record not found') {
+                            ret.tipCom.close()
+                        }
                     })
             }
         }
