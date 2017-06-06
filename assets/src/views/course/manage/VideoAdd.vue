@@ -186,13 +186,13 @@
                 return false
             },
             extname (file) {
-                var name = file.name || '';
-                var parts = name.split('.');
-                parts.shift();
+                var name = file.name || ''
+                var parts = name.split('.')
+                parts.shift()
                 if (parts.length) {
-                    return '.' + parts.join('.');
+                    return '.' + parts.join('.')
                 }
-                return '';
+                return ''
             }
         },
         components: {vTags}
