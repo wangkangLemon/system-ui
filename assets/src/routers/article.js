@@ -39,18 +39,6 @@ export default {
             }
         },
         {
-            path: 'content/show/:id',
-            name: 'article-content-show',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('../views/article/ContentShow.vue'))
-                })
-            },
-            meta: {
-                title: '内容管理-详情',
-            }
-        },
-        {
             path: 'content/:id',
             name: 'article-content-edit',
             component: resolve => {
