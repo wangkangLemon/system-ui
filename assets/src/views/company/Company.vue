@@ -104,24 +104,28 @@
                     width="180">
             </el-table-column>
             <el-table-column
+                    width="100"
                     prop="concact"
                     label="联系人">
             </el-table-column>
             <el-table-column
+                    width="150"
                     prop="mobile"
                     label="手机">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="email"
                     label="邮箱">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
             <el-table-column
                     prop="operate"
-                    label="操作" min-width="100">
+                    label="操作" width="180">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="adminPage(scope.$index, scope.row)">
                         管理员

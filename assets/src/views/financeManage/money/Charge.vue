@@ -100,39 +100,44 @@
         <el-table
                 v-loading="loading"
                 border
-                :data="industryData"
-                stripe
-                style="width: 100%">
+                :data="industryData">
             <el-table-column
+                    min-width="200"
                     prop="company"
                     label="工业">
             </el-table-column>
             <el-table-column
                     prop="admin_name"
                     label="管理员"
-                    width="180">
+                    width="100">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="category"
                     label="类型">
             </el-table-column>
             <el-table-column
+                    width="120"
                     prop="val_old"
                     label="变更前余额">
             </el-table-column>
             <el-table-column
+                    width="120"
                     prop="money"
                     label="变更金额">
             </el-table-column>
             <el-table-column
+                    width="120"
                     prop="val_new"
                     label="变更后余额">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="create_time_name"
                     label="变更时间">
             </el-table-column>
             <el-table-column
+                    width="100"
                     prop="operate"
                     label="操作">
                 <template scope="scope">

@@ -55,12 +55,10 @@
         <el-table
                 v-loading="loading"
                 border
-                :data="drawData"
-                stripe
-                style="width: 100%">
+                :data="drawData">
             <el-table-column
                     prop="draw_no"
-                    width="200"
+                    min-width="300"
                     label="编号">
             </el-table-column>
             <el-table-column
@@ -75,12 +73,12 @@
             </el-table-column>
             <el-table-column
                     prop="bank_name"
-                    width="180"
+                    width="120"
                     label="银行">
             </el-table-column>
             <el-table-column
                     prop="card_name"
-                    width="200"
+                    width="100"
                     label="卡号">
             </el-table-column>
             <el-table-column
@@ -99,10 +97,11 @@
             </el-table-column>
             <el-table-column
                     prop="completed_name"
-                    width="120"
+                    width="180"
                     label="申请时间">
             </el-table-column>
             <el-table-column
+                    width="100"
                     prop="operate"
                     label="操作">
                 <template scope="scope">

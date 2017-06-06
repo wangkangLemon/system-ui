@@ -62,7 +62,11 @@
                 return this.$route.query.tabIndex || '1'
             }
         },
+<<<<<<< HEAD
         activated () {
+=======
+        created () {
+>>>>>>> user-system
             xmview.setContentLoading(false)
         },
         methods: {

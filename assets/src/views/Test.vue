@@ -1,48 +1,24 @@
-<style lang='scss' rel='stylesheet/scss'>
-    #testview-container {
-
-    }
-
-</style>
+<style lang='scss' rel='stylesheet/scss'></style>
 
 <template>
-    <div id="testview-container">
-        <DateRange title="晒单时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
-                   v-on:changeStart="val=> fetchParam.time_start=val "
-                   v-on:changeEnd="val=> fetchParam.time_end=val "
-                   :change="fetchData">
-        </DateRange>
-        <button @click="removedate">干掉日期</button>
-    </div>
+    <Test @keyup.enter.native="shit"></Test>
 </template>
 
 <script>
-    import DateRange from './component/form/DateRangePicker.vue'
-    export default {
-        data() {
-            return {
-                courseList: [],
-                selected: void 0,
-                fetchParam: {
-                    time_start: void 0,
-                    time_end: void 0,
-                }
-            }
+    import Test from './component/Test.vue'
+    export default{
+        data () {
+            return {}
         },
         created () {
         },
-        mounted () {
+        activated () {
         },
         methods: {
-            fetchData () {
-                console.info(this.fetchParam)
-            },
-            removedate () {
-                this.fetchParam.time_start = void 0
-                this.fetchParam.time_end = void 0
-//                this.fetchParam.time_end = void 0
+            shit (val) {
+                console.info(val, 'shit123')
             }
         },
-        components: {DateRange}
+        components: {Test}
     }
 </script>

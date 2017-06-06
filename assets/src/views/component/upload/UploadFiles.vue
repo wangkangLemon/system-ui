@@ -8,9 +8,10 @@
                :action="url"
                :file-list="fileList"
                :accept="accept"
+               :on-error="handleError"
                :on-success="handleUploadMedia" :multiple="false" :on-progress="onProgress">
         <el-button size="small" :disabled="disabled" type="primary"><i><i class="el-icon-upload el-icon--left"></i></i>{{btnTitle}}
-
+        <!--a-->
         </el-button>
     </el-upload>
 </template>
@@ -39,7 +40,8 @@
                 default: '*/*'
             },
             // 文件上传中的回调
-            onProgress: Function
+            onProgress: Function,
+            onError: Function
         },
         data () {
             return {
@@ -66,6 +68,10 @@
             },
             choose () {
                 this.$refs.upload.$el.querySelector('input[type=file]').click()
+            },
+            handleError () {
+                xmview.showTip('error', '上传失败')
+                this.onError && this.onError()
             }
         },
         components: {}

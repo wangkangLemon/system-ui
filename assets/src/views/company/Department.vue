@@ -94,30 +94,37 @@
                     width="180">
             </el-table-column>
             <el-table-column
+                    min-width="180"
                     prop="company"
                     label="连锁">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="area_name"
                     label="地区">
             </el-table-column>
             <el-table-column
+                    width="100"
                     prop="concact"
                     label="店长">
             </el-table-column>
             <el-table-column
+                    width="100"
                     prop="user_count"
                     label="店员数量">
             </el-table-column>
             <el-table-column
+                    width="150"
                     prop="mobile"
                     label="手机">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
             <el-table-column
+                    width="120"
                     prop="operate"
                     label="操作">
                 <template scope="scope">

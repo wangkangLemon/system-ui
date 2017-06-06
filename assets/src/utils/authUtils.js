@@ -27,6 +27,8 @@ let authUtls = {
             if (str && str.ttl > Date.now()) {
                 return str.token
             }
+            // alert('检测到token过期')
+            // debugger
             return null
         } catch (e) {
             return null

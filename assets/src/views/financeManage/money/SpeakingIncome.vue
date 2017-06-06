@@ -59,31 +59,34 @@
         <el-table
                 v-loading="loading"
                 border
-                :data="historyData"
-                stripe
-                style="width: 100%">
+                :data="historyData">
             <el-table-column
+                    width="100"
                     prop="user_name"
                     label="用户">
             </el-table-column>
             <el-table-column
+                    min-width="200"
                     prop="company_name"
                     label="用户所属企业">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="type_name"
                     label="标题">
             </el-table-column>
             <el-table-column
                     prop="money"
                     label="金额"
-                    width="180">
+                    width="100">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="money_company_name"
                     label="红包赞助企业">
             </el-table-column>   
             <el-table-column
+                    width="180"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>

@@ -10,6 +10,7 @@ export default {
             resolve(require('../views/system/Index.vue'))
         })
     },
+<<<<<<< HEAD
     children: [
         // 管理
         {
@@ -98,6 +99,39 @@ export default {
                     }
                 },
             ]
+=======
+    // 设置
+    {
+        path: pathPre + '/setting',
+        name: 'sys-setting',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/system/Set.vue'))
+            })
+        },
+        meta: {
+            title: '设置-系统',
+            noback: true
+        }
+    },
+    // 日志
+    {
+        path: pathPre + '/log',
+        name: 'sys-log',
+        component: require('../views/system/Log.vue'),
+        meta: {
+            title: '系统管理操作-日志',
+            noback: true
+        }
+    },
+    // 工单管理
+    {
+        path: pathPre + '/feedback',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('../views/system/feedback/Main.vue'))
+            })
+>>>>>>> user-system
         },
         // 内测应用管理
         {
