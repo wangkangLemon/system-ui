@@ -92,6 +92,7 @@
     import vTags from '../../component/form/Tags.vue'
     import OssSdk from '../../../vendor/ossSdk'
     import courseService from '../../../services/courseService'
+    import authUtls from '../../../utils/authUtils'
 
     let ossSdk
     export default{
@@ -104,6 +105,7 @@
         },
         beforeCreate () {
             ossSdk = new OssSdk()
+            this.user = authUtls.getUserInfo()
         },
         mounted () {
             xmview.setContentLoading(false)
@@ -142,7 +144,15 @@
                     let successCount = 0
                     // 开始上传
                     this.listData.map((item) => {
-                        ossSdk.uploadFile(item.name, item.file, function (progress) {
+                        // 格式化名称
+                        var now = new Date()
+                        var name = [
+                            'company', this.user.company_id,
+                            now.getFullYear(), now.getMonth() + 1, now.getDate(),
+                            [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
+                        ].join('/') + this.extname(item.file)
+                        // 上传
+                        ossSdk.uploadFile(name, item.file, function (progress) {
                             item.process = progress
                         }, ret => {
                             // 创建视频
@@ -174,6 +184,15 @@
                     }
                 }
                 return false
+            },
+            extname (file) {
+                var name = file.name || ''
+                var parts = name.split('.')
+                parts.shift()
+                if (parts.length) {
+                    return '.' + parts.join('.')
+                }
+                return ''
             }
         },
         components: {vTags}
