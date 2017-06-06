@@ -145,12 +145,12 @@
                     // 开始上传
                     this.listData.map((item) => {
                         // 格式化名称
-                        var now = new Date();
+                        var now = new Date()
                         var name = [
                             'company', this.user.company_id,
                             now.getFullYear(), now.getMonth() + 1, now.getDate(),
                             [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
-                        ].join('/') + this.extname(item.file);
+                        ].join('/') + this.extname(item.file)
                         // 上传
                         ossSdk.uploadFile(name, item.file, function (progress) {
                             item.process = progress
