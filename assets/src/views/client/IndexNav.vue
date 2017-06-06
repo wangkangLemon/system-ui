@@ -4,9 +4,7 @@
         background: #fff;
         border: 1px solid #ededed;
         .form {
-            z-index: 99999999999999999999 !important;
             .img-wrap {
-                /*border:1px solid #ededed;*/
                 width: 140px;
                 height: 140px;
                 > img {
@@ -72,13 +70,12 @@
     <article class="index-nav-container">
         <el-dialog class="form" title="修改图标" v-model="changeIcon" size="tiny">
             <el-form :model="form" :rules="rules" ref="form">
-                <el-form-item prop="name" label="导航图标" label-width="120px">
+                <el-form-item prop="name" v-loading="loading" label="导航图标" label-width="120px">
                     <div class="img-wrap">
                         <img :src="form.url" alt="" />
                     </div>
                     <p class="tip">建议上传图片尺寸为 140*140</p>
-                    <ImagEcropperInput :compress="1" :isShowBtn="true" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
-                    :isRound="true"></ImagEcropperInput>
+                    <el-button type="primary" @click="() => {$refs.imgcropper.chooseImg()}">上传</el-button>
                 </el-form-item>
                 <el-form-item prop="name" label="导航名称" label-width="120px">
                     <el-input v-model="form.name"></el-input>
@@ -118,6 +115,8 @@
                     :total="total">
             </el-pagination>
         </div>
+        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
+                           :isRound="true"></ImagEcropperInput>
     </article>
 </template>
 <script>
@@ -128,6 +127,7 @@
     export default{
         data () {
             return {
+                loading: false,
                 currentData: {
                     id: '',
                     list: [],
@@ -150,18 +150,20 @@
                 }
             }
         },
-        activated () {
+        created () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
         },
         methods: {
             cropperFn (data) {
+                this.loading = true
                 // 执行上传
                 mobileService.uploadNavIcon({
                     image: data,
                     alias: Date.now() + '.jpg'
                 }).then((ret) => {
+                    this.loading = false
                     this.form.url = data
                     this.currentData.url = ret.url
                 })
