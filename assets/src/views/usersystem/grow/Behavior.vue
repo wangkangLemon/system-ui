@@ -40,7 +40,7 @@
         <main class="search">
             <section>
                 <i>用户行为</i>
-                <vInput :enter="fetchData" v-model="fetchParam.name"></vInput>
+                <el-input type="text" v-model="fetchParam.name" @keyup.enter.native="fetchData"></el-input>
             </section>
         </main>
 
@@ -74,11 +74,7 @@
 
 <script>
     import growService from '../../../services/usersystem/growService'
-    import vInput from '../../component/form/Input.vue'
     export default {
-        components: {
-            vInput
-        },
         data() {
             return {
                 loadingData: false,
