@@ -110,7 +110,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="reward" label="任务奖励">
-                    <el-input type="number" v-model="form.reward">
+                    <el-input type="number" v-model.number="form.reward">
                         <template slot="append">积分</template>
                     </el-input>
                 </el-form-item>
@@ -153,11 +153,11 @@
                 useraction: [],
                 total: 0,
                 rules: {
-                    user_action_name: {required: true, message: '必须填', trigger: 'change'},
-                    title: {required: true, message: '必须填', trigger: 'blur'},
-                    count: {required: true, message: '必须填', trigger: 'blur'},
-                    user_action_object_id: {type: 'number', required: true, message: '必须填', trigger: 'blur'},
-                    reward: {type: 'number', required: true, message: '必须填', trigger: 'blur'}
+                    user_action_name: {required: true, message: '必填', trigger: 'change'},
+                    title: {required: true, message: '必填', trigger: 'blur'},
+                    count: {required: true, message: '必填', trigger: 'blur'},
+                    user_action_object_id: {type: 'number', required: true, message: '必填', trigger: 'blur'},
+                    reward: {type: 'number', required: true, message: '必填', trigger: 'blur'}
                 }
             }
         },

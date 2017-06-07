@@ -31,7 +31,7 @@
                 <el-input v-model.number="fetchParam.day" placeholder="设置卡券的面值"></el-input>
             </el-form-item>
             <el-form-item label="倍数" v-if="isShowTimes" prop="quota">
-                <el-input v-model.number="fetchParam.quota" placeholder="设置卡券的面值"></el-input>
+                <el-input type="number" v-model.number="fetchParam.quota" placeholder="设置卡券的面值"></el-input>
             </el-form-item>
             <el-form-item label="商品名称" prop="name">
                 <el-input :disabled="fetchParam.id != null" v-model="fetchParam.name"
@@ -116,10 +116,9 @@
         mounted () {
             this.fetchParam = this.$route.params.prod || initParam()
 //            this.fetchParam.id = this.$route.query.id
-            console.info(this.fetchParam)
+            this.fetchParam.quota = this.fetchParam.quota ? parseFloat(this.fetchParam.quota) : ''
             if (this.fetchParam.id) xmview.setContentTile('编辑商品-用户体系管理')
             this.$refs.prodCategory.fetchData().then(() => {
-                console.info(111)
                 xmview.setContentLoading(false)
             })
         },
