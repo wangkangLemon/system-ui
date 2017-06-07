@@ -386,10 +386,8 @@
                 }, 0)
             },
             changeProduct () {
-                if (this.form.type != 'product') {
-                    this.form.category = ''
-                    this.form.product_id = ''
-                }
+                this.form.category = ''
+                this.form.product_id = ''
             },
             // select获取选择分类的产品列表
             getSelectPorduct () {
@@ -401,7 +399,7 @@
             },
             // 获取库存值
             getStockCount () {
-                if (this.form.product_id) {
+                if (this.form.product_id && this.form.product_id != ' ') {
                     // 获取库存量
                     ParkService.prodDetail({id: this.form.product_id}).then((ret) => {
                         this.stockCount = ret.stock_count

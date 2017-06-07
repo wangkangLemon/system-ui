@@ -187,7 +187,7 @@
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="库存量" v-if="form1.product_id">
+                <el-form-item label="库存量" v-if="!isNaN(form1.product_id) && form1.product_id > 0">
                     {{stockCount}}
                 </el-form-item>
                 <el-form-item label="积分面值" prop="quota" v-if="form1.type == 'credit'">
@@ -327,10 +327,8 @@
                 })
             },
             changeProduct () {
-                if (this.form.type != 'product') {
-                    this.form.category = ''
-                    this.form.product_id = ''
-                }
+                this.form1.category = ''
+                this.form1.product_id = ''
             },
             cropperFn(data) {
                 console.log(data)
