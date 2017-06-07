@@ -29,7 +29,7 @@ export const tamp2Str = Vue.filter('tamp2Str', function (timetamp) {
 
 // 填充图片的url
 export const fillImgPath = Vue.filter('fillImgPath', function (url) {
-    if (!url && !appConfig.debug) return url
+    if (!url || !appConfig.debug) return url
     let apiUrl = config.API_HOST_PROD.replace(/(^")|("$)/g, '')
     return url.indexOf('http://') > -1 ? url : apiUrl + url
 })
