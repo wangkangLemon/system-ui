@@ -21,7 +21,7 @@
 <template>
     <article class="task-daily-container">
         <section class="add">
-            <el-button icon="plus" type="primary" @click="addFn">添加</el-button>
+            <el-button v-if="$route.name == 'play' || $route.name == 'growth'" icon="plus" type="primary" @click="addFn">添加</el-button>
         </section>
         <section class="search">
             <section>
@@ -162,6 +162,7 @@
             }
         },
         activated () {
+            console.log(this.$route.name)
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
