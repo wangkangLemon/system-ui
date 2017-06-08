@@ -183,7 +183,7 @@
                         <el-option label="实物" value="entity"></el-option>
                         <el-option label="外部虚拟卡券" value="coupon"></el-option>
                     </el-select>
-                    <el-select v-if="form1.product_id && form1.type == 'product'" v-model="form1.product_id">
+                    <el-select @change="getStockCount" v-if="form1.product_id && form1.type == 'product'" v-model="form1.product_id">
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -260,6 +260,15 @@
             this.getSelectPorduct()
         },
         methods: {
+            // 获取库存
+            getStockCount () {
+                if (this.form1.type == 'product' && this.form1.product_id != ' ') {
+                    // 获取库存量
+                    ParkService.prodDetail({id: this.form1.product_id}).then((ret) => {
+                        this.stockCount = ret.stock_count
+                    })
+                }
+            },
             getData () {
                 return ActivityService.getActivity({play_id: 1})
             },
@@ -267,12 +276,7 @@
                 this.addForm = true
                 this.form1 = clone(row)
                 this.cloneForm1 = clone(row)
-                if (this.form1.type == 'product') {
-                    // 获取库存量
-                    ParkService.prodDetail({id: this.form1.id}).then((ret) => {
-                        this.stockCount = ret.stock_count
-                    })
-                }
+                this.getStockCount()
             },
             awardSet (form) {
                 this.$refs[form].validate((valid) => {

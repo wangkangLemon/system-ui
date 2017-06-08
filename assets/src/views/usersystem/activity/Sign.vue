@@ -270,12 +270,7 @@
                 this.addForm = true
                 this.form = clone(row)
                 this.cloneForm1 = clone(row)
-                if (this.form.type == 'product') {
-                    // 获取库存量
-                    ParkService.prodDetail({id: this.form.id}).then((ret) => {
-                        this.stockCount = ret.stock_count
-                    })
-                }
+                this.getStockCount()
             },
             // 获取活动的基本信息
             getActivity () {
