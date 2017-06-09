@@ -30,7 +30,7 @@ window.xmview = {
 }
 
 // ===保留此处=== 每次构建打印一个日期, 避免app.js的hash值没有变化
-console.info(process.buildTime)
+console.info(process.buildTime, 'buildTime')
 
 window.xmrouter = router
 window.xmconfig = {

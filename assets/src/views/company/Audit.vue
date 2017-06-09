@@ -57,26 +57,29 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="auditData"
-                    stripe
-                    style="width: 100%">
+                    :data="auditData">
                 <el-table-column
+                        width="200"
                         prop="name"
                         label="企业名称">
                 </el-table-column>
                 <el-table-column
+                        min-width="200"
                         prop="address"
                         label="企业地址">
                 </el-table-column>
                 <el-table-column
+                        width="100"
                         prop="contact"
                         label="联系人">
                 </el-table-column>
                 <el-table-column
+                        width="150"
                         prop="phone"
                         label="联系电话">
                 </el-table-column>
                 <el-table-column
+                        width="180"
                         prop="create_time_name"
                         label="申请时间">
                 </el-table-column>
@@ -92,7 +95,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="operate"
-                        width="100"
+                        width="80"
                         label="操作">
                     <template scope="scope">
                         <router-link class="show-link" :to="{name: 'company-audit-show', params: {id: scope.row.id}}">

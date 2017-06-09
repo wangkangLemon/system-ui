@@ -42,7 +42,7 @@
             <el-table-column width="100" prop="id" label="反馈编号"></el-table-column>
             <el-table-column width="120" prop="category_name" label="问题分类"></el-table-column>
             <el-table-column width="120" prop="user_name" label="提交人"></el-table-column>
-            <el-table-column prop="content" label="问题描述"></el-table-column>
+            <el-table-column min-width="200" prop="content" label="问题描述"></el-table-column>
             <el-table-column width="180" prop="create_time_name" label="提交时间"></el-table-column>
             <el-table-column width="100" prop="status_name" label="状态">
                 <template scope="scope">

@@ -85,6 +85,7 @@
             <panel :content="signs.departmentSum" title="签约门店" bgColor="#348fe2" :footer="'已录入'+ signs.departmentCount +'家'"></panel>
             <panel :content="signs.userSum" title="签约店员" bgColor="#727cb6" :footer="'已录入'+signs.userCount+'家'"></panel>
         </div>
+
         <!--导入弹窗-->
         <el-dialog v-model="isImport" title="导入企业签约信息" size="tiny">
             <UploadFile :beforeUpload="beforeUpload" :url='uploadFileUrl' :on-success="uploadImgSucc" btnTitle='上传文件'></UploadFile>
@@ -153,28 +154,29 @@
             </section>
             <el-table border :data="signData" v-loading="loading">
                 <el-table-column
+                        min-width="200"
                         prop="name"
                         label="连锁名称">
                 </el-table-column>
                 <el-table-column
                         prop="department_number"
                         label="签约门店"
-                        width="200">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="department_count"
                         label="录入门店"
-                        width="200">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="user_number"
                         label="签约店员"
-                        width="200">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="user_count"
                         label="录入店员"
-                        width="200">
+                        width="100">
                 </el-table-column>
                 <el-table-column
                         prop="active_count"
