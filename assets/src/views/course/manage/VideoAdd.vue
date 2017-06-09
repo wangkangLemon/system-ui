@@ -83,8 +83,7 @@
             </el-button>
         </div>
 
-        <input style="display: none" type="file" ref="file" multiple="multiple" @change="fileChange($event)"
-               accept="video/*">
+        <input style="display: none" type="file" ref="file" multiple="multiple" @change="fileChange($event)" accept="">
     </article>
 </template>
 
