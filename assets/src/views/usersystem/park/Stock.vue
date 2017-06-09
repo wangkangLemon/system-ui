@@ -27,7 +27,7 @@
 </style>
 
 <template>
-    <main id="usersys-integral-stock">
+    <main id="usersys-integral-stock" ref="container">
         <article class="manage-container">
             <el-button type="success" icon="plus" v-if="isShowAdd"
                        @click="showReplenishment('add')">添加  <!--a-->
@@ -135,11 +135,11 @@
         </el-dialog>
 
         <!--补货弹出框-->
-        <el-dialog
-                title="补货"
-                :visible.sync="dialogReplenishment.isShow"
-                size="small">
-            <el-form label-position="right" label-width="80px">
+        <el-dialog ref="replenishmentDialog"
+                   title="补货"
+                   :visible.sync="dialogReplenishment.isShow"
+                   size="small">
+            <el-form label-position="right" label-width="80px" ref="replenishmentDialogForm">
                 <el-form-item label="商品类型">
                     <i>{{prod.name}}</i>
                 </el-form-item>
@@ -152,9 +152,10 @@
                 <el-form-item label="库存剩余">
                     <i>{{prod.stock_count}}</i>
                 </el-form-item>
-                <el-form-item label="选择文件" v-if="dialogReplenishment.type === 'import'">
+                <el-form-item label="选择文件" v-if="dialogReplenishment.type === 'import'" ref="chooseFile">
                     <div>
-                        <UploadFile :url='dialogReplenishment.uploadUrl' :on-success="handleImported"
+                        <UploadFile ref="upload" class="stock" :autoUpload="false" :url='dialogReplenishment.uploadUrl'
+                                    :on-success="handleImported"
                                     accept=".xls, .xlsx"
                                     btnTitle='点击上传'></UploadFile>
                         <el-button type="text" @click="downloadTmp">*下载模板</el-button>
@@ -287,15 +288,20 @@
             },
             // 文件上传完毕
             handleImported () {
+                xmview.showTip('success', '导入成功')
                 this.fetchData()
                 this.dialogReplenishment.isShow = false
-                xmview.showTip('success', '导入成功')
             },
             // 下载模板
             downloadTmp () {
                 window.open(require('./assets/importProdTamplate.xlsx'))
             },
+            // 显示补货的弹出框
             showReplenishment (type) {
+                // 成功后干掉已经上传的文件
+                this.$nextTick(() => {
+                    this.$refs.replenishmentDialog.$children.length > 2 && this.$refs.replenishmentDialog.$children[2].$children[4].$children[0].clearFiles()
+                }, 0)
                 this.dialogReplenishment.isShow = true
                 this.dialogReplenishment.count = void 0
                 this.dialogReplenishment.type = type
@@ -311,7 +317,8 @@
                             this.fetchData()
                         })
                     } else {
-                        this.dialogReplenishment.isShow = false
+                        // 开始上传
+                        this.$refs.replenishmentDialog.$children[2].$children[4].$children[0].submit()
                     }
                 }
             }

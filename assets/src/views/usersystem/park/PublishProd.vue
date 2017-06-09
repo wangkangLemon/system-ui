@@ -44,7 +44,7 @@
             <el-form-item label="商品封面图" prop="image">
                 <img :src="fetchParam.image | fillImgPath" style="max-width: 300px" v-show="fetchParam.image">
                 <ImgCropper :compress="1" imgType="png" :isShowBtn="true" ref="imgcropper" :confirmFn="cropperImgSucc"
-                            :aspectRatio="16/9"></ImgCropper>
+                            :aspectRatio="405/172"></ImgCropper>
                 <i style="color: #999; font-size: 13px">*图片用于手机客户端查看积分乐园商品列表的图片及详情顶部的图片</i>
             </el-form-item>
             <el-form-item label="排序">
