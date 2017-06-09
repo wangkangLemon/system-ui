@@ -140,9 +140,13 @@
                             <template scope="scope">{{scope.row.weight}}%</template>
                         </el-table-column>
                         <el-table-column
-                                prop="quota"
+                                prop="limit"
                                 width="100"
                                 label="发放量">
+                            <template scope="scope">
+                                <span v-if="scope.row.type == 'product'">{{scope.row.limit}}</span>
+                                <span v-if="scope.row.type != 'product'">无限</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                                 width="100"
@@ -193,8 +197,9 @@
                 <el-form-item label="积分面值" prop="quota" v-if="form1.type == 'credit'">
                     <el-input v-model.number="form1.quota"></el-input>
                 </el-form-item>
-                <el-form-item label="发放量" prop="limit" v-if="form1.type == 'product'">
-                    <el-input v-model.number="form1.limit"></el-input>
+                <el-form-item label="发放量" prop="limit">
+                    <el-input v-model.number="form1.limit" v-if="form1.type == 'product'"></el-input>
+                    <span v-if="form1.type != 'product'">无限</span>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
                     <el-input v-model="form1.sort"></el-input>
@@ -251,7 +256,7 @@
         },
         activated () {
             // 获取活动详情和奖品配置
-            Promise.all([this.getData(), ActivityService.rewardSearch({play_type: 'wheel'})]).then((ret) => {
+            Promise.all([this.getData(), this.rewardSearch()]).then((ret) => {
                 this.activity = ret[0].play
                 this.awardlist = ret[1].rewards
             }).then(() => {
@@ -272,6 +277,9 @@
             getData () {
                 return ActivityService.getActivity({play_id: 1})
             },
+            rewardSearch () {
+                return ActivityService.rewardSearch({play_type: 'wheel'})
+            },
             editFn (row) {
                 this.addForm = true
                 this.form1 = clone(row)
@@ -282,7 +290,7 @@
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         // 判断库存
-                        if (this.form1.type == 'product' && this.stockCount < this.form1.quota) {
+                        if (this.form1.type == 'product' && this.stockCount < this.form1.limit) {
                             xmview.showTip('error', '库存不足')
                             return
                         }
@@ -298,7 +306,9 @@
                         ActivityService.updateReward(this.form1).then((ret) => {
                             xmview.showTip('success', '修改成功')
                             this.addForm = false
-                            this.getData()
+                            this.rewardSearch().then((ret) => {
+                                this.awardlist = ret.rewards
+                            })
                         })
                     } else {
                         return false

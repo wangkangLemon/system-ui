@@ -77,8 +77,8 @@
                     label="银行">
             </el-table-column>
             <el-table-column
-                    prop="card_name"
-                    width="100"
+                    prop="card"
+                    width="200"
                     label="卡号">
             </el-table-column>
             <el-table-column
@@ -96,7 +96,7 @@
                     label="管理员">
             </el-table-column>
             <el-table-column
-                    prop="completed_name"
+                    prop="create_time_name"
                     width="180"
                     label="申请时间">
             </el-table-column>
@@ -202,7 +202,9 @@
                 }
                 return drawList(params).then((ret) => {
                     let status = {pending: '待提现', complete: '已完成', close: '已关闭'}
-                    this.drawData = ret.data
+                    this.drawData = ret.data.sort((x, y) => {
+                        return y.id - x.id
+                    })
                     ret.data.forEach((item) => {
                         item.status = status[item.status]
                     })
