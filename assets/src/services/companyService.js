@@ -392,6 +392,12 @@ class CompanyService {
         })
     }
 
+    // 导出企业签约信息
+    exportSign (reqObj) {
+        let finalUrl = `${urlPre}/sign/search`
+        api.downLoad(finalUrl, Object.assign(reqObj, {export: 1}), 'company_sign.xls')
+    }
+
     // 企业签约信息导入
     importData () {
         return `${urlPre}/sign/import`
