@@ -100,6 +100,11 @@
                 <el-table-column
                         prop="limit"
                         label="发放量">
+                    <template scope="scope">
+                        <span v-if="scope.row.type == 'product'">{{scope.row.limit}}</span>
+                        <span v-if="scope.row.type == 'credit' && scope.row.limit == 0">无限</span>
+                        <span v-if="scope.row.type == 'credit' && scope.row.limit > 0">{{scope.row.limit}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="operate"
@@ -134,6 +139,11 @@
                 <el-table-column
                         prop="limit"
                         label="发放量">
+                    <template scope="scope">
+                        <span v-if="scope.row.type == 'product'">{{scope.row.limit}}</span>
+                        <span v-if="scope.row.type == 'credit' && scope.row.limit == 0">无限</span>
+                        <span v-if="scope.row.type == 'credit' && scope.row.limit > 0">{{scope.row.limit}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="operate"
@@ -192,8 +202,8 @@
                 <el-form-item label="积分面值" prop="quota" v-if="form.type == 'credit'">
                     <el-input v-model.number="form.quota"></el-input>
                 </el-form-item>
-                <el-form-item label="发放量" prop="limit" v-if="form.type == 'product'">
-                    <el-input v-model.number="form.limit"></el-input>
+                <el-form-item label="发放量" prop="limit">
+                    <el-input type="number" v-model.number="form.limit" :placeholder="form.type == 'credit' ? '请填写发放量，不填默认为无限' : ''"></el-input>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
                     <el-input type="number" v-model="form.sort"></el-input>
@@ -245,8 +255,17 @@
                     product_id: {required: true, message: '必填项'}, // 产品
                     weight: {type: 'number', required: true, message: '必填项'},
                     quota: {type: 'number', required: true, message: '必填项'},
-                    limit: {type: 'number', required: true, message: '必填项'},
+                    limit: {max: this.stockCount, type: 'number', required: true, message: '必填项'}
                 },
+            }
+        },
+        watch: {
+            'form.limit' (val) {
+                if (this.form.type == 'product') {
+                    this.rules['limit'] = [
+                        {max: this.stockCount, required: true, type: 'number', message: '发放量不得大于库存量', trigger: 'blur'},
+                    ]
+                }
             }
         },
         activated () {
@@ -268,9 +287,12 @@
             // 编辑奖品
             editFn (row) {
                 this.addForm = true
-                this.form = clone(row)
-                this.cloneForm1 = clone(row)
-                this.getStockCount()
+                this.$nextTick(() => {
+                    this.$refs.form.resetFields()
+                    this.form = clone(row)
+                    this.cloneForm1 = clone(row)
+                    this.getStockCount()
+                })
             },
             // 获取活动的基本信息
             getActivity () {
@@ -381,8 +403,10 @@
                 }, 0)
             },
             changeProduct () {
-                this.form.category = ''
-                this.form.product_id = ''
+                if (this.form.type == 'credit') {
+                    this.form.category = ''
+                    this.form.product_id = ''
+                }
             },
             // select获取选择分类的产品列表
             getSelectPorduct () {

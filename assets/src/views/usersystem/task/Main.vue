@@ -105,7 +105,7 @@
                     <el-button type="primary" @click="chooseFn">选取</el-button>
                 </el-form-item>
                 <el-form-item prop="count" v-if="search.category == 'growth'" label="累计次数">
-                    <el-input type="number" v-model="form.count">
+                    <el-input type="number" v-model.number="form.count">
                         <template slot="append">次</template>
                     </el-input>
                 </el-form-item>
@@ -155,7 +155,7 @@
                 rules: {
                     user_action_name: {required: true, message: '必填', trigger: 'change'},
                     title: {required: true, message: '必填', trigger: 'blur'},
-                    count: {required: true, message: '必填', trigger: 'blur'},
+                    count: {type: 'number', required: true, message: '必填', trigger: 'blur'},
                     user_action_object_id: {type: 'number', required: true, message: '必填', trigger: 'blur'},
                     reward: {type: 'number', required: true, message: '必填', trigger: 'blur'}
                 }

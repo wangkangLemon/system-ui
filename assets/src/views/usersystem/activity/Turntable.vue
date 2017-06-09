@@ -100,15 +100,15 @@
                     </el-input>
                 </el-form-item>
                 <!--<el-form-item label="上传图片" prop="url">-->
-                    <!--<section class="uploadimg">-->
-                        <!--<div class="img-container">-->
-                            <!--<img :src="form.url | fillImgPath" v-show="form.url">-->
-                        <!--</div>-->
-                        <!--<div class="img-desc">-->
-                            <!--<ImagEcropperInput :aspectRatio="1280/1706" :confirmFn="cropperFn"></ImagEcropperInput>-->
-                            <!--<span>图片用于手机客户端转盘页面的背景图更换</span>-->
-                        <!--</div>-->
-                    <!--</section>-->
+                <!--<section class="uploadimg">-->
+                <!--<div class="img-container">-->
+                <!--<img :src="form.url | fillImgPath" v-show="form.url">-->
+                <!--</div>-->
+                <!--<div class="img-desc">-->
+                <!--<ImagEcropperInput :aspectRatio="1280/1706" :confirmFn="cropperFn"></ImagEcropperInput>-->
+                <!--<span>图片用于手机客户端转盘页面的背景图更换</span>-->
+                <!--</div>-->
+                <!--</section>-->
                 <!--</el-form-item>-->
                 <el-form-item label="奖项配置">
                     <p class="tip"><i>*</i>此活动必须配置8个奖品，其中至少有一个谢谢参与</p>
@@ -125,7 +125,8 @@
                                 label="图片"
                                 width="200">
                             <template scope="scope">
-                                <img v-if="scope.row.product_image" class="img-list" :src="scope.row.product_image" alt="">
+                                <img v-if="scope.row.product_image" class="img-list" :src="scope.row.product_image"
+                                     alt="">
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -144,8 +145,10 @@
                                 width="100"
                                 label="发放量">
                             <template scope="scope">
+                                <span v-if="scope.row.type == 'thanks'">无限</span>
                                 <span v-if="scope.row.type == 'product'">{{scope.row.limit}}</span>
-                                <span v-if="scope.row.type != 'product'">无限</span>
+                                <span v-if="scope.row.type == 'credit' && scope.row.limit == 0">无限</span>
+                                <span v-if="scope.row.type == 'credit' && scope.row.limit > 0">{{scope.row.limit}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -187,8 +190,10 @@
                         <el-option label="实物" value="entity"></el-option>
                         <el-option label="外部虚拟卡券" value="coupon"></el-option>
                     </el-select>
-                    <el-select @change="getStockCount" v-if="form1.product_id && form1.type == 'product'" v-model="form1.product_id">
-                        <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
+                    <el-select @change="getStockCount" v-if="form1.category"
+                               v-model="form1.product_id">
+                        <el-option :label="item.name" :value="item.id" v-for="(item,index) in products"
+                                   :key="index"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form1.product_id) && form1.product_id > 0">
@@ -198,8 +203,10 @@
                     <el-input v-model.number="form1.quota"></el-input>
                 </el-form-item>
                 <el-form-item label="发放量" prop="limit">
-                    <el-input v-model.number="form1.limit" v-if="form1.type == 'product'"></el-input>
-                    <span v-if="form1.type != 'product'">无限</span>
+                    <el-input type="number" v-model.number="form1.limit"
+                              :placeholder="form1.type == 'credit' ? '请填写发放量，不填默认为无限' : ''"
+                              v-if="form1.type == 'product' || form1.type == 'credit'"></el-input>
+                    <span v-if="form1.type == 'thanks'">无限</span>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
                     <el-input v-model="form1.sort"></el-input>
@@ -264,10 +271,23 @@
             })
             this.getSelectPorduct()
         },
+        watch: {
+            'form1.limit' (val) {
+                if (this.form1.type == 'product') {
+                    this.rules1['limit'] = {
+                        max: this.stockCount,
+                        required: true,
+                        type: 'number',
+                        message: '发放量不得大于库存量',
+                        trigger: 'blur'
+                    }
+                }
+            }
+        },
         methods: {
             // 获取库存
             getStockCount () {
-                if (this.form1.type == 'product' && this.form1.product_id != ' ') {
+                if (this.form1.type == 'product' && this.form1.product_id) {
                     // 获取库存量
                     ParkService.prodDetail({id: this.form1.product_id}).then((ret) => {
                         this.stockCount = ret.stock_count
@@ -282,9 +302,12 @@
             },
             editFn (row) {
                 this.addForm = true
-                this.form1 = clone(row)
-                this.cloneForm1 = clone(row)
-                this.getStockCount()
+                this.$nextTick(() => {
+                    this.$refs.form1.resetFields()
+                    this.form1 = clone(row)
+                    this.cloneForm1 = clone(row)
+                    this.getStockCount()
+                })
             },
             awardSet (form) {
                 this.$refs[form].validate((valid) => {
@@ -334,15 +357,17 @@
                 })
             },
             getSelectPorduct () {
-                if (this.form1.category != this.cloneForm1.category) this.form1.product_id = ' '
+                if (this.form1.category != this.cloneForm1.category) this.form1.product_id = ''
                 // 获取选中产品列表 products
                 ActivityService.productSearch({category: this.form1.category}).then((ret) => {
                     this.products = ret.data
                 })
             },
             changeProduct () {
-                this.form1.category = ''
-                this.form1.product_id = ''
+                if (this.form1.type == 'credit' || this.form1.type == 'thanks') {
+                    this.form1.category = ''
+                    this.form1.product_id = ''
+                }
             },
             cropperFn(data) {
                 console.log(data)

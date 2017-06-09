@@ -88,7 +88,7 @@
         },
         watch: {
             category (val) {
-                if (!val && this.value != 'play') return
+                if (!val || this.value != 'play') return
                 this.page = 1
                 this.search = {
                     keyword: '',
