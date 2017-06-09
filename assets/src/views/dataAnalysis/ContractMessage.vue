@@ -1,5 +1,6 @@
 <!--企业签约信息-->
 <style lang='scss' rel="stylesheet/scss">
+    @import "../../utils/mixins/common";
     @import "../../utils/mixins/mixins";
     @import "../../utils/mixins/topSearch";
     @import "../../utils/mixins/showDetail";
@@ -8,6 +9,10 @@
         width: 100%;
     }
     .table-container {
+        @extend %content-container;
+        .header-button {
+            @extend %right-top-btnContainer;
+        }
         .el-dialog {
             .upload-tip {
                 padding-top: 10px;
@@ -92,6 +97,9 @@
                 <el-button type="primary" @click="isImport = false">关闭</el-button>
             </div>
         </el-dialog>
+        <div class="header-button">
+            <el-button @click="exportData" type="warning"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
+        </div>
         <!--详情-->
         <el-dialog class="show-detail" title="连锁详情" v-model="showDetial">
             <div class="info" v-if="currentItems">
@@ -296,6 +304,17 @@
             // 图片上传完毕之后的逻辑
             uploadImgSucc (res) {
                 xmview.showTip('success', '上传成功')
+            },
+            exportData () {
+                companyService.exportSign({
+                    keyword: this.fetchParam.name,
+                    isdepartment: this.fetchParam.isdepartment,
+                    isuser: this.fetchParam.isuser,
+                    signatory: this.fetchParam.signatory,
+                    time_start: this.fetchParam.createTime,
+                    time_end: this.fetchParam.endTime,
+                    province: this.fetchParam.provinceSelect,
+                })
             }
         }
     }
