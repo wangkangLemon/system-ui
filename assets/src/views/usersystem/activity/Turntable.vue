@@ -279,6 +279,7 @@
         },
         watch: {
             'form1.limit' (val) {
+                delete this.rules1['limit']
                 if (this.form1.type == 'product') {
                     this.rules1['limit'] = {
                         max: this.stockCount,
