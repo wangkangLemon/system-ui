@@ -152,6 +152,11 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                                min-width="100"
+                                prop="left"
+                                label="已发放">
+                        </el-table-column>
+                        <el-table-column
                                 width="100"
                                 prop="operate"
                                 label="操作">

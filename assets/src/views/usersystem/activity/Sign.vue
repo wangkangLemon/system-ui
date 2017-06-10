@@ -107,6 +107,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                        prop="left"
+                        label="已发放">
+                </el-table-column>
+                <el-table-column
                         prop="operate"
                         label="操作">
                     <template scope="scope">
@@ -144,6 +148,10 @@
                         <span v-if="scope.row.type == 'credit' && scope.row.limit == 0">无限</span>
                         <span v-if="scope.row.type == 'credit' && scope.row.limit > 0">{{scope.row.limit}}</span>
                     </template>
+                </el-table-column>
+                <el-table-column
+                        prop="left"
+                        label="已发放">
                 </el-table-column>
                 <el-table-column
                         prop="operate"
