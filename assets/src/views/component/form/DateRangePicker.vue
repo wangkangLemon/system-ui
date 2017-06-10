@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import * as timeUtls from '../../../utils/timeUtils'
+    import * as timeUtils from '../../../utils/timeUtils'
     let _this
     export default{
         props: {
@@ -45,13 +45,13 @@
                 pickerOptionsStart: {
                     disabledDate(time) {
                         return !_this.timespan[1] ? null
-                            : (time.getTime() - 1000 * 60 * 60 * 4 >= new Date(_this.timespan[1]).getTime() && timeUtls.compareDate(time, new Date(_this.timespan[0])) !== 0)
+                            : (time.getTime() - 1000 * 60 * 60 * 4 >= new Date(_this.timespan[1]).getTime() && timeUtils.compareDate(time, new Date(_this.timespan[0])) !== 0)
                     }
                 },
                 pickerOptionsEnd: {
                     disabledDate(time) {
                         return !_this.timespan[0] ? null
-                            : (time.getTime() <= new Date(_this.timespan[0]).getTime() && timeUtls.compareDate(time, new Date(_this.timespan[0])) !== 0)
+                            : (time.getTime() <= new Date(_this.timespan[0]).getTime() && timeUtils.compareDate(time, new Date(_this.timespan[0])) !== 0)
                     }
                 },
             }
@@ -86,6 +86,6 @@
 
     function getTimeStr (val) {
         if (!val) return val
-        return timeUtls.date2Str(new Date(val))
+        return timeUtils.date2Str(new Date(val))
     }
 </script>

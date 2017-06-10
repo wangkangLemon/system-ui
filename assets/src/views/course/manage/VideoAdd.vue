@@ -92,7 +92,7 @@
     import vTags from '../../component/form/Tags.vue'
     import OssSdk from '../../../vendor/ossSdk'
     import courseService from '../../../services/courseService'
-    import authUtls from '../../../utils/authUtils'
+    import authUtils from '../../../utils/authUtils'
 
     let ossSdk
     export default{
@@ -105,7 +105,7 @@
         },
         beforeCreate () {
             ossSdk = new OssSdk()
-            this.user = authUtls.getUserInfo()
+            this.user = authUtils.getUserInfo()
         },
         mounted () {
             xmview.setContentLoading(false)
