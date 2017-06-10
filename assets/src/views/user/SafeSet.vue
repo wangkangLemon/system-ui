@@ -175,6 +175,11 @@
         },
         created () {
             this.initData()
+            // 进入页面去掉自动刷新token 避免在初次设置的时候 跳转到登录
+            authUtils.clearAuthRefreshToken()
+        },
+        destroyed () {
+            authUtils.authRefreshtoken() // 离开页面时打
         },
         methods: {
             // 更换邮箱

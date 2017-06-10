@@ -1,7 +1,7 @@
 /**
  * Created by huanghuixin on 2017/4/10.
  */
-import * as typeUtils from './typeUtls'
+import * as typeUtils from './typeUtils'
 class FormUtils {
     // 序列化数组 格式为  xxx[0]=123&hhh[id][name]=234 的形式
     serializeArray (data, keyName, arrayNeedKey = true) {

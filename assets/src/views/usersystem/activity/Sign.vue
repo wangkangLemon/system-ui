@@ -107,6 +107,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                        prop="left"
+                        label="已发放">
+                </el-table-column>
+                <el-table-column
                         prop="operate"
                         label="操作">
                     <template scope="scope">
@@ -144,6 +148,10 @@
                         <span v-if="scope.row.type == 'credit' && scope.row.limit == 0">无限</span>
                         <span v-if="scope.row.type == 'credit' && scope.row.limit > 0">{{scope.row.limit}}</span>
                     </template>
+                </el-table-column>
+                <el-table-column
+                        prop="left"
+                        label="已发放">
                 </el-table-column>
                 <el-table-column
                         prop="operate"
@@ -235,6 +243,7 @@
         },
         data () {
             return {
+                preLimit: 0,
                 stockCount: 0,
                 addForm: false,
                 insEdit: true,
@@ -291,6 +300,7 @@
                     this.$refs.form.resetFields()
                     this.form = clone(row)
                     this.cloneForm1 = clone(row)
+                    this.preLimit = row.limit
                     this.getStockCount()
                 })
             },
@@ -363,6 +373,11 @@
                         })
                         if (this.form.weight + sumWeight > 100) {
                             xmview.showTip('error', '总概率不得超过100%')
+                            return
+                        }
+                        // 发放量不得改小
+                        if (this.form.type == 'product' && this.form.limit < this.preLimit) {
+                            xmview.showTip('error', '不得减少商品的发放量')
                             return
                         }
                         // 请求接口

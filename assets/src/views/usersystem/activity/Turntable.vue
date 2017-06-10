@@ -152,6 +152,11 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                                min-width="100"
+                                prop="left"
+                                label="已发放">
+                        </el-table-column>
+                        <el-table-column
                                 width="100"
                                 prop="operate"
                                 label="操作">
@@ -235,6 +240,7 @@
         },
         data () {
             return {
+                preLimit: 0,
                 stockCount: 0, // 库存量
                 addForm: false,
                 awardlist: [],
@@ -306,6 +312,7 @@
                     this.$refs.form1.resetFields()
                     this.form1 = clone(row)
                     this.cloneForm1 = clone(row)
+                    this.preLimit = row.limit
                     this.getStockCount()
                 })
             },
@@ -324,6 +331,11 @@
                         })
                         if (this.form1.weight + sumWeight > 100) {
                             xmview.showTip('error', '总概率不得超过100%')
+                            return
+                        }
+                        // 发放量不得减少
+                        if (this.form1.type == 'product' && this.form1.limit < this.preLimit) {
+                            xmview.showTip('error', '商品发放量不得减小')
                             return
                         }
                         ActivityService.updateReward(this.form1).then((ret) => {

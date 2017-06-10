@@ -1,4 +1,4 @@
-import * as typeUtls from './typeUtls'
+import * as typeUtils from './typeUtils'
 
 /**
  * 获取当前时区与utc时间的间隔
@@ -23,7 +23,7 @@ export function getUTCTimetamp () {
  */
 export function time2String (time, withoutDate = false, isUTC) {
     //  如果time是日期类型
-    if (typeUtls.isDate(time)) {
+    if (typeUtils.isDate(time)) {
         // 转换为时间戳格式 并将单位转为秒
         time = time.getTime() / 1000
     }
@@ -123,7 +123,7 @@ export function getWeek (tamp) {
  * @param hasDay 是否有日
  */
 export function date2Str (date, split = '-', {hashour = false, hasDay = true} = {}) {
-    if (!typeUtls.isDate(date)) {
+    if (!typeUtils.isDate(date)) {
         return date
     }
 

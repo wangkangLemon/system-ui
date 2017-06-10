@@ -127,8 +127,8 @@
                     return
                 }
                 this.initGetMore()
-                // 判断是否有数据
-                if (!this.data || this.data.length < 2) {
+                // 判断是否有数据 没有数据进行加载
+                if (!this.data || this.data.length < 1) {
                     this.loading = true
                     this.requestCb(this.keyword, 0).then((ret) => {
                         this.processRequestRet(ret)
