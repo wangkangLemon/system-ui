@@ -14,7 +14,7 @@ import * as userApi from '../services/userService'
 
 let refreshIntervalId
 let firstRefreshTimeoutId
-let authUtls = {
+let authUtils = {
     // 身份凭证操作
     getAuthToken () {
         let str = localStorage.getItem(KEY_AUTHTOKEN)
@@ -67,19 +67,19 @@ let authUtls = {
     },
     // 自动更新用户的token
     authRefreshtoken () {
-        authUtls.clearAuthRefreshToken()
+        authUtils.clearAuthRefreshToken()
         firstRefreshTimeoutId = setTimeout(() => {
-            authUtls.refreshToken()
+            authUtils.refreshToken()
         }, 1000 * 10)
         refreshIntervalId = setInterval(() => {
-            authUtls.refreshToken()
+            authUtils.refreshToken()
         }, 1000 * 60 * 20) // 20分钟一请求
     },
     refreshToken () {
-        let userinfo = authUtls.getUserInfo()
+        let userinfo = authUtils.getUserInfo()
         if (userinfo && userinfo.id) {
             userApi.refreshToken(userinfo.id).then((ret) => {
-                authUtls.setAuthToken(ret.data.auth_token)
+                authUtils.setAuthToken(ret.data.auth_token)
             })
         } else {
             if (xmrouter.history.current.name === 'login') {
@@ -95,10 +95,10 @@ let authUtls = {
         firstRefreshTimeoutId && clearTimeout(firstRefreshTimeoutId)
     },
     clearAuthInfo () {
-        authUtls.setAuthToken('')
-        authUtls.setNavMenu('')
-        authUtls.setUserInfo('')
+        authUtils.setAuthToken('')
+        authUtils.setNavMenu('')
+        authUtils.setUserInfo('')
     }
 }
 
-export default authUtls
+export default authUtils

@@ -325,8 +325,7 @@
             this.icons.service = require('./images/service.png')
             this.icons.article = require('./images/article.png')
 
-            if (authUtils.getTwiceToken())
-                authUtils.authRefreshtoken() // 开启自动更新token
+            authUtils.authRefreshtoken() // 开启自动更新token
             xmview.setContentLoading = this.setContentLoading.bind(this)
             xmview.setContentBack = this.showContentBack.bind(this)
 //            this.$store.dispatch('setIndexMenuActive', this.$route.path) // 设置选中的菜单
