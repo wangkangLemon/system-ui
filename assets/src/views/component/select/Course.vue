@@ -1,5 +1,5 @@
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" :list="list"
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder"
                   v-model="currVal" :disabled="disabled">
     </SelectScroll>
 </template>
@@ -24,7 +24,7 @@
         data () {
             return {
                 currVal: this.value,
-                pageSize: 15
+                pageSize: 10
             }
         },
         watch: {
@@ -42,10 +42,7 @@
             fetchData (val, length) {
                 let keyword = val
                 let page = parseInt(length / this.pageSize) + 1
-                return courseService.courseList(keyword, page, this.pageSize).then((ret) => {
-                    this.$emit('changeList', ret.data)
-                    return ret
-                })
+                return courseService.courseList(keyword, page, this.pageSize)
             }
         }
     }
