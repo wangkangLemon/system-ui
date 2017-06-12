@@ -324,6 +324,7 @@
             this.icons.system = require('./images/system.png')
             this.icons.service = require('./images/service.png')
             this.icons.article = require('./images/article.png')
+            this.icons.user = require('./images/user.png')
 
             authUtils.authRefreshtoken() // 开启自动更新token
             xmview.setContentLoading = this.setContentLoading.bind(this)
