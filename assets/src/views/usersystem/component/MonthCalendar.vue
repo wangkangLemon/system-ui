@@ -86,14 +86,8 @@
             </div>
             <div class="operate" v-if="item && item.day">
                 <i>积分</i>
-                <!--小与当前月不可编辑-->
-                <!--大于当前月并且isEdit=false不可编辑-->
-                <input :class="{'noEdit':(date.getMonth() < new Date().getMonth() && date < new Date())
-                                   || ((date.getMonth() == new Date().getMonth()
-                                   || date > new Date()) && calendarEdit == false)}"
-                       :disabled="(date.getMonth() < new Date().getMonth() && date < new Date())
-                                   || ((date.getMonth() == new Date().getMonth()
-                                   || date > new Date()) && calendarEdit == false)" type="text" :value="item.value" />
+                <!--当天以前的不可编辑-->
+                <input :class="{'noEdit': !calendarEdit}" :disabled="item.disabled || !calendarEdit" type="text"  :value="item.value" />
             </div>
         </a>
     </article>
@@ -154,9 +148,10 @@
                         if (!n && j < firstDay) {
                             calenderArr.push(null)
                         } else if (n && n <= curMonthdays) {
+                            let disabled = new Date(year, month, n).getTime() < Date.now()
                             let isMonthEnd = (curMonthdays == n)
                             let value = this.listChecked[n - 1] == undefined ? 5 : this.listChecked[n - 1]
-                            calenderArr.push({year: year, month: month, day: n, isMonthEnd, value})
+                            calenderArr.push({year: year, month: month, day: n, isMonthEnd, value, disabled})
                         } else if (n && n >= curMonthdays) {
                             calenderArr.push(null)
                         }
