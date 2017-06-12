@@ -189,12 +189,11 @@
                 <div><i class="iconfont icon-bell"></i> <em>消息</em></div>
                 <el-dropdown trigger="click" @command="handleFeedback">
                     <span class="el-dropdown-link feedback">
-                        <i class="iconfont icon-service"></i> <em>工单系统</em> <i
-                            class="el-icon-caret-bottom el-icon--right"></i>
+                        <i class="iconfont icon-service"></i> <em>问题反馈</em> <i class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                     <el-dropdown-menu slot="dropdown" class="feedback-dropdown">
-                        <el-dropdown-item command="index">我的工单</el-dropdown-item>
-                        <el-dropdown-item command="add">提交工单</el-dropdown-item>
+                        <el-dropdown-item command="index">我的反馈</el-dropdown-item>
+                        <el-dropdown-item command="add">提交问题</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <el-dropdown trigger="click" @command="handleNickname">
@@ -329,7 +328,7 @@
             authUtils.authRefreshtoken() // 开启自动更新token
             xmview.setContentLoading = this.setContentLoading.bind(this)
             xmview.setContentBack = this.showContentBack.bind(this)
-//            this.$store.dispatch('setIndexMenuActive', this.$route.path) // 设置选中的菜单
+            // this.$store.dispatch('setIndexMenuActive', this.$route.path) // 设置选中的菜单
             this.$store.dispatch('setIndexNavMenu', {menu: authUtils.getNavMenu()}) // 获取菜单
         },
         mounted () {
