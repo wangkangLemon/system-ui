@@ -106,10 +106,10 @@
         },
         methods: {
             // 裁切后的回调
-            cropperFn(data) {
+            cropperFn(data, ext) {
                 mineService.uploadAvatar({
                     avatar: data,
-                    alias: Date.now() + '.jpg'
+                    alias: `${Date.now()}${ext}`
                 }).then(() => {
                     xmview.showTip('success', '上传成功')
                     this.imgUrl = data

@@ -97,7 +97,7 @@
             cropperFn(data, ext) {
                 ArticleService.ArticleUploadUrl({
                     avatar: data,
-                    alias: `${Date.now()}.${this.ext}`
+                    alias: `${Date.now()}${ext}`
                 }).then((ret) => {
                     xmview.showTip('success', '上传成功')
                     this.form.cover = ret.data.url // 显示图片
