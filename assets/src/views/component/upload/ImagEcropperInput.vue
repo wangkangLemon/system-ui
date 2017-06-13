@@ -101,7 +101,7 @@
             // 确定裁剪尺寸
             confirmCropper () {
                 this.showCropper = false
-                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`image/${this.ext}`, this.compress), this.ext)
+                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`image/${this.imgType}`, this.compress))
                 this.imgData = null
             },
             startCropper () {
