@@ -110,11 +110,11 @@
         },
         methods: {
             // 裁切后的回调
-            cropperFn(data) {
+            cropperFn(data, ext) {
                 companyService.CompanyLogoUpload({
                     company_id: this.companyID,
                     image: data,
-                    alias: Date.now() + '.jpg'
+                    alias: `${Date.now()}${ext}`
                 }).then((ret) => {
                     this.imgData = ret.url
                     xmview.showTip('success', '上传成功')

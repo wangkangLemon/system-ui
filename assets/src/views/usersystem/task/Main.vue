@@ -28,7 +28,7 @@
                 <i>任务标题</i>
                 <el-input @keyup.enter.native="getData" v-model="search.title"></el-input>
             </section>
-            <section>
+            <section v-if="$route.name != 'daily' && $route.name != 'newbie'">
                 <i>任务类型</i>
                 <el-select clearable @change="getData" v-model="search.user_action_name">
                     <el-option v-for="(item,index) in useraction" :label="item.alias" :value="item.name" :key="index"></el-option>
@@ -74,7 +74,7 @@
                     width="180">
                 <template scope="scope">
                     <el-button type="text" @click="editFn(scope.row)">修改</el-button>
-                    <el-button type="text" @click="delFn(scope.row)">删除</el-button>
+                    <el-button v-if="$route.name != 'daily' && $route.name != 'newbie'" type="text" @click="delFn(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -91,7 +91,7 @@
         <el-dialog :visible.sync="addForm" size="tiny" :title="dialogTitle[search.category]">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item prop="user_action_name" label="任务类型">
-                    <el-select v-model="form.user_action_name">
+                    <el-select v-model="form.user_action_name" :disabled="$route.name == 'daily' || $route.name == 'newbie'">
                         <el-option :key="index" v-for="(item,index) in useraction" :label="item.alias" :value="item.name"></el-option>
                     </el-select>
                 </el-form-item>
@@ -162,7 +162,6 @@
             }
         },
         activated () {
-            console.log(this.$route.name)
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

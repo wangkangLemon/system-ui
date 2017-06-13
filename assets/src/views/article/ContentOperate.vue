@@ -15,14 +15,15 @@
         <section class="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
-                    <ArticleCategorySelect :placeholder="currCategoryName" v-model="form.category"></ArticleCategorySelect>
+                    <ArticleCategorySelect :placeholder="currCategoryName"
+                                           v-model="form.category"></ArticleCategorySelect>
                 </el-form-item>
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="imgUrl" label="封面" :label-width="formLabelWidth">
                     <div class="img-wrap" v-if="form.cover">
-                        <img :src="form.cover | fillImgPath" alt="" />
+                        <img :src="form.cover | fillImgPath" alt=""/>
                     </div>
                     <ImagEcropperInput :isRound="false" :aspectRatio="550/380" :confirmFn="cropperFn"
                                        class="upload-btn"></ImagEcropperInput>
@@ -93,10 +94,10 @@
             })
         },
         methods: {
-            cropperFn(data) {
+            cropperFn(data, ext) {
                 ArticleService.ArticleUploadUrl({
                     avatar: data,
-                    alias: Date.now() + '.jpg'
+                    alias: `${Date.now()}${ext}`
                 }).then((ret) => {
                     xmview.showTip('success', '上传成功')
                     this.form.cover = ret.data.url // 显示图片

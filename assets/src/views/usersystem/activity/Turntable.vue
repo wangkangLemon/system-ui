@@ -281,13 +281,17 @@
             'form1.limit' (val) {
                 delete this.rules1['limit']
                 if (this.form1.type == 'product') {
-                    this.rules1['limit'] = {
-                        max: this.stockCount,
-                        required: true,
-                        type: 'number',
-                        message: '发放量不得大于库存量',
-                        trigger: 'blur'
-                    }
+                    this.getStockCount().then(() => {
+                        if (this.form1.limit > this.stockCount) {
+                            this.rules1['limit'] = {
+                                max: this.stockCount,
+                                required: true,
+                                type: 'number',
+                                message: '发放量不得大于库存量',
+                                trigger: 'blur'
+                            }
+                        }
+                    })
                 }
             }
         },
@@ -296,7 +300,7 @@
             getStockCount () {
                 if (this.form1.type == 'product' && this.form1.product_id) {
                     // 获取库存量
-                    ParkService.prodDetail({id: this.form1.product_id}).then((ret) => {
+                    return ParkService.prodDetail({id: this.form1.product_id}).then((ret) => {
                         this.stockCount = ret.stock_count
                     })
                 }
