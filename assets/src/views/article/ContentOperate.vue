@@ -45,6 +45,7 @@
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
     import {fillImgPath} from '../../utils/filterUtils'
     export default {
+        name: 'content-operate',
         data () {
             return {
                 editor: null,
@@ -77,9 +78,9 @@
                 return this.$route.params.id
             }
         },
-        activated () {
+        created () {
             xmview.setContentLoading(false)
-            if (this.articleID == undefined) return
+            if (isNaN(this.articleID)) return
             ArticleService.getEditDetail(this.articleID).then((ret) => {
                 this.addForm = true
                 this.form.category = ret.data.category_id

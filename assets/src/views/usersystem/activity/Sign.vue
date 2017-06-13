@@ -363,29 +363,37 @@
                             xmview.showTip('error', '库存不足')
                             return
                         }
-                        // 判断概率
-                        let sumWeight = 0
                         let dataList = []
                         if (this.form.play_type == 'sign_weekly') dataList = this.sevenDaysGift
                         else dataList = this.monthGift
-                        dataList.forEach((item) => {
-                            sumWeight += item.weight
-                        })
-                        if (this.form.weight + sumWeight > 100) {
-                            xmview.showTip('error', '总概率不得超过100%')
-                            return
-                        }
                         // 发放量不得改小
                         if (this.form.type == 'product' && this.form.limit < this.preLimit) {
                             xmview.showTip('error', '不得减少商品的发放量')
                             return
                         }
                         // 请求接口
-                        let msg = '添加成功'
-                        let reqFn = ActivityService.addReward
+                        let msg
+                        let reqFn
+                        // 判断概率
+                        let sumWeight = 0
                         if (this.form.id) {
                             msg = '修改成功'
                             reqFn = ActivityService.updateReward
+                            dataList.forEach((item) => {
+                                if (item.id != this.form.id) {
+                                    sumWeight += item.weight
+                                }
+                            })
+                        } else {
+                            msg = '添加成功'
+                            reqFn = ActivityService.addReward
+                            dataList.forEach((item) => {
+                                sumWeight += item.weight
+                            })
+                        }
+                        if (this.form.weight + sumWeight > 100) {
+                            xmview.showTip('error', '总概率不得超过100%')
+                            return
                         }
                         reqFn(this.form).then((ret) => {
                             xmview.showTip('success', msg)

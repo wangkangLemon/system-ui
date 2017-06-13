@@ -95,7 +95,7 @@
                     <el-input v-model="activity.title" placeholder="活动标题"></el-input>
                 </el-form-item>
                 <el-form-item label="限制次数" prop="limit">
-                    <el-input type="number" placeholder="用户每天最多可参与的次数" v-model="activity.limit">
+                    <el-input type="number" placeholder="用户每天最多可参与的次数" v-model.number="activity.limit">
                         <template slot="append">次/每天</template>
                     </el-input>
                 </el-form-item>
@@ -328,7 +328,9 @@
                         // 判断概率
                         let sumWeight = 0
                         this.awardlist.forEach((item) => {
-                            sumWeight += item.weight
+                            if (item.id != this.form1.id) {
+                                sumWeight += item.weight
+                            }
                         })
                         if (this.form1.weight + sumWeight > 100) {
                             xmview.showTip('error', '总概率不得超过100%')
