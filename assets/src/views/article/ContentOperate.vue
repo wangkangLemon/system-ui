@@ -93,10 +93,10 @@
             })
         },
         methods: {
-            cropperFn(data) {
+            cropperFn(data,ext) {
                 ArticleService.ArticleUploadUrl({
                     avatar: data,
-                    alias: Date.now() + '.jpg'
+                    alias: `${Date.now()}.${this.ext}`
                 }).then((ret) => {
                     xmview.showTip('success', '上传成功')
                     this.form.cover = ret.data.url // 显示图片

@@ -61,7 +61,8 @@
                 showCropper: false,
                 imgData: '',
                 finalRatio: null,
-                cropper: null
+                cropper: null,
+                ext: void 0,
             }
         },
         watch: {
@@ -100,7 +101,7 @@
             // 确定裁剪尺寸
             confirmCropper () {
                 this.showCropper = false
-                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`image/${this.imgType}`, this.compress))
+                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`image/${this.ext}`, this.compress), this.ext)
                 this.imgData = null
             },
             startCropper () {
