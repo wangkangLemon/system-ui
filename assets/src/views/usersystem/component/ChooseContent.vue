@@ -98,6 +98,7 @@
             },
             value (val) {
                 this.curValue = val
+                if (val) this.changeList()
             },
             curValue (val) {
                 this.curValue = val
