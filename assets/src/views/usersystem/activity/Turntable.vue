@@ -384,6 +384,7 @@
             },
             changeProduct () {
                 if (this.form1.type == 'credit' || this.form1.type == 'thanks') {
+                    delete this.rules1['limit']
                     this.form1.category = ''
                     this.form1.product_id = ''
                 }

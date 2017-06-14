@@ -270,10 +270,19 @@
         },
         watch: {
             'form.limit' (val) {
+                delete this.rules['limit']
                 if (this.form.type == 'product') {
-                    this.rules['limit'] = [
-                        {max: this.stockCount, required: true, type: 'number', message: '发放量不得大于库存量', trigger: 'blur'},
-                    ]
+                    this.getStockCount().then(() => {
+                        if (this.form.limit > this.stockCount) {
+                            this.rules['limit'] = {
+                                max: this.stockCount,
+                                required: true,
+                                type: 'number',
+                                message: '发放量不得大于库存量',
+                                trigger: 'blur'
+                            }
+                        }
+                    })
                 }
             }
         },
@@ -427,6 +436,7 @@
             },
             changeProduct () {
                 if (this.form.type == 'credit') {
+                    delete this.rules['limit']
                     this.form.category = ''
                     this.form.product_id = ''
                 }
@@ -443,7 +453,7 @@
             getStockCount () {
                 if (this.form.product_id && this.form.product_id != ' ') {
                     // 获取库存量
-                    ParkService.prodDetail({id: this.form.product_id}).then((ret) => {
+                    return ParkService.prodDetail({id: this.form.product_id}).then((ret) => {
                         this.stockCount = ret.stock_count
                     })
                 }
