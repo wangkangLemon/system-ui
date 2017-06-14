@@ -91,7 +91,7 @@
         <el-dialog :visible.sync="addForm" size="tiny" :title="dialogTitle[search.category]">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item prop="user_action_name" label="任务类型">
-                    <el-select v-model="form.user_action_name" :disabled="$route.name == 'daily' || $route.name == 'newbie'">
+                    <el-select @change="changeActionFn" v-model="form.user_action_name" :disabled="$route.name == 'daily' || $route.name == 'newbie'">
                         <el-option :key="index" v-for="(item,index) in useraction" :label="item.alias" :value="item.name"></el-option>
                     </el-select>
                 </el-form-item>
@@ -167,6 +167,12 @@
             })
         },
         methods: {
+            changeActionFn () {
+                if (this.form.user_action_object_id) {
+                    this.form.user_action_object_id = ''
+                    this.form.user_action_object_title = ''
+                }
+            },
             delFn (row) {
                 xmview.showDialog(`你将要删除任务 <span style="color:red">${row.title}</span> 操作不可恢复确认吗?`, () => {
                     TaskService.del({task_id: row.id}).then(() => {
