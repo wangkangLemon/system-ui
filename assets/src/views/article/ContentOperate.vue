@@ -25,7 +25,7 @@
                     <div class="img-wrap" v-if="form.cover">
                         <img :src="form.cover | fillImgPath" alt=""/>
                     </div>
-                    <ImagEcropperInput :isRound="false" :aspectRatio="550/380" :confirmFn="cropperFn"
+                    <ImagEcropperInput :isRound="false" :confirmFn="cropperFn"
                                        class="upload-btn"></ImagEcropperInput>
                 </el-form-item>
                 <el-form-item prop="content" label="正文内容" id="editor" :label-width="formLabelWidth">
