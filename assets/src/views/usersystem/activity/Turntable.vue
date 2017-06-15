@@ -23,10 +23,12 @@
                 display: block;
                 margin: 0 auto;
             }
+            .el-table_1_column_2 {
+                text-align: center;
+            }
             .img-list {
-                margin-top: 10px;
-                width: 100px;
-                height: 100px;
+                vertical-align: middle;
+                height: 30px;
             }
         }
         /*上传图片部分*/
@@ -125,8 +127,9 @@
                                 label="图片"
                                 width="200">
                             <template scope="scope">
-                                <img v-if="scope.row.product_image" class="img-list" :src="scope.row.product_image"
-                                     alt="">
+                                <img v-if="scope.row.type == 'product'" class="img-list" :src="scope.row.product_image" alt="">
+                                <img v-if="scope.row.type == 'credit'" class="img-list" src="../images/credit.png" alt="">
+                                <img v-if="scope.row.type == 'thanks'" class="img-list" src="../images/thanks.png" alt="">
                             </template>
                         </el-table-column>
                         <el-table-column
