@@ -5,7 +5,7 @@
 import message from '../utils/message'
 import authUtils from '../utils/authUtils'
 import config from '../utils/config'
-import * as typeUtils from '../utils/typeUtls'
+import * as typeUtils from '../utils/typeUtils'
 import ajax from '@fdaciuk/ajax'
 
 let requestId = 0

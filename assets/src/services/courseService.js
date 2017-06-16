@@ -63,7 +63,7 @@ class CourseService {
         return api.downLoad(url, {date, page, page_size, export: 1}, '店员学习情况.xls')
     }
 
-    // 获取管理员列表
+    // 获取课程下拉列表
     courseList (keyword, page, pageSize) {
         let url = `${urlPre}/search/name`
         return api.get(url, {keyword, page, page_size: pageSize}).then(ret => {

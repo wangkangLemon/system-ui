@@ -577,7 +577,7 @@
                     this.category = item.ref_type
                     if (item.ref_type == 'course') {
                         this.form.content = item.course
-                        this.form.title = item.name
+                        this.form.title = item.course.name
                         this.form.des = item.description
                     } else if (item.ref_type == 'speaking') {
                         this.form.content = item.speaking

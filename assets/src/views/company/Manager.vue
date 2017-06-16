@@ -66,27 +66,32 @@
                     stripe
                     style="width: 100%">
                 <el-table-column
+                        width="200"
                         prop="company_name"
                         label="连锁">
                 </el-table-column>
                 <el-table-column
+                        min-width="200"
                         prop="department_name"
-                        label="门店"
-                        width="180">
+                        label="门店">
                 </el-table-column>
                 <el-table-column
+                        width="100"
                         prop="manager_name"
                         label="姓名">
                 </el-table-column>
                 <el-table-column
+                        width="150"
                         prop="manager_mobile"
                         label="手机">
                 </el-table-column>
                 <el-table-column
+                        width="180"
                         prop="last_login_time_name"
                         label="上次登录时间">
                 </el-table-column>
                 <el-table-column
+                        width="120"
                         prop="create_time_name"
                         label="注册时间">
                 </el-table-column>

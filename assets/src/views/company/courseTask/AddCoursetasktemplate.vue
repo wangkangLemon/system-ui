@@ -114,10 +114,10 @@
             }
         },
         methods: {
-            cropperFn(data) {
+            cropperFn(data, ext) {
                 companyService.CourseTaskTemplateUploadUrl({
                     avatar: data,
-                    alias: Date.now() + '.jpg'
+                    alias: `${Date.now()}${ext}`
                 }).then((ret) => {
                     xmview.showTip('success', '上传成功')
                     this.form.image = ret.data.url // 显示图片

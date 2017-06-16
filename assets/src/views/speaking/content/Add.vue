@@ -92,7 +92,7 @@
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import speakingContentService from '../../../services/speaking/contentService'
-    import * as timeUtls from '../../../utils/timeUtils'
+    import * as timeUtils from '../../../utils/timeUtils'
 
     export default{
         name: 'speaking-content-add',
@@ -200,7 +200,7 @@
                         reqFn = speakingContentService.updateSpeaking
                     }
 
-                    this.form.end_time = timeUtls.date2Str(this.form.end_time)
+                    this.form.end_time = timeUtils.date2Str(this.form.end_time)
                     reqFn(this.form).then((ret) => {
                         xmview.showTip('success', '保存成功')
                         this.$router.back()

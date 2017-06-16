@@ -108,7 +108,7 @@
 <script>
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../services/mobileService'
-    import authUtls from '../../utils/authUtils'
+    import authUtils from '../../utils/authUtils'
     export default{
         data() {
             return {
@@ -127,7 +127,7 @@
             }
         },
         activated () {
-            this.user = authUtls.getUserInfo()
+            this.user = authUtils.getUserInfo()
             mobileService.getBoot({company_id: this.user.company_id}).then((ret) => {
                 this.imgData = ret.data.image
                 this.form = {

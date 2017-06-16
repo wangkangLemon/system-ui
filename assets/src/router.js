@@ -12,10 +12,11 @@ import finance from './routers/finance' // 财务
 import sales from './routers/sales' // 晒单
 import company from './routers/company' // 企业
 import user from './routers/user' // 企业
+import usersystem from './routers/usersystem' // 用户体系
 import im from './routers/im'
 import speaking from './routers/speaking' // 药我说
 import authUtils from './utils/authUtils'
-import * as typeUtils from './utils/typeUtls'
+import * as typeUtils from './utils/typeUtils'
 
 Vue.use(VueRouter)
 
@@ -112,6 +113,8 @@ const routes = [
             im,
             // ============药我说==================
             speaking,
+            // ============用户体系==================
+            usersystem,
         ]
     },
     {   // 登录

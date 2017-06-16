@@ -95,6 +95,28 @@ export function moneyCharge({
         }
     })
 }
+// 确认提取
+export function confirmDraw({id, receipts}) {
+    let finalUrl = urlPre + '/draw'
+    return api.post(finalUrl, {id, receipts}).then((ret) => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}
+// 结束提取
+export function cancleDraw({id, receipts}) {
+    let finalUrl = urlPre + '/draw'
+    return api.put(finalUrl, {id, receipts}).then((ret) => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}
 // 显示余额
 export function balance(company_id) {
     let finalUrl = urlPre + '/company/balance'

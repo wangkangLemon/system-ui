@@ -47,9 +47,13 @@
                 isShowBtn: Boolean,
                 default: true
             },
-            compress: {
+            compress: { //  压缩比例
                 type: Number,
                 default: 0.8
+            },
+            imgType: { // 图片类型 jpg|png|gif
+                type: String,
+                default: 'jpg'
             }
         },
         data () {
@@ -57,7 +61,9 @@
                 showCropper: false,
                 imgData: '',
                 finalRatio: null,
-                cropper: null
+                cropper: null,
+                imageType: void 0,
+                ext: void 0,
             }
         },
         watch: {
@@ -86,17 +92,24 @@
                 let reader = new window.FileReader()
                 reader.readAsDataURL(file)
                 reader.onload = function () {
+                    var ext = 'jpg'
+                    var exts = file.name.split('.')
+                    if (exts.length > 0 && (exts.length - 1) > 0) {
+                        ext = exts[(exts.length - 1)]
+                    }
                     _this.$nextTick(() => {
                         _this.imgData = this.result
                         _this.$refs.file.value = null
                         _this.showCropper = true
+                        _this.imageType = file.type
+                        _this.ext = '.' + ext
                     })
                 }
             },
             // 确定裁剪尺寸
             confirmCropper () {
                 this.showCropper = false
-                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`image/jpeg`, this.compress))
+                this.confirmFn && this.confirmFn(this.cropper.getCroppedCanvas().toDataURL(`${this.imageType}`, this.compress), this.ext)
                 this.imgData = null
             },
             startCropper () {

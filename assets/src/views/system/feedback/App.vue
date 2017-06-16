@@ -115,6 +115,7 @@
                         width="180">
                 </el-table-column>
                 <el-table-column
+                        min-width="200"
                         prop="content"
                         label="问题描述">
                 </el-table-column>

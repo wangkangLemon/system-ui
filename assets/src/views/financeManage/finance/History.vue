@@ -62,25 +62,25 @@
                 v-loading="loading"
                 border
                 :data="historyData"
-                stripe
-                style="width: 100%">
+                stripe>
             <el-table-column
+                    min-width="200"
                     prop="tradeno"
                     label="流水号">
             </el-table-column>
             <el-table-column
                     prop="ent_name"
                     label="企业"
-                    width="160">
+                    width="180">
             </el-table-column>
             <el-table-column
                     prop="course_name"
-                    width="160"
+                    width="180"
                     label="课程">
             </el-table-column>
             <el-table-column
                     prop="store_name"
-                    width="160"
+                    width="180"
                     label="连锁">
             </el-table-column>
             <el-table-column
@@ -100,7 +100,7 @@
             </el-table-column>
             <el-table-column
                     prop="balance"
-                    width="80"
+                    width="100"
                     label="余额">
             </el-table-column>
         </el-table>

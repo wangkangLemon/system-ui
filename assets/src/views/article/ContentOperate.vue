@@ -15,16 +15,17 @@
         <section class="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
-                    <ArticleCategorySelect :placeholder="currCategoryName" v-model="form.category"></ArticleCategorySelect>
+                    <ArticleCategorySelect :placeholder="currCategoryName"
+                                           v-model="form.category"></ArticleCategorySelect>
                 </el-form-item>
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="imgUrl" label="封面" :label-width="formLabelWidth">
                     <div class="img-wrap" v-if="form.cover">
-                        <img :src="form.cover | fillImgPath" alt="" />
+                        <img :src="form.cover | fillImgPath" alt=""/>
                     </div>
-                    <ImagEcropperInput :isRound="false" :aspectRatio="550/380" :confirmFn="cropperFn"
+                    <ImagEcropperInput :isRound="false" :confirmFn="cropperFn"
                                        class="upload-btn"></ImagEcropperInput>
                 </el-form-item>
                 <el-form-item prop="content" label="正文内容" id="editor" :label-width="formLabelWidth">
@@ -45,6 +46,7 @@
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
     import {fillImgPath} from '../../utils/filterUtils'
     export default {
+        name: 'content-operate',
         data () {
             return {
                 editor: null,
@@ -77,9 +79,9 @@
                 return this.$route.params.id
             }
         },
-        activated () {
+        created () {
             xmview.setContentLoading(false)
-            if (this.articleID == undefined) return
+            if (isNaN(this.articleID)) return
             ArticleService.getEditDetail(this.articleID).then((ret) => {
                 this.addForm = true
                 this.form.category = ret.data.category_id
@@ -92,10 +94,10 @@
             })
         },
         methods: {
-            cropperFn(data) {
+            cropperFn(data, ext) {
                 ArticleService.ArticleUploadUrl({
                     avatar: data,
-                    alias: Date.now() + '.jpg'
+                    alias: `${Date.now()}${ext}`
                 }).then((ret) => {
                     xmview.showTip('success', '上传成功')
                     this.form.cover = ret.data.url // 显示图片

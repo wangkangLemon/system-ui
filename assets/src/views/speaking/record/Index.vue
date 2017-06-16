@@ -47,12 +47,12 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" border>
-            <el-table-column prop="speaking_title" label="标题"></el-table-column>
+            <el-table-column prop="speaking_title" label="标题" width="180"></el-table-column>
             <el-table-column prop="company_name" label="连锁"></el-table-column>
-            <el-table-column prop="department_name" label="门店"></el-table-column>
-            <el-table-column prop="user_name" label="店员"></el-table-column>
-            <el-table-column prop="score" label="分数"></el-table-column>
-            <el-table-column prop="create_time_name" label="练习时间"></el-table-column>
+            <el-table-column prop="department_name" label="门店" width="200"></el-table-column>
+            <el-table-column prop="user_name" label="店员" width="120"></el-table-column>
+            <el-table-column prop="score" label="分数" width="100"></el-table-column>
+            <el-table-column prop="create_time_name" label="练习时间" width="180"></el-table-column>
         </el-table>
 
         <el-pagination class="pagin"

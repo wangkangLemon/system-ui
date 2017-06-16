@@ -9,17 +9,14 @@
 
 <script>
     export default{
-        props: ['value', 'subChangelist'],
+        props: ['value', 'subChangelist', 'keyup.enter', 'keyup.enter.native'],
         data () {
             return {
                 currVal: this.value
             }
         },
         created () {
-            this.currVal = 123456
-            this.$emit('input', 123456)
-
-            this.showVal()
+            console.info(this.keyup, this.keyup.enter, this.keyup.enter.native)
         },
         methods: {
             showVal () {

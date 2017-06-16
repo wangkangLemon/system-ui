@@ -3,9 +3,23 @@
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
     .company-manager {
-        padding: 20px;
-        .search {
-            @extend %top-search-container;
+        .box-card {
+            margin-bottom: 20px;
+            .clearfix {
+                text-align: right;
+            }
+            .el-card__header {
+                padding: 10px 15px;
+                background: #f0f3f5;
+                .icon-iconfontexcel {
+                    position: relative;
+                    top: -2px;
+                    margin-right: 5px;
+                }
+            }
+            .search {
+                @extend %top-search-container;
+            }
         }
         .block {
             text-align: right;
@@ -15,52 +29,54 @@
 </style>
 <template>
     <article class="company-manager">
-        <section class="search">
-            <section>
-                <i>统计时间</i>
-                <el-date-picker
-                        @change="getData"
-                        v-model="searchParams.staticTime"
-                        type="date"
-                        :placeholder="searchParams.currentDate">
-                </el-date-picker>
+        <el-card class="box-card">
+            <section class="search">
+                <section>
+                    <i>统计时间</i>
+                    <el-date-picker
+                            @change="getData"
+                            v-model="searchParams.staticTime"
+                            type="date"
+                            :placeholder="searchParams.currentDate">
+                    </el-date-picker>
+                </section>
             </section>
-        </section>
-        <el-table
-                v-loading="loading"
-                border
-                :data="listData"
-                stripe
-                style="width: 100%">
-            <el-table-column
-                    prop="name"
-                    label="省份">
-            </el-table-column>
-            <el-table-column
-                    prop="increased"
-                    label="新增店员"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="tested"
-                    label="参与考试店员">
-            </el-table-column>
-            <el-table-column
-                    prop="total"
-                    label="当前店员总数">
-            </el-table-column>
-        </el-table>
-        <div class="block">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-sizes="[15, 30, 60, 100]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next"
-                    :total="total">
-            </el-pagination>
-        </div>
+            <el-table
+                    v-loading="loading"
+                    border
+                    :data="listData"
+                    stripe
+                    style="width: 100%">
+                <el-table-column
+                        prop="name"
+                        label="省份">
+                </el-table-column>
+                <el-table-column
+                        prop="increased"
+                        label="新增店员"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="tested"
+                        label="参与考试店员">
+                </el-table-column>
+                <el-table-column
+                        prop="total"
+                        label="当前店员总数">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next"
+                        :total="total">
+                </el-pagination>
+            </div>
+        </el-card>
     </article>
 </template>
 <script>

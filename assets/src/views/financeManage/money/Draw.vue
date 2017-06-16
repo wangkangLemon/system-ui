@@ -24,6 +24,20 @@
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>
             </div>
         </el-dialog>
+        <!--结束或确认提取-->
+        <el-dialog v-model="showDrawInfo" :title="title" size="tiny" v-loading="dialogLoading">
+            <el-form class="addForm" :model="submitParam" :rules="rules" ref="form" label-width="100px">
+                <el-form-item  label="注意">
+                    请通过线下渠道给该提现请求打款, 完成后在此输入打款得到的凭据.
+                </el-form-item>
+                <el-form-item  prop="receipts" label="提现凭证">
+                    <el-input type="textarea" :rows="4" v-model="submitParam.receipts" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="submit()">完成</el-button>
+            </div>
+        </el-dialog>
         <div class="header-button">
             <el-button type="primary" @click="exportData"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
@@ -55,12 +69,10 @@
         <el-table
                 v-loading="loading"
                 border
-                :data="drawData"
-                stripe
-                style="width: 100%">
+                :data="drawData">
             <el-table-column
                     prop="draw_no"
-                    width="200"
+                    min-width="300"
                     label="编号">
             </el-table-column>
             <el-table-column
@@ -74,12 +86,22 @@
                     label="姓名">
             </el-table-column>
             <el-table-column
+                    prop="company_name"
+                    width="100"
+                    label="连锁">
+            </el-table-column>
+            <el-table-column
+                    prop="department_name"
+                    width="100"
+                    label="门店">
+            </el-table-column>
+            <el-table-column
                     prop="bank_name"
-                    width="180"
+                    width="120"
                     label="银行">
             </el-table-column>
             <el-table-column
-                    prop="card_name"
+                    prop="card"
                     width="200"
                     label="卡号">
             </el-table-column>
@@ -98,16 +120,23 @@
                     label="管理员">
             </el-table-column>
             <el-table-column
-                    prop="completed_name"
-                    width="120"
+                    prop="create_time_name"
+                    width="180"
                     label="申请时间">
             </el-table-column>
             <el-table-column
+                    width="100"
                     prop="operate"
                     label="操作">
                 <template scope="scope">
-                    <el-button type="text" size="small" v-if="scope.row.status == '已完成'" @click="showFn(scope.row)">
+                    <el-button type="text" size="small" v-if="scope.row.status == '已完成' || scope.row.status == '已关闭'" @click="showFn(scope.row)">
                         凭据
+                    </el-button>
+                    <el-button type="text" size="small" v-if="scope.row.status == '待提现'" @click="confirmFn(scope.row, 'confirm')">
+                        提现
+                    </el-button>
+                    <el-button type="text" size="small" v-if="scope.row.status == '待提现'" @click="confirmFn(scope.row, 'cancle')">
+                        结束
                     </el-button>
                 </template>
             </el-table-column>
@@ -126,7 +155,7 @@
     </article>
 </template>
 <script>
-    import {drawList, exportDraw} from '../../../services/fianace/money'
+    import {drawList, exportDraw, confirmDraw, cancleDraw} from '../../../services/fianace/money'
     import UserList from '../../component/select/User'
     import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
@@ -142,9 +171,17 @@
                     createTime: '',
                     endTime: '',
                 },
+                submitParam: {
+                    id: 0,
+                    receipts: '',
+                },
+                flag: '',
+                title: '',
                 currentData: null,
                 showDetail: false,
+                showDrawInfo: false,
                 loading: false,
+                dialogLoading: false,
                 currentPage: 1,
                 pageSize: 10,
                 drawData: [],
@@ -170,6 +207,15 @@
                         value: 'close'
                     }
                 ],
+                rules: {
+                    receipts: [
+                        {
+                            required: true,
+                            message: '必填项',
+                            trigger: 'blur'
+                        }
+                    ]
+                },
                 total: 0
             }
         },
@@ -182,6 +228,34 @@
             showFn (row) {
                 this.showDetail = true
                 this.currentData = row
+            },
+            confirmFn (row, type) {
+                this.showDrawInfo = true
+                this.flag = type
+                this.title = '确认提现 ' + row.bank_name + '(' + row.card + ') $' + row.money_name
+                this.submitParam.id = row.id
+                this.submitParam.receipts = ''
+            },
+            submit () {
+                this.$refs.form.validate((valid) => {
+                    if (valid) {
+                        this.dialogLoading = true
+                        let p
+                        if (this.flag == 'confirm') {
+                            p = confirmDraw(this.submitParam)
+                        } else {
+                            p = cancleDraw(this.submitParam)
+                        }
+
+                        p.then(() => {
+                            this.dialogLoading = false
+                            this.showDrawInfo = false
+                            this.getData()
+                        })
+                    } else {
+                        return false
+                    }
+                })
             },
             handleSizeChange (val) {
                 this.pageSize = val
@@ -203,7 +277,9 @@
                 }
                 return drawList(params).then((ret) => {
                     let status = {pending: '待提现', complete: '已完成', close: '已关闭'}
-                    this.drawData = ret.data
+                    this.drawData = ret.data.sort((x, y) => {
+                        return y.id - x.id
+                    })
                     ret.data.forEach((item) => {
                         item.status = status[item.status]
                     })

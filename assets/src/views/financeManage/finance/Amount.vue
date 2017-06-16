@@ -53,23 +53,24 @@
             <el-table
                     border
                     v-loading="loading"
-                    :data="industryData"
-                    stripe
-                    style="width: 100%">
+                    :data="industryData">
                 <el-table-column
+                        min-width="200"
                         prop="company"
                         label="工业">
                 </el-table-column>
                 <el-table-column
                         prop="balance"
                         label="账户余额"
-                        width="180">
+                        width="150">
                 </el-table-column>
                 <el-table-column
+                        width="150"
                         prop="consume"
                         label="累计支出">
                 </el-table-column>
                 <el-table-column
+                        width="150"
                         prop="price"
                         label="课程单价">
                 </el-table-column>
