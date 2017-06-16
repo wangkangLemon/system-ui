@@ -159,6 +159,10 @@
                         label="连锁名称">
                 </el-table-column>
                 <el-table-column
+                        prop="province_name"
+                        label="省份">
+                </el-table-column>
+                <el-table-column
                         prop="department_number"
                         label="签约门店"
                         width="100">
