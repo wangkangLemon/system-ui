@@ -14,6 +14,7 @@
 </style>
 <template>
     <article>
+        <!--选取组件-->
         <el-dialog class="choose-course main-container" title="选取内容" :visible.sync="curValue">
             <section class="search">
                 <section>
@@ -33,6 +34,7 @@
                     <!--<CourseCategorySelect v-model="category_id" :onchange="getCourse"></CourseCategorySelect>-->
                 <!--</section>-->
             </section>
+
             <el-table v-if="category == 'course'" v-loading="loading" border :data="data" :highlight-current-row="true">
                 <el-table-column prop="name" label="课程"></el-table-column>
                 <el-table-column prop="company" label="企业" width="200"></el-table-column>

@@ -264,6 +264,7 @@
                     <el-button @click="addCourse('form')">添加内容</el-button>
                 </span>
             </div>
+            <!--列表-->
             <div class="right-list">
                 <el-table v-loading="result.loading" border :data="result.data">
                     <el-table-column
