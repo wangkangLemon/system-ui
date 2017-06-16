@@ -1,8 +1,10 @@
 <style lang="scss">
     @import "../../../utils/mixins/topSearch";
+
     .search {
         @extend %top-search-container;
     }
+
     .choose-course {
         .block {
             text-align: center !important;
@@ -30,17 +32,19 @@
                     </el-select>
                 </section>
                 <!--<section>-->
-                    <!--<i>栏目分类</i>-->
-                    <!--<CourseCategorySelect v-model="category_id" :onchange="getCourse"></CourseCategorySelect>-->
+                <!--<i>栏目分类</i>-->
+                <!--<CourseCategorySelect v-model="category_id" :onchange="getCourse"></CourseCategorySelect>-->
                 <!--</section>-->
             </section>
 
-            <el-table v-if="category == 'course'" v-loading="loading" border :data="data" :highlight-current-row="true">
+            <el-table v-show="category == 'course'" v-loading="loading" border :data="data"
+                      :highlight-current-row="true">
                 <el-table-column prop="name" label="课程"></el-table-column>
                 <el-table-column prop="company" label="企业" width="200"></el-table-column>
                 <el-table-column prop="material_type" label="类型" width="150">
                     <template scope="scope">
                         {{material_type[scope.row.material_type]}}
+
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -52,7 +56,8 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-table v-if="category == 'speaking'" v-loading="loading" border :data="data" :highlight-current-row="true">
+            <el-table v-show="category == 'speaking'" v-loading="loading" border :data="data"
+                      :highlight-current-row="true">
                 <el-table-column prop="title" label="标题"></el-table-column>
                 <el-table-column prop="create_time" label="创建时间" width="150"></el-table-column>
                 <el-table-column
@@ -64,7 +69,8 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-table  v-if="category == 'article'" border :data="data" v-loading="loading" :highlight-current-row="true">
+            <el-table v-show="category == 'article'" border :data="data" v-loading="loading"
+                      :highlight-current-row="true">
                 <el-table-column
                         prop="title"
                         label="标题"></el-table-column>
