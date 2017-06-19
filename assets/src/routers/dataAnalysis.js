@@ -40,6 +40,32 @@ export default {
             }
         },
         {
+            path: 'company/stat',
+            name: 'analysis-company-stat',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/dataAnalysis/companyStat/Index.vue'))
+                })
+            },
+            meta: {
+                title: '行为统计',
+                noback: true
+            }
+        },
+        {
+            path: 'company/manage',
+            name: 'analysis-company-manage',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/dataAnalysis/company/Manage.vue'))
+                })
+            },
+            meta: {
+                title: '管理员',
+                noback: true
+            }
+        },
+        {
             path: 'company/coursetask',
             name: 'analysis-company-coursetask',
             component: resolve => {

@@ -449,6 +449,42 @@ class CompanyService {
         let finalUrl = `${config.apiHost}/com/${company_id}/mobile/logo`
         return api.put(finalUrl, {logo})
     }
+
+    // 管理员活跃情况
+    getCompanyManage({
+                         page,
+                         page_size,
+                         name = '',
+                         user_name = '',
+                         company_id,
+                         role = '',
+                         time_start = '',
+                         time_end = '',
+                     }) {
+        let finalUrl = `${urlPre}/login/search`
+        return api.get(finalUrl, {page, page_size, name, user_name, company_id, role, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 管理员综合统计情况
+    getCompanyManageStat () {
+        let finalUrl = `${urlPre}/login/stat`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 企业活跃情况
+    getCompanyStat ({
+                      page,
+                      page_size,
+                      stat_date,
+                  }) {
+        let finalUrl = `${urlPre}/stat/search`
+        return api.get(finalUrl, {page, page_size, stat_date}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new CompanyService()
