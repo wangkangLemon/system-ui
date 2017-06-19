@@ -55,15 +55,21 @@
                     </el-select>
                 </section>
             </section>
-            <el-table :data="tableData" border v-loading="loading">
-                <el-table-column v-show="!type" label="连锁" prop="company_name" min-width="180">
+            <el-table v-show="!type" :data="tableData" border v-loading="loading">
+                <el-table-column label="连锁" prop="company_name" min-width="180">
                     <template scope="scope">
                         <el-button type="text" @click="$router.push({name: 'speaking-company-index', query: {type: 1, store_id: scope.row.company_id}})">{{scope.row.company_name}}</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column v-show="!type" label="药我说条数" prop="speaking_count" width="120"></el-table-column>
-                <el-table-column v-show="type" label="标题" prop="speaking_name" min-width="180"></el-table-column>
-                <el-table-column v-show="type" label="内容" prop="content" min-width="200"></el-table-column>
+                <el-table-column label="药我说条数" prop="speaking_count" width="120"></el-table-column>
+                <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
+                <el-table-column label="未练习人数" prop="no_speaking_user_num" width="120"></el-table-column>
+                <el-table-column label="满分人数" prop="high_score_num" width="100"></el-table-column>
+                <el-table-column label="满分率" prop="high_score_rate" width="100"></el-table-column>
+            </el-table>
+            <el-table v-if="type" :data="tableData" border v-loading="loading">
+                <el-table-column label="标题" prop="speaking_name" min-width="180"></el-table-column>
+                <el-table-column label="内容" prop="content" min-width="200"></el-table-column>
                 <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
                 <el-table-column label="未练习人数" prop="no_speaking_user_num" width="120"></el-table-column>
                 <el-table-column label="满分人数" prop="high_score_num" width="100"></el-table-column>

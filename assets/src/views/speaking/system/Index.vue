@@ -68,17 +68,10 @@
                     <i>店员</i>
                     <UserSelect v-model="fetchParam.user_id" :change="getData"></UserSelect>
                 </section>
-                <!--<section  v-if="type == 3">-->
-                <!--<i>有无练习</i>-->
-                <!--<el-select v-model="fetchParam.is_test" @change="getData">-->
-                <!--<el-option label="有" :value="1"></el-option>-->
-                <!--<el-option label="无" :value="0"></el-option>-->
-                <!--</el-select>-->
-                <!--</section>-->
             </section>
             <br>
-            <el-table v-if="type == 0 || type == 1 || type == 2" :data="tableData" border v-loading="loading">
-                <el-table-column v-if="type == 0" label="标题" prop="speaking_name" min-width="180">
+            <el-table v-show="type == 0" :data="tableData" border v-loading="loading">
+                <el-table-column label="标题" prop="speaking_name" min-width="180">
                     <template scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name: 'speaking-system-index', query: {type: 1, speaking_id: scope.row.speaking_id}})">
@@ -86,7 +79,13 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="type == 1 || type == 2" :label="type == 1 ? '连锁' : '门店'" prop="name"
+                <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
+                <el-table-column label="练习次数" prop="speaking_times" width="120"></el-table-column>
+                <el-table-column label="满分人数" prop="high_score_num" width="100"></el-table-column>
+                <el-table-column label="满分率" prop="high_score_rate" width="100"></el-table-column>
+            </el-table>
+            <el-table v-show="type == 1 || type == 2" :data="tableData" border v-loading="loading">
+                <el-table-column :label="type == 1 ? '连锁' : '门店'" prop="name"
                                  min-width="180">
                     <template scope="scope">
                         <el-button type="text"
@@ -96,16 +95,14 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="type == 1 || type == 2" label="未练习人数" prop="no_speaking_user_num"
+                <el-table-column label="未练习人数" prop="no_speaking_user_num"
                                  width="120"></el-table-column>
                 <el-table-column label="练习人数" prop="speaking_user_num" width="100"></el-table-column>
                 <el-table-column label="练习次数" prop="speaking_times" width="120"></el-table-column>
                 <el-table-column label="满分人数" prop="high_score_num" width="100"></el-table-column>
                 <el-table-column label="满分率" prop="high_score_rate" width="100"></el-table-column>
             </el-table>
-            <el-table v-if="type == 3" :data="tableData" border v-loading="loading">
-                1
-
+            <el-table v-show="type == 3" :data="tableData" border v-loading="loading">
                 <el-table-column label="员工姓名" prop="name" width="150"></el-table-column>
                 <el-table-column label="职务" prop="job" width="100"></el-table-column>
                 <el-table-column label="门店" prop="department_name" min-width="180"></el-table-column>
