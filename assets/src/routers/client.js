@@ -103,6 +103,19 @@ export default {
             }
         },
         {
+            path: 'hotword',
+            name: 'client-hotword',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/client/Hotword.vue'))
+                })
+            },
+            meta: {
+                title: '热词管理',
+                noback: true
+            }
+        },
+        {
             path: 'push/create',
             name: 'client-push-create',
             component: resolve => {

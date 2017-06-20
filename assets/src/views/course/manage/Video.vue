@@ -274,6 +274,8 @@
                         xmview.showTip('success', '操作成功')
                         this.data.splice(index, 1)
                         this.loadingData = false
+                    }).catch(() => {
+                        this.loadingData = false
                     })
                 })
             },

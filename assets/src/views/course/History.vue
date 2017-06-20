@@ -168,20 +168,7 @@
                 loadingData: false,
                 data: [], // 表格数据
                 total: 0,
-                fetchParam: {
-                    page: void 0,
-                    page_size: 15,
-                    enterprise_id: void 0,
-                    course_id: void 0,
-                    company_id: void 0, // 连锁
-                    department_id: void 0,
-                    account: void 0,
-                    time_start: void 0,
-                    time_end: void 0,
-                    grade: void 0, // 不赋值则为未选择，1位满分，2为及格，3为不及格
-                    user_name: void 0, // 用户昵称
-                    course_type: void 0, // 课程类型  public表示公开课，private为内训，industry为工业课程
-                },
+                fetchParam: getFetchParam(),
                 exporting: false
             }
         },
@@ -191,6 +178,9 @@
             })
         },
         methods: {
+            initFetchParam () {
+                this.fetchParam = getFetchParam()
+            },
             handleCurrentChange (val) {
                 this.fetchParam.page = val
                 this.fetchData()
@@ -227,5 +217,21 @@
             }
         },
         components: {CourseSelect, DateRange, CompanySelect, DepSelect}
+    }
+    function getFetchParam() {
+        return {
+            page: void 0,
+            page_size: 15,
+            enterprise_id: void 0,
+            course_id: void 0,
+            company_id: void 0, // 连锁
+            department_id: void 0,
+            account: void 0,
+            time_start: void 0,
+            time_end: void 0,
+            grade: void 0, // 不赋值则为未选择，1位满分，2为及格，3为不及格
+            user_name: void 0, // 用户昵称
+            course_type: void 0, // 课程类型  public表示公开课，private为内训，industry为工业课程
+        }
     }
 </script>

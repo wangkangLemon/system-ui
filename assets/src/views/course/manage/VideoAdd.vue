@@ -189,7 +189,7 @@
                 var parts = name.split('.')
                 parts.shift()
                 if (parts.length) {
-                    return '.' + parts.join('.')
+                    return '.' + parts.pop()
                 }
                 return ''
             }

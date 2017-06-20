@@ -38,6 +38,10 @@
                 <el-input v-model="fetchParam.product_name" @keyup.enter.native="fetchData"></el-input>
             </section>
             <section>
+                <i>联系方式</i>
+                <el-input v-model="fetchParam.mobile" @keyup.enter.native="fetchData"></el-input>
+            </section>
+            <section>
                 <i>销售渠道</i>
                 <el-select v-model="fetchParam.channel" placeholder="全部" @change="fetchData" :clearable="true">
                     <el-option label="积分乐园兑换" value="exchange"></el-option>
@@ -65,6 +69,11 @@
                     <el-option label="未领取" :value="0"></el-option>
                 </el-select>
             </section>
+            <DateRange title="有效日期" :start="fetchParam.time_start" :end="fetchParam.time_end"
+                       v-on:changeStart="val=> fetchParam.time_start=val"
+                       v-on:changeEnd="val=> fetchParam.time_end=val"
+                       :change="fetchData">
+            </DateRange>
         </article>
 
         <el-table class="data-table" v-loading="loadingData"
@@ -181,7 +190,11 @@
 
 <script>
     import orderService from '../../../services/usersystem/orderService'
+    import DateRange from '../../component/form/DateRangePicker.vue'
     export default {
+        components: {
+            DateRange
+        },
         data () {
             return {
                 selectedIds: [],
@@ -189,6 +202,7 @@
                 data: [{}], // 表格数据
                 total: 0,
                 fetchParam: {
+                    mobile: void '', // 领取人联系方式
                     channel: void '', // 销售渠道
                     product_name: void '', // 商品名
                     product_category: void '', // 商品类型
@@ -196,6 +210,8 @@
                     status: void -1, // 物流状态
                     page: 1,
                     page_size: 15,
+                    time_start: void '',
+                    time_end: void '',
                 },
                 dialogDetail: { // 完善订单弹框
                     isShow: false,
@@ -308,6 +324,5 @@
                 })
             },
         },
-        components: {}
     }
 </script>
