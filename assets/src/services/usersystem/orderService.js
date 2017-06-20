@@ -7,9 +7,9 @@ const urlPre = config.apiHost + '/sys/product/order'
 
 class OrderService {
     // 订单记录列表
-    search({page, page_size, status, channel = '', product_name = '', product_category = '', product_order_no = '', product_id}) {
+    search({page, page_size, status, mobile = '', channel = '', product_name = '', product_category = '', product_order_no = '', product_id, time_start = '', time_end = ''}) {
         let url = `${urlPre}/search`
-        return api.get(url, {page, page_size, status, channel, product_name, product_category, product_order_no, product_id}).then((ret) => {
+        return api.get(url, {page, page_size, status, mobile, channel, product_name, product_category, product_order_no, product_id, time_start, time_end}).then((ret) => {
             return ret.data
         })
     }
