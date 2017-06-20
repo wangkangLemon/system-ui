@@ -226,7 +226,6 @@
                             this.nodeSelected.item = this.fetchParam
                             this.$forceUpdate()
                         } else {
-//                            this.fetchParam.id = ret.data.id
                             let addedItem = {
                                 label: this.fetchParam.name,
                                 value: this.fetchParam.id,
@@ -234,13 +233,9 @@
                             }
 
                             // 如果是添加的根节点
-                            if (this.fetchParam.parent_id === 0) {
-                                this.treeData.push(addedItem)
-                            } else if (!this.nodeSelected.children) {
-                                this.nodeSelected.children = [{label: '加载中...'}]
-                            } else if (this.nodeSelected.children[0].value) {
-                                this.nodeSelected.children.push(addedItem)
-                            }
+                            if (this.fetchParam.parent_id === 0) this.$refs.articleCategory.initData()
+                            else if (!this.nodeSelected.children) this.nodeSelected.children = [{label: '加载中...'}]
+                            else if (this.nodeSelected.children[0].value) this.nodeSelected.children.push(addedItem)
                             this.fetchParam = getFetchParam()
                         }
                     })
