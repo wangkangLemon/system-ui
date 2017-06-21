@@ -1,21 +1,21 @@
 <!--热词管理-->
 <style lang='scss' rel='stylesheet/scss'>
+    @import "../../utils/mixins/showDetail";
     @import "../../utils/mixins/common";
-    #client-hotword-container {
-        
-        .add-btn {
-            float: right;
-            margin: 10px;
+     .client-hotword-container {
+        @extend %content-container;
+        .add {
+            @extend %right-top-btnContainer;
         }
         .block {
-            text-align: right;
             margin-top: 10px;
+            text-align: right;
         }
     }
 
 </style>
 <template>
-    <article id="client-hotword-container">
+    <article class="client-hotword-container">
         <!--添加Dialog-->
         <el-dialog title="添加" :visible.sync="dialogAdd">
             <el-form :model="hotword">
@@ -47,7 +47,9 @@
             </div>
         </el-dialog>
         <!--热词List-->
-        <el-button @click="showAddDialog" type="primary" class="add-btn">添加</el-button>
+        <section>
+            <el-button @click="showAddDialog" type="primary" icon="plus" class="add">添加</el-button>
+        </section>
         <el-table v-loading="loading" border :data="data">
             <el-table-column prop="name" label="热词名称" width="300">
             </el-table-column>
@@ -72,8 +74,7 @@
             layout="total, sizes, prev, pager, next, jumper" 
             :total="total">
             </el-pagination>
-        </section>
-    
+        </section>   
     </article>
 </template>
 <script>
