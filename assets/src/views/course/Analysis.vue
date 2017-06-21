@@ -153,11 +153,11 @@
                 </section>
             </article>
 
-            <el-table class="data-table" v-loading="loadingData"
+            <el-table v-show="type == 0" class="data-table" v-loading="loadingData"
                       :data="tableData"
                       :fit="true"
                       border>
-                <el-table-column v-if="type == 0" label="课程名称">
+                <el-table-column label="课程名称">
                     <template scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name:'course-analysis', query:{ type:1,course_id: scope.row.course_id }})">
@@ -168,7 +168,30 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="type == 1 || type == 2" :label="type == 1 ? '连锁名称' : '门店名称'">
+                <el-table-column prop="study_user_count" label="学习人数" width="100"></el-table-column>
+
+                <el-table-column prop="testing_user_count" label="考试人数" width="100"></el-table-column>
+                <el-table-column prop="passed_user_count" label="及格人数" width="100"></el-table-column>
+                <el-table-column label="及格率" width="100">
+                    <template scope="scope">
+                        <i>{{ scope.row.passed_user_count / scope.row.testing_user_count | passedPercent}} </i>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100">
+                    <template scope="scope">
+                        <el-button type="text" size="small"
+                                   @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.course_id}})">
+                            <i>答案分析</i>
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <el-table v-show="type == 1" class="data-table" v-loading="loadingData"
+                      :data="tableData"
+                      :fit="true"
+                      border>
+                <el-table-column label="连锁名称">
                     <template scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name:'course-analysis',
@@ -177,37 +200,60 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" label="店员姓名" v-if="type == 3"></el-table-column>
-
-                <el-table-column prop="study_user_count" label="学习人数" v-if="type != 3" width="100"></el-table-column>
-                <el-table-column v-if="type == 1 || type == 2" prop="unstudy_user_count" width="120" label="未学习人数">
+                <el-table-column prop="study_user_count" label="学习人数" width="100"></el-table-column>
+                <el-table-column prop="unstudy_user_count" width="120" label="未学习人数">
                 </el-table-column>
-                <el-table-column prop="testing_user_count" label="考试人数" v-if="type != 3" width="100"></el-table-column>
-                <el-table-column prop="passed_user_count" label="及格人数" v-if="type != 3" width="100"></el-table-column>
-                <el-table-column v-if="type != 3" label="及格率" width="100">
+                <el-table-column prop="testing_user_count" label="考试人数" width="100"></el-table-column>
+                <el-table-column prop="passed_user_count" label="及格人数" width="100"></el-table-column>
+                <el-table-column label="及格率" width="100">
                     <template scope="scope">
                         <i>{{ scope.row.passed_user_count / scope.row.testing_user_count | passedPercent}} </i>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="type == 0" label="操作" width="100">
+            </el-table>
+
+            <el-table v-show="type == 2" class="data-table" v-loading="loadingData"
+                      :data="tableData"
+                      :fit="true"
+                      border>
+                <el-table-column label="门店名称">
                     <template scope="scope">
-                        <el-button type="text" size="small"
-                                   @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.course_id}})">
-                            <i>答案分析</i>
+                        <el-button type="text"
+                                   @click="$router.push({name:'course-analysis',
+                                   query:{ type:type+1,course_id: scope.row.course_id, store_id:scope.row.company_id, department_id:scope.row.department_id }})">
+                            <i> {{scope.row.name}}</i>
                         </el-button>
                     </template>
                 </el-table-column>
 
-                <el-table-column v-if="type == 3" prop="job" label="职务"></el-table-column>
-                <el-table-column v-if="type == 3" prop="department_name" label="门店名称"></el-table-column>
-                <el-table-column v-if="type == 3" label="学习进度">
+                <el-table-column prop="study_user_count" label="学习人数" width="100"></el-table-column>
+                <el-table-column prop="unstudy_user_count" width="120" label="未学习人数">
+                </el-table-column>
+                <el-table-column prop="testing_user_count" label="考试人数" width="100"></el-table-column>
+                <el-table-column prop="passed_user_count" label="及格人数" width="100"></el-table-column>
+                <el-table-column label="及格率" width="100">
+                    <template scope="scope">
+                        <i>{{ scope.row.passed_user_count / scope.row.testing_user_count | passedPercent}} </i>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <el-table v-show="type == 3" class="data-table" v-loading="loadingData"
+                      :data="tableData"
+                      :fit="true"
+                      border>
+                <el-table-column prop="name" label="店员姓名"></el-table-column>
+
+                <el-table-column prop="job" label="职务"></el-table-column>
+                <el-table-column prop="department_name" label="门店名称"></el-table-column>
+                <el-table-column label="学习进度">
                     <template scope="scope">
                         <i>{{scope.row.complete_rate}} %</i>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="type == 3" prop="testing" label="考试次数"></el-table-column>
-                <el-table-column v-if="type == 3" prop="grade_name" label="最高成绩"></el-table-column>
-                <el-table-column v-if="type == 3" prop="score_max" label="最高分数"></el-table-column>
+                <el-table-column prop="testing" label="考试次数"></el-table-column>
+                <el-table-column prop="grade_name" label="最高成绩"></el-table-column>
+                <el-table-column prop="score_max" label="最高分数"></el-table-column>
             </el-table>
 
             <el-pagination class="pagin"
