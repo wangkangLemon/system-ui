@@ -133,7 +133,6 @@
                 <el-form-item prop="category" label="推荐类别">
                     <el-select v-model="form.category">
                         <el-option label="功能推荐" :value="1"></el-option>
-                        <el-option label="添加链接" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="version" label="功能支持版本">

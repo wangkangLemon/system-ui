@@ -139,6 +139,32 @@ export default {
                 title: '首页导航',
                 noback: true
             }
+        },
+        {
+            path: 'navigation/company',
+            name: 'client-navigation-company',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/client/navigation/Company.vue'))
+                })
+            },
+            meta: {
+                title: '企业导航',
+                noback: true
+            }
+        },
+        {
+            path: 'navigation/discover',
+            name: 'client-navigation-discover',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/client/navigation/Discover.vue'))
+                })
+            },
+            meta: {
+                title: '发现导航',
+                noback: true
+            }
         }
     ]
 }
