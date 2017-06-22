@@ -126,6 +126,19 @@ export default {
             meta: {
                 title: '新建消息推送',
             }
+        },
+        {
+            path: 'navigation/index',
+            name: 'client-navigation-index',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/client/navigation/Index.vue'))
+                })
+            },
+            meta: {
+                title: '首页导航',
+                noback: true
+            }
         }
     ]
 }

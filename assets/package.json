@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.6.0",
+    "awe-dnd": "^0.3.0",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.2",
