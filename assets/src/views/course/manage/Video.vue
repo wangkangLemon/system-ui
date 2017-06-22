@@ -192,6 +192,17 @@
             tags: [],
         }
     }
+    function getFetchParam() {
+        return {
+            company_id: void 0,
+            status: void 0,
+            keyword: void 0,
+            page: 1,
+            page_size: 15,
+            time_start: '',
+            time_end: ''
+        }
+    }
     export default{
         data () {
             return {
@@ -200,15 +211,7 @@
                 data: [],
                 selectedIds: [], // 选中的id
                 uploadImgUrl: '', // 上传图片的url
-                fetchParam: {
-                    company_id: void 0,
-                    status: void 0,
-                    keyword: void 0,
-                    page: 1,
-                    page_size: 15,
-                    time_start: '',
-                    time_end: ''
-                },
+                fetchParam: getFetchParam(),
                 dialogAdd: {
                     isShow: false,
                     title: '添加课程',
@@ -235,6 +238,9 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.fetchParam = getFetchParam()
+            },
             fetchData () {
                 this.loadingData = true
                 return courseService.getVideo(this.fetchParam).then((ret) => {

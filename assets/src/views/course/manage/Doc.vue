@@ -141,6 +141,18 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import config from '../../../utils/config'
+    
+    function getFetchParam() {
+        return {
+            file_type: void 0, // 文档类型
+            company_id: void 0,
+            keyword: void 0,
+            page: 1,
+            page_size: 15,
+            time_start: void 0,
+            time_end: void 0
+        }
+    }
 
     export default{
         data () {
@@ -149,15 +161,7 @@
                 total: 0,
                 data: [],
                 selectedIds: [], // 选中的id
-                fetchParam: {
-                    file_type: void 0, // 文档类型
-                    company_id: void 0,
-                    keyword: void 0,
-                    page: 1,
-                    page_size: 15,
-                    time_start: void 0,
-                    time_end: void 0
-                },
+                fetchParam: getFetchParam(),
             }
         },
         watch: {
@@ -174,6 +178,9 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.fetchParam = getFetchParam()
+            },
             fetchData () {
                 this.loadingData = true
                 return courseService.getDocList(this.fetchParam).then((ret) => {

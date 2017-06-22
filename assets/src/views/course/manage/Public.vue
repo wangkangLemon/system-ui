@@ -205,7 +205,20 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     import CourseCategoryTree from '../../component/tree/CourseCategory.vue'
-
+    
+    function getFetchParam() {
+        return {
+            status: void 0, // 2- 视屏转码中 1-下线 0-正常
+            category: void 0, // 1-工业 默认-公开课
+            category_id: void 0, // 栏目id
+            page: 1,
+            page_size: 15,
+            time_start: void 0,
+            time_end: void 0,
+            need_testing: void 0, //  不赋值则表示全部，0为不需要，1为需要
+            keyword: void 0,
+        }
+    }
     export default{
         data () {
             return {
@@ -214,17 +227,7 @@
                 total: 0,
                 dialogVisible: false,
                 selectedIds: [], // 被选中的数据id集合
-                fetchParam: {
-                    status: void 0, // 2- 视屏转码中 1-下线 0-正常
-                    category: void 0, // 1-工业 默认-公开课
-                    category_id: void 0, // 栏目id
-                    page: 1,
-                    page_size: 15,
-                    time_start: void 0,
-                    time_end: void 0,
-                    need_testing: void 0, //  不赋值则表示全部，0为不需要，1为需要
-                    keyword: void 0, // 课程名称
-                },
+                fetchParam: getFetchParam(),
                 dialogTree: {
                     isShow: false,
                     selectedId: void 0,
@@ -238,6 +241,9 @@
             this.fetchData()
         },
         methods: {
+            initFetchParam() {
+                this.fetchParam = getFetchParam()
+            },
             handleCurrentChange (val) {
                 this.fetchParam.page = val
                 this.fetchData()
