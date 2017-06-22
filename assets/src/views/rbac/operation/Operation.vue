@@ -1,24 +1,55 @@
 <!--权限管理-->
 <style lang="scss">
-    @import "../../../utils/mixins/showDetail";
     @import "../../../utils/mixins/common";
+    @import "../../../utils/mixins/topSearch";
 
     .rbac-operation-container {
-        @extend %content-container;
-        .add {
+         @extend %content-container;
+
+        .manage-container {
             @extend %right-top-btnContainer;
         }
-        .block {
-            margin-top: 10px;
-            text-align: right;
+
+        .search {
+            @extend %top-search-container;
+        }
+
+        .data-table {
+            .el-button {
+                margin-left: 2px;
+            }
         }
     }
 </style>
 <template>
-    <article class="rbac-operation-container">
-        <section class="add">
+    <main class="rbac-operation-container">
+        <article class="manage-container">
             <el-button icon="plus" type="primary" @click="add()">添加</el-button>
-        </section>
+        </article>
+        <article class="search">
+            <section>
+                <i>操作名称</i>
+                <el-input v-model="search.operation_name" @keyup.enter.native="getData"></el-input>
+            </section>
+            <section>
+                <i>API所有权</i>
+                <el-select v-model="search.owner" placeholder="全部" @change="getData" :clearable="true">
+                    <el-option label="公共" value="public"></el-option>
+                    <el-option label="角色" value="role"></el-option>
+                    <el-option label="禁用" value="diabled"></el-option>
+                </el-select>
+            </section>
+            <section>
+                <i>访问方法</i>
+                <el-select v-model="search.operation_method" placeholder="全部" @change="getData" :clearable="true">
+                    <el-option label="GET" value="get"></el-option>
+                    <el-option label="POST" value="post"></el-option>
+                    <el-option label="PUT" value="put"></el-option>
+                    <el-option label="DELETE" value="delete"></el-option>
+                    <el-option label="*" value="*"></el-option>
+                </el-select>
+            </section>
+        </article>
         <el-table border v-loading="loading" :data="dataList">
             <el-table-column
                     prop="operation_name"
@@ -65,17 +96,15 @@
                 </template>
             </el-table-column>
         </el-table>
-        <section class="block">
-            <el-pagination
-                    @size-change="val=> {search.page_size=val; getData()}"
-                    @current-change="val=> {search.page=val; getData()}"
-                    :current-page="search.page"
-                    :page-sizes="[15, 30, 60, 100]"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-            </el-pagination>
-        </section>
-    </article>
+        <el-pagination class="pagin"
+                @size-change="val=> {search.page_size=val; getData()}"
+                @current-change="val=> {search.page=val; getData()}"
+                :current-page="search.page"
+                :page-sizes="[15, 30, 60, 100]"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </main>
 </template>
 <script>
     import operationService from '../../../services/rbac/operationService'
@@ -87,6 +116,8 @@
                     page: 0,
                     page_size: 15,
                     owner: void '',
+                    operation_method: void '',
+                    operation_name: void '',
                 },
                 dataList: [{}],
                 total: 0,
