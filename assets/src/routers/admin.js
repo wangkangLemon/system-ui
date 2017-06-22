@@ -81,6 +81,20 @@ export default {
                 noback: true
             }
         },
+         // 菜单管理
+        {
+            path: 'rbac/menu',
+            name: 'sys-rbac-menu',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/rbac/menu/Menu.vue'))
+                })
+            },
+            meta: {
+                title: '菜单管理-RBAC',
+                noback: true
+            }
+        },
         // 设置
         {
             path: 'setting',
