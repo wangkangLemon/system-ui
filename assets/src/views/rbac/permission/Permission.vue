@@ -45,6 +45,12 @@
                     label="操作">
                 <template scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
+                    <el-button type="text" size="small" @click="disable(scope.row)">
+                            {{scope.row.disabled === 0 ? '启用' : '禁用'}}
+                    </el-button>
+                    <el-button @click="edit(scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="edit(scope.row)" type="text" size="small">API分配</el-button>
+                    <el-button @click="edit(scope.row)" type="text" size="small">菜单分配</el-button>
                 </template>
             </el-table-column>
         </el-table>
