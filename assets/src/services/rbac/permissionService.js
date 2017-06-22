@@ -33,6 +33,20 @@ class PermissionService {
         let url = `${urlPre}/${id}/`
         return api.put(url, {permission_name, disabled})
     }
+    // 获取指定权限已经关联的操作
+    operation(id) {
+        let url = `${urlPre}/${id}/operation`
+        return api.get(url).then((ret) => {
+            return ret.data
+        })
+    }
+    // 获取指定权限已经关联的菜单
+    menu(id) {
+        let url = `${urlPre}/${id}/menu`
+        return api.get(url).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new PermissionService()
