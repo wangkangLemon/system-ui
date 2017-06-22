@@ -29,6 +29,11 @@
                 @extend %top-search-container;
             }
         }
+        .date-picker {
+            position: absolute;
+            left: 490px;
+            top: 125px;
+        }
     }
 </style>
 
@@ -40,11 +45,24 @@
             <el-tab-pane label="上月" name="prevmonth"></el-tab-pane>
             <el-tab-pane label="全部" name="all"></el-tab-pane>
         </el-tabs>
+        <div class="date-picker">
+            <DateRange title="日期" :start="fetchParam.stat_date"
+                       v-on:changeStart="val=> fetchParam.stat_date=val"
+                       :change="fetchData">
+            </DateRange>
+        </div>
         <el-button type="warning" class="export" @click="exportClick"><i class="iconfont icon-iconfontexcel"></i>
             <i>导出</i></el-button>
 
         <article class="table-container">
             <article class="search">
+                <section>
+                    <i>连锁</i>
+                    <StoreSelect :type="2" v-model="fetchParam.companySelect"
+                                           v-on:change="val=>fetchParam.companySelect=val"
+                                           :change="fetchData">
+                    </StoreSelect>
+                </section>
             </article>
 
             <el-table class="data-table" v-loading="loadingData"
@@ -54,7 +72,7 @@
                 <el-table-column v-if=" type == 0" label="企业名称" min-width="200">
                     <template scope="scope">
                         <el-button type="text"
-                                   @click="$router.push({name:'analysis-company-stat-view', query:{ type:1,course_id: scope.row.id }})">
+                                   @click="$router.push({name:'analysis-company-stat-view', query:{ store_id: scope.row.company_id }})">
                             <i> {{scope.row.company_name}}</i>
                         </el-button>
                     </template>
@@ -114,6 +132,7 @@
     import CourseSelect from '../../component/select/Course.vue'
     import DepSelect from '../../component/select/Department.vue'
     import StoreSelect from '../../component/select/IndustryCompany.vue'
+    import DateRange from '../../component/form/DatePicker.vue'
 
     export default{
         filters: {
@@ -156,15 +175,19 @@
             },
             fetchData () {
                 this.loadingData = true
+                var statDate = this.fetchParam.date
+                if (this.fetchParam.stat_date) {
+                    statDate = this.fetchParam.stat_date
+                }
                 return companyService.getCompanyStat({
                     page: this.fetchParam.page,
                     page_size: this.fetchParam.page_size,
-                    stat_date: this.fetchParam.date,
+                    store_id: this.fetchParam.companySelect,
+                    stat_date: statDate,
                 }).then((ret) => {
-                    console.log(ret)
+                    this.loadingData = false
                     this.total = ret.total
                     this.tableData = ret.data
-                    this.loadingData = false
                 })
             },
             // 导出点击
@@ -175,7 +198,7 @@
 //                else courseService.exportUserLearn(this.fetchParam)
             }
         },
-        components: {CourseSelect, DepSelect, StoreSelect}
+        components: {CourseSelect, DepSelect, StoreSelect, DateRange}
     }
 
     function getFetchParam () {
@@ -186,7 +209,9 @@
             type: void 0,
             course_id: void 0,
             department_id: void 0,
-            store_id: void 0
+            store_id: void 0,
+            companySelect: '',
+            stat_date: ''
         }
     }
 </script>
