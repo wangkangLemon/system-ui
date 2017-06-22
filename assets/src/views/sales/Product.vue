@@ -131,6 +131,9 @@
             })
         },
         methods: {
+            initFetchParam () {
+                this.fetchParam.start = 1
+            },
             fetchData () {
                 this.loadingData = true
                 let fetchParam = Object.assign({}, this.fetchParam, {

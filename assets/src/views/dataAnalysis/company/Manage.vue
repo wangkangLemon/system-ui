@@ -238,6 +238,9 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()

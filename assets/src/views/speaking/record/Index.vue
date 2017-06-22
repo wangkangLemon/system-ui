@@ -73,7 +73,19 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
-
+    function getFetchParam() {
+        return {
+            company_id: void 0,
+            department_id: void 0,
+            user_id: void 0,
+            speaking_company_id: void -1,
+            keyword: void '',
+            page: 1,
+            page_size: 15,
+            time_start: void '',
+            time_end: void ''
+        }
+    }
     export default {
         components: {
             DateRange,
@@ -86,17 +98,7 @@
                 data: [], // 表格数据
                 total: 0,
                 dialogVisible: false,
-                fetchParam: {
-                    company_id: void 0,
-                    department_id: void 0,
-                    user_id: void 0,
-                    speaking_company_id: void -1,
-                    keyword: void '',
-                    page: 1,
-                    page_size: 15,
-                    time_start: void '',
-                    time_end: void ''
-                }
+                fetchParam: getFetchParam()
             }
         },
         activated () {
@@ -107,6 +109,9 @@
             xmview.setContentLoading(false)
         },
         methods: {
+            initFetchParam() {
+                this.fetchParam = getFetchParam()
+            },
             handleCurrentChange (val) {
                 this.fetchParam.page = val
                 this.fetchData()

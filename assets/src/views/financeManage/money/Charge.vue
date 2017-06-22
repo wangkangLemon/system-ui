@@ -219,6 +219,9 @@
             })
         },
         methods: {
+            initFetchParam () {
+                this.currentPage = 1
+            },
             accountFn () {
                 this.addForm = true
                 this.form = clearForm()

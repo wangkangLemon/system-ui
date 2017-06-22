@@ -141,6 +141,9 @@
 //            showFn (row) {
 //                this.$router.push({name: 'articleshow', params: {id: row.id}})
 //            },
+            initFetchParam() {
+                this.currentPage = 1
+            },
             addArticle () {
                 this.$router.push({name: 'article-content-add'})
             },

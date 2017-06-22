@@ -199,6 +199,9 @@
             })
         },
         methods: {
+            initFetchParam () {
+                this.currentPage = 1
+            },
             // 修改企业信息
             editCompany (index, row) {
                 this.$router.push({name: 'company-edit', params: {id: row.id}})
