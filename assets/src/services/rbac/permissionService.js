@@ -34,18 +34,28 @@ class PermissionService {
         return api.put(url, {permission_name, disabled})
     }
     // 获取指定权限已经关联的操作
-    operation(id) {
-        let url = `${urlPre}/${id}/operation`
+    searchOperation(id) {
+        let url = `${urlPre}/${id}/operation/search`
         return api.get(url).then((ret) => {
             return ret.data
         })
     }
     // 获取指定权限已经关联的菜单
-    menu(id) {
-        let url = `${urlPre}/${id}/menu`
+    searchMenu(id) {
+        let url = `${urlPre}/${id}/menu/search`
         return api.get(url).then((ret) => {
             return ret.data
         })
+    }
+    // 更新指定权限的关联操作
+    operation(id, ids) {
+        let url = `${urlPre}/${id}/operation/`
+        return api.post(url, {ids})
+    }
+    // 更新指定权限的关联菜单 其中ids逗号分隔
+    menu(id, ids) {
+        let url = `${urlPre}/${id}/menu/`
+        return api.post(url, {ids})
     }
 }
 

@@ -41,11 +41,16 @@ class RoleService {
         })
     }
     // 获取指定角色已经关联的权限
-    permission(id) {
-        let url = `${urlPre}/${id}/permission`
+    searchPermission(id) {
+        let url = `${urlPre}/${id}/permission/search`
         return api.get(url).then((ret) => {
             return ret.data
         })
+    }
+    // 更新指定角色的关联权限
+    permission(id, ids) {
+        let url = `${urlPre}/${id}/permission/`
+        return api.post(url, {ids})
     }
 }
 
