@@ -13,6 +13,26 @@ class MenuService {
             return ret.data
         })
     }
+    // 禁用
+    disable({id, disabled}) {
+        let url = `${urlPre}/${id}/disable`
+        return api.put(url, {disabled})
+    }
+    // 删除
+    delete(id) {
+        let url = `${urlPre}/${id}/`
+        return api.del(url)
+    }
+    // 新增
+    add({id, pid, menu_name = '', menu_url = '', menu_icon = '', menu_order, disabled}) {
+        let url = `${urlPre}/`
+        return api.post(url, {pid, menu_name, menu_url, menu_icon, menu_order,disabled})
+    }
+    // 修改
+    update({id, pid, menu_name = '', menu_url = '', menu_icon = '', menu_order, disabled}) {
+        let url = `${urlPre}/${id}/`
+        return api.put(url, {pid, menu_name, menu_url, menu_icon, menu_order,disabled})
+    }
 }
 
 export default new MenuService()

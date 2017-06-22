@@ -18,6 +18,21 @@ class PermissionService {
         let url = `${urlPre}/${id}/disable`
         return api.put(url, {disabled})
     }
+    // 删除
+    delete(id) {
+        let url = `${urlPre}/${id}/`
+        return api.del(url)
+    }
+    // 新增
+    add({id, permission_name = '', disabled}) {
+        let url = `${urlPre}/`
+        return api.post(url, {permission_name, disabled})
+    }
+    // 修改
+    update({id, permission_name = '', disabled}) {
+        let url = `${urlPre}/${id}/`
+        return api.put(url, {permission_name, disabled})
+    }
 }
 
 export default new PermissionService()
