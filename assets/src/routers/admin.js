@@ -11,7 +11,21 @@ export default {
         })
     },
     children: [
-        // 管理
+        // RBAC
+        {
+            path: 'rbac',
+            name: 'sys-rbac',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/rbac/Index.vue'))
+                })
+            },
+            meta: {
+                title: 'RBAC-系统',
+                noback: true
+            }
+        },
+        // 管理员管理
         {
             path: 'admin',
             name: 'sys-admin',
@@ -21,7 +35,49 @@ export default {
                 })
             },
             meta: {
-                title: '管理员-系统',
+                title: '管理员-RBAC',
+                noback: true
+            }
+        },
+        // 角色管理
+        {
+            path: 'rbac/role',
+            name: 'sys-rbac-role',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/rbac/role/Role.vue'))
+                })
+            },
+            meta: {
+                title: '角色管理-RBAC',
+                noback: true
+            }
+        },
+         // 权限管理
+        {
+            path: 'rbac/permission',
+            name: 'sys-rbac-permission',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/rbac/permission/Permission.vue'))
+                })
+            },
+            meta: {
+                title: '权限管理-RBAC',
+                noback: true
+            }
+        },
+         // api管理
+        {
+            path: 'rbac/operation',
+            name: 'sys-rbac-operation',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/rbac/operation/Operation.vue'))
+                })
+            },
+            meta: {
+                title: 'API管理-RBAC',
                 noback: true
             }
         },
