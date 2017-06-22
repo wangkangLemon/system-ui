@@ -7,9 +7,9 @@ const urlPre = config.apiHost + '/sys/rbac/menu'
 
 class MenuService {
     // 用户行为成长值记录列表
-    search({page, page_size, disbaled}) {
+    search() {
         let url = `${urlPre}/search`
-        return api.get(url, {page, page_size, disabled}).then((ret) => {
+        return api.get(url).then((ret) => {
             return ret.data
         })
     }

@@ -13,6 +13,11 @@ class PermissionService {
             return ret.data
         })
     }
+    // 禁用
+    disable({id, disabled}) {
+        let url = `${urlPre}/${id}/disable`
+        return api.put(url, {disabled})
+    }
 }
 
 export default new PermissionService()
