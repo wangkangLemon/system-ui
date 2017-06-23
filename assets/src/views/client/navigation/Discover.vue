@@ -41,7 +41,7 @@
             font-size: 14px;
         }
     }
-    .index-nav-container {
+    .index-discover-container {
         @extend %content-container;
         background: #fff;
         border: 1px solid #ededed;
@@ -72,13 +72,23 @@
         }
         .form {
             .img-wrap {
-                width: 140px;
-                height: 140px;
+                width: 80px;
+                height: 80px;
                 > img {
                     border-radius: 50%;
                     width: 100%;
                     height: 100%;
                 }
+                &:last-of-type {
+                    border-radius: 0;
+                    margin-bottom: 10px;
+                }
+            }
+            .split-line {
+                margin-bottom: 10px;
+                width: 100%;
+                border-bottom: 1px solid #ddd;
+                height: 1px;
             }
         }
         .nav-list {
@@ -157,59 +167,73 @@
     }
 </style>
 <template>
-    <article class="index-nav-container">
+    <article class="index-discover-container">
         <!--添加编辑/弹窗-->
         <el-dialog class="form" :title="dialogTitle" v-model="changeIcon">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
-                <el-form-item prop="category" label="推荐类别">
-                    <el-select v-model="form.category">
+                <el-form-item label="推荐类别">
+                    <el-select clearable v-model="form.category">
                         <el-option label="功能推荐" :value="1"></el-option>
+                        <el-option label="添加链接" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="version" label="功能支持版本">
+                <el-form-item prop="version" label="功能支持版本" v-if="form.category == 1">
                     <el-select v-model="form.version">
-                        <el-option label="功能推荐" :value="1"></el-option>
+                        <el-option label="功能支持版本" :value="1"></el-option>
+                        <el-option label="功能支持版本1" :value="2"></el-option>
+                        <el-option label="功能支持版本2" :value="3"></el-option>
+                        <el-option label="功能支持版本3" :value="4"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="version" label="选择功能">
+                <el-form-item prop="version" label="选择功能" v-if="form.category == 1">
                     <el-select v-model="form.action">
-                        <el-option label="功能推荐" :value="1"></el-option>
+                        <el-option label="选择功能" :value="1"></el-option>
+                        <el-option label="选择功能1" :value="2"></el-option>
+                        <el-option label="选择功能2" :value="3"></el-option>
+                        <el-option label="选择功能3" :value="4"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="name" v-loading="loading" label="导航图标">
+                <el-form-item prop="name" v-loading="loading" label="应用logo">
                     <div class="img-wrap">
                         <img :src="form.url" alt="" />
                     </div>
                     <p class="tip">建议上传图片尺寸为 140*140</p>
                     <el-button type="primary" @click="() => {$refs.imgcropper.chooseImg()}">上传</el-button>
                 </el-form-item>
-                <el-form-item prop="name" label="导航名称">
+                <el-form-item prop="name" label="应用名称">
                     <el-input v-model="form.name" placeholder="控制在4个字以内，展示效果最佳"></el-input>
+                </el-form-item>
+                <el-form-item prop="link" label="应用链接" v-if="form.category == 2">
+                    <el-input v-model="form.link" placeholder="请以http://或者https://开头"></el-input>
                 </el-form-item>
                 <div class="split-line"></div>
                 <el-form-item label="是否需要推荐">
-                    <el-radio class="radio" v-model="form.isRecommend" :label="0">否</el-radio>
-                    <el-radio class="radio" v-model="form.isRecommend" :label="1">是</el-radio>
+                    <el-radio-group @change="changeRecommend" v-model="form.isRecommend">
+                        <el-radio class="radio" :label="0">否</el-radio>
+                        <el-radio class="radio" :label="1">是</el-radio>
+                    </el-radio-group>
                 </el-form-item>
-                <el-form-item label="推荐标签">
-                    <el-checkbox v-model="form.isDot">红点</el-checkbox>
-                </el-form-item>
-                <el-form-item prop="recommend" label="">
-                    <el-checkbox v-model="form.isRecommendText" @change="() => {$forceUpdate()}">推荐语</el-checkbox>
-                    <div class="subshow" v-if="form.isRecommend">
-                        <i>文案</i>
-                        <el-input v-model="form.recommendText"></el-input>
-                    </div>
-                </el-form-item>
-                <el-form-item label="">
-                    <el-checkbox v-model="form.isPicture" @change="() => {$forceUpdate()}">展示图片</el-checkbox>
-                    <div class="subshow" v-if="form.isPicture">
-                        <div class="img-wrap">
-                            <img :src="form.showPic" alt="" />
+                <div v-if="form.isRecommend">
+                    <el-form-item label="推荐标签">
+                        <el-checkbox v-model="form.isDot">红点</el-checkbox>
+                    </el-form-item>
+                    <el-form-item prop="recommend" label="">
+                        <el-checkbox v-model="form.isRecommendText">推荐语</el-checkbox>
+                        <div class="subshow" v-if="form.isRecommendText">
+                            <i>文案</i>
+                            <el-input v-model="form.recommendText"></el-input>
                         </div>
-                        <el-button type="primary" @click="() => {$refs.imgcropper.chooseImg()}">上传</el-button>
-                    </div>
-                </el-form-item>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-checkbox v-model="form.isPicture">展示图片</el-checkbox>
+                        <div class="subshow" v-if="form.isPicture">
+                            <div class="img-wrap">
+                                <img :src="form.showPic" alt="" />
+                            </div>
+                            <el-button @click="()=>{$refs.recommendPic.chooseImg()}">上传</el-button>
+                        </div>
+                    </el-form-item>
+                </div>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="changeIcon = false">取 消</el-button>
@@ -260,11 +284,11 @@
                          v-for="(item,index) in mitem.data"
                          v-dragging="{item: item, list: mitem.data, group: 'item' + list.id + item.group}"
                          :key="item.name">
-                        <div class="parent" @mouseover="showLayer" @mouseout="hideLayer">
+                        <div class="parent" @mouseenter="showLayer" @mouseleave="hideLayer">
                             <img :src="item.icon | fillImgPath" alt=""/>
                             <p>{{item.name}}</p>
-                            <div class="operate-layer" @click="changeFn(list.info, index, list.id)">
-                                <i class="iconfont icon-edit"></i>
+                            <div class="operate-layer">
+                                <i class="iconfont icon-edit" @click="changeFn(item, index, list.id)"></i>
                                 <i class="el-icon-circle-cross"></i>
                             </div>
                         </div>
@@ -318,13 +342,15 @@
         </div>
         <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
                            :isRound="true"></ImagEcropperInput>
+        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="recommendPic" :confirmFn="recommendPic" :aspectRatio="1"
+                           :isRound="false"></ImagEcropperInput>
     </article>
 </template>
 <script>
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../../services/mobileService'
-    import formUtils from '../../../utils/formUtils'
-    import clone from 'clone'
+//    import formUtils from '../../../utils/formUtils'
+//    import clone from 'clone'
     export default{
         data () {
             return {
@@ -335,12 +361,6 @@
                     version: ''
                 },
                 loading: false,
-                currentData: {
-                    id: '',
-                    list: [],
-                    index: '',
-                    url: ''
-                },
                 changeIcon: false,
                 total: 0,
                 currentPage: 1,
@@ -355,7 +375,7 @@
                 }
             }
         },
-        created () {
+        activated () {
             xmview.setContentLoading(false)
             this.getData()
 //            this.getData().then(() => {
@@ -382,18 +402,10 @@
                 })
             },
             showLayer (e) {
-                if (e.target.parentNode.className == 'parent') {
-                    if (e.target.parentNode.querySelector('.operate-layer') != null) {
-                        e.target.parentNode.querySelector('.operate-layer').style.visibility = 'visible'
-                    }
-                }
+                e.target.querySelector('.operate-layer').style.visibility = 'visible'
             },
             hideLayer (e) {
-                if (e.target.parentNode.className == 'parent') {
-                    if (e.target.parentNode.querySelector('.operate-layer') != null) {
-                        e.target.parentNode.querySelector('.operate-layer').style.visibility = 'hidden'
-                    }
-                }
+                e.target.querySelector('.operate-layer').style.visibility = 'hidden'
             },
             cropperFn (data) {
                 this.loading = true
@@ -404,16 +416,22 @@
                 }).then((ret) => {
                     this.loading = false
                     this.form.url = data
-                    this.currentData.url = ret.url
                 })
             },
+            // 推荐图片上传
+            recommendPic (data) {
+                this.form.showPic = data
+                // 执行上传
+            },
             changeFn (list, index, id) {
-                this.form = {
-                    url: list[index].icon,
-                    name: list[index].name
-                }
-                this.currentData = {list, index, id}
-                this.dialogTitle = list[index].name
+//                this.form = {
+//                    url: list[index].icon,
+//                    name: list[index].name
+//                }
+                console.log(list)
+                this.form.url = list.icon
+                this.form.name = list.name
+                this.dialogTitle = list.name
                 this.changeIcon = true
             },
             handleCurrentChange (val) {
@@ -672,23 +690,7 @@
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        let originData = clone(this.currentData)
-                        this.currentData.list[this.currentData.index]['name'] = this.form.name
-                        if (this.currentData.url) {
-                            this.currentData.list[this.currentData.index]['icon'] = this.currentData.url
-                        }
-                        let info = formUtils.serializeArray(this.currentData.list, 'info')
-                        mobileService.updateMenu({
-                            info: info,
-                            scheme_id: this.currentData.id
-                        }).then((ret) => {
-                            this.changeIcon = false
-                            xmview.showTip('success', '更换成功')
-                        }).catch((ret) => {
-                            this.currentData.list[this.currentData.index]['name'] = originData.list[this.currentData.index]['name']
-                            this.currentData.list[this.currentData.index]['icon'] = originData.list[this.currentData.index]['icon']
-                            xmview.showTip('error', ret.message)
-                        })
+                        console.log(1)
                     } else {
                         return false
                     }
@@ -705,22 +707,28 @@
                     // 拖拽成功之后运行
                     // 将value.draged.id 和 value.to.id 作为参数传递给接口
                 })
+            },
+            changeRecommend () {
+                this.form.isDot = 0
+                this.form.isRecommendText = 0
+                this.form.isPicture = 0
             }
         },
         components: {ImagEcropperInput}
     }
     function clearFn() {
         return {
-            category: '', // 类别
+            category: 1, // 类别
             version: '', // 版本
             action: '', // 功能
+            link: '', // 链接
             url: '',
             name: '',
             isDot: 0, // 是否显示红点
             isPicture: 0, // 是否显示图片
-            isRecommend: 0, // 是否推荐
             isRecommendText: 0, // 是否显示推荐语
             recommendText: '', // 推荐语
+            isRecommend: 0, // 是否需要推荐
             showPic: '' // 展示图地址
         }
     }
