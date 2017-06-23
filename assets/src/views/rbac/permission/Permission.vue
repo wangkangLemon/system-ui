@@ -90,7 +90,7 @@
         return {
             id: '',
             permission_name: '',
-            disabled: ''
+            disabled: 0
         }
     }
     export default {
