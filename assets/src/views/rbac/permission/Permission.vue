@@ -19,6 +19,24 @@
         <section class="add">
             <el-button icon="plus" type="primary" @click="add()">添加</el-button>
         </section>
+         <!--添加/修改 弹窗-->
+        <el-dialog :visible.sync="updateForm" size="tiny" title="添加">
+            <el-form :model="form" :rules="rules" ref="form" label-width="120px">
+                <el-form-item label="权限名称" prop="permission_name">
+                    <el-input  v-model="form.permission_name" type="text"></el-input>
+                </el-form-item>
+                <el-form-item label="状态">
+                    <el-radio-group v-model="form.disabled">
+                            <el-radio :label="1">启用</el-radio>
+                            <el-radio :label="0">禁用</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="updateForm = false">取 消</el-button>
+                <el-button type="primary" @click="submit('form')">保 存</el-button>
+            </span>
+        </el-dialog>
         <el-table border v-loading="loading" :data="dataList">
             <el-table-column
                     prop="permission_name"
@@ -48,7 +66,7 @@
                     <el-button type="text" size="small" @click="disable(scope.row)">
                             {{scope.row.disabled === 0 ? '启用' : '禁用'}}
                     </el-button>
-                    <el-button @click="edit(scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="del(scope.$index,scope.row)" type="text" size="small">删除</el-button>
                     <el-button @click="edit(scope.row)" type="text" size="small">API分配</el-button>
                     <el-button @click="edit(scope.row)" type="text" size="small">菜单分配</el-button>
                 </template>
@@ -68,10 +86,19 @@
 </template>
 <script>
     import permissionService from '../../../services/rbac/permissionService'
+    function clearFn() {
+        return {
+            id: '',
+            permission_name: '',
+            disabled: ''
+        }
+    }
     export default {
         data () {
             return {
+                form: clearFn(),
                 loading: false,
+                updateForm: false, // 弹框
                 search: {
                     page: 0,
                     page_size: 15,
@@ -102,13 +129,69 @@
             })
         },
         methods: {
+            initFetchParam () {
+                this.search.Page = 1
+            },
             getData () {
                 this.loading = true
                 return permissionService.search(this.search).then((ret) => {
                     this.dataList = ret.data
+                    this.total = ret.total
                     this.loading = false
                 }).catch((ret) => {
                     this.xmviex.showTip('error', ret.message)
+                })
+            },
+            add() {
+                this.form = clearFn()
+                this.updateForm = true
+            },
+            edit(row) {
+                this.form.id = row.id
+                this.form.permission_name = row.permission_name
+                this.form.disabled = row.disabled
+
+                this.updateForm = true
+            },
+            del(index, row) {
+                xmview.showDialog(`你确认要删除【<i style="color: red">${row.permission_name}</i>】的管理权限吗？`, () => {
+                    permissionService.delete(row.id).then(() => {
+                        this.dataList.splice(index, 1)
+                        xmview.showTip('success', '操作成功')
+                    })
+                })
+            },
+            disable(row) {
+                xmview.showDialog(`你是要${row.disabled === 1 ? '禁用' : '启用'}【<i style="color: red">${row.permission_name}</i>】确认吗？`, () => {
+                    permissionService.disable({
+                        id: row.id,
+                        disabled: row.disabled === 1 ? 0 : 1
+                    }).then(() => {
+                        xmview.showTip('success', `${row.disabled === 1 ? '禁用' : '启用'}成功 `)
+                        this.getData()
+                    })
+                })
+            },
+            searchOperation() { // 获取指定权限已经关联的操作
+
+            },
+            searchMenu() {  // 获取指定权限已经关联的菜单
+            },
+            submit(form) {
+                this.$refs[form].validate((valid) => {
+                    let msg = '添加成功'
+                    let reqFn = permissionService.add
+                    if (this.form.id) {
+                        msg = '修改成功'
+                        reqFn = permissionService.update
+                    }
+                    reqFn(this.form).then(() => {
+                        this.updateForm = false
+                        this.getData()
+                        xmview.showTip('success', msg)
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
             }
         }

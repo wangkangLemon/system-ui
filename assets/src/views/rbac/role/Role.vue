@@ -16,6 +16,7 @@
 </style>
 <template>
     <article class="rbac-role-container">
+        
         <section class="add">
             <el-button icon="plus" type="primary" @click="add()">添加</el-button>
         </section>
@@ -48,7 +49,7 @@
                     <el-button type="text" size="small" @click="disable(scope.row)">
                             {{scope.row.disabled === 0 ? '启用' : '禁用'}}
                     </el-button>
-                    <el-button @click="del(scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                     <el-button @click="edit(scope.row)" type="text" size="small">权限分配</el-button>
                 </template>
             </el-table-column>
@@ -63,13 +64,17 @@
                     :total="total">
             </el-pagination>
         </section>
+        <!--添加 修改 弹窗-->
         <el-dialog :visible.sync="updateForm" size="tiny" title="角色设置">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
-                <el-form-item label="角色名称">
+                <el-form-item label="角色名称" prop="role_name">
                     <el-input v-model="form.role_name" type="text"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
-                    <el-switch on-text="启用" off-text="禁用" on-value="1" off-value="0" v-model="form.disabled"></el-switch>
+                   <el-radio-group v-model="form.disabled">
+                            <el-radio :label="1">启用</el-radio>
+                            <el-radio :label="0">禁用</el-radio>
+                    </el-radio-group>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -117,10 +122,14 @@
             })
         },
         methods: {
+            initFetchParam () {  // 初始化分页
+                this.search.Page = 1
+            },
             getData () {
                 this.loading = true
                 return roleService.search(this.search).then((ret) => {
                     this.dataList = ret.data
+                    this.total = ret.total
                     this.loading = false
                 }).catch((ret) => {
                     this.xmviex.showTip('error', ret.message)
@@ -137,13 +146,51 @@
                 this.form = clearFn()
                 this.updateForm = true
             },
+            del(index, row) {
+                xmview.showDialog(`你确认要删除用户【<i style="color: red">${row.role_name}</i>】的管理权限吗？`, () => {
+                    roleService.delete(row.id).then(() => {
+                        this.dataList.splice(index, 1)
+                        xmview.showTip('success', '操作成功')
+                    })
+                })
+            },
+            disable(row) {
+                xmview.showDialog(`你将要${row.disabled === 0 ? '启用' : '禁用'}【<i style="color: red">${row.role_name}</i>】确认吗`, () => {
+                    this.form.id = row.id
+                    this.form.disabled = row.disabled === 1 ? 0 : 1
+                    this.form.role_name = row.role_name
+                    roleService.update(this.form).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.getData()
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message || '操作失败')
+                    })
+                })
+            },
+            submit(form) {
+                this.$refs[form].validate((valid) => {
+                    let msg = '添加成功'
+                    let reqFn = roleService.add
+                    if (this.form.id) {
+                        msg = '修改成功'
+                        reqFn = roleService.update
+                    }
+                    reqFn(this.form).then(() => {
+                        this.updateForm = false
+                        this.getData()
+                        xmview.showTip('success', msg)
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
+                })
+            }
         }
     }
     function clearFn() {
         return {
             id: '',
             role_name: '',
-            disabled: '',
+            disabled: 0,
         }
     }
 </script>

@@ -1,25 +1,25 @@
 <!--权限管理-->
 <style lang="scss">
-    @import "../../../utils/mixins/common";
-    @import "../../../utils/mixins/topSearch";
+@import "../../../utils/mixins/common";
+@import "../../../utils/mixins/topSearch";
 
-    .rbac-operation-container {
-         @extend %content-container;
+.rbac-operation-container {
+    @extend %content-container;
 
-        .manage-container {
-            @extend %right-top-btnContainer;
-        }
+    .manage-container {
+        @extend %right-top-btnContainer;
+    }
 
-        .search {
-            @extend %top-search-container;
-        }
+    .search {
+        @extend %top-search-container;
+    }
 
-        .data-table {
-            .el-button {
-                margin-left: 2px;
-            }
+    .data-table {
+        .el-button {
+            margin-left: 2px;
         }
     }
+}
 </style>
 <template>
     <main class="rbac-operation-container">
@@ -50,110 +50,175 @@
                 </el-select>
             </section>
         </article>
+        <!--添加/删除 -->
+        <el-dialog :visible.sync="updateForm" size="tiny" title="API管理">
+            <el-form :model="form" :rules="rules" ref="form" label-width="120px">
+                <el-form-item label="操作名称" prop="operation_name">
+                    <el-input v-model="form.operation_name" type="text"></el-input>
+                </el-form-item>
+                <el-form-item label="操作地址" prop="operation_url">
+                    <el-input v-model="form.operation_url" type="text"></el-input>
+                </el-form-item>
+                <el-form-item label="操作方法">
+                    <el-select v-model="form.operation_method" placeholder="全部" @change="getData" :clearable="true">
+                    <el-option label="GET" value="get"></el-option>
+                    <el-option label="POST" value="post"></el-option>
+                    <el-option label="PUT" value="put"></el-option>
+                    <el-option label="DELETE" value="delete"></el-option>
+                    <el-option label="全部" value="*"></el-option>
+                </el-select>    
+                </el-form-item>
+                <el-form-item label="所有权">
+                    <el-select v-model="form.owner" placeholder="角色接口" @change="getData" :clearable="true">
+                    <el-option label="角色接口" value="role"></el-option>
+                    <el-option label="公共接口" value="public"></el-option>
+                    <el-option label="禁用" value="disabled"></el-option>
+                   
+                </el-select>    
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="updateForm = false">取 消</el-button>
+                <el-button type="primary" @click="submit('form')">保 存</el-button>
+            </span>
+        </el-dialog>
+    
         <el-table border v-loading="loading" :data="dataList">
-            <el-table-column
-                    prop="operation_name"
-                    label="操作名称">
+            <el-table-column prop="operation_name" label="操作名称">
             </el-table-column>
-            <el-table-column
-                    prop="operation_url"
-                    label="操作地址">
+            <el-table-column prop="operation_url" label="操作地址">
             </el-table-column>
-            <el-table-column
-                    prop="operation_method"
-                    label="操作方法">
-                    <template scope="scope">
-                        <el-tag type="success" v-if="scope.row.operation_method == '*'">get,put,post,delete</el-tag>
-                        <el-tag type="success" v-if="scope.row.operation_method != '*'">{{scope.row.operation_method}}</el-tag>
-                    </template>
+            <el-table-column prop="operation_method" label="操作方法">
+                <template scope="scope">
+                    <el-tag type="success" v-if="scope.row.operation_method == '*'">get,put,post,delete</el-tag>
+                    <el-tag type="success" v-if="scope.row.operation_method != '*'">{{scope.row.operation_method}}</el-tag>
+                </template>
             </el-table-column>
-            <el-table-column
-                    prop="owner"
-                    label="所有权">
-                    <template scope="scope">
-                        <el-tag type="success" v-if="scope.row.owner == 'public'">公共接口</el-tag>
-                        <el-tag type="gray" v-if="scope.row.owner == 'role'">角色接口</el-tag>
-                        <el-tag type="danger" v-if="scope.row.owner == 'disabled'">禁用接口</el-tag>
-                    </template>
+            <el-table-column prop="owner" label="所有权">
+                <template scope="scope">
+                    <el-tag type="success" v-if="scope.row.owner == 'public'">公共接口</el-tag>
+                    <el-tag type="gray" v-if="scope.row.owner == 'role'">角色接口</el-tag>
+                    <el-tag type="danger" v-if="scope.row.owner == 'disabled'">禁用接口</el-tag>
+                </template>
             </el-table-column>
-            <el-table-column
-                    prop="limit"
-                    label="限制访问次数">
+            <el-table-column prop="limit" label="限制访问次数">
             </el-table-column>
-            <el-table-column
-                    prop="create_time_name"
-                    label="创建时间">
+            <el-table-column prop="create_time_name" label="创建时间">
             </el-table-column>
-            <el-table-column
-                    prop="update_time_name"
-                    label="最后编辑时间">
+            <el-table-column prop="update_time_name" label="最后编辑时间">
             </el-table-column>
-            <el-table-column
-                    prop="operate"
-                    label="操作">
+            <el-table-column prop="operate" label="操作">
                 <template scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="edit(scope.row)" type="text" size="small">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination class="pagin"
-                @size-change="val=> {search.page_size=val; getData()}"
-                @current-change="val=> {search.page=val; getData()}"
-                :current-page="search.page"
-                :page-sizes="[15, 30, 60, 100]"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
+        <el-pagination class="pagin" @size-change="val=> {search.page_size=val; getData()}" @current-change="val=> {search.page=val; getData()}" :current-page="search.page" :page-sizes="[15, 30, 60, 100]" layout="total, sizes, prev, pager, next, jumper" :total="10">
         </el-pagination>
     </main>
 </template>
 <script>
-    import operationService from '../../../services/rbac/operationService'
-    export default {
-        data () {
-            return {
-                loading: false,
-                search: {
-                    page: 0,
-                    page_size: 15,
-                    owner: void '',
-                    operation_method: void '',
-                    operation_name: void '',
-                },
-                dataList: [{}],
-                total: 0,
-                rules: {
-                    id: [
-                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
-                    ],
-                    owner: [
-                        {required: true, message: '必填项', trigger: 'blur'}
-                    ],
-                    operation_name: [
-                        {
-                            required: true,
-                            message: '必填项',
-                            trigger: 'blur'
-                        }
-                    ]
-                }
-            }
-        },
-        activated () {
-            this.getData().then(() => {
-                xmview.setContentLoading(false)
-            })
-        },
-        methods: {
-            getData () {
-                this.loading = true
-                return operationService.search(this.search).then((ret) => {
-                    this.dataList = ret.data
-                    this.loading = false
-                }).catch((ret) => {
-                    this.xmviex.showTip('error', ret.message)
-                })
+import operationService from '../../../services/rbac/operationService'
+function clearFn() {
+    return {
+        id: '',
+        operation_name: '',
+        operation_url: '',
+        operation_method: '',
+        owner: '',
+        limit: ''
+    }
+}
+export default {
+    data() {
+        return {
+            loading: false,
+            updateForm: false,
+            search: {
+                page: 1,
+                page_size: 15,
+                owner: void '',
+                operation_method: void '',
+                operation_name: void '',
+            },
+            dataList: [{}],
+            total: 0,
+            form: clearFn(),
+            rules: {
+                id: [
+                    { type: 'number', required: true, message: '必填项', trigger: 'change' }
+                ],
+                owner: [
+                    { required: true, message: '必填项', trigger: 'blur' }
+                ],
+                operation_name: [
+                    {
+                        required: true,
+                        message: '必填项',
+                        trigger: 'blur'
+                    }
+                ],
+                operation_url: [
+                    {
+                        required: true,
+                        message: '必填项',
+                        trigger: 'blur'
+                    }
+                ]
             }
         }
+    },
+    activated() {
+        this.getData().then(() => {
+            xmview.setContentLoading(false)
+        })
+    },
+    methods: {
+        getData() {
+            this.loading = true
+            return operationService.search(this.search).then((ret) => {
+                this.dataList = ret.data
+                this.loading = false
+                this.total = ret.total
+            }).catch((ret) => {
+                this.xmviex.showTip('error', ret.message)
+            })
+        },
+        add () {
+            this.from = clearFn()
+            this.updateForm = true
+        },
+        edit (row) {
+            this.form = row
+            this.updateForm = true
+        },
+        del(index, row) {
+            xmview.showDialog(`你确认要删除【<i style="color: red">${row.operation_name}</i>】吗？`, () => {
+                operationService.delete(row.id).then(() => {
+                    this.dataList.splice(index, 1)
+                    xmview.showTip('success', '操作成功')
+                })
+            })
+        },
+        submit(form) {
+            this.$refs[form].validate((valid) => {
+                let msg = '添加成功'
+                let reqFn = operationService.add
+                if (this.form.id) {
+                    msg = '修改成功'
+                    reqFn = operationService.update
+                }
+                reqFn(this.form).then(() => {
+                    this.updateForm = false
+                    this.getData()
+                    xmview.showTip('success', msg)
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
+            })
+        }
+
     }
+}
 </script>
