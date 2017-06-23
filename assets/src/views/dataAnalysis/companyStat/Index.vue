@@ -188,6 +188,7 @@
                     this.loadingData = false
                     this.total = ret.total
                     this.tableData = ret.data
+                    xmview.setContentLoading(false)
                 })
             },
             // 导出点击
