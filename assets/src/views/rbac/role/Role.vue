@@ -50,7 +50,7 @@
                             {{scope.row.disabled === 0 ? '启用' : '禁用'}}
                     </el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
-                    <el-button @click="edit(scope.row)" type="text" size="small">权限分配</el-button>
+                    <el-button @click="relate(scope.row)" type="text" size="small">权限分配</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -82,6 +82,14 @@
                 <el-button type="primary" @click="submit('form')">保 存</el-button>
             </span>
         </el-dialog>
+        <!-- 分配权限 弹窗-->
+        <el-dialog :visible.sync="relateForm" size="tiny" title="分配权限">
+            <el-transfer v-model="toData" :data="fromData" :titles="['未选择', '已选择']" filterable></el-transfer>      
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="relateForm = false">取 消</el-button>
+                <el-button type="primary" @click="relateSubmit()">保 存</el-button>
+            </span>
+        </el-dialog>
     </article>
 </template>
 <script>
@@ -91,11 +99,15 @@
             return {
                 loading: false,
                 updateForm: false,
+                relateForm: false,
+                fromData: [{}],
+                toData: [],
                 search: {
                     page: 0,
                     page_size: 15,
                     disabled: -1,
                 },
+                permissionForm: clearRelateFn(),
                 dataList: [{}],
                 total: 0,
                 form: clearFn(),
@@ -167,6 +179,15 @@
                     })
                 })
             },
+            relate(row) {
+                this.permissionForm = clearRelateFn()
+                this.permissionForm.id = row.id
+                roleService.searchPermission(row.id).then((ret) => {
+                    this.fromData = ret.from === null ? [{}] : ret.from
+                    this.toData = ret.to === null ? [] : ret.to
+                    this.relateForm = true
+                })
+            },
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     let msg = '添加成功'
@@ -183,6 +204,17 @@
                         xmview.showTip('error', ret.message)
                     })
                 })
+            },
+            relateSubmit() {
+                this.permissionForm.ids = this.toData.toString()
+                roleService.permission(this.permissionForm).then((ret) => {
+                    if (ret.code === 0) {
+                        xmview.showTip('success', '操作成功!')
+                        this.relateForm = false
+                    } else if (ret.code === 1) {
+                        xmview.showTip('error', ret.message)
+                    }
+                })
             }
         }
     }
@@ -191,6 +223,12 @@
             id: '',
             role_name: '',
             disabled: 0,
+        }
+    }
+    function clearRelateFn() {
+        return {
+            id: '',
+            ids: '',
         }
     }
 </script>

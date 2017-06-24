@@ -33,13 +33,6 @@ class RoleService {
         let url = `${urlPre}/${id}/`
         return api.put(url, {role_name, disabled})
     }
-    // 获取所有启用的权限
-    all() {
-        let url = `${urlPre}/all`
-        return api.get(url).then((ret) => {
-            return ret.data
-        })
-    }
     // 获取指定角色已经关联的权限
     searchPermission(id) {
         let url = `${urlPre}/${id}/permission/search`
@@ -48,7 +41,7 @@ class RoleService {
         })
     }
     // 更新指定角色的关联权限
-    permission(id, ids) {
+    permission({id, ids}) {
         let url = `${urlPre}/${id}/permission/`
         return api.post(url, {ids})
     }

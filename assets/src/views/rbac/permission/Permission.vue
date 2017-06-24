@@ -37,6 +37,14 @@
                 <el-button type="primary" @click="submit('form')">保 存</el-button>
             </span>
         </el-dialog>
+        <!-- 分配权限 弹窗-->
+        <el-dialog :visible.sync="relateForm" size="tiny" :title="this.activeAction === 'api' ? 'API分配' : '菜单分配'">
+            <el-transfer v-model="toData" :data="fromData" :titles="['未选择', '已选择']" filterable></el-transfer>      
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="relateForm = false">取 消</el-button>
+                <el-button type="primary" @click="relateSubmit()">保 存</el-button>
+            </span>
+        </el-dialog>
         <el-table border v-loading="loading" :data="dataList">
             <el-table-column
                     prop="permission_name"
@@ -67,8 +75,8 @@
                             {{scope.row.disabled === 0 ? '启用' : '禁用'}}
                     </el-button>
                     <el-button @click="del(scope.$index,scope.row)" type="text" size="small">删除</el-button>
-                    <el-button @click="edit(scope.row)" type="text" size="small">API分配</el-button>
-                    <el-button @click="edit(scope.row)" type="text" size="small">菜单分配</el-button>
+                    <el-button @click="apiRelate(scope.row)" type="text" size="small">API分配</el-button>
+                    <el-button @click="menuRelate(scope.row)" type="text" size="small">菜单分配</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -96,14 +104,19 @@
     export default {
         data () {
             return {
+                activeAction: 'api',
                 form: clearFn(),
                 loading: false,
                 updateForm: false, // 弹框
+                relateForm: false,
+                fromData: [{}],
+                toData: [],
                 search: {
                     page: 0,
                     page_size: 15,
                     disabled: -1,
                 },
+                permissionForm: clearRelateFn(),
                 dataList: [{}],
                 total: 0,
                 rules: {
@@ -172,10 +185,25 @@
                     })
                 })
             },
-            searchOperation() { // 获取指定权限已经关联的操作
-
+            apiRelate(row) {
+                this.activeAction = 'api'
+                this.permissionForm = clearFn()
+                this.permissionForm.id = row.id
+                permissionService.searchOperation(row.id).then((ret) => {
+                    this.fromData = ret.from === null ? [{}] : ret.from
+                    this.toData = ret.to === null ? [] : ret.to
+                    this.relateForm = true
+                })
             },
-            searchMenu() {  // 获取指定权限已经关联的菜单
+            menuRelate(row) {
+                this.activeAction = 'menu'
+                this.permissionForm = clearFn()
+                this.permissionForm.id = row.id
+                permissionService.searchMenu(row.id).then((ret) => {
+                    this.fromData = ret.from === null ? [{}] : ret.from
+                    this.toData = ret.to === null ? [] : ret.to
+                    this.relateForm = true
+                })
             },
             submit(form) {
                 this.$refs[form].validate((valid) => {
@@ -193,7 +221,28 @@
                         xmview.showTip('error', ret.message)
                     })
                 })
+            },
+            relateSubmit() {
+                this.permissionForm.ids = this.toData.toString()
+                let reqFn = permissionService.operation
+                if (this.activeAction === 'menu') {
+                    reqFn = permissionService.menu
+                }
+                reqFn(this.permissionForm).then((ret) => {
+                    if (ret.code === 0) {
+                        xmview.showTip('success', '操作成功!')
+                        this.relateForm = false
+                    } else if (ret.code === 1) {
+                        xmview.showTip('error', ret.message)
+                    }
+                })
             }
+        }
+    }
+    function clearRelateFn() {
+        return {
+            id: '',
+            ids: '',
         }
     }
 </script>

@@ -48,12 +48,12 @@ class PermissionService {
         })
     }
     // 更新指定权限的关联操作
-    operation(id, ids) {
+    operation({id, ids}) {
         let url = `${urlPre}/${id}/operation/`
         return api.post(url, {ids})
     }
     // 更新指定权限的关联菜单 其中ids逗号分隔
-    menu(id, ids) {
+    menu({id, ids}) {
         let url = `${urlPre}/${id}/menu/`
         return api.post(url, {ids})
     }

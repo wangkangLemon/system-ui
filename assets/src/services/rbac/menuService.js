@@ -13,6 +13,11 @@ class MenuService {
             return ret.data
         })
     }
+    // 获取指定菜单信息
+    getInfo(id) {
+        let url = `${urlPre}/${id}/`
+        return api.get(url)
+    }
     // 禁用
     disable({id, disabled}) {
         let url = `${urlPre}/${id}/disable`
@@ -24,14 +29,14 @@ class MenuService {
         return api.del(url)
     }
     // 新增
-    add({id, pid, menu_name = '', menu_url = '', menu_icon = '', menu_order, disabled}) {
+    add({id, parent_id, menu_name = '', menu_url = '', menu_icon = '', menu_order, disabled}) {
         let url = `${urlPre}/`
-        return api.post(url, {pid, menu_name, menu_url, menu_icon, menu_order,disabled})
+        return api.post(url, {parent_id, menu_name, menu_url, menu_icon, menu_order, disabled})
     }
     // 修改
-    update({id, pid, menu_name = '', menu_url = '', menu_icon = '', menu_order, disabled}) {
+    update({id, parent_id, menu_name = '', menu_url = '', menu_icon = '', menu_order, disabled}) {
         let url = `${urlPre}/${id}/`
-        return api.put(url, {pid, menu_name, menu_url, menu_icon, menu_order,disabled})
+        return api.put(url, {parent_id, menu_name, menu_url, menu_icon, menu_order, disabled})
     }
 }
 
