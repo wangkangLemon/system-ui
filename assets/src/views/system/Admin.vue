@@ -43,13 +43,6 @@
         <!--添加/编辑表单-->
         <el-dialog v-model="addForm">
             <el-form :model="form" :rules="rules" ref="form">
-                <el-form-item prop="role_id" label="角色" :label-width="formLabelWidth">
-                    <el-select clearable v-model="form.role_id">
-                        <el-option label="管理员" :value="1"></el-option>
-                        <el-option label="编辑" :value="2"></el-option>
-                        <el-option label="营销" :value="3"></el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="form.name" placeholder="管理员姓名" auto-complete="off"></el-input>
                 </el-form-item>
@@ -78,6 +71,14 @@
                 <el-button @click="addForm = false">取 消</el-button>
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
             </div>
+        </el-dialog>
+        <!-- 分配权限 弹窗-->
+        <el-dialog :visible.sync="relateForm" size="tiny" title="分配角色">
+            <el-transfer v-model="toData" :data="fromData" :titles="['未选择', '已选择']" filterable></el-transfer>      
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="relateForm = false">取 消</el-button>
+                <el-button type="primary" @click="relateSubmit()">保 存</el-button>
+            </span>
         </el-dialog>
         <section class="header-button">
             <el-button type="primary" icon="plus" @click="addAdmin">添加</el-button>
@@ -145,6 +146,9 @@
                     <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
                         删除
                     </el-button>
+                    <el-button type="text" size="small" @click="relate(scope.row)">
+                        分配角色
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -188,7 +192,6 @@
                 showDetail: false,     // 是否显示详情对话框
                 form: {                // 表单属性值
                     name: '',          // 姓名
-                    role_id: '',       // 角色
                     mobile: '',        // 手机
                     email: '',        // 邮箱
                     passwd: '',          // 密码
@@ -197,7 +200,6 @@
                     disabled: 0,       // 状态
                 },
                 rules: {
-                    role_id: {type: 'number', required: true, message: '必须填写', trigger: 'change'},
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
@@ -212,7 +214,11 @@
                 fetchParam: { // 搜索的姓名
                     name: ''
                 },
-                adminData: []
+                adminData: [],
+                relateForm: false,
+                fromData: [{}],
+                toData: [],
+                permissionForm: clearRelateFn(),
             }
         },
         activated () {
@@ -237,7 +243,6 @@
                     this.form = {
                         id: ret.id,
                         name: ret.name,          // 姓名
-                        role_id: ret.role_id,       // 角色
                         mobile: ret.mobile,        // 手机
                         email: ret.email,        // 邮箱
                         address: ret.address,       // 地址
@@ -329,7 +334,34 @@
             handleCurrentChange (val) {
                 this.currentPage = val
                 this.getData()
+            },
+            relate(row) {
+                this.permissionForm = clearRelateFn()
+                this.permissionForm.id = row.id
+                adminService.searchRoles(row.id).then((ret) => {
+                    this.fromData = ret.from === null ? [{}] : ret.from
+                    this.toData = ret.to === null ? [] : ret.to
+                    this.relateForm = true
+                })
+            },
+            relateSubmit() {
+                this.permissionForm.ids = this.toData.toString()
+                adminService.role(this.permissionForm).then((ret) => {
+                    if (ret.code === 0) {
+                        xmview.showTip('success', '操作成功!')
+                        this.relateForm = false
+                        this.getData()
+                    } else if (ret.code === 1) {
+                        xmview.showTip('error', ret.message)
+                    }
+                })
             }
+        }
+    }
+    function clearRelateFn() {
+        return {
+            id: '',
+            ids: '',
         }
     }
 </script>
