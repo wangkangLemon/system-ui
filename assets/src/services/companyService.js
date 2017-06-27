@@ -478,10 +478,37 @@ class CompanyService {
     getCompanyStat ({
                       page,
                       page_size,
+                      store_id,
                       stat_date,
                   }) {
         let finalUrl = `${urlPre}/stat/search`
-        return api.get(finalUrl, {page, page_size, stat_date}).then((ret) => {
+        return api.get(finalUrl, {page, page_size, store_id, stat_date}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 企业活跃情况 详细内容
+    getCompanyStatView ({
+                        page,
+                        page_size,
+                        store_id,
+                        start_date,
+                        end_date,
+                    }) {
+        let finalUrl = `${urlPre}/stat/search/company`
+        return api.get(finalUrl, {page, page_size, store_id, start_date, end_date}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 企业活跃情况 图表信息
+    getCompanyStatChart ({
+                            store_id,
+                            start_date,
+                            end_date,
+                        }) {
+        let finalUrl = `${urlPre}/stat/chart`
+        return api.get(finalUrl, {store_id, start_date, end_date}).then((ret) => {
             return ret.data
         })
     }
