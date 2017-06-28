@@ -27,11 +27,6 @@ AmrPlayer.prototype = {
         this.ended_cb = function(){
             if(cnt === 0){
                 cnt++;
-                var msg = "AmrPlayer ended callback\n";
-                msg += "usage:\n";
-                msg += "var player = new AmrPlayer('http://xxx.com/xxx.amr');\n";
-                msg += "player.endedWith( function(){ xxx } );";
-                console.info(msg);
             }
         };
         
@@ -99,7 +94,6 @@ AmrPlayer.prototype = {
             self.ended_cb && self.ended_cb();
             self.genPLayer();
         };
-        this.play()
     },
     getAudioContext: function(){
         if (!this.audioContext) {

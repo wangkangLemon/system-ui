@@ -1,10 +1,9 @@
 <!--<VueAmrPlayer url="model.url"></VueAmrPlayer>-->
 <template>
-    <el-button type="text" icon="edit" @click="play"></el-button>
+    <el-button type="text" :loading="downLoading" icon="edit" @click="play"></el-button>
 </template>
 
 <script>
-import config from '../../../utils/config'
 export default {
     name: 'VueAmrPlayer',
     props: {
@@ -27,14 +26,12 @@ export default {
             // scriptTagStatus -> 0:代码未加载，1:两个代码依赖加载了一个，2:两个代码依赖都已经加载完成
             scriptTagStatus: 0,
             currVal: '',
+            downFlag: 0,
+            downLoading: false,
         }
     },
     created() {
-        if (this.url.indexOf('://') < 0) {
-            this.currVal = config.apiHost + '/upload/' + this.url
-        } else {
-            this.currVal = this.url
-        }
+        this.currVal = this.url
         if (window.AmrPlayer !== undefined) {
             // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
             this.scriptTagStatus = 2
@@ -106,7 +103,16 @@ export default {
             }
         },
         play() {
-            this.instance && this.instance.playAmr(this.currVal)
+            if (this.instance !== null) {
+                if (this.downFlag === 0) {
+                    this.instance.playAmr(this.currVal)
+                    this.downFlag++
+                } else {
+                    this.instance.toggle()
+                }
+            } else {
+                xmview.showTip('error', '加载AMR播放器失败, 请刷新重试!')
+            }
         },
     }
 }
