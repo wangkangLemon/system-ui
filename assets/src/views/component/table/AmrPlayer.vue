@@ -4,6 +4,7 @@
 </template>
 
 <script>
+import config from '../../../utils/config'
 export default {
     name: 'VueAmrPlayer',
     props: {
@@ -28,8 +29,12 @@ export default {
             currVal: '',
         }
     },
-    created () {
-        this.currVal = this.url
+    created() {
+        if (this.url.indexOf('://') < 0) {
+            this.currVal = config.apiHost + '/upload/' + this.url
+        } else {
+            this.currVal = this.url
+        }
         if (window.AmrPlayer !== undefined) {
             // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
             this.scriptTagStatus = 2
