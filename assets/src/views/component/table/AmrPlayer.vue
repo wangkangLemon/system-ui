@@ -1,6 +1,6 @@
 <!--<VueAmrPlayer url="model.url"></VueAmrPlayer>-->
 <template>
-    <el-button type="text" :loading="downLoading" icon="edit" @click="play"></el-button>
+    <el-button type="text" :loading="downLoading" @click="play"><i class="icon-luyin"></i></el-button>
 </template>
 
 <script>
@@ -105,14 +105,20 @@ export default {
         play() {
             if (this.instance !== null) {
                 if (this.downFlag === 0) {
+                    this.downLoading = true
                     this.instance.playAmr(this.currVal)
                     this.downFlag++
+                    setTimeout(this.close, 1500)
                 } else {
                     this.instance.toggle()
                 }
             } else {
                 xmview.showTip('error', '加载AMR播放器失败, 请刷新重试!')
             }
+        },
+        close() {
+            this.downLoading = false
+            this.instance.toggle()
         },
     }
 }
