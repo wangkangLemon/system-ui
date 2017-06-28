@@ -1,6 +1,6 @@
 <!--<VueAmrPlayer url="model.url"></VueAmrPlayer>-->
 <template>
-    <el-button type="text" :loading="downLoading" @click="play"><i class="icon-luyin"></i></el-button>
+    <el-button type="text" :loading="downLoading" @click="play"><i class="iconfont icon-luyin"></i></el-button>
 </template>
 
 <script>
