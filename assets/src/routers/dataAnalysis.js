@@ -53,6 +53,19 @@ export default {
             }
         },
         {
+            path: 'company/stat/view',
+            name: 'analysis-company-stat-view',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/dataAnalysis/companyStat/View.vue'))
+                })
+            },
+            meta: {
+                title: '趋势',
+                noback: true
+            }
+        },
+        {
             path: 'company/manage',
             name: 'analysis-company-manage',
             component: resolve => {
