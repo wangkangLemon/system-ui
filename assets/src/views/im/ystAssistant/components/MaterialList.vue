@@ -22,7 +22,7 @@
             }
 
             .searchImg {
-                flex: 0;
+                text-align: right;
                 width: 300px;
             }
         }
