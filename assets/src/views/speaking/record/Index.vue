@@ -55,6 +55,7 @@
             <el-table-column prop="speaking_content" label="标准录音"></el-table-column>
             <el-table-column label="用户录音">
                 <template scope="scope">
+                    <VueAmrPlayer :url="scope.row.recording"></VueAmrPlayer>
                     <i>{{scope.row.recording_text}}</i>
                 </template>
             </el-table-column>
@@ -79,6 +80,7 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
+    import VueAmrPlayer from '../../component/table/AmrPlayer.vue'
     function getFetchParam() {
         return {
             company_id: void 0,
@@ -96,7 +98,8 @@
         components: {
             DateRange,
             CompanySelect,
-            DepSelect
+            DepSelect,
+            VueAmrPlayer
         },
         data() {
             return {
