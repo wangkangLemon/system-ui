@@ -41,6 +41,7 @@ compiler.plugin('compilation', function (compilation) {
 
 // handle vendor
 app.use("/vendor", express.static('../public/vendor'));
+app.use("/upload", express.static('../public/upload'));
 
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
