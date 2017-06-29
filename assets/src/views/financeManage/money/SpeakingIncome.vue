@@ -128,8 +128,8 @@
                     createTime: '',
                     endTime: '',
                 },
-                currentPage: 1,
-                pageSize: 10,
+                currentPage: 0,
+                pageSize: 15,
                 historyData: [],
                 total: 0
             }
