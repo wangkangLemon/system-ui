@@ -55,7 +55,7 @@
             </el-table-column>
             <el-table-column prop="sort" label="排序" width="250">
             </el-table-column>
-            <el-table-column prop="create_time_name" label="时间">
+            <el-table-column prop="create_time_name" min-width='400'label="时间">
             </el-table-column>
             <el-table-column prop="cell" label="操作" width="250">
                 <template scope="scope">

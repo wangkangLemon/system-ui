@@ -43,14 +43,15 @@
                 <el-table-column
                         prop="app"
                         label="app"
-                        width="180">
+                        min-width="180">
                 </el-table-column>
                 <el-table-column
                         prop="key"
                         label="key"
-                        width="180">
+                        min-width="180">
                 </el-table-column>
                 <el-table-column
+                        min-width="380"
                         prop="val"
                         label="value">
                 </el-table-column>
