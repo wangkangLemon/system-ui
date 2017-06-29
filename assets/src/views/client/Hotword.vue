@@ -104,6 +104,9 @@ export default {
         this.getdata()
     },
     methods: {
+        initFetchParam() {
+            this.fetchParam.page = 1
+        },
         handleAdd() {  // 添 加
             hotwordService.addHotword(this.hotword).then(() => {
                 xmview.showTip('success', '操作成功')

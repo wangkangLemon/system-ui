@@ -7,8 +7,7 @@
 <!--</IndustryCompanySelect>-->
 
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" :list="list" :disabled="disabled"
-              >
+    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder" :list="list" :disabled="disabled">
     </SelectScroll>
 </template>
 

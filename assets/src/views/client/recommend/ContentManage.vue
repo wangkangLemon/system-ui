@@ -350,7 +350,7 @@
                     classifyData: [],  // 左侧显示的列表数据
                     total: 0,
                     page: 1,
-                    page_size: 15,
+                    page_size: 10,
                     currentID: '' // 当前选中的区块ID
                 },
                 // 右侧结果
@@ -510,7 +510,8 @@
             getLeftCategoryData () {
                 this.section.loading = true
                 return sectionService.getSectionList({
-                    category_id: this.section.category_id
+                    category_id: this.section.category_id,
+                    page: this.section.page
                 }).then((ret) => {
                     this.section.classifyData = ret.data
                     this.section.total = ret.total

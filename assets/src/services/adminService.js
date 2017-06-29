@@ -23,8 +23,8 @@ class AdminService {
     }
 
     // 新增管理员
-    addAdmin ({role_id, name, sex = '', mobile = '', passwd, email = '', address = '', disabled = ''}) {
-        return api.post(urlPre, {role_id, name, sex, mobile, email, passwd, address, disabled}).then((ret) => {
+    addAdmin ({name, sex = '', mobile = '', passwd, email = '', address = '', disabled = ''}) {
+        return api.post(urlPre, {name, sex, mobile, email, passwd, address, disabled}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -40,9 +40,9 @@ class AdminService {
     }
 
     // 修改管理员获取信息
-    updateAdmin ({id, role_id, name, sex = '', mobile = '', passwd = '', email = '', address = '', disabled = ''}) {
+    updateAdmin ({id, name, sex = '', mobile = '', passwd = '', email = '', address = '', disabled = ''}) {
         let finalUrl = `${urlPre}/${id}`
-        return api.put(finalUrl, {role_id, name, sex, mobile, passwd, email, address, disabled}).then((ret) => {
+        return api.put(finalUrl, {name, sex, mobile, passwd, email, address, disabled}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -90,6 +90,20 @@ class AdminService {
         return api.get(finalUrl, {page, page_size, keyword}).then((ret) => {
             return ret.data
         })
+    }
+
+    // 获取指定用户关联的角色
+    searchRoles(id) {
+        let url = `${urlPre}/${id}/role/search`
+        return api.get(url).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 更新指定用户的关联角色
+    role({id, ids}) {
+        let url = `${urlPre}/${id}/role/`
+        return api.post(url, {ids})
     }
 
     // ============================内测应用部分============================

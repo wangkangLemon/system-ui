@@ -48,10 +48,17 @@
 
         <el-table class="data-table" v-loading="loadingData" :data="data" border>
             <el-table-column prop="speaking_title" label="标题" width="180"></el-table-column>
-            <el-table-column prop="company_name" label="连锁"></el-table-column>
-            <el-table-column prop="department_name" label="门店" width="200"></el-table-column>
+            <el-table-column prop="company_name" label="连锁" width="200"></el-table-column>
+            <el-table-column prop="department_name" label="门店" width="150"></el-table-column>
             <el-table-column prop="user_name" label="店员" width="120"></el-table-column>
             <el-table-column prop="score" label="分数" width="100"></el-table-column>
+            <el-table-column prop="speaking_content" label="标准录音"></el-table-column>
+            <el-table-column label="用户录音">
+                <template scope="scope">
+                    <VueAmrPlayer :url="scope.row.recording"></VueAmrPlayer>
+                    <i>{{scope.row.recording_text}}</i>
+                </template>
+            </el-table-column>
             <el-table-column prop="create_time_name" label="练习时间" width="180"></el-table-column>
         </el-table>
 
@@ -73,12 +80,26 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
-
+    import VueAmrPlayer from '../../component/table/AmrPlayer.vue'
+    function getFetchParam() {
+        return {
+            company_id: void 0,
+            department_id: void 0,
+            user_id: void 0,
+            speaking_company_id: void -1,
+            keyword: void '',
+            page: 1,
+            page_size: 15,
+            time_start: void '',
+            time_end: void ''
+        }
+    }
     export default {
         components: {
             DateRange,
             CompanySelect,
-            DepSelect
+            DepSelect,
+            VueAmrPlayer
         },
         data() {
             return {
@@ -86,17 +107,7 @@
                 data: [], // 表格数据
                 total: 0,
                 dialogVisible: false,
-                fetchParam: {
-                    company_id: void 0,
-                    department_id: void 0,
-                    user_id: void 0,
-                    speaking_company_id: void -1,
-                    keyword: void '',
-                    page: 1,
-                    page_size: 15,
-                    time_start: void '',
-                    time_end: void ''
-                }
+                fetchParam: getFetchParam(),
             }
         },
         activated () {
@@ -107,6 +118,9 @@
             xmview.setContentLoading(false)
         },
         methods: {
+            initFetchParam() {
+                this.fetchParam = getFetchParam()
+            },
             handleCurrentChange (val) {
                 this.fetchParam.page = val
                 this.fetchData()

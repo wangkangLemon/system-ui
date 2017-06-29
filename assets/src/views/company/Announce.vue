@@ -153,6 +153,9 @@
             })
         },
         methods: {
+            initFetchParam () {
+                this.currentPage = 1
+            },
             showFn (row) {
                 this.showDetail = true
                 setTimeout(() => {

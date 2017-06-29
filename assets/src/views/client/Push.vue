@@ -184,6 +184,9 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+            },
             createPush () {
                 this.$router.push({name: 'client-push-create'})
             },

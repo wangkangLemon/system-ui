@@ -191,6 +191,9 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+            },
             // 显示详情
             showFn (index, row) {
                 this.show.showDetail = true

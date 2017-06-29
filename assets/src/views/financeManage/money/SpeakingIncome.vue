@@ -128,8 +128,8 @@
                     createTime: '',
                     endTime: '',
                 },
-                currentPage: 1,
-                pageSize: 10,
+                currentPage: 0,
+                pageSize: 15,
                 historyData: [],
                 total: 0
             }
@@ -140,6 +140,9 @@
             })
         },
         methods: {
+            initFetchParam () {
+                this.currentPage = 1
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()

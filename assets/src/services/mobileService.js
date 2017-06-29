@@ -34,7 +34,7 @@ class MobileService {
         let finalUrl = `${urlPre}/menu/scheme/${id}/enable`
         return api.put(finalUrl)
     }
-    // 应用导航方案
+    // 克隆导航
     menuClone (id) {
         let finalUrl = `${urlPre}/menu/scheme/${id}/copy`
         return api.put(finalUrl)

@@ -71,7 +71,7 @@
 <template>
     <article class="analysis-company-manage">
         <el-card class="box-card">
-            <section class="course-analytics">
+            <section class="course-analytics" v-if="statData != null">
                 <div>
                     <div>
                         <i>今日登陆</i>
@@ -238,6 +238,9 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()

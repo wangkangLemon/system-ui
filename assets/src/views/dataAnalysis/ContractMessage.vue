@@ -266,6 +266,9 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+            },
             beforeUpload (file) {
                 const isJPG = file.type === 'application/vnd.ms-excel'
                 if (!isJPG) {
