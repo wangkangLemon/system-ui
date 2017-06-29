@@ -114,7 +114,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination class="pagin" @size-change="val=> {search.page_size=val; getData()}" @current-change="val=> {search.page=val; getData()}" :current-page="search.page" :page-sizes="[15, 30, 60, 100]" layout="total, sizes, prev, pager, next, jumper" :total="10">
+        <el-pagination class="pagin" @size-change="val=> {search.page_size=val; getData()}" @current-change="val=> {search.page=val; getData()}" :current-page="search.page" :page-sizes="[15, 30, 60, 100]" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
     </main>
 </template>
