@@ -56,6 +56,83 @@ class MobileService {
         let finalUrl = `${urlPre}/menu/scheme/${scheme_id}`
         return api.put(finalUrl, info)
     }
+    // -------------------导航管理部分-------------
+    // 获取方案列表
+    searchScheme ({type, platform, app_version, page, page_size}) {
+        let finalUrl = `${urlPre}/menuscheme/search`
+        return api.get(finalUrl, {type, platform, app_version, page, page_size}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 获取方案筛选版本
+    searchVersions ({type, platform}) {
+        let finalUrl = `${urlPre}/menuscheme/versions`
+        return api.get(finalUrl, {type, platform}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 创建方案
+    createScheme ({type}) {
+        let finalUrl = `${urlPre}/menuscheme`
+        return api.post(finalUrl, {type}).then((ret) => {
+            return ret
+        })
+    }
+    // 克隆方案
+    cloneScheme ({scheme_id}) {
+        let finalUrl = `${urlPre}/menuscheme/clone`
+        return api.post(finalUrl, {scheme_id}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 删除导航方案
+    deleteScheme ({scheme_id}) {
+        let finalUrl = `${urlPre}/menuscheme/${scheme_id}`
+        return api.del(finalUrl)
+    }
+    // 启用方案
+    activeScheme ({scheme_id, ios, android}) {
+        let finalUrl = `${urlPre}/menuscheme/${scheme_id}/active`
+        return api.post(finalUrl, {ios, android})
+    }
+    // 获取平台版本列表
+    getPlatVersions ({scheme_id}) {
+        let finalUrl = `${urlPre}/menuscheme/${scheme_id}/validate`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+    // 删除功能
+    deleteModule ({scheme_id, module_id}) {
+        let finalUrl = `${urlPre}/menuscheme/${scheme_id}/module/${module_id}`
+        return api.del(finalUrl)
+    }
+    // 获取功能版本
+    getModuleVersions () {
+        let finalUrl = `${urlPre}/appmodule/version`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+    // 获取功能列表
+    getModules ({versoin}) {
+        let finalUrl = `${urlPre}/appmodule/search`
+        return api.get(finalUrl, {versoin}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 添加功能
+    addModule ({scheme_id, type, type_id, url, name, icon, notify, notify_node, notify_icon, notify_text, sort, group = 0}) {
+        let finalUrl = `${urlPre}/menuscheme/${scheme_id}/module`
+        return api.post(finalUrl, {type, type_id, url, name, icon, notify, notify_node, notify_icon, notify_text, sort, group}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 更新功能
+    updateModule ({scheme_id, module_id, type, type_id, url, name, icon, notify, notify_node, notify_icon, notify_text}) {
+        let finalUrl = `${urlPre}/menuscheme/${scheme_id}/module/${module_id}`
+        return api.put(finalUrl, {type, type_id, url, name, icon, notify, notify_node, notify_icon, notify_text})
+    }
 }
 
 export default new MobileService()

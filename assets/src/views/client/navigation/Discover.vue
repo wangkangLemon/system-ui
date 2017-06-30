@@ -352,6 +352,7 @@
 //    import formUtils from '../../../utils/formUtils'
 //    import clone from 'clone'
     export default{
+        name: 'navigatioin-discover',
         data () {
             return {
                 groupDialog: false, // 是否显示分组弹窗
@@ -375,7 +376,8 @@
                 }
             }
         },
-        activated () {
+        created () {
+            console.log(11)
             xmview.setContentLoading(false)
             this.getData()
 //            this.getData().then(() => {
