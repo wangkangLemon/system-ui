@@ -71,8 +71,8 @@
                     </el-form-item>
                     <el-form-item label="状态" prop="disabled">
                         <el-radio-group v-model="fetchParam.disabled">
-                            <el-radio :label="1">启用</el-radio>
-                            <el-radio :label="0">禁用</el-radio>
+                            <el-radio :label="0">启用</el-radio>
+                            <el-radio :label="1">禁用</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item>
@@ -278,7 +278,7 @@
             menu_icon: void '',
             menu_order: void 0,
             disabled: void 0,
-            id: void 0,
+            id: void 1,
         }
     }
 </script>

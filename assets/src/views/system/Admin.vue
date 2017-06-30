@@ -197,7 +197,7 @@
                     passwd: '',          // 密码
                     address: '',       // 地址
                     sex: 0,            // 性别
-                    disabled: 0,       // 状态
+                    disabled: 1,       // 状态
                 },
                 rules: {
                     name: [
@@ -275,7 +275,7 @@
                 })
             },
             adminDisable (row, val) {
-                let state = val ? '禁用' : '启用'
+                let state = val ? '启用' : '禁用'
                 xmview.showDialog(`你将要${state}管理员【<i style="color: red">${row.name}</i>】确认吗？`, () => {
                     adminService.adminDisable({
                         adminID: row.id,
