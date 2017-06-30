@@ -218,6 +218,7 @@
                         // 请求接口
                         login(this.ruleForm2.account, this.ruleForm2.checkPass).then((ret) => {
                             authUtils.setNavMenu(treeUtils.arr2Tree(ret.auth_menu)) // 保存菜单
+                            authUtils.setOperation(ret.auth_ops) // 保存权限信息
                             authUtils.setAuthToken(ret.auth_token) // 保存token
                             authUtils.setUserInfo(ret.auth_user) // 保存用户信息
                             xmview.showTip('success', '登录成功, 正在跳转...', 1e9)

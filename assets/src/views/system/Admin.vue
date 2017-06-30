@@ -81,7 +81,7 @@
             </span>
         </el-dialog>
         <section class="header-button">
-            <el-button type="primary" icon="plus" @click="addAdmin">添加</el-button>
+            <el-button type="primary" icon="plus" @click="addAdmin" v-show="isPermission('sys_admin_create')">添加</el-button>
         </section>
         <section class="search">
             <section>
@@ -146,7 +146,7 @@
                     <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
                         删除
                     </el-button>
-                    <el-button type="text" size="small" @click="relate(scope.row)">
+                    <el-button type="text" size="small" @click="relate(scope.row)" v-show="isPermission('sys_admin_role_update')">
                         分配角色
                     </el-button>
                 </template>
@@ -167,9 +167,10 @@
 <script>
     import adminService from '../../services/adminService'
     import {defaultAvatar} from '../../utils/filterUtils'
+    import authUtils from '../../utils/authUtils'
     export default {
         filters: {
-            defaultAvatar
+            defaultAvatar,
         },
         data () {
             let valMobile = (rule, value, callback) => {
@@ -227,6 +228,9 @@
             })
         },
         methods: {
+            isPermission (op) {
+                return authUtils.isPermission(op)
+            },
             addAdmin () {
                 this.addForm = true
                 setTimeout(() => {
