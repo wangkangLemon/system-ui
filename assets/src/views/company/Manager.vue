@@ -46,13 +46,13 @@
                                            :change="getData"></IndustryCompanySelect>
 
                 </section>
-                <section>
+                <!--<section>
                     <i>是否删除</i>
                     <el-select v-model="fetchParam.status" @change="getData">
                         <el-option label="未删除" :value="0"></el-option>
                         <el-option label="已删除" :value="1"></el-option>
                     </el-select>
-                </section>
+                </section>-->
                 <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
                            v-on:changeStart="val=> fetchParam.createTime = val"
                            v-on:changeEnd="val=> fetchParam.endTime = val"

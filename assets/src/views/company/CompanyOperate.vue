@@ -67,7 +67,8 @@
                 <el-form-item prop="description" label="企业介绍" :label-width="formLabelWidth">
                     <el-input type="textarea" :rows="3" v-model="form.description" auto-complete="off"></el-input>
                 </el-form-item>
-                <div class="tip">
+                <div v-if="form.category===2">
+                <div  class="tip">
                     * 以下信息会关联到营销数据中心，如果是营销人员签约连锁，请务必填写。
                 </div>
                 <el-form-item prop="department_number" label="签约门店数量" :label-width="formLabelWidth">
@@ -98,6 +99,7 @@
                                     placeholder="合同到期日">
                     </el-date-picker>
                 </el-form-item>
+                </div>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="submit('form')">提交</el-button>

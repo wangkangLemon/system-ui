@@ -90,7 +90,7 @@
                 <section>
                     <i>使用环境</i>
                     <el-select clearable v-model="searchParams.last_appstart" @change="getData">
-                        <el-option label="App" :value="1"></el-option>
+                        <el-option label="WAP" :value="1"></el-option>
                         <el-option label="IOS" :value="2"></el-option>
                         <el-option label="Android" :value="3"></el-option>
                     </el-select>

@@ -186,7 +186,7 @@ export default {
             })
         },
         add () {
-            this.from = clearFn()
+            this.form = clearFn()
             this.updateForm = true
         },
         edit (row) {

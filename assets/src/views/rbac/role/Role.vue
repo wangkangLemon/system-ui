@@ -29,8 +29,8 @@
                     prop="disabled"
                     label="状态">
                     <template scope="scope">
-                        <el-tag type="success" v-if="scope.row.disabled">启用</el-tag>
-                        <el-tag type="gray" v-if="!scope.row.disabled">禁用</el-tag>
+                        <el-tag type="success" v-if="!scope.row.disabled">启用</el-tag>
+                        <el-tag type="gray" v-if="scope.row.disabled">禁用</el-tag>
                     </template>
             </el-table-column>
             <el-table-column
@@ -47,7 +47,7 @@
                 <template scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                     <el-button type="text" size="small" @click="disable(scope.row)">
-                            {{scope.row.disabled === 0 ? '启用' : '禁用'}}
+                            {{scope.row.disabled === 1 ? '启用' : '禁用'}}
                     </el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                     <el-button @click="relate(scope.row)" type="text" size="small">权限分配</el-button>
@@ -72,8 +72,8 @@
                 </el-form-item>
                 <el-form-item label="状态">
                    <el-radio-group v-model="form.disabled">
-                            <el-radio :label="1">启用</el-radio>
-                            <el-radio :label="0">禁用</el-radio>
+                            <el-radio :label="0">启用</el-radio>
+                            <el-radio :label="1">禁用</el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
@@ -167,7 +167,7 @@
                 })
             },
             disable(row) {
-                xmview.showDialog(`你将要${row.disabled === 0 ? '启用' : '禁用'}【<i style="color: red">${row.role_name}</i>】确认吗`, () => {
+                xmview.showDialog(`你将要${row.disabled === 1 ? '启用' : '禁用'}【<i style="color: red">${row.role_name}</i>】确认吗`, () => {
                     this.form.id = row.id
                     this.form.disabled = row.disabled === 1 ? 0 : 1
                     this.form.role_name = row.role_name
@@ -222,7 +222,7 @@
         return {
             id: '',
             role_name: '',
-            disabled: 0,
+            disabled: 1,
         }
     }
     function clearRelateFn() {
