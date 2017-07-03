@@ -17,6 +17,23 @@ document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
 Vue.use(ElementUI)
 Vue.use(VueDND)
 
+/*
+添加全局认证方法
+*/
+let pluginPermission = {
+    install: function (Vue, options) {
+        // 注入组件
+        Vue.mixin({
+            methods: {
+                isPermission (val) {
+                    return authUtils.isPermission(val)
+                }
+            }
+        })
+    }
+}
+Vue.use(pluginPermission)
+
 window.xmview = {
     // success/warning/info/error
     showTip: function (type, msg, msgDuring = 3000) {

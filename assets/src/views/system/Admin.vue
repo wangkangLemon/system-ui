@@ -167,7 +167,6 @@
 <script>
     import adminService from '../../services/adminService'
     import {defaultAvatar} from '../../utils/filterUtils'
-    import authUtils from '../../utils/authUtils'
     export default {
         filters: {
             defaultAvatar,
@@ -228,9 +227,6 @@
             })
         },
         methods: {
-            isPermission (op) {
-                return authUtils.isPermission(op)
-            },
             addAdmin () {
                 this.addForm = true
                 setTimeout(() => {
