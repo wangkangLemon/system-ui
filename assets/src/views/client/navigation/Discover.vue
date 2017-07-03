@@ -160,6 +160,30 @@
                 }
             }
         }
+        .apply-version {
+            .el-dialog__body {
+                /*padding: 0;*/
+            }
+            p {
+                padding-bottom: 10px;
+            }
+            section {
+                display: flex;
+                margin-bottom: 10px;
+                > i {
+                    display: block;
+                    width: 100px;
+                    text-align: right;
+                }
+                .el-checkbox-group {
+                    width: 80%;
+                    .el-checkbox {
+                        margin-left: 15px;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
         .block {
             text-align: right;
             padding: 10px 0;
@@ -169,33 +193,27 @@
 <template>
     <article class="index-discover-container" v-loading="containerLoading">
         <!--添加编辑/弹窗-->
-        <el-dialog class="form" :title="dialogTitle" v-model="changeIcon">
+        <el-dialog class="form" :title="dialogTitle" :visible.sync="changeIcon" @open="dialogOpen">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item label="推荐类别">
-                    <el-select clearable v-model="form.category">
-                        <el-option label="功能推荐" :value="1"></el-option>
-                        <el-option label="添加链接" :value="2"></el-option>
+                    <el-select clearable v-model="form.type" @change="typeChange">
+                        <el-option label="功能推荐" value="app_module"></el-option>
+                        <el-option label="添加链接" value="link"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="version" label="功能支持版本" v-if="form.category == 1">
-                    <el-select v-model="form.version">
-                        <el-option label="功能支持版本" :value="1"></el-option>
-                        <el-option label="功能支持版本1" :value="2"></el-option>
-                        <el-option label="功能支持版本2" :value="3"></el-option>
-                        <el-option label="功能支持版本3" :value="4"></el-option>
+                <el-form-item label="功能支持版本" v-if="form.type == 'app_module'">
+                    <el-select clearable placeholder="全部" v-model="form.app_version" @change="versionChange">
+                        <el-option v-for="(item,index) in modulesVersions" :label="item" :value="item" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="version" label="选择功能" v-if="form.category == 1">
-                    <el-select v-model="form.action">
-                        <el-option label="选择功能" :value="1"></el-option>
-                        <el-option label="选择功能1" :value="2"></el-option>
-                        <el-option label="选择功能2" :value="3"></el-option>
-                        <el-option label="选择功能3" :value="4"></el-option>
+                <el-form-item prop="type_id" label="选择功能" v-if="form.type == 'app_module'">
+                    <el-select v-model="form.type_id">
+                        <el-option v-for="(item,index) in modules" :label="item.name" :value="item.id" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="name" v-loading="loading" label="应用logo">
-                    <div class="img-wrap">
-                        <img :src="form.url" alt="" />
+                    <div class="img-wrap" v-if="form.icon" >
+                        <img :src="form.icon | fillImgPath" alt=""/>
                     </div>
                     <p class="tip">建议上传图片尺寸为 140*140</p>
                     <el-button type="primary" @click="() => {$refs.imgcropper.chooseImg()}">上传</el-button>
@@ -203,32 +221,32 @@
                 <el-form-item prop="name" label="应用名称">
                     <el-input v-model="form.name" placeholder="控制在4个字以内，展示效果最佳"></el-input>
                 </el-form-item>
-                <el-form-item prop="link" label="应用链接" v-if="form.category == 2">
-                    <el-input v-model="form.link" placeholder="请以http://或者https://开头"></el-input>
+                <el-form-item prop="url" label="应用链接" v-if="form.type == 'link'">
+                    <el-input v-model="form.url" placeholder="请以http://或者https://开头"></el-input>
                 </el-form-item>
                 <div class="split-line"></div>
                 <el-form-item label="是否需要推荐">
-                    <el-radio-group @change="changeRecommend" v-model="form.isRecommend">
+                    <el-radio-group @change="changeRecommend" v-model="form.notify">
                         <el-radio class="radio" :label="0">否</el-radio>
                         <el-radio class="radio" :label="1">是</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <div v-if="form.isRecommend">
+                <div v-if="form.notify">
                     <el-form-item label="推荐标签">
-                        <el-checkbox v-model="form.isDot">红点</el-checkbox>
+                        <el-checkbox v-model="form.notify_node">红点</el-checkbox>
                     </el-form-item>
                     <el-form-item prop="recommend" label="">
                         <el-checkbox v-model="form.isRecommendText">推荐语</el-checkbox>
                         <div class="subshow" v-if="form.isRecommendText">
                             <i>文案</i>
-                            <el-input v-model="form.recommendText"></el-input>
+                            <el-input v-model="form.notify_text"></el-input>
                         </div>
                     </el-form-item>
                     <el-form-item label="">
                         <el-checkbox v-model="form.isPicture">展示图片</el-checkbox>
                         <div class="subshow" v-if="form.isPicture">
-                            <div class="img-wrap">
-                                <img :src="form.showPic" alt="" />
+                            <div class="img-wrap" v-if="form.notify_icon">
+                                <img :src="form.notify_icon | fillImgPath" alt="" />
                             </div>
                             <el-button @click="()=>{$refs.recommendPic.chooseImg()}">上传</el-button>
                         </div>
@@ -238,6 +256,28 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="changeIcon = false">取 消</el-button>
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!--启用弹窗-->
+        <el-dialog class="apply-version" title="选择方案应用平台和版本" :visible.sync="versionDialog">
+            <article v-loading="versionLoading" >
+                <p>此方案可应用到以下平台版本：</p>
+                <section>
+                    <i>Android：</i>
+                    <el-checkbox-group v-model="checkedAndroids" @change="(value)=>{checkedAndroids=[...value]}">
+                        <el-checkbox v-for="(item,index) in platForm.android" :label="item" :key="index">{{item}}</el-checkbox>
+                    </el-checkbox-group>
+                </section>
+                <section>
+                    <i>iOS：</i>
+                    <el-checkbox-group v-model="checkedIos" @change="(value)=>{checkedIos=[...value]}">
+                        <el-checkbox v-for="(item,index) in platForm.ios" :label="item" :key="index">{{item}}</el-checkbox>
+                    </el-checkbox-group>
+                </section>
+            </article>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="versionDialog = false">取 消</el-button>
+                <el-button type="primary" @click="activeScheme">启 用</el-button>
             </div>
         </el-dialog>
         <!--分组弹窗-->
@@ -256,21 +296,20 @@
             </div>
         </el-dialog>
         <div class="add">
-            <el-button type="primary" icon="plus" class="recharge" @click="navClone(0)">新建方案</el-button>
+            <el-button type="primary" icon="plus" class="recharge" @click="createScheme">新建方案</el-button>
         </div>
         <section class="search">
             <section>
                 <i>平台</i>
-                <el-select clearable v-model="fetchParam.plat" @change="getData">
-                    <el-option label="Android" :value="1"></el-option>
-                    <el-option label="iOS" :value="2"></el-option>
+                <el-select clearable v-model="fetchParam.plat" @change="()=>{searchVersions();getData()}">
+                    <el-option label="Android" value="android"></el-option>
+                    <el-option label="iOS" value="ios"></el-option>
                 </el-select>
             </section>
             <section>
                 <i>版本</i>
                 <el-select clearable v-model="fetchParam.version" @change="getData">
-                    <el-option label="Android" :value="1"></el-option>
-                    <el-option label="iOS" :value="2"></el-option>
+                    <el-option v-for="(item,index) in versions" :label="item" :value="item" :key="index"></el-option>
                 </el-select>
             </section>
         </section>
@@ -289,8 +328,8 @@
                             <img :src="item.icon | fillImgPath" alt=""/>
                             <p>{{item.name}}</p>
                             <div class="operate-layer">
-                                <i class="iconfont icon-edit" @click="changeFn(item, index, list.id)"></i>
-                                <i class="el-icon-circle-cross"></i>
+                                <i class="iconfont icon-edit" @click="editModule(item, list.id, pindex, index)"></i>
+                                <i class="el-icon-circle-cross" @click="delModule(list.id, item.id, pindex, index)"></i>
                             </div>
                         </div>
                     </div>
@@ -305,7 +344,7 @@
                         </div>
                     </div>
                 </section>
-                <div @click="addNav(list.id)" class="nav-item additem" v-if="!list.active">
+                <div @click="addModule(list.id, pindex)" class="nav-item additem" v-if="!list.active">
                     <div>
                         <img src="../images/add.png" alt="">
                     </div>
@@ -313,22 +352,15 @@
             </section>
             <section class="nav-operate">
                 <span v-if="list.active">使用中</span>
-                <el-button type="text" v-if="!list.active" @click="navStart(list.id)">启用</el-button>
-                <el-button type="text" @click="navClone(list.id)">克隆</el-button>
+                <el-button type="text" v-if="!list.active" @click="getPlatVersions(list.id)">启用</el-button>
+                <el-button type="text" @click="cloneScheme(list.id)">克隆</el-button>
                 <el-button type="text" @click="grouping(list)" v-if="!list.active">分组</el-button>
-                <el-button type="text" @click="navDelete(list.id)" v-if="!list.active">删除</el-button>
+                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active">删除</el-button>
             </section>
-            <div class="platform">
+            <div class="platform" v-if="list.active">
                 <i>使用平台和版本:</i>
                 <div>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
+                    <em v-for="(version,index) in list.platform_tag" :key="index">{{version}}</em>
                 </div>
             </div>
         </article>
@@ -351,7 +383,7 @@
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../../services/mobileService'
     //    import formUtils from '../../../utils/formUtils'
-    //    import clone from 'clone'
+    import clone from 'clone'
     export default{
         name: 'navigatioin-discover',
         data () {
@@ -359,12 +391,25 @@
                 containerLoading: false,
                 groupDialog: false, // 是否显示分组弹窗
                 dialogTitle: '',
+                versions: [], // 搜索版本列表
                 fetchParam: {
                     plat: '',
                     version: ''
                 },
+                versionDialog: false, // 是否显示启用版本的dialog
+                versionLoading: false, // 显示版本弹窗loading
+                platForm: [], // 启动时获取的平台列表
+                checkedAndroids: [], // 已选的Android列表
+                checkedIos: [], // 已选的ios列表
                 loading: false,
+                currentData: {
+                    scheme_id: '',
+                    pindex: '', // 父层索引
+                    index: '' // 子层索引
+                },
                 changeIcon: false,
+                modulesVersions: [], // 获取所有功能的版本
+                modules: [], // 获取功能列表
                 total: 0,
                 currentPage: 1,
                 page_size: 10,
@@ -372,9 +417,10 @@
                 groupList: [],
                 form: clearFn(),
                 rules: {
-                    name: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ]
+                    name: {required: true, message: '必须填写', trigger: 'blur'},
+                    icon: {required: true, message: '必须上传', trigger: 'change'},
+                    url: {required: true, message: '必须填写', trigger: 'blur'},
+                    type_id: {required: true, type: 'number', message: '必须填写', trigger: 'blur'}
                 }
             }
         },
@@ -384,6 +430,66 @@
             })
         },
         methods: {
+            dialogOpen () {
+                // 当编辑弹窗显示的时候获取所有的功能版本
+                return mobileService.getModuleVersions().then((ret) => {
+                    this.modulesVersions = ret.data
+                })
+            },
+            typeChange () {
+                if (this.form.type == 'link') {
+                    this.form.url = '' // 链接地址
+                    this.form.name = '' // 功能名称
+                    this.form.icon = '' // 功能图标
+                } else {
+                    this.form.type_id = '' // 功能id
+                    this.form.app_version = '' // 版本
+                    this.form.name = '' // 功能名称
+                    this.form.icon = '' // 功能图标
+                }
+            },
+            // 表单版本发生变化的时候获取功能列表
+            versionChange () {
+//                this.form.type_id = ''
+                return mobileService.getModules({version: this.form.app_version}).then((ret) => {
+                    this.modules = ret.data
+                    return ret.data
+                })
+            },
+            // 根据平台搜索版本
+            searchVersions () {
+                mobileService.searchVersions(
+                    {
+                        type: 'discover',
+                        platform: this.fetchParam.plat
+                    }).then((ret) => {
+                        this.versions = ret.data
+                    })
+            },
+            // 获取启用的版本
+            getPlatVersions (scheme_id) {
+                this.checkedIos = []
+                this.checkedAndroids = []
+                this.versionDialog = true
+                this.versionLoading = true
+                mobileService.getPlatVersions({scheme_id}).then((ret) => {
+                    this.platForm = ret.data
+                    this.platForm.scheme_id = scheme_id
+                    this.versionLoading = false
+                })
+            },
+            cloneScheme (scheme_id) {
+                mobileService.cloneScheme({scheme_id}).then(() => {
+                    xmview.showTip('success', '克隆成功')
+                    this.getData()
+                })
+            },
+            deleteScheme (scheme_id) {
+                mobileService.deleteScheme({scheme_id}).then(() => {
+                    xmview.showTip('success', '删除成功')
+                    this.getData()
+                })
+            },
             // 分组
             grouping (list) {
                 this.groupDialog = true
@@ -395,8 +501,41 @@
                 console.log(this.groupList)
                 console.log('确认分组')
             },
-            addNav (listID) {
+            editModule (item, scheme_id, pindex, index) {
+                this.currentData = {
+                    scheme_id,
+                    pindex,
+                    index
+                }
+                console.log(this.currentData)
+                this.changeIcon = true
+                this.form.type = item.type
+                this.dialogTitle = item.name
+                this.$nextTick(() => {
+                    this.form = clone(item)
+                    this.versionChange().then(() => {
+                        if (this.form.type == 'link') {
+                            this.form.scheme_id = scheme_id
+                            this.form.module_id = item.id
+                        } else {
+                            this.getActiveVersion(item.type_id).then((ret) => {
+                                this.form.app_version = ret[0].app_version
+                                this.form.scheme_id = scheme_id
+                                this.form.module_id = item.id
+                            })
+                        }
+                    })
+                })
+            },
+            addModule (scheme_id, pindex) {
                 this.form = clearFn()
+                this.form.scheme_id = scheme_id
+                delete this.form.module_id
+                this.currentData = {
+                    pindex,
+                    scheme_id
+                }
+                console.log(this.currentData)
                 this.changeIcon = true
                 this.$nextTick(() => {
                     this.$refs.form.resetFields()
@@ -408,226 +547,40 @@
             hideLayer (e) {
                 e.target.querySelector('.operate-layer').style.visibility = 'hidden'
             },
-            cropperFn (data) {
+            cropperFn (data, ext) {
                 this.loading = true
                 // 执行上传
-                mobileService.uploadNavIcon({
+                mobileService.uploadModuleScheme({
                     image: data,
-                    alias: Date.now() + '.jpg'
+                    alias: Date.now() + ext,
+                    scheme_id: this.currentData.scheme_id
                 }).then((ret) => {
                     this.loading = false
-                    this.form.url = data
+                    this.form.icon = ret.url
                 })
             },
             // 推荐图片上传
-            recommendPic (data) {
-                this.form.showPic = data
+            recommendPic (data, ext) {
                 // 执行上传
+                mobileService.uploadModuleScheme({
+                    image: data,
+                    alias: Date.now() + ext,
+                    scheme_id: this.currentData.scheme_id
+                }).then((ret) => {
+                    this.form.notify_icon = ret.url
+                })
             },
-            changeFn (list, index, id) {
-//                this.form = {
-//                    url: list[index].icon,
-//                    name: list[index].name
-//                }
-                console.log(list)
-                this.form.url = list.icon
-                this.form.name = list.name
-                this.dialogTitle = list.name
-                this.changeIcon = true
+            delModule (scheme_id, module_id, pindex, index) {
+                mobileService.deleteModule({scheme_id, module_id}).then(() => {
+                    xmview.showTip('success', '删除成功')
+                    this.getData()
+                })
             },
             handleCurrentChange (val) {
                 this.currentPage = val
                 this.getData()
             },
             getData () {
-//                this.resultData = [
-//                    {
-//                        'id': 1,
-//                        'name': '默认',
-//                        'readonly': 1,
-//                        'active': 0,
-//                        'create_admin_id': 1,
-//                        'update_admin_id': 1,
-//                        'info': [
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
-//                                'name': '药店培训',
-//                                'sort': 1,
-//                                'group': 3
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/history.png',
-//                                'name': '学习进度',
-//                                'sort': 2,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/task.png',
-//                                'name': '任务中心',
-//                                'sort': 6,
-//                                'group': 2
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/speakingsys.png',
-//                                'name': '药我说',
-//                                'sort': 4,
-//                                'group': 2
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/uniondrug.png',
-//                                'name': '联合用药',
-//                                'sort': 5,
-//                                'group': 2
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
-//                                'name': '搭配禁忌',
-//                                'sort': 6,
-//                                'group': 3
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
-//                                'name': '疾病大全',
-//                                'sort': 7,
-//                                'group': 4
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
-//                                'name': '症状大全',
-//                                'sort': 8,
-//                                'group': 4
-//                            }
-//                        ],
-//                        'create_time_name': '2017-01-07 18:00:04',
-//                        'create_time_unix': 1483783204,
-//                        'update_time_name': '2017-06-21 08:32:31',
-//                        'update_time_unix': 1498005151
-//                    },
-//                    {
-//                        'id': 2,
-//                        'name': '默认',
-//                        'readonly': 1,
-//                        'active': 0,
-//                        'create_admin_id': 1,
-//                        'update_admin_id': 1,
-//                        'info': [
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
-//                                'name': '药店培训',
-//                                'sort': 1,
-//                                'group': 3
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/history.png',
-//                                'name': '学习进度',
-//                                'sort': 2,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/task.png',
-//                                'name': '任务中心',
-//                                'sort': 6,
-//                                'group': 2
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/speakingsys.png',
-//                                'name': '药我说',
-//                                'sort': 4,
-//                                'group': 2
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/uniondrug.png',
-//                                'name': '联合用药',
-//                                'sort': 5,
-//                                'group': 2
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
-//                                'name': '搭配禁忌',
-//                                'sort': 6,
-//                                'group': 3
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
-//                                'name': '疾病大全',
-//                                'sort': 7,
-//                                'group': 4
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
-//                                'name': '症状大全',
-//                                'sort': 8,
-//                                'group': 4
-//                            }
-//                        ],
-//                        'create_time_name': '2017-01-07 18:00:04',
-//                        'create_time_unix': 1483783204,
-//                        'update_time_name': '2017-06-21 08:32:31',
-//                        'update_time_unix': 1498005151
-//                    },
-//                    {
-//                        'id': 16,
-//                        'name': '默认',
-//                        'readonly': 0,
-//                        'active': 1,
-//                        'create_admin_id': 1,
-//                        'update_admin_id': 162,
-//                        'info': [
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
-//                                'name': '公开课',
-//                                'sort': 4,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': '/upload/course/image/1493971044276339.jpg',
-//                                'name': '学习进度',
-//                                'sort': 2,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': '/upload/course/image/1493108743727142.jpg',
-//                                'name': '课程收藏',
-//                                'sort': 3,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/gsp.png',
-//                                'name': 'GSP工具',
-//                                'sort': 4,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': '/upload/course/image/1493006194233884.jpg',
-//                                'name': '联合用药',
-//                                'sort': 5,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
-//                                'name': '搭配禁忌',
-//                                'sort': 6,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
-//                                'name': '疾病',
-//                                'sort': 7,
-//                                'group': 1
-//                            },
-//                            {
-//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
-//                                'name': '症状大全',
-//                                'sort': 8,
-//                                'group': 1
-//                            }
-//                        ],
-//                        'create_time_name': '2017-04-20 17:43:24',
-//                        'create_time_unix': 1492681404,
-//                        'update_time_name': '2017-06-22 03:48:30',
-//                        'update_time_unix': 1498074510
-//                    },
-//                ]
                 this.containerLoading = true
                 return mobileService.searchScheme(
                     {
@@ -638,8 +591,7 @@
                         page_size: this.page_size
                     }
                 ).then((ret) => {
-                    console.log(ret)
-                    this.resultData = ret.data
+                    this.resultData = ret.data == null ? [] : ret.data
                     this.total = ret.total
                     // 按照group重新组合数组
                     this.resultData.forEach((list) => {
@@ -652,7 +604,7 @@
                         list.grouplist = list.modules
                         // 按排序分组
                         list.modules.forEach((item, i) => {
-                            if (item.group != newObj.group) {
+                            if (item.group !== newObj.group) {
                                 newObj = {group: '', data: []}
                                 newObj.group = item.group
                                 newArr.push(newObj)
@@ -669,6 +621,7 @@
                             })
                         })
                     })
+                    console.log(this.resultData)
                 }).then(() => {
                     this.containerLoading = false
                 })
@@ -703,10 +656,61 @@
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        console.log(1)
+                        let msg = ''
+                        let req = ''
+                        if (this.form.module_id) {
+                            msg = '修改成功'
+                            req = mobileService.updateModule
+                            delete this.form.sort
+                        } else {
+                            if (typeof this.resultData[this.currentData.pindex]['modules'] == 'object') {
+                                this.form.sort = this.resultData[this.currentData.pindex]['modules'].length + 1
+                            } else {
+                                this.form.sort = 1
+                            }
+                            msg = '添加成功'
+                            req = mobileService.addModule
+                        }
+                        req(this.form).then((ret) => {
+                            this.getData()
+                            this.changeIcon = false
+                            xmview.showTip('success', msg)
+                        })
                     } else {
                         return false
                     }
+                })
+            },
+            // 新建方案
+            createScheme () {
+                mobileService.createScheme({type: 'discover'}).then((ret) => {
+                    this.resultData.push(ret.data)
+                })
+            },
+            // 启用版本号
+            activeScheme () {
+                mobileService.activeScheme(
+                    {
+                        scheme_id: this.platForm.scheme_id,
+                        ios: this.checkedIos.toString(),
+                        android: this.checkedAndroids.toString()
+                    }
+                ).then(() => {
+                    xmview.showTip('success', '启用成功')
+                    this.versionDialog = false
+                    this.getData()
+                }).catch((ret) => {
+                    xmview.showTip('success', ret.message || '启用失败')
+                })
+            },
+            getActiveVersion (type_id) {
+                return this.versionChange().then((ret) => {
+                    let versionArr = ret.filter((item) => {
+                        if (item.id == type_id) {
+                            return item
+                        }
+                    })
+                    return versionArr
                 })
             },
             // 拖拽完成之后
@@ -722,7 +726,9 @@
                 })
             },
             changeRecommend () {
-                this.form.isDot = 0
+                this.form.notify_node = 0 // 是否开启红点
+                this.form.notify_icon = '' // 通知图标地址
+                this.form.notify_text = '' // 通知文本文案
                 this.form.isRecommendText = 0
                 this.form.isPicture = 0
             }
@@ -731,18 +737,18 @@
     }
     function clearFn() {
         return {
-            category: 1, // 类别
-            version: '', // 版本
-            action: '', // 功能
-            link: '', // 链接
-            url: '',
-            name: '',
-            isDot: 0, // 是否显示红点
-            isPicture: 0, // 是否显示图片
-            isRecommendText: 0, // 是否显示推荐语
-            recommendText: '', // 推荐语
-            isRecommend: 0, // 是否需要推荐
-            showPic: '' // 展示图地址
+            type: '', // 功能类型
+            type_id: '', // 功能id
+            url: '', // 链接地址
+            name: '', // 功能名称
+            icon: '', // 功能图标
+            app_version: '', // 版本
+            notify: '', // 是否开启通知
+            notify_node: '', // 是否开启红点
+            notify_icon: '', // 通知图标地址
+            notify_text: '', // 通知文本文案
+            isRecommendText: 0,
+            isPicture: 0
         }
     }
 </script>

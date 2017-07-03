@@ -54,7 +54,7 @@ $imported-modules: () !default;
     }
 }
 
-@mixin clear-inlineblock-marginRight {
+@mixin clear-inlineblock-marginRight() {
     font-size: 0;
     letter-spacing: -3px;
 
