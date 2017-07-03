@@ -3,6 +3,7 @@
     @import "../../../utils/mixins/topSearch";
     @import "../../../utils/mixins/common";
     @import "../../../utils/mixins/mixins";
+
     .index-nav-container {
         @extend %content-container;
         background: #fff;
@@ -120,6 +121,30 @@
                 }
             }
         }
+        .apply-version {
+            .el-dialog__body {
+                /*padding: 0;*/
+            }
+            p {
+                padding-bottom: 10px;
+            }
+            section {
+                display: flex;
+                margin-bottom: 10px;
+                > i {
+                    display: block;
+                    width: 100px;
+                    text-align: right;
+                }
+                .el-checkbox-group {
+                    width: 80%;
+                    .el-checkbox {
+                        margin-left: 15px;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
         .block {
             text-align: right;
             padding: 10px 0;
@@ -127,33 +152,40 @@
     }
 </style>
 <template>
-    <article class="index-nav-container">
-        <el-dialog class="form" :title="dialogTitle" v-model="changeIcon">
+    <article class="index-nav-container" v-loading="containerLoading">
+        <!--添加编辑/弹窗-->
+        <el-dialog class="form" :title="dialogTitle" v-model="changeIcon" @open="dialogOpen">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
-                <el-form-item prop="category" label="推荐类别">
-                    <el-select v-model="form.category">
-                        <el-option label="功能推荐" :value="1"></el-option>
+                <el-form-item label="推荐类别">
+                    <el-select clearable v-model="form.type" @change="typeChange">
+                        <el-option label="功能推荐" value="app_module"></el-option>
+                        <el-option label="添加链接" value="link"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="version" label="功能支持版本">
-                    <el-select v-model="form.version">
-                        <el-option label="功能推荐" :value="1"></el-option>
+                <el-form-item label="功能支持版本" v-if="form.type == 'app_module'">
+                    <el-select clearable placeholder="全部" v-model="form.app_version" @change="versionChange">
+                        <el-option v-for="(item,index) in modulesVersions" :label="item" :value="item"
+                                   :key="index"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="version" label="选择功能">
-                    <el-select v-model="form.action">
-                        <el-option label="功能推荐" :value="1"></el-option>
+                <el-form-item prop="type_id" label="选择功能" v-if="form.type == 'app_module'">
+                    <el-select v-model="form.type_id">
+                        <el-option v-for="(item,index) in modules" :label="item.name" :value="item.id"
+                                   :key="index"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="name" v-loading="loading" label="导航图标">
-                    <div class="img-wrap">
-                        <img :src="form.url" alt="" />
+                <el-form-item prop="icon" v-loading="loading" label="应用logo">
+                    <div class="img-wrap" v-if="form.icon">
+                        <img :src="form.icon | fillImgPath" alt=""/>
                     </div>
                     <p class="tip">建议上传图片尺寸为 140*140</p>
                     <el-button type="primary" @click="() => {$refs.imgcropper.chooseImg()}">上传</el-button>
                 </el-form-item>
-                <el-form-item prop="name" label="导航名称">
+                <el-form-item prop="name" label="应用名称">
                     <el-input v-model="form.name" placeholder="控制在4个字以内，展示效果最佳"></el-input>
+                </el-form-item>
+                <el-form-item prop="url" label="应用链接" v-if="form.type == 'link'">
+                    <el-input v-model="form.url" placeholder="请以http://或者https://开头"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -161,22 +193,45 @@
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
             </div>
         </el-dialog>
+        <!--启用弹窗-->
+        <el-dialog class="apply-version" title="选择方案应用平台和版本" :visible.sync="versionDialog">
+            <article v-loading="versionLoading">
+                <p>此方案可应用到以下平台版本：</p>
+                <section>
+                    <i>Android：</i>
+                    <el-checkbox-group v-model="checkedAndroids" @change="(value)=>{checkedAndroids=[...value]}">
+                        <el-checkbox v-for="(item,index) in platForm.android" :label="item" :key="index">{{item}}
+                        </el-checkbox>
+                    </el-checkbox-group>
+                </section>
+                <section>
+                    <i>iOS：</i>
+                    <el-checkbox-group v-model="checkedIos" @change="(value)=>{checkedIos=[...value]}">
+                        <el-checkbox v-for="(item,index) in platForm.ios" :label="item" :key="index">{{item}}
+                        </el-checkbox>
+                    </el-checkbox-group>
+                </section>
+            </article>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="versionDialog = false">取 消</el-button>
+                <el-button type="primary" @click="activeScheme">启 用</el-button>
+            </div>
+        </el-dialog>
         <div class="add">
-            <el-button type="primary" icon="plus" class="recharge" @click="navClone(0)">新建方案</el-button>
+            <el-button type="primary" icon="plus" class="recharge" @click="createScheme">新建方案</el-button>
         </div>
         <section class="search">
             <section>
                 <i>平台</i>
-                <el-select clearable v-model="fetchParam.plat" @change="getData">
-                    <el-option label="Android" :value="1"></el-option>
-                    <el-option label="iOS" :value="2"></el-option>
+                <el-select clearable v-model="fetchParam.plat" @change="()=>{searchVersions();getData()}">
+                    <el-option label="Android" value="android"></el-option>
+                    <el-option label="iOS" value="ios"></el-option>
                 </el-select>
             </section>
             <section>
                 <i>版本</i>
                 <el-select clearable v-model="fetchParam.version" @change="getData">
-                    <el-option label="Android" :value="1"></el-option>
-                    <el-option label="iOS" :value="2"></el-option>
+                    <el-option v-for="(item,index) in versions" :label="item" :value="item" :key="index"></el-option>
                 </el-select>
             </section>
         </section>
@@ -184,52 +239,49 @@
             <section class="nav-imgs">
                 <section class="dragWrap" v-if="!list.active">
                     <div class="nav-item active"
-                         v-for="(item,index) in list.info"
-                         v-dragging="{item: item, list: list.info, group: 'item' + list.id}"
-                         :key="item.name">
-                        <div class="parent" @mouseover="showLayer" @mouseout="hideLayer">
+                         v-for="(item,index) in list.modules"
+                         :key="list.id + index">
+                        <div class="parent" @mouseenter="showLayer" @mouseleave="hideLayer">
                             <img :src="item.icon | fillImgPath" alt=""/>
                             <p>{{item.name}}</p>
-                            <div class="operate-layer" @click="changeFn(list.info, index, list.id)">
-                                <i class="iconfont icon-edit"></i>
-                                <i class="el-icon-circle-cross"></i>
+                            <div class="operate-layer">
+                                <i class="iconfont icon-edit" @click="editModule(item, list.id, pindex, index)"></i>
+                                <i class="el-icon-circle-cross" @click="delModule(list.id, item.id, pindex, index)"></i>
                             </div>
+                        </div>
+                    </div>
+                    <div @click="addModule(list.id, pindex)" class="nav-item additem" v-if="!list.active">
+                        <div>
+                            <img src="../images/add.png" alt="">
                         </div>
                     </div>
                 </section>
                 <section class="dragWrap" v-if="list.active">
                     <div class="nav-item"
-                         v-for="(item,index) in list.info"
-                         :key="item.name">
+                         v-for="(item,index) in list.modules"
+                         :key="list.id + index">
                         <div>
                             <img :src="item.icon | fillImgPath" alt=""/>
                             <p>{{item.name}}</p>
                         </div>
                     </div>
-                </section>
-                <div @click="addNav(list.id)" class="nav-item additem" v-if="!list.active">
-                    <div>
-                        <img src="../images/add.png" alt="">
+                    <div @click="addModule(list.id, pindex)" class="nav-item additem" v-if="!list.active">
+                        <div>
+                            <img src="../images/add.png" alt="">
+                        </div>
                     </div>
-                </div>
+                </section>
             </section>
             <section class="nav-operate">
                 <span v-if="list.active">使用中</span>
-                <el-button type="text" v-if="!list.active" @click="navStart(list.id)">启用</el-button>
-                <el-button type="text" @click="navClone(list.id)">克隆</el-button>
-                <el-button type="text" @click="navDelete(list.id)" v-if="!list.active">删除</el-button>
+                <el-button type="text" v-if="!list.active" @click="getPlatVersions(list.id)">启用</el-button>
+                <el-button type="text" @click="cloneScheme(list.id)">克隆</el-button>
+                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active">删除</el-button>
             </section>
-            <div class="platform">
+            <div class="platform" v-if="list.active">
                 <i>使用平台和版本:</i>
                 <div>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
-                    <em>Android 2.0</em>
+                    <em v-for="(version,index) in list.platform_tag" :key="index">{{version}}</em>
                 </div>
             </div>
         </article>
@@ -249,62 +301,92 @@
 <script>
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../../services/mobileService'
-    import formUtils from '../../../utils/formUtils'
     import clone from 'clone'
     export default{
         data () {
             return {
-                dialogTitle: '',
-                fetchParam: {
+                containerLoading: false,
+                dialogTitle: '', // 编辑功能标题
+                versions: [], // 搜索版本列表
+                fetchParam: { // 搜索条件
                     plat: '',
                     version: ''
                 },
+                versionDialog: false, // 是否显示启用版本的dialog
+                versionLoading: false, // 显示版本弹窗loading
+                platForm: [], // 启动时获取的平台列表
+                checkedAndroids: [], // 已选的Android列表
+                checkedIos: [], // 已选的ios列表
                 loading: false,
                 currentData: {
-                    id: '',
-                    list: [],
-                    index: '',
-                    url: ''
+                    pindex: '', // 父层索引
+                    index: '' // 子层索引
                 },
                 changeIcon: false,
+                modulesVersions: [], // 获取所有功能的版本
+                modules: [], // 获取功能列表
                 total: 0,
                 currentPage: 1,
                 page_size: 10,
                 resultData: [],
                 form: clearFn(),
                 rules: {
-                    name: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ]
+                    name: {required: true, message: '必须填写', trigger: 'blur'},
+                    icon: {required: true, message: '必须上传', trigger: 'change'},
+                    url: {required: true, message: '必须填写', trigger: 'blur'},
+                    type_id: {required: true, type: 'number', message: '必须填写', trigger: 'blur'}
                 }
             }
         },
-        created () {
+        activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
         },
         methods: {
-            addNav (listID) {
+            dialogOpen () {
+                // 当编辑弹窗显示的时候过去所有的功能版本
+                return mobileService.getModuleVersions().then((ret) => {
+                    this.modulesVersions = ret.data
+                })
+            },
+            // 表单版本发生变化的时候获取功能列表
+            versionChange () {
+//                this.form.type_id = ''
+                return mobileService.getModules({version: this.form.app_version}).then((ret) => {
+                    this.modules = ret.data
+                    return ret.data
+                })
+            },
+            typeChange () {
+                if (this.form.type == 'link') {
+                    this.form.url = '' // 链接地址
+                    this.form.name = '' // 功能名称
+                    this.form.icon = '' // 功能图标
+                } else {
+                    this.form.type_id = '' // 功能id
+                    this.form.app_version = '' // 版本
+                    this.form.name = '' // 功能名称
+                    this.form.icon = '' // 功能图标
+                }
+            },
+            addModule (scheme_id, pindex) {
                 this.form = clearFn()
+                this.form.scheme_id = scheme_id
+                delete this.form.module_id
+                this.currentData = {
+                    pindex
+                }
                 this.changeIcon = true
                 this.$nextTick(() => {
                     this.$refs.form.resetFields()
                 })
             },
             showLayer (e) {
-                if (e.target.parentNode.className == 'parent') {
-                    if (e.target.parentNode.querySelector('.operate-layer') != null) {
-                        e.target.parentNode.querySelector('.operate-layer').style.visibility = 'visible'
-                    }
-                }
+                e.target.querySelector('.operate-layer').style.visibility = 'visible'
             },
             hideLayer (e) {
-                if (e.target.parentNode.className == 'parent') {
-                    if (e.target.parentNode.querySelector('.operate-layer') != null) {
-                        e.target.parentNode.querySelector('.operate-layer').style.visibility = 'hidden'
-                    }
-                }
+                e.target.querySelector('.operate-layer').style.visibility = 'hidden'
             },
             cropperFn (data) {
                 this.loading = true
@@ -314,91 +396,156 @@
                     alias: Date.now() + '.jpg'
                 }).then((ret) => {
                     this.loading = false
-                    this.form.url = data
-                    this.currentData.url = ret.url
+                    this.form.icon = ret.url
                 })
             },
-            changeFn (list, index, id) {
-                this.form = {
-                    url: list[index].icon,
-                    name: list[index].name
+            editModule (item, scheme_id, pindex, index) {
+                this.currentData = {
+                    pindex,
+                    index
                 }
-                this.currentData = {list, index, id}
-                this.dialogTitle = list[index].name
                 this.changeIcon = true
+                this.form.type = item.type
+                this.dialogTitle = item.name
+                this.$nextTick(() => {
+                    this.form = clone(item)
+                    this.versionChange().then(() => {
+                        if (this.form.type == 'link') {
+                            this.form.scheme_id = scheme_id
+                            this.form.module_id = item.id
+                        } else {
+                            this.getActiveVersion(item.type_id).then((ret) => {
+                                this.form.app_version = ret[0].app_version
+                                this.form.scheme_id = scheme_id
+                                this.form.module_id = item.id
+                            })
+                        }
+                    })
+                })
+            },
+            delModule (scheme_id, module_id, pindex, index) {
+                mobileService.deleteModule({scheme_id, module_id}).then(() => {
+                    xmview.showTip('success', '删除成功')
+                    this.resultData[pindex].modules.splice(index, 1)
+                })
             },
             handleCurrentChange (val) {
                 this.currentPage = val
                 this.getData()
             },
             getData () {
-                return mobileService.menuSearch({page: this.currentPage, page_size: this.page_size}).then((ret) => {
+                this.containerLoading = true
+                return mobileService.searchScheme(
+                    {
+                        type: 'company',
+                        platform: this.fetchParam.plat,
+                        app_version: this.fetchParam.version,
+                        page: this.currentPage,
+                        page_size: this.page_size
+                    }
+                ).then((ret) => {
                     this.resultData = ret.data
                     this.total = ret.total
+                }).then(() => {
+                    this.containerLoading = false
                 })
             },
-            startCropper() {
-                ImagEcropperInput.chooseImg()
+            searchVersions () {
+                mobileService.searchVersions(
+                    {
+                        type: 'company',
+                        platform: this.fetchParam.plat
+                    }).then((ret) => {
+                        this.versions = ret.data
+                    })
             },
-            navStart (navID) {
-                mobileService.applyMenu(navID).then(() => {
-                    xmview.showTip('success', '启用成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
+            // 获取启用的版本
+            getPlatVersions (scheme_id) {
+                this.checkedIos = []
+                this.checkedAndroids = []
+                this.versionDialog = true
+                this.versionLoading = true
+                mobileService.getPlatVersions({scheme_id}).then((ret) => {
+                    this.platForm = ret.data
+                    this.platForm.scheme_id = scheme_id
+                    this.versionLoading = false
                 })
             },
-            navClone (navID) {
-                mobileService.menuClone(navID).then(() => {
+            cloneScheme (scheme_id) {
+                mobileService.cloneScheme({scheme_id}).then(() => {
                     xmview.showTip('success', '克隆成功')
                     this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
                 })
             },
-            navDelete (navID) {
-                mobileService.menuDelete(navID).then(() => {
+            deleteScheme (scheme_id) {
+                mobileService.deleteScheme({scheme_id}).then(() => {
                     xmview.showTip('success', '删除成功')
                     this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
                 })
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        let originData = clone(this.currentData)
-                        this.currentData.list[this.currentData.index]['name'] = this.form.name
-                        if (this.currentData.url) {
-                            this.currentData.list[this.currentData.index]['icon'] = this.currentData.url
+                        let msg = ''
+                        let req = ''
+                        if (this.form.module_id) {
+                            msg = '修改成功'
+                            req = mobileService.updateModule
+                            delete this.form.sort
+                        } else {
+                            this.form.sort = this.resultData[this.currentData.pindex]['modules'].length + 1
+                            msg = '添加成功'
+                            req = mobileService.addModule
                         }
-                        let info = formUtils.serializeArray(this.currentData.list, 'info')
-                        mobileService.updateMenu({
-                            info: info,
-                            scheme_id: this.currentData.id
-                        }).then((ret) => {
+                        req(this.form).then((ret) => {
+                            // 添加
+                            if (!this.form.module_id) {
+                                this.form.module_id = ret.id
+                                // 追加一项
+                                this.resultData[this.currentData.pindex]['modules'].push(this.form)
+                            } else {
+                                // 修改当前项
+                                this.resultData[this.currentData.pindex]['modules'][this.currentData.index] = this.form
+                            }
                             this.changeIcon = false
-                            xmview.showTip('success', '更换成功')
-                        }).catch((ret) => {
-                            this.currentData.list[this.currentData.index]['name'] = originData.list[this.currentData.index]['name']
-                            this.currentData.list[this.currentData.index]['icon'] = originData.list[this.currentData.index]['icon']
-                            xmview.showTip('error', ret.message)
+                            xmview.showTip('success', msg)
                         })
+                        console.log(this.form)
                     } else {
                         return false
                     }
                 })
             },
-            // 拖拽完成之后
-            dragFn () {
-                /*
-                 draged 拖拽对象
-                 to 目标对象
-                 value.list 存储拖拽之后的数组
-                 */
-                this.$dragging.$on('dragged', (value) => {
-                    // 拖拽成功之后运行
-                    // 将value.draged.id 和 value.to.id 作为参数传递给接口
+            // 新建方案
+            createScheme () {
+                mobileService.createScheme({type: 'company'}).then((ret) => {
+                    this.resultData.push(ret.data)
+                })
+            },
+            // 启用版本号
+            activeScheme () {
+                mobileService.activeScheme(
+                    {
+                        scheme_id: this.platForm.scheme_id,
+                        ios: this.checkedIos.toString(),
+                        android: this.checkedAndroids.toString()
+                    }
+                ).then(() => {
+                    xmview.showTip('success', '启用成功')
+                    this.versionDialog = false
+                    this.getData()
+                }).catch((ret) => {
+                    xmview.showTip('success', ret.message || '启用失败')
+                })
+            },
+            getActiveVersion (type_id) {
+                return this.versionChange().then((ret) => {
+                    let versionArr = ret.filter((item) => {
+                        if (item.id == type_id) {
+                            return item
+                        }
+                    })
+                    return versionArr
                 })
             }
         },
@@ -406,11 +553,12 @@
     }
     function clearFn() {
         return {
-            category: '', // 类别
-            version: '', // 版本
-            action: '', // 功能
-            url: '',
-            name: ''
+            type: '', // 功能类型
+            type_id: '', // 功能id
+            url: '', // 链接地址
+            name: '', // 功能名称
+            icon: '', // 功能图标
+            app_version: '', // 版本
         }
     }
 </script>

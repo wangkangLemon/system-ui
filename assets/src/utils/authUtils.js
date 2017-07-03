@@ -5,6 +5,7 @@
 const KEY_AUTHTOKEN = 'KEY_AUTH_UTILS_TOKEN' // jwt的token
 const KEY_AUTHUSERINFO = 'KEY_AUTH_UTILS_USERINFO' // 用户信息
 const KEY_AUTHSETNAVMENU = 'KEY_AUTH_UTILS_SETNAVMENU' // 菜单
+const KEY_AUTHSETOPERATION = 'KEY_AUTH_UTILS_OPERATION' // 操作权限
 const KEY_TWICE_AUTH = 'KEY_AUTH_UTILS_TWICEAUTH' // 二次验证的key
 const KEY_AUTHTOKEN_TTL = 3600 // jwt的token 有效期，过期作废，一个小时
 
@@ -64,6 +65,30 @@ let authUtils = {
     },
     setTwiceToken (val) {
         return localStorage.setItem(KEY_TWICE_AUTH, val)
+    },
+    // 设置用户操作权限信息
+    setOperation (operationData) {
+        localStorage.setItem(KEY_AUTHSETOPERATION, JSON.stringify(operationData))
+    },
+    getOperation () {
+        let str = localStorage.getItem(KEY_AUTHSETOPERATION)
+        if (str)
+            return JSON.parse(str)
+        else
+            return null
+    },
+    // 判断操作是否被授权
+    isPermission(op) {
+        let ops = this.getOperation()
+        if (ops === null) {
+            return false
+        }
+        for (let i = 0; i < ops.length; i++) {
+            if (ops[i] === op) {
+                return true
+            }
+        }
+        return false
     },
     // 自动更新用户的token
     authRefreshtoken () {

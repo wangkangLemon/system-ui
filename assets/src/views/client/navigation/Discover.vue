@@ -167,7 +167,7 @@
     }
 </style>
 <template>
-    <article class="index-discover-container">
+    <article class="index-discover-container" v-loading="containerLoading">
         <!--添加编辑/弹窗-->
         <el-dialog class="form" :title="dialogTitle" v-model="changeIcon">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
@@ -277,13 +277,14 @@
         <article class="nav-list" v-for="(list,pindex) in resultData" :key="list.id">
             <section class="nav-imgs">
                 <section class="dragWrap"
-                         :class="{'is-border':list.info.length > 1}"
+                         :class="{'is-border':list.modules.length > 1}"
                          v-if="!list.active"
-                         v-for="(mitem,mindex) in list.info">
+                         v-for="(mitem,mindex) in list.modules">
                     <div class="nav-item active"
                          v-for="(item,index) in mitem.data"
                          v-dragging="{item: item, list: mitem.data, group: 'item' + list.id + item.group}"
                          :key="item.name">
+                        <!--key 必须是字符串-->
                         <div class="parent" @mouseenter="showLayer" @mouseleave="hideLayer">
                             <img :src="item.icon | fillImgPath" alt=""/>
                             <p>{{item.name}}</p>
@@ -294,7 +295,7 @@
                         </div>
                     </div>
                 </section>
-                <section class="dragWrap" :class="{'is-border':list.info.length > 1}" v-if="list.active" v-for="(mitem,mindex) in list.info">
+                <section class="dragWrap" :class="{'is-border':list.modules.length > 1}" v-if="list.active" v-for="(mitem,mindex) in list.modules">
                     <div class="nav-item"
                          v-for="(item,index) in mitem.data"
                          :key="item.name">
@@ -349,11 +350,13 @@
 <script>
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../../services/mobileService'
-//    import formUtils from '../../../utils/formUtils'
-//    import clone from 'clone'
+    //    import formUtils from '../../../utils/formUtils'
+    //    import clone from 'clone'
     export default{
+        name: 'navigatioin-discover',
         data () {
             return {
+                containerLoading: false,
                 groupDialog: false, // 是否显示分组弹窗
                 dialogTitle: '',
                 fetchParam: {
@@ -375,12 +378,10 @@
                 }
             }
         },
-        activated () {
-            xmview.setContentLoading(false)
-            this.getData()
-//            this.getData().then(() => {
-//                xmview.setContentLoading(false)
-//            })
+        created () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             // 分组
@@ -439,226 +440,238 @@
                 this.getData()
             },
             getData () {
-                this.resultData = [
+//                this.resultData = [
+//                    {
+//                        'id': 1,
+//                        'name': '默认',
+//                        'readonly': 1,
+//                        'active': 0,
+//                        'create_admin_id': 1,
+//                        'update_admin_id': 1,
+//                        'info': [
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
+//                                'name': '药店培训',
+//                                'sort': 1,
+//                                'group': 3
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/history.png',
+//                                'name': '学习进度',
+//                                'sort': 2,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/task.png',
+//                                'name': '任务中心',
+//                                'sort': 6,
+//                                'group': 2
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/speakingsys.png',
+//                                'name': '药我说',
+//                                'sort': 4,
+//                                'group': 2
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/uniondrug.png',
+//                                'name': '联合用药',
+//                                'sort': 5,
+//                                'group': 2
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
+//                                'name': '搭配禁忌',
+//                                'sort': 6,
+//                                'group': 3
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
+//                                'name': '疾病大全',
+//                                'sort': 7,
+//                                'group': 4
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
+//                                'name': '症状大全',
+//                                'sort': 8,
+//                                'group': 4
+//                            }
+//                        ],
+//                        'create_time_name': '2017-01-07 18:00:04',
+//                        'create_time_unix': 1483783204,
+//                        'update_time_name': '2017-06-21 08:32:31',
+//                        'update_time_unix': 1498005151
+//                    },
+//                    {
+//                        'id': 2,
+//                        'name': '默认',
+//                        'readonly': 1,
+//                        'active': 0,
+//                        'create_admin_id': 1,
+//                        'update_admin_id': 1,
+//                        'info': [
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
+//                                'name': '药店培训',
+//                                'sort': 1,
+//                                'group': 3
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/history.png',
+//                                'name': '学习进度',
+//                                'sort': 2,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/task.png',
+//                                'name': '任务中心',
+//                                'sort': 6,
+//                                'group': 2
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/speakingsys.png',
+//                                'name': '药我说',
+//                                'sort': 4,
+//                                'group': 2
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/uniondrug.png',
+//                                'name': '联合用药',
+//                                'sort': 5,
+//                                'group': 2
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
+//                                'name': '搭配禁忌',
+//                                'sort': 6,
+//                                'group': 3
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
+//                                'name': '疾病大全',
+//                                'sort': 7,
+//                                'group': 4
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
+//                                'name': '症状大全',
+//                                'sort': 8,
+//                                'group': 4
+//                            }
+//                        ],
+//                        'create_time_name': '2017-01-07 18:00:04',
+//                        'create_time_unix': 1483783204,
+//                        'update_time_name': '2017-06-21 08:32:31',
+//                        'update_time_unix': 1498005151
+//                    },
+//                    {
+//                        'id': 16,
+//                        'name': '默认',
+//                        'readonly': 0,
+//                        'active': 1,
+//                        'create_admin_id': 1,
+//                        'update_admin_id': 162,
+//                        'info': [
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
+//                                'name': '公开课',
+//                                'sort': 4,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': '/upload/course/image/1493971044276339.jpg',
+//                                'name': '学习进度',
+//                                'sort': 2,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': '/upload/course/image/1493108743727142.jpg',
+//                                'name': '课程收藏',
+//                                'sort': 3,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/gsp.png',
+//                                'name': 'GSP工具',
+//                                'sort': 4,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': '/upload/course/image/1493006194233884.jpg',
+//                                'name': '联合用药',
+//                                'sort': 5,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
+//                                'name': '搭配禁忌',
+//                                'sort': 6,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
+//                                'name': '疾病',
+//                                'sort': 7,
+//                                'group': 1
+//                            },
+//                            {
+//                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
+//                                'name': '症状大全',
+//                                'sort': 8,
+//                                'group': 1
+//                            }
+//                        ],
+//                        'create_time_name': '2017-04-20 17:43:24',
+//                        'create_time_unix': 1492681404,
+//                        'update_time_name': '2017-06-22 03:48:30',
+//                        'update_time_unix': 1498074510
+//                    },
+//                ]
+                this.containerLoading = true
+                return mobileService.searchScheme(
                     {
-                        'id': 1,
-                        'name': '默认',
-                        'readonly': 1,
-                        'active': 0,
-                        'create_admin_id': 1,
-                        'update_admin_id': 1,
-                        'info': [
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
-                                'name': '药店培训',
-                                'sort': 1,
-                                'group': 3
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/history.png',
-                                'name': '学习进度',
-                                'sort': 2,
-                                'group': 1
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/task.png',
-                                'name': '任务中心',
-                                'sort': 6,
-                                'group': 2
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/speakingsys.png',
-                                'name': '药我说',
-                                'sort': 4,
-                                'group': 2
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/uniondrug.png',
-                                'name': '联合用药',
-                                'sort': 5,
-                                'group': 2
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
-                                'name': '搭配禁忌',
-                                'sort': 6,
-                                'group': 3
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
-                                'name': '疾病大全',
-                                'sort': 7,
-                                'group': 4
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
-                                'name': '症状大全',
-                                'sort': 8,
-                                'group': 4
+                        type: 'discover',
+                        platform: this.fetchParam.plat,
+                        app_version: this.fetchParam.version,
+                        page: this.currentPage,
+                        page_size: this.page_size
+                    }
+                ).then((ret) => {
+                    console.log(ret)
+                    this.resultData = ret.data
+                    this.total = ret.total
+                    // 按照group重新组合数组
+                    this.resultData.forEach((list) => {
+                        let newArr = []
+                        let newObj = {group: '', data: []}
+                        // 按group排序
+                        list.modules = list.modules.sort((x, y) => {
+                            return x.group - y.group
+                        })
+                        list.grouplist = list.modules
+                        // 按排序分组
+                        list.modules.forEach((item, i) => {
+                            if (item.group != newObj.group) {
+                                newObj = {group: '', data: []}
+                                newObj.group = item.group
+                                newArr.push(newObj)
                             }
-                        ],
-                        'create_time_name': '2017-01-07 18:00:04',
-                        'create_time_unix': 1483783204,
-                        'update_time_name': '2017-06-21 08:32:31',
-                        'update_time_unix': 1498005151
-                    },
-                    {
-                        'id': 2,
-                        'name': '默认',
-                        'readonly': 1,
-                        'active': 0,
-                        'create_admin_id': 1,
-                        'update_admin_id': 1,
-                        'info': [
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
-                                'name': '药店培训',
-                                'sort': 1,
-                                'group': 3
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/history.png',
-                                'name': '学习进度',
-                                'sort': 2,
-                                'group': 1
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/task.png',
-                                'name': '任务中心',
-                                'sort': 6,
-                                'group': 2
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/speakingsys.png',
-                                'name': '药我说',
-                                'sort': 4,
-                                'group': 2
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/uniondrug.png',
-                                'name': '联合用药',
-                                'sort': 5,
-                                'group': 2
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
-                                'name': '搭配禁忌',
-                                'sort': 6,
-                                'group': 3
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
-                                'name': '疾病大全',
-                                'sort': 7,
-                                'group': 4
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
-                                'name': '症状大全',
-                                'sort': 8,
-                                'group': 4
-                            }
-                        ],
-                        'create_time_name': '2017-01-07 18:00:04',
-                        'create_time_unix': 1483783204,
-                        'update_time_name': '2017-06-21 08:32:31',
-                        'update_time_unix': 1498005151
-                    },
-                    {
-                        'id': 16,
-                        'name': '默认',
-                        'readonly': 0,
-                        'active': 1,
-                        'create_admin_id': 1,
-                        'update_admin_id': 162,
-                        'info': [
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/public.png',
-                                'name': '公开课',
-                                'sort': 4,
-                                'group': 1
-                            },
-                            {
-                                'icon': '/upload/course/image/1493971044276339.jpg',
-                                'name': '学习进度',
-                                'sort': 2,
-                                'group': 1
-                            },
-                            {
-                                'icon': '/upload/course/image/1493108743727142.jpg',
-                                'name': '课程收藏',
-                                'sort': 3,
-                                'group': 1
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/gsp.png',
-                                'name': 'GSP工具',
-                                'sort': 4,
-                                'group': 1
-                            },
-                            {
-                                'icon': '/upload/course/image/1493006194233884.jpg',
-                                'name': '联合用药',
-                                'sort': 5,
-                                'group': 1
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/mixtaboo.png',
-                                'name': '搭配禁忌',
-                                'sort': 6,
-                                'group': 1
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/disease.png',
-                                'name': '疾病',
-                                'sort': 7,
-                                'group': 1
-                            },
-                            {
-                                'icon': 'http://api.yst.vodjk.dev/assets/app/images/menu/symptom.png',
-                                'name': '症状大全',
-                                'sort': 8,
-                                'group': 1
-                            }
-                        ],
-                        'create_time_name': '2017-04-20 17:43:24',
-                        'create_time_unix': 1492681404,
-                        'update_time_name': '2017-06-22 03:48:30',
-                        'update_time_unix': 1498074510
-                    },
-                ]
-                // 按照group重新组合数组
-                this.resultData.forEach((list) => {
-                    let newArr = []
-                    let newObj = {group: '', data: []}
-                    // 按group排序
-                    list.info = list.info.sort((x, y) => {
-                        return x.group - y.group
+                            newObj.data.push(item)
+                        })
+                        list.modules = newArr
                     })
-                    list.grouplist = list.info
-                    // 按排序分组
-                    list.info.forEach((item, i) => {
-                        if (item.group != newObj.group) {
-                            newObj = {group: '', data: []}
-                            newObj.group = item.group
-                            newArr.push(newObj)
-                        }
-                        newObj.data.push(item)
-                    })
-                    list.info = newArr
-                })
-                // 重组数据后，按组内sort排序
-                this.resultData.forEach((pitem) => {
-                    pitem.info.forEach((mitem) => {
-                        mitem.data = mitem.data.sort((x, y) => {
-                            return x.sort - y.sort
+                    // 重组数据后，按组内sort排序
+                    this.resultData.forEach((pitem) => {
+                        pitem.modules.forEach((mitem) => {
+                            mitem.data = mitem.data.sort((x, y) => {
+                                return x.sort - y.sort
+                            })
                         })
                     })
+                }).then(() => {
+                    this.containerLoading = false
                 })
-//                return mobileService.menuSearch({page: this.currentPage, page_size: this.page_size}).then((ret) => {
-//                    this.resultData = ret.data
-//                    this.total = ret.total
-//                })
             },
             startCropper() {
                 ImagEcropperInput.chooseImg()
