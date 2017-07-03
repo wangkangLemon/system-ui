@@ -133,6 +133,18 @@ class MobileService {
         let finalUrl = `${urlPre}/menuscheme/${scheme_id}/module/${module_id}`
         return api.put(finalUrl, {type, type_id, url, name, icon, notify, notify_node, notify_icon, notify_text})
     }
+    // 上传功能图标
+    uploadModuleScheme ({image, alias, scheme_id}) {
+        let finalUrl = `${urlPre}/menuscheme/${scheme_id}/module/icon`
+        return api.post(finalUrl, {image, alias}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 功能排序
+    sortModule ({scheme_id, modules}) {
+        let finalUrl = `${urlPre}/menuscheme/${scheme_id}/module/sort`
+        return api.post(finalUrl, {modules})
+    }
 }
 
 export default new MobileService()

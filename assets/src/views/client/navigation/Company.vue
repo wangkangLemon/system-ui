@@ -319,6 +319,7 @@
                 checkedIos: [], // 已选的ios列表
                 loading: false,
                 currentData: {
+                    scheme_id: '', // 方案ID
                     pindex: '', // 父层索引
                     index: '' // 子层索引
                 },
@@ -375,7 +376,8 @@
                 this.form.scheme_id = scheme_id
                 delete this.form.module_id
                 this.currentData = {
-                    pindex
+                    pindex,
+                    scheme_id
                 }
                 this.changeIcon = true
                 this.$nextTick(() => {
@@ -388,12 +390,13 @@
             hideLayer (e) {
                 e.target.querySelector('.operate-layer').style.visibility = 'hidden'
             },
-            cropperFn (data) {
+            cropperFn (data, ext) {
                 this.loading = true
                 // 执行上传
-                mobileService.uploadNavIcon({
+                mobileService.uploadModuleScheme({
                     image: data,
-                    alias: Date.now() + '.jpg'
+                    alias: Date.now() + ext,
+                    scheme_id: this.currentData.scheme_id
                 }).then((ret) => {
                     this.loading = false
                     this.form.icon = ret.url
@@ -402,7 +405,8 @@
             editModule (item, scheme_id, pindex, index) {
                 this.currentData = {
                     pindex,
-                    index
+                    index,
+                    scheme_id
                 }
                 this.changeIcon = true
                 this.form.type = item.type
