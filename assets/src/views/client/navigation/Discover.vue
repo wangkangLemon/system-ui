@@ -284,7 +284,7 @@
         <el-dialog class="group-list-container" title="分组" v-model="groupDialog">
             <div class="tip">同一组应用请用相同数字标识，分组的排序按照数字从小到大排列</div>
             <article class="group-list">
-                <section class="group-item" v-for="(item,index) in groupList">
+                <section class="group-item" v-for="(item,index) in groupList.grouplist">
                     <img :src="item.icon | fillImgPath" alt=""/>
                     <p>{{item.name}}</p>
                     <el-input placeholder="0" v-model="item.group"/>
@@ -292,7 +292,7 @@
             </article>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="groupDialog = false">取 消</el-button>
-                <el-button type="primary" @click="submitGroup">确 定</el-button>
+                <el-button type="primary" @click="submitGroup(groupList.id)">确 定</el-button>
             </div>
         </el-dialog>
         <div class="add">
@@ -429,6 +429,10 @@
                 xmview.setContentLoading(false)
             })
         },
+        mounted () {
+            // 拖拽方法
+            this.dragFn()
+        },
         methods: {
             dialogOpen () {
                 // 当编辑弹窗显示的时候获取所有的功能版本
@@ -493,13 +497,26 @@
             // 分组
             grouping (list) {
                 this.groupDialog = true
-                this.groupList = list.grouplist
-                console.log(list)
+                this.groupList = list
             },
             // 确认分组
-            submitGroup () {
-                console.log(this.groupList)
-                console.log('确认分组')
+            submitGroup (scheme_id) {
+                let newArr = []
+                this.groupList.grouplist.forEach((item) => {
+                    newArr.push({
+                        id: item.id,
+                        group: parseInt(item.group),
+                        sort: parseInt(item.sort)
+                    })
+                })
+                mobileService.sortModule({
+                    scheme_id,
+                    modules: JSON.stringify(newArr)
+                }).then(() => {
+                    xmview.showTip('success', '排序成功')
+                    this.getData()
+                    this.groupDialog = false
+                })
             },
             editModule (item, scheme_id, pindex, index) {
                 this.currentData = {
@@ -507,7 +524,6 @@
                     pindex,
                     index
                 }
-                console.log(this.currentData)
                 this.changeIcon = true
                 this.form.type = item.type
                 this.dialogTitle = item.name
@@ -535,7 +551,6 @@
                     pindex,
                     scheme_id
                 }
-                console.log(this.currentData)
                 this.changeIcon = true
                 this.$nextTick(() => {
                     this.$refs.form.resetFields()
@@ -621,37 +636,12 @@
                             })
                         })
                     })
-                    console.log(this.resultData)
                 }).then(() => {
                     this.containerLoading = false
                 })
             },
             startCropper() {
                 ImagEcropperInput.chooseImg()
-            },
-            navStart (navID) {
-                mobileService.applyMenu(navID).then(() => {
-                    xmview.showTip('success', '启用成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
-                })
-            },
-            navClone (navID) {
-                mobileService.menuClone(navID).then(() => {
-                    xmview.showTip('success', '克隆成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
-                })
-            },
-            navDelete (navID) {
-                mobileService.menuDelete(navID).then(() => {
-                    xmview.showTip('success', '删除成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
-                })
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
@@ -721,8 +711,45 @@
                  value.list 存储拖拽之后的数组
                  */
                 this.$dragging.$on('dragged', (value) => {
-                    // 拖拽成功之后运行
-                    // 将value.draged.id 和 value.to.id 作为参数传递给接口
+                    // 根据方案id获取方案的索引
+                    let schemeIndex = this.getIndex(this.resultData, value.draged.menu_scheme_id)
+                    // 获取当前拖拽项的索引
+                    let dragIndex = this.getIndex(this.resultData[schemeIndex].grouplist, value.draged.id)
+                    let toIndex = this.getIndex(this.resultData[schemeIndex].grouplist, value.to.id)
+                    let newArr = []
+                    this.resultData[schemeIndex].grouplist.forEach((item, index) => {
+                        if (index == dragIndex) {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(value.to.sort)
+                            })
+                        } else if (index == toIndex) {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(value.draged.sort)
+                            })
+                        } else {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(item.sort)
+                            })
+                        }
+                    })
+                    mobileService.sortModule({
+                        scheme_id: value.draged.menu_scheme_id,
+                        modules: JSON.stringify(newArr)
+                    }).then(() => {
+                        xmview.showTip('success', '排序成功')
+                    })
+                })
+            },
+            // 返回数组的索引
+            getIndex (array, id) {
+                return array.findIndex((value, index, arr) => {
+                    return value.id == id
                 })
             },
             changeRecommend () {
