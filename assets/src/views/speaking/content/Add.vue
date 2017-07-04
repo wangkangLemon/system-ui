@@ -40,13 +40,6 @@
                 <ImagEcropperInput :isRound="false" :aspectRatio="2/1" :confirmFn="cropperFn"
                                    class="upload-btn"></ImagEcropperInput>
             </el-form-item>
-            <el-form-item prop="end_time" label="截止日期">
-                <el-date-picker
-                        v-model="form.end_time"
-                        type="date"
-                        placeholder="选择截止日期">
-                </el-date-picker>
-            </el-form-item>
             <el-form-item prop="price_enabled" label="是否设置红包">
                 <template>
                     <el-radio class="radio" v-model="form.price_enabled" :label="1">是</el-radio>
@@ -79,6 +72,13 @@
             <el-form-item prop="price_float" label="浮动">
                 <el-input-number v-model="form.price_float" auto-complete="off"
                                  :disabled="!form.price_enabled"></el-input-number>
+            </el-form-item>
+            <el-form-item prop="end_time" label="红包截止日期">
+                <el-date-picker
+                        v-model="form.end_time"
+                        type="date"
+                        placeholder="选择红包截止日期">
+                </el-date-picker>
             </el-form-item>
             <el-form-item prop="sort">
                 <el-button type="primary" @click="submit(0)" :disabled="submiting">保存并上线</el-button>

@@ -168,7 +168,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="type_id" label="选择功能" v-if="form.type == 'app_module'">
-                    <el-select v-model="form.type_id">
+                    <el-select v-model="form.type_id" @change="getDefaultLogo">
                         <el-option v-for="(item,index) in modules" :label="item.name" :value="item.id" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -272,7 +272,7 @@
                 <span v-if="list.active">使用中</span>
                 <el-button type="text" v-if="!list.active" @click="getPlatVersions(list.id)">启用</el-button>
                 <el-button type="text" @click="cloneScheme(list.id)">克隆</el-button>
-                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active">删除</el-button>
+                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active || !list.readonly">删除</el-button>
             </section>
             <div class="platform" v-if="list.active">
                 <i>使用平台和版本:</i>
@@ -297,6 +297,7 @@
 <script>
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../../services/mobileService'
+    import {getArrayIdIndex} from '../../../utils/common'
     import clone from 'clone'
     export default{
         data () {
@@ -341,6 +342,11 @@
             })
         },
         methods: {
+            getDefaultLogo () {
+                // 根据功能获取到默认logo
+                let curModule = getArrayIdIndex(this.modules, this.form.type_id)
+                if (curModule > -1) this.form.icon = this.modules[curModule]['icon']
+            },
             dialogOpen () {
                 // 当编辑弹窗显示的时候过去所有的功能版本
                 return mobileService.getModuleVersions().then((ret) => {
@@ -366,6 +372,7 @@
                     this.form.name = '' // 功能名称
                     this.form.icon = '' // 功能图标
                 }
+                console.log(this.form)
             },
             addModule (scheme_id, pindex) {
                 this.form = clearFn()
@@ -407,12 +414,14 @@
                 this.changeIcon = true
                 this.form.type = item.type
                 this.dialogTitle = item.name
+                item.app_version = ''
                 this.$nextTick(() => {
                     this.form = clone(item)
                     this.versionChange().then(() => {
                         if (this.form.type == 'link') {
                             this.form.scheme_id = scheme_id
                             this.form.module_id = item.id
+                            this.form.app_version = ''
                         } else {
                             this.getActiveVersion(item.type_id).then((ret) => {
                                 this.form.app_version = ret[0].app_version
