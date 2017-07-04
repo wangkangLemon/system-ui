@@ -276,7 +276,7 @@
                 <span v-if="list.active">使用中</span>
                 <el-button type="text" v-if="!list.active" @click="getPlatVersions(list.id)">启用</el-button>
                 <el-button type="text" @click="cloneScheme(list.id)">克隆</el-button>
-                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active || !list.readonly">删除</el-button>
+                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active && !list.readonly">删除</el-button>
             </section>
             <div class="platform" v-if="list.active">
                 <i>使用平台和版本:</i>
