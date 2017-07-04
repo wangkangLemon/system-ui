@@ -25,6 +25,10 @@ RUN cd /node/src/git.vodjk.com/yst/system-ui/assets \
 ADD entrypoint.sh /
 ADD config.js.default /
 
+RUN cd /node/src/git.vodjk.com/yst/system-ui/assets \
+  && cp -f /config.js.default config/config.js \
+  && yarn run build
+
 EXPOSE 80
 
 CMD ["/entrypoint.sh"]
