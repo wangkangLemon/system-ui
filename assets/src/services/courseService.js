@@ -429,6 +429,24 @@ class CourseService {
         let finalUrl = `${urlPre}/doc/${doc_id}/view`
         return api.get(finalUrl)
     }
+
+    // 下载文档
+    downloadDoc ({id, name}) {
+        let finalUrl = `${urlPre}/doc/${id}/download`
+        return api.downLoad(finalUrl, {}, name)
+    }
+
+    // 查询状态
+    refreshDoc({id}) {
+        let finalUrl = `${urlPre}/doc/${id}/refresh`
+        return api.get(finalUrl)
+    }
+
+    // 重试转码
+    retryDoc({id}) {
+        let finalUrl = `${urlPre}/doc/${id}/retry`
+        return api.get(finalUrl)
+    }
 }
 
 export default new CourseService()

@@ -74,7 +74,7 @@
                     label="文档名称">
             </el-table-column>
             <el-table-column
-                    min-width="230"
+                    min-width="200"
                     prop="company_name"
                     label="所属企业">
             </el-table-column>
@@ -85,7 +85,7 @@
             </el-table-column>
             <el-table-column
                     width="100"
-                    label="文件大小">
+                    label="大小">
                 <template scope="scope">
                     <i>{{(scope.row.file_size / 1024 / 1024).toFixed(2)}} M</i>
                 </template>
@@ -96,27 +96,35 @@
                     label="页数">
             </el-table-column>
             <el-table-column
-                    width="100"
+                    width="110"
                     label="状态">
                 <template scope="scope">
-                    <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
+                    <span v-if="scope.row.status == 0" class="text-success">正常</span>
+                    <template v-else-if="scope.row.status == 1 && scope.row.job_id > 0">
+                        <span class="text-light-blue">转码中</span>
+                        <el-button @click="refresh(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-refresh" title="刷新状态"></i></el-button>
+                    </template>
                     <template v-else>
-                        <el-tag type="primary">转码中</el-tag>
-                        <a><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                        <span class="text-danger" :title="scope.row.job_message">转码失败</span>
+                        <el-button @click="retry(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-refresh" title="点击重试"></i></el-button>
                     </template>
                 </template>
             </el-table-column>
             <el-table-column
-                    width="190"
+                    width="170"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="120"
+                    width="140"
                     label="操作">
                 <template scope="scope">
-                    <el-button type="text" @click="show(scope.$index, scope.row)" size="small">查看</el-button>
-                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    <template v-if="scope.row.status == 0">
+                        <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
+                        <el-button @click="show(scope.$index, scope.row)" type="text" size="small">预览</el-button>
+                        <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    </template>
+                    <el-button v-else @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -210,9 +218,35 @@
                     })
                 })
             },
+            //  刷新
+            refresh (index, row) {
+                this.loadingData = true
+                courseService.refreshDoc({id: row.id}).then(() => {
+                    xmview.showTip('success', '文档转码状态刷新成功')
+                    this.loadingData = false
+                    this.fetchData()
+                }).catch(() => {
+                    this.loadingData = false
+                })
+            },
+            // 重试
+            retry (index, row) {
+                this.loadingData = true
+                courseService.retryDoc({id: row.id}).then(() => {
+                    xmview.showTip('success', '重新提交文档转码任务成功')
+                    this.loadingData = false
+                    this.fetchData()
+                }).catch(() => {
+                    this.loadingData = false
+                })
+            },
             // 查看
             show (index, row) {
                 window.open(`${window.location.origin}/view/showdoc?url=${config.apiHost}/sys/course/doc/${row.id}/view`)
+            },
+            // 下载
+            download (index, row) {
+                courseService.downloadDoc({id: row.id, name: row.file_name})
             },
             // 批量删除
             delMulti () {

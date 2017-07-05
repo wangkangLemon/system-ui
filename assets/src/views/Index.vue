@@ -106,10 +106,13 @@
             }
 
             .left-menu-container {
+                position: fixed;
                 width: 220px;
                 z-index: 10;
-                /*height: 100%;*/
-                /*overflow-y: auto;*/
+                top: 56px;
+                bottom: 0;
+                overflow: hidden;
+                overflow-y: auto;
                 transition: all 300ms ease;
                 transform: translateX(0);
 
@@ -142,6 +145,7 @@
                 width: 100%;
                 background: #d9e0e7;
                 min-height: 100%;
+                height: 100%;
                 top: 0;
                 overflow: auto;
                 @media (max-width: 767px) {

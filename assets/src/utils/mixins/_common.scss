@@ -22,7 +22,7 @@
     }
 }
 
-//右上角按钮的容器样式
+// 右上角按钮的容器样式
 %right-top-btnContainer{
     position: absolute;
     right: 0;
@@ -38,4 +38,24 @@
             }
         }
     }
+}
+
+// 常用颜色定义
+.text-blue {
+    color: #20A0FF
+}
+.text-light-blue {
+  color: #58B7FF
+}
+.text-dark-blue {
+    color: #1D8CE0
+}
+.text-success{
+    color: #13CE66
+}
+.text-warning{
+    color: #F7BA2A
+}
+.text-danger{
+    color: #FF4949
 }
