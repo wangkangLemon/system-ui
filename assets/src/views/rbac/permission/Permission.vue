@@ -47,7 +47,7 @@
         </el-dialog>
         <!-- 分配权限菜单 弹窗-->
         <el-dialog :visible.sync="menuForm" size="tiny" title="菜单分配">
-            <el-tree :data="fromData" node-key="id" show-checkbox  default-expand-all :default-checked-keys="toData" ref="tree"></el-tree>
+            <el-tree :data="fromData" node-key="id" show-checkbox  default-expand-all :default-checked-keys="toData" ref="tree" :check-strictly="false"></el-tree>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="menuForm = false">取 消</el-button>
                 <el-button type="primary" @click="menuSubmit()">保 存</el-button>
@@ -150,22 +150,6 @@
             })
         },
         methods: {
-            // 获取选中的id
-            getcheckData() {
-                this.list = this.$refs.tree.store
-                let nodes = this.list.nodesMap
-                let newlist = []
-                for (let index in nodes) {
-                    let node = nodes[index]
-                    if (node.checked) {
-                        newlist.push(node.data.id)
-                    } else if (node.indeterminate && !node.checked) {
-                        newlist.push(node.data.id)
-                    }
-                }
-                this.permissionForm.ids = newlist.toString()
-                console.log(this.permissionForm.ids)
-            },
             initFetchParam () {
                 this.search.Page = 1
             },
@@ -257,7 +241,8 @@
                 })
             },
             menuSubmit() {
-                this.getcheckData()
+                let checkData = this.$refs.tree.getCheckedKeys()
+                this.permissionForm.ids = checkData.toString()
                 let reqFn = permissionService.menu
                 reqFn(this.permissionForm).then((ret) => {
                     if (ret.code === 0) {
