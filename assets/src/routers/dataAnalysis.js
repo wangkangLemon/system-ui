@@ -118,8 +118,8 @@ export default {
             }
         },
         {
-            path: 'company/announce',
-            name: 'analysis-company-announce',
+            path: 'app/announce',
+            name: 'analysis-app-announce',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../views/dataAnalysis/company/Announce.vue'))
