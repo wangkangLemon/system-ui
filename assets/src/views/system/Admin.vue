@@ -79,7 +79,7 @@
                 </el-form-item>
                 <el-form-item label='分配权限' :label-width="formLabelWidth">
                     <el-select v-model="toData" filterable placeholder="请选择" allow-create multiple>
-                        <el-option v-for="item in fromData" :key="item.key" :label="item.label" :value="item.key">
+                        <el-option if='fromData' v-for="item in fromData" :key="item.key" :label="item.label" :value="item.key">
                         </el-option>
                     </el-select>
     
@@ -219,7 +219,7 @@ export default {
         },
         addAdmin() {
             this.addForm = true
-            this.toData = ''
+            this.toData = []
             this.getAllrolates()
             setTimeout(() => {
                 this.$refs['form'].resetFields()
@@ -299,7 +299,7 @@ export default {
         },
         submit(form) {
             this.form.roles = this.toData.toString()
-            console.log(this.form.roles)
+
             this.$refs[form].validate((valid) => {
                 if (valid) {
                     if (!this.form.id && !this.form.passwd) {
@@ -341,12 +341,12 @@ export default {
             })
         },
         getAllrolates() {
+            this.fromData = []
             adminService.getAllroles().then((ret) => {
                 ret.data.map((item) => {
                     item.label = item.role_name
                     item.key = item.id
                 })
-
                 this.fromData = ret.data
             })
         }
