@@ -40,7 +40,7 @@ export function time2String (time, withoutDate = false, isUTC) {
         return fillZero(finalDate.getHours(), 2) + ':' + fillZero(finalDate.getMinutes(), 2)
     } else {
         //  返回字符串
-        return finalDate.getFullYear() + '-' + (finalDate.getMonth() + 1) + '-' + finalDate.getDate() +
+        return finalDate.getFullYear() + '-' + fillZero(finalDate.getMonth() + 1) + '-' + fillZero(finalDate.getDate()) +
             ' ' + fillZero(finalDate.getHours(), 2) + ':' + fillZero(finalDate.getMinutes(), 2)
     }
 }

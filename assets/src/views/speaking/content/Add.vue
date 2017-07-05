@@ -76,7 +76,8 @@
             <el-form-item prop="end_time" label="红包截止日期">
                 <el-date-picker
                         v-model="form.end_time"
-                        type="date"
+                        type="datetime"
+                        :disabled="!form.price_enabled"
                         placeholder="选择红包截止日期">
                 </el-date-picker>
             </el-form-item>
@@ -144,7 +145,7 @@
                     }
                 } else {
                     delete this.rules.price_company_id
-                    this.form.price_company_id = this.form.price_total = this.form.price = this.form.price_float = this.form.price_company_name = void 0
+                    this.form.end_time = this.form.price_company_id = this.form.price_total = this.form.price = this.form.price_float = this.form.price_company_name = void 0
                 }
             },
             'form.price_company_id' (val) {
@@ -200,7 +201,7 @@
                         reqFn = speakingContentService.updateSpeaking
                     }
 
-                    this.form.end_time = timeUtils.date2Str(this.form.end_time)
+                    this.form.end_time = timeUtils.time2String(this.form.end_time)
                     reqFn(this.form).then((ret) => {
                         xmview.showTip('success', '保存成功')
                         this.$router.back()

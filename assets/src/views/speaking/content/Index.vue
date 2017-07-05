@@ -64,7 +64,7 @@
                     <el-tag v-else type="danger">下线</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="create_time" label="有效日期"></el-table-column>
+            <el-table-column prop="end_time" label="有效日期"></el-table-column>
             <el-table-column
                     width="207"
                     label="操作">
