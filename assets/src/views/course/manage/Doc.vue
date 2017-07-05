@@ -106,7 +106,7 @@
                     </template>
                     <template v-else>
                         <span class="text-danger" :title="scope.row.job_message">转码失败</span>
-                        <el-button @click="retry(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-refresh" title="点击重试"></i></el-button>
+                        <el-button @click="retry(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-retweet" title="点击重试"></i></el-button>
                     </template>
                 </template>
             </el-table-column>

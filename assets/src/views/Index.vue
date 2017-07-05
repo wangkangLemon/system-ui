@@ -124,7 +124,7 @@
                 }
                 @media (max-width: 767px) {
                     transform: translateX(-100%);
-                    top: -55px;
+                    top: 0px;
                     z-index: 12;
                 }
 
@@ -316,17 +316,17 @@
             }
         },
         created () {
-            this.icons.main = require('./images/main.png')
-            this.icons.course = require('./images/course.png')
-            this.icons.company = require('./images/company.png')
-            this.icons.finance = require('./images/finance.png')
-            this.icons.sale = require('./images/sale.png')
-            this.icons.client = require('./images/client.png')
-            this.icons.data = require('./images/data.png')
-            this.icons.system = require('./images/system.png')
-            this.icons.service = require('./images/service.png')
-            this.icons.article = require('./images/article.png')
-            this.icons.user = require('./images/user.png')
+            this.icons.main = 'fa-home'
+            this.icons.course = 'fa-file-video-o'
+            this.icons.company = 'fa-building-o'
+            this.icons.finance = 'fa-money'
+            this.icons.sale = 'fa-gift'
+            this.icons.client = 'fa-android'
+            this.icons.data = 'fa-line-chart'
+            this.icons.system = 'fa-cog'
+            this.icons.service = 'fa-wechat'
+            this.icons.article = 'fa-book'
+            this.icons.user = 'fa-user'
 
             authUtils.authRefreshtoken() // 开启自动更新token
             xmview.setContentLoading = this.setContentLoading.bind(this)
