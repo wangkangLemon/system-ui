@@ -47,7 +47,7 @@
         </el-dialog>
         <!-- 分配权限菜单 弹窗-->
         <el-dialog :visible.sync="menuForm" size="tiny" title="菜单分配">
-            <el-tree :data="fromData" node-key="id" show-checkbox  default-expand-all :default-checked-keys="toData" ref="tree" :check-strictly="false"></el-tree>
+            <el-tree :data="fromData" node-key="id" show-checkbox  default-expand-all :default-checked-keys="toData" ref="tree" :check-strictly="true"></el-tree>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="menuForm = false">取 消</el-button>
                 <el-button type="primary" @click="menuSubmit()">保 存</el-button>
