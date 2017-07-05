@@ -22,11 +22,9 @@ export default {
     },
     data() {
         return {
-            currVal: '',
         }
     },
     created() {
-        this.currVal = this.url
         // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
         this.insertScriptTag()
     },
@@ -50,7 +48,7 @@ export default {
             }
         },
         play() {
-            window.playAmr(this.currVal)
+            window.playAmr(this.url)
         },
     }
 }
