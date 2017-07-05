@@ -27,8 +27,8 @@
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-radio-group v-model="form.disabled">
-                            <el-radio :label="1">启用</el-radio>
-                            <el-radio :label="0">禁用</el-radio>
+                            <el-radio :label="0">启用</el-radio>
+                            <el-radio :label="1">禁用</el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
@@ -37,12 +37,20 @@
                 <el-button type="primary" @click="submit('form')">保 存</el-button>
             </span>
         </el-dialog>
-        <!-- 分配权限 弹窗-->
-        <el-dialog :visible.sync="relateForm" size="tiny" :title="this.activeAction === 'api' ? 'API分配' : '菜单分配'">
+        <!-- 分配权限API 弹窗-->
+        <el-dialog :visible.sync="apiForm" size="tiny" title="API分配">
             <el-transfer v-model="toData" :data="fromData" :titles="['未选择', '已选择']" filterable></el-transfer>      
             <span slot="footer" class="dialog-footer">
-                <el-button @click="relateForm = false">取 消</el-button>
-                <el-button type="primary" @click="relateSubmit()">保 存</el-button>
+                <el-button @click="apiForm = false">取 消</el-button>
+                <el-button type="primary" @click="apiSubmit()">保 存</el-button>
+            </span>
+        </el-dialog>
+        <!-- 分配权限菜单 弹窗-->
+        <el-dialog :visible.sync="menuForm" size="tiny" title="菜单分配">
+            <el-tree :data="fromData" node-key="id" show-checkbox  default-expand-all :default-checked-keys="toData" ref="tree" :check-strictly="true"></el-tree>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="menuForm = false">取 消</el-button>
+                <el-button type="primary" @click="menuSubmit()">保 存</el-button>
             </span>
         </el-dialog>
         <el-table border v-loading="loading" :data="dataList">
@@ -54,8 +62,8 @@
                     prop="disabled"
                     label="状态">
                     <template scope="scope">
-                        <el-tag type="success" v-if="scope.row.disabled">启用</el-tag>
-                        <el-tag type="gray" v-if="!scope.row.disabled">禁用</el-tag>
+                        <el-tag type="success" v-if="!scope.row.disabled">启用</el-tag>
+                        <el-tag type="gray" v-if="scope.row.disabled">禁用</el-tag>
                     </template>
             </el-table-column>
             <el-table-column
@@ -72,7 +80,7 @@
                 <template scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                     <el-button type="text" size="small" @click="disable(scope.row)">
-                            {{scope.row.disabled === 0 ? '启用' : '禁用'}}
+                            {{scope.row.disabled === 0 ? '禁用' : '启用'}}
                     </el-button>
                     <el-button @click="del(scope.$index,scope.row)" type="text" size="small">删除</el-button>
                     <el-button @click="apiRelate(scope.row)" type="text" size="small">API分配</el-button>
@@ -104,11 +112,11 @@
     export default {
         data () {
             return {
-                activeAction: 'api',
                 form: clearFn(),
                 loading: false,
                 updateForm: false, // 弹框
-                relateForm: false,
+                apiForm: false,
+                menuForm: false,
                 fromData: [{}],
                 toData: [],
                 search: {
@@ -186,23 +194,21 @@
                 })
             },
             apiRelate(row) {
-                this.activeAction = 'api'
                 this.permissionForm = clearFn()
                 this.permissionForm.id = row.id
                 permissionService.searchOperation(row.id).then((ret) => {
                     this.fromData = ret.from === null ? [{}] : ret.from
                     this.toData = ret.to === null ? [] : ret.to
-                    this.relateForm = true
+                    this.apiForm = true
                 })
             },
             menuRelate(row) {
-                this.activeAction = 'menu'
                 this.permissionForm = clearFn()
                 this.permissionForm.id = row.id
                 permissionService.searchMenu(row.id).then((ret) => {
                     this.fromData = ret.from === null ? [{}] : ret.from
                     this.toData = ret.to === null ? [] : ret.to
-                    this.relateForm = true
+                    this.menuForm = true
                 })
             },
             submit(form) {
@@ -222,16 +228,26 @@
                     })
                 })
             },
-            relateSubmit() {
+            apiSubmit() {
                 this.permissionForm.ids = this.toData.toString()
                 let reqFn = permissionService.operation
-                if (this.activeAction === 'menu') {
-                    reqFn = permissionService.menu
-                }
                 reqFn(this.permissionForm).then((ret) => {
                     if (ret.code === 0) {
                         xmview.showTip('success', '操作成功!')
-                        this.relateForm = false
+                        this.apiForm = false
+                    } else if (ret.code === 1) {
+                        xmview.showTip('error', ret.message)
+                    }
+                })
+            },
+            menuSubmit() {
+                let checkData = this.$refs.tree.getCheckedKeys()
+                this.permissionForm.ids = checkData.toString()
+                let reqFn = permissionService.menu
+                reqFn(this.permissionForm).then((ret) => {
+                    if (ret.code === 0) {
+                        xmview.showTip('success', '操作成功!')
+                        this.menuForm = false
                     } else if (ret.code === 1) {
                         xmview.showTip('error', ret.message)
                     }

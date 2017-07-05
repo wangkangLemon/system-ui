@@ -62,6 +62,20 @@
         .addForm {
             text-align: left;
             text-align-last: left;
+            .img-wrap {
+                display: flex;
+                .image {
+                    width: 200px;
+                    height: 100px;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .button-wrap {
+                    margin-left: 10px;
+                }
+            }
             .tag {
                 span {
                     padding: 10px;
@@ -207,8 +221,14 @@
                 </el-form-item>
                 <el-form-item prop="image" label="图片" :label-width="formLabelWidth">
                     <!--图片上传-->
-                    <UploadImg ref="uploadImg" :defaultImg="form.image" :url="uploadReqUrl"
-                                :onSuccess="handleImgUploaded"></UploadImg>
+                    <div class="img-wrap">
+                        <div v-if="form.image" class="image">
+                            <img :src="form.image | fillImgPath" alt=""/>
+                        </div>
+                        <div class="button-wrap">
+                            <el-button type="primary" @click="() => {$refs.imgcropper.chooseImg()}">上传</el-button>
+                        </div>
+                    </div>
                 </el-form-item>
                 <el-form-item prop="desc" label="描述" :label-width="formLabelWidth">
                     <el-input type="textarea" :rows="3" v-model="form.desc" auto-complete="off"></el-input>
@@ -326,20 +346,21 @@
                 </el-pagination>
             </div>
         </section>
+        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgcropper" :confirmFn="handleImgUploaded" :aspectRatio="2"></ImagEcropperInput>
     </article>
 </template>
 <script>
     import ChooseContent from '../component/ChooseContent.vue'
     import SectionCategorySelect from '../../component/select/SectionCategory.vue'
     import sectionService from '../../../services/sectionService'
-    import UploadImg from '../../component/upload/UploadImg.vue'
+    import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import {date2Str} from '../../../utils/timeUtils'
     let _this
     export default {
         components: {
             ChooseContent,
             SectionCategorySelect,
-            UploadImg
+            ImagEcropperInput
         },
         data () {
             return {
@@ -373,7 +394,6 @@
                 formTitle: '添加内容',
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
-                uploadReqUrl: '', // 上传图片的请求地址
                 catArr: {'course': '课程', 'article': '资讯', 'speaking': '药我说', 'link': '链接'},
                 category: '',
                 form: {                // 表单属性值
@@ -443,7 +463,6 @@
             }).then(() => {
                 xmview.setContentLoading(false)
             })
-            this.uploadReqUrl = sectionService.getContentUploadImg()
         },
         methods: {
             showImg (e) {
@@ -609,8 +628,14 @@
                 this.addForm = true
                 this.formTitle = '添加内容'
             },
-            handleImgUploaded (response) {
-                this.form.image = response.data.url
+            handleImgUploaded (data, ext) {
+                sectionService.uploadSectionImage({
+                    section_id: this.section.currentID,
+                    alias: Date.now() + ext,
+                    image: data
+                }).then((ret) => {
+                    this.form.image = ret.url
+                })
             }
         }
     }

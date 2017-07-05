@@ -22,8 +22,14 @@ RUN cd /node/src/git.vodjk.com/yst/system-ui/assets \
     && npm link node-sass \
     && yarn install
 
-ADD entrypoint.sh /
 ADD config.js.default /
+
+RUN cd /node/src/git.vodjk.com/yst/system-ui/assets \
+  && cp -f /config.js.default config/config.js \
+  && yarn run build
+
+ADD entrypoint.sh /
+ADD demo.sh /
 
 EXPOSE 80
 

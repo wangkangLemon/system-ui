@@ -52,8 +52,7 @@
 
             <section>
                 <i>所属企业</i>
-                <IndustryCompanySelect v-model="fetchParam.company_id"
-                                       :change="fetchData"></IndustryCompanySelect>
+                <IndustryCompanySelect v-model="fetchParam.company_id" :change="fetchData"></IndustryCompanySelect>
             </section>
 
             <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
@@ -100,8 +99,11 @@
                     width="100"
                     label="状态">
                 <template scope="scope">
-                    <el-tag v-if="scope.row.pages > 0" type="success">正常</el-tag>
-                    <el-tag v-else type="primary">转码中</el-tag>
+                    <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
+                    <template v-else>
+                        <el-tag type="primary">转码中</el-tag>
+                        <a><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                    </template>
                 </template>
             </el-table-column>
             <el-table-column

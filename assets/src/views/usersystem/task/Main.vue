@@ -16,6 +16,23 @@
             margin-top: 10px;
             text-align: right;
         }
+        .icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+        .up-img {
+            display: flex;
+            align-items: center;
+              .img-wrap {
+                    width: 80px;
+                    height: 80px;
+                    margin-right: 30px;
+                 img {
+                        max-width: 100%;
+                     }
+                      }
+                 }
     }
 </style>
 <template>
@@ -36,6 +53,14 @@
             </section>
         </section>
         <el-table border v-loading="loading" :data="dataList">
+            <el-table-column
+            label="任务图标"
+            min-width='100'>
+            <template scope="scope">
+                <!--<img :src="scope.row.icon" alt="icon">-->
+                <img class="icon" :src="scope.row.icon | fillImgPath" alt=""/>
+            </template>
+            </el-table-column>
             <el-table-column
                     prop="title"
                     min-width="180"
@@ -95,6 +120,17 @@
                         <el-option :key="index" v-for="(item,index) in useraction" :label="item.alias" :value="item.name"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="任务图标">
+                    <div class="up-img">
+                     <div class="img-wrap" v-if="form.icon" >
+                    <img :src="form.icon | fillImgPath" alt=""></img>
+                    </div>
+                   <div>
+                        <el-button class="up-btn" type="primary" @click="() => {$refs.imgcropper.chooseImg()}">更换</el-button>
+                   </div>
+                    </div>
+                   
+                </el-form-item>
                 <el-form-item prop="title" label="任务标题">
                     <el-input v-model="form.title"></el-input>
                 </el-form-item>
@@ -121,15 +157,19 @@
             </span>
         </el-dialog>
         <ChooseContent :category="form.user_action_name" v-model="choose.isShow" v-on:result="chooseConfirm"></ChooseContent>
+        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
+                           :isRound="true"></ImagEcropperInput>
     </article>
 </template>
 <script>
+    import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import ChooseContent from '../component/ChooseContent.vue'
     import TaskService from '../../../services/usersystem/taskService'
     import clone from 'clone'
     export default {
         components: {
-            ChooseContent
+            ChooseContent,
+            ImagEcropperInput
         },
         data () {
             return {
@@ -167,6 +207,13 @@
             })
         },
         methods: {
+            cropperFn (data, ext) {
+                // this.form.icon = data
+                TaskService.upIcon({
+                    image: data,
+                    alias: Date.now() + ext
+                }).then((ret) => { this.form.icon = ret.url })
+            },
             changeActionFn () {
                 if (this.form.user_action_object_id) {
                     this.form.user_action_object_id = ''
@@ -192,6 +239,7 @@
             },
             editFn (row) {
                 this.addForm = true
+                console.log(row)
                 this.$nextTick(() => {
                     this.form = clearFn.call(this)
                     this.$refs.form.resetFields()
@@ -211,6 +259,7 @@
                     this.useraction = result[0].data
                     this.dataList = result[1].data
                     this.total = result[1].total
+                    console.log(result)
                 })
             },
             submit (form) {
@@ -250,6 +299,7 @@
             reward: '',
             user_action_object_id: '',
             count: '', // 累计次数
+            icon: ''
         }
     }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <keep-alive exclude="navigatioin-discover">
+    <keep-alive exclude="navigatioin-discover,navigatioin-index,navigatioin-company">
         <router-view></router-view>
     </keep-alive>
 </template>

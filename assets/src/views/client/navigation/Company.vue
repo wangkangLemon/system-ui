@@ -169,7 +169,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="type_id" label="选择功能" v-if="form.type == 'app_module'">
-                    <el-select v-model="form.type_id">
+                    <el-select v-model="form.type_id" @change="getDefaultLogo">
                         <el-option v-for="(item,index) in modules" :label="item.name" :value="item.id"
                                    :key="index"></el-option>
                     </el-select>
@@ -240,7 +240,8 @@
                 <section class="dragWrap" v-if="!list.active">
                     <div class="nav-item active"
                          v-for="(item,index) in list.modules"
-                         :key="list.id + index">
+                         v-dragging="{item: item, list: list.modules, group: 'item' + list.id}"
+                         :key="item.name">
                         <div class="parent" @mouseenter="showLayer" @mouseleave="hideLayer">
                             <img :src="item.icon | fillImgPath" alt=""/>
                             <p>{{item.name}}</p>
@@ -276,7 +277,7 @@
                 <span v-if="list.active">使用中</span>
                 <el-button type="text" v-if="!list.active" @click="getPlatVersions(list.id)">启用</el-button>
                 <el-button type="text" @click="cloneScheme(list.id)">克隆</el-button>
-                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active">删除</el-button>
+                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active && !list.readonly">删除</el-button>
             </section>
             <div class="platform" v-if="list.active">
                 <i>使用平台和版本:</i>
@@ -301,8 +302,10 @@
 <script>
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../../services/mobileService'
+    import {getArrayIdIndex} from '../../../utils/common'
     import clone from 'clone'
     export default{
+        name: 'navigatioin-company',
         data () {
             return {
                 containerLoading: false,
@@ -319,6 +322,7 @@
                 checkedIos: [], // 已选的ios列表
                 loading: false,
                 currentData: {
+                    scheme_id: '', // 方案ID
                     pindex: '', // 父层索引
                     index: '' // 子层索引
                 },
@@ -338,12 +342,21 @@
                 }
             }
         },
-        activated () {
+        created () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
         },
+        mounted () {
+            // 拖拽方法
+            this.dragCompanyFn()
+        },
         methods: {
+            getDefaultLogo () {
+                // 根据功能获取到默认logo
+                let curModule = getArrayIdIndex(this.modules, this.form.type_id)
+                if (curModule > -1) this.form.icon = this.modules[curModule]['icon']
+            },
             dialogOpen () {
                 // 当编辑弹窗显示的时候过去所有的功能版本
                 return mobileService.getModuleVersions().then((ret) => {
@@ -375,7 +388,8 @@
                 this.form.scheme_id = scheme_id
                 delete this.form.module_id
                 this.currentData = {
-                    pindex
+                    pindex,
+                    scheme_id
                 }
                 this.changeIcon = true
                 this.$nextTick(() => {
@@ -388,12 +402,13 @@
             hideLayer (e) {
                 e.target.querySelector('.operate-layer').style.visibility = 'hidden'
             },
-            cropperFn (data) {
+            cropperFn (data, ext) {
                 this.loading = true
                 // 执行上传
-                mobileService.uploadNavIcon({
+                mobileService.uploadModuleScheme({
                     image: data,
-                    alias: Date.now() + '.jpg'
+                    alias: Date.now() + ext,
+                    scheme_id: this.currentData.scheme_id
                 }).then((ret) => {
                     this.loading = false
                     this.form.icon = ret.url
@@ -402,11 +417,13 @@
             editModule (item, scheme_id, pindex, index) {
                 this.currentData = {
                     pindex,
-                    index
+                    index,
+                    scheme_id
                 }
                 this.changeIcon = true
                 this.form.type = item.type
                 this.dialogTitle = item.name
+                item.app_version = ''
                 this.$nextTick(() => {
                     this.form = clone(item)
                     this.versionChange().then(() => {
@@ -547,7 +564,51 @@
                     })
                     return versionArr
                 })
-            }
+            },
+            // 拖拽完成之后
+            dragCompanyFn () {
+                /*
+                 draged 拖拽对象
+                 to 目标对象
+                 value.list 存储拖拽之后的数组
+                 */
+                this.$dragging.$on('dragged', (value) => {
+                    // 根据方案id获取方案的索引
+                    let schemeIndex = getArrayIdIndex(this.resultData, value.draged.menu_scheme_id)
+                    if (!this.resultData[schemeIndex] || this.resultData[schemeIndex] == undefined) return
+                    // 获取当前拖拽项的索引
+                    let dragIndex = getArrayIdIndex(this.resultData[schemeIndex].modules, value.draged.id)
+                    let toIndex = getArrayIdIndex(this.resultData[schemeIndex].modules, value.to.id)
+                    let newArr = []
+                    this.resultData[schemeIndex].modules.forEach((item, index) => {
+                        if (index == dragIndex) {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(value.to.sort)
+                            })
+                        } else if (index == toIndex) {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(value.draged.sort)
+                            })
+                        } else {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(item.sort)
+                            })
+                        }
+                    })
+                    mobileService.sortModule({
+                        scheme_id: value.draged.menu_scheme_id,
+                        modules: JSON.stringify(newArr)
+                    }).then(() => {
+                        xmview.showTip('success', '排序成功')
+                    })
+                })
+            },
         },
         components: {ImagEcropperInput}
     }

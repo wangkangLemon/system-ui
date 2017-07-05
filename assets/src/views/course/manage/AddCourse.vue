@@ -292,6 +292,13 @@
                     xmview.setContentLoading(true)
                     courseService.getTestingInfo({course_id: this.fetchParam.id}).then((data) => {
                         this.fetchTesting = data
+                        this.fetchTesting.forEach((item) => {
+                            if (item.category == 1) {
+                                item.options.forEach((optionItem, index) => {
+                                    if (optionItem.correct == 1) item.correct = index
+                                })
+                            }
+                        })
                         xmview.setContentLoading(false)
                     })
                 }
@@ -379,7 +386,7 @@
                 let requestParam = JSON.parse(JSON.stringify(this.fetchTesting))
                 for (let i = 0; i < requestParam.length, item = requestParam[i]; i++) {
                     // 处理单选题的正确答案选中
-                    if (item.category == 1 && item.correct) {
+                    if (item.category == 1 && typeof item.correct == 'number') {
                         item.options.map((itemOptions) => {
                             delete itemOptions.correct
                         })
