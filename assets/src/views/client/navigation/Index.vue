@@ -345,7 +345,7 @@
         },
         mounted () {
             // 拖拽方法
-            this.dragFn()
+            this.dragIndexFn()
         },
         methods: {
             getDefaultLogo () {
@@ -563,7 +563,7 @@
                 })
             },
             // 拖拽完成之后
-            dragFn () {
+            dragIndexFn () {
                 /*
                  draged 拖拽对象
                  to 目标对象
@@ -572,6 +572,7 @@
                 this.$dragging.$on('dragged', (value) => {
                     // 根据方案id获取方案的索引
                     let schemeIndex = getArrayIdIndex(this.resultData, value.draged.menu_scheme_id)
+                    if (!this.resultData[schemeIndex] || this.resultData[schemeIndex] == undefined) return
                     // 获取当前拖拽项的索引
                     let dragIndex = getArrayIdIndex(this.resultData[schemeIndex].modules, value.draged.id)
                     let toIndex = getArrayIdIndex(this.resultData[schemeIndex].modules, value.to.id)
