@@ -150,6 +150,22 @@
             })
         },
         methods: {
+            // 获取选中的id
+            getcheckData() {
+                this.list = this.$refs.tree.store
+                let nodes = this.list.nodesMap
+                let newlist = []
+                for (let index in nodes) {
+                    let node = nodes[index]
+                    if (node.checked) {
+                        newlist.push(node.data.id)
+                    } else if (node.indeterminate && !node.checked) {
+                        newlist.push(node.data.id)
+                    }
+                }
+                this.permissionForm.ids = newlist.toString()
+                console.log(this.permissionForm.ids)
+            },
             initFetchParam () {
                 this.search.Page = 1
             },
@@ -241,8 +257,7 @@
                 })
             },
             menuSubmit() {
-                let checkData = this.$refs.tree.getCheckedKeys()
-                this.permissionForm.ids = checkData.toString()
+                this.getcheckData()
                 let reqFn = permissionService.menu
                 reqFn(this.permissionForm).then((ret) => {
                     if (ret.code === 0) {
