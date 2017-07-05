@@ -200,8 +200,7 @@
                     if (this.form.id) {
                         reqFn = speakingContentService.updateSpeaking
                     }
-
-                    this.form.end_time = timeUtils.time2String(this.form.end_time)
+                    if (this.form.end_time) this.form.end_time = timeUtils.time2String(this.form.end_time, false, false)
                     reqFn(this.form).then((ret) => {
                         xmview.showTip('success', '保存成功')
                         this.$router.back()

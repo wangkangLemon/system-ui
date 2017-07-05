@@ -21,7 +21,7 @@ export function getUTCTimetamp () {
  * @param isUTC 是否是UTC时间
  * @param withoutDate 是否不包含日期 只有时间
  */
-export function time2String (time, withoutDate = false, isUTC) {
+export function time2String (time, withoutDate = false, withoutSeconds = true, isUTC) {
     //  如果time是日期类型
     if (typeUtils.isDate(time)) {
         // 转换为时间戳格式 并将单位转为秒
@@ -38,10 +38,14 @@ export function time2String (time, withoutDate = false, isUTC) {
     if (withoutDate) {
         //  返回字符串
         return fillZero(finalDate.getHours(), 2) + ':' + fillZero(finalDate.getMinutes(), 2)
-    } else {
+    } else if (withoutSeconds) {
         //  返回字符串
         return finalDate.getFullYear() + '-' + fillZero(finalDate.getMonth() + 1) + '-' + fillZero(finalDate.getDate()) +
             ' ' + fillZero(finalDate.getHours(), 2) + ':' + fillZero(finalDate.getMinutes(), 2)
+    } else if (!withoutSeconds) {
+        //  返回字符串
+        return finalDate.getFullYear() + '-' + fillZero(finalDate.getMonth() + 1) + '-' + fillZero(finalDate.getDate()) +
+            ' ' + fillZero(finalDate.getHours(), 2) + ':' + fillZero(finalDate.getMinutes(), 2) + ':' + fillZero(finalDate.getSeconds(), 2)
     }
 }
 
