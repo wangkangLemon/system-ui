@@ -9,7 +9,7 @@
             }
         }
         .dialog-footer {
-            float: right !important;
+            /*float: right !important;*/
             text-align: right !important;
         }
     }
@@ -105,6 +105,10 @@
                     var exts = file.name.split('.')
                     if (exts.length > 0 && (exts.length - 1) > 0) {
                         ext = exts[(exts.length - 1)]
+                    }
+                    if (ext == 'gif') {
+                        _this.confirmFn(reader.result, `.${ext}`)
+                        return false
                     }
                     _this.$nextTick(() => {
                         _this.imgData = this.result

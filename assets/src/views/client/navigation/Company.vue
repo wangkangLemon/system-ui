@@ -70,6 +70,7 @@
                         }
                         .el-icon-circle-cross {
                             float: right;
+                            margin-top: 13px;
                         }
                     }
                     img {
@@ -384,6 +385,7 @@
                 }
             },
             addModule (scheme_id, pindex) {
+                this.dialogTitle = '添加'
                 this.form = clearFn()
                 this.form.scheme_id = scheme_id
                 delete this.form.module_id
@@ -541,6 +543,10 @@
             },
             // 启用版本号
             activeScheme () {
+                if (this.checkedIos.length < 1 && this.checkedAndroids.length < 1) {
+                    xmview.showTip('error', '至少选择一个版本')
+                    return false
+                }
                 mobileService.activeScheme(
                     {
                         scheme_id: this.platForm.scheme_id,
