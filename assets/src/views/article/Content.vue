@@ -77,6 +77,12 @@
                         label="创建时间"
                         width="200">
                 </el-table-column>
+                <el-table-column
+                        prop="hits"
+                        label="阅读量"
+                        width="200">
+                </el-table-column>
+                
                 <el-table-column prop="operate" label="操作">
                     <template scope="scope">
                         <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
