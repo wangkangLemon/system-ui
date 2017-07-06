@@ -55,10 +55,10 @@
         <el-table border v-loading="loading" :data="dataList">
             <el-table-column
             label="任务图标"
-            min-width='100'>
+            width='100'>
             <template scope="scope">
-                <!--<img :src="scope.row.icon" alt="icon">-->
-                <img class="icon" :src="scope.row.icon | fillImgPath" alt=""/>
+                <img v-if="scope.row.icon" class="icon" :src="scope.row.icon | fillImgPath" alt="">
+                <img v-else class="icon" :src="scope.row.user_action_icon" alt="">
             </template>
             </el-table-column>
             <el-table-column
@@ -185,6 +185,7 @@
                     title: '',
                     status: '',
                     user_action_name: '',
+                    user_action_icon: '',
                     page: 1,
                     page_size: 15
                 },
@@ -208,7 +209,6 @@
         },
         methods: {
             cropperFn (data, ext) {
-                // this.form.icon = data
                 TaskService.upIcon({
                     image: data,
                     alias: Date.now() + ext
@@ -239,7 +239,6 @@
             },
             editFn (row) {
                 this.addForm = true
-                console.log(row)
                 this.$nextTick(() => {
                     this.form = clearFn.call(this)
                     this.$refs.form.resetFields()
@@ -259,7 +258,6 @@
                     this.useraction = result[0].data
                     this.dataList = result[1].data
                     this.total = result[1].total
-                    console.log(result)
                 })
             },
             submit (form) {
