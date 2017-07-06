@@ -346,7 +346,7 @@
                 </el-pagination>
             </div>
         </section>
-        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgcropper" :confirmFn="handleImgUploaded" :aspectRatio="2"></ImagEcropperInput>
+        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgcropper" :confirmFn="handleImgUploaded" :aspectRatio="ratio"></ImagEcropperInput>
     </article>
 </template>
 <script>
@@ -364,6 +364,7 @@
         },
         data () {
             return {
+                ratio: 0, // 裁剪的比例
                 // 左侧分类
                 section: {
                     loading: false,
@@ -508,6 +509,8 @@
                     category: row.course_category_name
                 }
                 this.section.currentID = row.id
+                if (this.section.currentID == 1 || this.section.currentID == 10) this.ratio = 2
+                else this.ratio = 0
                 this.getSectionData(row.id)
             },
             // 结果列表

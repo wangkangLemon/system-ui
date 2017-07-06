@@ -2,22 +2,28 @@
 <!--<ImgCropper :isShowBtn="false" ref="imgcropper" :confirmFn="cropperImgSucc" :aspectRatio="1"-->
 <!--:isRound="true"></ImgCropper>-->
 <style lang='scss' scoped rel='stylesheet/scss'>
-    .croppercontainer {
-        img {
-            max-height: 600px;
+    #image-ecropper-input-container {
+        .croppercontainer {
+            img {
+                max-height: 600px;
+            }
+        }
+        .dialog-footer {
+            float: right !important;
+            text-align: right !important;
         }
     }
 </style>
 
 <template>
-    <article ref="container">
+    <article ref="container" id="image-ecropper-input-container">
         <el-button v-show="isShowBtn" type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i>
         </el-button>
         <el-dialog :close-on-click-modal="false" title="裁切图片" v-model="showCropper" size="large" top="15px">
             <div class="croppercontainer">
                 <img @load="startCropper()" class="image-preview" :src="imgData">
             </div>
-            <span slot="footer">
+            <span slot="footer" class="dialog-footer">
                 <el-button @click="showCropper = false">取 消</el-button>
                 <el-button type="primary" @click="confirmCropper()">确 定</el-button>
             </span>
@@ -72,6 +78,9 @@
                     this.cropper.destroy()
                     this.imgData = null
                 }
+            },
+            'aspectRatio'(val) {
+                this.finalRatio = val || 16 / 9
             }
         },
         created () {
