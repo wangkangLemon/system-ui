@@ -141,7 +141,7 @@
                     endTime: '',
                 },
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 15,
                 historyData: [],
                 total: 0
             }
