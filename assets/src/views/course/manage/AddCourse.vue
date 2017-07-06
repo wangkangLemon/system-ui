@@ -16,6 +16,17 @@
         .el-tab-pane {
             max-width: 700px;
         }
+        .el-upload-list__item {
+            position: relative;
+            .el-icon-close {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+        }
+        }
+        
+
+
 
         // 考试题目设置
         .testing-set {

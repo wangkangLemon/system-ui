@@ -28,6 +28,7 @@
             }
             .el-icon-circle-cross {
                 float: right;
+                margin-top: 13px;
             }
         }
         img {
@@ -520,7 +521,6 @@
                 })
             },
             editModule (item, scheme_id, pindex, index) {
-                console.log(item)
                 this.currentData = {
                     scheme_id,
                     pindex,
@@ -530,9 +530,9 @@
                 this.form.type = item.type
                 this.dialogTitle = item.name
                 item.app_version = ''
-                this.form = clone(item)
                 this.form.notify_node ? this.form.notify_node = true : this.form.notify_node = false
                 this.$nextTick(() => {
+                    this.form = clone(item)
                     this.versionChange().then(() => {
                         if (this.form.type == 'link') {
                             this.form.scheme_id = scheme_id
@@ -548,6 +548,7 @@
                 })
             },
             addModule (scheme_id, pindex) {
+                this.dialogTitle = '添加'
                 this.form = clearFn()
                 this.form.scheme_id = scheme_id
                 delete this.form.module_id
@@ -684,6 +685,10 @@
             },
             // 启用版本号
             activeScheme () {
+                if (this.checkedIos.length < 1 && this.checkedAndroids.length < 1) {
+                    xmview.showTip('error', '至少选择一个版本')
+                    return false
+                }
                 mobileService.activeScheme(
                     {
                         scheme_id: this.platForm.scheme_id,
@@ -768,7 +773,7 @@
             name: '', // 功能名称
             icon: '', // 功能图标
             app_version: '', // 版本
-            notify: '', // 是否开启通知
+            notify: 0, // 是否开启通知
             notify_node: '', // 是否开启红点
             notify_icon: '', // 通知图标地址
             notify_text: '', // 通知文本文案

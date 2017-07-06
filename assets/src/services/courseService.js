@@ -447,6 +447,11 @@ class CourseService {
         let finalUrl = `${urlPre}/doc/${id}/retry`
         return api.get(finalUrl)
     }
+
+    // 替换文档
+    replaceDoc({doc_id, material_id}) {
+        return {}
+    }
 }
 
 export default new CourseService()

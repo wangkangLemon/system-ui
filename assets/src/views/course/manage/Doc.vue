@@ -30,12 +30,17 @@
             display: inline-block;
             margin-top: 15px;
         }
+
+        // 替换文档
+        .el-form-item {
+            margin-bottom: 0;
+        }
     }
 </style>
 
 <template>
-    <article id="course-manage-doc-container">
-        <article class="search">
+    <main id="course-manage-doc-container">
+        <section class="search">
             <section>
                 <i>文档名称</i>
                 <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
@@ -59,7 +64,7 @@
                        @changeStart="val=> fetchParam.time_start=val "
                        @changeEnd="val=> fetchParam.time_end=val" :change="fetchData">
             </DateRange>
-        </article>
+        </section>
 
         <el-table class="data-table" v-loading="loadingData"
                   :data="data"
@@ -83,12 +88,6 @@
                     prop="file_type"
                     label="类型">
             </el-table-column>
-            <el-table-column
-                    width="100"
-                    label="大小">
-                <template scope="scope">
-                    <i>{{(scope.row.file_size / 1024 / 1024).toFixed(2)}} M</i>
-                </template>
             </el-table-column>
             <el-table-column
                     width="80"
@@ -116,15 +115,20 @@
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="140"
+                    width="180"
                     label="操作">
                 <template scope="scope">
                     <template v-if="scope.row.status == 0">
-                        <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
                         <el-button @click="show(scope.$index, scope.row)" type="text" size="small">预览</el-button>
+                        <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
+                        <el-button @click="replace(scope.$index, scope.row)" type="text" size="small">替换</el-button>
                         <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                     </template>
-                    <el-button v-else @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
+                    <template v-else>
+                        <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
+                        <el-button @click="replace(scope.$index, scope.row)" type="text" size="small">替换</el-button>
+                        <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    </template>
                 </template>
             </el-table-column>
         </el-table>
@@ -143,15 +147,35 @@
             <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
         </div>
 
-    </article>
+        <!-- 替换文档 -->
+        <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow">
+            <el-form label-position="right" label-width="80px" :model="docModel">
+                <el-form-item label="文档名称">
+                    <span>{{docModel.file_name}}</span>
+                </el-form-item>
+                <el-form-item label="所属企业">
+                    <span>{{docModel.company_name}}</span>
+                </el-form-item>
+                <el-form-item label="上传文档">
+                    <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl" :accept="accept"></UploadFile>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogReplace.isShow = false">取 消</el-button>
+                <el-button type="primary" @click="dialogReplace.confirmFn">确 定</el-button>
+            </div>
+        </el-dialog>
+
+    </main>
 </template>
 
 <script>
     import courseService from '../../../services/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
+    import UploadFile from '../../component/upload/UploadFiles.vue'
     import config from '../../../utils/config'
-    
+
     function getFetchParam() {
         return {
             file_type: void 0, // 文档类型
@@ -172,6 +196,14 @@
                 data: [],
                 selectedIds: [], // 选中的id
                 fetchParam: getFetchParam(),
+                dialogReplace: {
+                    isShow: false,
+                    title: '替换文档',
+                    confirmFn: {},
+                },
+                docModel: {},
+                uploadDocUrl: '',
+                accept: '.doc,.docx,.ppt,pptx,.pdf',
             }
         },
         watch: {
@@ -181,6 +213,9 @@
             'fetchParam.page'() {
                 this.fetchData()
             }
+        },
+        created () {
+            this.uploadDocUrl = courseService.getCourseDocUploadUrl()
         },
         activated () {
             this.fetchData().then(() => {
@@ -260,7 +295,30 @@
                     })
                 })
             },
+            // 替换文档
+            replace (index, row) {
+                this.dialogReplace.isShow = true
+                this.docModel = {
+                    'id': row.id,
+                    'material_id': row.material_id,
+                    'file_name': row.file_name,
+                    'company_name': row.company_name,
+                }
+
+                this.dialogReplace.confirmFn = () => {
+                    // courseService.replaceDoc(this.docModel).then(() => {
+                    xmview.showTip('success', '操作成功')
+                    this.fetchData()
+                    this.dialogReplace.isShow = false
+                    // })
+                }
+            },
+            // 上传文档
+            handleUploadDoc (rep) { // 文档上传完毕
+                this.docModel.material_id = rep.data.id
+                console.log(this.docModel)
+            },
         },
-        components: {courseService, DateRange, IndustryCompanySelect}
+        components: {courseService, DateRange, IndustryCompanySelect, UploadFile}
     }
 </script>
