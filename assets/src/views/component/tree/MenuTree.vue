@@ -19,7 +19,7 @@
 
         <el-menu-item :index="item.item.menu_url" v-for="item in leafChildren" :key="item.item.id">
             <i class="fa" :class="item.item.menu_icon" v-if="item.item.menu_icon"></i>
-            <i class="fa fa-circle-o"></i>
+            <i class="fa fa-circle-o" v-else></i>
             {{item.item.menu_name}}
         </el-menu-item>
     </el-submenu>
