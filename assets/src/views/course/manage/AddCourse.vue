@@ -299,7 +299,6 @@
                                 })
                             }
                         })
-                        console.log(this.fetchTesting)
                         xmview.setContentLoading(false)
                     })
                 }

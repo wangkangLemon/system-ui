@@ -207,7 +207,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="type_id" label="选择功能" v-if="form.type == 'app_module'">
-                    <el-select v-model="form.type_id">
+                    <el-select v-model="form.type_id" @change="getDefaultLogo">
                         <el-option v-for="(item,index) in modules" :label="item.name" :value="item.id" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -231,24 +231,19 @@
                         <el-radio class="radio" :label="1">是</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <div v-if="form.notify">
+                <div v-show="form.notify">
                     <el-form-item label="推荐标签">
-                        <el-checkbox v-model="form.notify_node">红点</el-checkbox>
+                        <el-checkbox v-model="form.notify_node">展示红点</el-checkbox>
                     </el-form-item>
-                    <el-form-item prop="recommend" label="">
-                        <el-checkbox v-model="form.isRecommendText">推荐语</el-checkbox>
-                        <div class="subshow" v-if="form.isRecommendText">
-                            <i>文案</i>
-                            <el-input v-model="form.notify_text"></el-input>
-                        </div>
+                    <el-form-item prop="recommend" label="推荐文案">
+                        <el-input v-model="form.notify_text"></el-input>
                     </el-form-item>
-                    <el-form-item label="">
-                        <el-checkbox v-model="form.isPicture">展示图片</el-checkbox>
-                        <div class="subshow" v-if="form.isPicture">
+                    <el-form-item label="展示图片">
+                        <div class="subshow">
                             <div class="img-wrap" v-if="form.notify_icon">
                                 <img :src="form.notify_icon | fillImgPath" alt="" />
                             </div>
-                            <el-button @click="()=>{$refs.recommendPic.chooseImg()}">上传</el-button>
+                            <el-button type="primary" @click="()=>{$refs.recommendPic.chooseImg()}">上传</el-button>
                         </div>
                     </el-form-item>
                 </div>
@@ -284,7 +279,7 @@
         <el-dialog class="group-list-container" title="分组" v-model="groupDialog">
             <div class="tip">同一组应用请用相同数字标识，分组的排序按照数字从小到大排列</div>
             <article class="group-list">
-                <section class="group-item" v-for="(item,index) in groupList">
+                <section class="group-item" v-for="(item,index) in groupList.grouplist">
                     <img :src="item.icon | fillImgPath" alt=""/>
                     <p>{{item.name}}</p>
                     <el-input placeholder="0" v-model="item.group"/>
@@ -292,7 +287,7 @@
             </article>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="groupDialog = false">取 消</el-button>
-                <el-button type="primary" @click="submitGroup">确 定</el-button>
+                <el-button type="primary" @click="submitGroup(groupList.id)">确 定</el-button>
             </div>
         </el-dialog>
         <div class="add">
@@ -355,7 +350,7 @@
                 <el-button type="text" v-if="!list.active" @click="getPlatVersions(list.id)">启用</el-button>
                 <el-button type="text" @click="cloneScheme(list.id)">克隆</el-button>
                 <el-button type="text" @click="grouping(list)" v-if="!list.active">分组</el-button>
-                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active">删除</el-button>
+                <el-button type="text" @click="deleteScheme(list.id)" v-if="!list.active && !list.readonly">删除</el-button>
             </section>
             <div class="platform" v-if="list.active">
                 <i>使用平台和版本:</i>
@@ -383,6 +378,7 @@
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import mobileService from '../../../services/mobileService'
     //    import formUtils from '../../../utils/formUtils'
+    import {getArrayIdIndex} from '../../../utils/common'
     import clone from 'clone'
     export default{
         name: 'navigatioin-discover',
@@ -429,7 +425,16 @@
                 xmview.setContentLoading(false)
             })
         },
+        mounted () {
+            // 拖拽方法
+            this.dragDiscoverFn()
+        },
         methods: {
+            getDefaultLogo () {
+                // 根据功能获取到默认logo
+                let curModule = getArrayIdIndex(this.modules, this.form.type_id)
+                if (curModule > -1) this.form.icon = this.modules[curModule]['icon']
+            },
             dialogOpen () {
                 // 当编辑弹窗显示的时候获取所有的功能版本
                 return mobileService.getModuleVersions().then((ret) => {
@@ -493,26 +498,41 @@
             // 分组
             grouping (list) {
                 this.groupDialog = true
-                this.groupList = list.grouplist
-                console.log(list)
+                this.groupList = list
             },
             // 确认分组
-            submitGroup () {
-                console.log(this.groupList)
-                console.log('确认分组')
+            submitGroup (scheme_id) {
+                let newArr = []
+                this.groupList.grouplist.forEach((item) => {
+                    newArr.push({
+                        id: item.id,
+                        group: parseInt(item.group),
+                        sort: parseInt(item.sort)
+                    })
+                })
+                mobileService.sortModule({
+                    scheme_id,
+                    modules: JSON.stringify(newArr)
+                }).then(() => {
+                    xmview.showTip('success', '排序成功')
+                    this.getData()
+                    this.groupDialog = false
+                })
             },
             editModule (item, scheme_id, pindex, index) {
+                console.log(item)
                 this.currentData = {
                     scheme_id,
                     pindex,
                     index
                 }
-                console.log(this.currentData)
                 this.changeIcon = true
                 this.form.type = item.type
                 this.dialogTitle = item.name
+                item.app_version = ''
+                this.form = clone(item)
+                this.form.notify_node ? this.form.notify_node = true : this.form.notify_node = false
                 this.$nextTick(() => {
-                    this.form = clone(item)
                     this.versionChange().then(() => {
                         if (this.form.type == 'link') {
                             this.form.scheme_id = scheme_id
@@ -535,7 +555,6 @@
                     pindex,
                     scheme_id
                 }
-                console.log(this.currentData)
                 this.changeIcon = true
                 this.$nextTick(() => {
                     this.$refs.form.resetFields()
@@ -621,37 +640,12 @@
                             })
                         })
                     })
-                    console.log(this.resultData)
                 }).then(() => {
                     this.containerLoading = false
                 })
             },
             startCropper() {
                 ImagEcropperInput.chooseImg()
-            },
-            navStart (navID) {
-                mobileService.applyMenu(navID).then(() => {
-                    xmview.showTip('success', '启用成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
-                })
-            },
-            navClone (navID) {
-                mobileService.menuClone(navID).then(() => {
-                    xmview.showTip('success', '克隆成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
-                })
-            },
-            navDelete (navID) {
-                mobileService.menuDelete(navID).then(() => {
-                    xmview.showTip('success', '删除成功')
-                    this.getData()
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
-                })
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
@@ -671,6 +665,7 @@
                             msg = '添加成功'
                             req = mobileService.addModule
                         }
+                        this.form.notify_node = this.form.notify_node ? 1 : 0
                         req(this.form).then((ret) => {
                             this.getData()
                             this.changeIcon = false
@@ -714,23 +709,53 @@
                 })
             },
             // 拖拽完成之后
-            dragFn () {
+            dragDiscoverFn () {
                 /*
                  draged 拖拽对象
                  to 目标对象
                  value.list 存储拖拽之后的数组
                  */
                 this.$dragging.$on('dragged', (value) => {
-                    // 拖拽成功之后运行
-                    // 将value.draged.id 和 value.to.id 作为参数传递给接口
+                    // 根据方案id获取方案的索引
+                    let schemeIndex = getArrayIdIndex(this.resultData, value.draged.menu_scheme_id)
+                    if (!this.resultData[schemeIndex] || this.resultData[schemeIndex] == undefined) return
+                    // 获取当前拖拽项的索引
+                    let dragIndex = getArrayIdIndex(this.resultData[schemeIndex].grouplist, value.draged.id)
+                    let toIndex = getArrayIdIndex(this.resultData[schemeIndex].grouplist, value.to.id)
+                    let newArr = []
+                    this.resultData[schemeIndex].grouplist.forEach((item, index) => {
+                        if (index == dragIndex) {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(value.to.sort)
+                            })
+                        } else if (index == toIndex) {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(value.draged.sort)
+                            })
+                        } else {
+                            newArr.push({
+                                id: item.id,
+                                group: parseInt(item.group),
+                                sort: parseInt(item.sort)
+                            })
+                        }
+                    })
+                    mobileService.sortModule({
+                        scheme_id: value.draged.menu_scheme_id,
+                        modules: JSON.stringify(newArr)
+                    }).then(() => {
+                        xmview.showTip('success', '排序成功')
+                    })
                 })
             },
             changeRecommend () {
                 this.form.notify_node = 0 // 是否开启红点
                 this.form.notify_icon = '' // 通知图标地址
                 this.form.notify_text = '' // 通知文本文案
-                this.form.isRecommendText = 0
-                this.form.isPicture = 0
             }
         },
         components: {ImagEcropperInput}
@@ -747,8 +772,6 @@
             notify_node: '', // 是否开启红点
             notify_icon: '', // 通知图标地址
             notify_text: '', // 通知文本文案
-            isRecommendText: 0,
-            isPicture: 0
         }
     }
 </script>

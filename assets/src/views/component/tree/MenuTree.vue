@@ -1,12 +1,8 @@
 <style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     .left-menu-container {
-        .menu-icon {
-            width: 15px;
-            height: 15px;
-            position: relative;
-            top: 2px;
-            margin-right: 2px;
+        .fa {
+            margin-right: 5px;
         }
     }
 </style>
@@ -14,21 +10,21 @@
 <template>
     <el-submenu :index="data.item.menu_url" v-if="data && data.children != null">
         <template slot="title">
-            <img class="menu-icon" :src="icons[data.item.menu_icon]" v-if="data.item.parent_id == 0"/>
-            <i class="el-icon-message" v-else></i>
+            <i class="fa" :class="icons[data.item.menu_icon]" v-if="data.item.parent_id == 0"></i>
+            <i class="fa fa-th-large" v-else></i>
             {{data.item.menu_name}}
         </template>
 
         <MenuTree v-for="item in hasChildCItems" :key="item.item.id" :data="item"></MenuTree>
 
         <el-menu-item :index="item.item.menu_url" v-for="item in leafChildren" :key="item.item.id">
-            <i class="el-icon-menu"></i>
+            <i class="fa fa-circle-o"></i>
             {{item.item.menu_name}}
         </el-menu-item>
     </el-submenu>
 
     <el-menu-item :index="data.item.menu_url" v-else-if="data && data.children == null">
-        <img class="menu-icon" :src="icons[data.item.menu_icon]"/>
+        <i class="fa" :class="icons[data.item.menu_icon]"></i>
         {{data.item.menu_name}}
     </el-menu-item>
 </template>

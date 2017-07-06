@@ -93,4 +93,5 @@
     }
 
     @import "./utils/mixins/font/iconfont";
+    @import "./utils/mixins/font-awesome/scss/font-awesome";
 </style>
