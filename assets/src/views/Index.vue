@@ -258,7 +258,7 @@
                      @select="handleMenuClick"
                      :router="true">
                 <div class="nav-title">导航</div>
-                <MenuTree v-for="item in navMenus" :icons="icons" :data="item" :key="item.item.id"></MenuTree>
+                <MenuTree v-for="item in navMenus" :data="item" :key="item.item.id"></MenuTree>
             </el-menu>
 
             <!--右边内容-->
@@ -290,7 +290,6 @@
                 contentLoading: false,
                 mainTitle: this.$store.state.index.webpathMain,
                 subTitle: this.$store.state.index.webpathSub,
-                icons: {},
                 isShowBack: false
             }
         },
@@ -316,18 +315,6 @@
             }
         },
         created () {
-            this.icons.main = 'fa-home'
-            this.icons.course = 'fa-file-video-o'
-            this.icons.company = 'fa-building-o'
-            this.icons.finance = 'fa-money'
-            this.icons.sale = 'fa-gift'
-            this.icons.client = 'fa-android'
-            this.icons.data = 'fa-line-chart'
-            this.icons.system = 'fa-cog'
-            this.icons.service = 'fa-wechat'
-            this.icons.article = 'fa-book'
-            this.icons.user = 'fa-user'
-
             authUtils.authRefreshtoken() // 开启自动更新token
             xmview.setContentLoading = this.setContentLoading.bind(this)
             xmview.setContentBack = this.showContentBack.bind(this)

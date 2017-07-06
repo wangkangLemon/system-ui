@@ -83,12 +83,6 @@
                     prop="file_type"
                     label="类型">
             </el-table-column>
-            <el-table-column
-                    width="100"
-                    label="大小">
-                <template scope="scope">
-                    <i>{{(scope.row.file_size / 1024 / 1024).toFixed(2)}} M</i>
-                </template>
             </el-table-column>
             <el-table-column
                     width="80"
@@ -116,15 +110,20 @@
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="140"
+                    width="180"
                     label="操作">
                 <template scope="scope">
                     <template v-if="scope.row.status == 0">
-                        <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
                         <el-button @click="show(scope.$index, scope.row)" type="text" size="small">预览</el-button>
+                        <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
+                        <el-button @click="download(scope.$index, scope.row)" type="text" size="small">替换</el-button>
                         <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                     </template>
-                    <el-button v-else @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
+                    <template v-else>
+                    <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
+                        <el-button @click="download(scope.$index, scope.row)" type="text" size="small">替换</el-button>
+                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    </template>
                 </template>
             </el-table-column>
         </el-table>
