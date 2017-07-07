@@ -148,7 +148,7 @@
         </div>
 
         <!-- 替换文档 -->
-        <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow">
+        <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow" @close="dialogClose">
             <el-form label-position="right" label-width="80px" :model="docModel">
                 <el-form-item label="文档名称">
                     <span>{{docModel.file_name}}</span>
@@ -157,13 +157,9 @@
                     <span>{{docModel.company_name}}</span>
                 </el-form-item>
                 <el-form-item label="上传文档">
-                    <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl" :accept="accept"></UploadFile>
+                    <UploadFile :onSuccess="handleReplaceUploadDoc" :url="replaceDocUploadUrl" :accept="accept" ref="uploadFileRef"></UploadFile>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogReplace.isShow = false">取 消</el-button>
-                <el-button type="primary" @click="dialogReplace.confirmFn">确 定</el-button>
-            </div>
         </el-dialog>
 
     </main>
@@ -199,10 +195,10 @@
                 dialogReplace: {
                     isShow: false,
                     title: '替换文档',
-                    confirmFn: {},
+                    open: null,
                 },
                 docModel: {},
-                uploadDocUrl: '',
+                replaceDocUploadUrl: '',
                 accept: '.doc,.docx,.ppt,pptx,.pdf',
             }
         },
@@ -213,9 +209,6 @@
             'fetchParam.page'() {
                 this.fetchData()
             }
-        },
-        created () {
-            this.uploadDocUrl = courseService.getCourseDocUploadUrl()
         },
         activated () {
             this.fetchData().then(() => {
@@ -244,7 +237,7 @@
             del (index, row) {
                 xmview.showDialog(`你将要删除文档 <span style="color:red">${row.file_name}</span> 操作不可恢复确认吗?`, () => {
                     this.loadingData = true
-                    courseService.deleteDoc({id: row.id}).then(() => {
+                    courseService.deleteDoc({doc_id: row.id}).then(() => {
                         xmview.showTip('success', '操作成功')
                         this.data.splice(index, 1)
                         this.loadingData = false
@@ -253,10 +246,22 @@
                     })
                 })
             },
+            // 批量删除
+            delMulti () {
+                xmview.showDialog(`你将要删除选中的课程，操作不可恢复确认吗?`, () => {
+                    courseService.deleteDocMulty({doc_id: this.selectedIds}).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.dialogTree.isShow = false
+                        setTimeout(() => {
+                            this.fetchData() // 重新刷新数据
+                        }, 300)
+                    })
+                })
+            },
             //  刷新
             refresh (index, row) {
                 this.loadingData = true
-                courseService.refreshDoc({id: row.id}).then(() => {
+                courseService.refreshDoc({doc_id: row.id}).then(() => {
                     xmview.showTip('success', '文档转码状态刷新成功')
                     this.loadingData = false
                     this.fetchData()
@@ -267,7 +272,7 @@
             // 重试
             retry (index, row) {
                 this.loadingData = true
-                courseService.retryDoc({id: row.id}).then(() => {
+                courseService.retryDoc({doc_id: row.id}).then(() => {
                     xmview.showTip('success', '重新提交文档转码任务成功')
                     this.loadingData = false
                     this.fetchData()
@@ -281,42 +286,28 @@
             },
             // 下载
             download (index, row) {
-                courseService.downloadDoc({id: row.id, name: row.file_name})
-            },
-            // 批量删除
-            delMulti () {
-                xmview.showDialog(`你将要删除选中的课程，操作不可恢复确认吗?`, () => {
-                    courseService.deleteDocMulty({id: this.selectedIds}).then(() => {
-                        xmview.showTip('success', '操作成功')
-                        this.dialogTree.isShow = false
-                        setTimeout(() => {
-                            this.fetchData() // 重新刷新数据
-                        }, 300)
-                    })
-                })
+                courseService.downloadDoc({doc_id: row.id, name: row.file_name})
             },
             // 替换文档
             replace (index, row) {
+                this.replaceDocUploadUrl = courseService.getReplaceDocUploadUrl({doc_id: row.id})
                 this.dialogReplace.isShow = true
                 this.docModel = {
                     'id': row.id,
-                    'material_id': row.material_id,
                     'file_name': row.file_name,
                     'company_name': row.company_name,
                 }
-
-                this.dialogReplace.confirmFn = () => {
-                    // courseService.replaceDoc(this.docModel).then(() => {
-                    xmview.showTip('success', '操作成功')
-                    this.fetchData()
-                    this.dialogReplace.isShow = false
-                    // })
-                }
             },
-            // 上传文档
-            handleUploadDoc (rep) { // 文档上传完毕
-                this.docModel.material_id = rep.data.id
-                console.log(this.docModel)
+            // 更新文档， 文档上传完毕
+            handleReplaceUploadDoc (rep) {
+                xmview.showTip('success', '操作成功')
+                this.fetchData()
+                this.dialogReplace.isShow = false
+            },
+            dialogClose () {
+                this.$nextTick(() => {
+                    this.$refs.uploadFileRef.fileList = []
+                })
             },
         },
         components: {courseService, DateRange, IndustryCompanySelect, UploadFile}
