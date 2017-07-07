@@ -332,6 +332,22 @@ class CourseService {
         return api.post(finalUrl, {course_id: course_id.join(','), name})
     }
 
+    // 获取课程信息以及选项列表
+    getCourseSubject ({id}) {
+        let finalUrl = `${urlPre}/${id}/subject/stat`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取课程题目答案分析
+    getSubjectAnswer ({c_id, s_id}) {
+        let finalUrl = `${urlPre}/${c_id}/subject/${s_id}/stat`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data.stat
+        })
+    }
+
     // ============================================= 视频页面部分 开始 ======================================================
     // 获取视频
     getVideo ({company_id, status, keyword, page, page_size, time_start, time_end}) {
@@ -397,31 +413,15 @@ class CourseService {
         })
     }
 
-    deleteDoc ({id}) {
-        let url = `${urlPre}/doc/${id}`
+    deleteDoc ({doc_id}) {
+        let url = `${urlPre}/doc/${doc_id}`
         return api.del(url)
     }
 
     // 批量删除
-    deleteDocMulty ({id}) {
+    deleteDocMulty ({doc_id}) {
         let url = `${urlPre}/doc/batchdel`
-        return api.del(url, {id: id.join(',')})
-    }
-
-    // 获取课程信息以及选项列表
-    getCourseSubject ({id}) {
-        let finalUrl = `${urlPre}/${id}/subject/stat`
-        return api.get(finalUrl).then((ret) => {
-            return ret.data
-        })
-    }
-
-    // 获取课程题目答案分析
-    getSubjectAnswer ({c_id, s_id}) {
-        let finalUrl = `${urlPre}/${c_id}/subject/${s_id}/stat`
-        return api.get(finalUrl).then((ret) => {
-            return ret.data.stat
-        })
+        return api.del(url, {doc_id: doc_id.join(',')})
     }
 
     // 查看文档
@@ -431,26 +431,26 @@ class CourseService {
     }
 
     // 下载文档
-    downloadDoc ({id, name}) {
-        let finalUrl = `${urlPre}/doc/${id}/download`
+    downloadDoc ({doc_id, name}) {
+        let finalUrl = `${urlPre}/doc/${doc_id}/download`
         return api.downLoad(finalUrl, {}, name)
     }
 
     // 查询状态
-    refreshDoc({id}) {
-        let finalUrl = `${urlPre}/doc/${id}/refresh`
+    refreshDoc ({doc_id}) {
+        let finalUrl = `${urlPre}/doc/${doc_id}/refresh`
         return api.get(finalUrl)
     }
 
     // 重试转码
-    retryDoc({id}) {
-        let finalUrl = `${urlPre}/doc/${id}/retry`
+    retryDoc ({doc_id}) {
+        let finalUrl = `${urlPre}/doc/${doc_id}/retry`
         return api.get(finalUrl)
     }
 
-    // 替换文档
-    replaceDoc({doc_id, material_id}) {
-        return {}
+    // 获取文档替换的上传url
+    getReplaceDocUploadUrl ({doc_id} = {}) {
+        return `${urlPre}/doc/${doc_id}/replace`
     }
 }
 

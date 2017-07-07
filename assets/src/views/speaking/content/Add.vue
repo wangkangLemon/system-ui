@@ -128,15 +128,6 @@
                     image: [
                         {required: true, message: '必须上传图片', trigger: 'blur'}
                     ],
-                    price_total: [
-                        {required: true, type: 'number', message: '必须填写', trigger: 'blur'}
-                    ],
-                    price: [
-                        {required: true, type: 'number', message: '必须填写', trigger: 'blur'}
-                    ],
-                    price_float: [
-                        {required: true, type: 'number', message: '必须填写', trigger: 'blur'}
-                    ],
                     price_enabled: {required: true, type: 'number', message: '请选择是否设置红包', trigger: 'blur'}
                 },
                 dialogCourse: {
@@ -149,6 +140,29 @@
         },
         watch: {
             'form.price_enabled' (val) {
+                delete this.rules['price_total']
+                delete this.rules['price']
+                delete this.rules['price_float']
+                if (this.form.price_enabled == 1) {
+                    this.rules['price_total'] = {
+                        required: true,
+                        type: 'number',
+                        message: '必须填写',
+                        trigger: 'blur'
+                    }
+                    this.rules['price_float'] = {
+                        required: true,
+                        type: 'number',
+                        message: '必须填写',
+                        trigger: 'blur'
+                    }
+                    this.rules['price'] = {
+                        required: true,
+                        type: 'number',
+                        message: '必须填写',
+                        trigger: 'blur'
+                    }
+                }
                 if (val) {
                     this.rules.price_company_id = {
                         type: 'number',
@@ -224,6 +238,6 @@
                 })
             }
         },
-        components: {ImagEcropperInput, IndustryCompanySelect}
+        components: {ImagEcropperInput, IndustryCompanySelect},
     }
 </script>
