@@ -62,15 +62,15 @@
                 <span style="color: red">*为药我说添加红包可在下面填写，不填写默认为不添加红包，药我说满分后用户可领取该红包</span>
             </el-form-item-->
             <el-form-item prop="price_total" label="总额预算">
-                <el-input-number v-model="form.price_total" auto-complete="off"
+                <el-input-number v-model="form.price_total" auto-complete="off"debounce='1000'
                                  :disabled="!form.price_enabled"></el-input-number>
             </el-form-item>
             <el-form-item prop="price" label="单价">
-                <el-input-number v-model="form.price" auto-complete="off"
+                <el-input-number v-model="form.price" auto-complete="off" debounce='1000'
                                  :disabled="!form.price_enabled"></el-input-number>
             </el-form-item>
             <el-form-item prop="price_float" label="浮动">
-                <el-input-number v-model="form.price_float" auto-complete="off"
+                <el-input-number v-model="form.price_float" auto-complete="off" debounce='1000'
                                  :disabled="!form.price_enabled"></el-input-number>
             </el-form-item>
             <el-form-item prop="end_time" label="红包截止日期">
@@ -121,8 +121,23 @@
                     content: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
+                    price_company_id: [
+                        {required: true, message: '必须填写', trigger: 'blur'}
+                    ],
                     image: [
                         {required: true, message: '必须上传图片', trigger: 'blur'}
+                    ],
+                    price_total: [
+                        {required: true, type: 'number', message: '必须填写', trigger: 'blur'}
+                    ],
+                    price: [
+                        {required: true, type: 'number', message: '必须填写', trigger: 'blur'}
+                    ],
+                    price_float: [
+                        {required: true, type: 'number', message: '必须填写', trigger: 'blur'}
+                    ],
+                    end_time: [
+                        {required: true, type: 'date', message: '请选择日期', trigger: 'blur'}
                     ],
                     price_enabled: {required: true, type: 'number', message: '请选择是否设置红包', trigger: 'blur'}
                 },
