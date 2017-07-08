@@ -529,7 +529,6 @@
                             this.changeIcon = false
                             xmview.showTip('success', msg)
                         })
-                        console.log(this.form)
                     } else {
                         return false
                     }
@@ -582,30 +581,13 @@
                     // 根据方案id获取方案的索引
                     let schemeIndex = getArrayIdIndex(this.resultData, value.draged.menu_scheme_id)
                     if (!this.resultData[schemeIndex] || this.resultData[schemeIndex] == undefined) return
-                    // 获取当前拖拽项的索引
-                    let dragIndex = getArrayIdIndex(this.resultData[schemeIndex].modules, value.draged.id)
-                    let toIndex = getArrayIdIndex(this.resultData[schemeIndex].modules, value.to.id)
                     let newArr = []
                     this.resultData[schemeIndex].modules.forEach((item, index) => {
-                        if (index == dragIndex) {
-                            newArr.push({
-                                id: item.id,
-                                group: parseInt(item.group),
-                                sort: parseInt(value.to.sort)
-                            })
-                        } else if (index == toIndex) {
-                            newArr.push({
-                                id: item.id,
-                                group: parseInt(item.group),
-                                sort: parseInt(value.draged.sort)
-                            })
-                        } else {
-                            newArr.push({
-                                id: item.id,
-                                group: parseInt(item.group),
-                                sort: parseInt(item.sort)
-                            })
-                        }
+                        newArr.push({
+                            id: item.id,
+                            group: item.group,
+                            sort: index + 1
+                        })
                     })
                     mobileService.sortModule({
                         scheme_id: value.draged.menu_scheme_id,
