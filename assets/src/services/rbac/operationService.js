@@ -9,7 +9,7 @@ class OperationService {
     // 用户行为成长值记录列表
     search({page, page_size, owner = '', operation_name = '', operation_url = '', operation_method = ''}) {
         let url = `${urlPre}/search`
-        return api.get(url, {page, page_size, owner, operation_name, operation_url,operation_method}).then((ret) => {
+        return api.get(url, {page, page_size, owner, operation_name, operation_url, operation_method}).then((ret) => {
             return ret.data
         })
     }
