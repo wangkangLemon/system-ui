@@ -76,7 +76,7 @@
         <section class="right-content">
             <div class="content-title">
                 <span v-if="category.title">{{category.title}}-</span>区块列表
-                <el-button @click="addForm = true">添加区块</el-button>
+                <el-button @click="add">添加区块</el-button>
             </div>
             <div class="content-list">
                 <el-table v-loading="section.loading" border :data="section.data">
@@ -116,6 +116,14 @@
 <script>
     import sectionService from '../../../services/sectionService'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
+    function clearFn() {
+        return {
+            name: '',          // 名称
+            sort: '',          // 排序
+            category_id: '',   // 分类ID
+            course_category_id: ''       // 绑定的栏目
+        }
+    }
     export default {
         components: {
             CourseCategorySelect
@@ -132,12 +140,7 @@
                 addForm: false, // 表单弹窗是否显示
                 formLabelWidth: '50px', // 表单label的宽度
                 editPlacehoder: '',
-                form: {                // 表单属性值
-                    name: '',          // 名称
-                    sort: '',          // 排序
-                    category_id: '',   // 分类ID
-                    course_category_id: ''       // 绑定的栏目
-                },
+                form: clearFn(),
                 rules: {
                     name: [
                         {
@@ -171,6 +174,11 @@
             })
         },
         methods: {
+            add() {
+                this.form = clearFn()
+                this.formTitle = '添加'
+                this.addForm = true
+            },
             // 获取左侧分类
             getCategoryTree (id) {
                 return sectionService.getSectionCategoryTree({id}).then((ret) => {
