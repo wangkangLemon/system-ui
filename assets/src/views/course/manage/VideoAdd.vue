@@ -19,7 +19,9 @@
             width: 700px;
             margin-bottom: 15px;
             transition: all 300ms ease;
-
+            .operate {
+                text-align: right;
+            }
             .clearfix {
                 display: flex;
                 span {
@@ -43,11 +45,6 @@
         .bottom-btn {
             margin: 0 auto;
             width: 700px;
-            .el-button {
-                &:last-of-type {
-                    float: right;
-                }
-            }
         }
     }
 </style>
@@ -74,13 +71,17 @@
                     <el-progress :percentage="item.process" :status="item.process>= 100 ? 'success' : ''"></el-progress>
                 </el-form-item>
             </el-form>
+            <div class="operate">
+                <el-button type="primary" :disabled="item.process >= 100" @click="submit(item)">
+                    <i v-if="item.process < 100 && item.process > 0">正在上传</i>
+                    <i v-if="item.process == 0">开始上传</i>
+                    <i v-if="item.process >= 100">上传完毕</i>
+                </el-button>
+            </div>
         </el-card>
 
         <div v-if="listData.length > 0" class="bottom-btn">
-            <el-button :disabled="uploading" @click="fileClick">继续添加视频</el-button>
-            <el-button type="primary" :disabled="uploading" @click="submit">
-                <i>{{uploading ? '正在上传' : '开始上传'}}</i>
-            </el-button>
+            <el-button v-if="complete" @click="fileClick">继续添加视频</el-button>
         </div>
 
         <input style="display: none" type="file" ref="file" multiple="multiple" @change="fileChange($event)" accept="">
@@ -100,6 +101,7 @@
             return {
                 listData: [],
                 uploading: false,
+                complete: false, // 是否上传成功
             }
         },
         beforeCreate () {
@@ -134,45 +136,40 @@
                 this.listData.splice(index, 1)
             },
             fileClick() {
+                this.complete = false
+                this.uploading = false
                 this.$refs.file.click()
             },
-            submit () {
+            // 开始上传
+            submit (item) {
+                this.complete = false
                 this.uploading = true
                 courseService.getOssToken().then((ret) => {
                     ossSdk = new OssSdk(ret)
-                    let successCount = 0
-                    // 开始上传
-                    this.listData.map((item) => {
-                        // 格式化名称
-                        var now = new Date()
-                        var name = [
-                            'company', this.user.company_id,
-                            now.getFullYear(), now.getMonth() + 1, now.getDate(),
-                            [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
-                        ].join('/') + this.extname(item.file)
-                        // 上传
-                        ossSdk.uploadFile(name, item.file, function (progress) {
-                            item.process = progress
-                        }, ret => {
-                            // 创建视频
-                            courseService.addVideo({
-                                name: item.name,
-                                tags: item.tags.join(','),
-                                source_type: 'aliyun',
-                                source_url: ret.res.requestUrls[0].split('?')[0]
-                            }).then(() => {
-                                successCount++
-                                // 全都上传完毕之后 跳转到列表页面
-                                if (successCount >= this.listData.length) {
-                                    xmview.showTip('success', '操作成功!')
-                                    setTimeout(() => {
-                                        this.$router.back()
-                                    }, 300)
-                                }
-                            })
-                        }, err => {
-                            xmview.showTip('error', '上传出现错误' + JSON.stringify(err))
+                    // 格式化名称
+                    var now = new Date()
+                    var name = [
+                        'company', this.user.company_id,
+                        now.getFullYear(), now.getMonth() + 1, now.getDate(),
+                        [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
+                    ].join('/') + this.extname(item.file)
+                    // 上传
+                    ossSdk.uploadFile(name, item.file, function (progress) {
+                        item.process = progress
+                    }, ret => {
+                        // 创建视频
+                        courseService.addVideo({
+                            name: item.name,
+                            tags: item.tags.join(','),
+                            source_type: 'aliyun',
+                            source_url: ret.res.requestUrls[0].split('?')[0]
+                        }).then(() => {
+                            xmview.showTip('success', '操作成功!')
+                            this.complete = true
+                            this.uploading = false
                         })
+                    }, err => {
+                        xmview.showTip('error', '上传出现错误' + JSON.stringify(err))
                     })
                 })
             },
