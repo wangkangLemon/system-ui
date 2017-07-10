@@ -192,6 +192,12 @@ class CourseService {
         return api.post(finalUrl, {id})
     }
 
+    // 批量删除视频
+    deleteVideoMulty ({id}) {
+        let finalUrl = `${urlPre}/video/batchdel`
+        return api.post(finalUrl, {id})
+    }
+
     // 批量移动课程到指定分类
     moveCourseToCategoryMulty ({companyid, id, catid}) {
         companyid = companyid || authUtils.getUserInfo().company_id
