@@ -427,10 +427,32 @@
             })
         },
         mounted () {
-            // 拖拽方法
-            this.dragDiscoverFn()
+            this.drag()
         },
         methods: {
+            drag () {
+                this.$dragging.$on('dragged', (value) => {
+                    // 根据方案id获取方案的索引
+                    let schemeIndex = getArrayIdIndex(this.resultData, value.draged.menu_scheme_id)
+                    if (!this.resultData[schemeIndex] || this.resultData[schemeIndex] == undefined) return
+                    let newArr = []
+                    this.resultData[schemeIndex].modules.forEach((mitem, mindex) => {
+                        mitem.data.forEach((item, index) => {
+                            newArr.push({
+                                id: item.id,
+                                group: item.group,
+                                sort: index + 1
+                            })
+                        })
+                    })
+                    mobileService.sortModule({
+                        scheme_id: value.draged.menu_scheme_id,
+                        modules: JSON.stringify(newArr)
+                    }).then(() => {
+                        xmview.showTip('success', '排序成功')
+                    })
+                })
+            },
             getDefaultLogo () {
                 // 根据功能获取到默认logo
                 let curModule = getArrayIdIndex(this.modules, this.form.type_id)
@@ -711,50 +733,6 @@
                         }
                     })
                     return versionArr
-                })
-            },
-            // 拖拽完成之后
-            dragDiscoverFn () {
-                /*
-                 draged 拖拽对象
-                 to 目标对象
-                 value.list 存储拖拽之后的数组
-                 */
-                this.$dragging.$on('dragged', (value) => {
-                    // 根据方案id获取方案的索引
-                    let schemeIndex = getArrayIdIndex(this.resultData, value.draged.menu_scheme_id)
-                    if (!this.resultData[schemeIndex] || this.resultData[schemeIndex] == undefined) return
-                    // 获取当前拖拽项的索引
-                    let dragIndex = getArrayIdIndex(this.resultData[schemeIndex].grouplist, value.draged.id)
-                    let toIndex = getArrayIdIndex(this.resultData[schemeIndex].grouplist, value.to.id)
-                    let newArr = []
-                    this.resultData[schemeIndex].grouplist.forEach((item, index) => {
-                        if (index == dragIndex) {
-                            newArr.push({
-                                id: item.id,
-                                group: parseInt(item.group),
-                                sort: parseInt(value.to.sort)
-                            })
-                        } else if (index == toIndex) {
-                            newArr.push({
-                                id: item.id,
-                                group: parseInt(item.group),
-                                sort: parseInt(value.draged.sort)
-                            })
-                        } else {
-                            newArr.push({
-                                id: item.id,
-                                group: parseInt(item.group),
-                                sort: parseInt(item.sort)
-                            })
-                        }
-                    })
-                    mobileService.sortModule({
-                        scheme_id: value.draged.menu_scheme_id,
-                        modules: JSON.stringify(newArr)
-                    }).then(() => {
-                        xmview.showTip('success', '排序成功')
-                    })
                 })
             },
             changeRecommend () {
