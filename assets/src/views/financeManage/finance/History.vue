@@ -103,6 +103,11 @@
                     width="100"
                     label="余额">
             </el-table-column>
+             <el-table-column
+                    prop="create_time_name"
+                    min-width="100"
+                    label="添加时间">
+            </el-table-column>
         </el-table>
         <div class="block">
             <el-pagination
