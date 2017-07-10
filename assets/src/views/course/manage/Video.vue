@@ -263,7 +263,7 @@
             edit (index, row) {
                 this.dialogAdd.isShow = true
                 this.videoModel = JSON.parse(JSON.stringify(row))
-                this.videoModel.tags = this.videoModel.tags && this.videoModel.tags.split(',')
+                this.videoModel.tags = this.videoModel.tags ? this.videoModel.tags.split(',') : []
 
                 this.dialogAdd.confirmFn = () => {
                     courseService.updateVideo(this.videoModel).then(() => {

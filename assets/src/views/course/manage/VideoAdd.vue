@@ -104,21 +104,22 @@
                 complete: false, // 是否上传成功
             }
         },
-        beforeCreate () {
-            ossSdk = new OssSdk()
-            this.user = authUtils.getUserInfo()
-        },
         mounted () {
+//            ossSdk = new OssSdk()
+            this.user = authUtils.getUserInfo()
             xmview.setContentLoading(false)
         },
         methods: {
             fileChange (e) {
+                this.complete = false
+                this.uploading = false
                 let dom = e.target
                 let ret = []
                 for (let i = 0; i < dom.files.length; i++) {
                     let file = dom.files[i]
                     if (this.checkExist(file.name)) {
                         xmview.showTip('warning', `${file.name} 已存在于列表中`)
+                        this.complete = true
                     } else {
                         ret.push({
                             name: file.name,
@@ -134,10 +135,12 @@
             },
             deleteVideo (index) {
                 this.listData.splice(index, 1)
+                let completeAll = this.listData.every((item, index) => {
+                    return item.process == 100
+                })
+                if (completeAll) this.complete = true
             },
             fileClick() {
-                this.complete = false
-                this.uploading = false
                 this.$refs.file.click()
             },
             // 开始上传
@@ -169,6 +172,7 @@
                             this.uploading = false
                         })
                     }, err => {
+                        this.complete = true
                         xmview.showTip('error', '上传出现错误' + JSON.stringify(err))
                     })
                 })
