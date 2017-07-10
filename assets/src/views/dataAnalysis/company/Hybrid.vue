@@ -26,7 +26,7 @@
     <article class="analysis-company-startimg">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span>截止到2017-02-09日，共152家连锁设置小应用</span>
+                <span>截止到{{date}}日，共{{companyCount}}家连锁设置小应用</span>
             </div>
             <section class="search">
                 <section>
@@ -41,6 +41,14 @@
                            :change="getData">
                 </DateRange>
             </section>
+            <el-dialog class="show-detail" title="企业公告信息" v-model="showCompany">
+                <div class="info" v-if="appCompany">
+                    <h2>{{appCompany.company_name}}</h2>
+                    <p><i class="title">第一次发布时间：</i><span class="value">{{appCompany.first_time}}</span></p>
+                    <p><i class="title">上一次发布时间：</i><span class="value">{{appCompany.last_time}}</span></p>
+                    <p><i class="title">共发布条数：</i><span class="value">{{appCompany.app_count}}条</span></p>
+                </div>
+            </el-dialog>
             <el-table
                     v-loading="loading"
                     border
@@ -48,19 +56,24 @@
                     stripe
                     style="width: 100%">
                 <el-table-column
-                        prop="title"
+                        prop="name"
                         min-width="300"
                         label="应用名称">
                 </el-table-column>
                 <el-table-column
-                        prop="company"
+                        prop="path"
                         min-width="180"
                         label="链接">
                 </el-table-column>
                 <el-table-column
-                        prop="company"
+                        prop="company_name"
                         min-width="180"
                         label="企业">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="showCompanyFn(scope.row)">
+                            {{scope.row.company_name}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
@@ -85,6 +98,7 @@
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
+    import companyService from '../../../services/companyService'
     export default {
         components: {
             CompanySelect,
@@ -97,6 +111,10 @@
                 currentPage: 1,
                 pageSize: 15,
                 total: 0,
+                date: '',
+                companyCount: 0,
+                showCompany: false,
+                appCompany: null,
                 search: {
                     company_id: '',
                     createTime: '',
@@ -107,15 +125,48 @@
         created () {
             xmview.setContentLoading(false)
         },
+        activated () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+            },
+            showCompanyFn (item) {
+                companyService.getCompanyAppDetail({
+                    company_id: item.company_id,
+                }).then((ret) => {
+                    this.appCompany = ret.data
+                }).then(() => {
+                    this.showCompany = true
+                })
+            },
             handleSizeChange (val) {
                 this.pageSize = val
+                this.getData()
             },
             handleCurrentChange (val) {
                 this.currentPage = val
+                this.getData()
             },
             getData () {
-                console.log(1)
+                this.loading = true
+                return companyService.getCompanyAppList({
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    company_id: this.search.company_id,
+                    time_start: this.search.createTime,
+                    time_end: this.search.endTime,
+                }).then((ret) => {
+                    this.total = ret.total
+                    this.hybridData = ret.data
+                    this.date = ret.date
+                    this.companyCount = ret.company_count
+                }).then(() => {
+                    this.loading = false
+                })
             }
         }
     }

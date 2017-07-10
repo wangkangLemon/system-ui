@@ -79,8 +79,8 @@ export default {
             }
         },
         {
-            path: 'company/coursetask',
-            name: 'analysis-company-coursetask',
+            path: 'app/coursetask',
+            name: 'analysis-app-coursetask',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../views/dataAnalysis/company/CourseTask.vue'))
@@ -92,8 +92,8 @@ export default {
             }
         },
         {
-            path: 'company/startimg',
-            name: 'analysis-company-startimg',
+            path: 'app/logo',
+            name: 'analysis-app-logo',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../views/dataAnalysis/company/StartImage.vue'))
@@ -105,8 +105,8 @@ export default {
             }
         },
         {
-            path: 'company/dynamic',
-            name: 'analysis-company-dynamic',
+            path: 'app/company/article',
+            name: 'analysis-app-company-article',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../views/dataAnalysis/company/Dynamic.vue'))
@@ -131,8 +131,8 @@ export default {
             }
         },
         {
-            path: 'company/hybrid',
-            name: 'analysis-company-hybrid',
+            path: 'app/company/app',
+            name: 'analysis-app-company-app',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../views/dataAnalysis/company/Hybrid.vue'))
@@ -157,8 +157,8 @@ export default {
             }
         },
         {
-            path: 'company/medicine',
-            name: 'analysis-company-medicine',
+            path: 'app/medicinetask',
+            name: 'analysis-app-medicinetask',
             component: resolve => {
                 require.ensure([], () => {
                     resolve(require('../views/dataAnalysis/company/Medicine.vue'))
