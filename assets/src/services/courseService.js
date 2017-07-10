@@ -186,8 +186,15 @@ class CourseService {
     }
 
     // 批量删除课程
-    deleteCourseMulty ({id}) {
-        let finalUrl = `${config.apiHost}/sys/course/batchdel`
+    deleteCourseMulty ({companyid, id}) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/com/${companyid}/course/batchdel`
+        return api.post(finalUrl, {id})
+    }
+
+    // 批量删除视频
+    deleteVideoMulty ({id}) {
+        let finalUrl = `${urlPre}/video/batchdel`
         return api.post(finalUrl, {id})
     }
 

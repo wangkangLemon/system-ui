@@ -286,9 +286,9 @@
                 })
             },
             delMulti () {
-                xmview.showDialog(`你将要删除选中的课程，操作不可恢复确认吗?`, () => {
+                xmview.showDialog(`你将要删除选中的视频，操作不可恢复确认吗?`, () => {
                     this.loadingData = true
-                    courseService.deleteCourseMulty({id: this.selectedIds.join(',')}).then(() => {
+                    courseService.deleteVideoMulty({id: this.selectedIds.join(',')}).then(() => {
                         xmview.showTip('success', '操作成功')
                         this.fetchData() // 重新刷新数据
                     })
