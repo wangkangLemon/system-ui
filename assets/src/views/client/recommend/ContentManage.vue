@@ -509,7 +509,7 @@
                     category: row.course_category_name
                 }
                 this.section.currentID = row.id
-                if (this.section.currentID == 1 || this.section.currentID == 10) this.ratio = 2
+                if (this.section.currentID == 1 || this.section.currentID == 10) this.ratio = 2.2
                 else this.ratio = 0
                 this.getSectionData(row.id)
             },
