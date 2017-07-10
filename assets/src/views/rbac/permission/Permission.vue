@@ -12,6 +12,9 @@
             margin-top: 10px;
             text-align: right;
         }
+        .el-dialog {
+            min-width: 500px;
+        }
     }
 </style>
 <template>
@@ -38,7 +41,7 @@
             </span>
         </el-dialog>
         <!-- 分配权限API 弹窗-->
-        <el-dialog :visible.sync="apiForm" size="tiny" title="API分配">
+        <el-dialog  :visible.sync="apiForm" size="tiny" title="API分配">
             <el-transfer v-model="toData" :data="fromData" :titles="['未选择', '已选择']" filterable></el-transfer>      
             <span slot="footer" class="dialog-footer">
                 <el-button @click="apiForm = false">取 消</el-button>
