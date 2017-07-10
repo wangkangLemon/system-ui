@@ -32,6 +32,10 @@
                 <el-input v-model="search.operation_name" @keyup.enter.native="getData"></el-input>
             </section>
             <section>
+                <i>操作地址</i>
+                <el-input v-model="search.operation_url" @keyup.enter.native="getData"></el-input>
+            </section>
+            <section>
                 <i>API所有权</i>
                 <el-select v-model="search.owner" placeholder="全部" @change="getData" :clearable="true">
                     <el-option label="公共" value="public"></el-option>
@@ -141,6 +145,7 @@ export default {
                 owner: void '',
                 operation_method: void '',
                 operation_name: void '',
+                operation_url: void '',
             },
             dataList: [{}],
             total: 0,
