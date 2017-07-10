@@ -186,9 +186,8 @@ class CourseService {
     }
 
     // 批量删除课程
-    deleteCourseMulty ({companyid, id}) {
-        companyid = companyid || authUtils.getUserInfo().company_id
-        let finalUrl = `${config.apiHost}/com/${companyid}/course/batchdel`
+    deleteCourseMulty ({id}) {
+        let finalUrl = `${config.apiHost}/sys/course/batchdel`
         return api.post(finalUrl, {id})
     }
 
