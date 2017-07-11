@@ -339,6 +339,15 @@
                 }
             }
         },
+        watch: {
+            'form.app_version'(val) {
+                this.versionChange().then((ret) => {
+                    if (getArrayIdIndex(ret, this.form.type_id) == -1) {
+                        this.form.type_id = ''
+                    }
+                })
+            }
+        },
         created () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
