@@ -156,6 +156,17 @@
     import IndustryCompanySelect from '../component/select/IndustryCompany'
     import DateRange from '../component/form/DateRangePicker.vue'
     import Region from '../component/select/Region.vue'
+
+    function clearFn() {
+        return {
+            companySelect: '',
+            provinceSelect: '',
+            citySelect: '',
+            areaSelect: '',
+            name: '', // 名称
+            concact: '' // 店长
+        }
+    }
     export default {
         components: {
             IndustryCompanySelect,
@@ -191,7 +202,9 @@
             })
         },
         methods: {
+
             initFetchParam() {
+                this.fetchParam = clearFn()
                 this.currentPage = 1
             },
             // 显示详情

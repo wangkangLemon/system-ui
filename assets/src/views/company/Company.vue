@@ -156,6 +156,15 @@
     import companyService from '../../services/companyService'
     import DateRange from '../component/form/DateRangePicker.vue'
     import Region from '../component/select/Region.vue'
+    function clearFn() {
+        return {
+            typeSelect: '',
+            provinceSelect: '',
+            citySelect: '',
+            areaSelect: '',
+            name: ''
+        }
+    }
     export default {
         components: {
             DateRange,
@@ -201,6 +210,7 @@
         methods: {
             initFetchParam () {
                 this.currentPage = 1
+                this.fetchParam = clearFn()
             },
             // 修改企业信息
             editCompany (index, row) {
