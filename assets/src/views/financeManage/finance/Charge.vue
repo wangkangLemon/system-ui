@@ -220,6 +220,7 @@
         },
         methods: {
             initFetchParam () {
+                this.fetchParam = clearForm()
                 this.currentPage = 1
             },
             accountFn () {

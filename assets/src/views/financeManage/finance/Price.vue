@@ -127,6 +127,14 @@
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import Admin from '../../component/select/Admin.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
+    function clearFn() {
+        return {
+            industrySelect: '',
+            managerSelect: '',
+            createTime: '',
+            endTime: '',
+        }
+    }
     export default {
         components: {
             IndustryCompanySelect,
@@ -135,12 +143,7 @@
         },
         data () {
             return {
-                fetchParam: {
-                    industrySelect: '',
-                    managerSelect: '',
-                    createTime: '',
-                    endTime: '',
-                },
+                fetchParam: clearFn(),
                 currentData: null,
                 showDetail: false,
                 loading: false,
@@ -184,6 +187,7 @@
         methods: {
             initFetchParam () {
                 this.currentPage = 1
+                this.fetchParam = clearFn()
             },
             showFn (row) {
                 this.showDetail = true

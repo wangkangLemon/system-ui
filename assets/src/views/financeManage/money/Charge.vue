@@ -166,6 +166,16 @@
     import Admin from '../../component/select/Admin'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
+
+    function clearFn() {
+        return {
+            category: '', // 类型
+            industrySelect: '',
+            managerSelect: '',
+            createTime: '',
+            endTime: '',
+        }
+    }
     export default {
         components: {
             Admin,
@@ -174,13 +184,7 @@
         },
         data () {
             return {
-                fetchParam: {
-                    category: '', // 类型
-                    industrySelect: '',
-                    managerSelect: '',
-                    createTime: '',
-                    endTime: '',
-                },
+                fetchParam: clearFn(),
                 balance: 0, // 余额
                 showDetail: false,
                 currentData: null,
@@ -221,6 +225,7 @@
         methods: {
             initFetchParam () {
                 this.currentPage = 1
+                this.fetchParam = clearFn()
             },
             accountFn () {
                 this.addForm = true
