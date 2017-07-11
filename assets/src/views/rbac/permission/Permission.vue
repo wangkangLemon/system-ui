@@ -63,7 +63,7 @@
             </el-table-column>
             <el-table-column
                     prop="disabled"
-                    label="状态">
+                    label="状态" width="100">
                     <template scope="scope">
                         <el-tag type="success" v-if="!scope.row.disabled">启用</el-tag>
                         <el-tag type="gray" v-if="scope.row.disabled">禁用</el-tag>

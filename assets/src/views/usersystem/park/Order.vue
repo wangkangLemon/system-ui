@@ -191,20 +191,6 @@
 <script>
     import orderService from '../../../services/usersystem/orderService'
     import DateRange from '../../component/form/DateRangePicker.vue'
-    function clearFn() {
-        return {
-            mobile: void '', // 领取人联系方式
-            channel: void '', // 销售渠道
-            product_name: void '', // 商品名
-            product_category: void '', // 商品类型
-            product_order_no: void '', // 订单号
-            status: void -1, // 物流状态
-            page: 1,
-            page_size: 15,
-            time_start: void '',
-            time_end: void '',
-        }
-    }
     export default {
         components: {
             DateRange
@@ -215,7 +201,7 @@
                 loadingData: false,
                 data: [{}], // 表格数据
                 total: 0,
-                fetchParam: clearFn(),
+                fetchParam: clearFetchParam(),
                 dialogDetail: { // 完善订单弹框
                     isShow: false,
                     model: {
@@ -263,9 +249,9 @@
             })
         },
         methods: {
-            initFetchParam() {
-                console.log('hello 我被调用了')
-                this.fetchParam = clearFn()
+
+            initFetchParam () {
+                this.fetchParam = clearFetchParam()
             },
             fetchData() {
                 this.loadingData = true
@@ -331,5 +317,19 @@
                 })
             },
         },
+    }
+    function clearFetchParam() {
+        return {
+            mobile: void '', // 领取人联系方式
+            channel: void '', // 销售渠道
+            product_name: void '', // 商品名
+            product_category: void '', // 商品类型
+            product_order_no: void '', // 订单号
+            status: void -1, // 物流状态
+            page: 1,
+            page_size: 15,
+            time_start: void '',
+            time_end: void '',
+        }
     }
 </script>
