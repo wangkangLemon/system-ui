@@ -173,9 +173,8 @@
             }
         },
         activated () {
-            this.fetchData().then(() => {
-                xmview.setContentLoading(false)
-            })
+            xmview.setContentLoading(false)
+            this.fetchData()
         },
         methods: {
             initFetchParam () {
