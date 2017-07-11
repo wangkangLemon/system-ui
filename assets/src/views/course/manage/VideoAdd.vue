@@ -19,9 +19,7 @@
             width: 700px;
             margin-bottom: 15px;
             transition: all 300ms ease;
-            .operate {
-                text-align: right;
-            }
+
             .clearfix {
                 display: flex;
                 span {
@@ -45,6 +43,11 @@
         .bottom-btn {
             margin: 0 auto;
             width: 700px;
+            .el-button {
+                &:last-of-type {
+                    float: right;
+                }
+            }
         }
     }
 </style>
@@ -71,17 +74,13 @@
                     <el-progress :percentage="item.process" :status="item.process>= 100 ? 'success' : ''"></el-progress>
                 </el-form-item>
             </el-form>
-            <div class="operate">
-                <el-button type="primary" :disabled="item.process >= 100" @click="submit(item)">
-                    <i v-if="item.process < 100 && item.process > 0">正在上传</i>
-                    <i v-if="item.process == 0">开始上传</i>
-                    <i v-if="item.process >= 100">上传完毕</i>
-                </el-button>
-            </div>
         </el-card>
 
         <div v-if="listData.length > 0" class="bottom-btn">
-            <el-button v-if="complete" @click="fileClick">继续添加视频</el-button>
+            <el-button :disabled="uploading" @click="fileClick">继续添加视频</el-button>
+            <el-button type="primary" :disabled="uploading" @click="submit">
+                <i>{{uploading ? '正在上传' : '开始上传'}}</i>
+            </el-button>
         </div>
 
         <input style="display: none" type="file" ref="file" multiple="multiple" @change="fileChange($event)" accept="">
@@ -94,32 +93,30 @@
     import courseService from '../../../services/courseService'
     import authUtils from '../../../utils/authUtils'
 
-    let ossSdk
+    let ossSdk = new OssSdk()
     export default{
         name: 'course-manage-videoadd',
         data () {
             return {
                 listData: [],
                 uploading: false,
-                complete: false, // 是否上传成功
             }
         },
-        mounted () {
+        beforeCreate () {
 //            ossSdk = new OssSdk()
             this.user = authUtils.getUserInfo()
+        },
+        mounted () {
             xmview.setContentLoading(false)
         },
         methods: {
             fileChange (e) {
-                this.complete = false
-                this.uploading = false
                 let dom = e.target
                 let ret = []
                 for (let i = 0; i < dom.files.length; i++) {
                     let file = dom.files[i]
                     if (this.checkExist(file.name)) {
                         xmview.showTip('warning', `${file.name} 已存在于列表中`)
-                        this.complete = true
                     } else {
                         ret.push({
                             name: file.name,
@@ -135,20 +132,19 @@
             },
             deleteVideo (index) {
                 this.listData.splice(index, 1)
-                let completeAll = this.listData.every((item, index) => {
-                    return item.process == 100
-                })
-                if (completeAll) this.complete = true
             },
             fileClick() {
                 this.$refs.file.click()
             },
-            // 开始上传
-            submit (item) {
-                this.complete = false
+            submit () {
                 this.uploading = true
+                if (this.listData.length > 0) this.uploadVideo()
+            },
+            uploadVideo (count = 0) {
+                let item = this.listData[count]
                 courseService.getOssToken().then((ret) => {
                     ossSdk = new OssSdk(ret)
+                    // 开始上传
                     // 格式化名称
                     var now = new Date()
                     var name = [
@@ -167,12 +163,18 @@
                             source_type: 'aliyun',
                             source_url: ret.res.requestUrls[0].split('?')[0]
                         }).then(() => {
-                            xmview.showTip('success', '操作成功!')
-                            this.complete = true
-                            this.uploading = false
+                            count++
+                            // 全都上传完毕之后 跳转到列表页面
+                            if (count < this.listData.length) {
+                                this.uploadVideo(count)
+                            } else if (count >= this.listData.length) {
+                                xmview.showTip('success', '操作成功!')
+                                setTimeout(() => {
+                                    this.$router.back()
+                                }, 300)
+                            }
                         })
                     }, err => {
-                        this.complete = true
                         xmview.showTip('error', '上传出现错误' + JSON.stringify(err))
                     })
                 })
