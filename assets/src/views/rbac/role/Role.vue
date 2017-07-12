@@ -12,6 +12,10 @@
             margin-top: 10px;
             text-align: right;
         }
+        .el-dialog {
+            min-width: 500px;
+        }
+        
     }
 </style>
 <template>
@@ -83,7 +87,7 @@
             </span>
         </el-dialog>
         <!-- 分配权限 弹窗-->
-        <el-dialog :visible.sync="relateForm" size="tiny" title="分配权限">
+        <el-dialog class="dialog" :visible.sync="relateForm" size="tiny" title="分配权限">
             <el-transfer v-model="toData" :data="fromData" :titles="['未选择', '已选择']" filterable></el-transfer>      
             <span slot="footer" class="dialog-footer">
                 <el-button @click="relateForm = false">取 消</el-button>

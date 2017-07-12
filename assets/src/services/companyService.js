@@ -512,6 +512,168 @@ class CompanyService {
             return ret.data
         })
     }
+
+    // 获取公告统计数据
+    getCompanyAppAnnounceStat () {
+        let finalUrl = `${urlPre}/app/announce`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取公告统计数据
+    getCompanyAppAnnounceDetail ({
+                                     company_id,
+                                     department_id,
+                                     type,
+                                 }) {
+        let finalUrl = `${urlPre}/app/announce/detail`
+        return api.get(finalUrl, {company_id, department_id, type}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取公告统计列表
+    getCompanyAnnounce({
+                         page,
+                         page_size,
+                         company_id,
+                         department_id,
+                         type,
+                         time_start = '',
+                         time_end = '',
+                     }) {
+        let finalUrl = `${urlPre}/app/announce/search`
+        return api.get(finalUrl, {page, page_size, company_id, department_id, type, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取课程任务统计数据
+    getCompanyAppCourseTaskStat () {
+        let finalUrl = `${urlPre}/app/coursetask`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取课程任务统计数据
+    getCompanyAppCourseTaskDetail ({
+                                     company_id,
+                                     department_id,
+                                     type,
+                                 }) {
+        let finalUrl = `${urlPre}/app/coursetask/detail`
+        return api.get(finalUrl, {company_id, department_id, type}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取课程任务统计列表
+    getCompanyCourseTask({
+                           page,
+                           page_size,
+                           company_id,
+                           department_id,
+                           time_start = '',
+                           time_end = '',
+                       }) {
+        let finalUrl = `${urlPre}/app/coursetask/search`
+        return api.get(finalUrl, {page, page_size, company_id, department_id, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取拿药练习统计数据
+    getCompanyAppMedicineTaskStat () {
+        let finalUrl = `${urlPre}/app/medicinetask`
+        return api.get(finalUrl).then((ret) => {
+            return ret.data
+        })
+    }
+    // 获取拿药练习统计数据
+    getCompanyAppMedicineTaskDetail ({
+                                       company_id,
+                                       department_id,
+                                       type,
+                                   }) {
+        let finalUrl = `${urlPre}/app/medicinetask/detail`
+        return api.get(finalUrl, {company_id, department_id, type}).then((ret) => {
+            return ret.data
+        })
+    }
+    // 获取拿药练习统计列表
+    getCompanyMedicineTask({
+                             page,
+                             page_size,
+                             company_id,
+                             department_id,
+                             time_start = '',
+                             time_end = '',
+                         }) {
+        let finalUrl = `${urlPre}/app/medicinetask/search`
+        return api.get(finalUrl, {page, page_size, company_id, department_id, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取启动图统计列表
+    getCompanyStartLogo({
+                               page,
+                               page_size,
+                               company_id,
+                               time_start = '',
+                               time_end = '',
+                           }) {
+        let finalUrl = `${urlPre}/app/startlogo/search`
+        return api.get(finalUrl, {page, page_size, company_id, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取资讯统计列表
+    getCompanyArticle({
+                            page,
+                            page_size,
+                            company_id,
+                            time_start = '',
+                            time_end = '',
+                        }) {
+        let finalUrl = `${urlPre}/app/article/search`
+        return api.get(finalUrl, {page, page_size, company_id, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取资讯统计数据
+    getCompanyAppArticleDetail ({company_id}) {
+        let finalUrl = `${urlPre}/app/article/detail`
+        return api.get(finalUrl, {company_id}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取小应用统计列表
+    getCompanyAppList({
+                          page,
+                          page_size,
+                          company_id,
+                          time_start = '',
+                          time_end = '',
+                      }) {
+        let finalUrl = `${urlPre}/app/companyapp/search`
+        return api.get(finalUrl, {page, page_size, company_id, time_start, time_end}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 获取小应用统计数据
+    getCompanyAppDetail ({company_id}) {
+        let finalUrl = `${urlPre}/app/companyapp/detail`
+        return api.get(finalUrl, {company_id}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new CompanyService()

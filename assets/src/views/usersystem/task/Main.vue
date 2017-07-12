@@ -208,6 +208,11 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.search.page = 1
+                this.search.title = ''
+                this.search.user_action_name = ''
+            },
             cropperFn (data, ext) {
                 TaskService.upIcon({
                     image: data,

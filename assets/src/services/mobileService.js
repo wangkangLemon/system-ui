@@ -115,9 +115,9 @@ class MobileService {
         })
     }
     // 获取功能列表
-    getModules ({versoin}) {
+    getModules ({version}) {
         let finalUrl = `${urlPre}/appmodule/search`
-        return api.get(finalUrl, {versoin}).then((ret) => {
+        return api.get(finalUrl, {version}).then((ret) => {
             return ret.data
         })
     }

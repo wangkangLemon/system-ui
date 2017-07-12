@@ -143,6 +143,7 @@
         methods: {
             initFetchParam() {
                 this.currentPage = 1
+                this.fetchParam = clearSearch()
             },
             handleSizeChange (val) {
                 this.pageSize = val

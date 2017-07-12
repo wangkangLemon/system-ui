@@ -93,7 +93,7 @@
     import courseService from '../../../services/courseService'
     import authUtils from '../../../utils/authUtils'
 
-    let ossSdk
+    let ossSdk = new OssSdk()
     export default{
         name: 'course-manage-videoadd',
         data () {
@@ -103,7 +103,7 @@
             }
         },
         beforeCreate () {
-            ossSdk = new OssSdk()
+//            ossSdk = new OssSdk()
             this.user = authUtils.getUserInfo()
         },
         mounted () {
@@ -138,41 +138,44 @@
             },
             submit () {
                 this.uploading = true
+                if (this.listData.length > 0) this.uploadVideo()
+            },
+            uploadVideo (count = 0) {
+                let item = this.listData[count]
                 courseService.getOssToken().then((ret) => {
                     ossSdk = new OssSdk(ret)
-                    let successCount = 0
                     // 开始上传
-                    this.listData.map((item) => {
-                        // 格式化名称
-                        var now = new Date()
-                        var name = [
-                            'company', this.user.company_id,
-                            now.getFullYear(), now.getMonth() + 1, now.getDate(),
-                            [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
-                        ].join('/') + this.extname(item.file)
-                        // 上传
-                        ossSdk.uploadFile(name, item.file, function (progress) {
-                            item.process = progress
-                        }, ret => {
-                            // 创建视频
-                            courseService.addVideo({
-                                name: item.name,
-                                tags: item.tags.join(','),
-                                source_type: 'aliyun',
-                                source_url: ret.res.requestUrls[0].split('?')[0]
-                            }).then(() => {
-                                successCount++
-                                // 全都上传完毕之后 跳转到列表页面
-                                if (successCount >= this.listData.length) {
-                                    xmview.showTip('success', '操作成功!')
-                                    setTimeout(() => {
-                                        this.$router.back()
-                                    }, 300)
-                                }
-                            })
-                        }, err => {
-                            xmview.showTip('error', '上传出现错误' + JSON.stringify(err))
+                    // 格式化名称
+                    var now = new Date()
+                    var name = [
+                        'company', this.user.company_id,
+                        now.getFullYear(), now.getMonth() + 1, now.getDate(),
+                        [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
+                    ].join('/') + this.extname(item.file)
+                    // 上传
+                    ossSdk.uploadFile(name, item.file, function (progress) {
+                        item.process = progress
+                    }, ret => {
+                        // 创建视频
+                        courseService.addVideo({
+                            name: item.name,
+                            tags: item.tags.join(','),
+                            source_type: 'aliyun',
+                            source_url: ret.res.requestUrls[0].split('?')[0]
+                        }).then(() => {
+                            count++
+                            // 全都上传完毕之后 跳转到列表页面
+                            if (count < this.listData.length) {
+                                this.uploadVideo(count)
+                            } else if (count >= this.listData.length) {
+                                xmview.showTip('success', '操作成功!')
+                                setTimeout(() => {
+                                    this.$router.back()
+                                }, 300)
+                            }
                         })
+                    }, err => {
+                        xmview.showTip('error', '上传出现错误' + JSON.stringify(err))
                     })
                 })
             },

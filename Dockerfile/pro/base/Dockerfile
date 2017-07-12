@@ -1,4 +1,4 @@
-FROM hub.docker.vodjk.com/node/common
+FROM hub.docker.vodjk.com:5000/node/common
 MAINTAINER coldstar yanghf@vodjk.com
 
 WORKDIR /node/src/

@@ -1,4 +1,4 @@
-FROM hub.docker.vodjk.com/node:6.10-alpine
+FROM hub.docker.vodjk.com:5000/node:6.10-alpine
 MAINTAINER coldstar yanghf@vodjk.com
 
 ENV NODE_ENV production

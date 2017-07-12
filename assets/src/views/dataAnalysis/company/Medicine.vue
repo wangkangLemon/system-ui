@@ -93,32 +93,47 @@
 </style>
 <template>
     <article class="analysis-company-medicine">
-        <section class="department-analytics">
+        <section class="department-analytics" v-if="statData != null">
             <div>
                 <i><img src="./images/company.png" /></i>
-                <h2>134</h2>
+                <h2>{{statData.company_number}}</h2>
                 <router-link tag="p" :to="{name: 'company-index'}">使用连锁数量</router-link>
                 <div>
-                    <i>占连锁总数的12%</i>
+                    <i>占连锁总数的{{statData.company_rate}}%</i>
                 </div>
             </div>
             <div>
                 <i><img src="./images/department.png" /></i>
-                <h2>222</h2>
+                <h2>{{statData.department_number}}</h2>
                 <router-link tag="p" :to="{name: 'company-department'}">使用门店数量</router-link>
                 <div>
-                    <i>占门店总数的12%</i>
+                    <i>占门店总数的{{statData.department_rate}}%</i>
                 </div>
             </div>
             <div>
                 <i><img src="./images/user.png" /></i>
-                <h2>454</h2>
+                <h2>{{statData.medicine_task_number}}</h2>
                 <router-link tag="p" :to="{name: 'company-user', query: {status: 1}}">发布练习次数</router-link>
-                <div>
-                    <i>占练习总数的12%</i>
-                </div>
             </div>
         </section>
+        <el-dialog class="show-detail" title="企业公告信息" v-model="showCompany">
+            <div class="info" v-if="medicineTaskCompany">
+                <h2>{{medicineTaskCompany.company_name}}</h2>
+                <p><i class="title">第一次使用时间：</i><span class="value">{{medicineTaskCompany.first_time}}</span></p>
+                <p><i class="title">上一次使用时间：</i><span class="value">{{medicineTaskCompany.last_time}}</span></p>
+                <p><i class="title">使用门店数量：</i><span class="value">{{medicineTaskCompany.department_count}}家</span></p>
+                <p><i class="title">发布练习次数：</i><span class="value">{{medicineTaskCompany.medicine_task_count}}次</span></p>
+                <p><i class="title">使用次数最多门店：</i><span class="value">{{medicineTaskCompany.department_max_name}}（{{medicineTaskCompany.department_max_number}}次）</span></p>
+            </div>
+        </el-dialog>
+        <el-dialog class="show-detail" title="分店公告信息" v-model="showDepartment">
+            <div class="info" v-if="medicineTaskDepartment">
+                <h2>{{medicineTaskDepartment.department_name}}-使用概况</h2>
+                <p><i class="title">第一次使用时间：</i><span class="value">{{medicineTaskDepartment.first_time}}</span></p>
+                <p><i class="title">上一次使用时间：</i><span class="value">{{medicineTaskDepartment.last_time}}</span></p>
+                <p><i class="title">发布练习次数：</i><span class="value">{{medicineTaskDepartment.medicine_task_count}}次</span></p>
+            </div>
+        </el-dialog>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>拿药练习概览</span>
@@ -143,7 +158,7 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="courseTaskData"
+                    :data="medicineTaskData"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -152,24 +167,29 @@
                         label="任务标题">
                 </el-table-column>
                 <el-table-column
-                        prop="course_num"
+                        prop="random_num"
                         label="课程数量"
                         min-width="100">
                 </el-table-column>
                 <el-table-column
-                        prop="company"
+                        prop="company_name"
                         min-width="180"
                         label="企业">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="showCompanyFn(scope.row)">
+                            {{scope.row.company_name}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="department"
+                        prop="department_name"
                         min-width="180"
                         label="门店">
-                </el-table-column>
-                <el-table-column
-                        prop="total"
-                        min-width="150"
-                        label="完成店员/覆盖店员">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="showDepartmentFn(scope.row)">
+                            {{scope.row.department_name}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
@@ -195,6 +215,15 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
+    import companyService from '../../../services/companyService'
+    function clearFn() {
+        return {
+            company_id: '',
+            createTime: '',
+            endTime: '',
+            department_id: ''
+        }
+    }
     export default {
         components: {
             DepSelect,
@@ -204,30 +233,83 @@
         data () {
             return {
                 loading: false,
-                courseTaskData: [],
+                medicineTaskData: [],
+                statData: null,
                 currentPage: 1,
                 pageSize: 15,
                 total: 0,
-                search: {
-                    company_id: '',
-                    createTime: '',
-                    endTime: '',
-                    department_id: ''
-                }
+                showCompany: false,
+                medicineTaskCompany: null,
+                showDepartment: false,
+                medicineTaskDepartment: null,
+                search: clearFn()
             }
         },
         created () {
             xmview.setContentLoading(false)
         },
+        mounted () {
+            companyService.getCompanyAppMedicineTaskStat().then((ret) => {
+                this.statData = ret.data
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
+        activated () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+                this.search = clearFn()
+            },
+            showCompanyFn (item) {
+                companyService.getCompanyAppMedicineTaskDetail({
+                    company_id: item.company_id,
+                    department_id: item.department_id,
+                    type: 'company',
+                }).then((ret) => {
+                    this.medicineTaskCompany = ret.data
+                }).then(() => {
+                    this.showCompany = true
+                })
+            },
+            showDepartmentFn (item) {
+                companyService.getCompanyAppMedicineTaskDetail({
+                    company_id: item.company_id,
+                    department_id: item.department_id,
+                    type: 'department',
+                }).then((ret) => {
+                    this.medicineTaskDepartment = ret.data
+                }).then(() => {
+                    this.showDepartment = true
+                })
+            },
             handleSizeChange (val) {
                 this.pageSize = val
+                this.getData()
             },
             handleCurrentChange (val) {
                 this.currentPage = val
+                this.getData()
             },
             getData () {
-                console.log(1)
+                this.loading = true
+                return companyService.getCompanyMedicineTask({
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    company_id: this.search.company_id,
+                    department_id: this.search.department_id,
+                    time_start: this.search.createTime,
+                    time_end: this.search.endTime,
+                }).then((ret) => {
+                    this.total = ret.total
+                    this.medicineTaskData = ret.data
+                }).then(() => {
+                    this.loading = false
+                })
             }
         }
     }

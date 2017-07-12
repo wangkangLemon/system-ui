@@ -171,6 +171,18 @@
     import IndustrySelect from '../component/select/IndustryCompany.vue'
     import salesService from '../../services/salesService'
     import DateRange from '../component/form/DateRangePicker.vue'
+    function clearFn() {
+        return {
+            product_id: void 0,
+            time_start: void 0,
+            time_end: void 0,
+            enterprise_id: void 0,
+            status: void 0,
+            username: void 0,
+            length: 15, // 每页大小
+            start: 1, // 当前页数
+        }
+    }
 
     export default{
         data () {
@@ -184,16 +196,7 @@
                     name: '已完成',
                     id: 2
                 }, {name: '已关闭', id: 3}],
-                fetchParam: {
-                    product_id: void 0,
-                    time_start: void 0,
-                    time_end: void 0,
-                    enterprise_id: void 0,
-                    status: void 0,
-                    username: void 0,
-                    length: 15, // 每页大小
-                    start: 0, // 当前页数
-                }
+                fetchParam: clearFn()
             }
         },
         activated () {
@@ -203,7 +206,7 @@
         },
         methods: {
             initFetchParam () {
-                this.fetchParam.start = 1
+                this.fetchParam = clearFn()
             },
             fetchData () {
                 this.loadingData = true

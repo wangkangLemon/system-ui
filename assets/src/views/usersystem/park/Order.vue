@@ -201,18 +201,7 @@
                 loadingData: false,
                 data: [{}], // 表格数据
                 total: 0,
-                fetchParam: {
-                    mobile: void '', // 领取人联系方式
-                    channel: void '', // 销售渠道
-                    product_name: void '', // 商品名
-                    product_category: void '', // 商品类型
-                    product_order_no: void '', // 订单号
-                    status: void -1, // 物流状态
-                    page: 1,
-                    page_size: 15,
-                    time_start: void '',
-                    time_end: void '',
-                },
+                fetchParam: clearFetchParam(),
                 dialogDetail: { // 完善订单弹框
                     isShow: false,
                     model: {
@@ -247,10 +236,10 @@
             }
         },
         watch: {
-            'fetchParam.page_size'() {
+            'fetchParam.page_size'(val) {
                 this.fetchData()
             },
-            'fetchParam.page'() {
+            'fetchParam.page'(val) {
                 this.fetchData()
             },
         },
@@ -260,6 +249,10 @@
             })
         },
         methods: {
+
+            initFetchParam () {
+                this.fetchParam = clearFetchParam()
+            },
             fetchData() {
                 this.loadingData = true
                 return orderService.search(this.fetchParam).then((ret) => {
@@ -324,5 +317,19 @@
                 })
             },
         },
+    }
+    function clearFetchParam() {
+        return {
+            mobile: void '', // 领取人联系方式
+            channel: void '', // 销售渠道
+            product_name: void '', // 商品名
+            product_category: void '', // 商品类型
+            product_order_no: void '', // 订单号
+            status: void -1, // 物流状态
+            page: 1,
+            page_size: 15,
+            time_start: void '',
+            time_end: void '',
+        }
     }
 </script>

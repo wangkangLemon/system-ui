@@ -77,7 +77,7 @@
                 <el-form-item label="地址" :label-width="formLabelWidth">
                     <el-input v-model="form.address" placeholder="地址" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label='分配权限' :label-width="formLabelWidth">
+                <el-form-item label='分配角色' :label-width="formLabelWidth">
                     <el-select v-model="toData" filterable placeholder="请选择" allow-create multiple>
                         <el-option if='fromData' v-for="item in fromData" :key="item.key" :label="item.label" :value="item.key">
                         </el-option>

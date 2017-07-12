@@ -105,6 +105,15 @@
     import DateRange from '../component/form/DateRangePicker.vue'
     import * as filters from '../../filters/timeFilter'
 
+    function clearFn() {
+        return {
+            time_start: void 0, // 时间范围
+            time_end: void 0, // 药品名称
+            enterprise_id: void 0, // 工业ID
+            deleted: void 0, // 删除状态
+        }
+    }
+
     export default{
         filters,
         data () {
@@ -115,12 +124,7 @@
                 total: 0,
                 pagesize: 15,
                 start: 1, // 当前第几页
-                fetchParam: {
-                    time_start: void 0, // 时间范围
-                    time_end: void 0, // 药品名称
-                    enterprise_id: void 0, // 工业ID
-                    deleted: void 0, // 删除状态
-                },
+                fetchParam: clearFn(),
             }
         },
         activated () {
@@ -132,7 +136,8 @@
         },
         methods: {
             initFetchParam () {
-                this.fetchParam.start = 1
+                this.start = 1
+                this.fetchParam = clearFn()
             },
             fetchData () {
                 this.loadingData = true

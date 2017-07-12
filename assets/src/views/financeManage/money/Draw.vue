@@ -158,6 +158,14 @@
     import {drawList, exportDraw, confirmDraw, cancleDraw} from '../../../services/fianace/money'
     import UserList from '../../component/select/User'
     import DateRange from '../../component/form/DateRangePicker.vue'
+    function clearFn() {
+        return {
+            drawStatusSelect: '',
+            userSelect: '',
+            createTime: '',
+            endTime: '',
+        }
+    }
     export default {
         components: {
             UserList,
@@ -165,12 +173,7 @@
         },
         data () {
             return {
-                fetchParam: {
-                    drawStatusSelect: '',
-                    userSelect: '',
-                    createTime: '',
-                    endTime: '',
-                },
+                fetchParam: clearFn(),
                 submitParam: {
                     id: 0,
                     receipts: '',
@@ -227,6 +230,7 @@
         methods: {
             initFetchParam () {
                 this.currentPage = 1
+                this.fetchParam = clearFn()
             },
             showFn (row) {
                 this.showDetail = true

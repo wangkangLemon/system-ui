@@ -167,7 +167,8 @@ class CourseService {
     // 上下线课程
     offlineCourse ({companyid, course_id, disabled}) {
         companyid = companyid || authUtils.getUserInfo().company_id
-        let finalUrl = `${config.apiHost}/com/${companyid}/course/${course_id}/disable`
+        let finalUrl = `${config.apiHost}/sys/course/${course_id}/disable`
+        console.log(finalUrl)
         return api.put(finalUrl, {disabled})
     }
 
@@ -188,6 +189,12 @@ class CourseService {
     deleteCourseMulty ({companyid, id}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/batchdel`
+        return api.post(finalUrl, {id})
+    }
+
+    // 批量删除视频
+    deleteVideoMulty ({id}) {
+        let finalUrl = `${urlPre}/video/batchdel`
         return api.post(finalUrl, {id})
     }
 

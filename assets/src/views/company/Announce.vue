@@ -155,6 +155,7 @@
         methods: {
             initFetchParam () {
                 this.currentPage = 1
+                this.fetchParam = clearSearch()
             },
             showFn (row) {
                 this.showDetail = true

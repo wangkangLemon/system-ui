@@ -93,37 +93,37 @@
 </style>
 <template>
     <article class="analysis-company-coursetask">
-        <section class="department-analytics">
+        <section class="department-analytics" v-if="statData != null">
             <div>
                 <i><img src="./images/company.png" /></i>
-                <h2>134</h2>
+                <h2>{{statData.company_number}}</h2>
                 <router-link tag="p" :to="{name: 'company-index'}">使用连锁数量</router-link>
                 <div>
-                    <i>占连锁总数的12%</i>
+                    <i>占连锁总数的{{statData.company_rate}}%</i>
                 </div>
             </div>
             <div>
                 <i><img src="./images/department.png" /></i>
-                <h2>222</h2>
+                <h2>{{statData.department_number}}</h2>
                 <router-link tag="p" :to="{name: 'company-department'}">使用门店数量</router-link>
                 <div>
-                    <i>占门店总数的12%</i>
+                    <i>占门店总数的{{statData.department_rate}}%</i>
                 </div>
             </div>
             <div>
                 <i><img src="./images/user.png" /></i>
-                <h2>454</h2>
+                <h2>{{statData.company_course_task}}</h2>
                 <router-link tag="p" :to="{name: 'company-user', query: {status: 1}}">企业任务数量</router-link>
                 <div>
-                    <i>占任务总数的12%</i>
+                    <i>占任务总数的{{statData.company_course_task_rate}}%</i>
                 </div>
             </div>
             <div>
                 <i><img src="./images/r_user.png" /></i>
-                <h2>1212</h2>
+                <h2>{{statData.department_course_task}}</h2>
                 <router-link tag="p" :to="{name: 'company-user', query: {status: 2}}">分店任务数量</router-link>
                 <div>
-                    <i>占任务总数的12</i>
+                    <i>占任务总数的{{statData.department_course_task_rate}}%</i>
                 </div>
             </div>
         </section>
@@ -148,6 +148,22 @@
                            :change="getData">
                 </DateRange>
             </section>
+            <el-dialog class="show-detail" title="企业公告信息" v-model="showCompany">
+                <div class="info" v-if="courseTaskCompany">
+                    <h2>{{courseTaskCompany.company_name}}</h2>
+                    <p><i class="title">第一次发布时间：</i><span class="value">{{courseTaskCompany.first_time}}</span></p>
+                    <p><i class="title">上一次发布时间：</i><span class="value">{{courseTaskCompany.last_time}}</span></p>
+                    <p><i class="title">发布个数：</i><span class="value">{{courseTaskCompany.course_task_count}}条（{{courseTaskCompany.company_count}}条企业课程任务，{{courseTaskCompany.department_count}}条分店课程任务）</span></p>
+                </div>
+            </el-dialog>
+            <el-dialog class="show-detail" title="分店公告信息" v-model="showDepartment">
+                <div class="info" v-if="courseTaskDepartment">
+                    <h2>{{courseTaskDepartment.department_name}}-使用概况</h2>
+                    <p><i class="title">第一次发布时间：</i><span class="value">{{courseTaskDepartment.first_time}}</span></p>
+                    <p><i class="title">上一次发布时间：</i><span class="value">{{courseTaskDepartment.last_time}}</span></p>
+                    <p><i class="title">发布个数：</i><span class="value">{{courseTaskDepartment.department_count}}条</span></p>
+                </div>
+            </el-dialog>
             <el-table
                     v-loading="loading"
                     border
@@ -160,24 +176,29 @@
                         label="任务标题">
                 </el-table-column>
                 <el-table-column
-                        prop="course_num"
+                        prop="course_count"
                         label="课程数量"
                         min-width="100">
                 </el-table-column>
                 <el-table-column
-                        prop="company"
+                        prop="company_name"
                         min-width="180"
                         label="企业">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="showCompanyFn(scope.row)">
+                            {{scope.row.company_name}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="department"
+                        prop="department_name"
                         min-width="180"
                         label="门店">
-                </el-table-column>
-                <el-table-column
-                        prop="total"
-                        min-width="150"
-                        label="完成店员/覆盖店员">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="showDepartmentFn(scope.row)">
+                            {{scope.row.department_name}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
@@ -203,6 +224,15 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
+    import companyService from '../../../services/companyService'
+    function clearFn() {
+        return {
+            company_id: '',
+            createTime: '',
+            endTime: '',
+            department_id: ''
+        }
+    }
     export default {
         components: {
             DepSelect,
@@ -213,29 +243,82 @@
             return {
                 loading: false,
                 courseTaskData: [],
+                statData: null,
                 currentPage: 1,
                 pageSize: 15,
                 total: 0,
-                search: {
-                    company_id: '',
-                    createTime: '',
-                    endTime: '',
-                    department_id: ''
-                }
+                showCompany: false,
+                courseTaskCompany: null,
+                showDepartment: false,
+                courseTaskDepartment: null,
+                search: clearFn()
             }
+        },
+        mounted () {
+            companyService.getCompanyAppCourseTaskStat().then((ret) => {
+                this.statData = ret.data
+            }).then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         created () {
             xmview.setContentLoading(false)
         },
+        activated () {
+            this.getData().then(() => {
+                xmview.setContentLoading(false)
+            })
+        },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+                this.search = clearFn()
+            },
+            showCompanyFn (item) {
+                companyService.getCompanyAppCourseTaskDetail({
+                    company_id: item.company_id,
+                    department_id: item.department_id,
+                    type: 'company',
+                }).then((ret) => {
+                    this.courseTaskCompany = ret.data
+                }).then(() => {
+                    this.showCompany = true
+                })
+            },
+            showDepartmentFn (item) {
+                companyService.getCompanyAppCourseTaskDetail({
+                    company_id: item.company_id,
+                    department_id: item.department_id,
+                    type: 'department',
+                }).then((ret) => {
+                    this.courseTaskDepartment = ret.data
+                }).then(() => {
+                    this.showDepartment = true
+                })
+            },
             handleSizeChange (val) {
                 this.pageSize = val
+                this.getData()
             },
             handleCurrentChange (val) {
                 this.currentPage = val
+                this.getData()
             },
             getData () {
-                console.log(1)
+                this.loading = true
+                return companyService.getCompanyCourseTask({
+                    page: this.currentPage,
+                    page_size: this.pageSize,
+                    company_id: this.search.company_id,
+                    department_id: this.search.department_id,
+                    time_start: this.search.createTime,
+                    time_end: this.search.endTime,
+                }).then((ret) => {
+                    this.total = ret.total
+                    this.courseTaskData = ret.data
+                }).then(() => {
+                    this.loading = false
+                })
             }
         }
     }

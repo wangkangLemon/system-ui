@@ -1,4 +1,4 @@
-FROM hub.docker.vodjk.com/node/common
+FROM hub.docker.vodjk.com:5000/node/common
 MAINTAINER jingziming fenghk@vodjk.com
 
 WORKDIR /node/src/

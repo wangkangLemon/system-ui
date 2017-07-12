@@ -201,6 +201,17 @@
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
     import companyService from '../../../services/companyService'
+    function clearFn() {
+        return {
+            name: '',
+            user_name: '',
+            company_id: '',
+            role: '',
+            createTime: '',
+            endTime: '',
+        }
+    }
+
     export default {
         components: {
             DepSelect,
@@ -215,14 +226,7 @@
                 currentPage: 1,
                 pageSize: 15,
                 total: 0,
-                search: {
-                    name: '',
-                    user_name: '',
-                    company_id: '',
-                    role: '',
-                    createTime: '',
-                    endTime: '',
-                }
+                search: clearFn()
             }
         },
         mounted () {
@@ -240,6 +244,7 @@
         methods: {
             initFetchParam() {
                 this.currentPage = 1
+                this.search = clearFn()
             },
             handleSizeChange (val) {
                 this.pageSize = val

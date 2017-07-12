@@ -343,6 +343,15 @@
                 }
             }
         },
+        watch: {
+            'form.app_version'(val) {
+                this.versionChange().then((ret) => {
+                    if (getArrayIdIndex(ret, this.form.type_id) == -1) {
+                        this.form.type_id = ''
+                    }
+                })
+            }
+        },
         created () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
@@ -366,7 +375,6 @@
             },
             // 表单版本发生变化的时候获取功能列表
             versionChange () {
-//                this.form.type_id = ''
                 return mobileService.getModules({version: this.form.app_version}).then((ret) => {
                     this.modules = ret.data
                     return ret.data

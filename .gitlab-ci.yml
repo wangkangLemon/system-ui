@@ -1,4 +1,4 @@
-image: hub.docker.vodjk.com/node/common
+image: hub.docker.vodjk.com:5000/node/common
 
 before_script:
 

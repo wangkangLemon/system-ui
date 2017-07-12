@@ -32,6 +32,10 @@
                 <el-input v-model="search.operation_name" @keyup.enter.native="getData"></el-input>
             </section>
             <section>
+                <i>操作地址</i>
+                <el-input v-model="search.operation_url" @keyup.enter.native="getData"></el-input>
+            </section>
+            <section>
                 <i>API所有权</i>
                 <el-select v-model="search.owner" placeholder="全部" @change="getData" :clearable="true">
                     <el-option label="公共" value="public"></el-option>
@@ -130,18 +134,22 @@ function clearFn() {
         limit: ''
     }
 }
+function clearSearch() {
+    return {
+        page: 1,
+        page_size: 15,
+        owner: void '',
+        operation_method: void '',
+        operation_name: void '',
+        operation_url: void '',
+    }
+}
 export default {
     data() {
         return {
             loading: false,
             updateForm: false,
-            search: {
-                page: 1,
-                page_size: 15,
-                owner: void '',
-                operation_method: void '',
-                operation_name: void '',
-            },
+            search: clearSearch(),
             dataList: [{}],
             total: 0,
             form: clearFn(),
@@ -175,6 +183,9 @@ export default {
         })
     },
     methods: {
+        initFetchParam() {
+            this.search = clearSearch()
+        },
         getData() {
             this.loading = true
             return operationService.search(this.search).then((ret) => {

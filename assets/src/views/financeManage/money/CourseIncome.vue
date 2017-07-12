@@ -110,6 +110,16 @@
     import CourseList from '../../component/select/Course'
     import UserList from '../../component/select/User'
     import DateRange from '../../component/form/DateRangePicker.vue'
+    function clearFn () {
+        return {
+            companySelect: '',
+            moneycompanySelect: '',
+            courseSelect: '',
+            userSelect: '',
+            createTime: '',
+            endTime: '',
+        }
+    }
     export default {
         components: {
             IndustryCompanySelect,
@@ -119,14 +129,7 @@
         },
         data () {
             return {
-                fetchParam: {
-                    companySelect: '',
-                    moneycompanySelect: '',
-                    courseSelect: '',
-                    userSelect: '',
-                    createTime: '',
-                    endTime: '',
-                },
+                fetchParam: clearFn(),
                 loading: false,
                 currentPage: 1,
                 pageSize: 15,
@@ -142,6 +145,7 @@
         methods: {
             initFetchParam () {
                 this.currentPage = 1
+                this.fetchParam = clearFn()
             },
             handleSizeChange (val) {
                 this.pageSize = val

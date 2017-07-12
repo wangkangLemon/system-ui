@@ -190,10 +190,14 @@ router.beforeEach((to, from, next) => {
     // 如果需要清空筛选条件
     if (store.state.index.clearFetchParam) {
         store.dispatch('clearFetchParam', false)
-
-        if (from.matched.length < 3) return
-        // if (!from.matched[2].instances.default) return
-        let vm = from.matched[2].instances.default
+        let vm
+        if (from.matched.length < 3) {
+            return
+        } else if (from.matched.length === 3) {
+            vm = from.matched[2].instances.default
+        } else if (from.matched.length === 4) {
+            vm = from.matched[3].instances.default
+        }
         vm.initFetchParam ? vm.initFetchParam() : clearObj([vm.fetchParam, vm.fetchParams])
     }
 
