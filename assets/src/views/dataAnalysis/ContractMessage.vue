@@ -216,6 +216,17 @@
     import companyService from '../../services/companyService'
     import SignatorySelect from '../component/select/Signatory.vue'
     import Province from '../component/select/Province.vue'
+    function clearFn () {
+        return {
+            name: '',
+            createTime: '',
+            endTime: '',
+            isdepartment: '', // 是否录入门店
+            isuser: '', // 是否录入店员
+            signatory: '', // 签约人
+            provinceSelect: '' // 省份
+        }
+    }
     export default {
         components: {
             panel,
@@ -230,15 +241,7 @@
                 signs: null,
                 currentItems: null, // 当前预览信息
                 loading: false,
-                fetchParam: {
-                    name: '',
-                    createTime: '',
-                    endTime: '',
-                    isdepartment: '', // 是否录入门店
-                    isuser: '', // 是否录入店员
-                    signatory: '', // 签约人
-                    provinceSelect: '' // 省份
-                },
+                fetchParam: clearFn(),
                 constructor: [
                     {
                         id: 1,
@@ -268,6 +271,7 @@
         methods: {
             initFetchParam() {
                 this.currentPage = 1
+                this.fetchParam = clearFn()
             },
             beforeUpload (file) {
                 const isJPG = file.type === 'application/vnd.ms-excel'

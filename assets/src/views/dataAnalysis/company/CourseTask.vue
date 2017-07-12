@@ -225,6 +225,14 @@
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
     import companyService from '../../../services/companyService'
+    function clearFn() {
+        return {
+            company_id: '',
+            createTime: '',
+            endTime: '',
+            department_id: ''
+        }
+    }
     export default {
         components: {
             DepSelect,
@@ -243,12 +251,7 @@
                 courseTaskCompany: null,
                 showDepartment: false,
                 courseTaskDepartment: null,
-                search: {
-                    company_id: '',
-                    createTime: '',
-                    endTime: '',
-                    department_id: ''
-                }
+                search: clearFn()
             }
         },
         mounted () {
@@ -269,6 +272,7 @@
         methods: {
             initFetchParam() {
                 this.currentPage = 1
+                this.search = clearFn()
             },
             showCompanyFn (item) {
                 companyService.getCompanyAppCourseTaskDetail({

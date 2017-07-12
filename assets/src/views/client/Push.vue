@@ -186,6 +186,7 @@
         methods: {
             initFetchParam() {
                 this.currentPage = 1
+                this.fetchParam = clearSearch()
             },
             createPush () {
                 this.$router.push({name: 'client-push-create'})

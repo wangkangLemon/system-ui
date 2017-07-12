@@ -216,6 +216,14 @@
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import DepSelect from '../../component/select/Department.vue'
     import companyService from '../../../services/companyService'
+    function clearFn() {
+        return {
+            company_id: '',
+            createTime: '',
+            endTime: '',
+            department_id: ''
+        }
+    }
     export default {
         components: {
             DepSelect,
@@ -234,12 +242,7 @@
                 medicineTaskCompany: null,
                 showDepartment: false,
                 medicineTaskDepartment: null,
-                search: {
-                    company_id: '',
-                    createTime: '',
-                    endTime: '',
-                    department_id: ''
-                }
+                search: clearFn()
             }
         },
         created () {
@@ -260,6 +263,7 @@
         methods: {
             initFetchParam() {
                 this.currentPage = 1
+                this.search = clearFn()
             },
             showCompanyFn (item) {
                 companyService.getCompanyAppMedicineTaskDetail({

@@ -106,6 +106,13 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import companyService from '../../../services/companyService'
+    function clearFn () {
+        return {
+            company_id: '',
+            createTime: '',
+            endTime: '',
+        }
+    }
     export default {
         components: {
             CompanySelect,
@@ -119,11 +126,7 @@
                 pageSize: 15,
                 total: 0,
                 date: '',
-                search: {
-                    company_id: '',
-                    createTime: '',
-                    endTime: '',
-                }
+                search: clearFn()
             }
         },
         created () {
@@ -143,6 +146,7 @@
             },
             initFetchParam() {
                 this.currentPage = 1
+                this.search = clearFn()
             },
             handleSizeChange (val) {
                 this.pageSize = val

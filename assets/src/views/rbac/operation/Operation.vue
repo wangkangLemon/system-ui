@@ -134,19 +134,22 @@ function clearFn() {
         limit: ''
     }
 }
+function clearSearch() {
+    return {
+        page: 1,
+        page_size: 15,
+        owner: void '',
+        operation_method: void '',
+        operation_name: void '',
+        operation_url: void '',
+    }
+}
 export default {
     data() {
         return {
             loading: false,
             updateForm: false,
-            search: {
-                page: 1,
-                page_size: 15,
-                owner: void '',
-                operation_method: void '',
-                operation_name: void '',
-                operation_url: void '',
-            },
+            search: clearSearch(),
             dataList: [{}],
             total: 0,
             form: clearFn(),
@@ -180,6 +183,9 @@ export default {
         })
     },
     methods: {
+        initFetchParam() {
+            this.search = clearSearch()
+        },
         getData() {
             this.loading = true
             return operationService.search(this.search).then((ret) => {

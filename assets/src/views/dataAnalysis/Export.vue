@@ -126,6 +126,13 @@
     import DateRange from '../component/form/DateRangePicker.vue'
     import analysisService from '../../services/analysisService'
     import authUtils from '../../utils/authUtils'
+    function clearFn() {
+        return {
+            statusSelect: '',
+            createTime: '',
+            endTime: '',
+        }
+    }
     export default {
         components: {
             DateRange
@@ -137,11 +144,7 @@
                 total: 0,
                 pageSize: 15,
                 currentPage: 1,
-                fetchParam: {
-                    statusSelect: '',
-                    createTime: '',
-                    endTime: '',
-                },
+                fetchParam: clearFn(),
                 exportData: []
             }
         },
@@ -151,6 +154,10 @@
             })
         },
         methods: {
+            initFetchParam() {
+                this.currentPage = 1
+                this.fetchParam = clearFn()
+            },
             handleSizeChange (val) {
                 this.pageSize = val
                 this.getData()
