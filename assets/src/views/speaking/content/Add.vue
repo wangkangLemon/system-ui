@@ -55,6 +55,9 @@
                                        :disabled="!form.price_enabled">
                 </IndustryCompanySelect>
             </el-form-item>
+            <el-form-item prop="price_total" label="练习次数">
+                <el-input-number v-model="form.limit" auto-complete="off" :debounce = "num"></el-input-number>
+            </el-form-item>
             <el-form-item label="赞助企业余额">
                 <el-tag type="primary">{{this.balance}} 元</el-tag>
             </el-form-item>
@@ -114,6 +117,8 @@
                     price: void 0, // 红包单价
                     price_float: void 0, // 红包浮动范围
                     status: void 0, // 状态
+                    limit: void 0 // 联系次数
+
                 },
                 rules: {
                     title: [
@@ -128,8 +133,10 @@
                     image: [
                         {required: true, message: '必须上传图片', trigger: 'blur'}
                     ],
+                    limit: {required: true, type: 'number', message: '必须填写', trigger: 'blur'},
                     price_enabled: {required: true, type: 'number', message: '请选择是否设置红包', trigger: 'blur'}
                 },
+
                 dialogCourse: {
                     loading: false,
                     isShow: false,
@@ -140,28 +147,40 @@
         },
         watch: {
             'form.price_enabled' (val) {
-                delete this.rules['price_total']
-                delete this.rules['price']
-                delete this.rules['price_float']
+                let arr = ['price_total', 'price', 'price_float']
+                arr.map((item) => {
+                    delete this.rules[item]
+                })
+                // delete this.rules['price_total']
+                // delete this.rules['price']
+                // delete this.rules['price_float']
                 if (this.form.price_enabled == 1) {
-                    this.rules['price_total'] = {
-                        required: true,
-                        type: 'number',
-                        message: '必须填写',
-                        trigger: 'blur'
-                    }
-                    this.rules['price_float'] = {
-                        required: true,
-                        type: 'number',
-                        message: '必须填写',
-                        trigger: 'blur'
-                    }
-                    this.rules['price'] = {
-                        required: true,
-                        type: 'number',
-                        message: '必须填写',
-                        trigger: 'blur'
-                    }
+                    arr.map((item) => {
+                        this.rules[item] = {
+                            required: true,
+                            type: 'number',
+                            message: '必须填写',
+                            trigger: 'blur'
+                        }
+                    })
+                    // this.rules['price_total'] = {
+                    //     required: true,
+                    //     type: 'number',
+                    //     message: '必须填写',
+                    //     trigger: 'blur'
+                    // }
+                    // this.rules['price_float'] = {
+                    //     required: true,
+                    //     type: 'number',
+                    //     message: '必须填写',
+                    //     trigger: 'blur'
+                    // }
+                    // this.rules['price'] = {
+                    //     required: true,
+                    //     type: 'number',
+                    //     message: '必须填写',
+                    //     trigger: 'blur'
+                    // }
                 }
                 if (val) {
                     this.rules.price_company_id = {

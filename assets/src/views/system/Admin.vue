@@ -276,7 +276,7 @@ export default {
                     adminID: row.id,
                     disabled: val
                 }).then(() => {
-                    xmview.showTip('success', '禁用成功')
+                    xmview.showTip('success', '操作成功')
                     this.getData()
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message || '操作失败')

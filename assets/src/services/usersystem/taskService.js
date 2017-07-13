@@ -7,7 +7,7 @@ const urlPre = config.apiHost + '/sys/task'
 
 class TaskService {
     // 列表
-    search({page, page_size, category, title, icon, status, user_action_name}) {
+    search({page, page_size, category, title, icon, status = -1, user_action_name}) {
         let url = `${urlPre}/search`
         return api.get(url, {page, page_size, category, title, icon, status, user_action_name}).then((ret) => {
             return ret.data
@@ -28,6 +28,10 @@ class TaskService {
     update({id, title, user_action_name, icon, user_action_object_id, count, reward}) {
         let url = `${urlPre}/${id}`
         return api.put(url, {title, user_action_name, icon, user_action_object_id, count, reward})
+    }
+    disable({id, status}) { // 上下线
+        let url = `${urlPre}/${id}/disable`
+        return api.put(url, {id, status})
     }
     // 删除任务
     del({task_id}) {

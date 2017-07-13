@@ -64,6 +64,7 @@
                     <el-tag v-else type="danger">下线</el-tag>
                 </template>
             </el-table-column>
+            <!--<el-table-column width="100" prop="limit" label="练习次数"></el-table-column>-->
             <el-table-column prop="end_time" label="有效日期"></el-table-column>
             <el-table-column
                     width="207"

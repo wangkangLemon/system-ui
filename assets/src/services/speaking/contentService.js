@@ -45,15 +45,15 @@ class SpeakingContentService {
     }
 
     // 新增药我说
-    addSpeaking ({id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status}) {
+    addSpeaking ({id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status, limit}) {
         let finalUrl = `${urlPre}/`
-        return api.post(finalUrl, {id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status})
+        return api.post(finalUrl, {id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status, limit})
     }
 
     // 修改药我说
-    updateSpeaking ({id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status}) {
+    updateSpeaking ({id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status, limit}) {
         let finalUrl = `${urlPre}/${id}`
-        return api.put(finalUrl, {id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status})
+        return api.put(finalUrl, {id, title, image, content, end_time, price_enabled, price_company_id, price_total, price, price_float, status, limit})
     }
 
     // 根据红包赞助企业的ID获取该企业的账户余额

@@ -1,4 +1,4 @@
-<!--日志-企业后台登录-->
+<!--客户端意见反馈-->
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
@@ -200,6 +200,9 @@
             }
         },
         activated () {
+            if (this.fetchParam.status == undefined || this.fetchParam.status == '') {
+                this.fetchParam.status = -1
+            }
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })

@@ -35,8 +35,8 @@ app.use(compression({
     },
     level: 7
 }))
-app.use('/upload', express.static(path.join(__dirname, '../storage/upload')));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/upload', express.static(path.join(__dirname, '../storage/upload'),{maxAge:1000*60*60*6}));
+app.use(express.static(path.join(__dirname, 'public'),{maxAge:1000*60*60*6}));
 
 app.use('/', index);
 
