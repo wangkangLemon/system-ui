@@ -47,8 +47,15 @@
             </section>
             <section v-if="$route.name != 'daily' && $route.name != 'newbie'">
                 <i>任务类型</i>
-                <el-select clearable @change="getData" v-model="search.user_action_name">
+                <el-select clearable @change="getData" v-model="search.user_action_name" > 
                     <el-option v-for="(item,index) in useraction" :label="item.alias" :value="item.name" :key="index"></el-option>
+                </el-select>
+            </section>
+            <section>
+                 <i>任务状态</i>
+                <el-select :clearable="true" @change="getData" v-model="search.status" placeholder="全部">
+                    <el-option  label="上线" value="0" ></el-option>
+                    <el-option  label="下线" value="1" ></el-option>
                 </el-select>
             </section>
         </section>
@@ -98,6 +105,9 @@
                     label="操作"
                     width="180">
                 <template scope="scope">
+                     <el-button type="text" size="small" @click="disable(scope.row)">
+                            {{scope.row.status === 0 ? '下线' : '上线'}}
+                    </el-button>
                     <el-button type="text" @click="editFn(scope.row)">修改</el-button>
                     <el-button v-if="$route.name != 'daily' && $route.name != 'newbie'" type="text" @click="delFn(scope.row)">删除</el-button>
                 </template>
@@ -183,7 +193,7 @@
                 search: {
                     category: this.$route.name, // 任务类型
                     title: '',
-                    status: '',
+                    status: void 0,
                     user_action_name: '',
                     user_action_icon: '',
                     page: 1,
@@ -262,7 +272,19 @@
                 return Promise.all([TaskService.userAction({category: this.search.category}), TaskService.search(this.search)]).then((result) => {
                     this.useraction = result[0].data
                     this.dataList = result[1].data
+                    console.log(result)
                     this.total = result[1].total
+                })
+            },
+            disable(row) { //  上下线
+                xmview.showDialog(`你是要${row.status === 1 ? '下线' : '上线'}【<i style="color: red">${row.title}</i>】确认吗？`, () => {
+                    TaskService.disable({
+                        id: row.id,
+                        status: row.status === 1 ? 0 : 1
+                    }).then(() => {
+                        xmview.showTip('success', `操作成功 `)
+                        this.getData()
+                    })
                 })
             },
             submit (form) {
