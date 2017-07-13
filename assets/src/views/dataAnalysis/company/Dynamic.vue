@@ -63,6 +63,11 @@
                         prop="title"
                         min-width="300"
                         label="资讯标题">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="adminPage(scope.row)">
+                            {{scope.row.title}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="company_name"
@@ -139,6 +144,9 @@
             initFetchParam() {
                 this.currentPage = 1
                 this.search = clearFn()
+            },
+            adminPage (index, item) {
+                this.$router.push({name: 'analysis-app-company-article-view', params: {content_id: index.id}})
             },
             showCompanyFn (item) {
                 companyService.getCompanyAppArticleDetail({

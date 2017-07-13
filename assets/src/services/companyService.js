@@ -533,6 +533,17 @@ class CompanyService {
         })
     }
 
+    // 获取公告内容
+    getAnnounceView ({
+                       company_id,
+                       announce_id
+                    }) {
+        let finalUrl = `${urlPre}/app/announce/view`
+        return api.get(finalUrl, {company_id, announce_id}).then((ret) => {
+            return ret.data
+        })
+    }
+
     // 获取公告统计列表
     getCompanyAnnounce({
                          page,
