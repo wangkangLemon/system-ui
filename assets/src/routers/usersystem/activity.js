@@ -38,5 +38,17 @@ export default {
                 noback: true
             }
         },
+        {
+            path: 'prize', // 领取详情
+            name: 'activity-prize',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../../views/usersystem/activity/Prize.vue'))
+                })
+            },
+            meta: {
+                title: '领取详情',
+            }
+        }
     ]
 }

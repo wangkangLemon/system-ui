@@ -61,6 +61,18 @@ export default {
                 title: '任务中心-成长任务',
                 noback: true
             }
+        },
+        {
+            path: 'details', // 领取详情
+            name: 'task-details',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../../views/usersystem/task/Details.vue'))
+                })
+            },
+            meta: {
+                title: '领取详情',
+            }
         }
     ]
 }
