@@ -159,7 +159,7 @@
                                 prop="left"
                                 label="已发放">
                         <template scope="scope">
-                            <el-button type="text" @click="$router.push({name:'activity-prize', params:{play_type:'wheel',id:scope.row.id} })">{{scope.row.left}}</el-button>
+                            <el-button type="text" @click="$router.push({name:'activity-prize', params:{play_type:'wheel',id:scope.row.id,product_name:scope.row.product_name} })">{{scope.row.left}}</el-button>
                         </template>
                         </el-table-column>
                         <el-table-column

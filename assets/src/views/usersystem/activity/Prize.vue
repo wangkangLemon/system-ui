@@ -132,6 +132,8 @@ export default {
     },
 
     activated () {
+        this.$route.meta.title = `领取详情-${this.$route.params.product_name}`
+        console.log(this.$route.params.product_name)
         this.fetchParam.play_type = this.$route.params.play_type
         this.fetchParam.id = this.$route.params.id
         this.getData().then(() => {
