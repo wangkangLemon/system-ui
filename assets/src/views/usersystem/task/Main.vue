@@ -100,7 +100,7 @@
                     label="完成人数"
                     min-width="100">
                     <template scope="scope">
-                            <el-button type="text" @click="$router.push({name:'task-details', params:{id:scope.row.id} })">{{scope.row.completed_count}}</el-button>
+                            <el-button type="text" @click="$router.push({name:'task-details', query:{id:scope.row.id} })">{{scope.row.completed_count}}</el-button>
                     </template>
             </el-table-column>
             <el-table-column

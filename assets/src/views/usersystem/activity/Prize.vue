@@ -118,13 +118,13 @@ export default {
             loading: false,
             total: 0,
             fetchParam: {
-                play_type: this.$route.params.play_type, // 类型
+                play_type: this.$route.query.play_type, // 类型
                 user_name: void 0,
                 mobile: void 0,
                 page: 0,
                 page_size: 15,
                 company_id: '',
-                id: this.$route.params.id,   // 物品id
+                id: this.$route.query.id,   // 物品id
                 start_time: '',
                 end_time: ''
             }
@@ -132,10 +132,8 @@ export default {
     },
 
     activated () {
-        this.$route.meta.title = `领取详情-${this.$route.params.product_name}`
-        console.log(this.$route.params.product_name)
-        this.fetchParam.play_type = this.$route.params.play_type
-        this.fetchParam.id = this.$route.params.id
+        this.fetchParam.play_type = this.$route.query.play_type
+        this.fetchParam.id = this.$route.query.id
         this.getData().then(() => {
             xmview.setContentLoading(false)
         })

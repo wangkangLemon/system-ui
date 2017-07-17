@@ -1,4 +1,4 @@
-<!--任务领取详情-->
+<!--任务完成详情-->
 <style lang='scss' rel='stylesheet/scss'>
     @import "../../../utils/mixins/common";
     @import "../../../utils/mixins/topSearch";
@@ -72,7 +72,7 @@
             </el-table-column>
             <el-table-column
                     prop="create_time_name"
-                    label="领取时间"
+                    label="完成时间"
                     min-width="250">
             </el-table-column>
          
@@ -124,7 +124,7 @@ export default {
                 page: 0,
                 page_size: 15,
                 company_id: '',
-                id: this.$route.params.id,   // 物品id
+                id: this.$route.query.id,   // 物品id
                 start_time: '',
                 end_time: ''
             }
@@ -132,7 +132,7 @@ export default {
     },
 
     activated () {
-        this.fetchParam.id = this.$route.params.id
+        this.fetchParam.id = this.$route.query.id
         this.getData().then(() => {
             xmview.setContentLoading(false)
         })

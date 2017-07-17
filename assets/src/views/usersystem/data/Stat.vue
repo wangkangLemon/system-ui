@@ -76,7 +76,7 @@
     </el-table-column>
      <el-table-column 
             prop="credit"
-            min-width="100"
+            min-width="120"
             label="现有积分">
     </el-table-column>
      <el-table-column 

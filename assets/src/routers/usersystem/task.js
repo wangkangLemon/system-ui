@@ -63,7 +63,7 @@ export default {
             }
         },
         {
-            path: 'details', // 领取详情
+            path: 'details', // 任务完成详情
             name: 'task-details',
             component: resolve => {
                 require.ensure([], () => {
@@ -71,7 +71,7 @@ export default {
                 })
             },
             meta: {
-                title: '领取详情',
+                title: '完成详情',
             }
         }
     ]
