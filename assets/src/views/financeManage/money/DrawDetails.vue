@@ -53,11 +53,11 @@
   <el-form-item label="身份证正面:">
     <img class="image" :src="fetchParam.image_front | fillImgPath" alt="img">
   </el-form-item>
-  <el-form-item label="身份挣背面:">
+  <el-form-item label="身份证背面:">
      <img class="image" :src="fetchParam.image_back | fillImgPath" alt="img">
   </el-form-item>
-  <el-form-item label="状态:"  v-if="this.flag==='未打款'">
-    <el-select v-model="fetchParam.status" placeholder="请选择">
+  <el-form-item label="状态:" prop='flag' >
+    <el-select v-model="fetchParam.status" placeholder="请选择" :disabled="!submitParam.flag">
       <el-option label="已打款" value="complete"></el-option>
       <el-option label="身份不符" value="close"></el-option>
     </el-select>
@@ -72,7 +72,7 @@
     </el-input>
   </el-form-item>
   <div class="bottom-btn">
-    <el-button type='primary' @click='submit()'>提交</el-button>
+    <el-button  v-if="submitParam.flag" type='primary' @click='submit()'>提交</el-button>
     </div>
     </el-form>
   </article>
@@ -87,6 +87,7 @@ export default {
             submitParam: {
                 id: 0,
                 receipts: '',
+                flag: ''
             },
             flag: '', // 保存 原有的status 防止控件消失
             rules: {
@@ -100,12 +101,13 @@ export default {
             },
         }
     },
-    created() {
+    activated() {
+        xmview.setContentLoading(false)
         this.fetchParam = this.$route.query
-        this.flag = this.fetchParam.status
+        this.submitParam.flag = this.$route.query.status === '未打款'
+        console.log(this.submitParam.flag)
         this.submitParam.id = this.fetchParam.id
         this.submitParam.receipts = this.fetchParam.receipts
-        xmview.setContentLoading(false)
     },
     methods: {
         submit() {
