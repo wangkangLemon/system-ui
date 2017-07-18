@@ -3,6 +3,8 @@
  */
 // 财务管理
 const pathPre = '/financemanage'
+import store from '../store'
+import action from '../store/actions'
 export default {
     path: pathPre,
     component: resolve => {
@@ -87,6 +89,22 @@ export default {
             meta: {
                 title: '提现管理-红包',
                 noback: true
+            }
+        },
+        {
+            path: 'money/draw_details',
+            name: 'financeManage-money-details',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/financeManage/money/DrawDetails.vue'))
+                })
+            },
+            beforeEnter: (to, from, next) => {
+                action.setIndexWebpath(store, {sub: to.query.user_name})
+                next()
+            },
+            meta: {
+                title: '充值管理',
             }
         },
         {

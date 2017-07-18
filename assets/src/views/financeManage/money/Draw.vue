@@ -76,26 +76,26 @@
                     label="编号">
             </el-table-column>
             <el-table-column
-                    prop="money"
-                    label="金额"
-                    width="100">
-            </el-table-column>
-            <el-table-column
                     prop="user_name"
                     width="100"
                     label="姓名">
             </el-table-column>
             <el-table-column
-                    prop="company_name"
+                    prop="money_name"
+                    label="提现金额"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="actual_money_name"
                     width="100"
-                    label="连锁">
+                    label="扣税后应付">
             </el-table-column>
             <el-table-column
                     prop="department_name"
                     width="100"
                     label="门店">
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
                     prop="bank_name"
                     width="120"
                     label="银行">
@@ -104,10 +104,10 @@
                     prop="card"
                     width="200"
                     label="卡号">
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                     prop="status"
-                    width="100"
+                    width="180"
                     label="状态">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.status">{{scope.row.status}}</el-tag>
@@ -129,7 +129,11 @@
                     prop="operate"
                     label="操作">
                 <template scope="scope">
-                    <el-button type="text" size="small" v-if="scope.row.status == '已完成' || scope.row.status == '已关闭'" @click="showFn(scope.row)">
+                    <el-button type ="text" 
+                     size="small" 
+                     @click="$router.push({name:'financeManage-money-details', 
+                     query:scope.row})">查看</el-button>
+                      <!-- <el-button type="text" size="small" v-if="scope.row.status == '已完成' || scope.row.status == '已关闭'" @click="showFn(scope.row)">
                         凭据
                     </el-button>
                     <el-button type="text" size="small" v-if="scope.row.status == '待提现'" @click="confirmFn(scope.row, 'confirm')">
@@ -137,7 +141,7 @@
                     </el-button>
                     <el-button type="text" size="small" v-if="scope.row.status == '待提现'" @click="confirmFn(scope.row, 'cancle')">
                         结束
-                    </el-button>
+                    </el-button>   -->
                 </template>
             </el-table-column>
         </el-table>
@@ -186,7 +190,7 @@
                 loading: false,
                 dialogLoading: false,
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 15,
                 drawData: [],
                 drawStatus: [
                     {
@@ -196,17 +200,17 @@
                     },
                     {
                         id: 2,
-                        name: '待提现',
+                        name: '未打款',
                         value: 'pending'
                     },
                     {
                         id: 3,
-                        name: '已完成',
+                        name: '已打款',
                         value: 'complete'
                     },
                     {
                         id: 4,
-                        name: '已关闭',
+                        name: '身份信息不符',
                         value: 'close'
                     }
                 ],
@@ -283,7 +287,8 @@
                     user_id: this.fetchParam.userSelect
                 }
                 return drawList(params).then((ret) => {
-                    let status = {pending: '待提现', complete: '已完成', close: '已关闭'}
+                    console.log(ret)
+                    let status = {pending: '未打款', complete: '已打款', close: '身份信息不符'}
                     this.drawData = ret.data.sort((x, y) => {
                         return y.id - x.id
                     })

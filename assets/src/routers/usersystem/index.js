@@ -7,6 +7,7 @@ import activity from './activity' // 活动
 import park from './park' // 积分乐园
 import grow from './grow' // 成长值管理
 import task from './task' // 任务中心
+import data from './data'
 // 用户体系
 export default {
     path: pathPre,
@@ -19,6 +20,7 @@ export default {
         activity, // 活动
         park, // 积分乐园
         grow, // 成长值
-        task  // 任务中心
+        task,  // 任务中心
+        data  // 积分统计
     ]
 }

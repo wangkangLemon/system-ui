@@ -95,6 +95,14 @@
                     label="奖励"
                     width="100">
             </el-table-column>
+             <el-table-column
+                    prop="completed_count"
+                    label="完成人数"
+                    min-width="100">
+                    <template scope="scope">
+                            <el-button type="text" @click="$router.push({name:'task-details', query:{id:scope.row.id} })">{{scope.row.completed_count}}</el-button>
+                    </template>
+            </el-table-column>
             <el-table-column
                     prop="update_time_name"
                     label="上次设置时间"
@@ -105,7 +113,7 @@
                     label="操作"
                     width="180">
                 <template scope="scope">
-                     <el-button type="text" size="small" @click="disable(scope.row)">
+                     <el-button type="text" @click="disable(scope.row)">
                             {{scope.row.status === 0 ? '下线' : '上线'}}
                     </el-button>
                     <el-button type="text" @click="editFn(scope.row)">修改</el-button>

@@ -34,10 +34,11 @@ class SectionService {
         category_id,
         name,
         sort = '',
-        course_category_id
+        course_category_id,
+        disabled
     }) {
         let finalUrl = `${urlPre}/create`
-        return api.post(finalUrl, {category_id, name, sort, course_category_id}).then((ret) => {
+        return api.post(finalUrl, {category_id, name, sort, course_category_id, disabled}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -49,10 +50,11 @@ class SectionService {
         category_id,
         name,
         sort = '',
-        course_category_id
+        course_category_id,
+        disabled
     }) {
         let finalUrl = `${urlPre}/${id}`
-        return api.put(finalUrl, {category_id, name, sort, course_category_id}).then((ret) => {
+        return api.put(finalUrl, {category_id, name, sort, course_category_id, disabled}).then((ret) => {
             if (ret.code) {
                 return Promise.reject(ret)
             }

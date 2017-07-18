@@ -54,6 +54,12 @@
                 <el-form-item prop="sort" label="排序" :label-width="formLabelWidth">
                     <el-input v-model="form.sort" placeholder="最小的排在前面" auto-complete="off"></el-input>
                 </el-form-item>
+                 <el-form-item prop="status" label="状态" :label-width="formLabelWidth">
+                    <el-radio-group v-model="form.disabled">
+                            <el-radio :label="0">启用</el-radio>
+                            <el-radio :label="1">禁用</el-radio>
+                    </el-radio-group>   
+                </el-form-item>
                 <el-form-item label="绑定公开课栏目（可选）" :label-width="formLabelWidth">
                     <CourseCategorySelect :placeholder="editPlacehoder" v-model="form.course_category_id"></CourseCategorySelect>
                 </el-form-item>
@@ -88,6 +94,15 @@
                     </el-table-column>
                     <el-table-column prop="sort" label="排序" width="100"></el-table-column>
                     <el-table-column prop="update_time_name" label="更新时间" width="200"></el-table-column>
+                     <el-table-column
+                        prop="status_name"
+                        label="状态"
+                        width="100">
+                    <template scope="scope">
+                        <el-tag  type="success"v-if="scope.row.disabled==0">上线</el-tag>
+                        <el-tag type="gray" v-else>下线</el-tag>
+                    </template>
+                </el-table-column>
                     <el-table-column prop="operate" label="操作" width="100">
                         <template scope="scope">
                             <el-button type="text" size="small" @click="update(scope.$index, scope.row)">
@@ -121,7 +136,8 @@
             name: '',          // 名称
             sort: '',          // 排序
             category_id: '',   // 分类ID
-            course_category_id: ''       // 绑定的栏目
+            course_category_id: '',       // 绑定的栏目
+            disabled: -1         // 状态
         }
     }
     export default {
@@ -134,7 +150,7 @@
                     currentData: null,
                     loading: false,
                     title: '',
-                    data: []
+                    data: [],
                 },
                 formTitle: '', // 添加/编辑区块标题
                 addForm: false, // 表单弹窗是否显示

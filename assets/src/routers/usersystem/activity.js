@@ -1,7 +1,8 @@
 /**
  * Created by huanghuixin on 2017/3/30.
  */
-
+import store from '../../store'
+import action from '../../store/actions'
 const pathPre = 'activity'
 // 用户体系-活动
 export default {
@@ -38,5 +39,21 @@ export default {
                 noback: true
             }
         },
+        {
+            path: 'prize',  // 领取详情
+            name: 'activity-prize',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../../views/usersystem/activity/Prize.vue'))
+                })
+            },
+            beforeEnter: (to, from, next) => {
+                action.setIndexWebpath(store, {sub: to.query.product_name})
+                next()
+            },
+            meta: {
+                title: '领取详情',
+            }
+        }
     ]
 }
