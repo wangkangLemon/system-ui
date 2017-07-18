@@ -68,6 +68,7 @@
             v-model="submitParam.receipts"
             :autosize="{ minRows: 4, maxRows: 6}"
             auto-complete="off"
+            :disabled="!submitParam.flag"
             placeholder="请输入内容">
     </el-input>
   </el-form-item>
