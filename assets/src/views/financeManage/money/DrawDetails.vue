@@ -65,7 +65,7 @@
   <el-form-item label='备注:' prop="receipts">
     <el-input 
             type="textarea"
-            v-model="fetchParam.receipts"
+            v-model="submitParam.receipts"
             :autosize="{ minRows: 4, maxRows: 6}"
             auto-complete="off"
             placeholder="请输入内容">
