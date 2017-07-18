@@ -87,12 +87,12 @@
             </el-table-column>
             <el-table-column
                     prop="actual_money_name"
-                    width="100"
+                    min-width="120"
                     label="扣税后应付">
             </el-table-column>
             <el-table-column
                     prop="department_name"
-                    width="100"
+                    min-width="100"
                     label="门店">
             </el-table-column>
             <!-- <el-table-column
