@@ -113,7 +113,7 @@
                     label="操作"
                     width="180">
                 <template scope="scope">
-                     <el-button type="text" size="small" @click="disable(scope.row)">
+                     <el-button type="text" @click="disable(scope.row)">
                             {{scope.row.status === 0 ? '下线' : '上线'}}
                     </el-button>
                     <el-button type="text" @click="editFn(scope.row)">修改</el-button>
