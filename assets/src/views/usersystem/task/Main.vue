@@ -113,11 +113,11 @@
                     label="操作"
                     width="180">
                 <template scope="scope">
-                     <el-button type="text" @click="disable(scope.row)">
+                     <el-button type="text" size="small" @click="disable(scope.row)">
                             {{scope.row.status === 0 ? '下线' : '上线'}}
                     </el-button>
-                    <el-button type="text" @click="editFn(scope.row)">修改</el-button>
-                    <el-button v-if="$route.name != 'daily' && $route.name != 'newbie'" type="text" @click="delFn(scope.row)">删除</el-button>
+                    <el-button type="text" size="small" @click="editFn(scope.row)">修改</el-button>
+                    <el-button v-if="$route.name != 'daily' && $route.name != 'newbie'" size="small" type="text" @click="delFn(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
