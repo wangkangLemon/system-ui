@@ -64,7 +64,7 @@ $imported-modules: () !default;
 }
 
 %clear-inlineblock-marginRight {
-    @include clear-inlineblock-marginRight;
+    @include clear-inlineblock-marginRight();
 }
 
 %lineCount {
