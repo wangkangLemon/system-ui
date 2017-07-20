@@ -43,7 +43,7 @@
 <template>
     <article id="sys-rbac-menu">
         <section class="left-container">
-            <el-tree highlight-current :data="treeData" :props="defaultProps" @node-click="treeClick" ref="tree">
+              <EditorTree v-model='treeData' ref="tree"  @onNodeClick="treeClick"></EditorTree>    
             </el-tree>
         </section>
 
@@ -115,12 +115,14 @@
 </template>
 <script type="text/jsx">
     import menuService from '../../../services/rbac/menuService'
+    import EditorTree from '../../component/tree/EditorTree.vue'
     export default{
         data () {
             return {
                 activeTab: 'root',
                 nodeSelected: void 0, // 被选中的node节点
                 moveToNode: void 0, // 将要移动到最终的分类
+                nodeItem:'',
                 treeData: [],
                 moveTreeData: [],
                 defaultProps: {
@@ -135,6 +137,11 @@
                 dialogTree: {
                     isShow: false,
                     confirmClick: {}
+                },
+                item: {   // 添加元素
+                    id: -1,
+                    label: "",
+                    children: null
                 },
                 fetchParam: getFetchParam(),
                 rules: {
@@ -158,7 +165,7 @@
                                 this.fetchParam = ret.data.data
                             }
                         })
-                    }         
+                    }
                 }
             },
         },
@@ -169,14 +176,17 @@
         methods: {
             moveTreeClick(obj, node, self) {
                 this.moveToNode = obj
+                
             },
             // 点击树发生动作
             treeClick(obj, node, self) {
                 this.activeTab = 'edit'
                 this.nodeSelected = obj
+                this.nodeItem =node
                 menuService.getInfo(this.nodeSelected.id).then((ret) => {
                     if (ret.code === 0) {
                         this.fetchParam = ret.data.data
+                        
                     }
                 })
             },
@@ -188,8 +198,9 @@
             },
             // 删除分类
             deleteMenu (){
+                let nodeitem = this.nodeItem //查看是子节点
                 let node = this.nodeSelected
-                if (node && node.children) {
+                if (node && nodeitem.childNodes.length > 0) {
                     xmview.showTip('warning', '该分类下还有子分类,不能被删除')
                     return
                 }
@@ -200,9 +211,11 @@
                     menuService.delete(node.id).then(() => {
                         xmview.showTip('success', '操作成功!')
                         node = null
+                        nodeitem = null
+                        this.$refs.tree.removeItem(this.nodeSelected,this.nodeparent) // 删除选中元素
                         this.dialogConfirm.isShow = false
                         this.resetForm()
-                        this.getTreeData()
+                        
                     })
                 }
                 this.fetchParam = getFetchParam()
@@ -228,8 +241,20 @@
                     }
         
                     p.then((ret) => {
+                        if(this.activeTab === 'add') {
+                            this.item.id = ret.data.id
+                            this.item.label = this.fetchParam.menu_name
+                            this.$refs.tree.addItem(this.item, this.nodeSelected)
+                        }else if (this.activeTab==='root') {
+                              this.item.id = ret.data.id
+                              this.item.label = this.fetchParam.menu_name
+                            this.$refs.tree.addItem(this.item)
+                        }else if(this.activeTab==='edit') {
+                                this.nodeSelected.label = this.fetchParam.menu_name
+                        }
+                        this.$forceUpdate()
                         xmview.showTip('success', '操作成功!')
-                        this.getTreeData()
+                        // this.getTreeData()
                     })
                 })
             },
@@ -258,8 +283,11 @@
                             // 重新渲染树节点
                             if (ret.code === 0) {
                                 xmview.showTip('success', '操作成功!')
-                                this.dialogTree.isShow = false
-                                this.getTreeData()
+                                 this.dialogTree.isShow = false
+                                 // 移动节点
+                                this.$refs.tree.removeItem(this.nodeSelected)
+                                 this.$refs.tree.addItem(this.nodeSelected, this.moveToNode)
+                                this.$forceUpdate()
                             } else if (ret.code === 1) {
                                 xmview.showTip('error', ret.message)
                             }
@@ -268,7 +296,7 @@
                 })
             },
         },
-        components: {}
+        components: {EditorTree}
     }
     function getFetchParam () {
         return {

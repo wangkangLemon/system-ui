@@ -139,7 +139,9 @@ export default {
     methods: {
 
         getData() {
+            this.loading = true
             return integralService.getAll(this.fetchParam).then((ret) => {
+                this.loading = false
                 this.dataList = ret.historys
                 this.total = ret.total
             })
