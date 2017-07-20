@@ -88,7 +88,7 @@
         </el-dialog>
         <!-- 分配权限 弹窗-->
         <el-dialog class="dialog" :visible.sync="relateForm" size="tiny" title="分配权限">
-            <el-transfer v-model="toData" :data="fromData" :titles="['未选择', '已选择']" filterable></el-transfer>      
+            <el-tree :data="fromData" node-key="id" show-checkbox :default-checked-keys="toData" ref="tree"></el-tree>     
             <span slot="footer" class="dialog-footer">
                 <el-button @click="relateForm = false">取 消</el-button>
                 <el-button type="primary" @click="relateSubmit()">保 存</el-button>
@@ -210,7 +210,8 @@
                 })
             },
             relateSubmit() {
-                this.permissionForm.ids = this.toData.toString()
+                let checkData = this.$refs.tree.getCheckedKeys(false)
+                this.permissionForm.ids = checkData.toString()
                 roleService.permission(this.permissionForm).then((ret) => {
                     if (ret.code === 0) {
                         xmview.showTip('success', '操作成功!')
