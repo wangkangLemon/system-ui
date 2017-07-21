@@ -40,6 +40,16 @@
                 <ImagEcropperInput :isRound="false" :aspectRatio="2/1" :confirmFn="cropperFn"
                                    class="upload-btn"></ImagEcropperInput>
             </el-form-item>
+            <el-form-item prop="price_total" label="练习次数">
+                <el-input-number v-model="form.limit" auto-complete="off" :debounce = "num"></el-input-number>
+            </el-form-item>
+             <el-form-item prop="end_time" label="截止日期">
+                <el-date-picker
+                        v-model="form.end_time"
+                        type="datetime"
+                        placeholder="截止日期">
+                </el-date-picker>
+            </el-form-item>
             <el-form-item prop="price_enabled" label="是否设置红包">
                 <template>
                     <el-radio class="radio" v-model="form.price_enabled" :label="1">是</el-radio>
@@ -55,9 +65,7 @@
                                        :disabled="!form.price_enabled">
                 </IndustryCompanySelect>
             </el-form-item>
-            <el-form-item prop="price_total" label="练习次数">
-                <el-input-number v-model="form.limit" auto-complete="off" :debounce = "num"></el-input-number>
-            </el-form-item>
+            
             <el-form-item label="赞助企业余额">
                 <el-tag type="primary">{{this.balance}} 元</el-tag>
             </el-form-item>
@@ -76,14 +84,7 @@
                 <el-input-number v-model="form.price_float" auto-complete="off"  :debounce = "num"
                                  :disabled="!form.price_enabled"></el-input-number>
             </el-form-item>
-            <el-form-item prop="end_time" label="红包截止日期">
-                <el-date-picker
-                        v-model="form.end_time"
-                        type="datetime"
-                        :disabled="!form.price_enabled"
-                        placeholder="选择红包截止日期">
-                </el-date-picker>
-            </el-form-item>
+           
             <el-form-item prop="sort">
                 <el-button type="primary" @click="submit(0)" :disabled="submiting">保存并上线</el-button>
                 <!--<el-button type="warning" @click="submit(1)">存草稿</el-button>-->
@@ -133,6 +134,9 @@
                     image: [
                         {required: true, message: '必须上传图片', trigger: 'blur'}
                     ],
+                    end_time: [
+                        { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                    ],
                     limit: {required: true, type: 'number', message: '必须填写', trigger: 'blur'},
                     price_enabled: {required: true, type: 'number', message: '请选择是否设置红包', trigger: 'blur'}
                 },
@@ -151,7 +155,6 @@
                 arr.map((item) => {
                     delete this.rules[item]
                 })
-                // delete this.rules['price_total']
                 // delete this.rules['price']
                 // delete this.rules['price_float']
                 if (this.form.price_enabled == 1) {
@@ -182,7 +185,7 @@
                     //     trigger: 'blur'
                     // }
                 }
-                if (val) {
+                if (val === 1) {
                     this.rules.price_company_id = {
                         type: 'number',
                         required: true,
@@ -191,7 +194,7 @@
                     }
                 } else {
                     delete this.rules.price_company_id
-                    this.form.end_time = this.form.price_company_id = this.form.price_total = this.form.price = this.form.price_float = this.form.price_company_name = void 0
+                    this.form.price_company_id = this.form.price_total = this.form.price = this.form.price_float = this.form.price_company_name = void 0
                 }
             },
             'form.price_company_id' (val) {
@@ -247,6 +250,7 @@
                         reqFn = speakingContentService.updateSpeaking
                     }
                     if (this.form.end_time) this.form.end_time = timeUtils.time2String(this.form.end_time, false, false)
+                    console.log(this.form.end_time)
                     reqFn(this.form).then((ret) => {
                         xmview.showTip('success', '保存成功')
                         this.$router.back()
