@@ -18,7 +18,7 @@
         }
 
         .right-container {
-            width: 558px;
+            width: 658px;
             margin-left: 15px;
             .edit-content {
                 margin: 10px 0 0
@@ -88,8 +88,8 @@
                 <el-button :class="{'btn-selected': activeTab == 'root'}" @click="activeTab = 'root'">添加一级权限</el-button>
                 <el-button type="success" @click="move">移动权限</el-button>
                 <el-button type="danger" @click="del">删除权限</el-button>
-                 <div class="btn-group" v-if="isShowBtn" >
-                    <el-button type='info' @click="apiRelate">API分配</el-button>
+                 <div class="btn-group">
+                    <el-button type='warning' @click="apiRelate">API分配</el-button>
                     <el-button type='info' @click="menuRelate">菜单分配</el-button> 
                 </div> 
             </section>
@@ -133,7 +133,6 @@
                 nodeSelected: void 0, // 被选中的node节点
                 moveToNode: void 0, // 将要移动到最终的分类
                 nodeStore: void '', // 当前stroe
-                isShowBtn: false,
                 form: clearFn(),
                 item: {   // 添加元素
                     id: -1,
@@ -196,8 +195,6 @@
                 this.activeTab = 'edit'
                 this.nodeSelected = value
                 this.nodeStore = node
-                this.isShowBtn = this.nodeSelected && this.nodeStore.childNodes.length == 0
-                console.log(this.isShowBtn)
                 permissionService.getInfo(this.nodeSelected.id).then((ret) => {
                     if (ret.code === 0) {
                         this.form = ret.data.data
@@ -208,6 +205,10 @@
                 this.moveToNode = obj
             },
             del() {
+                if (!this.nodeSelected) {
+                    xmview.showTip('warning', '请先选中一个分类')
+                    return
+                }
                 let nodeStore = this.nodeStore // 查看是子节点
                 let node = this.nodeSelected
                 if (node && nodeStore.childNodes.length > 0) {
@@ -267,6 +268,10 @@
                 })
             },
             apiRelate() {
+                if (!this.nodeSelected) {
+                    xmview.showTip('warning', '请先选中一个分类')
+                    return
+                }
                 this.permissionForm = clearFn()
                 this.permissionForm.id = this.nodeSelected.id
                 permissionService.searchOperation(this.nodeSelected.id).then((ret) => {
@@ -276,6 +281,10 @@
                 })
             },
             menuRelate() {
+                if (!this.nodeSelected) {
+                    xmview.showTip('warning', '请先选中一个分类')
+                    return
+                }
                 this.permissionForm = clearFn()
                 this.permissionForm.id = this.nodeSelected.id
                 permissionService.searchMenu(this.nodeSelected.id).then((ret) => {
