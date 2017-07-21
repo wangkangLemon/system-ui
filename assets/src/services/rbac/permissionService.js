@@ -7,9 +7,9 @@ const urlPre = config.apiHost + '/sys/rbac/permission'
 
 class PermissionService {
     // 用户行为成长值记录列表
-    search({page, page_size, disabled}) {
+    search() {
         let url = `${urlPre}/search`
-        return api.get(url, {page, page_size, disabled}).then((ret) => {
+        return api.get(url).then((ret) => {
             return ret.data
         })
     }
@@ -24,14 +24,19 @@ class PermissionService {
         return api.del(url)
     }
     // 新增
-    add({id, permission_name = '', disabled}) {
+    add({id, parent_id, permission_name = '', disabled}) {
         let url = `${urlPre}/`
-        return api.post(url, {permission_name, disabled})
+        return api.post(url, {parent_id, permission_name, disabled})
     }
     // 修改
     update({id, permission_name = '', disabled}) {
         let url = `${urlPre}/${id}/`
         return api.put(url, {permission_name, disabled})
+    }
+    // 获取 单个权限信息
+    getInfo(id) {
+        let url = `${urlPre}/${id}`
+        return api.get(url)
     }
     // 获取指定权限已经关联的操作
     searchOperation(id) {

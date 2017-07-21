@@ -44,7 +44,6 @@
     <article id="sys-rbac-menu">
         <section class="left-container">
               <EditorTree v-model='treeData' ref="tree"  @onNodeClick="treeClick"></EditorTree>    
-            </el-tree>
         </section>
 
         <section class="right-container">
@@ -140,7 +139,7 @@
                 },
                 item: {   // 添加元素
                     id: -1,
-                    label: "",
+                    label: '',
                     children: null
                 },
                 fetchParam: getFetchParam(),
