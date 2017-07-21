@@ -197,6 +197,10 @@
             },
             // 删除分类
             deleteMenu (){
+                if (!this.nodeSelected) {
+                    xmview.showTip('warning', '请先选中一个分类')
+                    return
+                }
                 let nodeitem = this.nodeItem //查看是子节点
                 let node = this.nodeSelected
                 if (node && nodeitem.childNodes.length > 0) {
