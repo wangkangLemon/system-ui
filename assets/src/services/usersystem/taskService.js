@@ -21,13 +21,13 @@ class TaskService {
         })
     }
     // 添加任务
-    add({title, category, icon, user_action_name, user_action_object_id, count, reward}) {
-        return api.post(urlPre, {title, category, icon, user_action_name, user_action_object_id, count, reward})
+    add({title, category, icon, user_action_name, user_action_object_id, count, reward, app_version, platform, sample_image}) {
+        return api.post(urlPre, {title, category, icon, user_action_name, user_action_object_id, count, reward, app_version, platform, sample_image})
     }
     // 修改任务
-    update({id, title, user_action_name, icon, user_action_object_id, count, reward}) {
+    update({id, title, user_action_name, icon, user_action_object_id, count, reward, app_version, platform, sample_image}) {
         let url = `${urlPre}/${id}`
-        return api.put(url, {title, user_action_name, icon, user_action_object_id, count, reward})
+        return api.put(url, {title, user_action_name, icon, user_action_object_id, count, reward, app_version, platform, sample_image})
     }
     disable({id, status}) { // 上下线
         let url = `${urlPre}/${id}/disable`

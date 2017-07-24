@@ -118,6 +118,7 @@
                     </el-button>
                     <el-button type="text" size="small" @click="editFn(scope.row)">修改</el-button>
                     <el-button v-if="$route.name != 'daily' && $route.name != 'newbie'" size="small" type="text" @click="delFn(scope.row)">删除</el-button>
+                    <el-button size="small" v-if="scope.row.user_action_name == 'upload_image'" type="text" @click="$router.push({name: 'play-audit'})">审核</el-button> 
                 </template>
             </el-table-column>
         </el-table>
@@ -147,12 +148,34 @@
                         <el-button class="up-btn" type="primary" @click="() => {$refs.imgcropper.chooseImg()}">更换</el-button>
                    </div>
                     </div>
-                   
                 </el-form-item>
+                <!-- 根据条件变换 -->
+                    <el-form-item  label="选择平台" v-if="form.user_action_name==='app_update'">
+                    <el-select v-model="form.platform">
+                    <el-option label="ios" value="ios"></el-option>
+                    <el-option label="android" value="android"></el-option>
+                    </el-select>
+                    </el-form-item>
+                     <el-form-item label="选择版本" v-if="form.user_action_name==='app_update'">
+                       <el-input v-model="form.app_version"></el-input> 
+                    </el-select>
+                    </el-form-item>
+                 <el-form-item label="样例图片" v-if="form.user_action_name=='upload_image'" >
+                    <div class="up-img">
+                     <div class="img-wrap" v-if="form.sample_image" >
+                    <img :src="form.sample_image | fillImgPath" alt=""></img>
+                    </div>
+                   <div>
+                        <el-button class="up-btn" type="primary" @click="() => {$refs.imgupload.chooseImg()}">上传</el-button>
+                   </div>
+                    </div>
+                </el-form-item>
+
+
                 <el-form-item prop="title" label="任务标题">
                     <el-input v-model="form.title"></el-input>
                 </el-form-item>
-                <el-form-item prop="user_action_object_id" label="选择" v-if="search.category == 'play'">
+                <el-form-item prop="user_action_object_id" label="选择" v-if="search.category == 'play'&& !(form.user_action_name==='app_update' || form.user_action_name=='upload_image')">
                     <span class="choose-title" v-if="form.user_action_object_id">
                         {{form.user_action_object_title}}
                     </span>
@@ -168,6 +191,13 @@
                         <template slot="append">积分</template>
                     </el-input>
                 </el-form-item>
+                <el-form-item label="有效时间">
+                        <el-date-picker
+                        v-model="form.end_time"
+                        type="datetime"
+                        placeholder="请选择时间">
+                        </el-date-picker>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addForm = false">取 消</el-button>
@@ -176,6 +206,8 @@
         </el-dialog>
         <ChooseContent :category="form.user_action_name" v-model="choose.isShow" v-on:result="chooseConfirm"></ChooseContent>
         <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
+                           :isRound="true"></ImagEcropperInput>
+        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgupload" :confirmFn="imguploadFn" :aspectRatio="1"
                            :isRound="true"></ImagEcropperInput>
     </article>
 </template>
@@ -220,6 +252,19 @@
                 }
             }
         },
+        watch: {
+            'form.user_action_object_id'(val) {
+                delete this.rules['user_action_object_id']
+                if (!(this.form.user_action_name === 'app_update' || this.form.user_action_name === 'upload_image')) {
+                    this.rules['user_action_object_id'] = {
+                        type: 'number',
+                        required: true,
+                        message: '必填',
+                        trigger: 'blur'
+                    }
+                }
+            }
+        },
         activated () {
             this.getData().then(() => {
                 xmview.setContentLoading(false)
@@ -236,6 +281,15 @@
                     image: data,
                     alias: Date.now() + ext
                 }).then((ret) => { this.form.icon = ret.url })
+            },
+            imguploadFn (data, ext) {
+                TaskService.upIcon({
+                    image: data,
+                    alias: Date.now() + ext
+                }).then((ret) => {
+                    console.log(ret)
+                    this.form.sample_image = ret.url
+                })
             },
             changeActionFn () {
                 if (this.form.user_action_object_id) {
@@ -332,7 +386,11 @@
             reward: '',
             user_action_object_id: '',
             count: '', // 累计次数
-            icon: ''
+            icon: '',
+            end_time: '', // 有效时间
+            app_version: '',  // 客户端版本号
+            platform: '', // 发布平台
+            sample_image: ''
         }
     }
 </script>

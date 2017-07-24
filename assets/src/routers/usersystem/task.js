@@ -37,6 +37,31 @@ export default {
             }
         },
         {
+            path: 'audit',
+            name: 'play-audit',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../../views/usersystem/task/Audit.vue'))
+                })
+            },
+            meta: {
+                title: '活动任务-审核',
+                noback: true
+            }
+        },
+        {
+            path: 'audit_details',
+            name: 'play-audit-details',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../../views/usersystem/task/AuditDetails.vue'))
+                })
+            },
+            meta: {
+                title: '审核详情',
+            }
+        },
+        {
             path: 'new',
             name: 'newbie',
             component: resolve => {
