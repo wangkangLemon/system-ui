@@ -374,6 +374,8 @@ class CompanyService {
                             signatory = '',
                             time_start = '',
                             time_end = '',
+                            time_active_start = '',
+                            time_active_end = '',
                             province = ''
                         }) {
         let finalUrl = `${urlPre}/sign/search`
@@ -386,6 +388,8 @@ class CompanyService {
             signatory,
             time_start,
             time_end,
+            time_active_start,
+            time_active_end,
             province
         }).then((ret) => {
             return ret.data
