@@ -221,6 +221,8 @@
             name: '',
             createTime: '',
             endTime: '',
+            activeStartTime: '',
+            activeEndTime: '',
             isdepartment: '', // 是否录入门店
             isuser: '', // 是否录入店员
             signatory: '', // 签约人
@@ -306,6 +308,8 @@
                     signatory: this.fetchParam.signatory,
                     time_start: this.fetchParam.createTime,
                     time_end: this.fetchParam.endTime,
+                    time_active_start: this.fetchParam.activeStartTime,
+                    time_active_end: this.fetchParam.activeEndTime,
                     province: this.fetchParam.provinceSelect,
                 }).then((ret) => {
                     this.signData = ret.data
@@ -326,6 +330,8 @@
                     signatory: this.fetchParam.signatory,
                     time_start: this.fetchParam.createTime,
                     time_end: this.fetchParam.endTime,
+                    time_active_start: this.fetchParam.activeStartTime,
+                    time_active_end: this.fetchParam.activeEndTime,
                     province: this.fetchParam.provinceSelect,
                 })
             }
