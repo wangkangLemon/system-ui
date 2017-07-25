@@ -151,6 +151,13 @@
                     <label>签约人</label>
                     <SignatorySelect :change="getData" v-model="fetchParam.signatory"></SignatorySelect>
                 </section>
+                <section>
+                    <DateRange title="激活时间" :start="fetchParam.activeStartTime" :end="fetchParam.activeEndTime"
+                               v-on:changeStart="val=> fetchParam.activeStartTime=val"
+                               v-on:changeEnd="val=> fetchParam.activeEndTime=val"
+                               :change="getData">
+                    </DateRange>
+                </section>
             </section>
             <el-table border :data="signData" v-loading="loading">
                 <el-table-column
