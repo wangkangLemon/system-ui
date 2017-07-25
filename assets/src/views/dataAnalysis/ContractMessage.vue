@@ -151,6 +151,13 @@
                     <label>签约人</label>
                     <SignatorySelect :change="getData" v-model="fetchParam.signatory"></SignatorySelect>
                 </section>
+                <section>
+                    <DateRange title="激活时间" :start="fetchParam.activeStartTime" :end="fetchParam.activeEndTime"
+                               v-on:changeStart="val=> fetchParam.activeStartTime=val"
+                               v-on:changeEnd="val=> fetchParam.activeEndTime=val"
+                               :change="getData">
+                    </DateRange>
+                </section>
             </section>
             <el-table border :data="signData" v-loading="loading">
                 <el-table-column
@@ -221,6 +228,8 @@
             name: '',
             createTime: '',
             endTime: '',
+            activeStartTime: '',
+            activeEndTime: '',
             isdepartment: '', // 是否录入门店
             isuser: '', // 是否录入店员
             signatory: '', // 签约人
@@ -306,6 +315,8 @@
                     signatory: this.fetchParam.signatory,
                     time_start: this.fetchParam.createTime,
                     time_end: this.fetchParam.endTime,
+                    time_active_start: this.fetchParam.activeStartTime,
+                    time_active_end: this.fetchParam.activeEndTime,
                     province: this.fetchParam.provinceSelect,
                 }).then((ret) => {
                     this.signData = ret.data
