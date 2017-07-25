@@ -337,6 +337,8 @@
                     signatory: this.fetchParam.signatory,
                     time_start: this.fetchParam.createTime,
                     time_end: this.fetchParam.endTime,
+                    time_active_start: this.fetchParam.activeStartTime,
+                    time_active_end: this.fetchParam.activeEndTime,
                     province: this.fetchParam.provinceSelect,
                 })
             }
