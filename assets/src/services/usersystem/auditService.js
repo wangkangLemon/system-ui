@@ -2,9 +2,23 @@ import * as api from '../api'
 import config from '../../utils/config'
 const urlPre = config.apiHost + '/sys/task'
 class AuditService {
-    search(fetchParam) {
+    search({
+        user_name,
+        status = 0,
+        time_start,
+        time_end,
+        page,
+        page_size
+    }) {
         let url = `${urlPre}/upload/image/search/`
-        return api.get(url, fetchParam).then((ret) => {
+        return api.get(url, {
+            user_name,
+            status,
+            time_start,
+            time_end,
+            page,
+            page_size
+        }).then((ret) => {
             return ret.data
         })
     }

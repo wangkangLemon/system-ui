@@ -32,21 +32,21 @@
     <img class="image" :src="+fetchParam.image | fillImgPath" alt="img">
   </el-form-item>
   <el-form-item label="状态:" prop='flag' >
-    <el-select v-model="fetchParam.status" >
+    <el-select v-model="fetchParam.status" :disabled="disabled">
       <el-option label="已通过" value="1"></el-option>
       <el-option label="已拒绝" value="2"></el-option>
       <el-option label="未审核" value="0"></el-option>
     </el-select>
   </el-form-item>
   <el-form-item label='备注:' prop="node">
-    <el-input 
+    <el-input  :disabled="disabled"
             type="textarea"
             v-model="fetchParam.note"
             :autosize="{ minRows: 4, maxRows: 6}"
             placeholder="请输入内容">
     </el-input>
   </el-form-item>
-    <el-button  type='primary' class="bottom-btn" @click="submit">保存</el-button>
+    <el-button v-if="!disabled" type='primary' class="bottom-btn" @click="submit">保存</el-button>
     </el-form>
     </article>
 </template>
@@ -59,11 +59,14 @@ export default {
     data () {
         return {
             fetchParam: this.$route.query,
+            disabled: false
         }
     },
     methods: {
         getData() {
             this.fetchParam = this.$route.query
+            this.disabled = this.$route.query.status != 0
+            console.log(this.disabled)
             if (this.fetchParam.status === 0) {
                 this.fetchParam.status = '未审核'
             } else if (this.fetchParam.status === 1) {

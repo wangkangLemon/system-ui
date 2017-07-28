@@ -25,7 +25,7 @@
     
             <section>
                 <label>状态</label>
-                <el-select @change="getData" clearable v-model="fetchParam.status" placeholder="全部">
+                <el-select @change="getData" clearable v-model="fetchParam.status" placeholder="未审核">
                     <el-option label="未审核" value="0"></el-option>
                     <el-option label="已通过" value="1"></el-option>
                     <el-option label="已拒绝" value="2"></el-option>
