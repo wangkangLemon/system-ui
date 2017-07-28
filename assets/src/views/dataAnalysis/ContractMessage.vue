@@ -127,29 +127,11 @@
                           title="省份" v-on:provinceChange="val => fetchParam.provinceSelect = val"
                           :change="getData"></Province>
                 <section>
-                    <label>是否录入门店</label>
-                    <el-select clearable @change="getData" v-model="fetchParam.isdepartment">
-                        <el-option label="已录入" :value="1"></el-option>
-                        <el-option label="未录入" :value="2"></el-option>
-                    </el-select>
-                </section>
-                <section>
-                    <label>是否录入店员</label>
-                    <el-select clearable @change="getData" v-model="fetchParam.isuser">
-                        <el-option label="已录入" :value="1"></el-option>
-                        <el-option label="未录入" :value="2"></el-option>
-                    </el-select>
-                </section>
-                <section>
-                    <DateRange title="签约时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
+                    <DateRange title="录入时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
                                v-on:changeStart="val=> fetchParam.createTime=val"
                                v-on:changeEnd="val=> fetchParam.endTime=val"
                                :change="getData">
                     </DateRange>
-                </section>
-                <section>
-                    <label>签约人</label>
-                    <SignatorySelect :change="getData" v-model="fetchParam.signatory"></SignatorySelect>
                 </section>
                 <section>
                     <DateRange title="激活时间" :start="fetchParam.activeStartTime" :end="fetchParam.activeEndTime"
@@ -176,8 +158,8 @@
                 </el-table-column>
                 <el-table-column
                         prop="department_count"
-                        label="录入门店"
-                        width="100">
+                        label="录入门店(总)"
+                        width="120">
                 </el-table-column>
                 <el-table-column
                         prop="user_number"
