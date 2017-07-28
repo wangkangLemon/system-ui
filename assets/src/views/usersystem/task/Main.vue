@@ -216,6 +216,7 @@
     import ChooseContent from '../component/ChooseContent.vue'
     import TaskService from '../../../services/usersystem/taskService'
     import clone from 'clone'
+    import {time2String} from '../../../utils/timeUtils'
     export default {
         components: {
             ChooseContent,
@@ -315,11 +316,13 @@
                 })
             },
             editFn (row) {
+                console.log(row)
                 this.addForm = true
                 this.$nextTick(() => {
                     this.form = clearFn.call(this)
                     this.$refs.form.resetFields()
                     this.search.category = row.category
+
                     this.form = clone(row)
                 })
             },
@@ -358,6 +361,10 @@
                             msg = '修改成功'
                             reqFn = TaskService.update
                         }
+                        if (this.form.end_time) {
+                            this.form.end_time = time2String(new Date(this.form.end_time), false, false)
+                        }
+                        console.log(this.form.end_time)
                         reqFn(this.form).then(() => {
                             xmview.showTip('success', msg)
                             this.getData()

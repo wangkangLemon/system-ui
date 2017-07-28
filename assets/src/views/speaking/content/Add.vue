@@ -43,7 +43,7 @@
             <el-form-item prop="price_total" label="练习次数">
                 <el-input-number v-model="form.limit" auto-complete="off" :debounce = "num"></el-input-number>
             </el-form-item>
-             <el-form-item prop="end_time" label="截止日期">
+             <el-form-item  label="截止日期" prop="end_time">
                 <el-date-picker
                         v-model="form.end_time"
                         type="datetime"
@@ -209,6 +209,7 @@
                     speaking_id: this.$route.query.id
                 }).then((ret) => {
                     this.form = ret.data.speaking
+                    console.log(ret.data.speaking)
                 }, () => {
                 }).then(() => {
                     xmview.setContentLoading(false)
@@ -249,8 +250,7 @@
                     if (this.form.id) {
                         reqFn = speakingContentService.updateSpeaking
                     }
-                    if (this.form.end_time) this.form.end_time = timeUtils.time2String(this.form.end_time, false, false)
-                    console.log(this.form.end_time)
+                    if (this.form.end_time) this.form.end_time = timeUtils.time2String(new Date(this.form.end_time), false, false)
                     reqFn(this.form).then((ret) => {
                         xmview.showTip('success', '保存成功')
                         this.$router.back()
