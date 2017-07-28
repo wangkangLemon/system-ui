@@ -207,8 +207,8 @@
         <ChooseContent :category="form.user_action_name" v-model="choose.isShow" v-on:result="chooseConfirm"></ChooseContent>
         <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgcropper" :confirmFn="cropperFn" :aspectRatio="1"
                            :isRound="true"></ImagEcropperInput>
-        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgupload" :confirmFn="imguploadFn" :aspectRatio="1"
-                           :isRound="true"></ImagEcropperInput>
+        <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgupload" :confirmFn="imguploadFn" 
+                           ></ImagEcropperInput>
     </article>
 </template>
 <script>
