@@ -157,8 +157,7 @@
                     </el-select>
                     </el-form-item>
                      <el-form-item label="选择版本" v-if="form.user_action_name==='app_update'">
-                       <el-input v-model="form.app_version"></el-input> 
-                    </el-select>
+                       <el-input v-model="form.app_version"></el-input>
                     </el-form-item>
                  <el-form-item label="样例图片" v-if="form.user_action_name=='upload_image'" >
                     <div class="up-img">
@@ -316,14 +315,13 @@
                 })
             },
             editFn (row) {
-                console.log(row)
-                this.addForm = true
+                this.form = clone(row)
+                this.form = clearFn.call(this)
+                this.search.category = row.category
+                this.form.user_action_object_id = row.user_action_object_id
+                this.form.user_action_object_title = row.user_action_object_title
                 this.$nextTick(() => {
-                    this.form = clearFn.call(this)
-                    this.$refs.form.resetFields()
-                    this.search.category = row.category
-
-                    this.form = clone(row)
+                    this.addForm = true
                 })
             },
             chooseFn () {
