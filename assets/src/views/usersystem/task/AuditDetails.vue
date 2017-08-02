@@ -29,7 +29,7 @@
      <span>{{fetchParam.department_name}}</span>
   </el-form-item>
     <el-form-item label="照片:">
-    <img class="image" :src="+fetchParam.image | fillImgPath" alt="img">
+    <img class="image" :src="fetchParam.image | fillImgPath" alt="img">
   </el-form-item>
   <el-form-item label="状态:" prop='flag' >
     <el-select v-model="fetchParam.status" :disabled="disabled">
