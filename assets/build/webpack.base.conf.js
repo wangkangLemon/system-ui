@@ -34,7 +34,7 @@ module.exports = {
             {
                 test: /\.(js|vue|jsx)$/,
                 loader: 'eslint-loader',
-                enforce: "pre",
+                enforce: 'pre',
                 options: {
                     formatter: require('eslint-friendly-formatter')
                 }
