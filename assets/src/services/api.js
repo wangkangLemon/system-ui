@@ -84,10 +84,6 @@ function sendRequest (method, url, params, needLoding = false) {
     if (method === 'GET')
         url = url + '?' + processParams(params)
 
-    if (method === 'PUT' || method === 'POST') {
-        params = params.replace(/%/g, '%25')
-    }
-
     needLoding && xmview.setLoading(true)
 
     let pRequest = new Promise((resolve, reject) => {
