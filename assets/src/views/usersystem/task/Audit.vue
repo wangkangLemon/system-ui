@@ -79,12 +79,13 @@ import DateRange from '../../component/form/DateRangePicker.vue'
 import auditService from '../../../services/usersystem/auditService'
 function clearFn() {
     return {
+        id: '',
         user_name: '',
         status: '',
         time_start: '',
         time_end: '',
         page: 0,
-        page_size: 15
+        page_size: 15,
     }
 }
 export default {
@@ -98,6 +99,7 @@ export default {
         }
     },
     activated() {
+        this.fetchParam.id = this.$route.query.id
         this.getData()
     },
     methods: {

@@ -3,6 +3,7 @@ import config from '../../utils/config'
 const urlPre = config.apiHost + '/sys/task'
 class AuditService {
     search({
+        id,
         user_name,
         status = 0,
         time_start,
@@ -10,8 +11,10 @@ class AuditService {
         page,
         page_size
     }) {
-        let url = `${urlPre}/upload/image/search/`
+        let url = `${urlPre}/${id}/upload/image/search/`
+        console.log(url)
         return api.get(url, {
+            id,
             user_name,
             status,
             time_start,

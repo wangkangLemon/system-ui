@@ -118,7 +118,7 @@
                     </el-button>
                     <el-button type="text" size="small" @click="editFn(scope.row)">修改</el-button>
                     <el-button v-if="$route.name != 'daily' && $route.name != 'newbie'" size="small" type="text" @click="delFn(scope.row)">删除</el-button>
-                    <el-button size="small" v-if="scope.row.user_action_name == 'upload_image'" type="text" @click="$router.push({name: 'play-audit'})">审核</el-button> 
+                    <el-button size="small" v-if="scope.row.user_action_name == 'upload_image'" type="text" @click="$router.push({name: 'play-audit', query:{id:scope.row.id} })">审核</el-button> 
                 </template>
             </el-table-column>
         </el-table>
