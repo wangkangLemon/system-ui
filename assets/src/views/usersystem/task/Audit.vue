@@ -32,7 +32,7 @@
                 </el-select>
             </section>
             <section>
-                <DateRange title="申请时间" :start="fetchParam.start_time" :end="fetchParam.time_end" v-on:changeStart="val=> fetchParam.start_time=val" v-on:changeEnd="val=> fetchParam.time_end=val" :change="getData">
+                <DateRange title="申请时间" :start="fetchParam.time_start" :end="fetchParam.time_end" v-on:changeStart="val=> fetchParam.start_time=val" v-on:changeEnd="val=> fetchParam.time_end=val" :change="getData">
                 </DateRange>
             </section>
     
