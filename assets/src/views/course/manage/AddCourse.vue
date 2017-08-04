@@ -417,7 +417,7 @@
                 xmview.setContentLoading(true)
                 courseService.addOrEditTesting({
                     course_id: this.fetchParam.id,
-                    subjects: formUtils.serializeArray(requestParam)
+                    subjects: encodeURI(formUtils.serializeArray(requestParam))
                 }).then((ret) => {
                     xmview.showTip('success', '操作成功')
                     this.$router.back()
