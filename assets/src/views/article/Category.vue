@@ -123,7 +123,7 @@
     import treeUtils from '../../utils/treeUtils'
     import ArticleCategoryTree from '../component/tree/ArticleCategory.vue'
     import UploadImg from '../component/upload/UploadImg.vue'
-
+    import clone from 'clone'
     export default{
         data () {
             return {
@@ -187,12 +187,13 @@
             treeNodeClick (type, data, node, store) {
                 if (type == 1) {
                     if (this.nodeSelected && this.nodeSelected.value === data.value) return
+                    this.activeTab = 'edit'
                     this.nodeParentSelected = node.parent// 记录父节点
                     this.nodeSelected = data // 记录当前节点
                     this.$refs.uploadImg.clearFiles()
-                    this.fetchParam = data.item
+                    this.$refs.form.resetFields()
+                    this.fetchParam = clone(data.item)
                     this.fetchParam.parent_id = data.value // 重新指向当前的id
-                    this.activeTab = 'edit'
                 } else if (type == 2) {
                     this.moveToNode = node
                 }
