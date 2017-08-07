@@ -315,12 +315,12 @@
                 })
             },
             editFn (row) {
-                this.form = clone(row)
                 this.form = clearFn.call(this)
+                this.form = clone(row)
                 this.search.category = row.category
-                this.form.user_action_object_id = row.user_action_object_id
-                this.form.user_action_object_title = row.user_action_object_title
                 this.$nextTick(() => {
+                    this.form.user_action_object_id = row.user_action_object_id
+                    this.form.user_action_object_title = row.user_action_object_title
                     this.addForm = true
                 })
             },
