@@ -47,15 +47,6 @@
   <el-form-item label="卡号:">
     <span>{{fetchParam.card}}</span>
   </el-form-item>
-  <el-form-item label="身份证号:">
-    <span>{{fetchParam.identity_no}}</span>
-  </el-form-item>
-  <el-form-item label="身份证正面:">
-    <img class="image" :src="fetchParam.image_front | fillImgPath" alt="img">
-  </el-form-item>
-  <el-form-item label="身份证背面:">
-     <img class="image" :src="fetchParam.image_back | fillImgPath" alt="img">
-  </el-form-item>
   <el-form-item label="状态:" prop='flag' >
     <el-select v-model="fetchParam.status" placeholder="请选择" :disabled="!submitParam.flag">
       <el-option label="已打款" value="complete"></el-option>
