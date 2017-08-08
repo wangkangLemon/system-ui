@@ -32,9 +32,20 @@
         }
 
         // 替换文档
-        .el-form-item {
+        .doc-update {
+          .el-form-item {
             margin-bottom: 0;
+          }
         }
+         .form {
+        margin-top: 20px;
+        .bottom-btn {
+            float: right;
+            margin-bottom: 20px;
+
+         }
+    }
+
     }
 </style>
 
@@ -98,11 +109,13 @@
                     width="110"
                     label="状态">
                 <template scope="scope">
-                    <span v-if="scope.row.status == 0" class="text-success">正常</span>
+                    <span v-if="scope.row.status == 3" class="text-success">审核成功</span>
+                    <span v-else-if="scope.row.status == 4" class="text-gray">审核失败</span>
                     <template v-else-if="scope.row.status == 1 && scope.row.job_id > 0">
                         <span class="text-light-blue">转码中</span>
                         <el-button @click="refresh(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-refresh" title="刷新状态"></i></el-button>
                     </template>
+                    <span v-else-if="scope.row.status == 0" class="text-success">待审核</span>
                     <template v-else>
                         <span class="text-danger" :title="scope.row.job_message">转码失败</span>
                         <el-button @click="retry(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-retweet" title="点击重试"></i></el-button>
@@ -118,8 +131,8 @@
                     width="180"
                     label="操作">
                 <template scope="scope">
-                    <template v-if="scope.row.status == 0">
-                        <el-button @click="show(scope.$index, scope.row)" type="text" size="small">预览</el-button>
+                    <template v-if="scope.row.status != 1 && scope.row.status != 2">
+                        <el-button @click="show(scope.$index, scope.row)" type="text" size="small">查看</el-button>
                         <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>
                         <el-button @click="replace(scope.$index, scope.row)" type="text" size="small">替换</el-button>
                         <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
@@ -146,9 +159,33 @@
         <div class="bottom-manage">
             <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
         </div>
+            <!-- 查看  -->
+        <el-dialog title="查看" :visible.sync="docshow">
+            <DocShow ref="docShow" :docurl="docurl" class="docshow"></DocShow>
+             <el-form label-width="100px":model="form" class="form" ref="form" >
+            <el-form-item label="审核结果" prop='flag' >
+                <el-select v-model="form.status" :disabled="disabled">
+                <el-option label="审核成功" value="3"></el-option>
+                <el-option label="审核失败" value="4"></el-option>
+                <el-option label="待审核" value="0"></el-option>
+                </el-select>
+            </el-form-item>
+        <el-form-item label='备注说明' prop="remark">
+         <el-input  
+            :disabled="disabled"
+            type="textarea"
+            v-model="form.remark"
+            :autosize="{ minRows: 4, maxRows: 6}"
+            placeholder="请输入内容">
+        </el-input>
+        </el-form-item>
+            <el-button v-if="!disabled" type='primary' class="bottom-btn" @click="submit()">确定</el-button>
+            <el-button v-else type='primary' class="bottom-btn" @click="docshow=false">取消</el-button>
+        </el-form>
 
+        </el-dialog>
         <!-- 替换文档 -->
-        <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow" @close="dialogClose">
+        <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow" @close="dialogClose" class="doc-update">
             <el-form label-position="right" label-width="80px" :model="docModel">
                 <el-form-item label="文档名称">
                     <span>{{docModel.file_name}}</span>
@@ -171,7 +208,8 @@
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import UploadFile from '../../component/upload/UploadFiles.vue'
     import config from '../../../utils/config'
-
+    import DocShow from './DocShow'
+    import clone from 'clone'
     function getFetchParam() {
         return {
             file_type: void 0, // 文档类型
@@ -187,9 +225,16 @@
     export default{
         data () {
             return {
+                docshow: false,
                 loadingData: false,
                 total: 0,
                 data: [],
+                disabled: false,
+                form: {
+                    id: '',
+                    status: '',
+                    remark: ''
+                },
                 selectedIds: [], // 选中的id
                 fetchParam: getFetchParam(),
                 dialogReplace: {
@@ -200,6 +245,7 @@
                 docModel: {},
                 replaceDocUploadUrl: '',
                 accept: '.doc,.docx,.ppt,pptx,.pdf',
+                docurl: '' // docurl 阅览
             }
         },
         watch: {
@@ -282,7 +328,34 @@
             },
             // 查看
             show (index, row) {
-                window.open(`${window.location.origin}/view/showdoc?url=${config.apiHost}/sys/course/doc/${row.id}/view`)
+                this.docurl = `${config.apiHost}/sys/course/doc/${row.id}/view`
+                this.form = clone(row)
+                this.disabled = row.status !== 0
+                if (this.form.status === 0) {
+                    this.form.status = '待审核'
+                } else if (this.form.status === 3) {
+                    this.form.status = '审核成功'
+                } else if (this.form.status === 4) {
+                    this.form.status = '审核失败'
+                }
+                this.docshow = true
+                // window.open(`${window.location.origin}/view/showdoc?url=${config.apiHost}/sys/course/doc/${row.id}/view`)
+            },
+
+            // 审核提交
+            submit() {
+                if (this.form.status === '待审核') {
+                    this.form.status = 0
+                } else if (this.form.status === '审核成功') {
+                    this.form.status = 3
+                } else if (this.form.status === '审核失败') {
+                    this.form.status = 4
+                }
+                courseService.auditDoc(this.form).then(() => {
+                    xmview.showTip('success', '保存成功')
+                    this.docshow = false
+                    this.fetchData()
+                })
             },
             // 下载
             download (index, row) {
@@ -310,6 +383,6 @@
                 })
             },
         },
-        components: {courseService, DateRange, IndustryCompanySelect, UploadFile}
+        components: {courseService, DateRange, IndustryCompanySelect, UploadFile, DocShow}
     }
 </script>

@@ -134,9 +134,6 @@
                     image: [
                         {required: true, message: '必须上传图片', trigger: 'blur'}
                     ],
-                    end_time: [
-                        { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-                    ],
                     limit: {required: true, type: 'number', message: '必须填写', trigger: 'blur'},
                     price_enabled: {required: true, type: 'number', message: '请选择是否设置红包', trigger: 'blur'}
                 },
@@ -166,24 +163,6 @@
                             trigger: 'blur'
                         }
                     })
-                    // this.rules['price_total'] = {
-                    //     required: true,
-                    //     type: 'number',
-                    //     message: '必须填写',
-                    //     trigger: 'blur'
-                    // }
-                    // this.rules['price_float'] = {
-                    //     required: true,
-                    //     type: 'number',
-                    //     message: '必须填写',
-                    //     trigger: 'blur'
-                    // }
-                    // this.rules['price'] = {
-                    //     required: true,
-                    //     type: 'number',
-                    //     message: '必须填写',
-                    //     trigger: 'blur'
-                    // }
                 }
                 if (val === 1) {
                     this.rules.price_company_id = {

@@ -7,7 +7,8 @@
            max-width:700px;
         }
         .bottom-btn {
-            float: right
+            float: right;
+            margin-bottom: 20px;
          }
          .image{
              max-width: 80%;
