@@ -285,7 +285,7 @@
             } else if (this.$route.query.id) {
                 courseService.getCourseInfo({course_id: this.$route.query.id}).then((ret) => {
                     this.fetchParam = ret.course
-                this.fetchParam.tags = this.fetchParam.tags ? this.fetchParam.tags.split(',') : []
+                    this.fetchParam.tags = this.fetchParam.tags ? this.fetchParam.tags.split(',') : []
                     xmview.setContentTile('编辑课程-培训')
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
@@ -334,7 +334,7 @@
             btnNextClick () {
                 this.fetchParam.limit_time && (this.fetchParam.limit_time += '')
                 this.fetchParam.score_pass && (this.fetchParam.score_pass += '')
-                this.fetchParam.tags =  this.fetchParam.tags.join(',')
+                this.fetchParam.tags = this.fetchParam.tags.join(',')
                 this.$refs.formFirst.validate((isValidate) => {
                     if (!isValidate) return
                     let p
