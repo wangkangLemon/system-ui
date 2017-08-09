@@ -117,6 +117,10 @@
                         </el-input>
                     </el-form-item>
 
+                    <el-form-item label="课程标签">
+                        <vTags v-model="fetchParam.tags"></vTags>
+                    </el-form-item>
+
                     <h2>课后考试设置</h2>
                     <el-form-item label="课后考试" prop="need_testing">
                         <el-radio class="radio" v-model="fetchParam.need_testing" :label="1">需要</el-radio>
@@ -247,6 +251,7 @@
     import CourseAlbumSelect from '../../component/select/CourseAlbum.vue'
     import testingFactory from '../utils/testingFactory'
     import formUtils from '../../../utils/formUtils'
+    import vTags from '../../component/form/Tags.vue'
 
     export default{
         name: 'course-manage-addcourse',
@@ -275,10 +280,12 @@
             this.uploadImgUrl = courseService.getManageImgUploadUrl()
             if (this.$route.params.courseInfo) {
                 this.fetchParam = this.$route.params.courseInfo
+                this.fetchParam.tags = this.fetchParam.tags ? this.fetchParam.tags.split(',') : []
                 xmview.setContentTile('编辑课程-培训')
             } else if (this.$route.query.id) {
                 courseService.getCourseInfo({course_id: this.$route.query.id}).then((ret) => {
                     this.fetchParam = ret.course
+                this.fetchParam.tags = this.fetchParam.tags ? this.fetchParam.tags.split(',') : []
                     xmview.setContentTile('编辑课程-培训')
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
@@ -327,6 +334,7 @@
             btnNextClick () {
                 this.fetchParam.limit_time && (this.fetchParam.limit_time += '')
                 this.fetchParam.score_pass && (this.fetchParam.score_pass += '')
+                this.fetchParam.tags =  this.fetchParam.tags.join(',')
                 this.$refs.formFirst.validate((isValidate) => {
                     if (!isValidate) return
                     let p
@@ -440,7 +448,7 @@
                 }
             }
         },
-        components: {CropperImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo, UploadImg}
+        components: {CropperImg, UploadFile, CourseCategorySelect, CourseAlbumSelect, DialogVideo, UploadImg, vTags}
     }
 
     function getOrignData () {
@@ -450,6 +458,7 @@
             cat_name: void 0,
             name: void 0,
             image: void 0,
+            tags: void 0,
             material_type: void 0,
             material_id: void 0,
             material_name: '选择视频',
