@@ -110,15 +110,15 @@
                     title: void '',          // 标题
                     image: void '',        // 图片地址
                     content: void '',  // 内容
-                    end_time: void 0,         // 截止日期
+                    end_time: '',         // 截止日期
                     price_enabled: void 0,     // 是否启用红包
                     price_company_name: void 0, // 赞助企业名
                     price_company_id: void 0,       // 红包赞助工业
                     price_total: void 0, // 总额预算
                     price: void 0, // 红包单价
-                    price_float: void 0, // 红包浮动范围
+                    price_float: 0, // 红包浮动范围
                     status: void 0, // 状态
-                    limit: void 0 // 联系次数
+                    limit: 1 // 练习次数
 
                 },
                 rules: {
