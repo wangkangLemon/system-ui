@@ -64,6 +64,11 @@
                         prop="path"
                         min-width="180"
                         label="链接">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="linkHref(scope.row)">
+                            {{scope.row.path}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="company_name"
@@ -146,6 +151,9 @@
                 }).then(() => {
                     this.showCompany = true
                 })
+            },
+            linkHref(item) {
+                window.open(item.path)
             },
             handleSizeChange (val) {
                 this.pageSize = val

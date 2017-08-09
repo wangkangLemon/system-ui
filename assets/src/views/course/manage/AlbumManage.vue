@@ -276,7 +276,7 @@
                 this.dialogAdd.name = row.name
                 this.dialogAdd.title = `${row.name} 专辑编辑`
                 this.fetchData4dialogCourse(true)
-                courseService.getPublicCourselist({album_id: row.id}).then((ret) => {
+                courseService.getPublicCourselist({albumid: row.id}).then((ret) => {
                     this.dialogAdd.data4Selected = ret.data
                 })
 

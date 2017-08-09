@@ -118,6 +118,19 @@ export default {
             }
         },
         {
+            path: 'app/company/article/view',
+            name: 'analysis-app-company-article-view',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/dataAnalysis/company/ArticleView.vue'))
+                })
+            },
+            meta: {
+                title: '企业动态详情',
+                noback: true
+            }
+        },
+        {
             path: 'app/announce',
             name: 'analysis-app-announce',
             component: resolve => {
@@ -127,6 +140,19 @@ export default {
             },
             meta: {
                 title: '公告',
+                noback: true
+            }
+        },
+        {
+            path: 'app/announce/view',
+            name: 'analysis-app-announce-view',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/dataAnalysis/company/AnnounceView.vue'))
+                })
+            },
+            meta: {
+                title: '公告详情',
                 noback: true
             }
         },

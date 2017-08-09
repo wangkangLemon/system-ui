@@ -411,6 +411,11 @@ class CourseService {
             return ret.data
         })
     }
+    // 审核状态
+    auditVideo (form) {
+        let finalUrl = `${urlPre}/video/${form.id}/audit`
+        return api.put(finalUrl, form)
+    }
 
     // ============================================= 文档管理部分 开始 ======================================================
     getDocList ({page, page_size, keyword, company_id, file_type, time_start, time_end}) {
@@ -458,6 +463,10 @@ class CourseService {
     // 获取文档替换的上传url
     getReplaceDocUploadUrl ({doc_id} = {}) {
         return `${urlPre}/doc/${doc_id}/replace`
+    }
+    auditDoc(form) {
+        let finalUrl = `${urlPre}/doc/${form.id}/audit`
+        return api.put(finalUrl, form)
     }
 }
 

@@ -94,14 +94,13 @@
                     width="120"
                     label="状态">
                 <template scope="scope">
-                    <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
+                    <el-tag v-if="scope.row.status == 3" type="success">审核成功</el-tag>
+                    <span v-else-if="scope.row.status == 4" class="text-gray">审核失败</span>
+                    <span v-else-if="scope.row.status == 0" class="text-success">待审核</span>
                     <el-tag v-else-if="scope.row.status == 1" type="primary">转码中</el-tag>
                     <el-tag v-else>转码失败</el-tag>
                     <el-button type="text" v-if="scope.row.status == 1" size="small"
                                @click="refreshStatus(scope.$index, scope.row)">刷新
-
-
-
                     </el-button>
                 </template>
             </el-table-column>
@@ -115,10 +114,7 @@
                     label="操作">
                 <template scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
-                               v-if="scope.row.status == 0">预览
-
-
-
+                               v-if="scope.row.status != 1 && scope.row.status != 2">查看
                     </el-button>
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
@@ -168,7 +164,7 @@
             </div>
         </el-dialog>
 
-        <VideoPreview :url="videoUrl" ref="videoPreview"></VideoPreview>
+        <VideoPreview :url="videoUrl" :row ="row" :onchange="fetchData" ref="videoPreview"></VideoPreview>
     </article>
 </template>
 
@@ -218,7 +214,8 @@
                     confirmFn: {}
                 },
                 videoModel: getVideoModel(),
-                videoUrl: '' // 预览的视频url
+                videoUrl: '', // 预览的视频url
+                row: '' // dialoglog信息
             }
         },
         watch: {
@@ -299,6 +296,7 @@
                 // 拿到播放地址
                 courseService.getVideoPreviewUrl(row.id).then((ret) => {
                     this.videoUrl = ret.video
+                    this.row = row
                     this.$refs.videoPreview.show(row.name)
                 })
             },

@@ -1,7 +1,7 @@
 <!--菜单管理-->
 <style lang='scss' rel='stylesheet/scss'>
-    @import "../../../utils/mixins/common";
-    @import "../../../utils/mixins/mixins";
+    @import "../../../../utils/mixins/common";
+    @import "../../../../utils/mixins/mixins";
 
     #sys-rbac-menu {
         @extend %content-container;
@@ -113,8 +113,8 @@
     </article>
 </template>
 <script type="text/jsx">
-    import menuService from '../../../services/rbac/menuService'
-    import EditorTree from '../../component/tree/EditorTree.vue'
+    import menuService from '../../../../services/companyrbac/menuService'
+    import EditorTree from '../../../component/tree/EditorTree.vue'
     export default{
         data () {
             return {

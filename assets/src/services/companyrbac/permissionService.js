@@ -3,7 +3,7 @@
  */
 import * as api from '../api'
 import config from '../../utils/config'
-const urlPre = config.apiHost + '/sys/rbac/permission'
+const urlPre = config.apiHost + '/com/rbac/permission'
 
 class PermissionService {
     // 用户行为成长值记录列表

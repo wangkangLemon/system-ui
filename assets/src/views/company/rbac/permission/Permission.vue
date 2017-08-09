@@ -1,7 +1,7 @@
 <!--权限管理-->
 <style lang="scss">
-    @import "../../../utils/mixins/showDetail";
-    @import "../../../utils/mixins/common";
+    @import "../../../../utils/mixins/showDetail";
+    @import "../../../../utils/mixins/common";
 
     .rbac-permission-container {
         @extend %content-container;
@@ -114,8 +114,8 @@
     </article>
 </template>
 <script>
-    import permissionService from '../../../services/rbac/permissionService'
-    import EditorTree from '../../component/tree/EditorTree.vue'
+    import permissionService from '../../../../services/companyrbac/permissionService'
+    import EditorTree from '../../../component/tree/EditorTree.vue'
     function clearFn() {
         return {
             id: '',

@@ -39,16 +39,16 @@
 
 <template>
     <article id="analysis-company-stat">
-        <el-tabs v-model="fetchParam.date" @tab-click="fetchData">
+        <el-tabs v-model="fetchParam.date" @tab-click="fetchDate">
             <el-tab-pane label="昨日" name="yesterday"></el-tab-pane>
             <el-tab-pane label="上周" name="prevweek"></el-tab-pane>
             <el-tab-pane label="上月" name="prevmonth"></el-tab-pane>
             <el-tab-pane label="全部" name="all"></el-tab-pane>
         </el-tabs>
         <div class="date-picker">
-            <DateRange title="日期" :start="fetchParam.stat_date"
-                       v-on:changeStart="val=> fetchParam.stat_date=val"
-                       :change="fetchData">
+            <DateRange title="日期" :start="fetchParam.stat_day"
+                       v-on:changeStart="val=> fetchParam.stat_day=val"
+                       :change="fetchStatDate">
             </DateRange>
         </div>
         <el-button type="warning" class="export" @click="exportClick"><i class="iconfont icon-iconfontexcel"></i>
@@ -173,17 +173,21 @@
                 this.page = val
                 this.getData()
             },
+            fetchDate() {
+                this.fetchParam.stat_date = this.fetchParam.date
+                this.fetchData()
+            },
+            fetchStatDate() {
+                this.fetchParam.stat_date = this.fetchParam.stat_day
+                this.fetchData()
+            },
             fetchData () {
                 this.loadingData = true
-                var statDate = this.fetchParam.date
-                if (this.fetchParam.stat_date) {
-                    statDate = this.fetchParam.stat_date
-                }
                 return companyService.getCompanyStat({
                     page: this.fetchParam.page,
                     page_size: this.fetchParam.page_size,
                     store_id: this.fetchParam.companySelect,
-                    stat_date: statDate,
+                    stat_date: this.fetchParam.stat_date,
                 }).then((ret) => {
                     this.loadingData = false
                     this.total = ret.total
@@ -212,7 +216,8 @@
             department_id: void 0,
             store_id: void 0,
             companySelect: '',
-            stat_date: ''
+            stat_date: '',
+            stat_day: ''
         }
     }
 </script>

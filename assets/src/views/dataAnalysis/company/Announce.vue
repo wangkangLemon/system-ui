@@ -194,6 +194,11 @@
                         prop="title"
                         min-width="200"
                         label="公告标题">
+                    <template scope="scope">
+                        <el-button type="text" size="small" @click="adminPage(scope.row)">
+                            {{scope.row.title}}
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="announce_type"
@@ -294,6 +299,9 @@
             initFetchParam() {
                 this.currentPage = 1
                 this.search = clearFn()
+            },
+            adminPage (index, item) {
+                this.$router.push({name: 'analysis-app-announce-view', params: {announce_id: index.announce_id}})
             },
             showCompanyFn (item) {
                 companyService.getCompanyAppAnnounceDetail({

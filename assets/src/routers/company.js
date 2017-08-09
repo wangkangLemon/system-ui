@@ -2,6 +2,7 @@
  * Created by huangrui on 2017/4/5.
  */
 const pathPre = '/company'
+import comrbac from './comrbac' // 企业权限管理
 
 export default {
     path: pathPre,
@@ -24,6 +25,7 @@ export default {
                 noback: true
             }
         },
+        comrbac,
         {
             path: 'operate/add',
             name: 'company-add',
@@ -214,7 +216,6 @@ export default {
             meta: {
                 title: '入驻审核(审核)'
             }
-        },
-
+        }
     ]
 }

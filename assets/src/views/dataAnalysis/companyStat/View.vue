@@ -339,6 +339,7 @@
                         return Math.max(a, b)
                     })
                 }).then(() => {
+                    xmview.setContentBack(true)
                     xmview.setContentLoading(false)
                 })
             },

@@ -1,7 +1,7 @@
 <!--角色管理-->
 <style lang="scss">
-    @import "../../../utils/mixins/showDetail";
-    @import "../../../utils/mixins/common";
+    @import "../../../../utils/mixins/showDetail";
+    @import "../../../../utils/mixins/common";
 
     .rbac-role-container {
         @extend %content-container;
@@ -97,7 +97,7 @@
     </article>
 </template>
 <script>
-    import roleService from '../../../services/rbac/roleService'
+    import roleService from '../../../../services/companyrbac/roleService'
     export default {
         data () {
             return {
