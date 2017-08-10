@@ -95,10 +95,10 @@
                     label="状态">
                 <template scope="scope">
                     <el-tag v-if="scope.row.status == 3" type="success">审核成功</el-tag>
-                    <span v-else-if="scope.row.status == 4" class="text-gray">审核失败</span>
-                    <span v-else-if="scope.row.status == 0" class="text-success">待审核</span>
-                    <el-tag v-else-if="scope.row.status == 1" type="primary">转码中</el-tag>
-                    <el-tag v-else>转码失败</el-tag>
+                    <el-tag v-else-if="scope.row.status == 4" type="gray">审核失败</el-tag>
+                    <el-tag v-else-if="scope.row.status == 0" type="primary">待审核</el-tag>
+                    <el-tag v-else-if="scope.row.status == 1" type="warning">转码中</el-tag>
+                    <el-tag v-else type="danger">转码失败</el-tag>
                     <el-button type="text" v-if="scope.row.status == 1" size="small"
                                @click="refreshStatus(scope.$index, scope.row)">刷新
                     </el-button>

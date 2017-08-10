@@ -106,18 +106,18 @@
                     label="页数">
             </el-table-column>
             <el-table-column
-                    width="110"
+                    width="120"
                     label="状态">
                 <template scope="scope">
-                    <span v-if="scope.row.status == 3" class="text-success">审核成功</span>
-                    <span v-else-if="scope.row.status == 4" class="text-gray">审核失败</span>
+                    <el-tag v-if="scope.row.status == 3" type="success">审核成功</el-tag>
+                    <el-tag v-else-if="scope.row.status == 4" type="gray">审核失败</el-tag>
                     <template v-else-if="scope.row.status == 1 && scope.row.job_id > 0">
-                        <span class="text-light-blue">转码中</span>
+                        <el-tag type="warning">转码中</el-tag>
                         <el-button @click="refresh(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-refresh" title="刷新状态"></i></el-button>
                     </template>
-                    <span v-else-if="scope.row.status == 0" class="text-success">待审核</span>
+                    <el-tag v-else-if="scope.row.status == 0" type="primary">待审核</el-tag>
                     <template v-else>
-                        <span class="text-danger" :title="scope.row.job_message">转码失败</span>
+                        <el-tag type="danger" :title="scope.row.job_message">转码失败</el-tag>
                         <el-button @click="retry(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-retweet" title="点击重试"></i></el-button>
                     </template>
                 </template>
