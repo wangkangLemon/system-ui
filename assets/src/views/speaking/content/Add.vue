@@ -188,7 +188,7 @@
                     speaking_id: this.$route.query.id
                 }).then((ret) => {
                     this.form = ret.data.speaking
-                    this.form.end_time = new Date(this.form.end_time)
+                    if (this.form.end_time) this.form.end_time = new Date(this.form.end_time)
                 }, () => {
                 }).then(() => {
                     xmview.setContentLoading(false)

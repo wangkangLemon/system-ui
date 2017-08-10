@@ -23,7 +23,7 @@
         }
         .up-img {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
               .img-wrap {
                     width: 80px;
                     height: 80px;

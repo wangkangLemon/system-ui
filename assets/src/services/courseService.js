@@ -74,7 +74,7 @@ class CourseService {
     // 获取公开课列表
     getPublicCourselist ({companyid = '', page = '', page_size = '', status = '', keyword = '', time_start = '', time_end = '', category_id = '', need_testing = '', albumid = ''}) {
         companyid = companyid || authUtils.getUserInfo().company_id
-        status = status || 0
+        status = status || -1
         let finalUrl = `${config.apiHost}/com/${companyid}/course/search`
         return api.get(finalUrl, {
             page,
@@ -109,13 +109,14 @@ class CourseService {
     }
 
     // 添加课程
-    addCourse ({companyid, category_id, name, image, material_type, material_id, albumid, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
+    addCourse ({companyid, category_id, name, image, tags, material_type, material_id, albumid, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course`
         return api.post(finalUrl, {
             category_id,
             name,
             image,
+            tags,
             material_type,
             material_id,
             albumid,
@@ -141,13 +142,14 @@ class CourseService {
         })
     }
     // 修改课程
-    editCourse ({companyid, id, category_id, name, image, material_type, material_id, albumid, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
+    editCourse ({companyid, id, category_id, name, image, tags, material_type, material_id, albumid, description, need_testing, limit_time, limit_repeat, score_pass, price_enabled, price, price_float}) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/${id}`
         return api.put(finalUrl, {
             category_id,
             name,
             image,
+            tags,
             material_type,
             material_id,
             albumid,
