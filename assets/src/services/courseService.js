@@ -74,7 +74,7 @@ class CourseService {
     // 获取公开课列表
     getPublicCourselist ({companyid = '', page = '', page_size = '', status = '', keyword = '', time_start = '', time_end = '', category_id = '', need_testing = '', albumid = ''}) {
         companyid = companyid || authUtils.getUserInfo().company_id
-        status = status || 0
+        status = status || -1
         let finalUrl = `${config.apiHost}/com/${companyid}/course/search`
         return api.get(finalUrl, {
             page,
