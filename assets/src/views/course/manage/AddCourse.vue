@@ -278,6 +278,7 @@
         created () {
             this.uploadDocUrl = courseService.getCourseDocUploadUrl()
             this.uploadImgUrl = courseService.getManageImgUploadUrl()
+            this.fetchParam.tags = []
             if (this.$route.params.courseInfo) {
                 this.fetchParam = this.$route.params.courseInfo
                 this.fetchParam.tags = this.fetchParam.tags ? this.fetchParam.tags.split(',') : []
