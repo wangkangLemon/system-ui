@@ -3,14 +3,13 @@
  */
 import Vue from 'vue'
 import * as timeUtils from '../utils/timeUtils'
-import config from '../../config/config'
-import appConfig from './config'
+import config from './config'
 
 // 默认头像
 export const defaultAvatar = Vue.filter('defaultAvatar', function (urlObj) {
     if (!urlObj) return ''
     if (urlObj.url && urlObj.url.indexOf('/user-default') == -1) {
-        let apiUrl = config.API_HOST_PROD.replace(/(^")|("$)/g, '')
+        let apiUrl = config.apiHost.replace(/(^")|("$)/g, '')
         return urlObj.url.indexOf('http://') > -1 ? urlObj.url : apiUrl + urlObj.url
     } else {
         if (urlObj.sex) {
@@ -29,8 +28,8 @@ export const tamp2Str = Vue.filter('tamp2Str', function (timetamp) {
 
 // 填充图片的url
 export const fillImgPath = Vue.filter('fillImgPath', function (url) {
-    if (!url || !appConfig.debug) return url
-    let apiUrl = config.API_HOST_PROD.replace(/(^")|("$)/g, '')
+    if (!url || !config.debug) return url
+    let apiUrl = config.apiHost.replace(/(^")|("$)/g, '')
     return url.indexOf('http://') > -1 ? url : apiUrl + url
 })
 

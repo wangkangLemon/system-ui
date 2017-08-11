@@ -26,9 +26,10 @@ class CompanyUserService {
         time_start = '',
         time_end = '',
         last_appstart = '',
+        nologin_timestart = ''
     }) {
         let finalUrl = `${urlPre}/search`
-        return api.get(finalUrl, {page, page_size, company_id, keyword, mobile, email, user_type, time_start, time_end, last_appstart}).then((ret) => {
+        return api.get(finalUrl, {page, page_size, company_id, keyword, mobile, email, user_type, time_start, time_end, last_appstart, nologin_timestart}).then((ret) => {
             return ret.data
         })
     }
