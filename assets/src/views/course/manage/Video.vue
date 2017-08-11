@@ -50,9 +50,11 @@
             <section>
                 <i>状态</i>
                 <el-select :clearable="true" v-model="fetchParam.status" placeholder="请选择" @change="fetchData">
-                    <el-option label="转码中" :value="1"></el-option>
-                    <el-option label="转码失败" :value="2"></el-option>
-                    <el-option label="正常" :value="0"></el-option>
+                   <el-option label="待审核" value="0"></el-option>
+                   <el-option label="转码中" value="1"></el-option>
+                   <el-option label="转码失败" value="2"></el-option>
+                   <el-option label="审核成功" value="3"></el-option>
+                   <el-option label="审核失败" value="4"></el-option>
                 </el-select>
             </section>
 
