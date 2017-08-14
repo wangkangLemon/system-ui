@@ -153,7 +153,7 @@
                 this.loading = true
                 // 获取药我说数据
                 return speakingService.search({
-                    sender_type: 'public',
+                    sender_type: 'system',
                     keyword: this.search.keyword,
                     status: this.search.status,
                     page: this.page,
