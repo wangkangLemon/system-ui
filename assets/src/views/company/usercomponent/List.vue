@@ -95,6 +95,10 @@
                         <el-option label="Android" :value="3"></el-option>
                     </el-select>
                 </section>
+                <DatePicker title="未活跃" :start="searchParams.nologin_timestart"
+                    v-on:changeStart="val=> searchParams.nologin_timestart = val"
+                    :change="getData">
+                </DatePicker>
                 <el-button type="primary" @click="clearFn">清空</el-button>
             </section>
             <el-table
@@ -169,6 +173,7 @@
 <script>
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import DateRange from '../../component/form/DateRangePicker.vue'
+    import DatePicker from '../../component/form/DatePicker.vue'
     import CompanyUserService from '../../../services/companyUserService'
     import {defaultAvatar} from '../../../utils/filterUtils'
     export default {
@@ -177,7 +182,8 @@
         },
         components: {
             IndustryCompanySelect,
-            DateRange
+            DateRange,
+            DatePicker
         },
         data () {
             return {
@@ -196,7 +202,8 @@
                     mobile: '',
                     status: this.$route.query.status ? this.$route.query.status : '',
                     email: '',
-                    last_appstart: ''
+                    last_appstart: '',
+                    nologin_timestart: '', // 自指定日期起，就没有登录过
                 }
             }
         },
@@ -215,7 +222,8 @@
                     mobile: '',
                     status: '',
                     email: '',
-                    last_appstart: ''
+                    last_appstart: '',
+                    nologin_timestart: ''
                 }
                 this.getData()
             },
@@ -247,7 +255,8 @@
                     mobile: this.searchParams.mobile,
                     email: this.searchParams.email,
                     user_type: this.searchParams.status,
-                    last_appstart: this.searchParams.last_appstart
+                    last_appstart: this.searchParams.last_appstart,
+                    nologin_timestart: this.searchParams.nologin_timestart
                 }
                 return CompanyUserService.getUserList(params).then((ret) => {
                     this.companyUserData = ret.data

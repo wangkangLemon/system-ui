@@ -151,8 +151,9 @@
             },
             getSpeaking () {
                 this.loading = true
-                // 获取课程数据
+                // 获取药我说数据
                 return speakingService.search({
+                    sender_type: 'public',
                     keyword: this.search.keyword,
                     status: this.search.status,
                     page: this.page,
