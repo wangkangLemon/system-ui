@@ -176,7 +176,7 @@
                                 </el-button>
                             </div>
                             <div class="multy-choose-item">
-                                <el-button type="text" @click="addMoreTestingOption(item.options)">添加更多选项</el-button>
+                                <el-button v-if="item.editable" type="text" @click="addMoreTestingOption(item.options)">添加更多选项</el-button>
                             </div>
                         </el-form-item>
     
@@ -369,7 +369,6 @@ export default {
                 this.$router.back()
                 return
             }
-
             let requestParam = JSON.parse(JSON.stringify(this.fetchTesting))
             for (let i = 0; i < requestParam.length, item = requestParam[i]; i++) {
                 // 处理单选题的正确答案选中
@@ -389,11 +388,10 @@ export default {
                     })
                 }
             }
-
             xmview.setContentLoading(true)
             courseService.addOrEditTesting({
                 course_id: this.fetchParam.id,
-                subjects: encodeURI(formUtils.serializeArray(requestParam))
+                subjects: encodeURI(formUtils.serializeArray(requestParam)).replace(/\+/g, '%2B')
             }).then((ret) => {
                 xmview.showTip('success', '操作成功')
                 this.$router.back()
