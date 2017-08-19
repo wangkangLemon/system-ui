@@ -2,7 +2,7 @@
 <style lang='scss' rel="stylesheet/scss">
 @import "../../../utils/mixins/common";
 @import "../../../utils/mixins/showDetail";
-#system-tools-batchsetuserpasswd-container {
+#system-tools-batchsetpasswd-container {
     @extend %content-container;
     .header-button {
         @extend %right-top-btnContainer;
@@ -14,14 +14,15 @@
 }
 </style>
 <template>
-    <main id="system-tools-batchsetuserpasswd-container">
+    <main id="system-tools-batchsetpasswd-container">
         <div>system tools batch set user passwd</div>
     </main>
 </template>
 
 <script>
-export default{
-    name: "",
+export default {
+    name: 'system-tools-batchsetpasswd',
+    components: {},
     data() {
         return {}
     },

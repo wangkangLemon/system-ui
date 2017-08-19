@@ -15,6 +15,7 @@ import user from './routers/user' // 企业
 import usersystem from './routers/usersystem' // 用户体系
 import im from './routers/im'
 import speaking from './routers/speaking' // 药我说
+import systemTools from './routers/system/tools' // 系统工具
 import authUtils from './utils/authUtils'
 import * as typeUtils from './utils/typeUtils'
 
@@ -115,6 +116,8 @@ const routes = [
             speaking,
             // ============用户体系==================
             usersystem,
+            // 系统工具
+            systemTools,
         ]
     },
     {   // 登录
