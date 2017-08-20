@@ -80,7 +80,6 @@ export default {
     components: {},
     data() {
         return {
-            labelWidth: '100px',
             data: {
                 department_total: 0,
                 department_today: 0,
@@ -97,6 +96,7 @@ export default {
                     { type: 'number', required: true, message: '必须填写', trigger: 'change' }
                 ],
             },
+            labelWidth: '100px',
         }
     },
     created() {
@@ -129,6 +129,6 @@ export default {
             })
         }
     }
-
 }
+
 </script>
