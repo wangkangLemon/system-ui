@@ -1,7 +1,7 @@
 <!--企业-管理员-添加-门店下拉框-->
 
 <template>
-    <SelectScroll :changeCb="handleChange" @changeVal="setCurrentValue" :requestCb="fetchData" v-model="currVal">
+    <SelectScroll ref="selectScroll" :changeCb="handleChange" @changeVal="setCurrentValue" :requestCb="fetchData" v-model="currVal">
     </SelectScroll>
 </template>
 
@@ -19,6 +19,10 @@
         watch: {
             'value'(val, oldValue) {
                 this.setCurrentValue(val)
+            },
+            'type'(val, oldValue) {
+                this.setCurrentValue('')
+                this.$refs['selectScroll'].filter('')
             }
         },
         methods: {

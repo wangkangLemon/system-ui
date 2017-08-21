@@ -90,10 +90,10 @@ export default {
             },
             rules: {
                 department_total: [
-                    { type: 'number', required: true, message: '必须填写', trigger: 'change' }
+                    { required: true, message: '必须填写', trigger: 'blur' }
                 ],
                 user_total: [
-                    { type: 'number', required: true, message: '必须填写', trigger: 'change' }
+                    { required: true, message: '必须填写', trigger: 'blur' }
                 ],
             },
             labelWidth: '100px',
