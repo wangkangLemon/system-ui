@@ -18,7 +18,7 @@
 </style>
 <template>
     <main id="system-tools-sign-analytics-container">
-        <el-form :model="data" :rules="rules" ref="form">
+        <el-form :model="data" ref="form">
             <el-row>
                 <el-col :span="2">
                     <el-form-item prop="" label="门店统计">
@@ -88,44 +88,22 @@ export default {
                 user_today: 0,
                 user_yesterday: 0,
             },
-            rules: {
-                department_total: [
-                    { required: true, message: '必须填写', trigger: 'blur' }
-                ],
-                user_total: [
-                    { required: true, message: '必须填写', trigger: 'blur' }
-                ],
-            },
             labelWidth: '100px',
         }
     },
     created() {
-        this.getData().then(() => {
-            xmview.setContentLoading(false)
-        })
-    },
-    activated() {
-        this.getData().then(() => {
+        ToolsService.getSignAnalytics().then((ret) => {
+            this.data = ret.data
+        }).then(() => {
             xmview.setContentLoading(false)
         })
     },
     methods: {
-        getData() {
-            return ToolsService.getSignAnalytics().then((ret) => {
-                this.data = ret.data
-            })
-        },
         submit(form) {
-            this.$refs[form].validate((valid) => {
-                if (valid) {
-                    ToolsService.setSignAnalytics(this.data).then((ret) => {
-                        xmview.showTip('success', '操作成功')
-                    }).catch((ret) => {
-                        xmview.showTip('error', ret.message)
-                    })
-                } else {
-                    return false
-                }
+            ToolsService.setSignAnalytics(this.data).then((ret) => {
+                xmview.showTip('success', '操作成功')
+            }).catch((ret) => {
+                xmview.showTip('error', ret.message)
             })
         }
     }
