@@ -1,9 +1,9 @@
-<!--公开课管理-->
+<!--课程列表-->
 <style lang='scss' rel='stylesheet/scss'>
 @import "../../../utils/mixins/common";
 @import "../../../utils/mixins/topSearch";
 
-#course-manage-public-container {
+#newcourse-course-public-container {
     @extend %content-container;
 
     .manage-container {
@@ -36,7 +36,7 @@
 </style>
 
 <template>
-    <article id="course-manage-public-container">
+    <article id="newcourse-course-public-container">
         <section class="manage-container">
             <el-button type="primary" icon="plus" @click="$router.push({ name:'course-manage-addCourse'})">
                 <i>添加课程</i>
@@ -77,13 +77,6 @@
             <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end" @changeStart="val=> fetchParam.time_start=val " @changeEnd="val=> fetchParam.time_end=val" :change="fetchData">
             </DateRange>
 
-            <!-- <section>
-                <i>课后考试</i>
-                <el-select v-model="fetchParam.need_testing" placeholder="未选择" @change="fetchData" :clearable="true">
-                    <el-option label="不需要" value="0"></el-option>
-                    <el-option label="需要" value="1"></el-option>
-                </el-select>
-            </section> -->
         </article>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true" @select="selectRow" @select-all="selectRow" border>
@@ -92,11 +85,9 @@
             </el-table-column>
             <el-table-column min-width="200" prop="cat_name" label="所属栏目">
             </el-table-column>
-            <el-table-column width="80" label="题目数">
+            <el-table-column width="80" label="课时">
                 <template scope="scope">
-                    <el-button style="width: 100%" @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second'}})" type="text" size="small">{{scope.row.subject_num}}
-                        <!--a-->
-                    </el-button>
+                    {{ scope.row.lesson_count}}课时
                 </template>
             </el-table-column>
             <el-table-column width="100" label="状态">
@@ -118,9 +109,6 @@
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
-                    <el-button v-if="scope.row.subject_num > 0" @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.id}})" type="text" size="small">答案分析
-                        <!--ff-->
-                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -177,7 +165,7 @@ function getFetchParam() {
 export default {
     data() {
         return {
-            activeTab: 'course',
+            activeTab: 'newcourse',
             loadingData: false,
             data: [], // 表格数据
             total: 0,
@@ -270,9 +258,9 @@ export default {
         },
         handleTab(val) {
             if (val.name == 'newcourse') {
-                this.$router.push({ name: 'newcourse-course-public' })
+                this.$router.push({ name: 'newcourse-course-index' })
             }
-        },
+        }
     },
     components: { DateRange, CourseCategorySelect, CourseCategoryTree }
 }

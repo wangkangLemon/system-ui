@@ -1,5 +1,5 @@
 <template>
-    <keep-alive exclude="sys-feedback-view">
+    <keep-alive exclude="newcourse-course-form">
         <router-view></router-view>
     </keep-alive>
 </template>
