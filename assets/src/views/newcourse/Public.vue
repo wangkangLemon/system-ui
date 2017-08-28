@@ -1,7 +1,7 @@
 <!--课程列表-->
 <style lang='scss' rel='stylesheet/scss'>
-@import "../../../utils/mixins/common";
-@import "../../../utils/mixins/topSearch";
+@import "../../utils/mixins/common";
+@import "../../utils/mixins/topSearch";
 
 #newcourse-course-public-container {
     @extend %content-container;
@@ -36,7 +36,8 @@
 </style>
 
 <template>
-    <article id="newcourse-course-public-container">
+    <main id="newcourse-course-public-container">
+
         <section class="manage-container">
             <el-button type="primary" icon="plus" @click="$router.push({ name:'course-manage-addCourse'})">
                 <i>添加课程</i>
@@ -54,7 +55,7 @@
             <el-tab-pane label="系列课程" name="newcourse"></el-tab-pane>
         </el-tabs>
 
-        <article class="search">
+        <main class="search">
             <section>
                 <i>课程名称</i>
                 <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
@@ -77,7 +78,7 @@
             <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end" @changeStart="val=> fetchParam.time_start=val " @changeEnd="val=> fetchParam.time_end=val" :change="fetchData">
             </DateRange>
 
-        </article>
+        </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true" @select="selectRow" @select-all="selectRow" border>
             <el-table-column type="selection"></el-table-column>
@@ -124,7 +125,7 @@
 
         <!--移动子栏目的弹出框-->
         <div class="el-dialog__wrapper" v-show="dialogTree.isShow">
-            <article class="el-dialog el-dialog--tiny">
+            <main class="el-dialog el-dialog--tiny">
                 <section class="el-dialog__header">
                     <i>移动课程到</i>
                 </section>
@@ -135,31 +136,30 @@
                 <section class="el-dialog__footer">
                     <span class="dialog-footer">
                         <el-button @click="dialogTree.isShow = false">取 消</el-button>
-                        <el-button type="primary" @click="moveToCat">确 定</el-button>
+                        <el-button type="primary" @click="moveToCategory">确 定</el-button>
                     </span>
                 </section>
-            </article>
+            </main>
         </div>
-    </article>
+
+    </main>
 </template>
 
 <script>
-import courseService from '../../../services/courseService'
-import DateRange from '../../component/form/DateRangePicker.vue'
-import CourseCategorySelect from '../../component/select/CourseCategory.vue'
-import CourseCategoryTree from '../../component/tree/CourseCategory.vue'
+import courseService from '../../services/newcourse/courseService'
+import DateRange from '../component/form/DateRangePicker.vue'
+import CourseCategorySelect from '../component/select/CourseCategory.vue'
+import CourseCategoryTree from '../component/tree/CourseCategory.vue'
 
 function getFetchParam() {
     return {
-        status: void 0, // 2- 视屏转码中 1-下线 0-正常
-        category: void 0, // 1-工业 默认-公开课
+        keyword: void '',
+        status: void 0, // 2 视屏转码中，1 下线，0 正常，-1 全部
         category_id: void 0, // 栏目id
-        page: 1,
-        page_size: 15,
         time_start: void 0,
         time_end: void 0,
-        need_testing: void 0, //  不赋值则表示全部，0为不需要，1为需要
-        keyword: void 0,
+        page: 1,
+        page_size: 15,
     }
 }
 export default {
@@ -198,7 +198,7 @@ export default {
         },
         fetchData(val) {
             this.loadingData = true
-            return courseService.getPublicCourselist(this.fetchParam).then((ret) => {
+            return courseService.search(this.fetchParam).then((ret) => {
                 this.data = ret.data
                 this.total = ret.total
                 this.loadingData = false
@@ -217,8 +217,9 @@ export default {
         offline(index, row) {
             let txt = row.status == 0 ? '下线' : '上线'
             let finalStatus = row.status == 0 ? 1 : 0
+            let reqFn = row.status == 0 ? courseService.offline : courseService.online
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                courseService.offlineCourse({ course_id: row.id, disabled: finalStatus }).then((ret) => {
+                reqFn(row.id).then((ret) => {
                     row.status = finalStatus
                 })
             })
@@ -226,16 +227,16 @@ export default {
         // 单条删除
         del(index, row) {
             xmview.showDialog(`你将要删除课程 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
-                courseService.deleteCourse({ course_id: row.id }).then(() => {
+                courseService.delete(row.id).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.data.splice(index, 1)
                 })
             })
         },
-        moveToCat() {
-            courseService.moveCourseToCategoryMulty({
-                id: this.selectedIds.join(','),
-                catid: this.dialogTree.selectedId
+        moveToCategory() {
+            courseService.moveToCategoryMulty({
+                ids: this.selectedIds.join(','),
+                category_id: this.dialogTree.selectedId
             }).then(() => {
                 xmview.showTip('success', '操作成功')
                 this.dialogTree.isShow = false
@@ -247,7 +248,7 @@ export default {
         // 批量删除
         delMulti() {
             xmview.showDialog(`你将要删除选中的课程，操作不可恢复确认吗?`, () => {
-                courseService.deleteCourseMulty({ id: this.selectedIds.join(',') }).then(() => {
+                courseService.deleteMulty(this.selectedIds.join(',')).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.dialogTree.isShow = false
                     setTimeout(() => {
@@ -257,8 +258,8 @@ export default {
             })
         },
         handleTab(val) {
-            if (val.name == 'newcourse') {
-                this.$router.push({ name: 'newcourse-course-index' })
+            if (val.name == 'course') {
+                this.$router.push({ name: 'course-manage-public' })
             }
         }
     },
