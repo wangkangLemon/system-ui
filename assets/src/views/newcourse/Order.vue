@@ -35,19 +35,19 @@
         <section class="search">
             <section>
                 <i>课程</i>
-                <el-input v-model="fetchParam.course_id"></el-input>
+                <el-input v-model="fetchParam.course_id" @keyup.enter.native="getData"></el-input>
             </section>
             <section>
                 <i>下单人</i>
-                <el-input v-model="fetchParam.user_id"></el-input>
+                <el-input v-model="fetchParam.user_id" @keyup.enter.native="getData"></el-input>
             </section>
             <section>
                 <i>手机号</i>
-                <el-input v-model="fetchParam.user_mobile"></el-input>
+                <el-input v-model="fetchParam.user_mobile" @keyup.enter.native="getData"></el-input>
             </section>
             <section>
                 <i>支付方式</i>
-                <el-select v-model="fetchParam.pay_method" placeholder="未选择">
+                <el-select clearable @change="getData" v-model="fetchParam.pay_method" placeholder="全部">
                     <el-option label="微信" value="wechat"></el-option>
                     <el-option label="支付宝" value="alipay"></el-option>
                     <el-option label="红包" value="luckymoney"></el-option>
@@ -57,7 +57,7 @@
             </section>
             <section>
                 <i>有无归属</i>
-                <el-select v-model="fetchParam.in_compnay" placeholder="未选择">
+                <el-select clearable v-model="fetchParam.in_compnay" @change="getData" placeholder="全部">
                     <el-option label="有归属" :value="1"></el-option>
                     <el-option label="无归属" :value="0"></el-option>
                     <el-option label="不限制" :value="-1"></el-option>
@@ -66,7 +66,7 @@
             <DateRange title="下单时间" :start="fetchParam.time_start" :end="fetchParam.time_end" @changeStart="val=> fetchParam.time_start=val " @changeEnd="val=> fetchParam.time_end=val" :change="getData"></DateRange>
             <section>
                 <i>订单状态</i>
-                <el-select v-model="fetchParam.status" placeholder="全部">
+                <el-select clearable @change="getData" v-model="fetchParam.status" placeholder="全部">
                     <el-option label="未支付" :value="0"></el-option>
                     <el-option label="已支付" :value="1"></el-option>
                     <el-option label="已关闭" :value="2"></el-option>
@@ -160,7 +160,6 @@
             getData () {
                 this.loading = true
                 return orderService.search(this.fetchParam).then((ret) => {
-                    console.log(ret)
                     this.dataList = ret.data
                     this.total = ret.total
                     this.loading = false
