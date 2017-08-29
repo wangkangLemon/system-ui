@@ -46,7 +46,7 @@ export default {
                 })
             },
             meta: {
-                title: '单节课程 - 公开课 - 课程管理',
+                title: '公开课 - 课程管理',
                 noback: true
             }
         },

@@ -17,7 +17,7 @@ export default {
                 })
             },
             meta: {
-                title: '系列课程 - 公开课 - 课程管理',
+                title: '公开课',
                 noback: true
             }
         },
@@ -30,8 +30,7 @@ export default {
                 })
             },
             meta: {
-                title: '添加课程 - 系列课程 - 公开课 - 课程管理',
-                noback: true
+                title: '添加课程',
             }
         },
         {

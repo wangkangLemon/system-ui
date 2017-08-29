@@ -57,7 +57,7 @@
             </section>
             <section>
                 <i>有无归属</i>
-                <el-select clearable v-model="fetchParam.in_compnay" @change="getData" placeholder="全部">
+                <el-select clearable v-model="fetchParam.in_company" @change="getData" placeholder="全部">
                     <el-option label="有归属" :value="1"></el-option>
                     <el-option label="无归属" :value="0"></el-option>
                     <el-option label="不限制" :value="-1"></el-option>
@@ -67,6 +67,7 @@
             <section>
                 <i>订单状态</i>
                 <el-select clearable @change="getData" v-model="fetchParam.status" placeholder="全部">
+                    <el-option label="全部" :value="-1"></el-option>
                     <el-option label="未支付" :value="0"></el-option>
                     <el-option label="已支付" :value="1"></el-option>
                     <el-option label="已关闭" :value="2"></el-option>
@@ -75,17 +76,25 @@
             </section>
         </section>
         <el-table v-loading="loading" :data="dataList" :fit="true" border>
-            <el-table-column prop="user_done" min-width="180" label="订单编号"></el-table-column>
-            <el-table-column prop="user_count" label="课程名称" width="180"></el-table-column>
-            <el-table-column prop="create_time_name" label="价格" width="100"></el-table-column>
-            <el-table-column prop="end_day" label="下单人" width="100"></el-table-column>
-            <el-table-column prop="end_day" label="手机号" width="180"></el-table-column>
-            <el-table-column prop="end_day" label="支付方式" width="120"></el-table-column>
-            <el-table-column prop="end_day" label="支付时间" width="180"></el-table-column>
-            <el-table-column prop="end_day" label="订单状态" width="100"></el-table-column>
-            <el-table-column prop="end_day" label="操作" width="100">
+            <el-table-column prop="trade_no" min-width="180" label="订单编号"></el-table-column>
+            <el-table-column prop="course_name" label="课程名称" width="180"></el-table-column>
+            <el-table-column prop="price" label="价格" width="100"></el-table-column>
+            <el-table-column prop="user_name" label="下单人" width="100"></el-table-column>
+            <el-table-column prop="user_mobile" label="手机号" width="180"></el-table-column>
+            <el-table-column prop="pay_method" label="支付方式" width="120">
                 <template scope="scope">
-                    <el-button type="text" @click="showDetail = true">详情</el-button>
+                    {{payMethods[scope.row.pay_method]}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="create_time_name" label="支付时间" width="180"></el-table-column>
+            <el-table-column prop="status" label="订单状态" width="100">
+                <template scope="scope">
+                    {{payStatus[scope.row.status]}}
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="100">
+                <template scope="scope">
+                    <el-button type="text" @click="()=>{showDetail=true;detail=scope.row}">详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -100,21 +109,21 @@
         <!--详情-->
         <el-dialog title="订单详情" class="show-detail" v-model="showDetail">
             <div class="info" v-if="detail != null">
-                <p><i class="title">订单号：</i><span class="value">{{detail.category_name}}</span></p>
-                <p><i class="title">课程名称：</i><span class="value">{{detail.create_time_name}}</span></p>
-                <p><i class="title">价格：</i><span class="value">{{detail.user_name}}</span></p>
-                <p><i class="title">下单人：</i> <span class="value">{{detail.contact}}</span></p>
-                <p><i class="title">手机号：</i> <span class="value">{{detail.content}}</span></p>
-                <p><i class="title">所属连锁：</i> <span class="value">{{detail.Device}}</span></p>
-                <p><i class="title">所属门店：</i> <span class="value">{{detail.app_version}}</span></p>
-                <p><i class="title">下单时间：</i> <span class="value">{{detail.system_version}}</span></p>
-                <p><i class="title">支付时间：</i> <span class="value">{{detail.system_version}}</span></p>
-                <p><i class="title">支付方式：</i> <span class="value">{{detail.system_version}}</span></p>
-                <p><i class="title">支付状态：</i> <span class="value">{{detail.system_version}}</span></p>
+                <p><i class="title">订单号：</i><span class="value">{{detail.trade_no}}</span></p>
+                <p><i class="title">课程名称：</i><span class="value">{{detail.course_name}}</span></p>
+                <p><i class="title">价格：</i><span class="value">{{detail.price}}</span></p>
+                <p><i class="title">下单人：</i> <span class="value">{{detail.user_name}}</span></p>
+                <!--<p><i class="title">手机号：</i> <span class="value">{{detail.user_mobile}}</span></p>-->
+                <p><i class="title">所属连锁：</i> <span class="value">{{detail.company_name}}</span></p>
+                <p><i class="title">所属门店：</i> <span class="value">{{detail.department_name}}</span></p>
+                <p><i class="title">下单时间：</i> <span class="value">{{detail.create_time_name}}</span></p>
+                <p><i class="title">支付时间：</i> <span class="value">{{detail.pay_time}}</span></p>
+                <p><i class="title">支付方式：</i> <span class="value">{{payMethods[detail.pay_method]}}</span></p>
+                <p><i class="title">支付状态：</i> <span class="value">{{payStatus[detail.status]}}</span></p>
                 <p class="select remark">
                     <i class="title">备注：</i>
                     <span class="value">
-                        <el-input type="textarea" :rows="6" v-model="form.note"></el-input>
+                        <el-input type="textarea" :rows="3" v-model="detail.note"></el-input>
                     </span>
                 </p>
             </div>
@@ -133,6 +142,8 @@
         },
         data () {
             return {
+                payMethods: {'wechat': '微信', 'alipay': '支付宝', 'luckmoney': '红包', 'applestore': '苹果应用市场购买', 'applepay': '苹果支付'},
+                payStatus: ['未支付', '已支付', '已关闭', '已删除'],
                 showDetail: false,
                 detail: null,
                 loading: false,
@@ -145,8 +156,8 @@
                     pay_method: '',
                     time_start: '',
                     time_end: '',
-                    status: '',
-                    in_compnay: ''
+                    status: -1,
+                    in_company: -1
                 },
                 dataList: [],
                 total: 0
