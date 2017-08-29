@@ -14,5 +14,16 @@ class OrderService {
             }
         })
     }
+
+    // 更新备注
+    updateNote({id, note}) {
+        let url = `${urlPre}/${id}/note`
+        return api.put(url, {note}).then(ret => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
 }
+
 export default new OrderService()

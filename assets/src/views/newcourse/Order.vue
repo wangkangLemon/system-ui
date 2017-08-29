@@ -1,33 +1,33 @@
 <!--课程订单管理-->
 <style lang="scss" rel="stylesheet/scss">
-    @import "../../utils/mixins/topSearch";
-    @import "../../utils/mixins/common";
-    @import "../../utils/mixins/showDetail";
-    #course-order {
-        @extend %content-container;
-        .show-detail {
-            .info {
-                padding-bottom: 40px;
-                p.select {
-                    span.value {
-                        > div {
-                            width: 100%;
-                        }
+@import "../../utils/mixins/topSearch";
+@import "../../utils/mixins/common";
+@import "../../utils/mixins/showDetail";
+#course-order {
+    @extend %content-container;
+    .show-detail {
+        .info {
+            padding-bottom: 40px;
+            p.select {
+                span.value {
+                    >div {
+                        width: 100%;
                     }
                 }
             }
         }
-        .top-btn {
-            @extend %right-top-btnContainer;
-        }
-        .search {
-            @extend %top-search-container;
-        }
-        .block {
-            text-align: right;
-            margin-top: 20px;
-        }
     }
+    .top-btn {
+        @extend %right-top-btnContainer;
+    }
+    .search {
+        @extend %top-search-container;
+    }
+    .block {
+        text-align: right;
+        margin-top: 20px;
+    }
+}
 </style>
 <template>
     <article id="course-order">
@@ -98,28 +98,52 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination class="block"
-                       @size-change="val=> {fetchParam.page_size=val; getData()}"
-                       @current-change="val=> {fetchParam.page=val; getData()}"
-                       :current-page="fetchParam.page"
-                       :page-size="fetchParam.page_size"
-                       :page-sizes="[15, 30, 60, 100]"
-                       layout="sizes,total, prev, pager, next" :total="total">
+        <el-pagination class="block" @size-change="val=> {fetchParam.page_size=val; getData()}" @current-change="val=> {fetchParam.page=val; getData()}" :current-page="fetchParam.page" :page-size="fetchParam.page_size" :page-sizes="[15, 30, 60, 100]" layout="sizes,total, prev, pager, next" :total="total">
         </el-pagination>
         <!--详情-->
         <el-dialog title="订单详情" class="show-detail" v-model="showDetail">
             <div class="info" v-if="detail != null">
-                <p><i class="title">订单号：</i><span class="value">{{detail.trade_no}}</span></p>
-                <p><i class="title">课程名称：</i><span class="value">{{detail.course_name}}</span></p>
-                <p><i class="title">价格：</i><span class="value">{{detail.price}}</span></p>
-                <p><i class="title">下单人：</i> <span class="value">{{detail.user_name}}</span></p>
+                <p>
+                    <i class="title">订单号：</i>
+                    <span class="value">{{detail.trade_no}}</span>
+                </p>
+                <p>
+                    <i class="title">课程名称：</i>
+                    <span class="value">{{detail.course_name}}</span>
+                </p>
+                <p>
+                    <i class="title">价格：</i>
+                    <span class="value">{{detail.price}}</span>
+                </p>
+                <p>
+                    <i class="title">下单人：</i>
+                    <span class="value">{{detail.user_name}}</span>
+                </p>
                 <!--<p><i class="title">手机号：</i> <span class="value">{{detail.user_mobile}}</span></p>-->
-                <p><i class="title">所属连锁：</i> <span class="value">{{detail.company_name}}</span></p>
-                <p><i class="title">所属门店：</i> <span class="value">{{detail.department_name}}</span></p>
-                <p><i class="title">下单时间：</i> <span class="value">{{detail.create_time_name}}</span></p>
-                <p><i class="title">支付时间：</i> <span class="value">{{detail.pay_time}}</span></p>
-                <p><i class="title">支付方式：</i> <span class="value">{{payMethods[detail.pay_method]}}</span></p>
-                <p><i class="title">支付状态：</i> <span class="value">{{payStatus[detail.status]}}</span></p>
+                <p>
+                    <i class="title">所属连锁：</i>
+                    <span class="value">{{detail.company_name}}</span>
+                </p>
+                <p>
+                    <i class="title">所属门店：</i>
+                    <span class="value">{{detail.department_name}}</span>
+                </p>
+                <p>
+                    <i class="title">下单时间：</i>
+                    <span class="value">{{detail.create_time_name}}</span>
+                </p>
+                <p>
+                    <i class="title">支付时间：</i>
+                    <span class="value">{{detail.pay_time}}</span>
+                </p>
+                <p>
+                    <i class="title">支付方式：</i>
+                    <span class="value">{{payMethods[detail.pay_method]}}</span>
+                </p>
+                <p>
+                    <i class="title">支付状态：</i>
+                    <span class="value">{{payStatus[detail.status]}}</span>
+                </p>
                 <p class="select remark">
                     <i class="title">备注：</i>
                     <span class="value">
@@ -128,54 +152,64 @@
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary">确定</el-button>
+                <el-button type="primary" @click="updateFn">确定</el-button>
             </span>
         </el-dialog>
     </article>
 </template>
 <script>
-    import DateRange from '../component/form/DateRangePicker.vue'
-    import orderService from '../../services/newcourse/orderService'
-    export default {
-        components: {
-            DateRange
+import DateRange from '../component/form/DateRangePicker.vue'
+import orderService from '../../services/newcourse/orderService'
+export default {
+    components: {
+        DateRange
+    },
+    data() {
+        return {
+            payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'luckmoney': '红包', 'applestore': '苹果应用市场购买', 'applepay': '苹果支付' },
+            payStatus: ['未支付', '已支付', '已关闭', '已删除'],
+            showDetail: false,
+            detail: null,
+            loading: false,
+            fetchParam: {
+                page: 1,
+                page_size: 15,
+                course_id: '',
+                user_id: '',
+                user_mobile: '',
+                pay_method: '',
+                time_start: '',
+                time_end: '',
+                status: -1,
+                in_company: -1
+            },
+            dataList: [],
+            total: 0
+        }
+    },
+    created() {
+        xmview.setContentLoading(false)
+        this.getData()
+    },
+    methods: {
+        getData() {
+            this.loading = true
+            return orderService.search(this.fetchParam).then((ret) => {
+                this.dataList = ret.data
+                this.total = ret.total
+                this.loading = false
+            })
         },
-        data () {
-            return {
-                payMethods: {'wechat': '微信', 'alipay': '支付宝', 'luckmoney': '红包', 'applestore': '苹果应用市场购买', 'applepay': '苹果支付'},
-                payStatus: ['未支付', '已支付', '已关闭', '已删除'],
-                showDetail: false,
-                detail: null,
-                loading: false,
-                fetchParam: {
-                    page: 1,
-                    page_size: 15,
-                    course_id: '',
-                    user_id: '',
-                    user_mobile: '',
-                    pay_method: '',
-                    time_start: '',
-                    time_end: '',
-                    status: -1,
-                    in_company: -1
-                },
-                dataList: [],
-                total: 0
-            }
-        },
-        created () {
-            xmview.setContentLoading(false)
-            this.getData()
-        },
-        methods: {
-            getData () {
-                this.loading = true
-                return orderService.search(this.fetchParam).then((ret) => {
-                    this.dataList = ret.data
-                    this.total = ret.total
-                    this.loading = false
+        updateFn() {
+            if (this.detail.id) {
+                orderService.updateNote({ id: this.detail.id, note: this.detail.note }).then((ret) => {
+                    xmview.showTip('success', '修改成功')
+                    this.showDetail = false
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
                 })
             }
         }
     }
+}
 </script>
