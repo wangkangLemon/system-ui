@@ -7,6 +7,9 @@
     @extend %content-container;
 
     .manage-container {
+        .el-dropdown {
+            margin-right: 10px;
+        }
         @extend %right-top-btnContainer;
         >* {
             color: #fff;
@@ -39,9 +42,13 @@
     <main id="newcourse-course-public-container">
 
         <section class="manage-container">
-            <el-button type="primary" icon="plus" @click="$router.push({ name:'newcourse-course-add'})">
-                <i>添加课程</i>
-            </el-button>
+            <el-dropdown>
+                <el-button type="primary"><i class="el-icon-plus" style="margin-right: 5px;"></i>添加课程</el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>单节课程</el-dropdown-item>
+                    <el-dropdown-item>系列课程</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
             <el-button type="warning" icon="menu" @click="$router.push({name:'course-manage-course-category-manage'})">
                 <i>管理栏目</i>
             </el-button>
