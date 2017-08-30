@@ -30,7 +30,7 @@ export default {
                 })
             },
             meta: {
-                title: '添加课程',
+                title: '添加系列课程',
             }
         },
         {

@@ -42,11 +42,11 @@
     <main id="newcourse-course-public-container">
 
         <section class="manage-container">
-            <el-dropdown>
+            <el-dropdown trigger="click" @command="handleType">
                 <el-button type="primary"><i class="el-icon-plus" style="margin-right: 5px;"></i>添加课程</el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>单节课程</el-dropdown-item>
-                    <el-dropdown-item>系列课程</el-dropdown-item>
+                    <el-dropdown-item command="course">单节课程</el-dropdown-item>
+                    <el-dropdown-item command="newcourse">系列课程</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <el-button type="warning" icon="menu" @click="$router.push({name:'course-manage-course-category-manage'})">
@@ -199,6 +199,10 @@ export default {
         this.fetchData()
     },
     methods: {
+        handleType (type) {
+            if (type === 'course') this.$router.push({name: 'course-manage-addCourse'})
+            else this.$router.push({name: 'newcourse-course-add'})
+        },
         initFetchParam() {
             this.fetchParam = getFetchParam()
         },
