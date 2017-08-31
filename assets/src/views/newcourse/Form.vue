@@ -328,7 +328,6 @@
                 newcourseService.getCourseInfo({
                     course_id: this.$route.params.course_id
                 }).then((ret) => {
-                    console.log(ret)
                     this.editLessonData = ret.lessons
                     this.fetchParam = ret.course
                     this.fetchParam.company_id = 158
@@ -346,7 +345,6 @@
                     }
                 })
             }
-            console.log(this.$route.params.course_id)
             this.uploadDocUrl = courseService.getCourseDocUploadUrl()
             xmview.setContentLoading(false)
         },
@@ -359,9 +357,7 @@
                     if (this.fetchParam.lesson_type === 'multi') {
                         this.currentData.pindex !== -1 ? this.multi.data[this.currentData.pindex] = item : this.multi.data.unshift(item)
                     } else if (this.fetchParam.lesson_type === 'chapter') {
-                        console.log(this.currentData)
                         this.currentData.index !== -1 ? this.resultData[this.currentData.pindex].lessons[this.currentData.index] = item : this.resultData[this.currentData.pindex].lessons.unshift(item)
-                        console.log(this.resultData)
                     }
                     this.classhour.showDialog = false
                 })
@@ -380,7 +376,6 @@
                     this.fetchParam.tags = this.courseTags.toString()
                     let req = newcourseService.create
                     if (this.fetchParam.id) req = newcourseService.update
-                    console.log(this.fetchParam)
                     req(this.fetchParam).then((ret) => {
                         // 重置当前数据
                         this.currentData = {
@@ -454,9 +449,6 @@
                 this.chapter.editStatus = false
             },
             saveItemChapter (pitem, pindex) {
-                console.log(pitem)
-                console.log(pindex)
-                console.log('保存当前编辑的章节')
                 this.resultData[pindex].status = 0
             },
             // 删除多章节
@@ -517,7 +509,7 @@
             price: '',
             lesson_type: 'single',
             tags: '',
-            id: 100004
+            id: 0
         }
     }
     function clearFormData() {
