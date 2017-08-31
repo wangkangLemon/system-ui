@@ -69,7 +69,7 @@
             <el-tab-pane label="课程信息" name="couse">
                 <el-form label-width="120px" ref="form" :rules="rules" :model="fetchParam">
                     <el-form-item label="所属栏目" prop="category_id">
-                        <CourseCategorySelect :placeholder="fetchParam.cat_name" :autoClear="true" :showNotCat="false" v-model="fetchParam.category_id"></CourseCategorySelect>
+                        <CourseCategorySelect :placeholder="fetchParam.category_name" :autoClear="true" :showNotCat="false" v-model="fetchParam.category_id"></CourseCategorySelect>
                     </el-form-item>
                     <el-form-item label="课程名称" prop="name">
                         <el-input v-model="fetchParam.name"></el-input>
@@ -87,6 +87,7 @@
                     </el-form-item>
                     <el-form-item label="课程归属" prop="company_id">
                         <CompanySelect type="0" v-model="fetchParam.company_id"
+                                       :placeholder="fetchParam.company_name"
                                         v-on:change="val=>fetchParam.company_id=val">
                         </CompanySelect>
                     </el-form-item>
@@ -134,19 +135,21 @@
                 <!--多节课-->
                 <section class="mulit-class" v-if="fetchParam.lesson_type == 'multi'">
                     <div v-for="(item,index) in multi.data">
-                        <p class="gray" @click="addNewClasshour" v-if="item.id === -1"><i class="el-icon-plus" ></i> 添加新课时</p>
-                        <p v-else>
-                            <el-tag type="primary">课时{{index + 1}}</el-tag>
-                            <span>
+                        <div v-if="!item.deleted">
+                            <p class="gray" @click="addNewClasshour" v-if="item.id === -1"><i class="el-icon-plus" ></i> 添加新课时</p>
+                            <p v-else>
+                                <el-tag type="primary">课时{{index + 1}}</el-tag>
+                                <span>
                                 <i>{{item.name}}</i>
                                 <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
                             </span>
-                            <span class="operate">
+                                <span class="operate">
                                 <el-button type="text">查看</el-button>
                                 <el-button type="text" @click="editClasshour(item, index)">编辑</el-button>
                                 <el-button type="text" @click="delClasshour(item, index)">删除</el-button>
                             </span>
-                        </p>
+                            </p>
+                        </div>
                     </div>
                     <el-button type="primary" class="saveBtn" @click="saveResult">保存</el-button>
                 </section>
@@ -154,36 +157,40 @@
                 <!--多章节-->
                 <section class="mulit-class" v-if="fetchParam.lesson_type == 'chapter'">
                     <section v-for="(pitem,pindex) in resultData">
-                        <p>
-                            <el-tag type="danger">章节{{pindex + 1}}</el-tag>
-                            <span v-show="!pitem.status"><i>{{pitem.name}}</i></span>
-                            <span v-show="!pitem.status" class="operate">
+                        <section v-if="!pitem.deleted">
+                            <p>
+                                <el-tag type="danger">章节{{pindex + 1}}</el-tag>
+                                <span v-show="!pitem.status"><i>{{pitem.name}}</i></span>
+                                <span v-show="!pitem.status" class="operate">
                                 <el-button type="text" @click="pitem.status = 1">编辑</el-button>
                                 <el-button type="text" @click="delChapter">删除</el-button>
                             </span>
-                            <i class="edit-status" v-show="pitem.status">
-                                <el-input v-model="pitem.name" placeholder="请输入章节名称"></el-input>
-                                <span>
+                                <i class="edit-status" v-show="pitem.status">
+                                    <el-input v-model="pitem.name" placeholder="请输入章节名称"></el-input>
+                                    <span>
                                     <el-button type="text" @click="saveItemChapter(pitem, pindex)">保存</el-button>
                                     <el-button type="text" @click="pitem.status = 0">取消</el-button>
                                 </span>
-                            </i>
-                        </p>
-                        <div v-for="(item,index) in pitem.lessons">
-                            <p class="gray" @click="addNewClasshour(pindex)" v-if="item.id === -1"><i class="el-icon-plus" ></i> 添加新课时</p>
-                            <p v-else>
-                                <el-tag type="primary">课时{{index + 1}}</el-tag>
-                                <span>
-                                    <i>{{item.name}}</i>
-                                    <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
-                                </span>
-                                <span class="operate">
-                                    <el-button type="text">查看</el-button>
-                                    <el-button type="text" @click="editClasshour(item, pindex, index)">编辑</el-button>
-                                    <el-button type="text" @click="delClasshour(item, index)">删除</el-button>
-                                </span>
+                                </i>
                             </p>
-                        </div>
+                            <div v-for="(item,index) in pitem.lessons">
+                                <div v-if="!item.deleted">
+                                    <p class="gray" @click="addNewClasshour(pindex)" v-if="item.id === -1"><i class="el-icon-plus" ></i> 添加新课时</p>
+                                    <p v-else>
+                                        <el-tag type="primary">课时{{index + 1}}</el-tag>
+                                        <span>
+                                        <i>{{item.name}}</i>
+                                        <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
+                                    </span>
+                                        <span class="operate">
+                                        <el-button type="text">查看</el-button>
+                                        <el-button type="text" @click="editClasshour(item, pindex, index)">编辑</el-button>
+                                        <el-button type="text" @click="delClasshour(item, pindex, index)">删除</el-button>
+                                    </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
                     </section>
                     <p class="gray" v-show="!chapter.editStatus" @click="()=>{chapter.editStatus = true;chapter.value = '';}"><i class="el-icon-plus" ></i> 添加新章节</p>
                     <p v-show="chapter.editStatus" class="edit-status" style="text-align: left">
@@ -296,7 +303,7 @@
 //                        id: 0,
 //                        name: '顶顶顶顶',
 //                        sort: 0,
-//                        deleted: false,
+//                        deleted: 0,
 //                        status: 0,
 //                        lessons: [
 //                            {
@@ -306,7 +313,7 @@
 //                                material_type: '',
 //                                material_id: '',
 //                                sort: 0,
-//                                deleted: false
+//                                deleted: 1
 //                            },
 //                            {
 //                                id: -1
@@ -420,14 +427,18 @@
                 this.classhour.form = clone(row)
             },
             delClasshour (row, pindex = -1, index = -1) {
-                this.multi.data.splice(pindex, 1)
-//                if (row.id !== 0) {
-//                    console.log(row)
-//                }
+                if (row.id !== 0) {
+                    if (this.fetchParam.lesson_type === 'multi') {
+                        this.multi.data[pindex].deleted = true
+                    } else if (this.fetchParam.lesson_type === 'chapter') {
+                        this.resultData[pindex].lessons[pindex].deleted = true
+                    }
+                }
             },
             // 保存章节
             submitChapter () {
                 if (!this.chapter.value) return
+                if (this.resultData === null) this.resultData = []
                 this.resultData.unshift({
                     id: 0,
                     name: this.chapter.value,
@@ -451,7 +462,6 @@
             // 删除多章节
             delChapter (pitem, pindex) {
                 if (pitem.id) this.resultData[pindex].deleted = true
-                this.resultData.splice(pindex, 1)
             },
             saveResult () {
                 let result = [
@@ -498,8 +508,9 @@
     function getOriginData() {
         return {
             company_id: '',
+            company_name: '',
             category_id: '',
-            cat_name: '',
+            category_name: '',
             name: '',
             image: '',
             description: '',

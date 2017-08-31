@@ -91,7 +91,7 @@
                     <el-table-column type="selection"></el-table-column>
                     <el-table-column min-width="200" prop="name" label="课程">
                     </el-table-column>
-                    <el-table-column min-width="200" prop="cat_name" label="所属栏目">
+                    <el-table-column min-width="200" prop="category_name" label="所属栏目">
                     </el-table-column>
                     <el-table-column width="80" label="课时">
                         <template scope="scope">
