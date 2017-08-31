@@ -30,7 +30,7 @@ class CourseService {
     // 更新
     update({ id, category_id, name, image, description, tags, company_id, price, lesson_type }) {
         let url = `${urlPre}/${id}`
-        return api.post(url, { category_id, name, image, description, tags, company_id, price, lesson_type }).then(ret => {
+        return api.put(url, { category_id, name, image, description, tags, company_id, price, lesson_type }).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -82,8 +82,25 @@ class CourseService {
     }
 
     // 获取添加编辑课程上传图片的url
-    getUploadUrl({ companyid } = {}) {
-        return `${urlPre}/upload`
+    getUploadUrl({image, alias}) {
+        let url = `${urlPre}/upload`
+        return api.post(url, {image, alias}).then((ret) => {
+            return ret.data
+        })
+    }
+
+    // 设置课时
+    setLessons ({course_id, jsonstr}) {
+        let url = `${urlPre}/${course_id}/lesson`
+        return api.put(url, jsonstr)
+    }
+
+    // 获取课程信息
+    getCourseInfo ({course_id}) {
+        let url = `${urlPre}/${course_id}`
+        return api.get(url).then((ret) => {
+            return ret.data
+        })
     }
 }
 export default new CourseService()
