@@ -16,6 +16,7 @@ import usersystem from './routers/usersystem' // 用户体系
 import im from './routers/im'
 import speaking from './routers/speaking' // 药我说
 import systemTools from './routers/system/tools' // 系统工具
+import newCourse from './routers/newcourse/course' // 系列课程
 import authUtils from './utils/authUtils'
 import * as typeUtils from './utils/typeUtils'
 
@@ -118,6 +119,8 @@ const routes = [
             usersystem,
             // 系统工具
             systemTools,
+            // 系列课程
+            newCourse,
         ]
     },
     {   // 登录

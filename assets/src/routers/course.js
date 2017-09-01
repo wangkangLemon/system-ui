@@ -46,7 +46,7 @@ export default {
                 })
             },
             meta: {
-                title: '公开课管理-培训',
+                title: '公开课 - 课程管理',
                 noback: true
             }
         },

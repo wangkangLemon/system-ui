@@ -75,6 +75,12 @@
                                    :disabled="fetchParam.parent_id == null"
                                    :onSuccess="handleImgUploaded"></UploadImg>
                     </el-form-item>
+                    <el-form-item label="课程类型" prop="type">
+                        <el-radio-group v-model="fetchParam.type">
+                            <el-radio v-model="fetchParam.type" label="course">单节课程</el-radio>
+                            <el-radio v-model="fetchParam.type" label="newcourse">系列课程</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
                     <el-form-item label="栏目排序" prop="sort">
                         <el-input placeholder="最小的排在前面" :disabled="fetchParam.parent_id == null"
                                   v-model.number="fetchParam.sort"></el-input>
@@ -312,6 +318,7 @@
     function getFetchParam () {
         return {
             parent_id: void 0,
+            type: void '',
             name: void 0,
             image: void 0,
             sort: void 0,

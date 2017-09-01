@@ -5,7 +5,7 @@
 
     #course-manage-public-container {
         @extend %content-container;
-
+        border: none;
         .manage-container {
             @extend %right-top-btnContainer;
             > * {
@@ -205,7 +205,7 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import CourseCategorySelect from '../../component/select/CourseCategory.vue'
     import CourseCategoryTree from '../../component/tree/CourseCategory.vue'
-    
+
     function getFetchParam() {
         return {
             status: void 0, // 2- 视屏转码中 1-下线 0-正常
