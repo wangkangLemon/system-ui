@@ -249,10 +249,10 @@ class CourseService {
 
     // ============================================= 栏目 开始 ======================================================
     // 获取课程栏目树
-    getCategoryTree({ companyid, id = 'tree', filter = true }) {
+    getCategoryTree({ companyid, id = 'tree', type, filter = true }) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category/children`
-        return api.get(finalUrl, { id, filter }).catch((ret) => {
+        return api.get(finalUrl, { id, filter, type }).catch((ret) => {
             ret.tipCom.close()
             return ret
         })

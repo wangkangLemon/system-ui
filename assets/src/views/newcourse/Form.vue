@@ -69,7 +69,7 @@
             <el-tab-pane label="课程信息" name="couse">
                 <el-form label-width="120px" ref="form" :rules="rules" :model="fetchParam">
                     <el-form-item label="所属栏目" prop="category_id">
-                        <CourseCategorySelect :placeholder="fetchParam.category_name" :autoClear="true" :showNotCat="false" v-model="fetchParam.category_id"></CourseCategorySelect>
+                        <CourseCategorySelect type="newcourse" :placeholder="fetchParam.category_name" :autoClear="true" :showNotCat="false" v-model="fetchParam.category_id"></CourseCategorySelect>
                     </el-form-item>
                     <el-form-item label="课程名称" prop="name">
                         <el-input v-model="fetchParam.name"></el-input>
@@ -97,7 +97,7 @@
                     <h2>课时类型设置</h2>
                     <el-form-item label="选择类型" prop="lesson_type">
                         <el-radio-group v-model="fetchParam.lesson_type">
-                            <el-radio label="single">单节课</el-radio>
+                            <!--<el-radio label="single">单节课</el-radio>-->
                             <el-radio label="multi">多课时</el-radio>
                             <el-radio label="chapter">多章节课</el-radio>
                         </el-radio-group>
@@ -501,7 +501,7 @@
             image: '',
             description: '',
             price: '',
-            lesson_type: 'single',
+            lesson_type: 'multi',
             tags: '',
             id: 0
         }

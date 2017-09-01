@@ -277,9 +277,8 @@ export default {
             })
         },
         handleTab(val) {
-//            if (val.name == 'course') {
-//                this.$router.push({ name: 'course-manage-public' })
-//            }
+//            if (val.name == 'course') this.$router.push({name: 'newcourse-course-public', query: {tab: 'course'}})
+//            else this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
         }
     },
     components: { DateRange, CourseCategorySelect, CourseCategoryTree, CourseComponent }
