@@ -3,6 +3,7 @@
     .comp-dialog-videopreview {
 
     }
+
     .form {
         margin-top: 20px;
     }
@@ -13,40 +14,42 @@
     <el-dialog :title="title || '视频预览'" v-model="isShow">
         <div id="J_prismPlayer" class="prism-player"></div>
 
-          <el-form label-width="100px":model="form" class="form" ref="form" >
-            <el-form-item label="审核结果" prop='flag' >
+        <el-form label-width="100px" :model="form" class="form" ref="form" v-if="!type">
+            <el-form-item label="审核结果" prop='flag'>
                 <el-select v-model="form.status" :disabled="disabled">
-                <el-option label="审核成功" value="3"></el-option>
-                <el-option label="审核失败" value="4"></el-option>
-                <el-option label="待审核" value="0"></el-option>
+                    <el-option label="审核成功" value="3"></el-option>
+                    <el-option label="审核失败" value="4"></el-option>
+                    <el-option label="待审核" value="0"></el-option>
                 </el-select>
             </el-form-item>
-        <el-form-item label='备注说明' prop="remark">
-         <el-input  
-            :disabled="disabled"
-            type="textarea"
-            v-model="form.remark"
-            :autosize="{ minRows: 4, maxRows: 6}"
-            placeholder="请输入内容">
-        </el-input>
-        </el-form-item>
+            <el-form-item label='备注说明' prop="remark">
+                <el-input
+                        :disabled="disabled"
+                        type="textarea"
+                        v-model="form.remark"
+                        :autosize="{ minRows: 4, maxRows: 6}"
+                        placeholder="请输入内容">
+                </el-input>
+            </el-form-item>
             <el-button v-if="!disabled" type='primary' class="bottom-btn" @click="submit()">确定</el-button>
             <el-button v-else type='primary' class="bottom-btn" @click="isShow=false">取消</el-button>
         </el-form>
-  
+
     </el-dialog>
 </template>
 
 <script>
     import courseService from '../../../services/courseService'
     import clone from 'clone'
-    export default{
+
+    export default {
         props: {
             onchange: Function,
             url: String,
-            row: {}
+            row: {},
+            type: ''
         },
-        data () {
+        data() {
             return {
                 disabled: false,
                 isShow: false,
@@ -83,7 +86,7 @@
             this.initPlayer()
         },
         watch: {
-            'isShow' (val) {
+            'isShow'(val) {
                 if (val) {
                     this.initPlayer()
                     console.log(this.row)
@@ -93,7 +96,7 @@
         },
         methods: {
             // 审核提交
-            submit() {
+            submit () {
                 if (!this.row) return
                 if (this.form.status === '待审核') {
                     this.form.status = 0
