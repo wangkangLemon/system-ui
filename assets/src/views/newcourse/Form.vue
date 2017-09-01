@@ -92,7 +92,7 @@
                         </CompanySelect>
                     </el-form-item>
                     <el-form-item label="课程售价" prop="price">
-                        <el-input v-model="fetchParam.price"></el-input>
+                        <el-input v-model.number="fetchParam.price" type="number"></el-input>
                     </el-form-item>
                     <h2>课时类型设置</h2>
                     <el-form-item label="选择类型" prop="lesson_type">
@@ -160,17 +160,17 @@
                         <section v-if="!pitem.deleted">
                             <p>
                                 <el-tag type="danger">章节{{pindex + 1}}</el-tag>
-                                <span v-show="!pitem.status"><i>{{pitem.name}}</i></span>
-                                <span v-show="!pitem.status" class="operate">
-                                <el-button type="text" @click="pitem.status = 1">编辑</el-button>
-                                <el-button type="text" @click="delChapter">删除</el-button>
-                            </span>
-                                <i class="edit-status" v-show="pitem.status">
+                                <span v-if="!pitem.status"><i>{{pitem.name}}</i></span>
+                                <span v-if="!pitem.status" class="operate">
+                                    <el-button type="text" @click="()=>{pitem.status = 1;$forceUpdate();}">编辑</el-button>
+                                    <el-button type="text" @click="delChapter(pitem, pindex)">删除</el-button>
+                                </span>
+                                <i class="edit-status" v-if="pitem.status">
                                     <el-input v-model="pitem.name" placeholder="请输入章节名称"></el-input>
                                     <span>
-                                    <el-button type="text" @click="saveItemChapter(pitem, pindex)">保存</el-button>
-                                    <el-button type="text" @click="pitem.status = 0">取消</el-button>
-                                </span>
+                                        <el-button type="text" @click="saveItemChapter(pitem, pindex)">保存</el-button>
+                                        <el-button type="text" @click="()=>{pitem.status = 0;$forceUpdate();}">取消</el-button>
+                                    </span>
                                 </i>
                             </p>
                             <div v-for="(item,index) in pitem.lessons">
@@ -224,7 +224,7 @@
                         <i>{{classhour.form.material_name}}</i>
                     </el-button>
                 </el-form-item>
-                <el-form-item label="课时名称">
+                <el-form-item label="课时名称" prop="name">
                     <el-input v-model="classhour.form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="免费试看">
@@ -287,7 +287,9 @@
                     accept: '*.doc,*.docx', // 上传的文件格式
                     form: clearFormData(),
                     rules: {
+                        name: { required: true, message: '请输入课程名称', trigger: 'change' },
                         material_type: { required: true, message: '请选择课时类型', trigger: 'change' },
+                        material_id: { required: true, type: 'number', message: '请上传课程文件', trigger: 'change' },
                     }
                 },
                 multi: {
@@ -298,29 +300,6 @@
                     ],
                 },
                 resultData: [],
-//                resultData: [
-//                    {
-//                        id: 0,
-//                        name: '顶顶顶顶',
-//                        sort: 0,
-//                        deleted: 0,
-//                        status: 0,
-//                        lessons: [
-//                            {
-//                                id: 0,
-//                                name: '水水水水',
-//                                try_enable: 0,
-//                                material_type: '',
-//                                material_id: '',
-//                                sort: 0,
-//                                deleted: 1
-//                            },
-//                            {
-//                                id: -1
-//                            }
-//                        ]
-//                    }
-//                ]
             }
         },
         created () {
@@ -328,6 +307,7 @@
                 newcourseService.getCourseInfo({
                     course_id: this.$route.params.course_id
                 }).then((ret) => {
+                    console.log(ret)
                     this.editLessonData = ret.lessons
                     this.fetchParam = ret.course
                     this.fetchParam.company_id = 158
@@ -340,8 +320,10 @@
                     } else if (this.fetchParam.lesson_type === 'chapter') {
                         this.resultData = ret.lessons
                         this.resultData.forEach((pitem) => {
+                            pitem.status = 0
                             pitem.lessons.push({id: -1})
                         })
+                        console.log(this.resultData)
                     }
                 })
             }
@@ -355,9 +337,9 @@
                     if (!valid) return
                     let item = clone(this.classhour.form)
                     if (this.fetchParam.lesson_type === 'multi') {
-                        this.currentData.pindex !== -1 ? this.multi.data[this.currentData.pindex] = item : this.multi.data.unshift(item)
+                        this.currentData.pindex !== -1 ? this.multi.data[this.currentData.pindex] = item : this.multi.data.splice(this.multi.data.length - 1, 0, item)
                     } else if (this.fetchParam.lesson_type === 'chapter') {
-                        this.currentData.index !== -1 ? this.resultData[this.currentData.pindex].lessons[this.currentData.index] = item : this.resultData[this.currentData.pindex].lessons.unshift(item)
+                        this.currentData.index !== -1 ? this.resultData[this.currentData.pindex].lessons[this.currentData.index] = item : this.resultData[this.currentData.pindex].lessons.splice(this.resultData[this.currentData.pindex].lessons.length - 1, 0, item)
                     }
                     this.classhour.showDialog = false
                 })
@@ -415,6 +397,9 @@
                 if (this.fetchParam.lesson_type === 'chapter') this.currentData.pindex = pindex
                 this.classhour.showDialog = true
                 this.classhour.form = clearFormData()
+                this.$nextTick(() => {
+                    this.$refs['multiForm'].resetFields()
+                })
             },
             editClasshour (row, pindex = -1, index = -1) {
                 this.currentData = {data: row, pindex, index}
@@ -426,7 +411,13 @@
                     if (this.fetchParam.lesson_type === 'multi') {
                         this.multi.data[pindex].deleted = true
                     } else if (this.fetchParam.lesson_type === 'chapter') {
-                        this.resultData[pindex].lessons[pindex].deleted = true
+                        this.resultData[pindex].lessons[index].deleted = true
+                    }
+                } else {
+                    if (this.fetchParam.lesson_type === 'multi') {
+                        this.multi.data.splice(pindex, 1)
+                    } else if (this.fetchParam.lesson_type === 'chapter') {
+                        this.resultData[pindex].lessons.splice(index, 1)
                     }
                 }
             },
@@ -434,7 +425,7 @@
             submitChapter () {
                 if (!this.chapter.value) return
                 if (this.resultData === null) this.resultData = []
-                this.resultData.unshift({
+                this.resultData.push({
                     id: 0,
                     name: this.chapter.value,
                     sort: 0,
@@ -450,10 +441,12 @@
             },
             saveItemChapter (pitem, pindex) {
                 this.resultData[pindex].status = 0
+                this.$forceUpdate()
             },
             // 删除多章节
             delChapter (pitem, pindex) {
                 if (pitem.id) this.resultData[pindex].deleted = true
+                else this.resultData.splice(pindex, 1)
             },
             saveResult () {
                 let result = [
@@ -479,6 +472,7 @@
                 } else if (this.fetchParam.lesson_type === 'chapter') {
                     result = []
                     this.resultData.forEach((pitem) => {
+                        delete pitem.status
                         pitem.lessons.pop()
                         pitem.lessons.forEach((item) => {
                             delete item.material_name
