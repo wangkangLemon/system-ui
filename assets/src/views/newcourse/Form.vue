@@ -307,7 +307,6 @@
                 newcourseService.getCourseInfo({
                     course_id: this.$route.params.course_id
                 }).then((ret) => {
-                    console.log(ret)
                     this.editLessonData = ret.lessons
                     this.fetchParam = ret.course
                     this.fetchParam.company_id = 158
@@ -323,7 +322,6 @@
                             pitem.status = 0
                             pitem.lessons.push({id: -1})
                         })
-                        console.log(this.resultData)
                     }
                 })
             }
@@ -445,6 +443,13 @@
             },
             // 删除多章节
             delChapter (pitem, pindex) {
+                let dealData = this.resultData[pindex].lessons.filter((item) => {
+                    return !item.deleted
+                })
+                if (dealData.length > 1) {
+                    xmview.showTip('error', '请先删除该章节下面的课时')
+                    return
+                }
                 if (pitem.id) this.resultData[pindex].deleted = true
                 else this.resultData.splice(pindex, 1)
             },
@@ -485,7 +490,7 @@
                     course_id: this.fetchParam.id,
                     jsonstr: JSON.stringify(result)
                 }).then(() => {
-                    xmview.showTip('success', '添加成功')
+                    xmview.showTip('success', '操作成功')
                     this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
                 })
             }
