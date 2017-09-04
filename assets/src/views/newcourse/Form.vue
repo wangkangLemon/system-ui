@@ -86,7 +86,7 @@
                         <vTags v-model="courseTags"></vTags>
                     </el-form-item>
                     <el-form-item label="课程归属" prop="company_id">
-                        <CompanySelect type="0" v-model="fetchParam.company_id"
+                        <CompanySelect type="3" v-model="fetchParam.company_id"
                                        :placeholder="fetchParam.company_name"
                                         v-on:change="val=>fetchParam.company_id=val">
                         </CompanySelect>
@@ -144,7 +144,7 @@
                                 <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
                             </span>
                                 <span class="operate">
-                                <el-button type="text">查看</el-button>
+                                <el-button type="text" @click="previewFn(item)">查看</el-button>
                                 <el-button type="text" @click="editClasshour(item, index)">编辑</el-button>
                                 <el-button type="text" @click="delClasshour(item, index)">删除</el-button>
                             </span>
@@ -183,7 +183,7 @@
                                         <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
                                     </span>
                                         <span class="operate">
-                                        <el-button type="text">查看</el-button>
+                                        <el-button type="text" @click="previewFn(item)">查看</el-button>
                                         <el-button type="text" @click="editClasshour(item, pindex, index)">编辑</el-button>
                                         <el-button type="text" @click="delClasshour(item, pindex, index)">删除</el-button>
                                     </span>
@@ -235,6 +235,10 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
+        <el-dialog title="查看" :visible.sync="docshow">
+            <DocPreview ref="docShow" :docurl="docurl" class="docshow"></DocPreview>
+        </el-dialog>
+        <VideoPreview :type="1" :url="videoUrl" ref="videoPreview"></VideoPreview>
     </article>
 </template>
 <script>
@@ -246,10 +250,15 @@
     import DialogVideo from './component/DialogVideo.vue'
     import UploadFile from '../component/upload/UploadFiles.vue'
     import CompanySelect from '../component/select/IndustryCompany.vue'
+    import VideoPreview from '../component/dialog/VideoPreview.vue'
+    import DocPreview from '../component/dialog/DocShow.vue'
+    import config from '../../utils/config'
     import clone from 'clone'
     export default {
         name: 'newcourse-course-form',
         components: {
+            DocPreview,
+            VideoPreview,
             CourseCategorySelect,
             vTags,
             CropperImg,
@@ -259,6 +268,9 @@
         },
         data () {
             return {
+                videoUrl: '',
+                docurl: '',
+                docshow: false,
                 editLessonData: [],
                 currentData: {
                     data: {},
@@ -493,6 +505,18 @@
                     xmview.showTip('success', '操作成功')
                     this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
                 })
+            },
+            previewFn (row) {
+                if (row.material_type === 'video') {
+                    // 拿到播放地址
+                    courseService.getVideoPreviewUrl(row.material_id).then((ret) => {
+                        this.videoUrl = ret.video
+                        this.$refs.videoPreview.show(row.name)
+                    })
+                } else {
+                    this.docurl = `${config.apiHost}/sys/course/doc/${row.material_id}/view`
+                    this.docshow = true
+                }
             }
         }
     }

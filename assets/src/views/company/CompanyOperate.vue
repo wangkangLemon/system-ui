@@ -134,6 +134,10 @@
             return {
                 companyTypes: [ // 类型
                     {
+                        name: '提供商',
+                        id: 3
+                    },
+                    {
                         name: '连锁',
                         id: 2
                     },
