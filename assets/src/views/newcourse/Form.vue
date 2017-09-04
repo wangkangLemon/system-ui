@@ -86,7 +86,7 @@
                         <vTags v-model="courseTags"></vTags>
                     </el-form-item>
                     <el-form-item label="课程归属" prop="company_id">
-                        <CompanySelect type="0" v-model="fetchParam.company_id"
+                        <CompanySelect type="3" v-model="fetchParam.company_id"
                                        :placeholder="fetchParam.company_name"
                                         v-on:change="val=>fetchParam.company_id=val">
                         </CompanySelect>
