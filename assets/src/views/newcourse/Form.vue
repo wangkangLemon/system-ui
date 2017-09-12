@@ -203,7 +203,7 @@
                     <el-button type="primary" class="saveBtn" @click="saveResult">保存</el-button>
                 </section>
                 <!--选择视频的弹窗-->
-                <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
+                <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="fetchParam.company_id"></DialogVideo>
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="添加课时" :visible.sync="classhour.showDialog">
@@ -321,7 +321,7 @@
                 }).then((ret) => {
                     this.editLessonData = ret.lessons
                     this.fetchParam = ret.course
-                    this.fetchParam.company_id = 158
+                    this.fetchParam.company_id = ret.course.company_id
                     this.courseTags = ret.course.tags.split(',')
                     if (this.fetchParam.lesson_type === 'single') {
                         this.classhour.form = ret.lessons[0].lessons[0]
