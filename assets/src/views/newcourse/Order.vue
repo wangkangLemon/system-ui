@@ -50,9 +50,7 @@
                 <el-select clearable @change="getData" v-model="fetchParam.pay_method" placeholder="全部">
                     <el-option label="微信" value="wechat"></el-option>
                     <el-option label="支付宝" value="alipay"></el-option>
-                    <el-option label="红包" value="luckymoney"></el-option>
-                    <el-option label="苹果应用市场购买" value="applestore"></el-option>
-                    <el-option label="苹果支付" value="applepay"></el-option>
+                    <el-option label="余额" value="money"></el-option>
                 </el-select>
             </section>
             <section>
@@ -86,12 +84,13 @@
                     {{payMethods[scope.row.pay_method]}}
                 </template>
             </el-table-column>
-            <el-table-column prop="create_time_name" label="支付时间" width="180"></el-table-column>
+            <el-table-column prop="pay_time" label="支付时间" width="180"></el-table-column>
             <el-table-column prop="status" label="订单状态" width="100">
                 <template scope="scope">
                     {{payStatus[scope.row.status]}}
                 </template>
             </el-table-column>
+            <el-table-column prop="create_time_name" label="下单时间" width="180"></el-table-column>
             <el-table-column label="操作" width="100">
                 <template scope="scope">
                     <el-button type="text" @click="()=>{showDetail=true;detail=scope.row}">详情</el-button>
@@ -166,7 +165,7 @@ export default {
     },
     data() {
         return {
-            payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'luckmoney': '红包', 'applestore': '苹果应用市场购买', 'applepay': '苹果支付' },
+            payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'money': '余额' },
             payStatus: ['未支付', '已支付', '已关闭', '已删除'],
             showDetail: false,
             detail: null,
