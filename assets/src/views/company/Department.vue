@@ -39,7 +39,7 @@
         <el-dialog size="small" v-if="show.detail" class="show-detail" title="查看门店" v-model="show.showDetail">
             <div class="info">
                 <h2>{{show.detail.name}}<i class="sub-title">{{show.detail.company}}</i></h2>
-                <p><i class="title">店长：</i><span class="value">{{show.detail.concact || '无'}}</span></p>
+                <p><i class="title">店长：</i><span class="value">{{show.detail.contact || '无'}}</span></p>
                 <p><i class="title">手机：</i><span class="value">{{show.detail.mobile || '无'}}</span></p>
                 <p><i class="title">电话：</i><span class="value">{{show.detail.tel || '无'}}</span></p>
                 <p><i class="title">传真：</i><span class="value">{{show.detail.fax || '无'}}</span></p>
@@ -79,7 +79,7 @@
             </section>
             <section>
                 <i>店长：</i>
-                <el-input @keyup.enter.native="getData" v-model="fetchParam.concact" auto-complete="off"></el-input>
+                <el-input @keyup.enter.native="getData" v-model="fetchParam.contact" auto-complete="off"></el-input>
             </section>
         </section>
         <el-table
@@ -105,7 +105,7 @@
             </el-table-column>
             <el-table-column
                     width="100"
-                    prop="concact"
+                    prop="contact"
                     label="店长">
             </el-table-column>
             <el-table-column
@@ -164,7 +164,7 @@
             citySelect: '',
             areaSelect: '',
             name: '', // 名称
-            concact: '' // 店长
+            contact: '' // 店长
         }
     }
     export default {
@@ -192,7 +192,7 @@
                     citySelect: '',
                     areaSelect: '',
                     name: '', // 名称
-                    concact: '' // 店长
+                    contact: '' // 店长
                 }
             }
         },
@@ -245,7 +245,7 @@
                     time_start: date2Str(this.fetchParam.createTime),
                     time_end: date2Str(this.fetchParam.endTime),
                     keyword: this.fetchParam.name,
-                    concact: this.fetchParam.concact
+                    contact: this.fetchParam.contact
                 }
                 return departmentService.getDepartment(params).then((ret) => {
                     this.departmentData = ret.data
@@ -263,7 +263,7 @@
                     time_start: date2Str(this.fetchParam.createTime),
                     time_end: date2Str(this.fetchParam.endTime),
                     keyword: this.fetchParam.name,
-                    concact: this.fetchParam.concact
+                    contact: this.fetchParam.contact
                 })
             }
         }

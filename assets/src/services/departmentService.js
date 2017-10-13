@@ -15,11 +15,11 @@ class DepartmentService {
         city = '',
         area = '',
         keyword = '',
-        concact = '',
+        contact = '',
         time_start = '',
         time_end = ''}) {
         let finalUrl = `${urlPre}/search`
-        return api.get(finalUrl, {page, page_size, company_id, province, city, area, keyword, concact, time_start, time_end}, false).then((ret) => {
+        return api.get(finalUrl, {page, page_size, company_id, province, city, area, keyword, contact, time_start, time_end}, false).then((ret) => {
             return ret.data
         })
     }

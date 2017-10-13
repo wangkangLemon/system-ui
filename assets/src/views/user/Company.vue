@@ -15,8 +15,8 @@
             <el-form-item prop="name" label="企业名称" :label-width="formLabelWidth">
                 <el-input v-model="form.name" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item prop="concact" label="联系人" :label-width="formLabelWidth">
-                <el-input v-model="form.concact" auto-complete="off"></el-input>
+            <el-form-item prop="contact" label="联系人" :label-width="formLabelWidth">
+                <el-input v-model="form.contact" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item prop="mobile" label="联系人手机" :label-width="formLabelWidth">
                 <el-input v-model="form.mobile" type="number" auto-complete="off"></el-input>
@@ -80,7 +80,7 @@
                 formLabelWidth: '100px',
                 form: {
                     name: '', // 名称
-                    concact: '', // 联系人
+                    contact: '', // 联系人
                     mobile: '', // 联系人手机
                     tel: '', // 电话
                     email: '', // 联系人邮箱
@@ -97,7 +97,7 @@
                     name: [
                         {required: true, message: '必填项', trigger: 'blur'}
                     ],
-                    concact: [
+                    contact: [
                         {required: true, message: '必填项', trigger: 'blur'}
                     ],
                     mobile: [
