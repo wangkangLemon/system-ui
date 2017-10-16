@@ -1,5 +1,5 @@
 // 注意 API_HOST两个配置有两个引号，而 VENDOR_HOST只有一个引号
 module.exports = {
-  API_HOST_PROD: '"http://sysapi.yst.vodjk.com"',
+  API_HOST_PROD: '"https://sysapi.yst.vodjk.com"',
   API_HOST_DEV: '"http://sysapi.yst.vodjk.dev"',
 }
