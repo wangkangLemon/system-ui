@@ -75,11 +75,11 @@ class MineService {
         })
     }
 
-    modifyCompany ({name, concact, mobile, email, tel, fax, province, city, area, address, zip, url, description}) {
+    modifyCompany ({name, contact, mobile, email, tel, fax, province, city, area, address, zip, url, description}) {
         let finalUrl = `${urlPre}/company`
         return api.put(finalUrl, {
             name,
-            concact,
+            contact,
             mobile,
             email,
             tel,

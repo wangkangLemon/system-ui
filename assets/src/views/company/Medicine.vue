@@ -22,7 +22,7 @@
                     label="连锁">
             </el-table-column>
             <el-table-column
-                    prop="concact"
+                    prop="contact"
                     label="管理员"
                     width="180">
             </el-table-column>

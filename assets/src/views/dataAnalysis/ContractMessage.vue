@@ -107,7 +107,7 @@
                 <h2>{{currentItems.name}}</h2>
                 <p><i class="title">门店数量：</i><span class="value">{{currentItems.department_number}}</span></p>
                 <p><i class="title">签约店员数量：</i><span class="value">{{currentItems.user_number}}</span></p>
-                <p><i class="title">对方联系人：</i><span class="value">{{currentItems.concact}}</span></p>
+                <p><i class="title">对方联系人：</i><span class="value">{{currentItems.contact}}</span></p>
                 <p><i class="title">联系方式：</i><span class="value">{{currentItems.mobile}}</span></p>
                 <p><i class="title">签约人：</i><span class="value">{{currentItems.user_name}}</span></p>
                 <p><i class="title">签约时间：</i><span class="value">{{currentItems.sign_time_str}}</span></p>

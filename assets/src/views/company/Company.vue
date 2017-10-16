@@ -37,7 +37,7 @@
                 </h2>
                 <p><i class="title">门店数量：</i><span class="value">{{details.department_count || '无'}}</span></p>
                 <p><i class="title">店员数量：</i><span class="value">{{details.user_count || '无'}}</span></p>
-                <p><i class="title">联系人：</i><span class="value">{{details.concact || '无'}}</span></p>
+                <p><i class="title">联系人：</i><span class="value">{{details.contact || '无'}}</span></p>
                 <p><i class="title">联系人手机：</i><span class="value">{{details.mobile || '无'}}</span></p>
                 <p><i class="title">联系人邮箱：</i><span class="value">{{details.email || '无'}}</span></p>
                 <p><i class="title">企业电话：</i><span class="value">{{details.tel || '无'}}</span></p>
@@ -105,7 +105,7 @@
             </el-table-column>
             <el-table-column
                     width="100"
-                    prop="concact"
+                    prop="contact"
                     label="联系人">
             </el-table-column>
             <el-table-column
