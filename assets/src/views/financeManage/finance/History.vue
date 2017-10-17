@@ -39,11 +39,11 @@
                 </IndustryCompanySelect>
             </section>
             <section>
-                <i>课程</i>
-                <course-list v-model="fetchParam.courseSelect"
-                             v-on:change="val=>fetchParam.courseSelect=val"
-                             :change="getData">
-                </course-list>
+                <i>支出类型</i>
+                <el-select v-model="fetchParam.trade_type" placeholder="请选择" clearable>
+                    <el-option v-for="item in tradeTypes" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
             </section>
             <section>
                 <i>用户</i>
@@ -74,9 +74,14 @@
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="course_name"
                     width="180"
-                    label="课程">
+                    label="支出类型">
+                <template scope="scope">
+                    <span v-if="scope.row.trade_type == 'course_testing'">培训服务费</span>
+                    <span v-else-if="scope.row.trade_type == 'course_lucky_money'">课程红包费</span>
+                    <span v-else-if="scope.row.trade_type == 'speaking_lucky_money'">药我说赞助</span>
+                    <span v-else>其他费用</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="store_name"

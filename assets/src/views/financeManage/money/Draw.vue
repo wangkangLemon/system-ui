@@ -71,7 +71,7 @@
                 border
                 :data="drawData">
             <el-table-column
-                    prop="draw_no"
+                    prop="trade_no"
                     min-width="300"
                     label="编号">
             </el-table-column>
