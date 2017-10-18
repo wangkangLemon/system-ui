@@ -159,7 +159,7 @@
     </article>
 </template>
 <script>
-    import {drawList, exportDraw, confirmDraw, cancleDraw} from '../../../services/fianace/money'
+    import {drawList, exportDraw, confirmDraw, cancleDraw} from '../../../services/finance/money'
     import UserList from '../../component/select/User'
     import DateRange from '../../component/form/DateRangePicker.vue'
     function clearFn() {

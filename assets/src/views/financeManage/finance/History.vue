@@ -65,11 +65,11 @@
                 stripe>
             <el-table-column
                     min-width="200"
-                    prop="tradeno"
+                    prop="trade_no"
                     label="流水号">
             </el-table-column>
             <el-table-column
-                    prop="ent_name"
+                    prop="money_company_name"
                     label="企业"
                     width="180">
             </el-table-column>
@@ -99,7 +99,7 @@
                     label="店员">
             </el-table-column>
             <el-table-column
-                    prop="price"
+                    prop="money"
                     width="80"
                     label="金额">
             </el-table-column>
@@ -128,7 +128,7 @@
     </article>
 </template>
 <script>
-    import {history, exportHistory} from '../../../services/fianace/finance'
+    import {history, exportHistory} from '../../../services/finance/finance'
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import CourseList from '../../component/select/Course'
     import UserList from '../../component/select/User'

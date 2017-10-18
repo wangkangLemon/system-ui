@@ -162,8 +162,8 @@
     </article>
 </template>
 <script>
-    import {chargeData, charge, exportCharge} from '../../../services/fianace/finance'
-    import {balance} from '../../../services/fianace/money'
+    import {chargeData, charge, exportCharge} from '../../../services/finance/finance'
+    import {balance} from '../../../services/finance/money'
     import Admin from '../../component/select/Admin'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'

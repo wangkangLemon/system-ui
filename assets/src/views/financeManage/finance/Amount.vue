@@ -92,7 +92,7 @@
 <script>
     import AmountPanel from '../../component/panel/AmountPanel'
     import Echars from 'echarts'
-    import * as finance from '../../../services/fianace/finance'
+    import * as finance from '../../../services/finance/finance'
     export default {
         components: {
             AmountPanel

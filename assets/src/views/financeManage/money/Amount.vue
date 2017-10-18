@@ -74,7 +74,7 @@
 </template>
 <script>
     import AmountPanel from '../../component/panel/AmountPanel'
-    import {getMoney, industry} from '../../../services/fianace/money'
+    import {getMoney, industry} from '../../../services/finance/money'
     export default {
         components: {
             AmountPanel
