@@ -114,7 +114,7 @@
                     label="连锁" min-width="180">
             </el-table-column>
             <el-table-column
-                    prop="dep_name"
+                    prop="department_name"
                     width="330"
                     label="门店">
             </el-table-column>

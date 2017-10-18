@@ -105,7 +105,7 @@
     </article>
 </template>
 <script>
-    import {history, exportData} from '../../../services/fianace/money'
+    import {history, exportData} from '../../../services/finance/money'
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import CourseList from '../../component/select/Course'
     import UserList from '../../component/select/User'

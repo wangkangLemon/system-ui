@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import {confirmDraw, cancleDraw} from '../../../services/fianace/money'
+import {confirmDraw, cancleDraw} from '../../../services/finance/money'
 export default {
     data () {
         return {

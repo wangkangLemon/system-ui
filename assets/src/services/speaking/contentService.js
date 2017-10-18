@@ -58,7 +58,7 @@ class SpeakingContentService {
 
     // 根据红包赞助企业的ID获取该企业的账户余额
     getBalanceByCompantID ({company_id}) {
-        let finalUrl = config.apiHost + '/sys/money/company/balance'
+        let finalUrl = config.apiHost + '/sys/finance/company/balance'
         return api.get(finalUrl, {company_id})
     }
 }

@@ -71,7 +71,7 @@
                 border
                 :data="drawData">
             <el-table-column
-                    prop="draw_no"
+                    prop="trade_no"
                     min-width="300"
                     label="编号">
             </el-table-column>
@@ -159,7 +159,7 @@
     </article>
 </template>
 <script>
-    import {drawList, exportDraw, confirmDraw, cancleDraw} from '../../../services/fianace/money'
+    import {drawList, exportDraw, confirmDraw, cancleDraw} from '../../../services/finance/money'
     import UserList from '../../component/select/User'
     import DateRange from '../../component/form/DateRangePicker.vue'
     function clearFn() {

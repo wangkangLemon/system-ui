@@ -123,7 +123,7 @@
     </article>
 </template>
 <script>
-    import {priceData, price, exportPrice} from '../../../services/fianace/finance'
+    import {priceData, price, exportPrice} from '../../../services/finance/finance'
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import Admin from '../../component/select/Admin.vue'
     import DateRange from '../../component/form/DateRangePicker.vue'
