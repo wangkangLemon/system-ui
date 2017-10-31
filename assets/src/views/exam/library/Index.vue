@@ -1,5 +1,10 @@
 <template>
     <div>
+        <section class="manage-container">
+            <el-button type="primary" icon="plus" @click="add()"><i>新增题库</i>
+            </el-button>
+        </section>
+
         <el-form :inline="true" :model="fetchParam" class="search">
             <el-form-item label="课程名称">
                 <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
@@ -27,14 +32,8 @@
                   border>
             <el-table-column type="selection"></el-table-column>
             <el-table-column
-                    min-width="200"
                     prop="name"
-                    label="课程">
-            </el-table-column>
-            <el-table-column
-                    min-width="200"
-                    prop="cat_name"
-                    label="所属栏目">
+                    label="题库名称">
             </el-table-column>
             <el-table-column
                     width="80"
@@ -47,26 +46,6 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="80"
-                    prop="score"
-                    label="总分数">
-            </el-table-column>
-            <el-table-column
-                    width="80"
-                    prop="limit_time_string"
-                    label="限时">
-            </el-table-column>
-            <el-table-column
-                    width="100"
-                    label="状态">
-                <template scope="scope">
-                    <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
-                    <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
-                    <el-tag v-else>已下线</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    width="190"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
@@ -75,19 +54,9 @@
                     width="207"
                     label="操作">
                 <template scope="scope">
-                    <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
-                    <el-button
-                            @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row}, query: {id: scope.row.id}})"
-                            type="text" size="small">编辑 <!--a-->
-                    </el-button>
-                    <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
-                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
-                    </el-button>
+                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">详情</el-button>
+                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
-                    <el-button v-if="scope.row.subject_num > 0"
-                               @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.id}})"
-                               type="text" size="small">答案分析 <!--ff-->
-                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -110,16 +79,49 @@
                 </el-pagination>
             </el-col>
         </el-row>
+
+        <el-dialog :title="editDialog" :visible.sync="dialog.edit">
+            <el-form v-model="model" label-width="80px">
+                <el-form-item label="题库名称">
+                    <el-input v-model="model.name"></el-input>
+                </el-form-item>
+                <el-form-item label="题库简介">
+                    <el-input type="textarea" v-model="model.description"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm()">确定</el-button>
+                    <el-button @click="dialog.edit = false">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
+        <el-dialog title="详情" :visible.sync="dialog.view">
+
+        </el-dialog>
+
+        <el-dialog title="删除" :visible.sync="dialog.del">
+            <p>题库删除后，已加入题库的试题将处于无归属状态，您是否确定删除本题库？</p>
+            <el-button type="primary" @click="submitForm()">确定</el-button>
+            <el-button @click="dialog.edit = false">取消</el-button>
+        </el-dialog>
     </div>
 
 </template>
 
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
+    import testLibraryService from '../../../services/testLibraryService'
 
     export default{
         data () {
             return {
+                dialog: {
+                    edit: false,
+                    view: false,
+                    del: false,
+                },
+                loadingData: false,
+                data: [],
                 selectedIds: [],
                 fetchParam: {
                     keyword: void '',
@@ -129,15 +131,64 @@
                     page: 1,
                     page_size: 15,
                     page_total: 0,
-                }
+                },
+                model: {
+                    id: 0,
+                    name: '',
+                    description: ''
+                },
+                editDialog: '新建题库'
             }
+        },
+        activated () {
+            this.fetchData()
         },
         methods: {
             fetchData() {
-
+                this.loadingData = true
+                return testLibraryService.search(this.fetchParam).then((ret) => {
+                    this.data = ret.list
+                    this.total = ret.total
+                    this.loadingData = false
+                    xmview.setContentLoading(false)
+                })
             },
             delMulti() {
 
+            },
+            // 单行被选中
+            selectRow(selection) {
+                let ret = []
+                selection.forEach((item) => {
+                    ret.push(item.id)
+                })
+                this.selectedIds = ret
+            },
+            add() {
+                this.editDialog = '新建题库'
+                this.dialog.edit = true
+            },
+            edit(index, row) {
+                this.editDialog = '编辑题库'
+                this.dialog.edit = true
+                this.model = row
+            },
+            del(index, row) {
+                this.dialog.del = true
+            },
+            preview(index, row) {
+                this.dialog.view = true
+            },
+            submitForm() {
+                if (this.model.id == 0) {
+                    return testLibraryService.create(this.model).then((ret) => {
+                        this.fetchData()
+                    })
+                } else {
+                    return testLibraryService.update(this.model.id, this.model).then((ret) => {
+                        this.fetchData()
+                    })
+                }
             }
         },
         components: {DateRange}
