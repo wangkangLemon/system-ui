@@ -1,7 +1,7 @@
 /**
  * Created by Pavle Lee on 2017/10/31.
  */
-const pathPre = '/test'
+const pathPre = 'test'
 // 试题管理
 export default {
     path: pathPre,
