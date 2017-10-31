@@ -18,7 +18,6 @@
                     width: 75%;
                     p {
                         padding: 10px;
-                        margin-top: 10px;
                         text-align: left;
                         span {
                             i {
@@ -46,11 +45,9 @@
                         }
                         &.edit-status {
                             text-align: left;
-                            margin-left: 50px;
                             > .el-input {
                                 outline: none;
                                 line-height: 30px;
-                                padding-left: 10px;
                                 width: 70%;
                             }
                             > span {
@@ -97,7 +94,7 @@
                     <h2>课时类型设置</h2>
                     <el-form-item label="选择类型" prop="lesson_type">
                         <el-radio-group v-model="fetchParam.lesson_type">
-                            <!--<el-radio label="single">单节课</el-radio>-->
+                            <el-radio label="single">单节课</el-radio>
                             <el-radio label="multi">多课时</el-radio>
                             <el-radio label="chapter">多章节课</el-radio>
                         </el-radio-group>
@@ -108,7 +105,6 @@
                 </el-form>
             </el-tab-pane>
             <el-tab-pane :disabled="!fetchParam.id" label="课时管理" name="classhour">
-            <!--<el-tab-pane label="课时管理" name="classhour">-->
                 <!--单节课-->
                 <el-form v-if="fetchParam.lesson_type == 'single'" label-width="120px" ref="classhourform" :rules="classhour.rules" :model="classhour.form">
                     <el-form-item label="课时类型" prop="material_type">
@@ -127,6 +123,15 @@
                             <i>{{classhour.form.material_name}}</i>
                         </el-button>
                     </el-form-item>
+                    <el-form-item label="课时名称" prop="name">
+                        <el-input v-model="classhour.form.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="免费试看">
+                        <el-checkbox v-model="classhour.form.try_enable">本课时免费试看</el-checkbox>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="gray" size="full" @click="openExamForm"><i class="el-icon-plus" ></i> 添加考试</el-button>
+                    </el-form-item>
                     <el-form-item label="">
                         <el-button type="primary" class="saveBtn" @click="saveResult">保存</el-button>
                     </el-form-item>
@@ -136,18 +141,21 @@
                 <section class="mulit-class" v-if="fetchParam.lesson_type == 'multi'">
                     <div v-for="(item,index) in multi.data">
                         <div v-if="!item.deleted">
-                            <p class="gray" @click="addNewClasshour" v-if="item.id === -1"><i class="el-icon-plus" ></i> 添加新课时</p>
+                            <div v-if="item.id === -1">
+                                <p><el-button type="gray" size="full" @click="addNewClasshour"><i class="el-icon-plus" ></i> 添加新课时</el-button></p>
+                                <p><el-button type="gray" size="full" @click="openExamForm"><i class="el-icon-plus" ></i> 添加考试</el-button></p>
+                            </div>
                             <p v-else>
                                 <el-tag type="primary">课时{{index + 1}}</el-tag>
                                 <span>
-                                <i>{{item.name}}</i>
-                                <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
-                            </span>
+                                    <i>{{item.name}}</i>
+                                    <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
+                                </span>
                                 <span class="operate">
-                                <el-button type="text" @click="previewFn(item)">查看</el-button>
-                                <el-button type="text" @click="editClasshour(item, index)">编辑</el-button>
-                                <el-button type="text" @click="delClasshour(item, index)">删除</el-button>
-                            </span>
+                                    <el-button type="text" @click="previewFn(item)">查看</el-button>
+                                    <el-button type="text" @click="editClasshour(item, index)">编辑</el-button>
+                                    <el-button type="text" @click="delClasshour(item, index)">删除</el-button>
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -175,7 +183,10 @@
                             </p>
                             <div v-for="(item,index) in pitem.lessons">
                                 <div v-if="!item.deleted">
-                                    <p class="gray" @click="addNewClasshour(pindex)" v-if="item.id === -1"><i class="el-icon-plus" ></i> 添加新课时</p>
+                                    <div v-if="item.id === -1">
+                                        <p><el-button type="gray" size="full" @click="addNewClasshour(pindex)"><i class="el-icon-plus" ></i> 添加新课时</el-button></p>
+                                        <p><el-button type="gray" size="full" @click="openExamForm"><i class="el-icon-plus" ></i> 添加考试</el-button></p>
+                                    </div>
                                     <p v-else>
                                         <el-tag type="primary">课时{{index + 1}}</el-tag>
                                         <span>
@@ -192,7 +203,6 @@
                             </div>
                         </section>
                     </section>
-                    <p class="gray" v-show="!chapter.editStatus" @click="()=>{chapter.editStatus = true;chapter.value = '';}"><i class="el-icon-plus" ></i> 添加新章节</p>
                     <p v-show="chapter.editStatus" class="edit-status" style="text-align: left">
                         <el-input v-model="chapter.value" placeholder="请输入章节名称"></el-input>
                         <span>
@@ -200,6 +210,7 @@
                             <el-button type="text" @click="chapter.editStatus = false">取消</el-button>
                         </span>
                     </p>
+                    <p v-show="!chapter.editStatus"><el-button type="gray" size="full" @click="()=>{chapter.editStatus = true;chapter.value = '';}"><i class="el-icon-plus" ></i> 添加新章节</el-button></p>
                     <el-button type="primary" class="saveBtn" @click="saveResult">保存</el-button>
                 </section>
                 <!--选择视频的弹窗-->
@@ -517,6 +528,13 @@
                     this.docurl = `${config.apiHost}/sys/course/doc/${row.material_id}/view`
                     this.docshow = true
                 }
+            },
+            openExamForm () {
+                this.$notify({
+                    title: '提示',
+                    message: '这是一条不会自动关闭的消息',
+                    duration: 0
+                })
             }
         }
     }
@@ -530,7 +548,7 @@
             image: '',
             description: '',
             price: '',
-            lesson_type: 'multi',
+            lesson_type: 'single',
             tags: '',
             id: 0
         }
