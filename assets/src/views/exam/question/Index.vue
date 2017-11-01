@@ -3,6 +3,9 @@
         .el-form-item{
             margin-bottom: 15px;
         }
+        .multy-choose-item{
+            padding: 5px 0;
+        }
     }
 </style>
 <template>
@@ -96,15 +99,71 @@
 
         <el-dialog :title="editDialog" :visible.sync="dialog.edit">
             <el-form v-model="model" label-width="80px">
-                <el-form-item label="题库名称">
-                    <el-input v-model="model.name"></el-input>
+                <el-form-item label="试题类型" prop="resource">
+                    <el-radio-group v-model="model.type">
+                        <el-radio :label="1">单选题</el-radio>
+                        <el-radio :label="2">多选题</el-radio>
+                        <el-radio :label="0">判断题</el-radio>
+                    </el-radio-group>
                 </el-form-item>
-                <el-form-item label="题库简介">
-                    <el-input type="textarea" v-model="model.description"></el-input>
+                <el-form-item label="试题题目">
+                    <el-input type="textarea" v-model="model.description" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="配图">
+                    <UploadImg :defaultImg="model.image" :url="uploadImgUrl" :onSuccess="res => model.image = res.data.url"></UploadImg>
+                </el-form-item>
+                <el-form-item label="答案选项">
+                    <!--判断题的正确错误选项-->
+                    <div v-if="model.type == 0">
+                        <el-radio class="radio" v-model="model.correct" :label="1">
+                            <i>正确</i>
+                        </el-radio>
+                        <el-radio class="radio" v-model="model.correct" :label="0">
+                            <i>错误</i>
+                        </el-radio>
+                    </div>
+                    <!--单选的答案部分-->
+                    <div v-if="model.type == 1">
+                        <h5>请在正确答案前面打勾</h5>
+                        <div class="multy-choose-item" v-for="(option, index) in model.option" :key="index">
+                            <el-radio v-model="model.correct" :label="index">&nbsp;</el-radio>
+                            <el-input placeholder="填写描述" v-model="option.description" style="width: 530px;"></el-input>
+                            <el-button type="text" @click="model.option.splice(index, 1)">
+                                删除
+                            </el-button>
+                        </div>
+                        <div class="multy-choose-item">
+                            <el-button type="text" @click="addMoreTestingOption(model.option)">添加更多选项</el-button>
+                        </div>
+                    </div>
+                    <!--多选的答案部分-->
+                    <div v-if="model.type == 2">
+                        <h5>请在正确答案前面打勾</h5>
+                        <div class="multy-choose-item" v-for="(option, index) in model.option" :key="index">
+                            <el-checkbox v-model="option.correct" :true-label="1">&nbsp;</el-checkbox>
+                            <el-input placeholder="填写描述" v-model="option.description" style="width: 530px;"></el-input>
+                            <el-button type="text" @click="model.option.splice(index, 1)">
+                                删除
+                            </el-button>
+                        </div>
+                        <div class="multy-choose-item">
+                            <el-button type="text" @click="addMoreTestingOption(model.option)">添加更多选项</el-button>
+                        </div>
+                    </div>
+                </el-form-item>
+                <el-form-item label="答案详解">
+                    <el-input v-model="model.explain" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="所属题库">
+                    <SelectScroll :requestCb="fetchLibrary" v-model="model.group_id"></SelectScroll>
+                </el-form-item>
+                <el-form-item label="课程标签">
+                    <Tags v-model="model.tags"></Tags>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm()">确定</el-button>
-                    <el-button @click="dialog.edit = false">取消</el-button>
+                    <el-button type="primary" @click="submitForm">确定</el-button>
+                    <el-button>取消</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -155,12 +214,16 @@
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
     import testQuestionService from '../../../services/testQuestionService'
+    import testLibraryService from '../../../services/testLibraryService'
+    import UploadImg from '../../component/upload/UploadImg.vue'
+    import SelectScroll from '../../component/form/SelectScroll.vue'
+    import Tags from '../../component/form/Tags.vue'
 
     export default{
         data () {
             return {
                 dialog: {
-                    edit: false,
+                    edit: true,
                     view: false,
                     del: false,
                 },
@@ -178,8 +241,12 @@
                 },
                 model: {
                     id: 0,
-                    name: '',
                     description: '',
+                    image: '',
+                    type: 0,
+                    correct: 0,
+                    group_id: '',
+                    option: []
                 },
                 editDialog: '新建题库'
             }
@@ -189,13 +256,13 @@
         },
         methods: {
             fetchData() {
-                this.loadingData = true
-                return testQuestionService.search(this.fetchParam).then((ret) => {
-                    this.data = ret.list
-                    this.total = ret.total
-                    this.loadingData = false
-                    xmview.setContentLoading(false)
-                })
+//                this.loadingData = true
+//                return testQuestionService.search(this.fetchParam).then((ret) => {
+//                    this.data = ret.list
+//                    this.total = ret.total
+//                    this.loadingData = false
+//                    xmview.setContentLoading(false)
+//                })
             },
             delMulti() {
 
@@ -237,22 +304,38 @@
                 this.model = row
             },
             submitForm() {
-                if (this.model.id == 0) {
-                    return testQuestionService.create(this.model).then((ret) => {
-                        this.dialog.edit = false
-                        this.fetchData()
-                    })
-                } else {
-                    return testQuestionService.update(this.model.id, this.model).then((ret) => {
-                        this.dialog.edit = false
-                        this.fetchData()
-                    })
-                }
+                console.log(this.model)
             },
             openImportDialog() {
 
+            },
+            // 添加多选 单选的选项
+            addMoreTestingOption() {
+                this.model.option.push({
+                    description: '',
+                    correct: ''
+                })
+            },
+            fetchLibrary(keyword, page) {
+                return testLibraryService.search({keyword, page}).then((ret) => {
+                    let result = {
+                        data: [],
+                        total: ret.total
+                    }
+                    if (ret.list == null) {
+                        ret.list = []
+                    }
+                    ret.list.forEach((value) => {
+                        result.data.push({
+                            id: value.id,
+                            name: value.name,
+                        })
+                    })
+
+                    return result
+                })
             }
         },
-        components: {DateRange}
+        components: {DateRange, UploadImg, SelectScroll, Tags}
     }
 </script>
