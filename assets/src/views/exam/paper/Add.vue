@@ -18,29 +18,29 @@
             <img :src="form.image | fillImgPath" width="200" height="112" v-show="form.image">
             <CropperImg ref="imgCropper" :aspectRatio="16/9"></CropperImg>
         </el-form-item>
-        <el-form-item label="题目数量">
+        <el-form-item label="题目数量" prop="number">
             <el-input class="number" v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="试卷总分">
+        <el-form-item label="试卷总分" prop="score">
             <el-input class="number" v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="考试时间">
+        <el-form-item label="考试时间" prop="long">
             <el-input class="number" v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="及格分数">
+        <el-form-item label="及格分数" prop="pass_score">
             <el-input class="number" v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="考试后">
+        <el-form-item label="考试后" prop="wait_resolve">
             <el-input class="number" v-model="form.name"></el-input>
             分钟开启试题解析
         </el-form-item>
-        <el-form-item label="考试次数">
+        <el-form-item label="考试次数" prop="times">
             <el-input class="number" v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="学分奖励">
+        <el-form-item label="学分奖励" prop="award_score">
             <el-input class="number" v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="适用对象">
+        <el-form-item label="适用对象" prop="suit">
             <el-select v-model="form.name" placeholder="请选择活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
@@ -143,6 +143,14 @@
                 form: {
                     name: '',
                     image: '',
+                    number: '',
+                    score: '',
+                    long: '',
+                    pass_score: '',
+                    wait_resolve: '',
+                    times: '',
+                    award_score: '',
+                    suit: '',
                     questions: []
                 },
                 multiQuestion: {
@@ -174,6 +182,30 @@
                     ],
                     image: [
                         { required: true, message: '请上传试卷封面', trigger: 'blur' },
+                    ],
+                    number: [
+                        { required: true, message: '请输入题目数量', trigger: 'blur' },
+                    ],
+                    score: [
+                        { required: true, message: '请输入题目数量', trigger: 'blur' },
+                    ],
+                    long: [
+                        { required: true, message: '请输入题目数量', trigger: 'blur' },
+                    ],
+                    pass_score: [
+                        { required: true, message: '请输入题目数量', trigger: 'blur' },
+                    ],
+                    wait_resolve: [
+                        { required: true, message: '请输入题目数量', trigger: 'blur' },
+                    ],
+                    times: [
+                        { required: true, message: '请输入题目数量', trigger: 'blur' },
+                    ],
+                    award_score: [
+                        { required: true, message: '请输入题目数量', trigger: 'blur' },
+                    ],
+                    suit: [
+                        { required: true, message: '请输入题目数量', trigger: 'blur' },
                     ],
                 }
             }
