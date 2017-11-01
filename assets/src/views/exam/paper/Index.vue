@@ -1,5 +1,9 @@
 <template>
-    <div>
+    <div id="paper-content-container">
+        <section class="manage-container">
+            <el-button type="primary" icon="plus" @click="$router.push({ name:'test-paper-add'})"><i>新增试卷</i></el-button>
+        </section>
+
         <el-form :inline="true" :model="fetchParam" class="search">
             <el-form-item label="课程名称">
                 <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
@@ -120,6 +124,8 @@
     export default{
         data () {
             return {
+                loadingData: false,
+                data: [],
                 selectedIds: [],
                 fetchParam: {
                     keyword: void '',
@@ -129,16 +135,37 @@
                     page: 1,
                     page_size: 15,
                     page_total: 0,
-                }
+                },
+                model: {
+                    id: 0,
+                    description: '',
+                    image: '',
+                    type: 0,
+                    correct: 0,
+                    group_id: '',
+                    option: []
+                },
+                editDialog: '新建题库'
             }
+        },
+        activated () {
+            this.fetchData()
         },
         methods: {
             fetchData() {
-
+                xmview.setContentLoading(false)
             },
             delMulti() {
 
-            }
+            },
+            // 单行被选中
+            selectRow(selection) {
+                let ret = []
+                selection.forEach((item) => {
+                    ret.push(item.id)
+                })
+                this.selectedIds = ret
+            },
         },
         components: {DateRange}
     }

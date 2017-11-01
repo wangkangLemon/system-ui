@@ -13,10 +13,10 @@ export default {
     children: [
         {
             path: 'index',
-            name: 'test-index',
+            name: 'test-paper-index',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../../views/exam/test/Index.vue'))
+                    resolve(require('../../views/exam/paper/Index.vue'))
                 })
             },
             meta: {
@@ -26,10 +26,10 @@ export default {
         },
         {
             path: 'view/:id',
-            name: 'test-view',
+            name: 'test-paper-view',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../../views/exam/test/View.vue'))
+                    resolve(require('../../views/exam/paper/View.vue'))
                 })
             },
             meta: {
@@ -38,22 +38,23 @@ export default {
         },
         {
             path: 'add',
-            name: 'test-add',
+            name: 'test-paper-add',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../../views/exam/test/Add.vue'))
+                    resolve(require('../../views/exam/paper/Add.vue'))
                 })
             },
             meta: {
                 title: '试题管理-添加',
+                noback: true
             }
         },
         {
             path: 'edit',
-            name: 'test-edit',
+            name: 'test-paper-edit',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../../views/exam/test/Edit.vue'))
+                    resolve(require('../../views/exam/paper/Edit.vue'))
                 })
             },
             meta: {

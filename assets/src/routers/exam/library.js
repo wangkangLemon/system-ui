@@ -16,7 +16,7 @@
      children: [
          {
              path: 'index',
-             name: 'test-index',
+             name: 'test-library-index',
              component: resolve => {
                  require.ensure([], () => {
                      resolve(require('../../views/exam/library/Index.vue'))

@@ -7,6 +7,14 @@
             padding: 5px 0;
         }
     }
+    #view {
+        .el-form-item__label {
+            width: 100px;
+        }
+        .el-form-item__content{
+            margin-left: 100px;
+        }
+    }
 </style>
 <template>
     <div id="question-content-container">
@@ -168,44 +176,64 @@
             </el-form>
         </el-dialog>
 
-        <el-dialog title="详情" :visible.sync="dialog.view">
+        <el-dialog id="view" title="详情" :visible.sync="dialog.view">
             <div class="el-form-item">
-                <label class="el-form-item__label" style="width: 100px;">题库名称：</label>
-                <div class="el-form-item__content" style="margin-left: 100px;">
+                <label class="el-form-item__label">试题类型：</label>
+                <div class="el-form-item__content">
                     <div class="el-input">
-                        {{model.name}}
+                        {{model.type}}
                     </div>
                 </div>
             </div>
             <div class="el-form-item">
-                <label class="el-form-item__label" style="width: 100px;">题库简介：</label>
-                <div class="el-form-item__content" style="margin-left: 100px;">
+                <label class="el-form-item__label">试题题目：</label>
+                <div class="el-form-item__content">
                     <div class="el-input">
                         {{model.description}}
                     </div>
                 </div>
             </div>
-            <el-table
-                    :data="tableData"
-                    border
-                    style="width: 100%">
-                <el-table-column
-                        prop="date"
-                        label="单选题">
-                </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="多选题">
-                </el-table-column>
-                <el-table-column
-                        prop="address"
-                        label="判断题">
-                </el-table-column>
-                <el-table-column
-                        prop="address"
-                        label="药我说">
-                </el-table-column>
-            </el-table>
+            <div class="el-form-item">
+                <label class="el-form-item__label">试题配图：</label>
+                <div class="el-form-item__content">
+                    <div class="el-input">
+                        {{model.description}}
+                    </div>
+                </div>
+            </div>
+            <div class="el-form-item">
+                <label class="el-form-item__label">答案选项：</label>
+                <div class="el-form-item__content">
+                    <div class="el-input">
+                        {{model.description}}
+                    </div>
+                </div>
+            </div>
+            <div class="el-form-item">
+                <label class="el-form-item__label">答案详解：</label>
+                <div class="el-form-item__content">
+                    <p>必要要件和充分要件 <el-tag type="danger">正确</el-tag></p>
+                    <p>必要要件和充分要件</p>
+                    <p>必要要件和充分要件</p>
+                    <p>必要要件和充分要件</p>
+                </div>
+            </div>
+            <div class="el-form-item">
+                <label class="el-form-item__label">试题标签：</label>
+                <div class="el-form-item__content">
+                    <div class="el-input">
+                        {{model.description}}
+                    </div>
+                </div>
+            </div>
+            <div class="el-form-item">
+                <label class="el-form-item__label">所属题库：</label>
+                <div class="el-form-item__content">
+                    <div class="el-input">
+                        {{model.description}}
+                    </div>
+                </div>
+            </div>
         </el-dialog>
     </div>
 
@@ -223,8 +251,8 @@
         data () {
             return {
                 dialog: {
-                    edit: true,
-                    view: false,
+                    edit: false,
+                    view: true,
                     del: false,
                 },
                 loadingData: false,
@@ -256,6 +284,7 @@
         },
         methods: {
             fetchData() {
+                xmview.setContentLoading(false)
 //                this.loadingData = true
 //                return testQuestionService.search(this.fetchParam).then((ret) => {
 //                    this.data = ret.list
@@ -276,16 +305,16 @@
                 this.selectedIds = ret
             },
             openAddDialog() {
-                this.editDialog = '新建题库'
+                this.editDialog = '新建试题'
                 this.dialog.edit = true
             },
             edit(index, row) {
-                this.editDialog = '编辑题库'
+                this.editDialog = '编辑试题'
                 this.dialog.edit = true
                 this.model = row
             },
             del(index, row) {
-                this.$confirm('题库删除后，已加入题库的试题将处于无归属状态，您是否确定删除本题库？', '删除', {
+                this.$confirm('您是否确定删除试题？', '删除', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
