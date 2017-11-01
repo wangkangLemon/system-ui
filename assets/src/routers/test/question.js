@@ -4,8 +4,8 @@
  * Time: 下午2:45
  */
 
- const pathPre = '/test/library'
- // 题库管理
+ const pathPre = '/test/question'
+ // 试题管理
  export default {
      path: pathPre,
      component: resolve => {
@@ -19,11 +19,11 @@
              name: 'test-index',
              component: resolve => {
                  require.ensure([], () => {
-                     resolve(require('../../views/exam/library/Index.vue'))
+                     resolve(require('../../views/exam/question/Index.vue'))
                  })
              },
              meta: {
-                 title: '题库管理',
+                 title: '试题管理',
              }
          },
      ]

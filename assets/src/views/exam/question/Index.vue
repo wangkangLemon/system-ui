@@ -1,19 +1,33 @@
+<style lang='scss' rel='stylesheet/scss'>
+    #question-content-container {
+        .el-form-item{
+            margin-bottom: 15px;
+        }
+    }
+</style>
 <template>
-    <div>
+    <div id="question-content-container">
         <section class="manage-container">
-            <el-button type="primary" icon="plus" @click="add()"><i>新增题库</i>
-            </el-button>
+            <el-button type="warning" icon="plus" @click="openImportDialog()"><i>导入试题</i></el-button>
+            <el-button type="primary" icon="plus" @click="openAddDialog()"><i>新增试题</i></el-button>
         </section>
 
         <el-form :inline="true" :model="fetchParam" class="search">
-            <el-form-item label="课程名称">
+            <el-form-item label="所属题库">
                 <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="试题标签">
                 <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                    <el-option label="正常" value="0"></el-option>
-                    <el-option label="下线" value="1"></el-option>
-                    <el-option label="视频转码中" value="2"></el-option>
+                    <el-option label="单选题" value="0"></el-option>
+                    <el-option label="多选题" value="1"></el-option>
+                    <el-option label="判断题" value="2"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="试题类型">
+                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
+                    <el-option label="单选题" value="0"></el-option>
+                    <el-option label="多选题" value="1"></el-option>
+                    <el-option label="判断题" value="2"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -140,7 +154,7 @@
 
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
-    import testLibraryService from '../../../services/testLibraryService'
+    import testQuestionService from '../../../services/testQuestionService'
 
     export default{
         data () {
@@ -176,7 +190,7 @@
         methods: {
             fetchData() {
                 this.loadingData = true
-                return testLibraryService.search(this.fetchParam).then((ret) => {
+                return testQuestionService.search(this.fetchParam).then((ret) => {
                     this.data = ret.list
                     this.total = ret.total
                     this.loadingData = false
@@ -194,7 +208,7 @@
                 })
                 this.selectedIds = ret
             },
-            add() {
+            openAddDialog() {
                 this.editDialog = '新建题库'
                 this.dialog.edit = true
             },
@@ -209,7 +223,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return testLibraryService.delete(row.id).then((ret) => {
+                    return testQuestionService.delete(row.id).then((ret) => {
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -224,16 +238,19 @@
             },
             submitForm() {
                 if (this.model.id == 0) {
-                    return testLibraryService.create(this.model).then((ret) => {
+                    return testQuestionService.create(this.model).then((ret) => {
                         this.dialog.edit = false
                         this.fetchData()
                     })
                 } else {
-                    return testLibraryService.update(this.model.id, this.model).then((ret) => {
+                    return testQuestionService.update(this.model.id, this.model).then((ret) => {
                         this.dialog.edit = false
                         this.fetchData()
                     })
                 }
+            },
+            openImportDialog() {
+
             }
         },
         components: {DateRange}

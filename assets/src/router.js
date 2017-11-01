@@ -18,7 +18,8 @@ import speaking from './routers/speaking' // 药我说
 import systemTools from './routers/system/tools' // 系统工具
 import newCourse from './routers/newcourse/course' // 系列课程
 import testPaper from './routers/test/paper' // 试卷管理
-import testLibrary from './routers/test/library' // 试卷管理
+import testLibrary from './routers/test/library' // 题库管理
+import testQuestion from './routers/test/question' // 试题管理
 import authUtils from './utils/authUtils'
 import * as typeUtils from './utils/typeUtils'
 
@@ -127,6 +128,8 @@ const routes = [
             testPaper,
             // 题库管理
             testLibrary,
+            // 试题管理
+            testQuestion,
         ]
     },
     {   // 登录

@@ -2,7 +2,7 @@
  * Created by Pavle Lee on 2017/10/31.
  */
 const pathPre = '/test/paper'
-// 试题管理
+// 试卷管理
 export default {
     path: pathPre,
     component: resolve => {

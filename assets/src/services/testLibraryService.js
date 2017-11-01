@@ -18,13 +18,19 @@ class TestLibraryService {
     }
     create({name, description}) {
         let url = `${urlPre}/testbank/group`
-        return api.post(url, {name, description}).then((ret) => {
+        return api.post(url, JSON.stringify({name, description})).then((ret) => {
             return ret.data
         })
     }
     update(id, {name, description}) {
         let url = `${urlPre}/testbank/group/${id}`
-        return api.put(url, {name, description}).then((ret) => {
+        return api.put(url, JSON.stringify({name, description})).then((ret) => {
+            return ret.data
+        })
+    }
+    delete(id) {
+        let url = `${urlPre}/testbank/group/${id}`
+        return api.del(url, {}).then((ret) => {
             return ret.data
         })
     }
