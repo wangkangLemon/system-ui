@@ -11,6 +11,14 @@ class Option {
         this.description = ''
         this.correct = 0
     }
+
+    get correctName() {
+        if (this.correct == 0) {
+            return '错误'
+        } else {
+            return '正确'
+        }
+    }
 }
 
 export default Option

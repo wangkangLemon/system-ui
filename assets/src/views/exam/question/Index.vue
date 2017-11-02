@@ -19,7 +19,7 @@
 <template>
     <div id="question-content-container">
         <section class="manage-container">
-            <el-button type="warning" icon="plus" @click="openImportDialog()"><i>导入试题</i></el-button>
+            <el-button type="warning" icon="plus" @click="$refs['localImportDialog'].open()"><i>导入试题</i></el-button>
             <el-button type="primary" icon="plus" @click="openAddDialog()"><i>新增试题</i></el-button>
         </section>
 
@@ -80,6 +80,7 @@
             <el-table-column
                     prop="status"
                     align="status"
+                    width="76"
                     label="当前状态">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.status == 0">上线</el-tag>
@@ -196,7 +197,7 @@
                 <label class="el-form-item__label">试题类型：</label>
                 <div class="el-form-item__content">
                     <div class="el-input">
-                        {{model.type}}
+                        {{model.typeName}}
                     </div>
                 </div>
             </div>
@@ -212,32 +213,34 @@
                 <label class="el-form-item__label">试题配图：</label>
                 <div class="el-form-item__content">
                     <div class="el-input">
-                        {{model.description}}
+                        <img :src="model.image" alt="" style="width: 100px; height: 100px;">
                     </div>
                 </div>
             </div>
             <div class="el-form-item">
                 <label class="el-form-item__label">答案选项：</label>
                 <div class="el-form-item__content">
-                    <div class="el-input">
-                        {{model.description}}
-                    </div>
+                    <p v-for="(option, index) in model.options">
+                        {{ option.description }}
+                        <el-tag type="success" v-if="option.correct == 1">{{ option.correctName }}</el-tag>
+                        <el-tag type="danger" v-if="option.correct == 0">{{ option.correctName }}</el-tag>
+                    </p>
                 </div>
             </div>
             <div class="el-form-item">
                 <label class="el-form-item__label">答案详解：</label>
                 <div class="el-form-item__content">
-                    <p>必要要件和充分要件 <el-tag type="danger">正确</el-tag></p>
-                    <p>必要要件和充分要件</p>
-                    <p>必要要件和充分要件</p>
-                    <p>必要要件和充分要件</p>
+                    <div class="el-input">
+                        {{model.explain}}
+                    </div>
                 </div>
             </div>
+
             <div class="el-form-item">
                 <label class="el-form-item__label">试题标签：</label>
                 <div class="el-form-item__content">
                     <div class="el-input">
-                        {{model.description}}
+                        {{model.tagString}}
                     </div>
                 </div>
             </div>
@@ -245,11 +248,13 @@
                 <label class="el-form-item__label">所属题库：</label>
                 <div class="el-form-item__content">
                     <div class="el-input">
-                        {{model.description}}
+                        {{model.group_name}}
                     </div>
                 </div>
             </div>
         </el-dialog>
+
+        <LocalImportDialog @confirmFn="importQuestion" ref="localImportDialog"></LocalImportDialog>
     </div>
 
 </template>
@@ -263,6 +268,7 @@
     import Tags from '../../component/form/Tags.vue'
     import Question from '../../../models/quesion'
     import Option from '../../../models/option'
+    import LocalImportDialog from '../LocalImportDialog.vue'
 
     export default{
         data () {
@@ -332,7 +338,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return testQuestionService.delete(row.id).then((ret) => {
+                    return testQuestionService.delete(row.subject_group_id, row.id).then((ret) => {
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -343,16 +349,15 @@
             },
             preview(index, row) {
                 this.dialog.view = true
-                this.model = row
+                let question = new Question()
+                question.findById(row.subject_group_id, row.id)
+                this.model = question
             },
             submitForm() {
                 this.model.save().then(() => {
                     this.fetchData()
                 })
                 this.dialog.edit = false
-            },
-            openImportDialog() {
-
             },
             // 添加多选 单选的选项
             addMoreTestingOption() {
@@ -377,8 +382,9 @@
 
                     return result
                 })
-            }
+            },
+            importQuestion() {}
         },
-        components: {DateRange, UploadImg, SelectScroll, Tags}
+        components: {DateRange, UploadImg, SelectScroll, Tags, LocalImportDialog}
     }
 </script>

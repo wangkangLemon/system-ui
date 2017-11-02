@@ -56,7 +56,7 @@ class Question {
             this.image = subject.image
             this.explain = subject.explain
             this.correct = subject.correct
-            this.tags = subject.tags.split('，')
+            this.tags = subject.tags == '' ? [] : subject.tags.split('，')
             this.group_id = subject.subject_group_id
             this.group_name = subject.subject_group_name
 
@@ -106,6 +106,10 @@ class Question {
         default:
             return '未定义'
         }
+    }
+
+    get tagString() {
+        return this.tags.join('，')
     }
 }
 
