@@ -25,7 +25,7 @@
 
         <el-form :inline="true" :model="fetchParam" class="search">
             <el-form-item label="所属题库">
-                <el-input v-model="fetchParam.group_id" placeholder="所属题库" @keyup.enter.native="fetchData"></el-input>
+                <SelectScroll :requestCb="fetchLibrary" v-model="fetchParam.group_id"></SelectScroll>
             </el-form-item>
             <el-form-item label="试题标签">
                 <el-select v-model="fetchParam.tags" placeholder="试题标签" @change="fetchData" :clearable="true">

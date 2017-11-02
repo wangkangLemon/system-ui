@@ -22,7 +22,7 @@ class TestQuestionService {
     }
     create(group_id, {type, description, explain, tags, correct, image, option}) {
         let url = `${urlPre}/testbank/group/${group_id}/subject`
-        return api.post(url, JSON.stringify({type, description, explain, tags, correct, image, option})).then((ret) => {
+        return api.post(url, JSON.stringify([{type, description, explain, tags, correct, image, option}])).then((ret) => {
             return ret.data
         })
     }
