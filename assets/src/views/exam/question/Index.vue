@@ -25,17 +25,17 @@
 
         <el-form :inline="true" :model="fetchParam" class="search">
             <el-form-item label="所属题库">
-                <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
+                <el-input v-model="fetchParam.group_id" placeholder="所属题库" @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
             <el-form-item label="试题标签">
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
+                <el-select v-model="fetchParam.tags" placeholder="试题标签" @change="fetchData" :clearable="true">
                     <el-option label="单选题" value="0"></el-option>
                     <el-option label="多选题" value="1"></el-option>
                     <el-option label="判断题" value="2"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="试题类型">
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
+                <el-select v-model="fetchParam.type" placeholder="试题类型" @change="fetchData" :clearable="true">
                     <el-option label="单选题" value="0"></el-option>
                     <el-option label="多选题" value="1"></el-option>
                     <el-option label="判断题" value="2"></el-option>
@@ -57,17 +57,33 @@
                   border>
             <el-table-column type="selection"></el-table-column>
             <el-table-column
-                    prop="name"
-                    label="题库名称">
+                    prop="description"
+                    label="试题题目">
             </el-table-column>
             <el-table-column
-                    width="80"
-                    label="题目数">
+                    prop="subject_group_name"
+                    label="所属题库">
+            </el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="试题类型">
                 <template scope="scope">
-                    <el-button style="width: 100%"
-                               @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second'}})"
-                               type="text" size="small">{{scope.row.subject_num}}  <!--a-->
-                    </el-button>
+                    <p v-if="scope.row.type == 0">判断题</p>
+                    <p v-if="scope.row.type == 1">单选题</p>
+                    <p v-if="scope.row.type == 2">多选题</p>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="tags"
+                    label="试题标签">
+            </el-table-column>
+            <el-table-column
+                    prop="status"
+                    align="status"
+                    label="当前状态">
+                <template scope="scope">
+                    <el-tag type="success" v-if="scope.row.status == 0">上线</el-tag>
+                    <el-tag type="danger" v-if="scope.row.status == 1">下线</el-tag>
                 </template>
             </el-table-column>
             <el-table-column
@@ -118,7 +134,7 @@
                     <el-input type="textarea" v-model="model.description" placeholder="请输入内容"></el-input>
                 </el-form-item>
                 <el-form-item label="配图">
-                    <UploadImg :defaultImg="model.image" :url="uploadImgUrl" :onSuccess="res => model.image = res.data.url"></UploadImg>
+                    <UploadImg :defaultImg="model.image" :onSuccess="res => model.image = res.data.url"></UploadImg>
                 </el-form-item>
                 <el-form-item label="答案选项">
                     <!--判断题的正确错误选项-->
@@ -133,29 +149,29 @@
                     <!--单选的答案部分-->
                     <div v-if="model.type == 1">
                         <h5>请在正确答案前面打勾</h5>
-                        <div class="multy-choose-item" v-for="(option, index) in model.option" :key="index">
+                        <div class="multy-choose-item" v-for="(option, index) in model.options" :key="index">
                             <el-radio v-model="model.correct" :label="index">&nbsp;</el-radio>
                             <el-input placeholder="填写描述" v-model="option.description" style="width: 530px;"></el-input>
-                            <el-button type="text" @click="model.option.splice(index, 1)">
+                            <el-button type="text" @click="model.options.splice(index, 1)">
                                 删除
                             </el-button>
                         </div>
                         <div class="multy-choose-item">
-                            <el-button type="text" @click="addMoreTestingOption(model.option)">添加更多选项</el-button>
+                            <el-button type="text" @click="addMoreTestingOption()">添加更多选项</el-button>
                         </div>
                     </div>
                     <!--多选的答案部分-->
                     <div v-if="model.type == 2">
                         <h5>请在正确答案前面打勾</h5>
-                        <div class="multy-choose-item" v-for="(option, index) in model.option" :key="index">
+                        <div class="multy-choose-item" v-for="(option, index) in model.options" :key="index">
                             <el-checkbox v-model="option.correct" :true-label="1">&nbsp;</el-checkbox>
                             <el-input placeholder="填写描述" v-model="option.description" style="width: 530px;"></el-input>
-                            <el-button type="text" @click="model.option.splice(index, 1)">
+                            <el-button type="text" @click="model.options.splice(index, 1)">
                                 删除
                             </el-button>
                         </div>
                         <div class="multy-choose-item">
-                            <el-button type="text" @click="addMoreTestingOption(model.option)">添加更多选项</el-button>
+                            <el-button type="text" @click="addMoreTestingOption()">添加更多选项</el-button>
                         </div>
                     </div>
                 </el-form-item>
@@ -171,7 +187,6 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm">确定</el-button>
-                    <el-button>取消</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -246,36 +261,31 @@
     import UploadImg from '../../component/upload/UploadImg.vue'
     import SelectScroll from '../../component/form/SelectScroll.vue'
     import Tags from '../../component/form/Tags.vue'
+    import Question from '../../../models/quesion'
+    import Option from '../../../models/option'
 
     export default{
         data () {
             return {
                 dialog: {
                     edit: false,
-                    view: true,
+                    view: false,
                     del: false,
                 },
                 loadingData: false,
                 data: [],
                 selectedIds: [],
                 fetchParam: {
-                    keyword: void '',
-                    status: void 0,
+                    group_id: void '',
+                    tags: '',
+                    type: void '',
                     time_start: void '',
                     time_end: void '',
                     page: 1,
                     page_size: 15,
                     page_total: 0,
                 },
-                model: {
-                    id: 0,
-                    description: '',
-                    image: '',
-                    type: 0,
-                    correct: 0,
-                    group_id: '',
-                    option: []
-                },
+                model: Question,
                 editDialog: '新建题库'
             }
         },
@@ -284,14 +294,13 @@
         },
         methods: {
             fetchData() {
-                xmview.setContentLoading(false)
-//                this.loadingData = true
-//                return testQuestionService.search(this.fetchParam).then((ret) => {
-//                    this.data = ret.list
-//                    this.total = ret.total
-//                    this.loadingData = false
-//                    xmview.setContentLoading(false)
-//                })
+                this.loadingData = true
+                return testQuestionService.search(this.fetchParam).then((ret) => {
+                    this.data = ret.list
+                    this.fetchParam.page_total = ret.total
+                    this.loadingData = false
+                    xmview.setContentLoading(false)
+                })
             },
             delMulti() {
 
@@ -307,11 +316,15 @@
             openAddDialog() {
                 this.editDialog = '新建试题'
                 this.dialog.edit = true
+                let question = new Question()
+                this.model = question
             },
             edit(index, row) {
                 this.editDialog = '编辑试题'
                 this.dialog.edit = true
-                this.model = row
+                let question = new Question()
+                question.findById(row.subject_group_id, row.id)
+                this.model = question
             },
             del(index, row) {
                 this.$confirm('您是否确定删除试题？', '删除', {
@@ -333,17 +346,18 @@
                 this.model = row
             },
             submitForm() {
-                console.log(this.model)
+                this.model.save().then(() => {
+                    this.fetchData()
+                })
+                this.dialog.edit = false
             },
             openImportDialog() {
 
             },
             // 添加多选 单选的选项
             addMoreTestingOption() {
-                this.model.option.push({
-                    description: '',
-                    correct: ''
-                })
+                let option = new Option()
+                this.model.addOption(option)
             },
             fetchLibrary(keyword, page) {
                 return testLibraryService.search({keyword, page}).then((ret) => {

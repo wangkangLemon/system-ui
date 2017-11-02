@@ -7,6 +7,9 @@
         .multy-choose-item{
             padding: 5px 0;
         }
+        .el-button + .el-button{
+            margin-left: 0;
+        }
     }
 </style>
 <template>
@@ -31,8 +34,9 @@
             <el-input class="number" v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="考试后" prop="wait_resolve">
-            <el-input class="number" v-model="form.name"></el-input>
-            分钟开启试题解析
+            <el-input class="number" v-model="form.name">
+                <template slot="append">分钟开启试题解析</template>
+            </el-input>
         </el-form-item>
         <el-form-item label="考试次数" prop="times">
             <el-input class="number" v-model="form.name"></el-input>
@@ -47,17 +51,22 @@
             </el-select>
         </el-form-item>
 
+        <LibraryImportDialog ref="libraryImportDialog" :confirmFn="importQuestion"></LibraryImportDialog>
+        <!--<LocalImportDialog ref="localImportDialog" confirmFn="addTesting(2, index)"></LocalImportDialog>-->
         <el-form label-width="120px" v-for="(item,index) in form.questions" :key="index">
             <hr>
             <el-form-item>
-                <el-button icon="plus" @click='addTesting(0, index)'>判断题</el-button>
-                <el-button icon="plus" @click='addTesting(1, index)'>单选题</el-button>
-                <el-button icon="plus" @click='addTesting(2, index)'>多选题</el-button>
-                <el-button icon="delete" type="danger" @click='deleteTesting(index, item)'>删除</el-button>
+                <el-button icon="plus" @click='addTesting(0, index)' size="small">判断题</el-button>
+                <el-button icon="plus" @click='addTesting(1, index)' size="small">单选题</el-button>
+                <el-button icon="plus" @click='addTesting(2, index)' size="small">多选题</el-button>
+                <el-button icon="plus" @click="$refs['localImportDialog'].open()" size="small">本地导入</el-button>
+                <el-button icon="plus" @click='addTesting(2, index)' size="small">题库导入</el-button>
+                <el-button icon="plus" @click='addTesting(2, index)' size="small">课程导入</el-button>
+                <el-button icon="delete" type="danger" @click='deleteTesting(index, item)' size="small"></el-button>
             </el-form-item>
             <el-form-item :label="'第' + (index+1) + '题'">
-                <span v-if="item.category == 0">判断题</span>
-                <span v-else-if="item.category == 1">单选题</span>
+                <span v-if="item.type == 0">判断题</span>
+                <span v-else-if="item.type == 1">单选题</span>
                 <span v-else>多选题</span>
             </el-form-item>
             <el-form-item label="题目">
@@ -73,7 +82,7 @@
 
             <el-form-item label="选项">
                 <!--判断题的正确错误选项-->
-                <div v-if="item.category == 0">
+                <div v-if="item.type == 0">
                     <el-radio class="radio" v-model="item.correct" :label="1">
                         <i>正确</i>
                     </el-radio>
@@ -82,10 +91,10 @@
                     </el-radio>
                 </div>
                 <!--单选的答案部分-->
-                <div v-if="item.category == 1">
+                <div v-if="item.type == 1">
                     <h5>请在正确答案前面打勾</h5>
                     <div class="multy-choose-item" v-for="(option, index) in item.options" :key="index">
-                        <el-radio v-model="option.correct" :label="index">&nbsp;</el-radio>
+                        <el-radio v-model="item.correct" :label="index">&nbsp;</el-radio>
                         <el-input placeholder="填写描述" v-model="option.description" style="width: 460px;"></el-input>
                         <el-button type="text" @click="option.options.splice(index, 1)">
                             删除
@@ -96,7 +105,7 @@
                     </div>
                 </div>
                 <!--多选的答案部分-->
-                <div v-if="item.category == 2">
+                <div v-if="item.type == 2">
                     <h5>请在正确答案前面打勾</h5>
                     <div class="multy-choose-item" v-for="(option, index) in item.options" :key="index">
                         <el-checkbox v-model="option.correct" :true-label="1">&nbsp;</el-checkbox>
@@ -120,9 +129,12 @@
         <el-form label-width="120px">
             <hr>
             <el-form-item label="">
-                <el-button icon="plus" @click='addTesting(0)'>判断题</el-button>
-                <el-button icon="plus" @click='addTesting(1)'>单选题</el-button>
-                <el-button icon="plus" @click='addTesting(2)'>多选题</el-button>
+                <el-button icon="plus" @click='addTesting(0)' size="small">判断题</el-button>
+                <el-button icon="plus" @click='addTesting(1)' size="small">单选题</el-button>
+                <el-button icon="plus" @click='addTesting(2)' size="small">多选题</el-button>
+                <el-button icon="plus" @click="$refs['localImportDialog'].open()" size="small">本地导入</el-button>
+                <el-button icon="plus" @click="$refs['libraryImportDialog'].open()" size="small">题库导入</el-button>
+                <el-button icon="plus" @click='addTesting(2)' size="small">课程导入</el-button>
             </el-form-item>
         </el-form>
 
@@ -136,6 +148,10 @@
 <script>
     import CropperImg from '../../component/upload/ImagEcropperInput.vue'
     import UploadImg from '../../component/upload/UploadImg.vue'
+    import LocalImportDialog from '../LocalImportDialog.vue'
+    import LibraryImportDialog from './LibraryImportDialog.vue'
+    import Question from '../../../models/quesion'
+    import Option from '../../../models/option'
 
     export default{
         data () {
@@ -152,29 +168,6 @@
                     award_score: '',
                     suit: '',
                     questions: []
-                },
-                multiQuestion: {
-                    category: void 1,
-                    description: void 0, // 题目
-                    score: void 0, // 分数
-                    image: void 0, // 图片
-                    explain: void 0, // 答案详解
-                    correct: void 0,
-                    editable: true,
-                    options: [{ // 选项
-                        sort: 1,
-                        description: '',
-                        correct: void 0 // 是否正确答案 正确为1
-                    }]
-                },
-                singleQuestion: {
-                    category: void 0,
-                    description: void 0, // 题目
-                    score: void 0, // 分数
-                    image: void 0, // 图片
-                    explain: void 0, // 答案详解
-                    correct: void 0,
-                    editable: true,
                 },
                 rules: {
                     name: [
@@ -218,20 +211,15 @@
                 if (index == undefined) {
                     index = this.form.questions.length
                 }
-                if (type == 0) {
-                    this.singleQuestion.category = type
-                    this.form.questions.splice(index, 1, this.singleQuestion)
-                } else {
-                    this.multiQuestion.category = type
-                    this.form.questions.splice(index, 1, this.multiQuestion)
-                }
+
+                let question = new Question()
+                question.type = type
+                this.form.questions.splice(index, 1, question)
             },
             // 添加多选 单选的选项
             addMoreTestingOption(question) {
-                question.options.push({
-                    description: '',
-                    correct: ''
-                })
+                let option = new Option()
+                question.addOption(option)
             },
             deleteTesting(index, question) {
                 this.form.questions.splice(index, 1)
@@ -245,8 +233,11 @@
                         return false
                     }
                 })
+            },
+            importQuestion(questions) {
+                this.form.questions.push(...questions)
             }
         },
-        components: {CropperImg, UploadImg}
+        components: {CropperImg, UploadImg, LocalImportDialog, LibraryImportDialog}
     }
 </script>

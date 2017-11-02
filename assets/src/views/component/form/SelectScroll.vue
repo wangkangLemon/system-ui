@@ -140,7 +140,7 @@
                 if (type === 0) {
                     // 把结果过滤掉当前选中的
                     ret.data = ret.data.filter((item) => {
-                        return item.id != this.value
+                        return item.id !== this.value
                     })
                     this.data.push(...ret.data)
                 } else

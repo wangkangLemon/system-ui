@@ -1,3 +1,10 @@
+<style lang='scss' rel='stylesheet/scss'>
+    #dialog-view {
+        .el-form-item{
+            margin-bottom: 15px;
+        }
+    }
+</style>
 <template>
     <div>
         <section class="manage-container">
@@ -95,7 +102,7 @@
             </el-form>
         </el-dialog>
 
-        <el-dialog title="详情" :visible.sync="dialog.view">
+        <el-dialog id="dialog-view" title="详情" :visible.sync="dialog.view">
             <div class="el-form-item">
                 <label class="el-form-item__label" style="width: 100px;">题库名称：</label>
                 <div class="el-form-item__content" style="margin-left: 100px;">
@@ -113,24 +120,26 @@
                 </div>
             </div>
             <el-table
-                    :data="tableData"
+                    :data="[model]"
                     border
                     style="width: 100%">
                 <el-table-column
-                        prop="date"
                         label="单选题">
+                    <template scope="scope">
+                        <p>{{ scope.row.single_total }}</p>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="name"
                         label="多选题">
+                    <template scope="scope">
+                        <p>{{ scope.row.multi_total }}</p>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
                         label="判断题">
-                </el-table-column>
-                <el-table-column
-                        prop="address"
-                        label="药我说">
+                    <template scope="scope">
+                        <p>{{ scope.row.judge_total }}</p>
+                    </template>
                 </el-table-column>
             </el-table>
         </el-dialog>
@@ -141,6 +150,7 @@
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
     import testLibraryService from '../../../services/testLibraryService'
+    import Library from '../../../models/library'
 
     export default{
         data () {
@@ -162,11 +172,7 @@
                     page_size: 15,
                     page_total: 0,
                 },
-                model: {
-                    id: 0,
-                    name: '',
-                    description: '',
-                },
+                model: Library,
                 editDialog: '新建题库'
             }
         },
@@ -197,11 +203,14 @@
             add() {
                 this.editDialog = '新建题库'
                 this.dialog.edit = true
+                this.model = new Library()
             },
             edit(index, row) {
                 this.editDialog = '编辑题库'
                 this.dialog.edit = true
-                this.model = row
+                let library = new Library()
+                library.setModel(row)
+                this.model = library
             },
             del(index, row) {
                 this.$confirm('题库删除后，已加入题库的试题将处于无归属状态，您是否确定删除本题库？', '删除', {
@@ -220,7 +229,9 @@
             },
             preview(index, row) {
                 this.dialog.view = true
-                this.model = row
+                let library = new Library()
+                library.setModel(row)
+                this.model = library
             },
             submitForm() {
                 if (this.model.id == 0) {
