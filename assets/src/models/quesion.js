@@ -81,7 +81,13 @@ class Question {
     save() {
         // 为了兼容后端的数据格式，重组一下
         if (this.type == 1) {
-            this.options[this.correct].correct = 1
+            this.options.forEach((option, index) => {
+                if (index == this.correct) {
+                    option.correct = 1
+                } else {
+                    option.correct = 0
+                }
+            })
             this.correct = 0
         }
 

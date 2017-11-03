@@ -124,11 +124,11 @@
 
         <el-dialog :title="editDialog" :visible.sync="dialog.edit">
             <el-form :model="model" label-width="80px" :rules="rules" ref="form">
-                <el-form-item label="试题类型" prop="type">
+                <el-form-item label="试题类型" class="is-required">
                     <el-radio-group v-model="model.type">
-                        <el-radio label="1">单选题</el-radio>
-                        <el-radio label="2">多选题</el-radio>
-                        <el-radio label="0">判断题</el-radio>
+                        <el-radio :label=1>单选题</el-radio>
+                        <el-radio :label=2>多选题</el-radio>
+                        <el-radio :label=0>判断题</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="试题题目" prop="description">
@@ -308,9 +308,6 @@
                 editDialog: '新建题库',
                 uploadUrl: `${config.apiHost}/testbank/group/subject/excel`,
                 rules: {
-                    type: [
-                        { required: true, message: '选择题目类型', trigger: 'blur' },
-                    ],
                     description: [
                         { required: true, message: '请输入试题题目', trigger: 'blur' },
                     ],
@@ -380,7 +377,6 @@
             },
             submitForm() {
                 this.$refs['form'].validate((pass) => {
-                    console.log(this.model, pass)
                     if (!pass) {
                         return
                     }
