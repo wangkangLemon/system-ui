@@ -18094,10 +18094,13 @@
 }
 .el-upload-list__item .el-icon-close {
     display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
     cursor: pointer;
     opacity: .75;
-    transform: scale(.7);
     color: rgb(72, 87, 106);
+    transform: scale(.7);
 }
 .el-upload-list__item .el-icon-close:hover {
     opacity: 1;

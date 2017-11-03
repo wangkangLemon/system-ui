@@ -44,6 +44,18 @@ class TestQuestionService {
             return ret.data
         })
     }
+
+    /**
+     * 批量添加
+     * @param group_id
+     * @param list
+     */
+    batchCreate(group_id, list) {
+        let url = `${urlPre}/testbank/group/${group_id}/subject`
+        return api.post(url, JSON.stringify(list)).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new TestQuestionService()

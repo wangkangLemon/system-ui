@@ -123,16 +123,16 @@
         </el-row>
 
         <el-dialog :title="editDialog" :visible.sync="dialog.edit">
-            <el-form v-model="model" label-width="80px">
-                <el-form-item label="试题类型" prop="resource">
+            <el-form :model="model" label-width="80px" :rules="rules" ref="form">
+                <el-form-item label="试题类型" prop="type">
                     <el-radio-group v-model="model.type">
-                        <el-radio :label="1">单选题</el-radio>
-                        <el-radio :label="2">多选题</el-radio>
-                        <el-radio :label="0">判断题</el-radio>
+                        <el-radio label="1">单选题</el-radio>
+                        <el-radio label="2">多选题</el-radio>
+                        <el-radio label="0">判断题</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="试题题目">
-                    <el-input type="textarea" v-model="model.description" placeholder="请输入内容"></el-input>
+                <el-form-item label="试题题目" prop="description">
+                    <el-input type="textarea" v-model="model.description" placeholder="请输入试题题目"></el-input>
                 </el-form-item>
                 <el-form-item label="配图">
                     <UploadImg :defaultImg="model.image" :onSuccess="res => model.image = res.data.url"></UploadImg>
@@ -176,8 +176,8 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="答案详解">
-                    <el-input v-model="model.explain" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容">
+                <el-form-item label="答案详解" prop="explain">
+                    <el-input v-model="model.explain" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入答案详解">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="所属题库">
@@ -254,7 +254,19 @@
             </div>
         </el-dialog>
 
-        <LocalImportDialog @confirmFn="importQuestion" ref="localImportDialog"></LocalImportDialog>
+        <LocalImportDialog
+                :onSuccess="importQuestion"
+                ref="localImportDialog"
+                title="导入题库"
+                :uploadUrl="uploadUrl"
+                templateUrl="xx">
+            <article slot="footer">
+                <hr style="margin-bottom: 15px;">
+                <h5>注意事项：</h5>
+                <h5>1.模板中字段轻对照填写，不能为空</h5>
+                <h5>2.如果有某些内容为空，导入时将跳过</h5>
+            </article>
+        </LocalImportDialog>
     </div>
 
 </template>
@@ -269,6 +281,7 @@
     import Question from '../../../models/quesion'
     import Option from '../../../models/option'
     import LocalImportDialog from '../LocalImportDialog.vue'
+    import config from '../../../utils/config'
 
     export default{
         data () {
@@ -291,8 +304,20 @@
                     page_size: 15,
                     page_total: 0,
                 },
-                model: Question,
-                editDialog: '新建题库'
+                model: {},
+                editDialog: '新建题库',
+                uploadUrl: `${config.apiHost}/testbank/group/subject/excel`,
+                rules: {
+                    type: [
+                        { required: true, message: '选择题目类型', trigger: 'blur' },
+                    ],
+                    description: [
+                        { required: true, message: '请输入试题题目', trigger: 'blur' },
+                    ],
+                    explain: [
+                        { required: true, message: '请输入试题详解', trigger: 'blur' },
+                    ],
+                }
             }
         },
         activated () {
@@ -320,17 +345,17 @@
                 this.selectedIds = ret
             },
             openAddDialog() {
-                this.editDialog = '新建试题'
-                this.dialog.edit = true
                 let question = new Question()
                 this.model = question
+                this.editDialog = '新建试题'
+                this.dialog.edit = true
             },
             edit(index, row) {
-                this.editDialog = '编辑试题'
-                this.dialog.edit = true
                 let question = new Question()
                 question.findById(row.subject_group_id, row.id)
                 this.model = question
+                this.editDialog = '编辑试题'
+                this.dialog.edit = true
             },
             del(index, row) {
                 this.$confirm('您是否确定删除试题？', '删除', {
@@ -354,10 +379,17 @@
                 this.model = question
             },
             submitForm() {
-                this.model.save().then(() => {
-                    this.fetchData()
+                this.$refs['form'].validate((pass) => {
+                    console.log(this.model, pass)
+                    if (!pass) {
+                        return
+                    }
+
+                    this.model.save().then(() => {
+                        this.fetchData()
+                    })
+                    this.dialog.edit = false
                 })
-                this.dialog.edit = false
             },
             // 添加多选 单选的选项
             addMoreTestingOption() {
@@ -383,7 +415,15 @@
                     return result
                 })
             },
-            importQuestion() {}
+            importQuestion(response) {
+                return testQuestionService.batchCreate(0, response.data).then((ret) => {
+                    return {
+                        success: 1,
+                        error: 0,
+                        reasons: []
+                    }
+                })
+            }
         },
         components: {DateRange, UploadImg, SelectScroll, Tags, LocalImportDialog}
     }
