@@ -16,10 +16,12 @@
                 class="upload-file"
                 drag
                 :action="uploadUrl"
-                multiple>
+                :multiple="false"
+                :headers="headers">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
+        <div class="upload-file"><el-button type="text">下载参考模板</el-button></div>
         <hr>
         <article>
             <h3>注意事项：</h3>
@@ -30,6 +32,7 @@
 </template>
 <script>
     import config from '../../utils/config'
+    import authUtils from '../../utils/authUtils'
 
     export default {
         props: {
@@ -38,7 +41,11 @@
         data() {
             return {
                 isOpen: false,
-                uploadUrl: `${config.apiHost}/testbank/group/subject/excel`
+                uploadUrl: `${config.apiHost}/testbank/group/subject/excel`,
+                headers: {
+                    'Authorization': 'Bearer ' + authUtils.getAuthToken(),
+                    'TwoStep': `Bearer ` + authUtils.getTwiceToken() // 二次验证的token
+                }
             }
         },
         methods: {

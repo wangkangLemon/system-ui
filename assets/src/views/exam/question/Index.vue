@@ -181,7 +181,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="所属题库">
-                    <SelectScroll :requestCb="fetchLibrary" v-model="model.group_id"></SelectScroll>
+                    <SelectScroll :requestCb="fetchLibrary" :placeholder="model.group_name" v-model="model.group_id"></SelectScroll>
                 </el-form-item>
                 <el-form-item label="课程标签">
                     <Tags v-model="model.tags"></Tags>
