@@ -8,6 +8,7 @@ import {sync} from 'vuex-router-sync'
 import config from './utils/config'
 import authUtils from './utils/authUtils'
 import VueDND from 'awe-dnd'
+import SidePannel from './views/component/mixin/sidePannel'
 
 // keep router and vuex store in sync
 sync(store, router)
@@ -28,8 +29,9 @@ let pluginPermission = {
                 isPermission (val) {
                     return authUtils.isPermission(val)
                 }
-            }
+            },
         })
+        Vue.prototype.$sidepan = SidePannel
     }
 }
 Vue.use(pluginPermission)

@@ -250,6 +250,7 @@
             <DocPreview ref="docShow" :docurl="docurl" class="docshow"></DocPreview>
         </el-dialog>
         <VideoPreview :type="1" :url="videoUrl" ref="videoPreview"></VideoPreview>
+        <el-button type="gray" size="full" @click="openExamForm"><i class="el-icon-plus" ></i> 添加考试</el-button>
     </article>
 </template>
 <script>
@@ -265,6 +266,8 @@
     import DocPreview from '../component/dialog/DocShow.vue'
     import config from '../../utils/config'
     import clone from 'clone'
+    import Paper from '../exam/paper/Add.vue'
+
     export default {
         name: 'newcourse-course-form',
         components: {
@@ -275,7 +278,7 @@
             CropperImg,
             DialogVideo,
             UploadFile,
-            CompanySelect
+            CompanySelect,
         },
         data () {
             return {
@@ -335,7 +338,7 @@
                     this.fetchParam.company_id = ret.course.company_id
                     this.courseTags = ret.course.tags.split(',')
                     if (this.fetchParam.lesson_type === 'single') {
-                        this.classhour.form = ret.lessons[0].lessons[0]
+                        this.classhour.form = ret.lessons[0].lessons[0] || clearFormData()
                     } else if (this.fetchParam.lesson_type === 'multi') {
                         this.multi.data = ret.lessons[0].lessons
                         this.multi.data.push({id: -1})
@@ -529,11 +532,10 @@
                     this.docshow = true
                 }
             },
-            openExamForm () {
-                this.$notify({
-                    title: '提示',
-                    message: '这是一条不会自动关闭的消息',
-                    duration: 0
+            openExamForm (e) {
+                e.stopPropagation()
+                this.$sidepan({
+                    content: this.$createElement(Paper),
                 })
             }
         }
