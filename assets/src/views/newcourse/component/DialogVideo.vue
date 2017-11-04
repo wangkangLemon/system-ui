@@ -74,7 +74,7 @@ export default {
     props: {
         onSelect: Function,
         value: Boolean,     // 是否显示dialog
-        companyID: Number,  // 视频所属的企业编号
+        companyID: [Number, String],  // 视频所属的企业编号
     },
     data() {
         return {
