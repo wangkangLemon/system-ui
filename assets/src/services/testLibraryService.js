@@ -34,6 +34,17 @@ class TestLibraryService {
             return ret.data
         })
     }
+
+    /**
+     *
+     * @param group_id
+     */
+    view(group_id) {
+        let url = `${urlPre}/testbank/group/${group_id}`
+        return api.get(url, {}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new TestLibraryService()

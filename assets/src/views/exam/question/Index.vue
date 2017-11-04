@@ -108,7 +108,7 @@
                 <!--底部的批量删除和移动两个按钮-->
                 <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
             </el-col>
-            <el-col :span="6" :offset="12">
+            <el-col :span="12" :offset="6">
                 <el-pagination
                         style="text-align: right"
                         @size-change="fetchData"
@@ -414,7 +414,7 @@
             importQuestion(response) {
                 return testQuestionService.batchCreate(0, response.data).then((ret) => {
                     return {
-                        success: 1,
+                        success: ret.list.length,
                         error: 0,
                         reasons: []
                     }

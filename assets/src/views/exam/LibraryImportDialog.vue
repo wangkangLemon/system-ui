@@ -69,10 +69,10 @@
     </el-dialog>
 </template>
 <script>
-    import testLibraryService from '../../../services/testLibraryService'
-    import testQuestionService from '../../../services/testQuestionService'
-    import SelectScroll from '../../component/form/SelectScroll.vue'
-    import Question from '../../../models/quesion'
+    import testLibraryService from '../../services/testLibraryService'
+    import testQuestionService from '../../services/testQuestionService'
+    import SelectScroll from '../component/form/SelectScroll.vue'
+    import Question from '../../models/quesion'
 
     export default {
         props: {

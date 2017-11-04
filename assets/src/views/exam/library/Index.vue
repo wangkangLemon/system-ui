@@ -172,7 +172,7 @@
                     page_size: 15,
                     page_total: 0,
                 },
-                model: Library,
+                model: {},
                 editDialog: '新建题库'
             }
         },
@@ -230,8 +230,9 @@
             preview(index, row) {
                 this.dialog.view = true
                 let library = new Library()
-                library.setModel(row)
+                library.findById(row.id)
                 this.model = library
+                console.log(this.model)
             },
             submitForm() {
                 if (this.model.id == 0) {

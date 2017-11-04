@@ -79,37 +79,27 @@ class Question {
     }
 
     save() {
-        // 为了兼容后端的数据格式，重组一下
-        if (this.type == 1) {
-            this.options.forEach((option, index) => {
-                if (index == this.correct) {
-                    option.correct = 1
-                } else {
-                    option.correct = 0
-                }
-            })
-            this.correct = 0
-        }
+        let question = this.format
 
-        if (this.id) {
-            return testQuestionService.update(this.group_id, this.id, {
-                type: this.type,
-                description: this.description,
-                explain: this.explain,
-                tags: this.tags.join('，'),
-                correct: this.correct,
-                image: this.image,
-                option: this.options
+        if (question.id) {
+            return testQuestionService.update(question.group_id, question.id, {
+                type: question.type,
+                description: question.description,
+                explain: question.explain,
+                tags: question.tags,
+                correct: question.correct,
+                image: question.image,
+                option: question.options
             })
         } else {
-            return testQuestionService.create(this.group_id, {
-                type: this.type,
-                description: this.description,
-                explain: this.explain,
-                tags: this.tags.join('，'),
-                correct: this.correct,
-                image: this.image,
-                option: this.options
+            return testQuestionService.create(question.group_id, {
+                type: question.type,
+                description: question.description,
+                explain: question.explain,
+                tags: question.tags,
+                correct: question.correct,
+                image: question.image,
+                option: question.options
             })
         }
     }
@@ -128,6 +118,26 @@ class Question {
 
     get tagString() {
         return this.tags.join('，')
+    }
+
+    /**
+     * 获取请求数据
+     * @returns {Question}
+     */
+    get format() {
+        let question = Object.assign({}, this)
+        if (question.type == 1) {
+            question.options.forEach((option, index) => {
+                if (index == question.correct) {
+                    question.correct = 1
+                } else {
+                    question.correct = 0
+                }
+            })
+            question.correct = 0
+        }
+        question.tags = this.tags.join('，')
+        return question
     }
 }
 
