@@ -563,7 +563,7 @@
                     jsonstr: JSON.stringify(chapters)
                 }).then(() => {
                     xmview.showTip('success', '操作成功')
-                    // this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
+                    this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
                 })
             },
             previewFn (row) {
