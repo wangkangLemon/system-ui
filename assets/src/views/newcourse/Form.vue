@@ -345,11 +345,7 @@
                     }
                 },
                 multi: {
-                    data: [
-                        {
-                            id: -1
-                        }
-                    ],
+                    data: [],
                 },
                 resultData: [],
                 sidebar: null,
@@ -606,10 +602,15 @@
 
                 let paper = new Paper()
                 paper.type = 'course_exam'
+
+                let lesson = new Lesson()
+                lesson.material_type = 'exam'
+                lesson.setMaterialPaper(paper)
+
                 let vnode = this.$createElement(PaperForm, {
                     props: {
                         paper: paper,
-                        onSubmit: this.submitPaper
+                        onSubmit: () => { this.submitPaper(lesson) }
                     },
                     style: {
                         'padding-top': '30px'
@@ -619,12 +620,10 @@
                     content: vnode,
                 })
             },
-            submitPaper(paper) {
-                paper.save().then(() => {
-                    let lesson = new Lesson()
-                    lesson.material_type = 'exam'
-                    lesson.setMaterialPaper(paper)
-
+            submitPaper(lesson) {
+                // 设置一下课程数据
+                lesson.setMaterialPaper(lesson.materialPaper)
+                lesson.materialPaper.save().then(() => {
                     if (this.fetchParam.lesson_type == 'single') {
                         this.classhour.paperLesson = lesson
                     }
@@ -648,7 +647,7 @@
                 let vnode = this.$createElement(PaperForm, {
                     props: {
                         paper: lesson.materialPaper,
-                        onSubmit: this.submitPaper
+                        onSubmit: () => { this.submitPaper(lesson) }
                     },
                     style: {
                         'padding-top': '30px'
