@@ -135,7 +135,7 @@
             },
             choiceQuestion(val) {
                 let question = new Question()
-                question.findById(this.search.group_id, val.target.value)
+                question.findById(val.target.value)
                 this.choiceList.push(question)
             }
         },

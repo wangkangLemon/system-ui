@@ -11,7 +11,7 @@ const urlPre = config.apiHost
 
 class TestQuestionService {
     search({group_id, status, type, tags, time_start, time_end, page, page_size}) {
-        let url = `${urlPre}/testbank/group/subject/search`
+        let url = `${urlPre}/subject/search`
         if (!group_id) group_id = -1
         if (!status) status = -1
         if (!type) type = -1
@@ -20,26 +20,26 @@ class TestQuestionService {
             return ret.data
         })
     }
-    create(group_id, {type, description, explain, tags, correct, image, option}) {
-        let url = `${urlPre}/testbank/group/${group_id}/subject`
-        return api.post(url, JSON.stringify([{type, description, explain, tags, correct, image, option}])).then((ret) => {
+    create({subject_group_id, type, description, explain, tags, correct, image, option}) {
+        let url = `${urlPre}/subject`
+        return api.post(url, JSON.stringify([{type, description, explain, tags, correct, image, option, subject_group_id}])).then((ret) => {
             return ret.data
         })
     }
-    update(group_id, subject_id, {type, description, explain, tags, correct, image, option}) {
-        let url = `${urlPre}/testbank/group/${group_id}/subject/${subject_id}`
-        return api.put(url, JSON.stringify({type, description, explain, tags, correct, image, option})).then((ret) => {
+    update(subject_id, {subject_group_id, type, description, explain, tags, correct, image, option}) {
+        let url = `${urlPre}/subject/${subject_id}`
+        return api.put(url, JSON.stringify({subject_group_id, type, description, explain, tags, correct, image, option})).then((ret) => {
             return ret.data
         })
     }
-    delete(group_id, subject_id) {
-        let url = `${urlPre}/testbank/group/${group_id}/subject/${subject_id}`
+    delete(subject_id) {
+        let url = `${urlPre}/subject/${subject_id}`
         return api.del(url, {}).then((ret) => {
             return ret.data
         })
     }
-    view(group_id, subject_id) {
-        let url = `${urlPre}/testbank/group/${group_id}/subject/${subject_id}`
+    view(subject_id) {
+        let url = `${urlPre}/subject/${subject_id}`
         return api.get(url, {}).then((ret) => {
             return ret.data
         })
@@ -50,8 +50,8 @@ class TestQuestionService {
      * @param group_id
      * @param list
      */
-    batchCreate(group_id, list) {
-        let url = `${urlPre}/testbank/group/${group_id}/subject`
+    batchCreate(list) {
+        let url = `${urlPre}/subject`
         return api.post(url, JSON.stringify(list)).then((ret) => {
             return ret.data
         })

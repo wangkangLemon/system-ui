@@ -134,6 +134,8 @@ Slot:
         },
         methods: {
             open() {
+                this.uploadStatus = 0
+                this.showUploading = true
                 this.isOpen = true
             },
             close() {
@@ -152,7 +154,6 @@ Slot:
 
                 if (this.onSuccess) {
                     this.onSuccess(response.data, file, fileList).then(({success, error, reasons}) => {
-                        console.log({success, error, reasons})
                         this.response.success = success
                         this.response.error = error
                         this.response.reasons = reasons
@@ -169,7 +170,7 @@ Slot:
             beforeUpload() {
                 this.uploadStatus = 0
                 this.showUploading = false
-            }
+            },
         }
     }
 </script>

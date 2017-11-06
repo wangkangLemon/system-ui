@@ -144,7 +144,7 @@
                 })
                 this.importQuestion(questions)
 
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
                     resolve({
                         success: response.data.length,
                         error: 0,

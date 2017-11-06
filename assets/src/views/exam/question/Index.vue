@@ -357,7 +357,7 @@
             },
             edit(index, row) {
                 let question = new Question()
-                question.findById(row.subject_group_id, row.id)
+                question.findById(row.id)
                 this.model = question
                 this.editDialog = '编辑试题'
                 this.dialog.edit = true
@@ -368,7 +368,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return testQuestionService.delete(row.subject_group_id, row.id).then((ret) => {
+                    return testQuestionService.delete(row.id).then((ret) => {
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -380,7 +380,7 @@
             preview(index, row) {
                 this.dialog.view = true
                 let question = new Question()
-                question.findById(row.subject_group_id, row.id)
+                question.findById(row.id)
                 this.model = question
             },
             submitForm() {
@@ -420,7 +420,7 @@
                 })
             },
             importQuestion(response) {
-                return testQuestionService.batchCreate(0, response.data).then((ret) => {
+                return testQuestionService.batchCreate(response.data).then((ret) => {
                     return {
                         success: ret.list.length,
                         error: 0,

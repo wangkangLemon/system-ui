@@ -11,25 +11,25 @@ const urlPre = config.apiHost
 
 class TestLibraryService {
     search({keyword, time_start, time_end, page, page_size}) {
-        let url = `${urlPre}/testbank/group/search`
+        let url = `${urlPre}/subject/group/search`
         return api.get(url, {page, page_size, keyword, time_start, time_end}).then((ret) => {
             return ret.data
         })
     }
     create({name, description}) {
-        let url = `${urlPre}/testbank/group`
+        let url = `${urlPre}/subject/group`
         return api.post(url, JSON.stringify({name, description})).then((ret) => {
             return ret.data
         })
     }
     update(id, {name, description}) {
-        let url = `${urlPre}/testbank/group/${id}`
+        let url = `${urlPre}/subject/group/${id}`
         return api.put(url, JSON.stringify({name, description})).then((ret) => {
             return ret.data
         })
     }
     delete(id) {
-        let url = `${urlPre}/testbank/group/${id}`
+        let url = `${urlPre}/subject/group/${id}`
         return api.del(url, {}).then((ret) => {
             return ret.data
         })
@@ -40,7 +40,7 @@ class TestLibraryService {
      * @param group_id
      */
     view(group_id) {
-        let url = `${urlPre}/testbank/group/${group_id}`
+        let url = `${urlPre}/subject/group/${group_id}`
         return api.get(url, {}).then((ret) => {
             return ret.data
         })

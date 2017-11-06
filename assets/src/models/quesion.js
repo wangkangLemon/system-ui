@@ -11,12 +11,12 @@ class Question {
     constructor() {
         this.id = 0
         this.type = 0
-        this.group_id = ''
-        this.group_name = ''
-        this.description = ''
-        this.score = 0
-        this.image = ''
-        this.explain = ''
+        this.group_id = void 0
+        this.group_name = void ''
+        this.description = void ''
+        this.score = void 0
+        this.image = void ''
+        this.explain = void ''
         this.correct = 0
         this.editable = true
         this.tags = []
@@ -45,8 +45,8 @@ class Question {
      * @param group_id
      * @param id
      */
-    findById(group_id, id) {
-        return testQuestionService.view(group_id, id).then((ret) => {
+    findById(id) {
+        return testQuestionService.view(id).then((ret) => {
             let subject = ret.subject
 
             this.id = subject.id
@@ -82,7 +82,8 @@ class Question {
         let question = this.format
 
         if (question.id) {
-            return testQuestionService.update(question.group_id, question.id, {
+            return testQuestionService.update(question.id, {
+                subject_group_id: question.group_id,
                 type: question.type,
                 description: question.description,
                 explain: question.explain,
@@ -92,7 +93,8 @@ class Question {
                 option: question.options
             })
         } else {
-            return testQuestionService.create(question.group_id, {
+            return testQuestionService.create({
+                subject_group_id: question.group_id,
                 type: question.type,
                 description: question.description,
                 explain: question.explain,

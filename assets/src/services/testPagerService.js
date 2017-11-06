@@ -80,8 +80,8 @@ class TestPagerService {
         })
     }
     // 获取添加编辑课程上传图片的url
-    getUploadUrl(examId, {image, alias}) {
-        let url = `${urlPre}/exam/${examId}/image`
+    getUploadUrl({image, alias}) {
+        let url = `${urlPre}/exam/image`
         return api.post(url, {image, alias}).then((ret) => {
             return ret.data
         })

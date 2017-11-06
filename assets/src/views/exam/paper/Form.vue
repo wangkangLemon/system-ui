@@ -19,7 +19,7 @@
         </el-form-item>
         <el-form-item label="试卷封面" prop="image">
             <img :src="paper.image | fillImgPath" width="200" height="112" v-show="paper.image">
-            <CropperImg ref="imgCropper" :aspectRatio="16/9"></CropperImg>
+            <CropperImg ref="imgCropper" :aspectRatio="16/9" :confirmFn="cropperImgSuccess"></CropperImg>
         </el-form-item>
         <!--<el-form-item label="题目数量" prop="number">-->
         <!--<el-input class="number" v-model="paper.number"></el-input>-->
@@ -134,7 +134,7 @@
                     image: data,
                     alias: Date.now() + ext
                 }).then((ret) => {
-                    this.fetchParam.image = ret.url
+                    this.paper.image = ret.url
                 })
             },
         },
