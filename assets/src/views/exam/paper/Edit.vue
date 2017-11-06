@@ -31,7 +31,10 @@
                     if (!pass) {
                         return
                     }
-                    this.form.save()
+                    this.form.save().then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.$router.push({name: 'test-paper-index'})
+                    })
                 })
             },
         }

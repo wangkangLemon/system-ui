@@ -9,10 +9,11 @@
                 <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
             <el-form-item label="状态">
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                    <el-option label="正常" value="0"></el-option>
-                    <el-option label="下线" value="1"></el-option>
-                    <el-option label="视频转码中" value="2"></el-option>
+                <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
+                    <el-option label="全部" :value="-1"></el-option>
+                    <el-option label="正常" :value="0"></el-option>
+                    <el-option label="下线" :value="1"></el-option>
+                    <el-option label="视频转码中" :value="2"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -73,8 +74,11 @@
                             @click="$router.push({name: 'test-paper-edit', params: {exam_id: scope.row.id}})"
                             type="text" size="small">编辑 <!--a-->
                     </el-button>
-                    <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
-                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
+                    <el-button @click="online(scope.$index, scope.row)" type="text" size="small" v-if="scope.row.status == 1">
+                        <i>上线</i>
+                    </el-button>
+                    <el-button @click="offline(scope.$index, scope.row)" type="text" size="small" v-if="scope.row.status == 0">
+                        <i>下线</i>
                     </el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>
@@ -84,7 +88,7 @@
         <el-row :gutter="20" class="utils-top-15">
             <el-col :span="6">
                 <!--底部的批量删除和移动两个按钮-->
-                <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
+                <el-button type="danger" :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
             </el-col>
             <el-col :span="12" :offset="6">
                 <el-pagination
@@ -153,7 +157,15 @@
                 })
             },
             delMulti() {
-
+                xmview.showDialog(`你将要删除选中的试卷，操作不可恢复确认吗?`, () => {
+                    testPaperService.delete({id: this.selectedIds.join(',')}).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.dialogTree.isShow = false
+                        setTimeout(() => {
+                            this.fetchData() // 重新刷新数据
+                        }, 300)
+                    })
+                })
             },
             // 单行被选中
             selectRow(selection) {
@@ -163,6 +175,18 @@
                 })
                 this.selectedIds = ret
             },
+            online(index, row) {
+                return testPaperService.online(row.id).then(() => {
+                    row.status = 0
+                    xmview.showTip('success', '操作成功')
+                })
+            },
+            offline(index, row) {
+                return testPaperService.offline(row.id).then(() => {
+                    row.status = 1
+                    xmview.showTip('success', '操作成功')
+                })
+            }
         },
         components: {DateRange}
     }

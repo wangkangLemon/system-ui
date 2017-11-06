@@ -17,9 +17,9 @@ import im from './routers/im'
 import speaking from './routers/speaking' // 药我说
 import systemTools from './routers/system/tools' // 系统工具
 import newCourse from './routers/newcourse/course' // 系列课程
-import testPaper from './routers/exam/paper' // 试卷管理
-import testLibrary from './routers/exam/library' // 题库管理
-import testQuestion from './routers/exam/question' // 试题管理
+import examPaper from './routers/exam/paper' // 试卷管理
+import examLibrary from './routers/exam/library' // 题库管理
+import examQuestion from './routers/exam/question' // 试题管理
 import authUtils from './utils/authUtils'
 import * as typeUtils from './utils/typeUtils'
 
@@ -125,11 +125,11 @@ const routes = [
             // 系列课程
             newCourse,
             // 试卷管理
-            testPaper,
+            examPaper,
             // 题库管理
-            testLibrary,
+            examLibrary,
             // 试题管理
-            testQuestion,
+            examQuestion,
         ]
     },
     {   // 登录

@@ -579,7 +579,6 @@
                     })
                 }
 
-                console.log(chapters)
                 newcourseService.setLessons({
                     course_id: this.fetchParam.id,
                     jsonstr: JSON.stringify(chapters)

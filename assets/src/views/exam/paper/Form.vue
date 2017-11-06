@@ -13,7 +13,7 @@
     }
 </style>
 <template>
-    <el-form  id="form" ref="form" :model="paper" label-width="120px">
+    <el-form  id="form" ref="form" :model="paper" :rules="rules" label-width="120px">
         <el-form-item label="试卷名称" prop="name">
             <el-input v-model="paper.name"></el-input>
         </el-form-item>
@@ -67,6 +67,12 @@
                 <template slot="append">次</template>
             </el-input>
         </el-form-item>
+        <!--<el-form-item label="课程归属" prop="company_id">-->
+            <!--<CompanySelect type="3" v-model="fetchParam.company_id"-->
+                           <!--:placeholder="fetchParam.company_name"-->
+                           <!--v-on:change="val=>fetchParam.company_id=val">-->
+            <!--</CompanySelect>-->
+        <!--</el-form-item>-->
 
         <ImportQuestion :questions="paper.questions"></ImportQuestion>
 
@@ -77,6 +83,7 @@
 <script>
     import CropperImg from '../../component/upload/ImagEcropperInput.vue'
     import ImportQuestion from '../ImportQuestion.vue'
+    import testPaperService from '../../../services/testPagerService'
 
     export default{
         props: {
@@ -95,25 +102,25 @@
 //                        { required: true, message: '请上传试卷封面', trigger: 'blur' },
 //                    ],
                     single_score: [
-                        { required: true, message: '请输入单选题分数', trigger: 'blur' },
+                        { type: 'number', required: true, message: '请输入单选题分数', trigger: 'blur' },
                     ],
                     multi_score: [
-                        { required: true, message: '请输入多选题分数', trigger: 'blur' },
+                        { type: 'number', required: true, message: '请输入多选题分数', trigger: 'blur' },
                     ],
                     judge_score: [
-                        { required: true, message: '请输入判断题分数', trigger: 'blur' },
+                        { type: 'number', required: true, message: '请输入判断题分数', trigger: 'blur' },
                     ],
                     limit_time: [
-                        { required: true, message: '请输入考试时间', trigger: 'blur' },
+                        { type: 'number', required: true, message: '请输入考试时间', trigger: 'blur' },
                     ],
                     score_pass: [
-                        { required: true, message: '请输入及格分数', trigger: 'blur' },
+                        { type: 'number', required: true, message: '请输入及格分数', trigger: 'blur' },
                     ],
                     answer_show_time: [
-                        { required: true, message: '请输入试题解析时间', trigger: 'blur' },
+                        { type: 'date', required: true, message: '请输入试题解析时间', trigger: 'blur' },
                     ],
                     limit_repeat: [
-                        { required: true, message: '请输入考试次数', trigger: 'blur' },
+                        { type: 'number', required: true, message: '请输入考试次数', trigger: 'blur' },
                     ],
                 }
             }
@@ -121,6 +128,14 @@
         methods: {
             validateForm(func) {
                 return this.$refs['form'].validate(func)
+            },
+            cropperImgSuccess (data, ext) {
+                testPaperService.getUploadUrl({
+                    image: data,
+                    alias: Date.now() + ext
+                }).then((ret) => {
+                    this.fetchParam.image = ret.url
+                })
             },
         },
         components: {CropperImg, ImportQuestion}

@@ -65,6 +65,27 @@ class TestPagerService {
             return ret.data
         })
     }
+
+    online (examId) {
+        let url = `${urlPre}/exam/${examId}/disable`
+        return api.put(url, JSON.stringify({status: 0})).then((ret) => {
+            return ret.data
+        })
+    }
+
+    offline (examId) {
+        let url = `${urlPre}/exam/${examId}/disable`
+        return api.put(url, JSON.stringify({status: 1})).then((ret) => {
+            return ret.data
+        })
+    }
+    // 获取添加编辑课程上传图片的url
+    getUploadUrl(examId, {image, alias}) {
+        let url = `${urlPre}/exam/${examId}/image`
+        return api.post(url, {image, alias}).then((ret) => {
+            return ret.data
+        })
+    }
 }
 
 export default new TestPagerService()

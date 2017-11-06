@@ -190,7 +190,15 @@
                 })
             },
             delMulti() {
-
+                xmview.showDialog(`你将要删除选中的数据，操作不可恢复确认吗?`, () => {
+                    testLibraryService.delete({id: this.selectedIds.join(',')}).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.dialogTree.isShow = false
+                        setTimeout(() => {
+                            this.fetchData() // 重新刷新数据
+                        }, 300)
+                    })
+                })
             },
             // 单行被选中
             selectRow(selection) {

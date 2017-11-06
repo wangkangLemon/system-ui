@@ -4,7 +4,7 @@
  * Time: 下午2:45
  */
 
- const pathPre = '/test/library'
+ const pathPre = '/exam/library'
  // 题库管理
  export default {
      path: pathPre,

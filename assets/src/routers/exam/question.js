@@ -4,7 +4,7 @@
  * Time: 下午2:45
  */
 
- const pathPre = '/test/question'
+ const pathPre = '/exam/question'
  // 试题管理
  export default {
      path: pathPre,

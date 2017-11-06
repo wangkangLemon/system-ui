@@ -1,7 +1,7 @@
 /**
  * Created by Pavle Lee on 2017/10/31.
  */
-const pathPre = '/test/paper'
+const pathPre = '/exam/paper'
 // 试卷管理
 export default {
     path: pathPre,
