@@ -117,7 +117,7 @@
                         { type: 'number', required: true, message: '请输入及格分数', trigger: 'blur' },
                     ],
                     answer_show_time: [
-                        { type: 'date', required: true, message: '请输入试题解析时间', trigger: 'blur' },
+                        { type: 'number', required: true, message: '请输入试题解析时间', trigger: 'blur' },
                     ],
                     limit_repeat: [
                         { type: 'number', required: true, message: '请输入考试次数', trigger: 'blur' },

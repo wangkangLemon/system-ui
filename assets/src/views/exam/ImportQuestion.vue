@@ -71,7 +71,19 @@
         </el-form>
 
         <LibraryImportDialog ref="libraryImportDialog" :confirmFn="importQuestion"></LibraryImportDialog>
-        <!--<LocalImportDialog ref="localImportDialog" :confirmFn="importQuestion"></LocalImportDialog>-->
+        <LocalImportDialog
+                :onSuccess="localImportQuestion"
+                ref="localImportDialog"
+                title="导入题库"
+                :uploadUrl="uploadUrl"
+                templateUrl="xx">
+            <article slot="footer">
+                <hr style="margin-bottom: 15px;">
+                <h5>注意事项：</h5>
+                <h5>1.模板中字段轻对照填写，不能为空</h5>
+                <h5>2.如果有某些内容为空，导入时将跳过</h5>
+            </article>
+        </LocalImportDialog>
         <el-form label-width="120px">
             <hr>
             <el-form-item label="">
@@ -90,10 +102,16 @@
     import Question from '../../models/quesion'
     import Option from '../../models/option'
     import UploadImg from '../component/upload/UploadImg.vue'
+    import config from '../../utils/config'
 
     export default {
         props: {
             questions: Array
+        },
+        data() {
+            return {
+                uploadUrl: `${config.apiHost}/subject/excel`,
+            }
         },
         components: {LibraryImportDialog, LocalImportDialog, UploadImg},
         methods: {
@@ -117,6 +135,23 @@
                 question.type = type
                 this.questions.splice(index, 1, question)
             },
+            localImportQuestion(response) {
+                let questions = []
+                response.data.forEach((item) => {
+                    let question = new Question()
+                    question.setModel(item)
+                    questions.push(question)
+                })
+                this.importQuestion(questions)
+
+                return new Promise((resolve, reject) => {
+                    resolve({
+                        success: response.data.length,
+                        error: 0,
+                        reasons: []
+                    })
+                })
+            }
         }
     }
 </script>

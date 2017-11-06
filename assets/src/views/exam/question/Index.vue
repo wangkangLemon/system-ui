@@ -306,7 +306,7 @@
                 },
                 model: {},
                 editDialog: '新建题库',
-                uploadUrl: `${config.apiHost}/testbank/group/subject/excel`,
+                uploadUrl: `${config.apiHost}/subject/excel`,
                 rules: {
                     description: [
                         { required: true, message: '请输入试题题目', trigger: 'blur' },

@@ -139,6 +139,19 @@ class Question {
         question.tags = this.tags.join('，')
         return question
     }
+
+    setModel(data) {
+        Object.assign(this, data)
+        this.options = []
+
+        if (data.options) {
+            data.options.forEach((item) => {
+                let option = new Option()
+                Object.assign(option, item)
+                this.addOption(option)
+            })
+        }
+    }
 }
 
 export default Question
