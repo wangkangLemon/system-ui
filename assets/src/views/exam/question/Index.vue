@@ -135,7 +135,7 @@
                     <el-input type="textarea" v-model="model.description" placeholder="请输入试题题目"></el-input>
                 </el-form-item>
                 <el-form-item label="配图">
-                    <UploadImg :defaultImg="model.image" :onSuccess="res => model.image = res.data.url"></UploadImg>
+                    <UploadImg :url="uploadImageUrl" :defaultImg="model.image" :onSuccess="res => model.image = res.data.url"></UploadImg>
                 </el-form-item>
                 <el-form-item label="答案选项">
                     <!--判断题的正确错误选项-->
@@ -307,6 +307,7 @@
                 model: {},
                 editDialog: '新建题库',
                 uploadUrl: `${config.apiHost}/subject/excel`,
+                uploadImageUrl: `${config.apiHost}/subject/image`,
                 rules: {
                     description: [
                         { required: true, message: '请输入试题题目', trigger: 'blur' },
@@ -421,6 +422,7 @@
             },
             importQuestion(response) {
                 return testQuestionService.batchCreate(response.data).then((ret) => {
+                    this.fetchData()
                     return {
                         success: ret.list.length,
                         error: 0,

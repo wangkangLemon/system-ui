@@ -131,9 +131,9 @@ class Question {
         if (question.type == 1) {
             question.options.forEach((option, index) => {
                 if (index == question.correct) {
-                    question.correct = 1
+                    option.correct = 1
                 } else {
-                    question.correct = 0
+                    option.correct = 0
                 }
             })
             question.correct = 0

@@ -17,16 +17,16 @@ class TestPagerService {
         })
     }
 
-    create({name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type}) {
+    create({name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type, company_id}) {
         let url = `${urlPre}/exam`
-        return api.post(url, JSON.stringify({name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type})).then((ret) => {
+        return api.post(url, JSON.stringify({name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type, company_id})).then((ret) => {
             return ret.data
         })
     }
 
-    update(examId, {name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type}) {
+    update(examId, {name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type, company_id}) {
         let url = `${urlPre}/exam/${examId}`
-        return api.put(url, JSON.stringify({name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type})).then((ret) => {
+        return api.put(url, JSON.stringify({name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type, company_id})).then((ret) => {
             return ret.data
         })
     }

@@ -67,12 +67,10 @@
                 <template slot="append">次</template>
             </el-input>
         </el-form-item>
-        <!--<el-form-item label="课程归属" prop="company_id">-->
-            <!--<CompanySelect type="3" v-model="fetchParam.company_id"-->
-                           <!--:placeholder="fetchParam.company_name"-->
-                           <!--v-on:change="val=>fetchParam.company_id=val">-->
-            <!--</CompanySelect>-->
-        <!--</el-form-item>-->
+        <el-form-item label="课程归属" prop="company_id">
+            <CompanySelect type="3" v-model.number="paper.company_id">
+            </CompanySelect>
+        </el-form-item>
 
         <ImportQuestion :questions="paper.questions"></ImportQuestion>
 
@@ -84,6 +82,7 @@
     import CropperImg from '../../component/upload/ImagEcropperInput.vue'
     import ImportQuestion from '../ImportQuestion.vue'
     import testPaperService from '../../../services/testPagerService'
+    import CompanySelect from '../../component/select/IndustryCompany.vue'
 
     export default{
         props: {
@@ -138,6 +137,6 @@
                 })
             },
         },
-        components: {CropperImg, ImportQuestion}
+        components: {CropperImg, ImportQuestion, CompanySelect}
     }
 </script>

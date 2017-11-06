@@ -24,6 +24,7 @@ class Paper {
         this.type = ''
         this.questions = []
         this.old_questions = []
+        this.company_id = void 0
     }
 
     /**
@@ -42,7 +43,7 @@ class Paper {
             this.limit_time = ret.exam.limit_time
             this.limit_repeat = ret.exam.limit_repeat
             this.answer_show_type = ret.exam.answer_show_type
-            this.answer_show_time = ret.exam.answer_show_time
+            this.answer_show_time = new Date(ret.exam.answer_show_time)
             this.type = ret.exam.type
 
             return testPaperService.searchQuestion(this.id, {type: -1, page_size: 100}).then((ret) => {
