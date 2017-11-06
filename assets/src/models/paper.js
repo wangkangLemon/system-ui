@@ -45,6 +45,7 @@ class Paper {
             this.answer_show_type = ret.exam.answer_show_type
             this.answer_show_time = new Date(ret.exam.answer_show_time)
             this.type = ret.exam.type
+            this.company_id = ret.exam.company_id
 
             return testPaperService.searchQuestion(this.id, {type: -1, page_size: 100}).then((ret) => {
                 ret.list.forEach((val) => {
