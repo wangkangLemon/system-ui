@@ -183,7 +183,7 @@
                 <!--多章节-->
                 <section class="mulit-class" v-if="fetchParam.lesson_type == 'chapter'">
                     <section v-for="(pitem,pindex) in resultData">
-                        <section v-if="!pitem.deleted">
+                        <section v-if="pitem.deleted == false">
                             <p>
                                 <el-tag type="danger">章节{{pindex + 1}}</el-tag>
                                 <span v-if="!pitem.status"><i>{{pitem.name}}</i></span>
@@ -352,7 +352,6 @@
                     ],
                 },
                 resultData: [],
-                paper: new Paper(),
                 sidebar: null,
             }
         },
@@ -364,17 +363,40 @@
                     this.editLessonData = ret.lessons
                     this.fetchParam = ret.course
                     this.fetchParam.company_id = ret.course.company_id
-                    this.courseTags = ret.course.tags.split(',')
+                    this.courseTags = ret.course.tags === '' ? [] : ret.course.tags.split(',')
+
                     if (this.fetchParam.lesson_type === 'single') {
-                        this.classhour.form = ret.lessons[0].lessons[0] || clearFormData()
+                        let lesson = new Lesson()
+                        Object.assign(lesson, ret.lessons[0].lessons[0])
+                        this.classhour.form = lesson
+
+                        if (ret.lessons[0].lessons.length > 1) {
+                            let paperLesson = new Lesson()
+                            Object.assign(paperLesson, ret.lessons[0].lessons[1])
+                            this.classhour.paperLesson = paperLesson
+                        }
                     } else if (this.fetchParam.lesson_type === 'multi') {
-                        this.multi.data = ret.lessons[0].lessons
+                        ret.lessons[0].lessons.forEach((item) => {
+                            let lesson = new Lesson()
+                            Object.assign(lesson, item)
+                            this.multi.data.push(lesson)
+                        })
                         this.multi.data.push({id: -1})
                     } else if (this.fetchParam.lesson_type === 'chapter') {
-                        this.resultData = ret.lessons
-                        this.resultData.forEach((pitem) => {
-                            pitem.status = 0
-                            pitem.lessons.push({id: -1})
+                        ret.lessons.forEach((pitem) => {
+                            let chapter = new Chapter()
+                            chapter.id = pitem.id
+                            chapter.name = pitem.name
+
+                            pitem.lessons.forEach((item) => {
+                                let lesson = new Lesson()
+                                Object.assign(lesson, item)
+                                chapter.addLesson(lesson)
+                            })
+
+                            chapter.lessons.push({id: -1})
+
+                            this.resultData.push(chapter)
                         })
                     }
                 })
@@ -460,11 +482,7 @@
             },
             delClasshour (row, pindex = -1, index = -1) {
                 if (row.id !== 0) {
-                    if (this.fetchParam.lesson_type === 'multi') {
-                        this.multi.data[pindex].deleted = true
-                    } else if (this.fetchParam.lesson_type === 'chapter') {
-                        this.resultData[pindex].lessons[index].deleted = true
-                    }
+                    row.deleted = true
                 } else {
                     if (this.fetchParam.lesson_type === 'multi') {
                         this.multi.data.splice(pindex, 1)
@@ -504,8 +522,11 @@
                     xmview.showTip('error', '请先删除该章节下面的课时')
                     return
                 }
-                if (pitem.id) this.resultData[pindex].deleted = true
-                else this.resultData.splice(pindex, 1)
+                if (pitem.id) {
+                    pitem.deleted = true
+                } else {
+                    this.resultData.splice(pindex, 1)
+                }
             },
             saveResult () {
                 let chapters = []
@@ -541,7 +562,8 @@
                 } else if (this.fetchParam.lesson_type === 'chapter') {
                     this.resultData.forEach((pitem) => {
                         let chapter = new Chapter()
-                        chapter.name = pitem.name
+                        Object.assign(chapter, pitem)
+                        chapter.lessons = []
                         pitem.lessons.forEach((item) => {
                             if (item.id == -1) {
                                 return

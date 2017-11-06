@@ -31,7 +31,7 @@ class Paper {
      * @param examId
      */
     findById(examId) {
-        testPaperService.view(examId).then((ret) => {
+        return testPaperService.view(examId).then((ret) => {
             this.id = ret.exam.id
             this.name = ret.exam.name
             this.image = ret.exam.image
@@ -45,7 +45,7 @@ class Paper {
             this.answer_show_time = ret.exam.answer_show_time
             this.type = ret.exam.type
 
-            testPaperService.searchQuestion(this.id, {type: -1, page_size: 100}).then((ret) => {
+            return testPaperService.searchQuestion(this.id, {type: -1, page_size: 100}).then((ret) => {
                 ret.list.forEach((val) => {
                     let question = new Question()
 

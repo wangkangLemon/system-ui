@@ -9,7 +9,7 @@ class Chapter {
         this.id = 0
         this.name = ''
         this.sort = 0
-        this.delete = 0
+        this.deleted = false
         this.lessons = []
     }
 
