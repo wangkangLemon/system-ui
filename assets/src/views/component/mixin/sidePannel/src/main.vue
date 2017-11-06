@@ -1,7 +1,8 @@
 <style lang="scss">
     #side-pannel-container {
         position: absolute;
-        overflow: hidden;
+        overflow-y: scroll;
+        overflow-x: hidden;
         top: 56px;
         bottom: 0;
         right: -630px;

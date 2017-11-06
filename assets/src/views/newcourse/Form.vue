@@ -127,10 +127,23 @@
                         <el-input v-model="classhour.form.name"></el-input>
                     </el-form-item>
                     <el-form-item label="免费试看">
-                        <el-checkbox v-model="classhour.form.try_enable">本课时免费试看</el-checkbox>
+                        <el-checkbox v-model="classhour.form.try_enable" :true-label="1" :false-label="0">本课时免费试看</el-checkbox>
                     </el-form-item>
-                    <el-form-item>
-                        <el-button type="gray" size="full" @click="openExamForm"><i class="el-icon-plus" ></i> 添加考试</el-button>
+                    <el-form-item v-if="!classhour.paperLesson">
+                        <el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)"><i class="el-icon-plus" ></i> 添加考试</el-button>
+                    </el-form-item>
+                    <el-form-item v-if="classhour.paperLesson">
+                        <section>
+                            <span>
+                                <i>{{classhour.paperLesson.name}}</i>
+                                <el-tag type="danger" v-show="classhour.paperLesson.try_enable">免费试看</el-tag>
+                                <el-tag type="danger" v-if="classhour.paperLesson.material_type == 'exam'">考试</el-tag>
+                            </span>
+                            <span class="operate">
+                                <el-button type="text" @click="openEditExamForm(classhour.paperLesson, -1, 0, $event)">编辑</el-button>
+                                <el-button type="text" @click="delClasshour(classhour.paperLesson, -1, 0)">删除</el-button>
+                            </span>
+                        </section>
                     </el-form-item>
                     <el-form-item label="">
                         <el-button type="primary" class="saveBtn" @click="saveResult">保存</el-button>
@@ -143,18 +156,23 @@
                         <div v-if="!item.deleted">
                             <div v-if="item.id === -1">
                                 <p><el-button type="gray" size="full" @click="addNewClasshour"><i class="el-icon-plus" ></i> 添加新课时</el-button></p>
-                                <p><el-button type="gray" size="full" @click="openExamForm"><i class="el-icon-plus" ></i> 添加考试</el-button></p>
+                                <p><el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)"><i class="el-icon-plus" ></i> 添加考试</el-button></p>
                             </div>
                             <p v-else>
                                 <el-tag type="primary">课时{{index + 1}}</el-tag>
                                 <span>
                                     <i>{{item.name}}</i>
                                     <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
+                                    <el-tag type="danger" v-if="item.material_type == 'exam'">考试</el-tag>
                                 </span>
-                                <span class="operate">
+                                <span class="operate" v-if="item.material_type != 'exam'">
                                     <el-button type="text" @click="previewFn(item)">查看</el-button>
                                     <el-button type="text" @click="editClasshour(item, index)">编辑</el-button>
                                     <el-button type="text" @click="delClasshour(item, index)">删除</el-button>
+                                </span>
+                                <span class="operate" v-else>
+                                    <el-button type="text" @click="openEditExamForm(item, -1, index, $event)">编辑</el-button>
+                                    <el-button type="text" @click="delClasshour(item, -1, index)">删除</el-button>
                                 </span>
                             </p>
                         </div>
@@ -185,19 +203,24 @@
                                 <div v-if="!item.deleted">
                                     <div v-if="item.id === -1">
                                         <p><el-button type="gray" size="full" @click="addNewClasshour(pindex)"><i class="el-icon-plus" ></i> 添加新课时</el-button></p>
-                                        <p><el-button type="gray" size="full" @click="openExamForm"><i class="el-icon-plus" ></i> 添加考试</el-button></p>
+                                        <p><el-button type="gray" size="full" @click="openExamForm(pindex, -1, $event)"><i class="el-icon-plus" ></i> 添加考试</el-button></p>
                                     </div>
                                     <p v-else>
                                         <el-tag type="primary">课时{{index + 1}}</el-tag>
                                         <span>
-                                        <i>{{item.name}}</i>
-                                        <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
-                                    </span>
-                                        <span class="operate">
-                                        <el-button type="text" @click="previewFn(item)">查看</el-button>
-                                        <el-button type="text" @click="editClasshour(item, pindex, index)">编辑</el-button>
-                                        <el-button type="text" @click="delClasshour(item, pindex, index)">删除</el-button>
-                                    </span>
+                                            <i>{{item.name}}</i>
+                                            <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
+                                            <el-tag type="danger" v-if="item.material_type == 'exam'">考试</el-tag>
+                                        </span>
+                                        <span class="operate" v-if="item.material_type != 'exam'">
+                                            <el-button type="text" @click="previewFn(item)">查看</el-button>
+                                            <el-button type="text" @click="editClasshour(item, pindex, index)">编辑</el-button>
+                                            <el-button type="text" @click="delClasshour(item, pindex, index)">删除</el-button>
+                                        </span>
+                                        <span class="operate" v-else>
+                                            <el-button type="text" @click="openEditExamForm(item, pindex, index, $event)">编辑</el-button>
+                                            <el-button type="text" @click="delClasshour(item, pindex, index)">删除</el-button>
+                                        </span>
                                     </p>
                                 </div>
                             </div>
@@ -250,7 +273,6 @@
             <DocPreview ref="docShow" :docurl="docurl" class="docshow"></DocPreview>
         </el-dialog>
         <VideoPreview :type="1" :url="videoUrl" ref="videoPreview"></VideoPreview>
-        <el-button type="gray" size="full" @click="openExamForm"><i class="el-icon-plus" ></i> 添加考试</el-button>
     </article>
 </template>
 <script>
@@ -266,7 +288,10 @@
     import DocPreview from '../component/dialog/DocShow.vue'
     import config from '../../utils/config'
     import clone from 'clone'
-    import Paper from '../exam/paper/Add.vue'
+    import PaperForm from './PaperForm.vue'
+    import Paper from '../../models/paper'
+    import Chapter from '../../models/chapter'
+    import Lesson from '../../models/lesson'
 
     export default {
         name: 'newcourse-course-form',
@@ -312,6 +337,7 @@
                     showDialog: false,
                     accept: '*.doc,*.docx', // 上传的文件格式
                     form: clearFormData(),
+                    paperLesson: null,
                     rules: {
                         name: { required: true, message: '请输入课程名称', trigger: 'change' },
                         material_type: { required: true, message: '请选择课时类型', trigger: 'change' },
@@ -326,6 +352,8 @@
                     ],
                 },
                 resultData: [],
+                paper: new Paper(),
+                sidebar: null,
             }
         },
         created () {
@@ -480,44 +508,62 @@
                 else this.resultData.splice(pindex, 1)
             },
             saveResult () {
-                let result = [
-                    {
-                        id: 0,
-                        name: '',
-                        sort: 0,
-                        deleted: false,
-                        lessons: []
-                    }
-                ]
+                let chapters = []
+
                 if (this.fetchParam.lesson_type === 'single') {
+                    let chapter = new Chapter()
+
+                    let lesson = new Lesson()
                     this.classhour.form.name = this.classhour.form.material_name
-                    delete this.classhour.form.material_name
-                    result[0].lessons.push(this.classhour.form)
+                    Object.assign(lesson, this.classhour.form)
+                    chapter.addLesson(lesson)
+
+                    if (this.classhour.paperLesson) {
+                        chapter.addLesson(this.classhour.paperLesson)
+                    }
+
+                    chapters.push(chapter)
                 } else if (this.fetchParam.lesson_type === 'multi') {
-                    this.multi.data.pop()
+                    let chapter = new Chapter()
+
                     this.multi.data.forEach((item) => {
-                        delete item.material_name
+                        if (item.id == -1) {
+                            return
+                        }
+                        let lesson = new Lesson()
                         item.try_enable ? item.try_enable = 1 : item.try_enable = 0
+                        Object.assign(lesson, item)
+
+                        chapter.addLesson(lesson)
                     })
-                    result[0].lessons.push(...this.multi.data)
+
+                    chapters.push(chapter)
                 } else if (this.fetchParam.lesson_type === 'chapter') {
-                    result = []
                     this.resultData.forEach((pitem) => {
-                        delete pitem.status
-                        pitem.lessons.pop()
+                        let chapter = new Chapter()
+                        chapter.name = pitem.name
                         pitem.lessons.forEach((item) => {
-                            delete item.material_name
+                            if (item.id == -1) {
+                                return
+                            }
+                            let lesson = new Lesson()
                             item.try_enable ? item.try_enable = 1 : item.try_enable = 0
+                            Object.assign(lesson, item)
+
+                            chapter.addLesson(lesson)
                         })
+
+                        chapters.push(chapter)
                     })
-                    result = this.resultData
                 }
+
+                console.log(chapters)
                 newcourseService.setLessons({
                     course_id: this.fetchParam.id,
-                    jsonstr: JSON.stringify(result)
+                    jsonstr: JSON.stringify(chapters)
                 }).then(() => {
                     xmview.showTip('success', '操作成功')
-                    this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
+                    // this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
                 })
             },
             previewFn (row) {
@@ -532,10 +578,63 @@
                     this.docshow = true
                 }
             },
-            openExamForm (e) {
+            openExamForm (pindex, index, e) {
                 e.stopPropagation()
-                this.$sidepan({
-                    content: this.$createElement(Paper),
+                this.currentData.pindex = pindex
+                this.currentData.index = index
+
+                let paper = new Paper()
+                paper.type = 'course_exam'
+                let vnode = this.$createElement(PaperForm, {
+                    props: {
+                        paper: paper,
+                        onSubmit: this.submitPaper
+                    },
+                    style: {
+                        'padding-top': '30px'
+                    }
+                })
+                this.sidebar = this.$sidepan({
+                    content: vnode,
+                })
+            },
+            submitPaper(paper) {
+                paper.save().then(() => {
+                    let lesson = new Lesson()
+                    lesson.material_type = 'exam'
+                    lesson.setMaterialPaper(paper)
+
+                    if (this.fetchParam.lesson_type == 'single') {
+                        this.classhour.paperLesson = lesson
+                    }
+
+                    if (this.fetchParam.lesson_type === 'multi') {
+                        this.currentData.index !== -1 ? this.multi.data[this.currentData.index] = lesson : this.multi.data.splice(this.multi.data.length - 1, 0, lesson)
+                    }
+
+                    if (this.fetchParam.lesson_type === 'chapter') {
+                        this.currentData.index !== -1 ? this.resultData[this.currentData.pindex].lessons[this.currentData.index] = lesson : this.resultData[this.currentData.pindex].lessons.splice(this.resultData[this.currentData.pindex].lessons.length - 1, 0, lesson)
+                    }
+
+                    this.sidebar.close()
+                })
+            },
+            openEditExamForm(lesson, pindex, index, e) {
+                e.stopPropagation()
+                this.currentData.pindex = pindex
+                this.currentData.index = index
+
+                let vnode = this.$createElement(PaperForm, {
+                    props: {
+                        paper: lesson.materialPaper,
+                        onSubmit: this.submitPaper
+                    },
+                    style: {
+                        'padding-top': '30px'
+                    }
+                })
+                this.sidebar = this.$sidepan({
+                    content: vnode,
                 })
             }
         }
@@ -562,6 +661,7 @@
             material_type: '',
             material_id: '',
             material_name: '选择视频',
+            material_data: null,
             try_enable: 0,
             sort: 0,
             deleted: false

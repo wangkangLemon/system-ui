@@ -33,40 +33,29 @@
             <el-table-column
                     min-width="200"
                     prop="name"
-                    label="课程">
-            </el-table-column>
-            <el-table-column
-                    min-width="200"
-                    prop="cat_name"
-                    label="所属栏目">
+                    label="试卷名称">
             </el-table-column>
             <el-table-column
                     width="80"
-                    label="题目数">
-                <template scope="scope">
-                    <el-button style="width: 100%"
-                               @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second'}})"
-                               type="text" size="small">{{scope.row.subject_num}}  <!--a-->
-                    </el-button>
-                </template>
+                    label="题目数"
+                    prop="subject_total">
             </el-table-column>
             <el-table-column
                     width="80"
-                    prop="score"
+                    prop="score_total"
                     label="总分数">
             </el-table-column>
             <el-table-column
                     width="80"
-                    prop="limit_time_string"
-                    label="限时">
+                    prop="score_pass"
+                    label="及格分数">
             </el-table-column>
             <el-table-column
                     width="100"
-                    label="状态">
+                    label="当前状态">
                 <template scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
-                    <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
-                    <el-tag v-else>已下线</el-tag>
+                    <el-tag v-else-if="scope.row.status == 1" type="danger">下线</el-tag>
                 </template>
             </el-table-column>
             <el-table-column
@@ -81,17 +70,13 @@
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button
-                            @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row}, query: {id: scope.row.id}})"
+                            @click="$router.push({name: 'test-paper-edit', params: {exam_id: scope.row.id}})"
                             type="text" size="small">编辑 <!--a-->
                     </el-button>
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
-                    <el-button v-if="scope.row.subject_num > 0"
-                               @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.id}})"
-                               type="text" size="small">答案分析 <!--ff-->
-                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -101,7 +86,7 @@
                 <!--底部的批量删除和移动两个按钮-->
                 <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
             </el-col>
-            <el-col :span="6" :offset="12">
+            <el-col :span="12" :offset="6">
                 <el-pagination
                         style="text-align: right"
                         @size-change="fetchData"
@@ -120,6 +105,7 @@
 
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
+    import testPaperService from '../../../services/testPagerService'
 
     export default{
         data () {
@@ -129,21 +115,12 @@
                 selectedIds: [],
                 fetchParam: {
                     keyword: void '',
-                    status: void 0,
+                    status: -1,
                     time_start: void '',
                     time_end: void '',
                     page: 1,
                     page_size: 15,
                     page_total: 0,
-                },
-                model: {
-                    id: 0,
-                    description: '',
-                    image: '',
-                    type: 0,
-                    correct: 0,
-                    group_id: '',
-                    option: []
                 },
                 editDialog: '新建题库'
             }
@@ -153,7 +130,27 @@
         },
         methods: {
             fetchData() {
-                xmview.setContentLoading(false)
+                xmview.setContentLoading(true)
+                testPaperService.search(this.fetchParam).then((ret) => {
+                    this.data = ret.list
+                    this.fetchParam.page_total = ret.total
+                    xmview.setContentLoading(false)
+                })
+            },
+            del(index, row) {
+                this.$confirm('您是否确定删除试题？', '删除', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    return testPaperService.delete(row.id).then((ret) => {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        })
+                        this.fetchData()
+                    })
+                })
             },
             delMulti() {
 

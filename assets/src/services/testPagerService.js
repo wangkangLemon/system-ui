@@ -11,7 +11,7 @@ const urlPre = config.apiHost
 
 class TestPagerService {
     search({keyword, status, time_start, time_end, page, page_size}) {
-        let url = `${urlPre}/testbank/group/search`
+        let url = `${urlPre}/exam/search`
         return api.get(url, {keyword, status, time_start, time_end, page, page_size}).then((ret) => {
             return ret.data
         })
@@ -24,9 +24,44 @@ class TestPagerService {
         })
     }
 
+    update(examId, {name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type}) {
+        let url = `${urlPre}/exam/${examId}`
+        return api.put(url, JSON.stringify({name, description, image, single_score, multi_score, judge_score, score_pass, limit_repeat, limit_time, answer_show_type, answer_show_time, type})).then((ret) => {
+            return ret.data
+        })
+    }
+
     batchCreateQuestion(examId, questions) {
         let url = `${urlPre}/exam/${examId}/subject`
         return api.post(url, JSON.stringify(questions)).then((ret) => {
+            return ret.data
+        })
+    }
+
+    batchDeleteQuestion(examId, questions) {
+        questions.forEach((question) => {
+            let url = `${urlPre}/exam/${examId}/subject/${question.id}`
+            api.del(url, JSON.stringify(questions))
+        })
+    }
+
+    delete(examId) {
+        let url = `${urlPre}/exam/${examId}`
+        return api.del(url).then((ret) => {
+            return ret.data
+        })
+    }
+
+    view(examId) {
+        let url = `${urlPre}/exam/${examId}`
+        return api.get(url).then((ret) => {
+            return ret.data
+        })
+    }
+
+    searchQuestion(examId, {type, tags, page, page_size}) {
+        let url = `${urlPre}/exam/${examId}/subject/search`
+        return api.get(url, {type, tags, page, page_size}).then((ret) => {
             return ret.data
         })
     }

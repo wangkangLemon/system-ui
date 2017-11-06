@@ -20,9 +20,6 @@
                 <el-input v-model="item.description" :disabled="!item.editable" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入内容">
                 </el-input>
             </el-form-item>
-            <el-form-item label="分数">
-                <el-input placeholder="为该题设置分数" :disabled="!item.editable" v-model.number="item.score"></el-input>
-            </el-form-item>
             <el-form-item label="配图">
                 <UploadImg :defaultImg="item.image" :url="item.image" :disabled="!item.editable" :onSuccess="res => item.image = res.data.url"></UploadImg>
             </el-form-item>
@@ -30,10 +27,10 @@
             <el-form-item label="选项">
                 <!--判断题的正确错误选项-->
                 <div v-if="item.type == 0">
-                    <el-radio class="radio" v-model="item.correct" :label="1">
+                    <el-radio class="radio" v-model="item.correct" :label="1" :disabled="!item.editable">
                         <i>正确</i>
                     </el-radio>
-                    <el-radio class="radio" v-model="item.correct" :label="0">
+                    <el-radio class="radio" v-model="item.correct" :label="0" :disabled="!item.editable">
                         <i>错误</i>
                     </el-radio>
                 </div>
@@ -41,28 +38,28 @@
                 <div v-if="item.type == 1">
                     <h5>请在正确答案前面打勾</h5>
                     <div class="multy-choose-item" v-for="(option, index) in item.options" :key="index">
-                        <el-radio v-model="item.correct" :label="index">&nbsp;</el-radio>
-                        <el-input placeholder="填写描述" v-model="option.description" style="width: 460px;"></el-input>
-                        <el-button type="text" @click="option.options.splice(index, 1)">
+                        <el-radio v-model="item.correct" :label="index" :disabled="!item.editable">&nbsp;</el-radio>
+                        <el-input placeholder="填写描述" v-model="option.description" style="width: 430px;" :disabled="!item.editable"></el-input>
+                        <el-button type="text" @click="option.options.splice(index, 1)" :disabled="!item.editable">
                             删除
                         </el-button>
                     </div>
                     <div class="multy-choose-item">
-                        <el-button type="text" @click="addMoreTestingOption(item)">添加更多选项</el-button>
+                        <el-button type="text" @click="addMoreTestingOption(item)" :disabled="!item.editable">添加更多选项</el-button>
                     </div>
                 </div>
                 <!--多选的答案部分-->
                 <div v-if="item.type == 2">
                     <h5>请在正确答案前面打勾</h5>
                     <div class="multy-choose-item" v-for="(option, index) in item.options" :key="index">
-                        <el-checkbox v-model="option.correct" :true-label="1">&nbsp;</el-checkbox>
-                        <el-input placeholder="填写描述" v-model="option.description" style="width: 430px;"></el-input>
-                        <el-button type="text" @click="option.option.splice(index, 1)">
+                        <el-checkbox v-model="option.correct" :true-label="1" :disabled="!item.editable">&nbsp;</el-checkbox>
+                        <el-input placeholder="填写描述" v-model="option.description" style="width: 430px;" :disabled="!item.editable"></el-input>
+                        <el-button type="text" @click="option.option.splice(index, 1)" :disabled="!item.editable">
                             删除
                         </el-button>
                     </div>
                     <div class="multy-choose-item">
-                        <el-button type="text" @click="addMoreTestingOption(item)">添加更多选项</el-button>
+                        <el-button type="text" @click="addMoreTestingOption(item)" :disabled="!item.editable">添加更多选项</el-button>
                     </div>
                 </div>
             </el-form-item>
@@ -83,7 +80,6 @@
                 <el-button icon="plus" @click='addTesting(2)' size="small">多选题</el-button>
                 <el-button icon="plus" @click="$refs['localImportDialog'].open()" size="small">本地导入</el-button>
                 <el-button icon="plus" @click="$refs['libraryImportDialog'].open()" size="small">题库导入</el-button>
-                <el-button icon="plus" @click='addTesting(2)' size="small">课程导入</el-button>
             </el-form-item>
         </el-form>
     </div>

@@ -50,7 +50,7 @@ export default {
             }
         },
         {
-            path: 'edit',
+            path: 'edit/:exam_id',
             name: 'test-paper-edit',
             component: resolve => {
                 require.ensure([], () => {

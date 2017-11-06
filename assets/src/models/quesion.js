@@ -14,7 +14,7 @@ class Question {
         this.group_id = ''
         this.group_name = ''
         this.description = ''
-        this.score = ''
+        this.score = 0
         this.image = ''
         this.explain = ''
         this.correct = 0
