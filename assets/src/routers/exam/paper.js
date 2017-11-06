@@ -46,7 +46,6 @@ export default {
             },
             meta: {
                 title: '试题管理-添加',
-                noback: true
             }
         },
         {

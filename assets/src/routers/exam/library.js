@@ -24,6 +24,7 @@
              },
              meta: {
                  title: '题库管理',
+                 noback: true
              }
          },
      ]

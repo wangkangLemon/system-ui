@@ -24,6 +24,7 @@
              },
              meta: {
                  title: '试题管理',
+                 noback: true
              }
          },
      ]
