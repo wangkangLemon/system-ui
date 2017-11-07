@@ -137,7 +137,6 @@ class Paper {
         let nowRes = this.arrayToMap(this.questions, 'id')
 
         let delKeys = oldRes.keys.filter(v => !nowRes.keys.includes(v))
-        let addKeys = nowRes.keys.filter(v => !oldRes.keys.includes(v))
 
         let del = []
         delKeys.forEach((key) => {
@@ -145,8 +144,10 @@ class Paper {
         })
 
         let add = []
-        addKeys.forEach((key) => {
-            add.push(nowRes.map[key])
+        this.questions.forEach((question) => {
+            if (question.id == 0) {
+                add.push(question)
+            }
         })
 
         return {add, del}
