@@ -40,7 +40,7 @@
                     <div class="multy-choose-item" v-for="(option, index) in item.options" :key="index">
                         <el-radio v-model="item.correct" :label="index" :disabled="!item.editable">&nbsp;</el-radio>
                         <el-input placeholder="填写描述" v-model="option.description" style="width: 430px;" :disabled="!item.editable"></el-input>
-                        <el-button type="text" @click="option.options.splice(index, 1)" :disabled="!item.editable">
+                        <el-button type="text" @click="item.options.splice(index, 1)" :disabled="!item.editable">
                             删除
                         </el-button>
                     </div>
@@ -54,7 +54,7 @@
                     <div class="multy-choose-item" v-for="(option, index) in item.options" :key="index">
                         <el-checkbox v-model="option.correct" :true-label="1" :disabled="!item.editable">&nbsp;</el-checkbox>
                         <el-input placeholder="填写描述" v-model="option.description" style="width: 430px;" :disabled="!item.editable"></el-input>
-                        <el-button type="text" @click="option.option.splice(index, 1)" :disabled="!item.editable">
+                        <el-button type="text" @click="item.options.splice(index, 1)" :disabled="!item.editable">
                             删除
                         </el-button>
                     </div>
