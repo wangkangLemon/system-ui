@@ -103,7 +103,6 @@
     import Option from '../../models/option'
     import UploadImg from '../component/upload/UploadImg.vue'
     import config from '../../utils/config'
-    import courseService from '../../services/courseService'
 
     export default {
         props: {
@@ -112,7 +111,7 @@
         data() {
             return {
                 uploadUrl: `${config.apiHost}/subject/excel`,
-                uploadImageUrl: courseService.getManageImgUploadUrl(),
+                uploadImageUrl: `${config.apiHost}/subject/image`,
             }
         },
         components: {LibraryImportDialog, LocalImportDialog, UploadImg},
