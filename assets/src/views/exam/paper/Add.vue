@@ -12,17 +12,18 @@
     import AddForm from './Form.vue'
     import Paper from '../../../models/paper'
 
-    let paper = new Paper()
-    paper.type = 'exam'
-
     export default {
+        name: 'exam-paper-add',
         components: {AddForm},
         data() {
+            let paper = new Paper()
+            paper.type = 'exam'
+
             return {
                 form: paper
             }
         },
-        activated () {
+        created () {
             xmview.setContentLoading(false)
         },
         methods: {

@@ -25,7 +25,7 @@
 </style>
 <template>
     <section id="test-content-container">
-        <keep-alive>
+        <keep-alive exclude="exam-paper-edit,exam-paper-add">
             <router-view></router-view>
         </keep-alive>
     </section>

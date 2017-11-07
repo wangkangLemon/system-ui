@@ -76,8 +76,8 @@
             <el-col :span="6" :offset="12">
                 <el-pagination
                         style="text-align: right"
-                        @size-change="fetchData"
-                        @current-change="fetchData"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
                         layout="sizes,total, prev, pager, next"
                         :current-page="fetchParam.page"
                         :page-size="fetchParam.page_size"
@@ -254,6 +254,14 @@
                         this.fetchData()
                     })
                 }
+            },
+            handleSizeChange (val) {
+                this.fetchParam.page_size = val
+                this.fetchData()
+            },
+            handleCurrentChange (val) {
+                this.fetchParam.page = val
+                this.fetchData()
             }
         },
         components: {DateRange}

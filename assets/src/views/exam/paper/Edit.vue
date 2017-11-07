@@ -13,6 +13,7 @@
     import Paper from '../../../models/paper'
 
     export default {
+        name: 'exam-paper-edit',
         components: {EditForm},
         data() {
             let paper = new Paper()
@@ -22,7 +23,7 @@
                 form: paper
             }
         },
-        activated () {
+        created () {
             xmview.setContentLoading(false)
         },
         methods: {
