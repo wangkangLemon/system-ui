@@ -13,16 +13,10 @@
         </section>
 
         <el-form :inline="true" :model="fetchParam" class="search">
-            <el-form-item label="课程名称">
-                <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
+            <el-form-item label="题库名称">
+                <el-input v-model="fetchParam.keyword" placeholder="题库名称" @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
-            <el-form-item label="状态">
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                    <el-option label="正常" value="0"></el-option>
-                    <el-option label="下线" value="1"></el-option>
-                    <el-option label="视频转码中" value="2"></el-option>
-                </el-select>
-            </el-form-item>
+
             <el-form-item>
                 <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
                            @changeStart="val=> fetchParam.time_start=val"
@@ -165,7 +159,6 @@
                 selectedIds: [],
                 fetchParam: {
                     keyword: void '',
-                    status: void 0,
                     time_start: void '',
                     time_end: void '',
                     page: 1,
@@ -184,7 +177,7 @@
                 this.loadingData = true
                 return testLibraryService.search(this.fetchParam).then((ret) => {
                     this.data = ret.list
-                    this.total = ret.total
+                    this.fetchParam.page_total = ret.total
                     this.loadingData = false
                     xmview.setContentLoading(false)
                 })

@@ -21,7 +21,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="配图">
-                <UploadImg :defaultImg="item.image" :url="item.image" :disabled="!item.editable" :onSuccess="res => item.image = res.data.url"></UploadImg>
+                <UploadImg :defaultImg="item.image" :url="uploadImageUrl" :disabled="!item.editable" :onSuccess="res => item.image = res.data.url"></UploadImg>
             </el-form-item>
 
             <el-form-item label="选项">
@@ -103,6 +103,7 @@
     import Option from '../../models/option'
     import UploadImg from '../component/upload/UploadImg.vue'
     import config from '../../utils/config'
+    import courseService from '../../services/courseService'
 
     export default {
         props: {
@@ -111,6 +112,7 @@
         data() {
             return {
                 uploadUrl: `${config.apiHost}/subject/excel`,
+                uploadImageUrl: courseService.getManageImgUploadUrl(),
             }
         },
         components: {LibraryImportDialog, LocalImportDialog, UploadImg},
