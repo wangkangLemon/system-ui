@@ -86,9 +86,8 @@ class Paper {
 
     save() {
         let request = this.format()
-        let {add, del} = this.compareQuestionsDiffSave()
-
         if (this.id) {
+            let {add, del} = this.compareQuestionsDiffSave()
             return testPaperService.update(this.id, request).then((ret) => {
                 if (del) {
                     testPaperService.batchDeleteQuestion(this.id, del)
@@ -109,6 +108,7 @@ class Paper {
                 }
             })
         } else {
+            let add = this.questions
             return testPaperService.create(request).then((ret) => {
                 this.id = ret.id
                 if (add.length > 0) {
