@@ -54,7 +54,7 @@ Slot:
     }
 </style>
 <template>
-    <el-dialog id="dialog-local-import" :title="title" :visible.sync="isOpen">
+    <NestedDialog id="dialog-local-import" :title="title" :visible.sync="isOpen" @click.native.stop>
         <el-upload
                 class="upload-file"
                 drag
@@ -90,10 +90,11 @@ Slot:
             <h5 v-for="reason in response.reasons">{{ reason.message }}</h5>
         </article>
         <slot name="footer"></slot>
-    </el-dialog>
+    </NestedDialog>
 </template>
 <script>
     import authUtils from '../../utils/authUtils'
+    import NestedDialog from '../component/dialog/NestedDialog.vue'
 
     export default {
         props: {
@@ -114,6 +115,7 @@ Slot:
                 required: true
             }
         },
+        components: {NestedDialog},
         data() {
             return {
                 isOpen: false,

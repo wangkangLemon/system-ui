@@ -1,5 +1,5 @@
 <template>
-    <el-dialog id="view" title="试题导入" :visible.sync="isOpen">
+    <NestedDialog id="view" title="试题导入" :visible.sync="isOpen" @click.native.stop>
         <el-form :inline="true" :model="search" class="demo-form-inline">
             <el-form-item label="题库名称">
                 <SelectScroll :requestCb="fetchLibrary" v-model="search.group_id" :changeCb="changeLibrary"></SelectScroll>
@@ -66,13 +66,14 @@
             </el-col>
         </el-row>
         <el-button type="primary" @click="importQuestion">插入</el-button>
-    </el-dialog>
+    </NestedDialog>
 </template>
 <script>
     import testLibraryService from '../../services/testLibraryService'
     import testQuestionService from '../../services/testQuestionService'
     import SelectScroll from '../component/form/SelectScroll.vue'
     import Question from '../../models/quesion'
+    import NestedDialog from '../component/dialog/NestedDialog.vue'
 
     export default {
         props: {
@@ -137,8 +138,8 @@
                 let question = new Question()
                 question.findById(val.target.value)
                 this.choiceList.push(question)
-            }
+            },
         },
-        components: {SelectScroll}
+        components: {SelectScroll, NestedDialog}
     }
 </script>
