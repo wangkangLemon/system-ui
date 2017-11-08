@@ -25,20 +25,16 @@
 
         <el-form :inline="true" :model="fetchParam" class="search">
             <el-form-item label="所属题库">
-                <SelectScroll :requestCb="fetchLibrary" v-model="fetchParam.group_id"></SelectScroll>
+                <SelectScroll :requestCb="fetchLibrary" v-model="fetchParam.subject_group_id" :changeCb="changeLibrary"></SelectScroll>
             </el-form-item>
             <el-form-item label="试题标签">
-                <el-select v-model="fetchParam.tags" placeholder="试题标签" @change="fetchData" :clearable="true">
-                    <el-option label="单选题" value="0"></el-option>
-                    <el-option label="多选题" value="1"></el-option>
-                    <el-option label="判断题" value="2"></el-option>
-                </el-select>
+                <el-input type="text" v-model="fetchParam.tags" placeholder="请输入标签" @change="fetchData"></el-input>
             </el-form-item>
             <el-form-item label="试题类型">
                 <el-select v-model="fetchParam.type" placeholder="试题类型" @change="fetchData" :clearable="true">
-                    <el-option label="单选题" value="0"></el-option>
-                    <el-option label="多选题" value="1"></el-option>
-                    <el-option label="判断题" value="2"></el-option>
+                    <el-option label="判断题" value="0"></el-option>
+                    <el-option label="单选题" value="1"></el-option>
+                    <el-option label="多选题" value="2"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -295,7 +291,7 @@
                 data: [],
                 selectedIds: [],
                 fetchParam: {
-                    group_id: void '',
+                    subject_group_id: void '',
                     tags: '',
                     type: void '',
                     time_start: void '',
@@ -436,6 +432,10 @@
             },
             handleCurrentChange (val) {
                 this.fetchParam.page = val
+                this.fetchData()
+            },
+            changeLibrary(val) {
+                this.fetchParam.subject_group_id = val
                 this.fetchData()
             }
         },

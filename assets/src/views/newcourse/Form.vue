@@ -345,7 +345,7 @@
                     }
                 },
                 multi: {
-                    data: [],
+                    data: [{id: -1}],
                 },
                 resultData: [],
                 sidebar: null,
@@ -372,6 +372,7 @@
                             this.classhour.paperLesson = paperLesson
                         }
                     } else if (this.fetchParam.lesson_type === 'multi') {
+                        this.multi.data = []
                         ret.lessons[0].lessons.forEach((item) => {
                             let lesson = new Lesson()
                             Object.assign(lesson, item)

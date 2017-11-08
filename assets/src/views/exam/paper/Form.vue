@@ -15,7 +15,7 @@
 <template>
     <el-form  id="form" ref="form" :model="paper" :rules="rules" label-width="120px">
         <el-form-item label="试卷名称" prop="name">
-            <el-input v-model="paper.name"></el-input>
+            <el-input v-model="paper.name" placeholder="请输入试卷名称"></el-input>
         </el-form-item>
         <el-form-item label="试卷封面" prop="image">
             <img :src="paper.image | fillImgPath" width="200" height="112" v-show="paper.image">
@@ -28,30 +28,30 @@
         <!--<el-input class="number" v-model="paper.score"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item label="单选题" prop="single_score">
-            <el-input class="number" v-model.number="paper.single_score" style="width: 300px">
+            <el-input type="number" v-model.number="paper.single_score" style="width: 300px">
                 <template slot="prepend">每题</template>
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
         <el-form-item label="多选题" prop="multi_score">
-            <el-input class="number" v-model.number="paper.multi_score" style="width: 300px">
+            <el-input type="number" v-model.number="paper.multi_score" style="width: 300px">
                 <template slot="prepend">每题</template>
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
         <el-form-item label="判断题" prop="judge_score">
-            <el-input class="number" v-model.number="paper.judge_score" style="width: 300px">
+            <el-input type="number" v-model.number="paper.judge_score" style="width: 300px">
                 <template slot="prepend">每题</template>
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
         <el-form-item label="考试时间" prop="limit_time">
-            <el-input class="number" v-model.number="paper.limit_time" style="width: 300px">
+            <el-input type="number" v-model.number="paper.limit_time" style="width: 300px">
                 <template slot="append">分钟</template>
             </el-input>
         </el-form-item>
         <el-form-item label="及格分数" prop="score_pass">
-            <el-input class="number" v-model.number="paper.score_pass" style="width: 300px">
+            <el-input type="number" v-model.number="paper.score_pass" style="width: 300px">
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
@@ -63,7 +63,7 @@
             </el-date-picker>
         </el-form-item>
         <el-form-item label="考试次数限制" prop="limit_repeat">
-            <el-input class="number" v-model.number="paper.limit_repeat" style="width: 300px">
+            <el-input type="number" v-model.number="paper.limit_repeat" style="width: 300px" placeholder="留空或为0表示不限制">
                 <template slot="append">次</template>
             </el-input>
         </el-form-item>

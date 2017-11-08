@@ -13273,6 +13273,16 @@
     position: relative;
     padding: 20px 20px 0;
 }
+.el-message-box__headerbtn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+}
 .el-message-box__content {
     padding: 30px 20px;
     color: rgb(72, 87, 106);

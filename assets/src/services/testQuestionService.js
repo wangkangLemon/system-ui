@@ -10,13 +10,13 @@ import config from '../utils/config'
 const urlPre = config.apiHost
 
 class TestQuestionService {
-    search({group_id, status, type, tags, time_start, time_end, page, page_size}) {
+    search({subject_group_id, status, type, tags, time_start, time_end, page, page_size}) {
         let url = `${urlPre}/subject/search`
-        if (!group_id) group_id = -1
+        if (!subject_group_id) subject_group_id = -1
         if (!status) status = -1
         if (!type) type = -1
 
-        return api.get(url, {group_id, status, page, page_size, time_start, time_end, type, tags}).then((ret) => {
+        return api.get(url, {subject_group_id, status, page, page_size, time_start, time_end, type, tags}).then((ret) => {
             return ret.data
         })
     }
