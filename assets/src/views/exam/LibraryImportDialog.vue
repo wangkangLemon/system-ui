@@ -1,5 +1,5 @@
 <template>
-    <NestedDialog id="view" title="试题导入" :visible.sync="isOpen" @click.native.stop>
+    <NestedDialog id="dialog-library-import" title="试题导入" :visible.sync="isOpen" @click.native.stop>
         <el-form :inline="true" :model="search" class="demo-form-inline">
             <el-form-item label="题库名称">
                 <SelectScroll :requestCb="fetchLibrary" v-model="search.group_id" :changeCb="changeLibrary"></SelectScroll>
