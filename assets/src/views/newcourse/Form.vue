@@ -218,14 +218,14 @@
                 </section>
             </el-tab-pane>
         </el-tabs>
-        <NestedDialog title="添加课时" :visible.sync="classhour.showDialog">
+        <el-dialog title="添加课时" :visible.sync="classhour.showDialog">
             <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id" ref="multiForm"></LessonForm>
             <el-form label-width="120px">
                 <el-form-item>
                     <el-button type="primary" @click="addMultiSubmit">保存</el-button>
                 </el-form-item>
             </el-form>
-        </NestedDialog>
+        </el-dialog>
         <el-dialog title="查看" :visible.sync="docshow">
             <DocPreview ref="docShow" :docurl="docurl" class="docshow"></DocPreview>
         </el-dialog>

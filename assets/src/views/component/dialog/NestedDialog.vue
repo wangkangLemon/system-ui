@@ -1,10 +1,9 @@
 <script>
     import { Dialog } from 'element-ui'
-    import Popup from 'element-ui/src/utils/popup'
 
     export default {
         name: 'NestedDialog',
-        mixins: [Dialog, Popup],
+        mixins: [Dialog],
         props: {
             appendToBody: {
                 type: Boolean,
