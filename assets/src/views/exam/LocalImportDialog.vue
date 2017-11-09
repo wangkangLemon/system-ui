@@ -160,7 +160,6 @@ Slot:
                         this.response.error = 0
                         this.response.reasons = []
                     }, ({error, reasons}) => {
-                        debugger
                         this.response.success = 0
                         this.response.error = error
                         this.response.reasons = reasons
