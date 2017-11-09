@@ -20,21 +20,33 @@ class TestQuestionService {
             return ret.data
         })
     }
-    create({subject_group_id, type, description, explain, tags, correct, image, option}) {
+    create({subject_group_id, type, description, explain, tags, correct, image, options}) {
         let url = `${urlPre}/subject`
-        return api.post(url, JSON.stringify([{type, description, explain, tags, correct, image, option, subject_group_id}])).then((ret) => {
+        return api.post(url, JSON.stringify([{type, description, explain, tags, correct, image, options, subject_group_id}])).then((ret) => {
             return ret.data
         })
     }
-    update(subject_id, {subject_group_id, type, description, explain, tags, correct, image, option}) {
+    update(subject_id, {subject_group_id, type, description, explain, tags, correct, image, options}) {
         let url = `${urlPre}/subject/${subject_id}`
-        return api.put(url, JSON.stringify({subject_group_id, type, description, explain, tags, correct, image, option})).then((ret) => {
+        return api.put(url, JSON.stringify({subject_group_id, type, description, explain, tags, correct, image, options})).then((ret) => {
             return ret.data
         })
     }
     delete(subject_id) {
         let url = `${urlPre}/subject/${subject_id}`
         return api.del(url, {}).then((ret) => {
+            return ret.data
+        })
+    }
+    offline(subject_id) {
+        let url = `${urlPre}/subject/${subject_id}/disable`
+        return api.put(url, JSON.stringify({status: 1})).then((ret) => {
+            return ret.data
+        })
+    }
+    online(subject_id) {
+        let url = `${urlPre}/subject/${subject_id}/disable`
+        return api.del(url, JSON.stringify({status: 0})).then((ret) => {
             return ret.data
         })
     }

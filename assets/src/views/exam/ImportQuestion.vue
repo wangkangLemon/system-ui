@@ -20,6 +20,10 @@
                 <el-input v-model="item.description" :disabled="!item.editable" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入内容">
                 </el-input>
             </el-form-item>
+            <el-form-item label="分数">
+                <el-input v-model="item.score" :disabled="!item.editable" type="number" placeholder="请输入分数">
+                </el-input>
+            </el-form-item>
             <el-form-item label="配图">
                 <UploadImg :defaultImg="item.image" :url="uploadImageUrl" :disabled="!item.editable" :onSuccess="res => item.image = res.data.url"></UploadImg>
             </el-form-item>

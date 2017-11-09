@@ -28,7 +28,7 @@
                 <SelectScroll :requestCb="fetchLibrary" v-model="fetchParam.subject_group_id" :changeCb="changeLibrary"></SelectScroll>
             </el-form-item>
             <el-form-item label="试题标签">
-                <el-input type="text" v-model="fetchParam.tags" placeholder="请输入标签" @change="fetchData"></el-input>
+                <el-input type="text" v-model="fetchParam.tags" placeholder="请输入标签" @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
             <el-form-item label="试题类型">
                 <el-select v-model="fetchParam.type" placeholder="试题类型" @change="fetchData" :clearable="true">
@@ -93,8 +93,9 @@
                     label="操作">
                 <template scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">详情</el-button>
-                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
-                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.status == 0">编辑</el-button>
+                    <el-button @click="online(scope.$index, scope.row)" type="text" size="small" v-if="scope.row.status == 1">上线</el-button>
+                    <el-button @click="offline(scope.$index, scope.row)" type="text" size="small" v-if="scope.row.status == 0">下线</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -179,7 +180,7 @@
                 <el-form-item label="所属题库">
                     <SelectScroll :requestCb="fetchLibrary" :placeholder="model.group_name" v-model="model.group_id"></SelectScroll>
                 </el-form-item>
-                <el-form-item label="课程标签">
+                <el-form-item label="试题标签">
                     <Tags v-model="model.tags"></Tags>
                 </el-form-item>
                 <el-form-item>
@@ -215,7 +216,18 @@
             </div>
             <div class="el-form-item">
                 <label class="el-form-item__label">答案选项：</label>
-                <div class="el-form-item__content">
+                <div class="el-form-item__content" v-if="model.type == 0">
+                    <el-tag type="success" v-if="model.correct == 1">正确</el-tag>
+                    <el-tag type="danger" v-if="model.correct == 0">错误</el-tag>
+                </div>
+                <div class="el-form-item__content" v-if="model.type == 1">
+                    <p v-for="(option, index) in model.options">
+                        {{ option.description }}
+                        <el-tag type="success" v-if="index == model.correct">{{ option.correctName }}</el-tag>
+                        <el-tag type="danger" v-if="index != model.correct">{{ option.correctName }}</el-tag>
+                    </p>
+                </div>
+                <div class="el-form-item__content" v-if="model.type == 2">
                     <p v-for="(option, index) in model.options">
                         {{ option.description }}
                         <el-tag type="success" v-if="option.correct == 1">{{ option.correctName }}</el-tag>
@@ -320,6 +332,9 @@
         methods: {
             fetchData() {
                 this.loadingData = true
+                if (this.$route.params.subject_group_id) {
+                    this.fetchParam.subject_group_id = this.$route.params.subject_group_id
+                }
                 return testQuestionService.search(this.fetchParam).then((ret) => {
                     this.data = ret.list
                     this.fetchParam.page_total = ret.total
@@ -372,6 +387,24 @@
                         })
                         this.fetchData()
                     })
+                })
+            },
+            online(index, row) {
+                return testQuestionService.online(row.id).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功!'
+                    })
+                    this.fetchData()
+                })
+            },
+            offline(index, row) {
+                return testQuestionService.offline(row.id).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功!'
+                    })
+                    this.fetchData()
                 })
             },
             preview(index, row) {
@@ -431,8 +464,10 @@
                 this.fetchData()
             },
             handleCurrentChange (val) {
-                this.fetchParam.page = val
-                this.fetchData()
+                if (this.fetchParam.page != val) {
+                    this.fetchParam.page = val
+                    this.fetchData()
+                }
             },
             changeLibrary(val) {
                 this.fetchParam.subject_group_id = val

@@ -5,15 +5,13 @@
         </section>
 
         <el-form :inline="true" :model="fetchParam" class="search">
-            <el-form-item label="课程名称">
+            <el-form-item label="试卷名称">
                 <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
             <el-form-item label="状态">
-                <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
-                    <el-option label="全部" :value="-1"></el-option>
+                <el-select v-model="fetchParam.status" @change="fetchData" @clear="fetchParam.status = -1" :clearable="true">
                     <el-option label="正常" :value="0"></el-option>
                     <el-option label="下线" :value="1"></el-option>
-                    <el-option label="视频转码中" :value="2"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -196,8 +194,10 @@
                 this.fetchData()
             },
             handleCurrentChange (val) {
-                this.fetchParam.page = val
-                this.fetchData()
+                if (this.fetchParam.page != val) {
+                    this.fetchParam.page = val
+                    this.fetchData()
+                }
             }
         },
         components: {DateRange}

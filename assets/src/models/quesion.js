@@ -60,7 +60,7 @@ class Question {
             this.group_id = subject.subject_group_id
             this.group_name = subject.subject_group_name
 
-            subject.option.forEach((val, index) => {
+            subject.options.forEach((val, index) => {
                 let option = new Option()
                 option.id = val.id
                 option.description = val.description
@@ -90,7 +90,7 @@ class Question {
                 tags: question.tags,
                 correct: question.correct,
                 image: question.image,
-                option: question.options
+                options: question.options
             })
         } else {
             return testQuestionService.create({
@@ -101,7 +101,7 @@ class Question {
                 tags: question.tags,
                 correct: question.correct,
                 image: question.image,
-                option: question.options
+                options: question.options
             })
         }
     }

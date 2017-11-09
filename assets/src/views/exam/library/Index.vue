@@ -41,7 +41,7 @@
                     label="题目数">
                 <template scope="scope">
                     <el-button style="width: 100%"
-                               @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second'}})"
+                               @click="$router.push({name: 'test-question-index', params: {subject_group_id: scope.row.id}})"
                                type="text" size="small">{{scope.row.subject_num}}  <!--a-->
                     </el-button>
                 </template>
@@ -56,8 +56,8 @@
                     label="操作">
                 <template scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">详情</el-button>
-                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
-                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.id == 0">编辑</el-button>
+                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.id == 0">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -82,11 +82,11 @@
         </el-row>
 
         <el-dialog :title="editDialog" :visible.sync="dialog.edit">
-            <el-form v-model="model" label-width="80px">
-                <el-form-item label="题库名称">
+            <el-form :model="model" label-width="80px" :rules="rules" ref="libraryForm">
+                <el-form-item label="题库名称" prop="name">
                     <el-input v-model="model.name"></el-input>
                 </el-form-item>
-                <el-form-item label="题库简介">
+                <el-form-item label="题库简介" prop="description">
                     <el-input type="textarea" v-model="model.description"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -166,7 +166,11 @@
                     page_total: 0,
                 },
                 model: {},
-                editDialog: '新建题库'
+                editDialog: '新建题库',
+                rules: {
+                    name: [{required: true, message: '请输入题库名称', trigger: 'blur'}],
+                    description: [{required: true, message: '请输入题库描述', trigger: 'blur'}],
+                }
             }
         },
         activated () {
@@ -236,25 +240,33 @@
                 console.log(this.model)
             },
             submitForm() {
-                if (this.model.id == 0) {
-                    return testLibraryService.create(this.model).then((ret) => {
-                        this.dialog.edit = false
-                        this.fetchData()
-                    })
-                } else {
-                    return testLibraryService.update(this.model.id, this.model).then((ret) => {
-                        this.dialog.edit = false
-                        this.fetchData()
-                    })
-                }
+                this.$refs['libraryForm'].validate((pass) => {
+                    if (!pass) {
+                        return
+                    }
+
+                    if (this.model.id == 0) {
+                        return testLibraryService.create(this.model).then(() => {
+                            this.dialog.edit = false
+                            this.fetchData()
+                        })
+                    } else {
+                        return testLibraryService.update(this.model.id, this.model).then(() => {
+                            this.dialog.edit = false
+                            this.fetchData()
+                        })
+                    }
+                })
             },
             handleSizeChange (val) {
                 this.fetchParam.page_size = val
                 this.fetchData()
             },
             handleCurrentChange (val) {
-                this.fetchParam.page = val
-                this.fetchData()
+                if (this.fetchParam.page != val) {
+                    this.fetchParam.page = val
+                    this.fetchData()
+                }
             }
         },
         components: {DateRange}

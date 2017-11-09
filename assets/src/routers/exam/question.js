@@ -15,7 +15,7 @@
      },
      children: [
          {
-             path: 'index',
+             path: 'index/:subject_group_id?',
              name: 'test-question-index',
              component: resolve => {
                  require.ensure([], () => {

@@ -61,10 +61,9 @@
 
             <section>
                 <i>状态</i>
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
+                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" @clear="fetchParam.status = -1" :clearable="true">
                     <el-option label="正常" value="0"></el-option>
                     <el-option label="下线" value="1"></el-option>
-                    <el-option label="视频转码中" value="2"></el-option>
                 </el-select>
             </section>
 
@@ -103,13 +102,13 @@
             <el-table-column fixed="right" width="207" label="操作">
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
-                    <el-button @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" type="text" size="small">编辑
-                        <!--a-->
+                    <el-button @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" type="text" size="small" :disabled="scope.row.status == 0">
+                        编辑
                     </el-button>
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
-                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.status == 0">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -262,6 +261,7 @@ export default {
                     xmview.showTip('success', '操作成功')
                     this.dialogTree.isShow = false
                     setTimeout(() => {
+                        this.selectedIds = []
                         this.fetchData() // 重新刷新数据
                     }, 300)
                 })
