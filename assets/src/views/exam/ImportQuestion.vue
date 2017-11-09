@@ -74,7 +74,7 @@
             </el-form-item>
         </el-form>
 
-        <LibraryImportDialog ref="libraryImportDialog" :confirmFn="importQuestion"></LibraryImportDialog>
+        <LibraryImportDialog ref="libraryImportDialog" :confirmFn="libraryImportQuestion"></LibraryImportDialog>
         <LocalImportDialog
                 :onSuccess="localImportQuestion"
                 ref="localImportDialog"
@@ -162,6 +162,15 @@
                             success: response.data.length,
                         })
                     }
+                })
+            },
+            libraryImportQuestion(questions) {
+                questions.forEach((question) => {
+                    question.id = 0
+                    question.options.forEach((option) => {
+                        option.id = 0
+                    })
+                    this.importQuestion([question])
                 })
             }
         }
