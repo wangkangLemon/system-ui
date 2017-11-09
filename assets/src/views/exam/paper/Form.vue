@@ -102,30 +102,30 @@
 //                    ],
                     single_score: [
                         { type: 'number', required: true, message: '请输入单选题分数', trigger: 'blur' },
-                        { min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                     multi_score: [
                         { type: 'number', required: true, message: '请输入多选题分数', trigger: 'blur' },
-                        { min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                     judge_score: [
                         { type: 'number', required: true, message: '请输入判断题分数', trigger: 'blur' },
-                        { min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                     limit_time: [
                         { type: 'number', required: true, message: '请输入考试时间', trigger: 'blur' },
-                        { min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                     score_pass: [
                         { type: 'number', required: true, message: '请输入及格分数', trigger: 'blur' },
-                        { min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                     answer_show_time: [
                         { type: 'date', required: true, message: '请输入试题解析时间', trigger: 'blur' },
                     ],
                     limit_repeat: [
                         { type: 'number', required: true, message: '请输入考试次数', trigger: 'blur' },
-                        { min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                 }
             }
