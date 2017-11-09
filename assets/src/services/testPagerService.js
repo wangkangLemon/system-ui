@@ -52,6 +52,17 @@ class TestPagerService {
         })
     }
 
+    /**
+     * 批量删除
+     * @param data
+     */
+    batchDelete(data) {
+        let url = `${urlPre}/exam`
+        return api.del(url, JSON.stringify(data)).then((ret) => {
+            return ret.data
+        })
+    }
+
     view(examId) {
         let url = `${urlPre}/exam/${examId}`
         return api.get(url).then((ret) => {

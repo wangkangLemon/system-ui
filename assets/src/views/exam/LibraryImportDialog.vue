@@ -2,7 +2,7 @@
     <NestedDialog id="dialog-library-import" title="试题导入" :visible.sync="isOpen" @click.native.stop>
         <el-form :inline="true" :model="search" class="demo-form-inline">
             <el-form-item label="题库名称">
-                <SelectScroll :requestCb="fetchLibrary" v-model="search.group_id" :changeCb="changeLibrary"></SelectScroll>
+                <SelectScroll :requestCb="fetchLibrary" v-model="search.subject_group_id" :changeCb="changeLibrary"></SelectScroll>
             </el-form-item>
             <el-form-item label="题库类型">
                 <el-select v-model="search.type" placeholder="题库类型">
@@ -89,7 +89,7 @@
                 choiceList: [],
                 search: {
                     type: '',
-                    group_id: '',
+                    subject_group_id: '',
                     page: 0,
                     page_size: 15,
                 }
@@ -131,7 +131,7 @@
                 })
             },
             changeLibrary(id) {
-                this.search.group_id = id
+                this.search.subject_group_id = id
                 this.fetchQuestion()
             },
             choiceQuestion(val) {
