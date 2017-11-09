@@ -84,7 +84,7 @@ Slot:
                 </div>
             </div>
         </div>
-        <div class="download-template"><a v-bind:href="templateUrl">下载参考模板</a></div>
+        <div class="download-template"><a v-bind:href="templateUrl" target="_blank">下载参考模板</a></div>
         <article class="error-reason" v-show="response.reasons.length > 0">
             <h5>错误原因：</h5>
             <h5 v-for="reason in response.reasons">{{ reason.message }}</h5>
@@ -155,10 +155,18 @@ Slot:
                 }
 
                 if (this.onSuccess) {
-                    this.onSuccess(response.data, file, fileList).then(({success, error, reasons}) => {
+                    this.onSuccess(response.data, file, fileList).then(({success}) => {
                         this.response.success = success
+                        this.response.error = 0
+                        this.response.reasons = []
+                    }, ({error, reasons}) => {
+                        debugger
+                        this.response.success = 0
                         this.response.error = error
                         this.response.reasons = reasons
+
+                        this.uploadStatus = 0
+                        this.showUploading = true
                     })
                 }
             },

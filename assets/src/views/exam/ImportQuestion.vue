@@ -21,7 +21,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="分数">
-                <el-input v-model="item.score" :disabled="!item.editable" type="number" placeholder="请输入分数">
+                <el-input v-model.number="item.score" :disabled="!item.editable" type="number" placeholder="请输入分数">
                 </el-input>
             </el-form-item>
             <el-form-item label="配图">
@@ -80,7 +80,7 @@
                 ref="localImportDialog"
                 title="导入题库"
                 :uploadUrl="uploadUrl"
-                templateUrl="xx">
+                templateUrl="/upload/templates/import/subject.xlsx">
             <article slot="footer">
                 <hr style="margin-bottom: 15px;">
                 <h5>注意事项：</h5>
@@ -141,20 +141,27 @@
                 this.questions.splice(index, 1, question)
             },
             localImportQuestion(response) {
-                let questions = []
-                response.data.forEach((item) => {
-                    let question = new Question()
-                    question.setModel(item)
-                    questions.push(question)
-                })
-                this.importQuestion(questions)
+                return new Promise((resolve, reject) => {
+                    if (response.errs) {
+                        reject({
+                            error: -1,
+                            reasons: [
+                                {message: response.errs[0]}
+                            ]
+                        })
+                    } else {
+                        let questions = []
+                        response.data.forEach((item) => {
+                            let question = new Question()
+                            question.setModel(item)
+                            questions.push(question)
+                        })
+                        this.importQuestion(questions)
 
-                return new Promise((resolve) => {
-                    resolve({
-                        success: response.data.length,
-                        error: 0,
-                        reasons: []
-                    })
+                        resolve({
+                            success: response.data.length,
+                        })
+                    }
                 })
             }
         }
