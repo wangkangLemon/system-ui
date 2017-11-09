@@ -107,28 +107,8 @@
             <el-tab-pane :disabled="!fetchParam.id" label="课时管理" name="classhour">
                 <!--单节课-->
                 <el-form v-if="fetchParam.lesson_type == 'single'" label-width="120px" ref="classhourform" :rules="classhour.rules" :model="classhour.form">
-                    <el-form-item label="课时类型" prop="material_type">
-                        <el-select v-model="classhour.form.material_type" @change="typeChange"  :clearable="true">
-                            <el-option label="视频" value="video"></el-option>
-                            <el-option label="WORD" value="doc"></el-option>
-                            <el-option label="PPT" value="ppt"></el-option>
-                            <el-option label="PDF" value="pdf"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="课件" prop="material_id">
-                        <!--上传文件-->
-                        <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl" :accept="classhour.accept" :disabled="classhour.form.material_type == null" v-show="classhour.form.material_type !== 'video'"></UploadFile>
-                        <!--点击上传视频-->
-                        <el-button v-show="classhour.form.material_type === 'video'" @click="isShowVideoDialog=true">
-                            <i>{{classhour.form.material_name}}</i>
-                        </el-button>
-                    </el-form-item>
-                    <el-form-item label="课时名称" prop="name">
-                        <el-input v-model="classhour.form.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="免费试看">
-                        <el-checkbox v-model="classhour.form.try_enable" :true-label="1" :false-label="0">本课时免费试看</el-checkbox>
-                    </el-form-item>
+                    <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id"></LessonForm>
+
                     <el-form-item v-if="!classhour.paperLesson">
                         <el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)"><i class="el-icon-plus" ></i> 添加考试</el-button>
                     </el-form-item>
@@ -236,43 +216,24 @@
                     <p v-show="!chapter.editStatus"><el-button type="gray" size="full" @click="()=>{chapter.editStatus = true;chapter.value = '';}"><i class="el-icon-plus" ></i> 添加新章节</el-button></p>
                     <el-button type="primary" class="saveBtn" @click="saveResult">保存</el-button>
                 </section>
-                <!--选择视频的弹窗-->
-                <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="fetchParam.company_id"></DialogVideo>
             </el-tab-pane>
         </el-tabs>
-        <el-dialog title="添加课时" :visible.sync="classhour.showDialog">
-            <el-form label-width="120px" ref="multiForm" :rules="classhour.rules" :model="classhour.form">
-                <el-form-item label="课时类型" prop="material_type">
-                    <el-select v-model="classhour.form.material_type" @change="typeChange"  :clearable="true">
-                        <el-option label="视频" value="video"></el-option>
-                        <el-option label="WORD" value="doc"></el-option>
-                        <el-option label="PPT" value="ppt"></el-option>
-                        <el-option label="PDF" value="pdf"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="课件" prop="material_id">
-                    <!--上传文件-->
-                    <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl" :accept="classhour.accept" :disabled="classhour.form.material_type == null" v-show="classhour.form.material_type !== 'video'"></UploadFile>
-                    <!--点击上传视频-->
-                    <el-button v-show="classhour.form.material_type === 'video'" @click="isShowVideoDialog=true">
-                        <i>{{classhour.form.material_name}}</i>
-                    </el-button>
-                </el-form-item>
-                <el-form-item label="课时名称" prop="name">
-                    <el-input v-model="classhour.form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="免费试看">
-                    <el-checkbox v-model="classhour.form.try_enable">本课时免费试看</el-checkbox>
-                </el-form-item>
+        <NestedDialog title="添加课时" :visible.sync="classhour.showDialog">
+            <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id" ref="multiForm"></LessonForm>
+            <el-form label-width="120px">
                 <el-form-item>
                     <el-button type="primary" @click="addMultiSubmit">保存</el-button>
                 </el-form-item>
             </el-form>
-        </el-dialog>
+        </NestedDialog>
         <el-dialog title="查看" :visible.sync="docshow">
             <DocPreview ref="docShow" :docurl="docurl" class="docshow"></DocPreview>
         </el-dialog>
         <VideoPreview :type="1" :url="videoUrl" ref="videoPreview"></VideoPreview>
+
+        <Sidebar ref="paperSidebar">
+            <PaperForm :paper="editPaper" :onSubmit="this.submitPaper" style="padding-top: 30px"></PaperForm>
+        </Sidebar>
     </article>
 </template>
 <script>
@@ -292,6 +253,9 @@
     import Paper from '../../models/paper'
     import Chapter from '../../models/chapter'
     import Lesson from '../../models/lesson'
+    import LessonForm from './LessonForm.vue'
+    import NestedDialog from '../component/dialog/NestedDialog.vue'
+    import Sidebar from '../component/sidebar/Sidebar.vue'
 
     export default {
         name: 'newcourse-course-form',
@@ -304,6 +268,10 @@
             DialogVideo,
             UploadFile,
             CompanySelect,
+            LessonForm,
+            NestedDialog,
+            Sidebar,
+            PaperForm
         },
         data () {
             return {
@@ -349,6 +317,8 @@
                 },
                 resultData: [],
                 sidebar: null,
+                editLesson: null,
+                editPaper: new Paper(),
             }
         },
         created () {
@@ -608,23 +578,15 @@
                 lesson.material_type = 'exam'
                 lesson.setMaterialPaper(paper)
 
-                let vnode = this.$createElement(PaperForm, {
-                    props: {
-                        paper: paper,
-                        onSubmit: () => { this.submitPaper(lesson) }
-                    },
-                    style: {
-                        'padding-top': '30px'
-                    }
-                })
-                this.sidebar = this.$sidepan({
-                    content: vnode,
-                })
+                this.editLesson = lesson
+                this.editPaper = paper
+
+                this.$refs['paperSidebar'].open()
             },
-            submitPaper(lesson) {
-                // 设置一下课程数据
-                lesson.setMaterialPaper(lesson.materialPaper)
-                lesson.materialPaper.save().then(() => {
+            submitPaper() {
+                this.editPaper.save().then(() => {
+                    let lesson = this.editLesson
+                    lesson.setMaterialPaper(this.editPaper)
                     if (this.fetchParam.lesson_type == 'single') {
                         this.classhour.paperLesson = lesson
                     }
@@ -637,7 +599,7 @@
                         this.currentData.index !== -1 ? this.resultData[this.currentData.pindex].lessons[this.currentData.index] = lesson : this.resultData[this.currentData.pindex].lessons.splice(this.resultData[this.currentData.pindex].lessons.length - 1, 0, lesson)
                     }
 
-                    this.sidebar.close()
+                    this.$refs['paperSidebar'].close()
                 })
             },
             openEditExamForm(lesson, pindex, index, e) {
@@ -645,24 +607,18 @@
                 this.currentData.pindex = pindex
                 this.currentData.index = index
 
-                let vnode = this.$createElement(PaperForm, {
-                    props: {
-                        paper: lesson.materialPaper,
-                        onSubmit: () => { this.submitPaper(lesson) }
-                    },
-                    style: {
-                        'padding-top': '30px'
-                    }
-                })
-                this.sidebar = this.$sidepan({
-                    content: vnode,
-                })
+                let paper = new Paper()
+                paper.findById(lesson.material_id)
+                this.editLesson = lesson
+                this.editPaper = paper
+
+                this.$refs['paperSidebar'].open()
             }
         }
     }
     function getOriginData() {
         return {
-            company_id: '',
+            company_id: void 0,
             company_name: '',
             category_id: '',
             category_name: '',
