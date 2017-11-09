@@ -12,7 +12,7 @@
 }
 </style>
 <template>
-    <el-dialog title="选取视频" v-model="isShowDialog">
+    <NestedDialog title="选取视频" v-model="isShowDialog">
         <article id="course-manage-component--dialogvideo">
             <article class="search">
                 <section>
@@ -64,11 +64,12 @@
             </el-pagination>
 
         </article>
-    </el-dialog>
+    </NestedDialog>
 </template>
 
 <script>
 import courseService from '../../../services/courseService'
+import NestedDialog from '../../component/dialog/NestedDialog.vue'
 
 export default {
     props: {
@@ -127,6 +128,6 @@ export default {
             this.isShowDialog = val
         }
     },
-    components: {}
+    components: {NestedDialog}
 }
 </script>

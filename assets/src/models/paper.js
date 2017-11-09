@@ -88,24 +88,26 @@ class Paper {
         let request = this.format()
         if (this.id) {
             let {add, del} = this.compareQuestionsDiffSave()
-            return testPaperService.update(this.id, request).then((ret) => {
-                if (del) {
-                    testPaperService.batchDeleteQuestion(this.id, del)
+            return testPaperService.update(this.id, request).then(() => {
+                let data = []
+                if (del.length > 0) {
+                    del.forEach((question) => {
+                        let item = question.format
+                        item.operation = 'delete'
+                        data.push(item)
+                    })
                 }
 
                 if (add.length > 0) {
-                    let data = []
                     add.forEach((question) => {
-                        data.push(question.format)
-                    })
-                    return testPaperService.batchCreateQuestion(this.id, data).then((ret) => {
-                        ret.list.forEach((questionId, index) => {
-                            add[index].id = questionId
-                        })
-
-                        this.refresh()
+                        let item = question.format
+                        item.operation = 'create'
+                        data.push(item)
                     })
                 }
+                return testPaperService.batchCreateQuestion(this.id, data).then(() => {
+                    this.refresh()
+                })
             })
         } else {
             let add = this.questions
@@ -114,13 +116,11 @@ class Paper {
                 if (add.length > 0) {
                     let data = []
                     add.forEach((question) => {
-                        data.push(question.format)
+                        let item = question.format
+                        item.operation = 'create'
+                        data.push(item)
                     })
-                    return testPaperService.batchCreateQuestion(this.id, data).then((ret) => {
-                        ret.list.forEach((questionId, index) => {
-                            add[index].id = questionId
-                        })
-
+                    return testPaperService.batchCreateQuestion(this.id, data).then(() => {
                         this.refresh()
                     })
                 }
