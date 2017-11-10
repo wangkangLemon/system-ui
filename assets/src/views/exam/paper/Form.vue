@@ -28,30 +28,30 @@
         <!--<el-input class="number" v-model="paper.score"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item label="单选题" prop="single_score">
-            <el-input type="number" v-model.number="paper.single_score" style="width: 300px">
+            <el-input type="number" v-model.number="paper.single_score" style="width: 300px" v-number-only>
                 <template slot="prepend">每题</template>
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
         <el-form-item label="多选题" prop="multi_score">
-            <el-input type="number" v-model.number="paper.multi_score" style="width: 300px">
+            <el-input type="number" v-model.number="paper.multi_score" style="width: 300px" v-number-only>
                 <template slot="prepend">每题</template>
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
         <el-form-item label="判断题" prop="judge_score">
-            <el-input type="number" v-model.number="paper.judge_score" style="width: 300px">
+            <el-input type="number" v-model.number="paper.judge_score" style="width: 300px" v-number-only>
                 <template slot="prepend">每题</template>
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
         <el-form-item label="考试时间" prop="limit_time">
-            <el-input type="number" v-model.number="paper.limit_time" style="width: 300px">
+            <el-input type="number" v-model.number="paper.limit_time" style="width: 300px" v-number-only>
                 <template slot="append">分钟</template>
             </el-input>
         </el-form-item>
         <el-form-item label="及格分数" prop="score_pass">
-            <el-input type="number" v-model.number="paper.score_pass" style="width: 300px">
+            <el-input type="number" v-model.number="paper.score_pass" style="width: 300px" v-number-only>
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
@@ -71,7 +71,7 @@
             </el-form-item>
         </el-form-item>
         <el-form-item label="考试次数限制" prop="limit_repeat">
-            <el-input type="number" v-model.number="paper.limit_repeat" style="width: 300px" placeholder="留空或为0表示不限制">
+            <el-input type="number" v-model.number="paper.limit_repeat" style="width: 300px" placeholder="留空或为0表示不限制" v-number-only>
                 <template slot="append">次</template>
             </el-input>
         </el-form-item>
@@ -91,6 +91,7 @@
     import ImportQuestion from '../ImportQuestion.vue'
     import testPaperService from '../../../services/testPagerService'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
+    import NumberOnly from '../../../directives/numberOnly'
 
     export default{
         props: {
@@ -134,9 +135,6 @@
                     answer_show_time: [
                         { type: 'date', required: true, message: '请输入试题解析时间', trigger: 'blur' },
                     ],
-                    limit_repeat: [
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
-                    ],
                 }
             }
         },
@@ -153,6 +151,9 @@
                 })
             },
         },
-        components: {CropperImg, ImportQuestion, CompanySelect}
+        components: {CropperImg, ImportQuestion, CompanySelect},
+        directives: {
+            numberOnly: NumberOnly
+        }
     }
 </script>
