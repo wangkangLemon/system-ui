@@ -161,7 +161,7 @@
         </el-pagination>
 
         <div class="bottom-manage">
-            <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
+            <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button>
         </div>
             <!-- 查看  -->
         <el-dialog title="查看" :visible.sync="docshow">

@@ -126,7 +126,7 @@
         <!--底部的批量删除和移动两个按钮-->
         <div class="bottom-manage">
             <el-button :disabled='selectedIds.length < 1' @click="dialogTree.isShow = true">移动到</el-button>
-            <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
+            <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button>
         </div>
 
         <!--移动子栏目的弹出框-->
