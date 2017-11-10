@@ -52,7 +52,7 @@ class TestQuestionService {
     }
     online(subject_id) {
         let url = `${urlPre}/subject/${subject_id}/disable`
-        return api.del(url, JSON.stringify({status: 0})).then((ret) => {
+        return api.put(url, JSON.stringify({status: 0})).then((ret) => {
             return ret.data
         })
     }
