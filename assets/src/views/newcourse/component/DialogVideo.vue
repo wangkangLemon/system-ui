@@ -13,6 +13,7 @@
 </style>
 <template>
     <NestedDialog title="选取视频" v-model="isShowDialog">
+        <span slot="title"><span class="el-dialog__title">选取视频</span>  <span style="color:#FF4949">只能选取审核通过的视频</span></span>
         <article id="course-manage-component--dialogvideo">
             <article class="search">
                 <section>
