@@ -61,9 +61,10 @@
 
             <section>
                 <i>状态</i>
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" @clear="fetchParam.status = -1" :clearable="true">
+                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
                     <el-option label="正常" value="0"></el-option>
                     <el-option label="下线" value="1"></el-option>
+                    <el-option label="转码中" value="2"></el-option>
                 </el-select>
             </section>
 
@@ -94,7 +95,7 @@
                 <template scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
                     <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
-                    <el-tag v-else>已下线</el-tag>
+                    <el-tag v-else>下线</el-tag>
                 </template>
             </el-table-column>
             <el-table-column width="190" prop="create_time_name" label="创建时间">
@@ -207,7 +208,11 @@ export default {
         },
         fetchData(val) {
             this.loadingData = true
-            return courseService.search(this.fetchParam).then((ret) => {
+            let data = Object.assign({}, this.fetchParam)
+            if (data.status === '' || data.status === undefined) {
+                data.status = -1
+            }
+            return courseService.search(data).then((ret) => {
                 this.data = ret.data
                 this.total = ret.total
                 this.loadingData = false
