@@ -68,9 +68,9 @@
                 isShowDocumentDialog: false,
                 uploadDocUrl: `${config.apiHost}/com/course/doc/upload`,
                 rules: {
-                    name: { required: true, message: '请输入课程名称', trigger: 'change' },
-                    material_type: { required: true, message: '请选择课时类型', trigger: 'change' },
-                    material_id: { required: true, type: 'number', message: '请上传课程文件', trigger: 'change' },
+                    name: { required: true, message: '请输入课程名称', trigger: 'blur' },
+                    material_type: { required: true, message: '请选择课时类型', trigger: 'blur' },
+                    material_id: { required: true, type: 'number', min: 1, message: '请选择课程文件', trigger: 'blur' },
                 }
             }
         },
