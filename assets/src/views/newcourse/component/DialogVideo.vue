@@ -16,15 +16,6 @@
         <article id="course-manage-component--dialogvideo">
             <article class="search">
                 <section>
-                    <i>状态</i>
-                    <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                        <el-option label="待审核" value="0"></el-option>
-                        <el-option label="转码中" value="1"></el-option>
-                        <el-option label="审核成功" value="3"></el-option>
-                    </el-select>
-                </section>
-
-                <section>
                     <i>名称</i>
                     <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
                 </section>
@@ -86,7 +77,7 @@ export default {
             fetchParam: {
                 companyid: void 0,
                 keyword: void 0,
-                status: void 0,
+                status: 3,
                 page: 1,
                 page_size: 15,
             }
