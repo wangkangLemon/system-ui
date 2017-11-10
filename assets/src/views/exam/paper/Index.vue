@@ -9,7 +9,7 @@
                 <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
             <el-form-item label="状态">
-                <el-select v-model="fetchParam.status" @change="fetchData" @clear="fetchParam.status = -1" :clearable="true">
+                <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
                     <el-option label="正常" :value="0"></el-option>
                     <el-option label="下线" :value="1"></el-option>
                 </el-select>
@@ -119,7 +119,7 @@
                 selectedIds: [],
                 fetchParam: {
                     keyword: void '',
-                    status: -1,
+                    status: '',
                     time_start: void '',
                     time_end: void '',
                     page: 1,
@@ -134,10 +134,12 @@
         },
         methods: {
             fetchData() {
-                console.log(this.fetchParam)
-
                 xmview.setContentLoading(true)
-                testPaperService.search(this.fetchParam).then((ret) => {
+                let data = Object.assign({}, this.fetchParam)
+                if (data.status === '' || data.status === undefined) {
+                    data.status = -1
+                }
+                testPaperService.search(data).then((ret) => {
                     this.data = ret.list
                     this.fetchParam.page_total = ret.total
                     xmview.setContentLoading(false)
