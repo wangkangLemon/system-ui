@@ -115,11 +115,11 @@
                     <el-form-item v-if="classhour.paperLesson">
                         <section>
                             <span>
-                                <i>{{classhour.paperLesson.name}}</i>
+                                <i style="margin-right: 10px">{{classhour.paperLesson.name}}</i>
                                 <el-tag type="danger" v-show="classhour.paperLesson.try_enable">免费试看</el-tag>
                                 <el-tag type="danger" v-if="classhour.paperLesson.material_type == 'exam'">考试</el-tag>
                             </span>
-                            <span class="operate">
+                            <span class="operate" style="float: right">
                                 <el-button type="text" @click="openEditExamForm(classhour.paperLesson, -1, 0, $event)">编辑</el-button>
                                 <el-button type="text" @click="delClasshour(classhour.paperLesson, -1, 0)">删除</el-button>
                             </span>
@@ -218,14 +218,14 @@
                 </section>
             </el-tab-pane>
         </el-tabs>
-        <el-dialog title="添加课时" :visible.sync="classhour.showDialog">
+        <NestedDialog title="添加课时" :visible.sync="classhour.showDialog">
             <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id" ref="multiForm"></LessonForm>
             <el-form label-width="120px">
                 <el-form-item>
                     <el-button type="primary" @click="addMultiSubmit">保存</el-button>
                 </el-form-item>
             </el-form>
-        </el-dialog>
+        </NestedDialog>
         <el-dialog title="查看" :visible.sync="docshow">
             <DocPreview ref="docShow" :docurl="docurl" class="docshow"></DocPreview>
         </el-dialog>
@@ -304,7 +304,7 @@
                 classhour: {
                     showDialog: false,
                     accept: '*.doc,*.docx', // 上传的文件格式
-                    form: clearFormData(),
+                    form: new Lesson(),
                     paperLesson: null,
                     rules: {
                         name: { required: true, message: '请输入课程名称', trigger: 'change' },
@@ -437,7 +437,7 @@
                 }
                 if (this.fetchParam.lesson_type === 'chapter') this.currentData.pindex = pindex
                 this.classhour.showDialog = true
-                this.classhour.form = clearFormData()
+                this.classhour.form = new Lesson()
                 this.$nextTick(() => {
                     this.$refs['multiForm'].resetFields()
                 })
@@ -501,11 +501,7 @@
                 if (this.fetchParam.lesson_type === 'single') {
                     let chapter = new Chapter()
 
-                    let lesson = new Lesson()
-                    this.classhour.form.name = this.classhour.form.material_name
-                    Object.assign(lesson, this.classhour.form)
-                    chapter.addLesson(lesson)
-
+                    chapter.addLesson(this.classhour.form)
                     if (this.classhour.paperLesson) {
                         chapter.addLesson(this.classhour.paperLesson)
                     }
@@ -629,19 +625,6 @@
             lesson_type: 'single',
             tags: '',
             id: 0
-        }
-    }
-    function clearFormData() {
-        return {
-            id: 0,
-            name: '',
-            material_type: '',
-            material_id: '',
-            material_name: '选择视频',
-            material_data: null,
-            try_enable: 0,
-            sort: 0,
-            deleted: false
         }
     }
 </script>

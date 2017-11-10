@@ -11,13 +11,19 @@
             </el-select>
         </el-form-item>
         <el-form-item label="课件" prop="material_id">
-            <!--上传文件-->
-            <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl" :accept="accept" :disabled="lesson.material_type == null" v-show="lesson.material_type !== 'video'"></UploadFile>
             <!--点击上传视频-->
-            <el-button v-show="lesson.material_type === 'video'" @click="isShowVideoDialog=true">
-                <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
-                <i v-else>选择视频</i>
-            </el-button>
+            <div v-if="lesson.material_type === 'video'">
+                <el-button @click="isShowVideoDialog=true" :disabled="!lesson.material_type">
+                    <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
+                    <i v-else>选择视频</i>
+                </el-button>
+            </div>
+            <div v-if="lesson.material_type !== 'video'">
+                <el-button @click="isShowDocumentDialog=true" :disabled="!lesson.material_type">
+                    <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
+                    <i v-else>选择文档</i>
+                </el-button>
+            </div>
         </el-form-item>
         <el-form-item label="课时名称" prop="name">
             <el-input v-model="lesson.name"></el-input>
@@ -27,6 +33,7 @@
         </el-form-item>
         <slot></slot>
         <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="company_id"></DialogVideo>
+        <DialogDocument :onSelect="handleDocumentSelected" v-model="isShowDocumentDialog" :companyID="company_id"></DialogDocument>
     </el-form>
     <!--选择视频的弹窗-->
 </template>
@@ -34,6 +41,7 @@
     import config from '../../utils/config'
     import DialogVideo from './component/DialogVideo.vue'
     import UploadFile from '../component/upload/UploadFiles.vue'
+    import DialogDocument from './component/DialogDocument.vue'
 
     export default {
         props: {
@@ -51,12 +59,13 @@
                 },
             },
         },
-        components: {DialogVideo, UploadFile},
+        components: {DialogVideo, UploadFile, DialogDocument},
         data() {
             return {
                 accept: '',
                 isShowVideoDialog: false,
-                uploadDocUrl: `${config.apiHost}/course/doc/upload`,
+                isShowDocumentDialog: false,
+                uploadDocUrl: `${config.apiHost}/com/course/doc/upload`,
                 rules: {
                     name: { required: true, message: '请输入课程名称', trigger: 'change' },
                     material_type: { required: true, message: '请选择课时类型', trigger: 'change' },
@@ -81,6 +90,10 @@
             // 处理视频选取
             handleVideoSelected(row) {
                 this.lesson.material_name = row.name
+                this.lesson.material_id = row.id
+            },
+            handleDocumentSelected(row) {
+                this.lesson.material_name = row.file_name
                 this.lesson.material_id = row.id
             },
             resetFields() {

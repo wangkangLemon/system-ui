@@ -12,6 +12,7 @@ class Lesson {
         this.try_enable = 0
         this.material_type = ''
         this.material_id = 0
+        this.material_name = ''
         this.sort = 0
         this.deleted = false
 
