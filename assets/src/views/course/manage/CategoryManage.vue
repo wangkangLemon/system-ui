@@ -87,8 +87,8 @@
                     </el-form-item>
                     <el-form-item label="是否启用" prop="disabled">
                         <el-radio-group v-model="fetchParam.disabled">
-                            <el-radio v-model="fetchParam.disabled" label="0">启用</el-radio>
-                            <el-radio v-model="fetchParam.disabled" label="1">禁用</el-radio>
+                            <el-radio v-model="fetchParam.disabled" :label="0">启用</el-radio>
+                            <el-radio v-model="fetchParam.disabled" :label="1">禁用</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item>
