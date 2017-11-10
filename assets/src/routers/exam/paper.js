@@ -57,7 +57,7 @@ export default {
                 })
             },
             meta: {
-                title: '试题管理-编辑',
+                title: '试卷管理-编辑',
             }
         }
     ]
