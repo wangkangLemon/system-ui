@@ -55,12 +55,20 @@
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
-        <el-form-item label="试题解析时间" prop="answer_show_time">
-            <el-date-picker
-                    v-model="paper.answer_show_time"
-                    type="datetime"
-                    placeholder="选择日期时间">
-            </el-date-picker>
+        <el-form-item label="试题解析时间" prop="answer_show_type">
+            <el-radio-group v-model="paper.answer_show_type">
+                <el-radio label="now">立即</el-radio>
+                <el-radio label="timing">延迟</el-radio>
+            </el-radio-group>
+            <el-form-item prop="answer_show_time" v-if="paper.answer_show_type == 'timing'" style="display: inline-block">
+                至
+                <el-date-picker
+                        v-model="paper.answer_show_time"
+                        type="datetime"
+                        placeholder="选择日期时间">
+                </el-date-picker>
+                之后显示
+            </el-form-item>
         </el-form-item>
         <el-form-item label="考试次数限制" prop="limit_repeat">
             <el-input type="number" v-model.number="paper.limit_repeat" style="width: 300px" placeholder="留空或为0表示不限制">
@@ -120,11 +128,13 @@
                         { type: 'number', required: true, message: '请输入及格分数', trigger: 'blur' },
                         { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
+                    answer_show_type: [
+                        { required: true, message: '请选择试题解析类型', trigger: 'blur' },
+                    ],
                     answer_show_time: [
                         { type: 'date', required: true, message: '请输入试题解析时间', trigger: 'blur' },
                     ],
                     limit_repeat: [
-                        { type: 'number', required: true, message: '请输入考试次数', trigger: 'blur' },
                         { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                 }

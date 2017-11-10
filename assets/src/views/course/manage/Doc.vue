@@ -52,7 +52,7 @@
 <template>
     <main id="course-manage-doc-container">
         <section class="manage-container">
-            <el-button type="primary" icon="plus" @click="openAddDialog()"><i>新增试题</i></el-button>
+            <el-button type="primary" icon="plus" @click="openAddDialog()"><i>新增文档</i></el-button>
         </section>
 
         <section class="search">
@@ -204,16 +204,10 @@
         </el-dialog>
 
         <!-- 新增文档 -->
-        <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow" @close="dialogClose" class="doc-update">
+        <el-dialog :title="dialogAdd.title" :visible.sync="dialogAdd.isShow" class="doc-update">
             <el-form label-position="right" label-width="80px" :model="docModel">
-                <el-form-item label="文档名称">
-                    <span>{{docModel.file_name}}</span>
-                </el-form-item>
-                <el-form-item label="所属企业">
-                    <span>{{docModel.company_name}}</span>
-                </el-form-item>
                 <el-form-item label="上传文档">
-                    <UploadFile :onSuccess="handleReplaceUploadDoc" :url="replaceDocUploadUrl" :accept="accept" ref="uploadFileRef"></UploadFile>
+                    <UploadFile :onSuccess="handleAddUploadDoc" :url="addDocUploadUrl" :accept="accept" ref="uploadFileAdd"></UploadFile>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -229,6 +223,7 @@
     import config from '../../../utils/config'
     import DocShow from './DocShow'
     import clone from 'clone'
+
     function getFetchParam() {
         return {
             file_type: void 0, // 文档类型
@@ -261,8 +256,14 @@
                     title: '替换文档',
                     open: null,
                 },
+                dialogAdd: {
+                    isShow: false,
+                    title: '新增文档',
+                    open: null,
+                },
                 docModel: {},
                 replaceDocUploadUrl: '',
+                addDocUploadUrl: courseService.getCourseDocUploadUrl(),
                 accept: '.doc,.docx,.ppt,pptx,.pdf',
                 docurl: '' // docurl 阅览
             }
@@ -390,15 +391,21 @@
                     'company_name': row.company_name,
                 }
             },
-            openAddDialog() {
-                this.dialogReplace.title = '新增文档'
-                this.dialogReplace.isShow = true
-            },
             // 更新文档， 文档上传完毕
             handleReplaceUploadDoc (rep) {
                 xmview.showTip('success', '操作成功')
                 this.fetchData()
                 this.dialogReplace.isShow = false
+            },
+            openAddDialog() {
+                this.dialogAdd.isShow = true
+            },
+            handleAddUploadDoc (rep) {
+                xmview.showTip('success', '操作成功')
+                setTimeout(() => {
+                    this.fetchData()
+                    this.dialogAdd.isShow = false
+                }, 1000)
             },
             dialogClose () {
                 this.$nextTick(() => {

@@ -114,7 +114,7 @@
         },
         data() {
             return {
-                uploadUrl: `${config.apiHost}/subject/excel`,
+                uploadUrl: `${config.apiHost}/exam/subject/excel`,
                 uploadImageUrl: `${config.apiHost}/subject/image`,
             }
         },

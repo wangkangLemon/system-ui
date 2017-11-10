@@ -12,7 +12,7 @@
 }
 </style>
 <template>
-    <NestedDialog title="选取视频" v-model="isShowDialog">
+    <NestedDialog title="选取文档" v-model="isShowDialog">
         <article id="course-manage-component--dialogvideo">
             <article class="search">
                 <section>
@@ -96,7 +96,7 @@ export default {
             fetchParam: {
                 companyid: void 0,
                 keyword: void 0,
-                status: void 0,
+                status: 3,
                 page: 1,
                 page_size: 15,
                 file_type: '',
@@ -124,7 +124,7 @@ export default {
             this.loadingData = true
             this.fetchParam.companyid = this.companyID
             this.fetchParam.file_type = this.fileType
-            this.fetchParam.status = 0
+            this.fetchParam.status = 3
             return courseService.getDocList(this.fetchParam).then((ret) => {
                 this.data = ret.data
                 this.total = ret.total

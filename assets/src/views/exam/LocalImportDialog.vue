@@ -139,6 +139,9 @@ Slot:
                 this.uploadStatus = 0
                 this.showUploading = true
                 this.isOpen = true
+                this.response.success = 0
+                this.response.error = 0
+                this.response.reasons = []
             },
             close() {
                 this.isOpen = false
@@ -149,8 +152,19 @@ Slot:
 
                 if (response.code != 0) {
                     this.response.success = 0
-                    this.response.error = response.code
-                    this.response.reasons = response.message
+                    this.response.error = 1
+                    this.response.reasons = [{message: response.message}]
+                    return
+                }
+
+                if (response.data.errs) {
+                    this.response.success = response.data.success
+                    this.response.error = 1
+                    response.data.errs.forEach((message) => {
+                        this.response.reasons.push({
+                            message: message
+                        })
+                    })
                     return
                 }
 

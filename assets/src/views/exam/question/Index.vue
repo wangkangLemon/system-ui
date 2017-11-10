@@ -229,8 +229,8 @@
                 <div class="el-form-item__content" v-if="model.type == 1">
                     <p v-for="(option, index) in model.options">
                         {{ option.description }}
-                        <el-tag type="success" v-if="index == model.correct">{{ option.correctName }}</el-tag>
-                        <el-tag type="danger" v-if="index != model.correct">{{ option.correctName }}</el-tag>
+                        <el-tag type="success" v-if="index == model.correct">正确</el-tag>
+                        <el-tag type="danger" v-if="index != model.correct">错误</el-tag>
                     </p>
                 </div>
                 <div class="el-form-item__content" v-if="model.type == 2">
@@ -273,7 +273,7 @@
                 ref="localImportDialog"
                 title="导入题库"
                 :uploadUrl="uploadUrl"
-                templateUrl="xx">
+                templateUrl="/upload/templates/import/subject_group.xlsx">
             <article slot="footer">
                 <hr style="margin-bottom: 15px;">
                 <h5>注意事项：</h5>
