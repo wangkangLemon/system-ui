@@ -33,7 +33,7 @@
         </el-form-item>
         <slot></slot>
         <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="company_id"></DialogVideo>
-        <DialogDocument :onSelect="handleDocumentSelected" v-model="isShowDocumentDialog" :companyID="company_id"></DialogDocument>
+        <DialogDocument :onSelect="handleDocumentSelected" v-model="isShowDocumentDialog" :companyID="company_id" :fileType="fileType"></DialogDocument>
     </el-form>
     <!--选择视频的弹窗-->
 </template>
@@ -62,6 +62,7 @@
         components: {DialogVideo, UploadFile, DialogDocument},
         data() {
             return {
+                fileType: '',
                 accept: '',
                 isShowVideoDialog: false,
                 isShowDocumentDialog: false,
@@ -76,16 +77,14 @@
         methods: {
             // 课程类型改变
             typeChange(val) {
-                if (val === 'doc') {
+                this.fileType = val
+                if (this.fileType === 'doc') {
                     this.accept = '.doc,.docx'
-                } else if (val === 'ppt') {
+                } else if (this.fileType === 'ppt') {
                     this.accept = '.ppt,pptx'
-                } else if (val === 'pdf') {
+                } else if (this.fileType === 'pdf') {
                     this.accept = '.pdf'
                 }
-            },
-            handleUploadDoc(rep) { // 文档上传完毕
-                this.lesson.material_id = rep.data.id
             },
             // 处理视频选取
             handleVideoSelected(row) {

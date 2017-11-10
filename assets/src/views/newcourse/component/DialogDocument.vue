@@ -50,12 +50,10 @@
                         <el-tag v-else-if="scope.row.status == 4" type="gray">审核失败</el-tag>
                         <template v-else-if="scope.row.status == 1 && scope.row.job_id > 0">
                             <el-tag type="warning">转码中</el-tag>
-                            <el-button @click="refresh(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-refresh" title="刷新状态"></i></el-button>
                         </template>
                         <el-tag v-else-if="scope.row.status == 0" type="primary">待审核</el-tag>
                         <template v-else>
                             <el-tag type="danger" :title="scope.row.job_message">转码失败</el-tag>
-                            <el-button @click="retry(scope.$index, scope.row)" type="text" size="small"><i class="fa fa-retweet" title="点击重试"></i></el-button>
                         </template>
                     </template>
                 </el-table-column>
@@ -101,11 +99,9 @@ export default {
                 status: void 0,
                 page: 1,
                 page_size: 15,
+                file_type: '',
             }
         }
-    },
-    created() {
-        this.fetchData()
     },
     watch: {
         'value'(val) {
@@ -120,13 +116,15 @@ export default {
         'isShowDialog'(val) {
             this.$emit('input', val)
             this.setShowDialog(val)
-            if (this.data.length < 1) this.fetchData()
+            this.fetchData()
         }
     },
     methods: {
         fetchData() {
             this.loadingData = true
             this.fetchParam.companyid = this.companyID
+            this.fetchParam.file_type = this.fileType
+            this.fetchParam.status = 0
             return courseService.getDocList(this.fetchParam).then((ret) => {
                 this.data = ret.data
                 this.total = ret.total

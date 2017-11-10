@@ -37,6 +37,12 @@
                     <el-option label="多选题" value="2"></el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="试题状态">
+                <el-select v-model="fetchParam.status" placeholder="试题状态" @change="fetchData" :clearable="true">
+                    <el-option label="上线" value="0"></el-option>
+                    <el-option label="下线" value="1"></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item>
                 <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end"
                            @changeStart="val=> fetchParam.time_start=val"
@@ -103,7 +109,7 @@
         <el-row :gutter="20" class="utils-top-15">
             <el-col :span="6">
                 <!--底部的批量删除和移动两个按钮-->
-                <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
+                <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button>
             </el-col>
             <el-col :span="12" :offset="6">
                 <el-pagination
@@ -311,6 +317,7 @@
                     page: 1,
                     page_size: 15,
                     page_total: 0,
+                    status: '',
                 },
                 model: {},
                 editDialog: '新建题库',
@@ -332,10 +339,14 @@
         methods: {
             fetchData() {
                 this.loadingData = true
-                if (this.$route.params.subject_group_id) {
-                    this.fetchParam.subject_group_id = this.$route.params.subject_group_id
+                let data = Object.assign({}, this.fetchParam)
+                if (data.status === '' || data.status === undefined) {
+                    data.status = -1
                 }
-                return testQuestionService.search(this.fetchParam).then((ret) => {
+                if (this.$route.params.subject_group_id) {
+                    data.subject_group_id = this.$route.params.subject_group_id
+                }
+                return testQuestionService.search(data).then((ret) => {
                     this.data = ret.list
                     this.fetchParam.page_total = ret.total
                     this.loadingData = false
@@ -344,9 +355,9 @@
             },
             delMulti() {
                 xmview.showDialog(`你将要删除选中的数据，操作不可恢复确认吗?`, () => {
-                    testQuestionService.delete({id: this.selectedIds.join(',')}).then(() => {
+                    testQuestionService.batchDelete(this.selectedIds).then(() => {
+                        this.selectedIds = []
                         xmview.showTip('success', '操作成功')
-                        this.dialogTree.isShow = false
                         setTimeout(() => {
                             this.fetchData() // 重新刷新数据
                         }, 300)

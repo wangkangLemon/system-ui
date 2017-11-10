@@ -20,7 +20,7 @@ export default {
                 })
             },
             meta: {
-                title: '试题管理',
+                title: '试卷管理',
                 noback: true
             }
         },
@@ -33,7 +33,7 @@ export default {
                 })
             },
             meta: {
-                title: '试题管理-详情',
+                title: '试卷管理-详情',
             }
         },
         {
@@ -45,7 +45,7 @@ export default {
                 })
             },
             meta: {
-                title: '试题管理-添加',
+                title: '试卷管理-添加',
             }
         },
         {

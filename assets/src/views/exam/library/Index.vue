@@ -65,7 +65,7 @@
         <el-row :gutter="20" class="utils-top-15">
             <el-col :span="6">
                 <!--底部的批量删除和移动两个按钮-->
-                <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
+                <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button>
             </el-col>
             <el-col :span="6" :offset="12">
                 <el-pagination
@@ -188,9 +188,9 @@
             },
             delMulti() {
                 xmview.showDialog(`你将要删除选中的数据，操作不可恢复确认吗?`, () => {
-                    testLibraryService.delete({id: this.selectedIds.join(',')}).then(() => {
+                    testLibraryService.batchDelete(this.selectedIds).then(() => {
+                        this.selectedIds = []
                         xmview.showTip('success', '操作成功')
-                        this.dialogTree.isShow = false
                         setTimeout(() => {
                             this.fetchData() // 重新刷新数据
                         }, 300)

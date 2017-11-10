@@ -51,6 +51,10 @@
 
 <template>
     <main id="course-manage-doc-container">
+        <section class="manage-container">
+            <el-button type="primary" icon="plus" @click="openAddDialog()"><i>新增试题</i></el-button>
+        </section>
+
         <section class="search">
             <section>
                 <i>文档名称</i>
@@ -185,6 +189,21 @@
 
         </el-dialog>
         <!-- 替换文档 -->
+        <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow" @close="dialogClose" class="doc-update">
+            <el-form label-position="right" label-width="80px" :model="docModel">
+                <el-form-item label="文档名称">
+                    <span>{{docModel.file_name}}</span>
+                </el-form-item>
+                <el-form-item label="所属企业">
+                    <span>{{docModel.company_name}}</span>
+                </el-form-item>
+                <el-form-item label="上传文档">
+                    <UploadFile :onSuccess="handleReplaceUploadDoc" :url="replaceDocUploadUrl" :accept="accept" ref="uploadFileRef"></UploadFile>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
+        <!-- 新增文档 -->
         <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow" @close="dialogClose" class="doc-update">
             <el-form label-position="right" label-width="80px" :model="docModel">
                 <el-form-item label="文档名称">
@@ -370,6 +389,10 @@
                     'file_name': row.file_name,
                     'company_name': row.company_name,
                 }
+            },
+            openAddDialog() {
+                this.dialogReplace.title = '新增文档'
+                this.dialogReplace.isShow = true
             },
             // 更新文档， 文档上传完毕
             handleReplaceUploadDoc (rep) {

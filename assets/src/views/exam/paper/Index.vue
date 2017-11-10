@@ -162,9 +162,9 @@
             },
             delMulti() {
                 xmview.showDialog(`你将要删除选中的试卷，操作不可恢复确认吗?`, () => {
-                    testPaperService.batchDelete(this.selectedIds.join(',')).then(() => {
+                    testPaperService.batchDelete(this.selectedIds).then(() => {
+                        this.selectedIds = []
                         xmview.showTip('success', '操作成功')
-                        this.dialogTree.isShow = false
                         setTimeout(() => {
                             this.fetchData() // 重新刷新数据
                         }, 300)

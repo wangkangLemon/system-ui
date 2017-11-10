@@ -38,6 +38,12 @@ class TestQuestionService {
             return ret.data
         })
     }
+    batchDelete(data) {
+        let url = `${urlPre}/subject`
+        return api.del(url, JSON.stringify(data)).then((ret) => {
+            return ret.data
+        })
+    }
     offline(subject_id) {
         let url = `${urlPre}/subject/${subject_id}/disable`
         return api.put(url, JSON.stringify({status: 1})).then((ret) => {
