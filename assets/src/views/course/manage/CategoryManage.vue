@@ -85,6 +85,12 @@
                         <el-input placeholder="最小的排在前面" :disabled="fetchParam.parent_id == null"
                                   v-model.number="fetchParam.sort"></el-input>
                     </el-form-item>
+                    <el-form-item label="是否启用" prop="disabled">
+                        <el-radio-group v-model="fetchParam.disabled">
+                            <el-radio v-model="fetchParam.disabled" label="0">启用</el-radio>
+                            <el-radio v-model="fetchParam.disabled" label="1">禁用</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
                     <el-form-item>
                         <el-button type="info" @click="submitForm" :disabled="fetchParam.parent_id == null">保存
                             <!--zhankeng-->
@@ -322,6 +328,7 @@
             name: void 0,
             image: void 0,
             sort: void 0,
+            disabled: 0,
             id: 0
         }
     }
