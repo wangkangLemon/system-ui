@@ -50,25 +50,26 @@ class Question {
         this.image = subject.image
         this.explain = subject.explain
         this.correct = subject.correct
-        this.tags = subject.tags == '' ? [] : subject.tags.split('，')
+        this.tags = subject.tags == '' || subject.tags === undefined ? [] : subject.tags.split('，')
         this.group_id = subject.subject_group_id
         this.group_name = subject.subject_group_name
+        if (subject.options !== undefined) {
+            subject.options.forEach((val, index) => {
+                let option = new Option()
+                option.id = val.id
+                option.description = val.description
+                option.correct = val.correct
+                option.sort = val.sort
 
-        subject.options.forEach((val, index) => {
-            let option = new Option()
-            option.id = val.id
-            option.description = val.description
-            option.correct = val.correct
-            option.sort = val.sort
+                // 为了兼容后端的数据格式
+                if (this.type == 1 && option.correct == 1) {
+                    this.correct = index
+                    option.correct = 0
+                }
 
-            // 为了兼容后端的数据格式
-            if (this.type == 1 && option.correct == 1) {
-                this.correct = index
-                option.correct = 0
-            }
-
-            this.addOption(option)
-        })
+                this.addOption(option)
+            })
+        }
     }
 
     save() {
