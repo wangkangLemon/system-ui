@@ -165,8 +165,12 @@ class Paper {
      */
     format() {
         let data = Object.assign({}, this)
-        if (data.answer_show_time instanceof Date) {
-            data.answer_show_time = this.formatDate(data.answer_show_time, 'yyyy-MM-dd hh:mm:ss')
+        if (data.answer_show_type === 'timing') {
+            if (data.answer_show_time instanceof Date) {
+                data.answer_show_time = this.formatDate(data.answer_show_time, 'yyyy-MM-dd hh:mm:ss')
+            }
+        } else {
+            data.answer_show_time = ''
         }
 
         if (data.limit_repeat === '' || data.limit_repeat === undefined) {

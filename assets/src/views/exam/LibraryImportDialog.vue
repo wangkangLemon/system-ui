@@ -53,8 +53,8 @@
                             width="84">
                         <template scope="scope">
                             <el-tag type="primary" v-if="scope.row.type == 0">判断题</el-tag>
+                            <el-tag type="danger" v-if="scope.row.type == 1">单选题</el-tag>
                             <el-tag type="warning" v-if="scope.row.type == 2">多选题</el-tag>
-                            <el-tag type="danger" v-if="scope.row.type == 3">单选题</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column>
