@@ -6,7 +6,7 @@
 
         <el-form :inline="true" :model="fetchParam" class="search">
             <el-form-item label="试卷名称">
-                <el-input v-model="fetchParam.keyword" placeholder="课程名称" @keyup.enter.native="fetchData"></el-input>
+                <el-input v-model="fetchParam.keyword" placeholder="试卷名称" @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
             <el-form-item label="状态">
                 <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
@@ -28,7 +28,9 @@
                   @select="selectRow"
                   @select-all="selectRow"
                   border>
-            <el-table-column type="selection"></el-table-column>
+            <el-table-column
+                    type="selection"
+                    :selectable="selectable"></el-table-column>
             <el-table-column
                     min-width="200"
                     prop="name"
@@ -142,6 +144,7 @@
                 testPaperService.search(data).then((ret) => {
                     this.data = ret.list
                     this.fetchParam.page_total = ret.total
+                    this.selectedIds = []
                     xmview.setContentLoading(false)
                 })
             },
@@ -200,6 +203,9 @@
                     this.fetchParam.page = val
                     this.fetchData()
                 }
+            },
+            selectable (row, index) {
+                return row.status === 1
             }
         },
         components: {DateRange}

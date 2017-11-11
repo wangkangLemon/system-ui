@@ -57,7 +57,9 @@
                   @select="selectRow"
                   @select-all="selectRow"
                   border>
-            <el-table-column type="selection"></el-table-column>
+            <el-table-column
+                    type="selection"
+                    :selectable="selectable"></el-table-column>
             <el-table-column
                     prop="description"
                     label="试题题目">
@@ -129,9 +131,9 @@
             <el-form :model="model" label-width="80px" :rules="rules" ref="form">
                 <el-form-item label="试题类型" class="is-required">
                     <el-radio-group v-model="model.type">
+                        <el-radio :label=0>判断题</el-radio>
                         <el-radio :label=1>单选题</el-radio>
                         <el-radio :label=2>多选题</el-radio>
-                        <el-radio :label=0>判断题</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="试题题目" prop="description">
@@ -183,7 +185,7 @@
                     <el-input v-model="model.explain" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入答案详解">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="所属题库">
+                <el-form-item label="所属题库" prop="group_name">
                     <SelectScroll :requestCb="fetchLibrary" :placeholder="model.group_name" v-model="model.group_id"></SelectScroll>
                 </el-form-item>
                 <el-form-item label="试题标签">
@@ -330,6 +332,9 @@
                     explain: [
                         { required: true, message: '请输入试题详解', trigger: 'blur' },
                     ],
+                    group_name: [
+                        { required: true, message: '请选择题库', trigger: 'blur' },
+                    ],
                 }
             }
         },
@@ -350,6 +355,7 @@
                     this.data = ret.list
                     this.fetchParam.page_total = ret.total
                     this.loadingData = false
+                    this.selectedIds = []
                     xmview.setContentLoading(false)
                 })
             },
@@ -431,9 +437,9 @@
                     }
 
                     this.model.save().then(() => {
+                        this.dialog.edit = false
                         this.fetchData()
                     })
-                    this.dialog.edit = false
                 })
             },
             // 添加多选 单选的选项
@@ -483,6 +489,9 @@
             changeLibrary(val) {
                 this.fetchParam.subject_group_id = val
                 this.fetchData()
+            },
+            selectable (row, index) {
+                return row.status === 1
             }
         },
         components: {DateRange, UploadImg, SelectScroll, Tags, LocalImportDialog}

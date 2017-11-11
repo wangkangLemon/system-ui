@@ -79,7 +79,7 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true" @select="selectRow" @select-all="selectRow" border>
-            <el-table-column type="selection"></el-table-column>
+            <el-table-column type="selection" :selectable="selectable"></el-table-column>
             <el-table-column min-width="200" prop="name" label="课程">
             </el-table-column>
             <el-table-column min-width="200" prop="category_name" label="所属栏目">
@@ -216,6 +216,7 @@ export default {
                 this.data = ret.data
                 this.total = ret.total
                 this.loadingData = false
+                this.selectedIds = []
                 xmview.setContentLoading(false)
             })
         },
@@ -275,6 +276,9 @@ export default {
         handleTab(val) {
 //            if (val.name == 'course') this.$router.push({name: 'newcourse-course-public', query: {tab: 'course'}})
 //            else this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
+        },
+        selectable (row) {
+            return row.status !== 0
         }
     },
     components: { DateRange, CourseCategorySelect, CourseCategoryTree, CourseComponent }
