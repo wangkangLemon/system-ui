@@ -194,6 +194,10 @@ class Paper {
             data.answer_show_time = this.formatDate(data.answer_show_time, 'yyyy-MM-dd hh:mm:ss')
         }
 
+        if (data.limit_repeat === '') {
+            data.limit_repeat = 0
+        }
+
         return data
     }
 
