@@ -17,14 +17,15 @@ class Library {
 
     /**
      * 填充一个模型
-     * @param id
-     * @param name
-     * @param description
+     * @param data
      */
-    setModel({id, name, description}) {
-        this.id = id
-        this.name = name
-        this.description = description
+    setModel(data) {
+        this.id = data.id
+        this.name = data.name
+        this.description = data.description
+        this.single_total = data.single_num
+        this.multi_total = data.multi_num
+        this.judge_total = data.judge_num
     }
 
     /**
@@ -33,12 +34,7 @@ class Library {
      */
     findById(group_id) {
         return testLibraryService.view(group_id).then((ret) => {
-            this.id = ret.subject_group.id
-            this.name = ret.subject_group.name
-            this.description = ret.subject_group.description
-            this.single_total = ret.subject_group.single_num
-            this.multi_total = ret.subject_group.multi_num
-            this.judge_total = ret.subject_group.judge_num
+            this.setModel(ret.subject_group)
         })
     }
 }

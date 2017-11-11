@@ -38,34 +38,7 @@ class Question {
      */
     findById(id) {
         return testQuestionService.view(id).then((ret) => {
-            let subject = ret.subject
-
-            this.id = subject.id
-            this.type = subject.type
-            this.description = subject.description
-            this.score = subject.score
-            this.image = subject.image
-            this.explain = subject.explain
-            this.correct = subject.correct
-            this.tags = subject.tags == '' ? [] : subject.tags.split('，')
-            this.group_id = subject.subject_group_id
-            this.group_name = subject.subject_group_name
-
-            subject.options.forEach((val, index) => {
-                let option = new Option()
-                option.id = val.id
-                option.description = val.description
-                option.correct = val.correct
-                option.sort = val.sort
-
-                // 为了兼容后端的数据格式
-                if (this.type == 1 && option.correct == 1) {
-                    this.correct = index
-                    option.correct = 0
-                }
-
-                this.addOption(option)
-            })
+            this.setModel(ret.subject)
         })
     }
 
