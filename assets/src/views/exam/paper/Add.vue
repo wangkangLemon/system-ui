@@ -30,6 +30,7 @@
             submitForm() {
                 this.$refs['form'].validateForm((pass) => {
                     if (!pass) {
+                        xmview.showTip('error', '您填写的数据不对，请检查红色项')
                         return
                     }
 
