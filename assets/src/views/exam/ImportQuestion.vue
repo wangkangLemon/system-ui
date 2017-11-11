@@ -6,9 +6,6 @@
                 <el-button icon="plus" @click='addTesting(0, index)' size="small">判断题</el-button>
                 <el-button icon="plus" @click='addTesting(1, index)' size="small">单选题</el-button>
                 <el-button icon="plus" @click='addTesting(2, index)' size="small">多选题</el-button>
-                <el-button icon="plus" @click="$refs['localImportDialog'].open()" size="small">本地导入</el-button>
-                <el-button icon="plus" @click="$refs['libraryImportDialog'].open()" size="small">题库导入</el-button>
-                <!--<el-button icon="plus" @click='addTesting(2, index)' size="small">课程导入</el-button>-->
                 <el-button icon="delete" type="danger" @click='deleteTesting(index, item)' size="small"></el-button>
             </el-form-item>
             <el-form-item :label="'第' + (index+1) + '题'">

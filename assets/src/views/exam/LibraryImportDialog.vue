@@ -5,10 +5,10 @@
                 <SelectScroll :requestCb="fetchLibrary" v-model="search.subject_group_id" :changeCb="changeLibrary"></SelectScroll>
             </el-form-item>
             <el-form-item label="题库类型">
-                <el-select v-model="search.type" placeholder="题库类型">
-                    <el-option label="判断题" value="0"></el-option>
-                    <el-option label="单选题" value="1"></el-option>
-                    <el-option label="多选题" value="2"></el-option>
+                <el-select v-model.number="search.type" placeholder="题库类型" :clearable="true" @change="fetchQuestion">
+                    <el-option label="判断题" :value="0"></el-option>
+                    <el-option label="单选题" :value="1"></el-option>
+                    <el-option label="多选题" :value="2"></el-option>
                 </el-select>
             </el-form-item>
         </el-form>
@@ -22,8 +22,8 @@
                             width="84">
                         <template scope="scope">
                             <el-tag type="primary" v-if="scope.row.type == 0">判断题</el-tag>
+                            <el-tag type="danger" v-if="scope.row.type == 1">单选题</el-tag>
                             <el-tag type="warning" v-if="scope.row.type == 2">多选题</el-tag>
-                            <el-tag type="danger" v-if="scope.row.type == 3">单选题</el-tag>
                             <el-checkbox :label="scope.row.id" @change="choiceQuestion">&nbsp;</el-checkbox>
                         </template>
                     </el-table-column>

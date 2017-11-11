@@ -12,9 +12,9 @@ const urlPre = config.apiHost
 class TestQuestionService {
     search({subject_group_id, status, type, tags, time_start, time_end, page, page_size}) {
         let url = `${urlPre}/subject/search`
-        if (!subject_group_id) subject_group_id = -1
-        if (!status) status = -1
-        if (!type) type = -1
+        if (subject_group_id === '' || subject_group_id === undefined) subject_group_id = -1
+        if (status === '' || status === undefined) status = -1
+        if (type === '' || type === undefined) type = -1
 
         return api.get(url, {subject_group_id, status, page, page_size, time_start, time_end, type, tags}).then((ret) => {
             return ret.data
