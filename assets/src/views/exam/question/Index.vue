@@ -185,7 +185,7 @@
                     <el-input v-model="model.explain" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入答案详解">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="所属题库" prop="group_name">
+                <el-form-item label="所属题库" prop="group_id">
                     <SelectScroll :requestCb="fetchLibrary" :placeholder="model.group_name" v-model="model.group_id"></SelectScroll>
                 </el-form-item>
                 <el-form-item label="试题标签">
@@ -332,8 +332,8 @@
                     explain: [
                         { required: true, message: '请输入试题详解', trigger: 'blur' },
                     ],
-                    group_name: [
-                        { required: true, message: '请选择题库', trigger: 'blur' },
+                    group_id: [
+                        { type: 'number', required: true, message: '请选择题库', trigger: 'blur' },
                     ],
                 }
             }
