@@ -1,9 +1,9 @@
 <script>
-    import { Dialog } from 'element-ui'
+    import ElementUI from 'element-ui'
 
     export default {
         name: 'NestedDialog',
-        mixins: [Dialog],
+        mixins: [ElementUI.Dialog],
         props: {
             appendToBody: {
                 type: Boolean,

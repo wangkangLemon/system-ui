@@ -1,4 +1,4 @@
-import ElementUI, {Message} from 'element-ui'
+import ElementUI from 'element-ui'
 import Vue from 'vue'
 import '../theme/index.css'
 import App from './App.vue'
@@ -39,14 +39,14 @@ Vue.use(pluginPermission)
 window.xmview = {
     // success/warning/info/error
     showTip: function (type, msg, msgDuring = 3000) {
-        return Message({
+        return ElementUI.Message({
             type,
             message: msg,
             duration: msgDuring
         })
     },
     closeAllTip () {
-        Message.closeAll()
+        ElementUI.Message.closeAll()
     }
 }
 

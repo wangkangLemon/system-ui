@@ -448,7 +448,8 @@
                 let option = new Option()
                 this.model.addOption(option)
             },
-            fetchLibrary(keyword, page) {
+            fetchLibrary(keyword, length) {
+                let page = parseInt(length / 10) + 1
                 return testLibraryService.search({keyword, page}).then((ret) => {
                     let result = {
                         data: [],
