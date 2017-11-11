@@ -127,7 +127,7 @@
             </el-col>
         </el-row>
 
-        <el-dialog :title="editDialog" :visible.sync="dialog.edit">
+        <NestedDialog :title="editDialog" :visible.sync="dialog.edit">
             <el-form :model="model" label-width="80px" :rules="rules" ref="form">
                 <el-form-item label="试题类型" class="is-required">
                     <el-radio-group v-model="model.type">
@@ -140,7 +140,7 @@
                     <el-input type="textarea" v-model="model.description" placeholder="请输入试题题目"></el-input>
                 </el-form-item>
                 <el-form-item label="配图">
-                    <UploadImg :url="uploadImageUrl" :defaultImg="model.image" :onSuccess="res => model.image = res.data.url"></UploadImg>
+                    <UploadImg :url="uploadImageUrl" :defaultImg="model.image" :onSuccess="res => model.image = res.data.url" :onRemove="onRemove"></UploadImg>
                 </el-form-item>
                 <el-form-item label="答案选项">
                     <!--判断题的正确错误选项-->
@@ -195,9 +195,9 @@
                     <el-button type="primary" @click="submitForm">确定</el-button>
                 </el-form-item>
             </el-form>
-        </el-dialog>
+        </NestedDialog>
 
-        <el-dialog id="view" title="详情" :visible.sync="dialog.view">
+        <NestedDialog id="view" title="详情" :visible.sync="dialog.view">
             <div class="el-form-item">
                 <label class="el-form-item__label">试题类型：</label>
                 <div class="el-form-item__content">
@@ -268,7 +268,7 @@
                     </div>
                 </div>
             </div>
-        </el-dialog>
+        </NestedDialog>
 
         <LocalImportDialog
                 :onSuccess="importQuestion"
@@ -298,6 +298,7 @@
     import Option from '../../../models/option'
     import LocalImportDialog from '../LocalImportDialog.vue'
     import config from '../../../utils/config'
+    import NestedDialog from '../../component/dialog/NestedDialog.vue'
 
     export default{
         data () {
@@ -492,8 +493,11 @@
             },
             selectable (row, index) {
                 return row.status === 1
+            },
+            onRemove() {
+                this.model.image = ''
             }
         },
-        components: {DateRange, UploadImg, SelectScroll, Tags, LocalImportDialog}
+        components: {DateRange, UploadImg, SelectScroll, Tags, LocalImportDialog, NestedDialog}
     }
 </script>

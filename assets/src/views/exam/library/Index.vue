@@ -222,7 +222,7 @@
                 this.model = library
             },
             del(index, row) {
-                this.$confirm('题库删除后，已加入题库的试题将处于无归属状态，您是否确定删除本题库？', '删除', {
+                this.$confirm('您是否确定删除本题库？', '删除', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
