@@ -21,7 +21,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="分数" prop="score">
-                <el-input v-model.number="item.score" :disabled="!item.editable" type="number" placeholder="请输入分数">
+                <el-input v-model.number="item.score" :disabled="!item.editable" placeholder="请输入分数">
                 </el-input>
             </el-form-item>
             <el-form-item label="配图" prop="image">
@@ -205,12 +205,14 @@
             },
             validateQuestionForm() {
                 let flag = true
-                this.$refs['question'].forEach((form) => {
-                    form.validate((pass) => {
-                        if (!pass) flag = false
-                        return false
+                if (this.$refs['question']) {
+                    this.$refs['question'].forEach((form) => {
+                        form.validate((pass) => {
+                            if (!pass) flag = false
+                            return false
+                        })
                     })
-                })
+                }
 
                 return flag
             }

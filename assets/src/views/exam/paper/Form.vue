@@ -21,37 +21,13 @@
             <img :src="paper.image | fillImgPath" width="200" height="112" v-show="paper.image">
             <CropperImg ref="imgCropper" :aspectRatio="16/9" :confirmFn="cropperImgSuccess"></CropperImg>
         </el-form-item>
-        <!--<el-form-item label="题目数量" prop="number">-->
-        <!--<el-input class="number" v-model="paper.number"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="试卷总分" prop="score">-->
-        <!--<el-input class="number" v-model="paper.score"></el-input>-->
-        <!--</el-form-item>-->
-        <el-form-item label="判断题" prop="judge_score">
-            <el-input type="number" v-model.number="paper.judge_score" style="width: 300px" v-number-only>
-                <template slot="prepend">每题</template>
-                <template slot="append">分</template>
-            </el-input>
-        </el-form-item>
-        <el-form-item label="单选题" prop="single_score">
-            <el-input type="number" v-model.number="paper.single_score" style="width: 300px" v-number-only>
-                <template slot="prepend">每题</template>
-                <template slot="append">分</template>
-            </el-input>
-        </el-form-item>
-        <el-form-item label="多选题" prop="multi_score">
-            <el-input type="number" v-model.number="paper.multi_score" style="width: 300px" v-number-only>
-                <template slot="prepend">每题</template>
-                <template slot="append">分</template>
-            </el-input>
-        </el-form-item>
         <el-form-item label="考试时间" prop="limit_time">
-            <el-input type="number" v-model.number="paper.limit_time" style="width: 300px" v-number-only>
+            <el-input v-model.number="paper.limit_time" style="width: 300px" v-number-only>
                 <template slot="append">分钟</template>
             </el-input>
         </el-form-item>
         <el-form-item label="及格分数" prop="score_pass">
-            <el-input type="number" v-model.number="paper.score_pass" style="width: 300px" v-number-only>
+            <el-input v-model.number="paper.score_pass" style="width: 300px" v-number-only>
                 <template slot="append">分</template>
             </el-input>
         </el-form-item>
@@ -71,7 +47,7 @@
             </el-form-item>
         </el-form-item>
         <el-form-item label="考试次数限制" prop="limit_repeat">
-            <el-input type="number" v-model.number="paper.limit_repeat" style="width: 300px" placeholder="留空或为0表示不限制" v-number-only>
+            <el-input v-model.number="paper.limit_repeat" style="width: 300px" placeholder="留空或为0表示不限制" v-number-only>
                 <template slot="append">次</template>
             </el-input>
         </el-form-item>
@@ -106,9 +82,9 @@
                     name: [
                         { required: true, message: '请输入试卷名称', trigger: 'blur' },
                     ],
-//                    image: [
-//                        { required: true, message: '请上传试卷封面', trigger: 'blur' },
-//                    ],
+                    image: [
+                        { required: true, message: '请上传试卷封面', trigger: 'blur' },
+                    ],
                     single_score: [
                         { type: 'number', required: true, message: '请输入单选题分数', trigger: 'blur' },
                         { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
