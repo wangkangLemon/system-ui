@@ -31,7 +31,10 @@
                   @select="selectRow"
                   @select-all="selectRow"
                   border>
-            <el-table-column type="selection"></el-table-column>
+            <el-table-column
+                    type="selection"
+                    :selectable="selectable">
+            </el-table-column>
             <el-table-column
                     prop="name"
                     label="题库名称">
@@ -56,8 +59,8 @@
                     label="操作">
                 <template scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">详情</el-button>
-                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.id == 0">编辑</el-button>
-                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.id == 0">删除</el-button>
+                    <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
+                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.subject_num > 0">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -183,6 +186,7 @@
                     this.data = ret.list
                     this.fetchParam.page_total = ret.total
                     this.loadingData = false
+                    this.selectedIds = []
                     xmview.setContentLoading(false)
                 })
             },
@@ -267,6 +271,9 @@
                     this.fetchParam.page = val
                     this.fetchData()
                 }
+            },
+            selectable (row) {
+                return row.subject_num === 0
             }
         },
         components: {DateRange}
