@@ -44,7 +44,7 @@
                     label="题目数">
                 <template scope="scope">
                     <el-button style="width: 100%"
-                               @click="$router.push({name: 'test-question-index', params: {subject_group_id: scope.row.id}})"
+                               @click="$router.push({name: 'test-question-group', params: {subject_group_id: scope.row.id}})"
                                type="text" size="small">{{scope.row.subject_num}}  <!--a-->
                     </el-button>
                 </template>

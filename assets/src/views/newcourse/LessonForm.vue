@@ -85,6 +85,9 @@
                 } else if (this.fileType === 'pdf') {
                     this.accept = '.pdf'
                 }
+
+                this.lesson.material_name = ''
+                this.lesson.material_id = 0
             },
             // 处理视频选取
             handleVideoSelected(row) {

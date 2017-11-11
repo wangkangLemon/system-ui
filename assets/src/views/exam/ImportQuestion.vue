@@ -181,6 +181,7 @@
                         response.data.forEach((item) => {
                             let question = new Question()
                             question.setModel(item)
+                            question.id = 0
                             questions.push(question)
                         })
                         this.importQuestion(questions)

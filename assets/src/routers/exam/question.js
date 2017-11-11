@@ -15,11 +15,24 @@
      },
      children: [
          {
-             path: 'index/:subject_group_id?',
+             path: 'index',
              name: 'test-question-index',
              component: resolve => {
                  require.ensure([], () => {
                      resolve(require('../../views/exam/question/Index.vue'))
+                 })
+             },
+             meta: {
+                 title: '试题管理',
+                 noback: true
+             }
+         },
+         {
+             path: 'group/:subject_group_id',
+             name: 'test-question-group',
+             component: resolve => {
+                 require.ensure([], () => {
+                     resolve(require('../../views/exam/question/Library.vue'))
                  })
              },
              meta: {
