@@ -18,7 +18,7 @@ class Paper {
         this.score_pass = void 0
         this.limit_time = void 0
         this.limit_repeat = void 0
-        this.answer_show_type = 'timing'
+        this.answer_show_type = 'now'
         this.answer_show_time = ''
         this.type = ''
         this.questions = []
