@@ -69,8 +69,8 @@
     </NestedDialog>
 </template>
 <script>
-    import testLibraryService from '../../services/testLibraryService'
-    import testQuestionService from '../../services/testQuestionService'
+    import testLibraryService from '../../services/exam/libraryService'
+    import testQuestionService from '../../services/exam/questionService'
     import SelectScroll from '../component/form/SelectScroll.vue'
     import Question from '../../models/quesion'
     import NestedDialog from '../component/dialog/NestedDialog.vue'

@@ -3,7 +3,7 @@
  * Date: 2017/11/2
  * Time: 下午3:14
  */
-import testLibraryService from '../services/testLibraryService'
+import testLibraryService from '../services/exam/libraryService'
 
 class Library {
     constructor() {

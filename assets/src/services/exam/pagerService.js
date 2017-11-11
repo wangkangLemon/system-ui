@@ -4,8 +4,8 @@
  * Date: 2017-10-31
  * Time: ${TIME}
  */
-import * as api from './api'
-import config from '../utils/config'
+import * as api from '../api'
+import config from '../../utils/config'
 
 const urlPre = config.apiHost
 

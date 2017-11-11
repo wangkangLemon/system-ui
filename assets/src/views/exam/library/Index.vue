@@ -146,7 +146,7 @@
 
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
-    import testLibraryService from '../../../services/testLibraryService'
+    import testLibraryService from '../../../services/exam/libraryService'
     import Library from '../../../models/library'
 
     export default{

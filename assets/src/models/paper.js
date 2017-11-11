@@ -4,7 +4,7 @@
  * Time: 上午10:27
  */
 
-import testPaperService from '../services/testPagerService'
+import testPaperService from '../services/exam/pagerService'
 import Question from './quesion'
 
 class Paper {

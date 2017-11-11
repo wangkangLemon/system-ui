@@ -65,7 +65,7 @@
 <script>
     import CropperImg from '../../component/upload/ImagEcropperInput.vue'
     import ImportQuestion from '../ImportQuestion.vue'
-    import testPaperService from '../../../services/testPagerService'
+    import testPaperService from '../../../services/exam/pagerService'
     import CompanySelect from '../../component/select/IndustryCompany.vue'
     import NumberOnly from '../../../directives/numberOnly'
 

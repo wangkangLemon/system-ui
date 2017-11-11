@@ -289,8 +289,8 @@
 
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
-    import testQuestionService from '../../../services/testQuestionService'
-    import testLibraryService from '../../../services/testLibraryService'
+    import testQuestionService from '../../../services/exam/questionService'
+    import testLibraryService from '../../../services/exam/libraryService'
     import UploadImg from '../../component/upload/UploadImg.vue'
     import SelectScroll from '../../component/form/SelectScroll.vue'
     import Tags from '../../component/form/Tags.vue'

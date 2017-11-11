@@ -4,7 +4,7 @@
  * Time: 上午11:25
  */
 
-import testQuestionService from '../services/testQuestionService'
+import testQuestionService from '../services/exam/questionService'
 import Option from './option'
 
 class Question {

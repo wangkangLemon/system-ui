@@ -111,7 +111,7 @@
 
 <script>
     import DateRange from '../../component/form/DateRangePicker.vue'
-    import testPaperService from '../../../services/testPagerService'
+    import testPaperService from '../../../services/exam/pagerService'
 
     export default{
         data () {
