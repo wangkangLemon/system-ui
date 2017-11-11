@@ -133,9 +133,9 @@
                     score: [
                         { type: 'number', required: true, message: '请输入分数', trigger: 'blur' },
                     ],
-                    explain: [
-                        { required: true, message: '请输入答案详解', trigger: 'blur' },
-                    ],
+//                    explain: [
+//                        { required: true, message: '请输入答案详解', trigger: 'blur' },
+//                    ],
                 }
             }
         },
