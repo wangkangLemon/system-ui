@@ -1,6 +1,6 @@
 <template>
     <div id="import-question">
-        <el-form label-width="120px" v-for="(item,index) in questions" :key="index">
+        <el-form label-width="120px" v-for="(item,index) in questions" :key="index" :model="item" :rules="rules" ref="question">
             <hr>
             <el-form-item>
                 <el-button icon="plus" @click='addTesting(0, index)' size="small">判断题</el-button>
@@ -16,15 +16,15 @@
                 <span v-else-if="item.type == 1">单选题</span>
                 <span v-else>多选题</span>
             </el-form-item>
-            <el-form-item label="题目">
+            <el-form-item label="题目" prop="description">
                 <el-input v-model="item.description" :disabled="!item.editable" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入内容">
                 </el-input>
             </el-form-item>
-            <el-form-item label="分数">
+            <el-form-item label="分数" prop="score">
                 <el-input v-model.number="item.score" :disabled="!item.editable" type="number" placeholder="请输入分数">
                 </el-input>
             </el-form-item>
-            <el-form-item label="配图">
+            <el-form-item label="配图" prop="image">
                 <UploadImg :defaultImg="item.image" :url="uploadImageUrl" :disabled="!item.editable" :onSuccess="res => item.image = res.data.url"></UploadImg>
             </el-form-item>
 
@@ -68,7 +68,7 @@
                 </div>
             </el-form-item>
 
-            <el-form-item label="答案详解">
+            <el-form-item label="答案详解" prop="explain">
                 <el-input v-model="item.explain" :disabled="!item.editable" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容">
                 </el-input>
             </el-form-item>
@@ -126,6 +126,17 @@
             return {
                 uploadUrl: `${config.apiHost}/exam/subject/excel`,
                 uploadImageUrl: `${config.apiHost}/subject/image`,
+                rules: {
+                    description: [
+                        { required: true, message: '请输入题目', trigger: 'blur' },
+                    ],
+                    score: [
+                        { type: 'number', required: true, message: '请输入分数', trigger: 'blur' },
+                    ],
+                    explain: [
+                        { required: true, message: '请输入答案详解', trigger: 'blur' },
+                    ],
+                }
             }
         },
         components: {LibraryImportDialog, LocalImportDialog, UploadImg},
@@ -191,6 +202,17 @@
                     })
                     this.importQuestion([question])
                 })
+            },
+            validateQuestionForm() {
+                let flag = true
+                this.$refs['question'].forEach((form) => {
+                    form.validate((pass) => {
+                        if (!pass) flag = false
+                        return false
+                    })
+                })
+
+                return flag
             }
         }
     }

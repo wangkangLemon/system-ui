@@ -80,7 +80,7 @@
             </CompanySelect>
         </el-form-item>
 
-        <ImportQuestion :questions="paper.questions" :scores="paper"></ImportQuestion>
+        <ImportQuestion :questions="paper.questions" :scores="paper" ref="importQuestion"></ImportQuestion>
 
         <slot name="formFooter"></slot>
     </el-form>
@@ -140,6 +140,10 @@
         },
         methods: {
             validateForm(func) {
+                if (!this.$refs['importQuestion'].validateQuestionForm()) {
+                    return
+                }
+
                 return this.$refs['form'].validate(func)
             },
             cropperImgSuccess (data, ext) {
