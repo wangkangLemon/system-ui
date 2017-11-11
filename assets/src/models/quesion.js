@@ -32,15 +32,6 @@ class Question {
     }
 
     /**
-     * 替换某一个选项
-     * @param index
-     * @param option
-     */
-    replaceOption(index, option) {
-        this.options.splice(index, 1, option)
-    }
-
-    /**
      * 通过ID查找一个题目，并且填充模型
      * @param group_id
      * @param id
@@ -52,7 +43,7 @@ class Question {
             this.id = subject.id
             this.type = subject.type
             this.description = subject.description
-            this.score = 0
+            this.score = subject.score
             this.image = subject.image
             this.explain = subject.explain
             this.correct = subject.correct
@@ -75,6 +66,35 @@ class Question {
 
                 this.addOption(option)
             })
+        })
+    }
+
+    setModel(subject) {
+        this.id = subject.id
+        this.type = subject.type
+        this.description = subject.description
+        this.score = subject.score
+        this.image = subject.image
+        this.explain = subject.explain
+        this.correct = subject.correct
+        this.tags = subject.tags == '' ? [] : subject.tags.split('，')
+        this.group_id = subject.subject_group_id
+        this.group_name = subject.subject_group_name
+
+        subject.options.forEach((val, index) => {
+            let option = new Option()
+            option.id = val.id
+            option.description = val.description
+            option.correct = val.correct
+            option.sort = val.sort
+
+            // 为了兼容后端的数据格式
+            if (this.type == 1 && option.correct == 1) {
+                this.correct = index
+                option.correct = 0
+            }
+
+            this.addOption(option)
         })
     }
 
@@ -140,19 +160,6 @@ class Question {
         }
         question.tags = this.tags.join('，')
         return question
-    }
-
-    setModel(data) {
-        Object.assign(this, data)
-        this.options = []
-
-        if (data.options) {
-            data.options.forEach((item) => {
-                let option = new Option()
-                Object.assign(option, item)
-                this.addOption(option)
-            })
-        }
     }
 }
 

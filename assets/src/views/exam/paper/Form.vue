@@ -27,6 +27,12 @@
         <!--<el-form-item label="试卷总分" prop="score">-->
         <!--<el-input class="number" v-model="paper.score"></el-input>-->
         <!--</el-form-item>-->
+        <el-form-item label="判断题" prop="judge_score">
+            <el-input type="number" v-model.number="paper.judge_score" style="width: 300px" v-number-only>
+                <template slot="prepend">每题</template>
+                <template slot="append">分</template>
+            </el-input>
+        </el-form-item>
         <el-form-item label="单选题" prop="single_score">
             <el-input type="number" v-model.number="paper.single_score" style="width: 300px" v-number-only>
                 <template slot="prepend">每题</template>
@@ -35,12 +41,6 @@
         </el-form-item>
         <el-form-item label="多选题" prop="multi_score">
             <el-input type="number" v-model.number="paper.multi_score" style="width: 300px" v-number-only>
-                <template slot="prepend">每题</template>
-                <template slot="append">分</template>
-            </el-input>
-        </el-form-item>
-        <el-form-item label="判断题" prop="judge_score">
-            <el-input type="number" v-model.number="paper.judge_score" style="width: 300px" v-number-only>
                 <template slot="prepend">每题</template>
                 <template slot="append">分</template>
             </el-input>
@@ -80,7 +80,7 @@
             </CompanySelect>
         </el-form-item>
 
-        <ImportQuestion :questions="paper.questions"></ImportQuestion>
+        <ImportQuestion :questions="paper.questions" :scores="paper"></ImportQuestion>
 
         <slot name="formFooter"></slot>
     </el-form>

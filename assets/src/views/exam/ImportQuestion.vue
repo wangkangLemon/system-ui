@@ -110,7 +110,17 @@
 
     export default {
         props: {
-            questions: Array
+            questions: Array,
+            scores: {
+                type: Object,
+                default() {
+                    return {
+                        single_score: 0,
+                        multi_score: 0,
+                        judge_score: 0,
+                    }
+                }
+            }
         },
         data() {
             return {
@@ -138,6 +148,15 @@
 
                 let question = new Question()
                 question.type = type
+                if (type === 0) {
+                    question.score = this.scores.judge_score
+                }
+                if (type === 1) {
+                    question.score = this.scores.single_score
+                }
+                if (type === 2) {
+                    question.score = this.scores.multi_score
+                }
                 this.questions.splice(index, 1, question)
             },
             localImportQuestion(response) {

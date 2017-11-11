@@ -6,7 +6,6 @@
 
 import testPaperService from '../services/testPagerService'
 import Question from './quesion'
-import Option from './option'
 
 class Paper {
     constructor() {
@@ -50,32 +49,8 @@ class Paper {
             return testPaperService.searchQuestion(this.id, {type: -1, page_size: 100}).then((ret) => {
                 ret.list.forEach((val) => {
                     let question = new Question()
-
-                    question.id = val.id
-                    question.type = val.type
-                    question.description = val.description
-                    question.score = 0
-                    question.image = val.image
-                    question.explain = val.explain
-                    question.correct = val.correct
+                    question.setModel(val)
                     question.editable = false
-                    question.tags = val.tags == '' ? [] : val.tags.split('，')
-
-                    val.options.forEach((val, index) => {
-                        let option = new Option()
-                        option.id = val.id
-                        option.description = val.description
-                        option.correct = val.correct
-                        option.sort = val.sort
-
-                        // 为了兼容后端的数据格式
-                        if (question.type == 1 && option.correct == 1) {
-                            question.correct = index
-                            option.correct = 0
-                        }
-
-                        question.addOption(option)
-                    })
 
                     this.questions.push(question)
                     this.old_questions.push(question)
