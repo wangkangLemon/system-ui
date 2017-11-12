@@ -38,13 +38,6 @@ class TestPagerService {
         })
     }
 
-    batchDeleteQuestion(examId, questions) {
-        questions.forEach((question) => {
-            let url = `${urlPre}/exam/${examId}/subject/${question.id}`
-            api.del(url, JSON.stringify(questions))
-        })
-    }
-
     delete(examId) {
         let url = `${urlPre}/exam/${examId}`
         return api.del(url).then((ret) => {
@@ -57,8 +50,8 @@ class TestPagerService {
      * @param data
      */
     batchDelete(data) {
-        let url = `${urlPre}/exam`
-        return api.del(url, JSON.stringify(data)).then((ret) => {
+        let url = `${urlPre}/exam/deletion`
+        return api.put(url, JSON.stringify(data)).then((ret) => {
             return ret.data
         })
     }

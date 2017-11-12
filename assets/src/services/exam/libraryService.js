@@ -35,8 +35,8 @@ class TestLibraryService {
         })
     }
     batchDelete(data) {
-        let url = `${urlPre}/subject/group`
-        return api.del(url, JSON.stringify(data)).then((ret) => {
+        let url = `${urlPre}/subject/group/deletion`
+        return api.put(url, JSON.stringify(data)).then((ret) => {
             return ret.data
         })
     }

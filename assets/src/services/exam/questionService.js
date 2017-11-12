@@ -39,8 +39,8 @@ class TestQuestionService {
         })
     }
     batchDelete(data) {
-        let url = `${urlPre}/subject`
-        return api.del(url, JSON.stringify(data)).then((ret) => {
+        let url = `${urlPre}/subject/deletion`
+        return api.put(url, JSON.stringify(data)).then((ret) => {
             return ret.data
         })
     }
