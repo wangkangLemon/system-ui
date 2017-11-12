@@ -293,7 +293,6 @@
                     value: ''
                 },
                 isShowVideoDialog: false,
-                uploadDocUrl: '',
                 activeTab: 'couse',
                 courseTags: [],
                 fetchParam: getOriginData(),
@@ -372,7 +371,6 @@
                     }
                 })
             }
-            this.uploadDocUrl = courseService.getCourseDocUploadUrl()
             xmview.setContentLoading(false)
         },
         methods: {
