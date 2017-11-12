@@ -1,3 +1,17 @@
+<style lang='scss' rel='stylesheet/scss'>
+    #dialog-library-import {
+        .el-table {
+            .no-padding {
+                .cell {
+                    padding: 0
+                }
+            }
+            .cell {
+                padding: 0 10px;
+            }
+        }
+    }
+</style>
 <template>
     <NestedDialog id="dialog-library-import" title="试题导入" :visible.sync="isOpen" @click.native.stop>
         <el-form :inline="true" :model="search" class="demo-form-inline">
@@ -19,12 +33,18 @@
                         :show-header="false"
                         height="400">
                     <el-table-column
-                            width="84">
+                            width="40">
+                        <template scope="scope">
+                            <el-checkbox :label="scope.row.id" @change="choiceQuestion(scope.row, scope.$index)">&nbsp;</el-checkbox>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            width="55"
+                            className="no-padding">
                         <template scope="scope">
                             <el-tag type="primary" v-if="scope.row.type == 0">判断题</el-tag>
                             <el-tag type="danger" v-if="scope.row.type == 1">单选题</el-tag>
                             <el-tag type="warning" v-if="scope.row.type == 2">多选题</el-tag>
-                            <el-checkbox :label="scope.row.id" @change="choiceQuestion(scope.row, scope.$index)">&nbsp;</el-checkbox>
                         </template>
                     </el-table-column>
                     <el-table-column>
@@ -35,8 +55,8 @@
                 </el-table>
                 <el-pagination
                         style="text-align: right"
-                        @size-change="fetchQuestion"
-                        @current-change="fetchQuestion"
+                        @size-change="onSizeChange"
+                        @current-change="onPageChange"
                         layout="prev, pager, next"
                         :current-page="search.page"
                         :page-size="search.page_size"
@@ -50,7 +70,7 @@
                         :show-header="false"
                         height="400">
                     <el-table-column
-                            width="84">
+                            width="70">
                         <template scope="scope">
                             <el-tag type="primary" v-if="scope.row.type == 0">判断题</el-tag>
                             <el-tag type="danger" v-if="scope.row.type == 1">单选题</el-tag>
@@ -90,13 +110,14 @@
                 search: {
                     type: '',
                     subject_group_id: '',
-                    page: 0,
+                    page: 1,
                     page_size: 15,
                 }
             }
         },
         methods: {
             open() {
+                this.fetchQuestion()
                 this.isOpen = true
             },
             close() {
@@ -156,6 +177,14 @@
                     this.choiceList.push(question)
                 }
             },
+            onPageChange(val) {
+                this.search.page = val
+                this.fetchQuestion()
+            },
+            onSizeChange(val) {
+                this.search.page_size = val
+                this.fetchQuestion()
+            }
         },
         components: {SelectScroll, NestedDialog}
     }
