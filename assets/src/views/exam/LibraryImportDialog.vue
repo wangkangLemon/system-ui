@@ -154,13 +154,16 @@
                 return testQuestionService.search(this.search).then((ret) => {
                     this.questionList.total = ret.total
                     this.questionList.data = ret.list
-                    setTimeout(() => {
-                        debugger
-                        this.choiceList.forEach(row => {
-                            let data = Object.assign({}, row)
-                            this.$refs['questionTable'].toggleRowSelection(data, true)
+
+                    this.$nextTick(() => {
+                        this.questionList.data.forEach(row => {
+                            this.choiceList.forEach(choice => {
+                                if (row.id === choice.id) {
+                                    this.$refs['questionTable'].toggleRowSelection(row, true)
+                                }
+                            })
                         })
-                    }, 100)
+                    })
                 })
             },
             changeLibrary(id) {
