@@ -29,14 +29,14 @@
         <el-row :gutter="10">
             <el-col :span="10">
                 <el-table
+                        ref="questionTable"
                         :data="questionList.data"
                         :show-header="false"
-                        height="400">
+                        height="400"
+                        @select="choiceQuestion">
                     <el-table-column
-                            width="40">
-                        <template scope="scope">
-                            <el-checkbox :label="scope.row.id" @change="choiceQuestion(scope.row, scope.$index)">&nbsp;</el-checkbox>
-                        </template>
+                            width="40"
+                            type="selection">
                     </el-table-column>
                     <el-table-column
                             width="55"
@@ -147,16 +147,27 @@
                 })
             },
             fetchQuestion() {
+                if (this.$refs['questionTable']) {
+                    this.$refs['questionTable'].clearSelection()
+                }
+
                 return testQuestionService.search(this.search).then((ret) => {
                     this.questionList.total = ret.total
                     this.questionList.data = ret.list
+                    setTimeout(() => {
+                        debugger
+                        this.choiceList.forEach(row => {
+                            let data = Object.assign({}, row)
+                            this.$refs['questionTable'].toggleRowSelection(data, true)
+                        })
+                    }, 100)
                 })
             },
             changeLibrary(id) {
                 this.search.subject_group_id = id
                 this.fetchQuestion()
             },
-            choiceQuestion(row) {
+            choiceQuestion(selection, row) {
                 let question = new Question()
                 question.findById(row.id)
                 let has = false
@@ -184,7 +195,7 @@
             onSizeChange(val) {
                 this.search.page_size = val
                 this.fetchQuestion()
-            }
+            },
         },
         components: {SelectScroll, NestedDialog}
     }
