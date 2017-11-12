@@ -1,7 +1,11 @@
 <template>
     <el-form label-width="120px" ref="form" :rules="rules" :model="lesson">
         <el-form-item label="课时类型" prop="material_type">
-            <el-select v-model.string="lesson.material_type" @change="typeChange" :clearable="false">
+            <el-select
+                    v-model.string="lesson.material_type"
+                    @change="typeChange"
+                    :clearable="false"
+                    @visible-change="onVisibleChange">
                 <el-option
                         v-for="item in material_types"
                         :key="item.value"
@@ -71,7 +75,8 @@
                     name: { required: true, message: '请输入课程名称', trigger: 'blur' },
                     material_type: { required: true, message: '请选择课时类型', trigger: 'blur' },
                     material_id: { required: true, type: 'number', min: 1, message: '请选择课程文件', trigger: 'blur' },
-                }
+                },
+                selectOpen: false
             }
         },
         methods: {
@@ -86,8 +91,10 @@
                     this.accept = '.pdf'
                 }
 
-                this.lesson.material_name = ''
-                this.lesson.material_id = 0
+                if (this.selectOpen) {
+                    this.lesson.material_name = ''
+                    this.lesson.material_id = 0
+                }
                 this.$refs['dialogDocument'].refreshFetchParam()
             },
             // 处理视频选取
@@ -104,6 +111,9 @@
             },
             validate(func) {
                 return this.$refs['form'].validate(func)
+            },
+            onVisibleChange(val) {
+                this.selectOpen = val
             }
         }
     }

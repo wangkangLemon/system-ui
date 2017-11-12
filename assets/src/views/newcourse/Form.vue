@@ -218,7 +218,7 @@
                 </section>
             </el-tab-pane>
         </el-tabs>
-        <NestedDialog title="添加课时" :visible.sync="classhour.showDialog">
+        <NestedDialog :title="classhour.title" :visible.sync="classhour.showDialog">
             <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id" ref="multiForm"></LessonForm>
             <el-form label-width="120px">
                 <el-form-item>
@@ -306,6 +306,7 @@
                 // 单节课
                 classhour: {
                     showDialog: false,
+                    title: '新增课程',
                     accept: '*.doc,*.docx', // 上传的文件格式
                     form: new Lesson(),
                     paperLesson: null,
@@ -439,6 +440,7 @@
                 }
                 if (this.fetchParam.lesson_type === 'chapter') this.currentData.pindex = pindex
                 this.classhour.showDialog = true
+                this.classhour.title = '新增课程'
                 this.classhour.form = new Lesson()
                 this.$nextTick(() => {
                     this.$refs['multiForm'].resetFields()
@@ -447,6 +449,7 @@
             editClasshour (row, pindex = -1, index = -1) {
                 this.currentData = {data: row, pindex, index}
                 this.classhour.showDialog = true
+                this.classhour.title = '修改课程'
                 this.classhour.form = clone(row)
             },
             delClasshour (row, pindex = -1, index = -1) {
