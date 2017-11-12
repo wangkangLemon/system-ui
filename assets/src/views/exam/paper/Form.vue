@@ -82,9 +82,6 @@
                     name: [
                         { required: true, message: '请输入试卷名称', trigger: 'blur' },
                     ],
-                    image: [
-                        { required: true, message: '请上传试卷封面', trigger: 'blur' },
-                    ],
                     single_score: [
                         { type: 'number', required: true, message: '请输入单选题分数', trigger: 'blur' },
                         { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },

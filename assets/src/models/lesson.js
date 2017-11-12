@@ -42,6 +42,7 @@ class Lesson {
         this._materialPaper = paper
         this.name = paper.name
         this.material_id = paper.id
+        this.material_name = paper.name
     }
 }
 
