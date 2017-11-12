@@ -10,7 +10,7 @@ class Lesson {
         this.id = 0
         this.name = ''
         this.try_enable = 0
-        this.material_type = ''
+        this.material_type = 'video'
         this.material_id = 0
         this.material_name = ''
         this.sort = 0

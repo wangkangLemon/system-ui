@@ -455,6 +455,9 @@
             delClasshour (row, pindex = -1, index = -1) {
                 if (row.id !== 0) {
                     row.deleted = true
+                    if (this.fetchParam.lesson_type === 'single') {
+                        this.classhour.paperLesson = null
+                    }
                 } else {
                     if (this.fetchParam.lesson_type === 'multi') {
                         this.multi.data.splice(pindex, 1)
