@@ -160,14 +160,7 @@
                 loadingData: false,
                 data: [],
                 selectedIds: [],
-                fetchParam: {
-                    keyword: void '',
-                    time_start: void '',
-                    time_end: void '',
-                    page: 1,
-                    page_size: 15,
-                    page_total: 0,
-                },
+                fetchParam: this.newFetchParam(),
                 model: {},
                 editDialog: '新建题库',
                 rules: {
@@ -180,6 +173,10 @@
             this.fetchData()
         },
         methods: {
+            initFetchParam() {
+                this.fetchParam = this.newFetchParam()
+                this.fetchData()
+            },
             fetchData() {
                 this.loadingData = true
                 return testLibraryService.search(this.fetchParam).then((ret) => {
@@ -274,6 +271,16 @@
             },
             selectable (row) {
                 return row.subject_num === 0
+            },
+            newFetchParam () {
+                return {
+                    keyword: void '',
+                    time_start: void '',
+                    time_end: void '',
+                    page: 1,
+                    page_size: 15,
+                    page_total: 0,
+                }
             }
         },
         components: {DateRange}

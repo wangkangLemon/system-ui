@@ -135,6 +135,16 @@ class Question {
         question.tags = this.tags.join('，')
         return question
     }
+
+    setDefaultOption(type) {
+        this.options = []
+        if (type !== 0) {
+            for (let i = 0; i < 4; i++) {
+                let option = new Option()
+                this.addOption(option)
+            }
+        }
+    }
 }
 
 export default Question

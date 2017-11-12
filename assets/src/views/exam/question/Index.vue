@@ -130,7 +130,7 @@
         <NestedDialog :title="editDialog" :visible.sync="dialog.edit">
             <el-form :model="model" label-width="80px" :rules="rules" ref="form">
                 <el-form-item label="试题类型" class="is-required">
-                    <el-radio-group v-model="model.type">
+                    <el-radio-group v-model="model.type" @change="onQuestionTypeChange">
                         <el-radio :label=0>判断题</el-radio>
                         <el-radio :label=1>单选题</el-radio>
                         <el-radio :label=2>多选题</el-radio>
@@ -141,6 +141,7 @@
                 </el-form-item>
                 <el-form-item label="配图">
                     <UploadImg :url="uploadImageUrl" :defaultImg="model.image" :onSuccess="res => model.image = res.data.url" :onRemove="onRemove"></UploadImg>
+                    <h5 style="color: #FF4949">只允许上传以下格式：.jpg;.jpeg;.png</h5>
                 </el-form-item>
                 <el-form-item label="答案选项">
                     <!--判断题的正确错误选项-->
@@ -186,7 +187,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="所属题库" prop="group_id">
-                    <SelectScroll :requestCb="fetchLibrary" :placeholder="model.group_name" v-model="model.group_id"></SelectScroll>
+                    <SelectScroll :requestCb="fetchLibrary" :changeCb="onLibraryChange" :placeholder="model.group_name" v-model="model.group_id"></SelectScroll>
                 </el-form-item>
                 <el-form-item label="试题标签">
                     <Tags v-model="model.tags"></Tags>
@@ -311,17 +312,7 @@
                 loadingData: false,
                 data: [],
                 selectedIds: [],
-                fetchParam: {
-                    subject_group_id: void '',
-                    tags: '',
-                    type: void '',
-                    time_start: void '',
-                    time_end: void '',
-                    page: 1,
-                    page_size: 15,
-                    page_total: 0,
-                    status: '',
-                },
+                fetchParam: this.newFetchParam(),
                 model: {},
                 editDialog: '新建题库',
                 uploadUrl: `${config.apiHost}/subject/excel`,
@@ -329,9 +320,6 @@
                 rules: {
                     description: [
                         { required: true, message: '请输入试题题目', trigger: 'blur' },
-                    ],
-                    explain: [
-                        { required: true, message: '请输入试题详解', trigger: 'blur' },
                     ],
                     group_id: [
                         { type: 'number', required: true, message: '请选择题库', trigger: 'blur' },
@@ -343,6 +331,10 @@
             this.fetchData()
         },
         methods: {
+            initFetchParam() {
+                this.fetchParam = this.newFetchParam()
+                this.fetchData()
+            },
             fetchData() {
                 this.loadingData = true
                 let data = Object.assign({}, this.fetchParam)
@@ -497,6 +489,28 @@
             },
             onRemove() {
                 this.model.image = ''
+            },
+            newFetchParam() {
+                return {
+                    subject_group_id: void '',
+                    tags: '',
+                    type: void '',
+                    time_start: void '',
+                    time_end: void '',
+                    page: 1,
+                    page_size: 15,
+                    page_total: 0,
+                    status: '',
+                }
+            },
+            onLibraryChange (val) {
+                this.model.group_id = val
+                this.$refs['form'].validate()
+            },
+            onQuestionTypeChange(val) {
+                if (this.model.id === 0) {
+                    this.model.setDefaultOption(val)
+                }
             }
         },
         components: {DateRange, UploadImg, SelectScroll, Tags, LocalImportDialog, NestedDialog}

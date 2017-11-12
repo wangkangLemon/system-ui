@@ -24,7 +24,7 @@
                             <el-tag type="primary" v-if="scope.row.type == 0">判断题</el-tag>
                             <el-tag type="danger" v-if="scope.row.type == 1">单选题</el-tag>
                             <el-tag type="warning" v-if="scope.row.type == 2">多选题</el-tag>
-                            <el-checkbox :label="scope.row.id" @change="choiceQuestion">&nbsp;</el-checkbox>
+                            <el-checkbox :label="scope.row.id" @change="choiceQuestion(scope.row, scope.$index)">&nbsp;</el-checkbox>
                         </template>
                     </el-table-column>
                     <el-table-column>
@@ -135,10 +135,26 @@
                 this.search.subject_group_id = id
                 this.fetchQuestion()
             },
-            choiceQuestion(val) {
+            choiceQuestion(row) {
                 let question = new Question()
-                question.findById(val.target.value)
-                this.choiceList.push(question)
+                question.findById(row.id)
+                let has = false
+                let offset = 0
+
+                for (let i = 0; i < this.choiceList.length; i++) {
+                    let question = this.choiceList[i]
+                    if (row.id === question.id) {
+                        has = true
+                        offset = i
+                        break
+                    }
+                }
+
+                if (has) {
+                    this.choiceList.splice(offset, 1)
+                } else {
+                    this.choiceList.push(question)
+                }
             },
         },
         components: {SelectScroll, NestedDialog}

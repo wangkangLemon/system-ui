@@ -97,7 +97,9 @@ export default {
         'isShowDialog'(val) {
             this.$emit('input', val)
             this.setShowDialog(val)
-            if (this.data.length < 1) this.fetchData()
+            if (val === true) {
+                this.fetchData()
+            }
         }
     },
     methods: {

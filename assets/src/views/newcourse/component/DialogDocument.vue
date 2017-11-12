@@ -117,7 +117,9 @@ export default {
         'isShowDialog'(val) {
             this.$emit('input', val)
             this.setShowDialog(val)
-            this.fetchData()
+            if (val === true) {
+                this.fetchData()
+            }
         }
     },
     methods: {
@@ -145,6 +147,10 @@ export default {
         },
         pageChange(val) {
             this.fetchParam.page = val
+        },
+        refreshFetchParam () {
+            this.fetchParam.keyword = ''
+            this.fetchParam.page = 1
         }
     },
     components: {NestedDialog}

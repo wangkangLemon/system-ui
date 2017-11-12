@@ -23,6 +23,7 @@
             </el-form-item>
             <el-form-item label="配图" prop="image">
                 <UploadImg :defaultImg="item.image" :url="uploadImageUrl" :disabled="!item.editable" :onSuccess="res => item.image = res.data.url"></UploadImg>
+                <h5 style="color: #FF4949">只允许上传以下格式：.jpg;.jpeg;.png</h5>
             </el-form-item>
 
             <el-form-item label="选项">
@@ -37,7 +38,7 @@
                 </div>
                 <!--单选的答案部分-->
                 <div v-if="item.type == 1">
-                    <h5>请在正确答案前面打勾</h5>
+                    <h5>请选中正确答案</h5>
                     <div class="multy-choose-item" v-for="(option, index) in item.options" :key="index">
                         <el-radio v-model="item.correct" :label="index" :disabled="!item.editable">&nbsp;</el-radio>
                         <el-input placeholder="填写描述" v-model="option.description" style="width: 430px;" :disabled="!item.editable"></el-input>
@@ -51,7 +52,7 @@
                 </div>
                 <!--多选的答案部分-->
                 <div v-if="item.type == 2">
-                    <h5>请在正确答案前面打勾</h5>
+                    <h5>请选中正确答案</h5>
                     <div class="multy-choose-item" v-for="(option, index) in item.options" :key="index">
                         <el-checkbox v-model="option.correct" :true-label="1" :disabled="!item.editable">&nbsp;</el-checkbox>
                         <el-input placeholder="填写描述" v-model="option.description" style="width: 430px;" :disabled="!item.editable"></el-input>
@@ -156,6 +157,7 @@
 
                 let question = new Question()
                 question.type = type
+                question.setDefaultOption(type)
                 if (type === 0) {
                     question.score = this.scores.judge_score
                 }

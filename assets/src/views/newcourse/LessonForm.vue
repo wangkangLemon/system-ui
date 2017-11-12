@@ -33,7 +33,7 @@
         </el-form-item>
         <slot></slot>
         <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="company_id"></DialogVideo>
-        <DialogDocument :onSelect="handleDocumentSelected" v-model="isShowDocumentDialog" :companyID="company_id" :fileType="fileType"></DialogDocument>
+        <DialogDocument :onSelect="handleDocumentSelected" v-model="isShowDocumentDialog" :companyID="company_id" :fileType="fileType" ref="dialogDocument"></DialogDocument>
     </el-form>
     <!--选择视频的弹窗-->
 </template>
@@ -88,6 +88,7 @@
 
                 this.lesson.material_name = ''
                 this.lesson.material_id = 0
+                this.$refs['dialogDocument'].refreshFetchParam()
             },
             // 处理视频选取
             handleVideoSelected(row) {
