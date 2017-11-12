@@ -25,7 +25,7 @@
 
         <el-form :inline="true" :model="fetchParam" class="search">
             <el-form-item label="所属题库">
-                <SelectScroll :requestCb="fetchLibrary" v-model="fetchParam.subject_group_id" :changeCb="changeLibrary"></SelectScroll>
+                <SelectScroll :requestCb="fetchLibrary" v-model="fetchParam.subject_group_id" :changeCb="changeLibrary" ref="selectScroll"></SelectScroll>
             </el-form-item>
             <el-form-item label="试题标签">
                 <el-input type="text" v-model="fetchParam.tags" placeholder="请输入标签" @keyup.enter.native="fetchData"></el-input>
@@ -329,6 +329,7 @@
         },
         activated () {
             this.fetchData()
+            this.$refs['selectScroll'].filter('')
         },
         methods: {
             initFetchParam() {
