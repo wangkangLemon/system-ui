@@ -89,7 +89,11 @@
                     {{ scope.row.lesson_count}}课时
                 </template>
             </el-table-column>
-            <el-table-column width="190" prop="create_time_name" label="是否考试">
+            <el-table-column width="190" prop="need_testing" label="是否考试">
+                <template scope="scope">
+                    <el-tag v-if="scope.row.need_testing == 0">否</el-tag>
+                    <el-tag v-if="scope.row.need_testing == 1" type="success">是</el-tag>
+                </template>
             </el-table-column>
             <el-table-column width="100" label="状态">
                 <template scope="scope">
