@@ -78,7 +78,7 @@
                 ref="localImportDialog"
                 title="导入题库"
                 :uploadUrl="uploadUrl"
-                templateUrl="/upload/templates/import/subject.xlsx">
+                templateUrl="https://upload.yst.vodjk.com/assets/download/import/subject.xlsx">
             <article slot="footer">
                 <hr style="margin-bottom: 15px;">
                 <h5>注意事项：</h5>
