@@ -155,7 +155,7 @@
                     </div>
                     <!--单选的答案部分-->
                     <div v-if="model.type == 1">
-                        <h5>请在正确答案前面打勾</h5>
+                        <h5>请选中正确答案</h5>
                         <div class="multy-choose-item" v-for="(option, index) in model.options" :key="index">
                             <el-radio v-model="model.correct" :label="index">&nbsp;</el-radio>
                             <el-input placeholder="填写描述" v-model="option.description" style="width: 530px;"></el-input>
@@ -169,7 +169,7 @@
                     </div>
                     <!--多选的答案部分-->
                     <div v-if="model.type == 2">
-                        <h5>请在正确答案前面打勾</h5>
+                        <h5>请选中正确答案</h5>
                         <div class="multy-choose-item" v-for="(option, index) in model.options" :key="index">
                             <el-checkbox v-model="option.correct" :true-label="1">&nbsp;</el-checkbox>
                             <el-input placeholder="填写描述" v-model="option.description" style="width: 530px;"></el-input>

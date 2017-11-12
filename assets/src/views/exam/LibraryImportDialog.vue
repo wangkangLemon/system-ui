@@ -117,6 +117,9 @@
         },
         methods: {
             open() {
+                this.choiceList = []
+                this.search.type = ''
+                this.search.subject_group_id = ''
                 this.fetchQuestion()
                 this.isOpen = true
             },
