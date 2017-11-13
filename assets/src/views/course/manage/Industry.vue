@@ -199,7 +199,7 @@
     import DateRange from '../../component/form/DateRangePicker.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
 
-    function getFetchParam (category) {
+    function getFetchParam (course_type) {
         return {
             page: 1,
             page_size: 15,
@@ -207,7 +207,7 @@
             time_end: void 0,
             keyword: void 0,
             status: void 0, // 2- 视屏转码中 1-下线 0-正常
-            category: category, // 1-工业 2- 连锁
+            course_type: course_type, // industry-工业 private- 连锁
         }
     }
 
@@ -218,7 +218,7 @@
                 loadingData: false,
                 total: 0,
                 currTab: 0,
-                fetchParams: [getFetchParam(2), getFetchParam(1)],
+                fetchParams: [getFetchParam('private'), getFetchParam('industry')],
             }
         },
         activated () {
@@ -227,7 +227,7 @@
         },
         methods: {
             initFetchParam () {
-                this.fetchParams = [getFetchParam(2), getFetchParam(1)]
+                this.fetchParams = [getFetchParam('private'), getFetchParam('industry')]
             },
             fetchData () {
                 this.loadingData = true
@@ -244,9 +244,15 @@
                 let txt = row.status == 0 ? '下线' : '上线'
                 let finalStatus = row.status == 0 ? 1 : 0
                 xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                    courseService.offline(row.id).then((ret) => {
-                        row.status = finalStatus
-                    })
+                    if (finalStatus == 1) {
+                        courseService.offline(row.id).then((ret) => {
+                            row.status = finalStatus
+                        })
+                    } else {
+                        courseService.online(row.id).then((ret) => {
+                            row.status = finalStatus
+                        })
+                    }
                 })
             },
             tabClick (tab) {
