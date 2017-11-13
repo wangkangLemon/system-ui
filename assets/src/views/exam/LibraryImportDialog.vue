@@ -110,7 +110,7 @@
                 search: {
                     type: '',
                     subject_group_id: '',
-                    status: 1,
+                    status: 0,
                     page: 1,
                     page_size: 15,
                 }
