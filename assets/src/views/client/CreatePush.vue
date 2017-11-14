@@ -3,7 +3,7 @@
     @import "../../utils/mixins/mixins";
     .client-createpush-container{
         background: #fff;
-        padding: 20px 200px;
+        padding: 40px 24px;
         .tip {
             color: #ff5b57;
         }
@@ -44,13 +44,9 @@
         }
         .part2 {
             border-top: 1px solid #ddd;
-            padding: 20px;
-            .tip {
-                text-align: center;
-            }
         }
         .footer {
-            margin-left: 100px;
+            margin-left: 80px;
         }
         .show-detail {
             .info {
@@ -71,7 +67,7 @@
 </style>
 <template>
     <article class="client-createpush-container">
-        <el-form label-width="100px" :model="form" ref="form" :rules="rules">
+        <el-form label-width="80px" :model="form" ref="form" :rules="rules" style="width: 640px">
             <el-form-item class="title" prop="title" label="标题">
                 <el-input @change="titleLen = form.title.length" :maxlength="titleMax" v-model="form.title"></el-input>
                 <span class="count"><i>{{titleLen}}</i> / {{titleMax}}</span>
@@ -88,16 +84,16 @@
                 <el-input v-if="form.model_id == 20" v-model="form.model_value" placeholder="请以http://或https://开头"></el-input>
                 <div class="chooseCourse" v-if="form.model_id == 5">
                     <el-button type="primary" @click="course.isShow = true">选取课程</el-button>
-                    <div v-if="course.currCourse != null"><span>已关联课程：{{course.currCourse.name}}</span><el-button @click="speaking.currentData = null">清除</el-button></div>
+                    <div v-if="course.currCourse != null"><span>已关联课程：{{course.currCourse.name}}</span><el-button @click="course.currCourse = null">清除</el-button></div>
                 </div>
                 <div class="chooseCourse" v-if="form.model_id == 9">
                     <el-button type="primary" @click="speaking.isShow = true">选取药我说</el-button>
                     <div v-if="speaking.currentData != null"><span>已关联药我说：{{speaking.currentData.title}}</span><el-button @click="speaking.currentData = null">清除</el-button></div>
                 </div>
             </el-form-item>
-            <div class="part2">
+            <el-form-item class="part2">
                 <p class="tip">*如果需要指定用户推送，请按以下维度进行条件筛选</p>
-            </div>
+            </el-form-item>
             <el-form-item label="平台">
                 <el-select clearable v-model="form.platform" @change="filterVersion">
                     <el-option v-for="item in platform" :label="item.name" :value="item.value" :key="item.id"></el-option>
