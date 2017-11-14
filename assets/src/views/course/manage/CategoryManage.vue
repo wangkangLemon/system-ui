@@ -61,10 +61,6 @@
                 <el-button type="danger" @click="deleteCategory">删除栏目</el-button>
             </div>
 
-            <div v-show="fetchParam.parent_id === 0">
-                <el-button type="primary">添加根节点</el-button>
-            </div>
-
             <el-card class="edit-content">
                 <el-form label-position="right" label-width="90px" :rules="rules" :model="fetchParam" ref="form">
                     <el-form-item label="分类名称" prop="name">
