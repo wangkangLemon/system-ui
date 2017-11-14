@@ -45,8 +45,8 @@
                     <!-- <template scope="scope">
                         {{material_type[scope.row.material_type]}}
 
-                    </template> -->
-                </el-table-column>
+                    </template>
+                </el-table-column> -->
                 <el-table-column
                         prop="operate"
                         label="操作"
@@ -170,7 +170,8 @@
                     keyword: this.search.keyword,
                     page: this.page,
                     page_size: this.page_size,
-                    course_type: 'public'
+                    course_type: 'public',
+                    status: 0
                 }).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
@@ -184,7 +185,8 @@
                 return ArticleService.getArticleList({
                     title: this.search.keyword,
                     page: this.page,
-                    page_size: this.page_size
+                    page_size: this.page_size,
+                    status: 0
                 }).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
@@ -199,7 +201,8 @@
                 return speakingService.search({
                     keyword: this.search.keyword,
                     page: this.page,
-                    page_size: this.page_size
+                    page_size: this.page_size,
+                    status: 0
                 }).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
