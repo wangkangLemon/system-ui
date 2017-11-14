@@ -42,7 +42,7 @@
                 <el-tag style="margin-right: 3px"
                         v-for="(c,index) in form.course" :key="index"
                         :closable="true"
-                        @close="form.courses.splice(index,1)"
+                        @close="form.course.splice(index,1)"
                         type="success">
                     {{c.name}}
                 <!--c-->
@@ -74,7 +74,7 @@
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
     import CourseTaskTemplateCategorySelect from '../../component/select/CourseTaskTemplateCategory.vue'
     import companyService from '../../../services/companyService'
-    import courseService from '../../../services/courseService'
+    import courseService from '../../../services/newcourse/courseService'
     import dialogSelectData from '../../component/dialog/SelectData4table.vue'
 
     export default{
@@ -126,7 +126,9 @@
                 })
             },
             fetchCourse (params) {
-                return courseService.getPublicCourselist(Object.assign({}, this.dialogCourse, params))
+                params.course_type = 'public'
+                params.status = 0
+                return courseService.search(Object.assign({}, this.dialogCourse, params))
             },
             submit(s) {
                 this.$refs.form.validate((valid) => {
