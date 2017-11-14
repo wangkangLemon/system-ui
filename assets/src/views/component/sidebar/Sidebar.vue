@@ -58,6 +58,11 @@
         created () {
             document.body.addEventListener('click', this.close, false)
         },
+        destroyed() {
+            if (this.appendToBody) {
+                document.body.removeChild(this.$el)
+            }
+        },
         methods: {
             open () {
                 this.isActive = true

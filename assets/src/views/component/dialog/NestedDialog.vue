@@ -14,6 +14,11 @@
             if (this.appendToBody) {
                 document.body.appendChild(this.$el)
             }
-        }
+        },
+        destroyed() {
+            if (this.appendToBody) {
+                document.body.removeChild(this.$el)
+            }
+        },
     }
 </script>
