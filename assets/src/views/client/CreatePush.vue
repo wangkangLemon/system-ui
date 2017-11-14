@@ -137,7 +137,7 @@
                 <p><span>推荐标题 </span>{{form.title}}</p>
                 <p><span>推荐内容 </span>{{form.content}}</p>
                 <div v-if="tags != null">
-                    <p v-for="item in newTags"><span>{{item.name}} </span>{{item.value}}</p>
+                    <p v-for="item in newTags" :key="item.value"><span>{{item.name}} </span>{{item.value}}</p>
                 </div>
             </div>
             <div slot="footer" class="footer">
