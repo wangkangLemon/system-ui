@@ -231,7 +231,11 @@
             },
             fetchData () {
                 this.loadingData = true
-                return courseService.search(this.fetchParams[this.currTab]).then((ret) => {
+                let data = Object.assign({}, this.fetchParams[this.currTab])
+                if (data.status === '' || data.status === undefined) {
+                    data.status = -1
+                }
+                return courseService.search(data).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
                     this.loadingData = false
