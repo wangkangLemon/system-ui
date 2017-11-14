@@ -478,12 +478,12 @@
                 if (this.category == 'course') {
                     this.form.title = this.form.content.name
                     this.form.image = this.form.content.image
-                    this.form.des = this.form.content.description
+                    this.form.desc = this.form.content.description
                     this.form.date = this.form.content.create_time_name
                 } else if (this.category == 'speaking') {
                     this.form.title = this.form.content.title
                     this.form.image = this.form.content.image
-                    this.form.des = this.form.content.content
+                    this.form.desc = this.form.content.content
                     this.form.date = this.form.content.create_time
                 } else if (this.category == 'article') {
                     this.form.title = this.form.content.title
@@ -601,11 +601,8 @@
                     this.category = item.ref_type
                     if (item.ref_type == 'course') {
                         this.form.content = item.course
-                        this.form.title = item.course.name
-                        this.form.des = item.description
                     } else if (item.ref_type == 'speaking') {
                         this.form.content = item.speaking
-                        this.form.des = item.content
                     } else if (item.ref_type == 'article') {
                         this.form.content = item.article
                     }

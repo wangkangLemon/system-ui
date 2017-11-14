@@ -1,4 +1,4 @@
-import ElementUI, {Message} from 'element-ui'
+import ElementUI from 'element-ui'
 import Vue from 'vue'
 import '../theme/index.css'
 import App from './App.vue'
@@ -8,6 +8,7 @@ import {sync} from 'vuex-router-sync'
 import config from './utils/config'
 import authUtils from './utils/authUtils'
 import VueDND from 'awe-dnd'
+import SidePannel from './views/component/mixin/sidePannel'
 
 // keep router and vuex store in sync
 sync(store, router)
@@ -28,8 +29,9 @@ let pluginPermission = {
                 isPermission (val) {
                     return authUtils.isPermission(val)
                 }
-            }
+            },
         })
+        Vue.prototype.$sidepan = SidePannel
     }
 }
 Vue.use(pluginPermission)
@@ -37,14 +39,14 @@ Vue.use(pluginPermission)
 window.xmview = {
     // success/warning/info/error
     showTip: function (type, msg, msgDuring = 3000) {
-        return Message({
+        return ElementUI.Message({
             type,
             message: msg,
             duration: msgDuring
         })
     },
     closeAllTip () {
-        Message.closeAll()
+        ElementUI.Message.closeAll()
     }
 }
 

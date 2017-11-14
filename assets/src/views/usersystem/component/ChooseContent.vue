@@ -60,7 +60,7 @@
     </article>
 </template>
 <script>
-    import courseService from '../../../services/courseService'
+    import courseService from '../../../services/newcourse/courseService'
     import speakingService from '../../../services/speaking/contentService'
     import ArticleService from '../../../services/articleService'
     export default {
@@ -122,7 +122,7 @@
             getCourse () {
                 this.loading = true
                 // 获取课程数据
-                return courseService.getPublicCourselist({
+                return courseService.search({
                     keyword: this.search.keyword,
                     status: this.search.status,
                     page: this.page,
@@ -168,9 +168,9 @@
             },
             changeList () {
                 let typeArr = {
-                    course: 'getCourse',
-                    testing: 'getCourse',
-                    testing_pass: 'getCourse',
+                    course_finished: 'getCourse',
+                    // testing: 'getCourse',
+                    // testing_pass: 'getCourse',
                     share_testing: 'getCourse',
                     article: 'getArticle',
                     share_article: 'getArticle',

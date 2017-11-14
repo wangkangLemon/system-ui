@@ -184,6 +184,7 @@
 
 <script>
     import courseService from '../../../services/courseService'
+    import newcourseService from '../../../services/newcourse/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     export default{
         data () {
@@ -276,7 +277,7 @@
                 this.dialogAdd.name = row.name
                 this.dialogAdd.title = `${row.name} 专辑编辑`
                 this.fetchData4dialogCourse(true)
-                courseService.getPublicCourselist({albumid: row.id}).then((ret) => {
+                newcourseService.search({album_id: row.id}).then((ret) => {
                     this.dialogAdd.data4Selected = ret.data
                 })
 
@@ -322,7 +323,8 @@
                 if (isFirst)
                     this.dialogAdd.page = 1
                 this.dialogAdd.loading = true
-                courseService.getPublicCourselist({
+                newcourseService.search({
+                    status: 0,
                     album_id: 0,
                     page: this.dialogAdd.page,
                     page_size: this.dialogAdd.page_size,

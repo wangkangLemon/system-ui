@@ -59,3 +59,26 @@
 .text-danger{
     color: #FF4949
 }
+//element-ui Button size: Full
+.el-button--full{
+    padding: 11px 19px;
+    font-size: 16px;
+    border-radius: 4px;
+    display: inline-block;
+    width: 100%;
+}
+//element-ui Button type: Gray
+.el-button--gray{
+    color: #333;
+    background-color: #eee;
+    border-color: #eee;
+}
+.el-button--gray:focus, .el-button--gray:hover {
+    color: #333;
+    background-color: #eee;
+    border-color: #eee;
+}
+
+.utils-top-15{
+    margin-top: 15px;
+}

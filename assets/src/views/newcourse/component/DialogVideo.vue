@@ -12,18 +12,10 @@
 }
 </style>
 <template>
-    <el-dialog title="选取视频" v-model="isShowDialog">
+    <NestedDialog title="选取视频" v-model="isShowDialog">
+        <span slot="title"><span class="el-dialog__title">选取视频</span>  <span style="color:#FF4949">只能选取审核通过的视频</span></span>
         <article id="course-manage-component--dialogvideo">
             <article class="search">
-                <section>
-                    <i>状态</i>
-                    <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                        <el-option label="待审核" value="0"></el-option>
-                        <el-option label="转码中" value="1"></el-option>
-                        <el-option label="审核成功" value="3"></el-option>
-                    </el-select>
-                </section>
-
                 <section>
                     <i>名称</i>
                     <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
@@ -64,17 +56,18 @@
             </el-pagination>
 
         </article>
-    </el-dialog>
+    </NestedDialog>
 </template>
 
 <script>
 import courseService from '../../../services/courseService'
+import NestedDialog from '../../component/dialog/NestedDialog.vue'
 
 export default {
     props: {
         onSelect: Function,
         value: Boolean,     // 是否显示dialog
-        companyID: Number,  // 视频所属的企业编号
+        companyID: [Number, String],  // 视频所属的企业编号
     },
     data() {
         return {
@@ -85,7 +78,7 @@ export default {
             fetchParam: {
                 companyid: void 0,
                 keyword: void 0,
-                status: void 0,
+                status: 3,
                 page: 1,
                 page_size: 15,
             }
@@ -104,7 +97,9 @@ export default {
         'isShowDialog'(val) {
             this.$emit('input', val)
             this.setShowDialog(val)
-            if (this.data.length < 1) this.fetchData()
+            if (val === true) {
+                this.fetchData()
+            }
         }
     },
     methods: {
@@ -127,6 +122,6 @@ export default {
             this.isShowDialog = val
         }
     },
-    components: {}
+    components: {NestedDialog}
 }
 </script>

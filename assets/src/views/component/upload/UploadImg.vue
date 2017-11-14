@@ -113,16 +113,19 @@
                    :file-list="currImg">
             <i class="el-icon-plus"></i>
         </el-upload>
-        <el-dialog v-model="dialogVisible" size="tiny">
+        <NestedDialog v-model="dialogVisible" size="tiny">
             <img width="100%" :src="currImg.length > 0 && currImg[0].url" alt="">
-        </el-dialog>
+        </NestedDialog>
     </div>
 </template>
 
 <script>
     import authUtils from '../../../utils/authUtils'
     import config from '../../../utils/config'
+    import NestedDialog from '../../component/dialog/NestedDialog.vue'
+
     export default{
+        components: {NestedDialog},
         props: {
             // 要上传的url地址
             url: {
@@ -135,7 +138,8 @@
             disabled: {
                 type: Boolean,
                 default: false
-            }
+            },
+            onRemove: Function,
         },
         data () {
             return {
@@ -186,6 +190,7 @@
             handleRemove () {
                 setTimeout(() => {
                     this.clearFiles()
+                    this.onRemove && this.onRemove()
                 }, 500)
             },
             handlePictureCardPreview (file) {

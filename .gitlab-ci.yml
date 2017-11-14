@@ -10,4 +10,4 @@ deploy:
   only:
     - master
   script:
-    - curl -Ss -XPOST "http://admin:57a66b7e93dcd16058b825cae35e1759@jenkins.vodjk.com/job/yst-system-ui-build-docker-pro/build?token=uuxREAji8EEerdiqw9rbfxa"
+    - curl -Ss -XPOST "http://admin:3ec9ab5a14dfa4fcdfd551751c3d8365@jenkins.vodjk.com/job/yst-system-ui-build-docker-pro/build?token=uuxREAji8EEerdiqw9rbfxa"

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import courseService from '../../../services/courseService'
+    import courseService from '../../../services/newcourse/courseService'
     import SelectScroll from '../../component/form/SelectScroll.vue'
     export default{
         props: {
@@ -42,7 +42,8 @@
             fetchData (val, length) {
                 let keyword = val
                 let page = parseInt(length / this.pageSize) + 1
-                return courseService.courseList(keyword, page, this.pageSize)
+                let page_size = this.pageSize
+                return courseService.search({keyword, page, page_size})
             }
         }
     }

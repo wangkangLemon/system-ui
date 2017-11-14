@@ -42,10 +42,10 @@
         <el-tabs type="card" @tab-click="tabClick">
             <el-tab-pane label="连锁课程">
                 <article class="search">
-                    <section>
+                    <!-- <section>
                         <i>专辑名称</i>
                         <el-input v-model="fetchParams[0].keyword" @keyup.enter.native="fetchData"></el-input>
-                    </section>
+                    </section> -->
 
                     <section>
                         <i>状态</i>
@@ -70,10 +70,10 @@
             </el-tab-pane>
             <el-tab-pane label="工业课程">
                 <article class="search">
-                    <section>
+                    <!-- <section>
                         <i>专辑名称</i>
                         <el-input v-model="fetchParams[1].keyword" @keyup.enter.native="fetchData"></el-input>
-                    </section>
+                    </section> -->
 
                     <section>
                         <i>状态</i>
@@ -110,14 +110,14 @@
             </el-table-column>
             <el-table-column
                     min-width="200"
-                    prop="company"
+                    prop="company_name"
                     label="企业">
             </el-table-column>
-            <el-table-column width="80" label="题目数">
+            <!-- <el-table-column width="80" label="题目数">
                 <template scope="scope">
                     <el-button style="width: 100%"
                                @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second', readonly: true}})"
-                               type="text" size="small">{{scope.row.subject_num}}  <!--a-->
+                               type="text" size="small">{{scope.row.subject_num}}
                     </el-button>
                 </template>
             </el-table-column>
@@ -150,7 +150,7 @@
                     <i v-if="scope.row.price > 0">¥ {{scope.row.price}} +- {{scope.row.price_float}}</i>
                     <i v-else>未开启</i>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                     width="100"
                     label="状态">
@@ -173,11 +173,11 @@
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
-                    <el-button v-if="scope.row.subject_num > 0"
+                    <!-- <el-button v-if="scope.row.subject_num > 0"
                                @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.id}})"
                                type="text" size="small">
                         <i>答案分析</i>
-                    </el-button>
+                    </el-button> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -195,11 +195,11 @@
 </template>
 
 <script>
-    import courseService from '../../../services/courseService'
+    import courseService from '../../../services/newcourse/courseService'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
 
-    function getFetchParam (category) {
+    function getFetchParam (course_type) {
         return {
             page: 1,
             page_size: 15,
@@ -207,7 +207,7 @@
             time_end: void 0,
             keyword: void 0,
             status: void 0, // 2- 视屏转码中 1-下线 0-正常
-            category: category, // 1-工业 2- 连锁
+            course_type: course_type, // industry-工业 private- 连锁
         }
     }
 
@@ -218,7 +218,7 @@
                 loadingData: false,
                 total: 0,
                 currTab: 0,
-                fetchParams: [getFetchParam(2), getFetchParam(1)],
+                fetchParams: [getFetchParam('private'), getFetchParam('industry')],
             }
         },
         activated () {
@@ -227,11 +227,15 @@
         },
         methods: {
             initFetchParam () {
-                this.fetchParams = [getFetchParam(2), getFetchParam(1)]
+                this.fetchParams = [getFetchParam('private'), getFetchParam('industry')]
             },
             fetchData () {
                 this.loadingData = true
-                return courseService.getCourseList(this.fetchParams[this.currTab]).then((ret) => {
+                let data = Object.assign({}, this.fetchParams[this.currTab])
+                if (data.status === '' || data.status === undefined) {
+                    data.status = -1
+                }
+                return courseService.search(data).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
                     this.loadingData = false
@@ -244,9 +248,15 @@
                 let txt = row.status == 0 ? '下线' : '上线'
                 let finalStatus = row.status == 0 ? 1 : 0
                 xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                    courseService.offlineCourse({course_id: row.id, disabled: finalStatus}).then((ret) => {
-                        row.status = finalStatus
-                    })
+                    if (finalStatus == 1) {
+                        courseService.offline(row.id).then((ret) => {
+                            row.status = finalStatus
+                        })
+                    } else {
+                        courseService.online(row.id).then((ret) => {
+                            row.status = finalStatus
+                        })
+                    }
                 })
             },
             tabClick (tab) {

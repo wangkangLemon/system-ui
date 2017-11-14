@@ -89,7 +89,7 @@
                                                   v-model="fetchParam.category_id"></CourseTaskTemplateCategorySelect>
             </section>
             <section>
-                <i>课程名称</i>
+                <i>任务名称</i>
                 <el-input @keyup.enter.native="getData" class="name" v-model="fetchParam.title"/>
             </section>
         </section>

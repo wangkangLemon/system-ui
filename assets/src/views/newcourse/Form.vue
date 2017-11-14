@@ -18,7 +18,6 @@
                     width: 75%;
                     p {
                         padding: 10px;
-                        margin-top: 10px;
                         text-align: left;
                         span {
                             i {
@@ -46,11 +45,9 @@
                         }
                         &.edit-status {
                             text-align: left;
-                            margin-left: 50px;
                             > .el-input {
                                 outline: none;
                                 line-height: 30px;
-                                padding-left: 10px;
                                 width: 70%;
                             }
                             > span {
@@ -92,12 +89,12 @@
                         </CompanySelect>
                     </el-form-item>
                     <el-form-item label="课程售价" prop="price">
-                        <el-input v-model.number="fetchParam.price" type="number"></el-input>
+                        <el-input v-model.number="fetchParam.price" v-number-only></el-input>
                     </el-form-item>
                     <h2>课时类型设置</h2>
                     <el-form-item label="选择类型" prop="lesson_type">
                         <el-radio-group v-model="fetchParam.lesson_type">
-                            <!--<el-radio label="single">单节课</el-radio>-->
+                            <el-radio label="single">单节课</el-radio>
                             <el-radio label="multi">多课时</el-radio>
                             <el-radio label="chapter">多章节课</el-radio>
                         </el-radio-group>
@@ -108,24 +105,25 @@
                 </el-form>
             </el-tab-pane>
             <el-tab-pane :disabled="!fetchParam.id" label="课时管理" name="classhour">
-            <!--<el-tab-pane label="课时管理" name="classhour">-->
                 <!--单节课-->
                 <el-form v-if="fetchParam.lesson_type == 'single'" label-width="120px" ref="classhourform" :rules="classhour.rules" :model="classhour.form">
-                    <el-form-item label="课时类型" prop="material_type">
-                        <el-select v-model="classhour.form.material_type" @change="typeChange"  :clearable="true">
-                            <el-option label="视频" value="video"></el-option>
-                            <el-option label="WORD" value="doc"></el-option>
-                            <el-option label="PPT" value="ppt"></el-option>
-                            <el-option label="PDF" value="pdf"></el-option>
-                        </el-select>
+                    <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id"></LessonForm>
+
+                    <el-form-item v-if="!classhour.paperLesson">
+                        <el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)"><i class="el-icon-plus" ></i> 添加考试</el-button>
                     </el-form-item>
-                    <el-form-item label="课件" prop="material_id">
-                        <!--上传文件-->
-                        <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl" :accept="classhour.accept" :disabled="classhour.form.material_type == null" v-show="classhour.form.material_type !== 'video'"></UploadFile>
-                        <!--点击上传视频-->
-                        <el-button v-show="classhour.form.material_type === 'video'" @click="isShowVideoDialog=true">
-                            <i>{{classhour.form.material_name}}</i>
-                        </el-button>
+                    <el-form-item v-if="classhour.paperLesson">
+                        <section>
+                            <span>
+                                <i style="margin-right: 10px">{{classhour.paperLesson.name}}</i>
+                                <el-tag type="danger" v-show="classhour.paperLesson.try_enable">免费试看</el-tag>
+                                <el-tag type="danger" v-if="classhour.paperLesson.material_type == 'exam'">考试</el-tag>
+                            </span>
+                            <span class="operate" style="float: right">
+                                <el-button type="text" @click="openEditExamForm(classhour.paperLesson, -1, 0, $event)">编辑</el-button>
+                                <el-button type="text" @click="delClasshour(classhour.paperLesson, -1, 0)">删除</el-button>
+                            </span>
+                        </section>
                     </el-form-item>
                     <el-form-item label="">
                         <el-button type="primary" class="saveBtn" @click="saveResult">保存</el-button>
@@ -136,18 +134,26 @@
                 <section class="mulit-class" v-if="fetchParam.lesson_type == 'multi'">
                     <div v-for="(item,index) in multi.data">
                         <div v-if="!item.deleted">
-                            <p class="gray" @click="addNewClasshour" v-if="item.id === -1"><i class="el-icon-plus" ></i> 添加新课时</p>
+                            <div v-if="item.id === -1">
+                                <p><el-button type="gray" size="full" @click="addNewClasshour"><i class="el-icon-plus" ></i> 添加新课时</el-button></p>
+                                <p><el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)"><i class="el-icon-plus" ></i> 添加考试</el-button></p>
+                            </div>
                             <p v-else>
                                 <el-tag type="primary">课时{{index + 1}}</el-tag>
                                 <span>
-                                <i>{{item.name}}</i>
-                                <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
-                            </span>
-                                <span class="operate">
-                                <el-button type="text" @click="previewFn(item)">查看</el-button>
-                                <el-button type="text" @click="editClasshour(item, index)">编辑</el-button>
-                                <el-button type="text" @click="delClasshour(item, index)">删除</el-button>
-                            </span>
+                                    <i>{{item.name}}</i>
+                                    <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
+                                    <el-tag type="danger" v-if="item.material_type == 'exam'">考试</el-tag>
+                                </span>
+                                <span class="operate" v-if="item.material_type != 'exam'">
+                                    <el-button type="text" @click="previewFn(item)">查看</el-button>
+                                    <el-button type="text" @click="editClasshour(item, index)">编辑</el-button>
+                                    <el-button type="text" @click="delClasshour(item, index)">删除</el-button>
+                                </span>
+                                <span class="operate" v-else>
+                                    <el-button type="text" @click="openEditExamForm(item, -1, index, $event)">编辑</el-button>
+                                    <el-button type="text" @click="delClasshour(item, -1, index)">删除</el-button>
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -157,7 +163,7 @@
                 <!--多章节-->
                 <section class="mulit-class" v-if="fetchParam.lesson_type == 'chapter'">
                     <section v-for="(pitem,pindex) in resultData">
-                        <section v-if="!pitem.deleted">
+                        <section v-if="pitem.deleted == false">
                             <p>
                                 <el-tag type="danger">章节{{pindex + 1}}</el-tag>
                                 <span v-if="!pitem.status"><i>{{pitem.name}}</i></span>
@@ -175,24 +181,31 @@
                             </p>
                             <div v-for="(item,index) in pitem.lessons">
                                 <div v-if="!item.deleted">
-                                    <p class="gray" @click="addNewClasshour(pindex)" v-if="item.id === -1"><i class="el-icon-plus" ></i> 添加新课时</p>
+                                    <div v-if="item.id === -1">
+                                        <p><el-button type="gray" size="full" @click="addNewClasshour(pindex)"><i class="el-icon-plus" ></i> 添加新课时</el-button></p>
+                                        <p><el-button type="gray" size="full" @click="openExamForm(pindex, -1, $event)"><i class="el-icon-plus" ></i> 添加考试</el-button></p>
+                                    </div>
                                     <p v-else>
                                         <el-tag type="primary">课时{{index + 1}}</el-tag>
                                         <span>
-                                        <i>{{item.name}}</i>
-                                        <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
-                                    </span>
-                                        <span class="operate">
-                                        <el-button type="text" @click="previewFn(item)">查看</el-button>
-                                        <el-button type="text" @click="editClasshour(item, pindex, index)">编辑</el-button>
-                                        <el-button type="text" @click="delClasshour(item, pindex, index)">删除</el-button>
-                                    </span>
+                                            <i>{{item.name}}</i>
+                                            <el-tag type="danger" v-show="item.try_enable">免费试看</el-tag>
+                                            <el-tag type="danger" v-if="item.material_type == 'exam'">考试</el-tag>
+                                        </span>
+                                        <span class="operate" v-if="item.material_type != 'exam'">
+                                            <el-button type="text" @click="previewFn(item)">查看</el-button>
+                                            <el-button type="text" @click="editClasshour(item, pindex, index)">编辑</el-button>
+                                            <el-button type="text" @click="delClasshour(item, pindex, index)">删除</el-button>
+                                        </span>
+                                        <span class="operate" v-else>
+                                            <el-button type="text" @click="openEditExamForm(item, pindex, index, $event)">编辑</el-button>
+                                            <el-button type="text" @click="delClasshour(item, pindex, index)">删除</el-button>
+                                        </span>
                                     </p>
                                 </div>
                             </div>
                         </section>
                     </section>
-                    <p class="gray" v-show="!chapter.editStatus" @click="()=>{chapter.editStatus = true;chapter.value = '';}"><i class="el-icon-plus" ></i> 添加新章节</p>
                     <p v-show="chapter.editStatus" class="edit-status" style="text-align: left">
                         <el-input v-model="chapter.value" placeholder="请输入章节名称"></el-input>
                         <span>
@@ -200,45 +213,27 @@
                             <el-button type="text" @click="chapter.editStatus = false">取消</el-button>
                         </span>
                     </p>
+                    <p v-show="!chapter.editStatus"><el-button type="gray" size="full" @click="()=>{chapter.editStatus = true;chapter.value = '';}"><i class="el-icon-plus" ></i> 添加新章节</el-button></p>
                     <el-button type="primary" class="saveBtn" @click="saveResult">保存</el-button>
                 </section>
-                <!--选择视频的弹窗-->
-                <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="fetchParam.company_id"></DialogVideo>
             </el-tab-pane>
         </el-tabs>
-        <el-dialog title="添加课时" :visible.sync="classhour.showDialog">
-            <el-form label-width="120px" ref="multiForm" :rules="classhour.rules" :model="classhour.form">
-                <el-form-item label="课时类型" prop="material_type">
-                    <el-select v-model="classhour.form.material_type" @change="typeChange"  :clearable="true">
-                        <el-option label="视频" value="video"></el-option>
-                        <el-option label="WORD" value="doc"></el-option>
-                        <el-option label="PPT" value="ppt"></el-option>
-                        <el-option label="PDF" value="pdf"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="课件" prop="material_id">
-                    <!--上传文件-->
-                    <UploadFile :onSuccess="handleUploadDoc" :url="uploadDocUrl" :accept="classhour.accept" :disabled="classhour.form.material_type == null" v-show="classhour.form.material_type !== 'video'"></UploadFile>
-                    <!--点击上传视频-->
-                    <el-button v-show="classhour.form.material_type === 'video'" @click="isShowVideoDialog=true">
-                        <i>{{classhour.form.material_name}}</i>
-                    </el-button>
-                </el-form-item>
-                <el-form-item label="课时名称" prop="name">
-                    <el-input v-model="classhour.form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="免费试看">
-                    <el-checkbox v-model="classhour.form.try_enable">本课时免费试看</el-checkbox>
-                </el-form-item>
+        <NestedDialog :title="classhour.title" :visible.sync="classhour.showDialog">
+            <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id" ref="multiForm"></LessonForm>
+            <el-form label-width="120px">
                 <el-form-item>
                     <el-button type="primary" @click="addMultiSubmit">保存</el-button>
                 </el-form-item>
             </el-form>
-        </el-dialog>
+        </NestedDialog>
         <el-dialog title="查看" :visible.sync="docshow">
             <DocPreview ref="docShow" :docurl="docurl" class="docshow"></DocPreview>
         </el-dialog>
         <VideoPreview :type="1" :url="videoUrl" ref="videoPreview"></VideoPreview>
+
+        <Sidebar ref="paperSidebar">
+            <PaperForm :paper="editPaper" :onSubmit="this.submitPaper" style="padding-top: 30px"></PaperForm>
+        </Sidebar>
     </article>
 </template>
 <script>
@@ -254,8 +249,20 @@
     import DocPreview from '../component/dialog/DocShow.vue'
     import config from '../../utils/config'
     import clone from 'clone'
+    import PaperForm from './PaperForm.vue'
+    import Paper from '../../models/paper'
+    import Chapter from '../../models/chapter'
+    import Lesson from '../../models/lesson'
+    import LessonForm from './LessonForm.vue'
+    import NestedDialog from '../component/dialog/NestedDialog.vue'
+    import Sidebar from '../component/sidebar/Sidebar.vue'
+    import NumberOnly from '../../directives/numberOnly'
+
     export default {
         name: 'newcourse-course-form',
+        directives: {
+            numberOnly: NumberOnly
+        },
         components: {
             DocPreview,
             VideoPreview,
@@ -264,7 +271,11 @@
             CropperImg,
             DialogVideo,
             UploadFile,
-            CompanySelect
+            CompanySelect,
+            LessonForm,
+            NestedDialog,
+            Sidebar,
+            PaperForm
         },
         data () {
             return {
@@ -282,7 +293,6 @@
                     value: ''
                 },
                 isShowVideoDialog: false,
-                uploadDocUrl: '',
                 activeTab: 'couse',
                 courseTags: [],
                 fetchParam: getOriginData(),
@@ -296,8 +306,10 @@
                 // 单节课
                 classhour: {
                     showDialog: false,
+                    title: '新增课程',
                     accept: '*.doc,*.docx', // 上传的文件格式
-                    form: clearFormData(),
+                    form: new Lesson(),
+                    paperLesson: null,
                     rules: {
                         name: { required: true, message: '请输入课程名称', trigger: 'change' },
                         material_type: { required: true, message: '请选择课时类型', trigger: 'change' },
@@ -305,13 +317,12 @@
                     }
                 },
                 multi: {
-                    data: [
-                        {
-                            id: -1
-                        }
-                    ],
+                    data: [{id: -1}],
                 },
                 resultData: [],
+                sidebar: null,
+                editLesson: null,
+                editPaper: new Paper(),
             }
         },
         created () {
@@ -322,22 +333,45 @@
                     this.editLessonData = ret.lessons
                     this.fetchParam = ret.course
                     this.fetchParam.company_id = ret.course.company_id
-                    this.courseTags = ret.course.tags.split(',')
+                    this.courseTags = ret.course.tags === '' ? [] : ret.course.tags.split(',')
+
                     if (this.fetchParam.lesson_type === 'single') {
-                        this.classhour.form = ret.lessons[0].lessons[0]
+                        let lesson = new Lesson()
+                        Object.assign(lesson, ret.lessons[0].lessons[0])
+                        this.classhour.form = lesson
+
+                        if (ret.lessons[0].lessons.length > 1) {
+                            let paperLesson = new Lesson()
+                            Object.assign(paperLesson, ret.lessons[0].lessons[1])
+                            this.classhour.paperLesson = paperLesson
+                        }
                     } else if (this.fetchParam.lesson_type === 'multi') {
-                        this.multi.data = ret.lessons[0].lessons
+                        this.multi.data = []
+                        ret.lessons[0].lessons.forEach((item) => {
+                            let lesson = new Lesson()
+                            Object.assign(lesson, item)
+                            this.multi.data.push(lesson)
+                        })
                         this.multi.data.push({id: -1})
                     } else if (this.fetchParam.lesson_type === 'chapter') {
-                        this.resultData = ret.lessons
-                        this.resultData.forEach((pitem) => {
-                            pitem.status = 0
-                            pitem.lessons.push({id: -1})
+                        ret.lessons.forEach((pitem) => {
+                            let chapter = new Chapter()
+                            chapter.id = pitem.id
+                            chapter.name = pitem.name
+
+                            pitem.lessons.forEach((item) => {
+                                let lesson = new Lesson()
+                                Object.assign(lesson, item)
+                                chapter.addLesson(lesson)
+                            })
+
+                            chapter.lessons.push({id: -1})
+
+                            this.resultData.push(chapter)
                         })
                     }
                 })
             }
-            this.uploadDocUrl = courseService.getCourseDocUploadUrl()
             xmview.setContentLoading(false)
         },
         methods: {
@@ -406,7 +440,8 @@
                 }
                 if (this.fetchParam.lesson_type === 'chapter') this.currentData.pindex = pindex
                 this.classhour.showDialog = true
-                this.classhour.form = clearFormData()
+                this.classhour.title = '新增课程'
+                this.classhour.form = new Lesson()
                 this.$nextTick(() => {
                     this.$refs['multiForm'].resetFields()
                 })
@@ -414,14 +449,14 @@
             editClasshour (row, pindex = -1, index = -1) {
                 this.currentData = {data: row, pindex, index}
                 this.classhour.showDialog = true
+                this.classhour.title = '修改课程'
                 this.classhour.form = clone(row)
             },
             delClasshour (row, pindex = -1, index = -1) {
                 if (row.id !== 0) {
-                    if (this.fetchParam.lesson_type === 'multi') {
-                        this.multi.data[pindex].deleted = true
-                    } else if (this.fetchParam.lesson_type === 'chapter') {
-                        this.resultData[pindex].lessons[index].deleted = true
+                    row.deleted = true
+                    if (this.fetchParam.lesson_type === 'single') {
+                        this.classhour.paperLesson = null
                     }
                 } else {
                     if (this.fetchParam.lesson_type === 'multi') {
@@ -462,45 +497,62 @@
                     xmview.showTip('error', '请先删除该章节下面的课时')
                     return
                 }
-                if (pitem.id) this.resultData[pindex].deleted = true
-                else this.resultData.splice(pindex, 1)
+                if (pitem.id) {
+                    pitem.deleted = true
+                } else {
+                    this.resultData.splice(pindex, 1)
+                }
             },
             saveResult () {
-                let result = [
-                    {
-                        id: 0,
-                        name: '',
-                        sort: 0,
-                        deleted: false,
-                        lessons: []
-                    }
-                ]
+                let chapters = []
+
                 if (this.fetchParam.lesson_type === 'single') {
-                    this.classhour.form.name = this.classhour.form.material_name
-                    delete this.classhour.form.material_name
-                    result[0].lessons.push(this.classhour.form)
+                    let chapter = new Chapter()
+
+                    chapter.addLesson(this.classhour.form)
+                    if (this.classhour.paperLesson) {
+                        chapter.addLesson(this.classhour.paperLesson)
+                    }
+
+                    chapters.push(chapter)
                 } else if (this.fetchParam.lesson_type === 'multi') {
-                    this.multi.data.pop()
+                    let chapter = new Chapter()
+
                     this.multi.data.forEach((item) => {
-                        delete item.material_name
+                        if (item.id == -1) {
+                            return
+                        }
+                        let lesson = new Lesson()
                         item.try_enable ? item.try_enable = 1 : item.try_enable = 0
+                        Object.assign(lesson, item)
+
+                        chapter.addLesson(lesson)
                     })
-                    result[0].lessons.push(...this.multi.data)
+
+                    chapters.push(chapter)
                 } else if (this.fetchParam.lesson_type === 'chapter') {
-                    result = []
                     this.resultData.forEach((pitem) => {
-                        delete pitem.status
-                        pitem.lessons.pop()
+                        let chapter = new Chapter()
+                        Object.assign(chapter, pitem)
+                        chapter.lessons = []
                         pitem.lessons.forEach((item) => {
-                            delete item.material_name
+                            if (item.id == -1) {
+                                return
+                            }
+                            let lesson = new Lesson()
                             item.try_enable ? item.try_enable = 1 : item.try_enable = 0
+                            Object.assign(lesson, item)
+
+                            chapter.addLesson(lesson)
                         })
+
+                        chapters.push(chapter)
                     })
-                    result = this.resultData
                 }
+
                 newcourseService.setLessons({
                     course_id: this.fetchParam.id,
-                    jsonstr: JSON.stringify(result)
+                    jsonstr: JSON.stringify(chapters)
                 }).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
@@ -517,12 +569,60 @@
                     this.docurl = `${config.apiHost}/sys/course/doc/${row.material_id}/view`
                     this.docshow = true
                 }
+            },
+            openExamForm (pindex, index, e) {
+                e.stopPropagation()
+                this.currentData.pindex = pindex
+                this.currentData.index = index
+
+                let paper = new Paper()
+                paper.type = 'course_exam'
+
+                let lesson = new Lesson()
+                lesson.material_type = 'exam'
+                lesson.setMaterialPaper(paper)
+
+                this.editLesson = lesson
+                this.editPaper = paper
+
+                this.$refs['paperSidebar'].open()
+            },
+            submitPaper() {
+                this.editPaper.save().then(() => {
+                    let lesson = this.editLesson
+                    lesson.setMaterialPaper(this.editPaper)
+                    if (this.fetchParam.lesson_type == 'single') {
+                        this.classhour.paperLesson = lesson
+                    }
+
+                    if (this.fetchParam.lesson_type === 'multi') {
+                        this.currentData.index !== -1 ? this.multi.data[this.currentData.index] = lesson : this.multi.data.splice(this.multi.data.length - 1, 0, lesson)
+                    }
+
+                    if (this.fetchParam.lesson_type === 'chapter') {
+                        this.currentData.index !== -1 ? this.resultData[this.currentData.pindex].lessons[this.currentData.index] = lesson : this.resultData[this.currentData.pindex].lessons.splice(this.resultData[this.currentData.pindex].lessons.length - 1, 0, lesson)
+                    }
+
+                    this.$refs['paperSidebar'].close()
+                })
+            },
+            openEditExamForm(lesson, pindex, index, e) {
+                e.stopPropagation()
+                this.currentData.pindex = pindex
+                this.currentData.index = index
+
+                let paper = new Paper()
+                paper.findById(lesson.material_id)
+                this.editLesson = lesson
+                this.editPaper = paper
+
+                this.$refs['paperSidebar'].open()
             }
         }
     }
     function getOriginData() {
         return {
-            company_id: '',
+            company_id: void 0,
             company_name: '',
             category_id: '',
             category_name: '',
@@ -530,21 +630,9 @@
             image: '',
             description: '',
             price: '',
-            lesson_type: 'multi',
+            lesson_type: 'single',
             tags: '',
             id: 0
-        }
-    }
-    function clearFormData() {
-        return {
-            id: 0,
-            name: '',
-            material_type: '',
-            material_id: '',
-            material_name: '选择视频',
-            try_enable: 0,
-            sort: 0,
-            deleted: false
         }
     }
 </script>

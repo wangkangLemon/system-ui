@@ -420,9 +420,9 @@ class CourseService {
     }
 
     // ============================================= 文档管理部分 开始 ======================================================
-    getDocList ({ page, page_size, keyword, company_id, file_type, time_start, time_end }) {
+    getDocList({ page, page_size, keyword, company_id, file_type, time_start, time_end, status = -1 }) {
         let url = `${urlPre}/doc/search`
-        return api.get(url, { page, page_size, keyword, company_id, file_type, time_start, time_end }).then((ret) => {
+        return api.get(url, { page, page_size, keyword, company_id, file_type, time_start, time_end, status }).then((ret) => {
             return ret.data
         })
     }

@@ -13273,6 +13273,16 @@
     position: relative;
     padding: 20px 20px 0;
 }
+.el-message-box__headerbtn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+}
 .el-message-box__content {
     padding: 30px 20px;
     color: rgb(72, 87, 106);
@@ -18094,10 +18104,13 @@
 }
 .el-upload-list__item .el-icon-close {
     display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
     cursor: pointer;
     opacity: .75;
-    transform: scale(.7);
     color: rgb(72, 87, 106);
+    transform: scale(.7);
 }
 .el-upload-list__item .el-icon-close:hover {
     opacity: 1;

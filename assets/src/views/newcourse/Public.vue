@@ -42,13 +42,9 @@
     <main id="newcourse-course-public-container">
 
         <section class="manage-container">
-            <el-dropdown trigger="click" @command="handleType">
-                <el-button type="primary"><i class="el-icon-plus" style="margin-right: 5px;"></i>添加课程</el-button>
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="course">单节课程</el-dropdown-item>
-                    <el-dropdown-item command="newcourse">系列课程</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
+            <el-button type="primary" icon="menu" @click="$router.push({name: 'newcourse-course-add'})">
+                <i>添加课程</i>
+            </el-button>
             <el-button type="warning" icon="menu" @click="$router.push({name:'course-manage-course-category-manage'})">
                 <i>管理栏目</i>
             </el-button>
@@ -57,105 +53,104 @@
             </el-button>
         </section>
 
-        <el-tabs v-model="activeTab" @tab-click="handleTab">
-            <el-tab-pane label="单节课程" name="course">
-                <CourseComponent></CourseComponent>
-            </el-tab-pane>
-            <el-tab-pane label="系列课程" name="newcourse">
-                <main class="search">
-                    <section>
-                        <i>课程名称</i>
-                        <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
-                    </section>
+        <main class="search">
+            <section>
+                <i>课程名称</i>
+                <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
+            </section>
 
-                    <section>
-                        <i>状态</i>
-                        <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                            <el-option label="正常" value="0"></el-option>
-                            <el-option label="下线" value="1"></el-option>
-                            <el-option label="视频转码中" value="2"></el-option>
-                        </el-select>
-                    </section>
+            <section>
+                <i>状态</i>
+                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
+                    <el-option label="正常" value="0"></el-option>
+                    <el-option label="下线" value="1"></el-option>
+                    <el-option label="转码中" value="2"></el-option>
+                </el-select>
+            </section>
 
-                    <section>
-                        <i>栏目</i>
-                        <CourseCategorySelect :onchange="fetchData" v-model="fetchParam.category_id"></CourseCategorySelect>
-                    </section>
+            <section>
+                <i>栏目</i>
+                <CourseCategorySelect :onchange="fetchData" v-model="fetchParam.category_id"></CourseCategorySelect>
+            </section>
 
-                    <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end" @changeStart="val=> fetchParam.time_start=val " @changeEnd="val=> fetchParam.time_end=val" :change="fetchData">
-                    </DateRange>
+            <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end" @changeStart="val=> fetchParam.time_start=val " @changeEnd="val=> fetchParam.time_end=val" :change="fetchData">
+            </DateRange>
 
-                </main>
+        </main>
 
-                <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true" @select="selectRow" @select-all="selectRow" border>
-                    <el-table-column type="selection"></el-table-column>
-                    <el-table-column min-width="200" prop="name" label="课程">
-                    </el-table-column>
-                    <el-table-column min-width="200" prop="category_name" label="所属栏目">
-                    </el-table-column>
-                    <el-table-column width="80" label="课时">
-                        <template scope="scope">
-                            {{ scope.row.lesson_count}}课时
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="100" label="状态">
-                        <template scope="scope">
-                            <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
-                            <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
-                            <el-tag v-else>已下线</el-tag>
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="190" prop="create_time_name" label="创建时间">
-                    </el-table-column>
-                    <el-table-column fixed="right" width="207" label="操作">
-                        <template scope="scope">
-                            <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
-                            <el-button @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" type="text" size="small">编辑
-                                <!--a-->
-                            </el-button>
-                            <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
-                                <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
-                            </el-button>
-                            <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
+        <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true" @select="selectRow" @select-all="selectRow" border>
+            <el-table-column type="selection" :selectable="selectable"></el-table-column>
+            <el-table-column min-width="200" prop="name" label="课程">
+            </el-table-column>
+            <el-table-column min-width="200" prop="category_name" label="所属栏目">
+            </el-table-column>
+            <el-table-column width="80" label="课时数">
+                <template scope="scope">
+                    {{ scope.row.lesson_count}}课时
+                </template>
+            </el-table-column>
+            <el-table-column width="190" prop="need_testing" label="是否考试">
+                <template scope="scope">
+                    <el-tag v-if="scope.row.need_testing == 0">否</el-tag>
+                    <el-tag v-if="scope.row.need_testing == 1" type="success">是</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column width="100" label="状态">
+                <template scope="scope">
+                    <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
+                    <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
+                    <el-tag v-else>下线</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column width="190" prop="create_time_name" label="创建时间">
+            </el-table-column>
+            <el-table-column fixed="right" width="207" label="操作">
+                <template scope="scope">
+                    <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
+                    <el-button @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" type="text" size="small" :disabled="scope.row.status == 0">
+                        编辑
+                    </el-button>
+                    <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
+                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
+                    </el-button>
+                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.status == 0">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
 
-                <el-pagination class="pagin"
-                               @size-change="handleSizeChange"
-                               @current-change="handleCurrentChange"
-                               :current-page="fetchParam.page"
-                               :page-size="fetchParam.page_size"
-                               :page-sizes="[15, 30, 60, 100]"
-                               layout="sizes,total, prev, pager, next"
-                               :total="total"></el-pagination>
+        <el-pagination class="pagin"
+                       @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       :current-page="fetchParam.page"
+                       :page-size="fetchParam.page_size"
+                       :page-sizes="[15, 30, 60, 100]"
+                       layout="sizes,total, prev, pager, next"
+                       :total="total"></el-pagination>
 
-                <!--底部的批量删除和移动两个按钮-->
-                <div class="bottom-manage">
-                    <el-button :disabled='selectedIds.length < 1' @click="dialogTree.isShow = true">移动到</el-button>
-                    <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
-                </div>
+        <!--底部的批量删除和移动两个按钮-->
+        <div class="bottom-manage">
+            <el-button :disabled='selectedIds.length < 1' @click="dialogTree.isShow = true">移动到</el-button>
+            <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button>
+        </div>
 
-                <!--移动子栏目的弹出框-->
-                <div class="el-dialog__wrapper" v-show="dialogTree.isShow">
-                    <main class="el-dialog el-dialog--tiny">
-                        <section class="el-dialog__header">
-                            <i>移动课程到</i>
-                        </section>
-                        <section class="el-dialog__body">
-                            <CourseCategoryTree node-key="id" :onNodeClick="(data) => dialogTree.selectedId=data.value"></CourseCategoryTree>
-                        </section>
+        <!--移动子栏目的弹出框-->
+        <div class="el-dialog__wrapper" v-show="dialogTree.isShow">
+            <main class="el-dialog el-dialog--tiny">
+                <section class="el-dialog__header">
+                    <i>移动课程到</i>
+                </section>
+                <section class="el-dialog__body">
+                    <CourseCategoryTree node-key="id" :onNodeClick="(data) => dialogTree.selectedId=data.value"></CourseCategoryTree>
+                </section>
 
-                        <section class="el-dialog__footer">
+                <section class="el-dialog__footer">
                     <span class="dialog-footer">
                         <el-button @click="dialogTree.isShow = false">取 消</el-button>
                         <el-button type="primary" @click="moveToCategory">确 定</el-button>
                     </span>
-                        </section>
-                    </main>
-                </div>
-            </el-tab-pane>
-        </el-tabs>
+                </section>
+            </main>
+        </div>
     </main>
 </template>
 
@@ -174,6 +169,7 @@ function getFetchParam() {
         time_end: void 0,
         page: 1,
         page_size: 15,
+        course_type: 'public'
     }
 }
 export default {
@@ -217,10 +213,15 @@ export default {
         },
         fetchData(val) {
             this.loadingData = true
-            return courseService.search(this.fetchParam).then((ret) => {
+            let data = Object.assign({}, this.fetchParam)
+            if (data.status === '' || data.status === undefined) {
+                data.status = -1
+            }
+            return courseService.search(data).then((ret) => {
                 this.data = ret.data
                 this.total = ret.total
                 this.loadingData = false
+                this.selectedIds = []
                 xmview.setContentLoading(false)
             })
         },
@@ -271,6 +272,7 @@ export default {
                     xmview.showTip('success', '操作成功')
                     this.dialogTree.isShow = false
                     setTimeout(() => {
+                        this.selectedIds = []
                         this.fetchData() // 重新刷新数据
                     }, 300)
                 })
@@ -279,6 +281,9 @@ export default {
         handleTab(val) {
 //            if (val.name == 'course') this.$router.push({name: 'newcourse-course-public', query: {tab: 'course'}})
 //            else this.$router.push({name: 'newcourse-course-public', query: {tab: 'newcourse'}})
+        },
+        selectable (row) {
+            return row.status !== 0
         }
     },
     components: { DateRange, CourseCategorySelect, CourseCategoryTree, CourseComponent }

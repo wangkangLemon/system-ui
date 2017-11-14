@@ -51,6 +51,10 @@
 
 <template>
     <main id="course-manage-doc-container">
+        <section class="manage-container">
+            <el-button type="primary" icon="plus" @click="openAddDialog()"><i>新增文档</i></el-button>
+        </section>
+
         <section class="search">
             <section>
                 <i>文档名称</i>
@@ -157,7 +161,7 @@
         </el-pagination>
 
         <div class="bottom-manage">
-            <el-button :disabled='selectedIds.length < 1' @click="delMulti">批量删除</el-button>
+            <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button>
         </div>
             <!-- 查看  -->
         <el-dialog title="查看" :visible.sync="docshow">
@@ -199,6 +203,15 @@
             </el-form>
         </el-dialog>
 
+        <!-- 新增文档 -->
+        <el-dialog :title="dialogAdd.title" :visible.sync="dialogAdd.isShow" class="doc-update">
+            <el-form label-position="right" label-width="80px" :model="docModel">
+                <el-form-item label="上传文档">
+                    <UploadFile :onSuccess="handleAddUploadDoc" :url="addDocUploadUrl" :accept="accept" ref="uploadFileAdd"></UploadFile>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
     </main>
 </template>
 
@@ -210,6 +223,7 @@
     import config from '../../../utils/config'
     import DocShow from './DocShow'
     import clone from 'clone'
+
     function getFetchParam() {
         return {
             file_type: void 0, // 文档类型
@@ -242,8 +256,14 @@
                     title: '替换文档',
                     open: null,
                 },
+                dialogAdd: {
+                    isShow: false,
+                    title: '新增文档',
+                    open: null,
+                },
                 docModel: {},
                 replaceDocUploadUrl: '',
+                addDocUploadUrl: courseService.getCourseDocUploadUrl(),
                 accept: '.doc,.docx,.ppt,pptx,.pdf',
                 docurl: '' // docurl 阅览
             }
@@ -376,6 +396,16 @@
                 xmview.showTip('success', '操作成功')
                 this.fetchData()
                 this.dialogReplace.isShow = false
+            },
+            openAddDialog() {
+                this.dialogAdd.isShow = true
+            },
+            handleAddUploadDoc (rep) {
+                xmview.showTip('success', '操作成功')
+                setTimeout(() => {
+                    this.fetchData()
+                    this.dialogAdd.isShow = false
+                }, 1000)
             },
             dialogClose () {
                 this.$nextTick(() => {
