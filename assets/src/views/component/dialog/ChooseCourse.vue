@@ -18,7 +18,7 @@
             <section class="search">
                 <section>
                     <i>名称</i>
-                    <el-input @change="getCourse" v-model="search.keyword"></el-input>
+                    <el-input @keyup.enter.native="getCourse" v-model="search.keyword"></el-input>
                 </section>
                 <section>
                     <i>栏目分类</i>
