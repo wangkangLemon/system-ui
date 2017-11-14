@@ -169,6 +169,7 @@ function getFetchParam() {
         time_end: void 0,
         page: 1,
         page_size: 15,
+        course_type: 'public'
     }
 }
 export default {
