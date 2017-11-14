@@ -18,7 +18,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="分数" prop="score">
-                <el-input v-model.number="item.score" :disabled="!item.editable" placeholder="请输入分数">
+                <el-input v-model.number="item.score" :disabled="!item.editable" placeholder="请输入分数" v-number-only>
                 </el-input>
             </el-form-item>
             <el-form-item label="配图" prop="image">
@@ -105,6 +105,7 @@
     import Option from '../../models/option'
     import UploadImg from '../component/upload/UploadImg.vue'
     import config from '../../utils/config'
+    import NumberOnly from '../../directives/numberOnly'
 
     export default {
         props: {
@@ -120,6 +121,7 @@
                 }
             }
         },
+        directives: {NumberOnly},
         data() {
             return {
                 uploadUrl: `${config.apiHost}/exam/subject/excel`,
