@@ -130,7 +130,7 @@
         <NestedDialog :title="editDialog" :visible.sync="dialog.edit">
             <el-form :model="model" label-width="80px" :rules="rules" ref="form">
                 <el-form-item label="试题类型" class="is-required">
-                    <el-radio-group v-model="model.type" @change="onQuestionTypeChange">
+                    <el-radio-group v-model="model.type" @change="onQuestionTypeChange" :disabled="model.id">
                         <el-radio :label=0>判断题</el-radio>
                         <el-radio :label=1>单选题</el-radio>
                         <el-radio :label=2>多选题</el-radio>
