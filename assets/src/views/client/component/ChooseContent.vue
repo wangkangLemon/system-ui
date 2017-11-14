@@ -40,12 +40,12 @@
             <el-table v-show="category == 'course'" v-loading="loading" border :data="data"
                       :highlight-current-row="true">
                 <el-table-column prop="name" label="课程"></el-table-column>
-                <el-table-column prop="company" label="企业" width="200"></el-table-column>
-                <el-table-column prop="material_type" label="类型" width="150">
-                    <template scope="scope">
+                <el-table-column prop="company_name" label="企业" width="200"></el-table-column>
+                <!-- <el-table-column prop="material_type" label="类型" width="150"> -->
+                    <!-- <template scope="scope">
                         {{material_type[scope.row.material_type]}}
 
-                    </template>
+                    </template> -->
                 </el-table-column>
                 <el-table-column
                         prop="operate"
@@ -108,7 +108,7 @@
     </article>
 </template>
 <script>
-    import courseService from '../../../services/courseService'
+    import courseService from '../../../services/newcourse/courseService'
     import speakingService from '../../../services/speaking/contentService'
     import ArticleService from '../../../services/articleService'
     export default {
@@ -166,10 +166,11 @@
             getCourse () {
                 this.loading = true
                 // 获取课程数据
-                return courseService.getPublicCourselist({
+                return courseService.search({
                     keyword: this.search.keyword,
                     page: this.page,
-                    page_size: this.page_size
+                    page_size: this.page_size,
+                    course_type: 'public'
                 }).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total

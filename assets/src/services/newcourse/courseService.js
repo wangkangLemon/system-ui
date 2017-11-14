@@ -4,9 +4,9 @@ const urlPre = config.apiHost + '/newcourse'
 
 class CourseService {
     // 搜索
-    search({ keyword = '', status = -1, category_id = 0, time_start, time_end, page, page_size }) {
+    search({ keyword = '', status = -1, category_id = 0, course_type = '', time_start, time_end, page, page_size }) {
         let url = urlPre + '/search'
-        return api.get(url, { keyword, status, category_id, time_start, time_end, page, page_size }, false).then(ret => {
+        return api.get(url, { keyword, status, category_id, time_start, time_end, page, page_size, course_type }, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
