@@ -101,7 +101,7 @@
                 let currItem = treeUtils.findItem(this.options, val, 'value')
 
                 if (!currItem.children || (currItem.children.length > 0 && currItem.children[0].value)) return
-                courseService.getCategoryTree({type: this.type, companyid: this.companyid, id: val[val.length - 1]})
+                courseService.getCategoryTree({companyid: this.companyid, id: val[val.length - 1]})
                     .then(ret => {
                         // 重新组合数据
                         ret.map((item) => {
