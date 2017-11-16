@@ -66,7 +66,7 @@
                     this.options = this.lastData
                 } else {
                     this.loading = true
-                    courseService.getCategoryTree({companyid: this.companyid, type: this.type})
+                    courseService.getCategoryTree({companyid: this.companyid})
                         .then(ret => {
                             // 不显示未分类那一项
                             if (!this.showNotCat) {
