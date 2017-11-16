@@ -29,11 +29,6 @@
                         label="文档名称">
                 </el-table-column>
                 <el-table-column
-                        min-width="200"
-                        prop="company_name"
-                        label="所属企业">
-                </el-table-column>
-                <el-table-column
                         width="80"
                         prop="file_type"
                         label="类型">
@@ -56,6 +51,12 @@
                         <template v-else>
                             <el-tag type="danger" :title="scope.row.job_message">转码失败</el-tag>
                         </template>
+                    </template>
+                </el-table-column>
+                <el-table-column width="80" label="课程">
+                    <template scope="scope">
+                        <el-tag v-if="scope.row.course_id != 0" type="success">已关联</el-tag>
+                        <el-tag v-else>未关联</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -128,9 +129,9 @@ export default {
             this.fetchParam.companyid = this.companyID
             this.fetchParam.file_type = this.fileType
             this.fetchParam.status = 3
-            return courseService.getDocList(this.fetchParam).then((ret) => {
-                this.data = ret.data
-                this.total = ret.total
+            return courseService.getDoc4Dialog(this.fetchParam).then((ret) => {
+                this.data = ret.data.data
+                this.total = ret.data.total
                 this.loadingData = false
                 xmview.setContentLoading(false)
             })
