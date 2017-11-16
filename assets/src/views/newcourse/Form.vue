@@ -301,7 +301,7 @@
                     category_id: { required: true, type: 'number', message: '请选择课程栏目', trigger: 'change' },
                     image: { required: true, message: '请上传课程封面', trigger: 'change' },
                     lesson_type: { required: true, message: '请选择课程类型', trigger: 'change' },
-                    company_id: { required: true, type: 'number', message: '请选择课程归属', trigger: 'change' },
+                    // company_id: { required: true, type: 'number', message: '请选择课程归属', trigger: 'change' },
                 },
                 // 单节课
                 classhour: {
@@ -332,7 +332,10 @@
                 }).then((ret) => {
                     this.editLessonData = ret.lessons
                     this.fetchParam = ret.course
-                    this.fetchParam.company_id = ret.course.company_id
+                    this.fetchParam.company_id = ret.course.company_id || void 0
+                    if (!this.fetchParam.company_id) {
+                        this.fetchParam.company_name = '请选择'
+                    }
                     this.courseTags = ret.course.tags === '' ? [] : ret.course.tags.split(',')
 
                     if (this.fetchParam.lesson_type === 'single') {

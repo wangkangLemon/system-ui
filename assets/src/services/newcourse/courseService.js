@@ -1,4 +1,5 @@
 import * as api from '../api'
+import authUtils from '../../utils/authUtils'
 import config from '../../utils/config'
 const urlPre = config.apiHost + '/newcourse'
 
@@ -18,6 +19,7 @@ class CourseService {
     // 创建
     create({ category_id, name, image, description, tags, company_id, price, lesson_type }) {
         let url = urlPre + '/'
+        company_id = company_id || authUtils.getUserInfo().company_id
         return api.post(url, { category_id, name, image, description, tags, company_id, price, lesson_type }).then(ret => {
             if (ret.code == 0) {
                 return ret.data
@@ -30,6 +32,7 @@ class CourseService {
     // 更新
     update({ id, category_id, name, image, description, tags, company_id, price, lesson_type }) {
         let url = `${urlPre}/${id}`
+        company_id = company_id || authUtils.getUserInfo().company_id
         return api.put(url, { category_id, name, image, description, tags, company_id, price, lesson_type }).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
