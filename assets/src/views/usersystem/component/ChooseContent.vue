@@ -29,9 +29,13 @@
                 </section>
             </section>
             <el-table v-loading="loading" border :data="data" :highlight-current-row="true">
-                <el-table-column
-                        :prop="category == 'article' || category == 'share_article' || category == 'speaking_pass' ? 'title' : 'name'"
-                        label="名称" min-width="200"></el-table-column>
+                <el-table-column label="名称" min-width="200">
+                    <template scope="scope">
+                        <span v-if="category == 'article' || category == 'share_article' || category == 'speaking_pass'">{{ scope.row.title}}</span>
+                        <span v-else>{{ scope.row.name }}</span>
+                        <el-tag type="success" v-if="scope.row.price">￥{{scope.row.price}}</el-tag>
+                    </template>
+                    </el-table-column>
                 <el-table-column prop="status" label="状态" width="100">
                     <template scope="scope">
                         <el-tag type="success" v-if="!scope.row.status">上线</el-tag>
