@@ -126,7 +126,8 @@
                     keyword: this.search.keyword,
                     status: this.search.status,
                     page: this.page,
-                    page_size: this.page_size
+                    page_size: this.page_size,
+                    course_type: 'public'
                 }).then((ret) => {
                     this.data = ret.data
                     this.total = ret.total
