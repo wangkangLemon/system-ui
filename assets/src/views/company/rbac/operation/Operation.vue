@@ -3,7 +3,7 @@
 @import "../../../../utils/mixins/common";
 @import "../../../../utils/mixins/topSearch";
 
-.rbac-operation-container {
+#company-rbac-operation-container {
     @extend %content-container;
 
     .manage-container {
@@ -21,8 +21,9 @@
     }
 }
 </style>
+
 <template>
-    <main class="rbac-operation-container">
+    <main id="company-rbac-operation-container">
         <article class="manage-container">
             <el-button icon="plus" type="primary" @click="add()">添加</el-button>
         </article>
@@ -122,11 +123,14 @@
         </el-pagination>
     </main>
 </template>
+
 <script>
 import operationService from '../../../../services/companyrbac/operationService'
+
 function clearFn() {
     return {
         id: '',
+        category: '',
         operation_name: '',
         operation_url: '',
         operation_method: '',
@@ -136,6 +140,7 @@ function clearFn() {
 }
 function clearSearch() {
     return {
+        category: '',
         page: 1,
         page_size: 15,
         owner: void '',
@@ -144,9 +149,11 @@ function clearSearch() {
         operation_url: void '',
     }
 }
+
 export default {
     data() {
         return {
+            category: '',
             loading: false,
             updateForm: false,
             search: clearSearch(),
@@ -178,6 +185,7 @@ export default {
         }
     },
     activated() {
+        this.category = this.$route.params.category
         this.getData().then(() => {
             xmview.setContentLoading(false)
         })
@@ -188,6 +196,7 @@ export default {
         },
         getData() {
             this.loading = true
+            this.search.category = this.category
             return operationService.search(this.search).then((ret) => {
                 this.dataList = ret.data
                 this.loading = false
@@ -198,6 +207,7 @@ export default {
         },
         add () {
             this.form = clearFn()
+            this.form.category = this.category
             this.updateForm = true
         },
         edit (row) {
@@ -206,7 +216,7 @@ export default {
         },
         del(index, row) {
             xmview.showDialog(`你确认要删除【<i style="color: red">${row.operation_name}</i>】吗？`, () => {
-                operationService.delete(row.id).then(() => {
+                operationService.delete({category: this.category, id: row.id}).then(() => {
                     this.dataList.splice(index, 1)
                     xmview.showTip('success', '操作成功')
                 })
