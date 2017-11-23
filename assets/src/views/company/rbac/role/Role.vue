@@ -1,26 +1,26 @@
 <!--角色管理-->
 <style lang="scss">
-    @import "../../../../utils/mixins/showDetail";
-    @import "../../../../utils/mixins/common";
+@import "../../../../utils/mixins/showDetail";
+@import "../../../../utils/mixins/common";
 
-    .rbac-role-container {
-        @extend %content-container;
-        .add {
-            @extend %right-top-btnContainer;
-        }
-        .block {
-            margin-top: 10px;
-            text-align: right;
-        }
-        .el-dialog {
-            min-width: 500px;
-        }
-        
+#company-rbac-role-container {
+    @extend %content-container;
+    .add {
+        @extend %right-top-btnContainer;
     }
+    .block {
+        margin-top: 10px;
+        text-align: right;
+    }
+    .el-dialog {
+        min-width: 500px;
+    }
+    
+}
 </style>
+
 <template>
-    <article class="rbac-role-container">
-        
+    <main id="company-rbac-role-container">
         <section class="add">
             <el-button icon="plus" type="primary" @click="add()">添加</el-button>
         </section>
@@ -94,146 +94,157 @@
                 <el-button type="primary" @click="relateSubmit()">保 存</el-button>
             </span>
         </el-dialog>
-    </article>
+    </main>
 </template>
+
 <script>
-    import roleService from '../../../../services/companyrbac/roleService'
-    export default {
-        data () {
-            return {
-                loading: false,
-                updateForm: false,
-                relateForm: false,
-                fromData: [{}],
-                toData: [],
-                search: {
-                    page: 0,
-                    page_size: 15,
-                    disabled: -1,
-                },
-                permissionForm: clearRelateFn(),
-                dataList: [{}],
-                total: 0,
-                form: clearFn(),
-                rules: {
-                    id: [
-                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
-                    ],
-                    disabled: [
-                        {type: 'number', required: true, message: '必填项', trigger: 'change'}
-                    ],
-                    role_name: [
-                        {
-                            required: true,
-                            message: '必填项',
-                            trigger: 'blur'
-                        }
-                    ]
-                }
+import roleService from '../../../../services/companyrbac/roleService'
+export default {
+    data () {
+        return {
+            category: '',
+            loading: false,
+            updateForm: false,
+            relateForm: false,
+            fromData: [{}],
+            toData: [],
+            search: {
+                category: '',
+                page: 0,
+                page_size: 15,
+                disabled: -1,
+            },
+            permissionForm: clearRelateFn(),
+            dataList: [{}],
+            total: 0,
+            form: clearFn(),
+            rules: {
+                id: [
+                    {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                ],
+                disabled: [
+                    {type: 'number', required: true, message: '必填项', trigger: 'change'}
+                ],
+                role_name: [
+                    {
+                        required: true,
+                        message: '必填项',
+                        trigger: 'blur'
+                    }
+                ]
             }
+        }
+    },
+    activated () {
+        this.category = this.$route.params.category
+        this.getData().then(() => {
+            xmview.setContentLoading(false)
+        })
+    },
+    methods: {
+        initFetchParam () {  // 初始化分页
+            this.search.Page = 1
         },
-        activated () {
-            this.getData().then(() => {
-                xmview.setContentLoading(false)
+        getData () {
+            this.loading = true
+            this.search.category = this.category
+            return roleService.search(this.search).then((ret) => {
+                this.dataList = ret.data
+                this.total = ret.total
+                this.loading = false
+            }).catch((ret) => {
+                this.xmviex.showTip('error', ret.message)
             })
         },
-        methods: {
-            initFetchParam () {  // 初始化分页
-                this.search.Page = 1
-            },
-            getData () {
-                this.loading = true
-                return roleService.search(this.search).then((ret) => {
-                    this.dataList = ret.data
-                    this.total = ret.total
-                    this.loading = false
-                }).catch((ret) => {
-                    this.xmviex.showTip('error', ret.message)
+            // 编辑
+        edit (row) {
+            this.form.id = row.id
+            this.form.category = this.category
+            this.form.role_name = row.role_name
+            this.form.disabled = row.disabled
+            this.updateForm = true
+        },
+        add () {
+            this.form = clearFn()
+            this.form.category = this.category
+            this.updateForm = true
+        },
+        del(index, row) {
+            xmview.showDialog(`你确认要删除用户【<i style="color: red">${row.role_name}</i>】的管理权限吗？`, () => {
+                roleService.delete({category: this.category, id: row.id}).then(() => {
+                    this.dataList.splice(index, 1)
+                    xmview.showTip('success', '操作成功')
                 })
-            },
-             // 编辑
-            edit (row) {
+            })
+        },
+        disable(row) {
+            xmview.showDialog(`你将要${row.disabled === 1 ? '启用' : '禁用'}【<i style="color: red">${row.role_name}</i>】确认吗`, () => {
                 this.form.id = row.id
+                this.form.category = this.category
+                this.form.disabled = row.disabled === 1 ? 0 : 1
                 this.form.role_name = row.role_name
-                this.form.disabled = row.disabled
-                this.updateForm = true
-            },
-            add () {
-                this.form = clearFn()
-                this.updateForm = true
-            },
-            del(index, row) {
-                xmview.showDialog(`你确认要删除用户【<i style="color: red">${row.role_name}</i>】的管理权限吗？`, () => {
-                    roleService.delete(row.id).then(() => {
-                        this.dataList.splice(index, 1)
-                        xmview.showTip('success', '操作成功')
-                    })
+                roleService.update(this.form).then(() => {
+                    xmview.showTip('success', '操作成功')
+                    this.getData()
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message || '操作失败')
                 })
-            },
-            disable(row) {
-                xmview.showDialog(`你将要${row.disabled === 1 ? '启用' : '禁用'}【<i style="color: red">${row.role_name}</i>】确认吗`, () => {
-                    this.form.id = row.id
-                    this.form.disabled = row.disabled === 1 ? 0 : 1
-                    this.form.role_name = row.role_name
-                    roleService.update(this.form).then(() => {
-                        xmview.showTip('success', '操作成功')
-                        this.getData()
-                    }).catch((ret) => {
-                        xmview.showTip('error', ret.message || '操作失败')
-                    })
+            })
+        },
+        relate(row) {
+            this.permissionForm = clearRelateFn()
+            this.permissionForm.id = row.id
+            roleService.searchPermission({category: this.category, id: row.id}).then((ret) => {
+                this.fromData = ret.from === null ? [{}] : ret.from
+                this.toData = ret.to === null ? [] : ret.to
+                this.relateForm = true
+            })
+        },
+        submit(form) {
+            this.$refs[form].validate((valid) => {
+                let msg = '添加成功'
+                let reqFn = roleService.add
+                if (this.form.id) {
+                    msg = '修改成功'
+                    reqFn = roleService.update
+                }
+                reqFn(this.form).then(() => {
+                    this.updateForm = false
+                    this.getData()
+                    xmview.showTip('success', msg)
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
                 })
-            },
-            relate(row) {
-                this.permissionForm = clearRelateFn()
-                this.permissionForm.id = row.id
-                roleService.searchPermission(row.id).then((ret) => {
-                    this.fromData = ret.from === null ? [{}] : ret.from
-                    this.toData = ret.to === null ? [] : ret.to
-                    this.relateForm = true
-                })
-            },
-            submit(form) {
-                this.$refs[form].validate((valid) => {
-                    let msg = '添加成功'
-                    let reqFn = roleService.add
-                    if (this.form.id) {
-                        msg = '修改成功'
-                        reqFn = roleService.update
-                    }
-                    reqFn(this.form).then(() => {
-                        this.updateForm = false
-                        this.getData()
-                        xmview.showTip('success', msg)
-                    }).catch((ret) => {
-                        xmview.showTip('error', ret.message)
-                    })
-                })
-            },
-            relateSubmit() {
-                let checkData = this.$refs.tree.getCheckedKeys(false)
-                this.permissionForm.ids = checkData.toString()
-                roleService.permission(this.permissionForm).then((ret) => {
-                    if (ret.code === 0) {
-                        xmview.showTip('success', '操作成功!')
-                        this.relateForm = false
-                    } else if (ret.code === 1) {
-                        xmview.showTip('error', ret.message)
-                    }
-                })
-            }
+            })
+        },
+        relateSubmit() {
+            let checkData = this.$refs.tree.getCheckedKeys(false)
+            this.permissionForm.ids = checkData.toString()
+            this.permissionForm.category = this.category
+            roleService.permission(this.permissionForm).then((ret) => {
+                if (ret.code === 0) {
+                    xmview.showTip('success', '操作成功!')
+                    this.relateForm = false
+                } else if (ret.code === 1) {
+                    xmview.showTip('error', ret.message)
+                }
+            })
         }
     }
-    function clearFn() {
-        return {
-            id: '',
-            role_name: '',
-            disabled: 1,
-        }
+}
+function clearFn() {
+    return {
+        id: '',
+        category: '',
+        role_name: '',
+        disabled: 1,
     }
-    function clearRelateFn() {
-        return {
-            id: '',
-            ids: '',
-        }
+}
+function clearRelateFn() {
+    return {
+        category: '',
+        id: '',
+        ids: '',
     }
+}
 </script>
