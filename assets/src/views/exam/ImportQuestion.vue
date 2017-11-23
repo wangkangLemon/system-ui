@@ -6,6 +6,8 @@
                 <el-button icon="plus" @click='addTesting(0, index)' size="small">判断题</el-button>
                 <el-button icon="plus" @click='addTesting(1, index)' size="small">单选题</el-button>
                 <el-button icon="plus" @click='addTesting(2, index)' size="small">多选题</el-button>
+                <el-button icon="plus" @click="openImportDialog('localImportDialog', index)" size="small">本地导入</el-button>
+                <el-button icon="plus" @click="openImportDialog('libraryImportDialog', index)" size="small">题库导入</el-button>
                 <el-button icon="delete" type="danger" @click='deleteTesting(index, item)' size="small"></el-button>
             </el-form-item>
             <el-form-item :label="'第' + (index+1) + '题'">
@@ -92,8 +94,8 @@
                 <el-button icon="plus" @click='addTesting(0)' size="small">判断题</el-button>
                 <el-button icon="plus" @click='addTesting(1)' size="small">单选题</el-button>
                 <el-button icon="plus" @click='addTesting(2)' size="small">多选题</el-button>
-                <el-button icon="plus" @click="$refs['localImportDialog'].open()" size="small">本地导入</el-button>
-                <el-button icon="plus" @click="$refs['libraryImportDialog'].open()" size="small">题库导入</el-button>
+                <el-button icon="plus" @click="openImportDialog('localImportDialog')" size="small">本地导入</el-button>
+                <el-button icon="plus" @click="openImportDialog('libraryImportDialog')" size="small">题库导入</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -136,13 +138,17 @@
 //                    explain: [
 //                        { required: true, message: '请输入答案详解', trigger: 'blur' },
 //                    ],
-                }
+                },
+                index: undefined
             }
         },
         components: {LibraryImportDialog, LocalImportDialog, UploadImg},
         methods: {
             importQuestion(questions) {
-                this.questions.push(...questions)
+                if (this.index === undefined) {
+                    this.index = this.questions.length
+                }
+                this.questions.splice(this.index, 0, ...questions)
             },
             // 添加多选 单选的选项
             addMoreTestingOption(question) {
@@ -153,10 +159,6 @@
                 this.questions.splice(index, 1)
             },
             addTesting(type, index) {
-                if (index == undefined) {
-                    index = this.questions.length
-                }
-
                 let question = new Question()
                 question.type = type
                 question.setDefaultOption(type)
@@ -169,7 +171,9 @@
                 if (type === 2) {
                     question.score = this.scores.multi_score
                 }
-                this.questions.splice(index, 1, question)
+
+                this.index = index
+                this.importQuestion([question])
             },
             localImportQuestion(response) {
                 return new Promise((resolve, reject) => {
@@ -217,6 +221,10 @@
                 }
 
                 return flag
+            },
+            openImportDialog(ref, index) {
+                this.index = index
+                this.$refs[ref].open()
             }
         }
     }
