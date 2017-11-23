@@ -231,15 +231,14 @@ export default{
         submitForm () {
             this.$refs.form.validate((ret) => {
                 if (!ret) return
-
                 let p
+                this.fetchParam.category = this.category
                 if (this.activeTab === 'add') {
                     if (this.fetchParam.id === 0 || typeof(this.fetchParam.id) == 'undefined') {
                         xmview.showTip('warning', '请先选中一个分类')
                         return
                     }
                     this.fetchParam.parent_id = this.fetchParam.id
-                    this.fetchParam.category = this.category
                     p = menuService.add(this.fetchParam)
                 } else if (this.activeTab === 'edit') {
                     p = menuService.update(this.fetchParam)

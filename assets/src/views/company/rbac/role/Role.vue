@@ -208,6 +208,7 @@ export default {
                     msg = '修改成功'
                     reqFn = roleService.update
                 }
+                this.form.category = this.category
                 reqFn(this.form).then(() => {
                     this.updateForm = false
                     this.getData()

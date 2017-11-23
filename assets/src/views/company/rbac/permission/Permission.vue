@@ -304,13 +304,13 @@ export default {
         submitForm() {
             this.$refs.form.validate((valid) => {
                 let p
+                this.form.category = this.category
                 if (this.activeTab === 'add') {
                     if (this.form.id === 0 || typeof (this.form.id) == 'undefined') {
                         xmview.showTip('warning', '请先选中一个分类')
                         return
                     }
                     this.form.parent_id = this.form.id
-                    this.form.category = this.category
                     p = permissionService.add(this.form)
                 } else if (this.activeTab === 'edit') {
                     p = permissionService.update(this.form)
