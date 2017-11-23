@@ -33,6 +33,10 @@ class TaskService {
         let url = `${urlPre}/${id}/disable`
         return api.put(url, {id, status})
     }
+    timingOnline({id, start_time = ''}) {
+        let url = `${urlPre}/${id}/disable`
+        return api.put(url, {id, status: 2, start_time})
+    }
     // 删除任务
     del({task_id}) {
         let url = `${urlPre}/${task_id}`

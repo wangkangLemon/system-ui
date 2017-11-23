@@ -34,6 +34,21 @@
                       }
                  }
     }
+    .timing-dialog {
+        .el-dialog {
+            width: 300px;
+        }
+        .el-dialog__header {
+            padding: 10px 10px;
+            border-bottom: 1px solid #EDF2FC;
+        }
+        .el-dialog__body{
+            text-align: center;
+            padding: 10px 20px;
+            height: 60px;
+            line-height: 60px;
+        }
+    }
 </style>
 <template>
     <article class="task-daily-container">
@@ -56,6 +71,7 @@
                 <el-select :clearable="true" @change="getData" v-model="search.status" placeholder="全部">
                     <el-option  label="上线" value="0" ></el-option>
                     <el-option  label="下线" value="1" ></el-option>
+                    <el-option v-if="search.category == 'play'"  label="待上线" value="2"></el-option>
                 </el-select>
             </section>
         </section>
@@ -104,6 +120,18 @@
                     </template>
             </el-table-column>
             <el-table-column
+                    align="center"
+                    width="100"
+                    label="当前状态">
+                <template scope="scope">
+                    <el-tag v-if="scope.row.status == 0" type="success">上线</el-tag>
+                    <el-tag v-else-if="scope.row.status == 1" type="danger">下线</el-tag>
+                    <el-tooltip v-else-if="scope.row.status == 2" :content="scope.row.start_time" placement="top" effect="light">
+                        <el-tag type="warning">待上线</el-tag>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="update_time_name"
                     label="上次设置时间"
                     width="180">
@@ -111,11 +139,11 @@
             <el-table-column
                     prop="operate"
                     label="操作"
-                    width="180">
+                    width="200">
                 <template scope="scope">
-                     <el-button type="text" size="small" @click="disable(scope.row)">
-                            {{scope.row.status === 0 ? '下线' : '上线'}}
-                    </el-button>
+                    <el-button v-if="scope.row.status != 1" type="text" size="small" @click="disable(scope.row)">下线</el-button>
+                    <el-button v-if="scope.row.status == 1" type="text" size="small" @click="disable(scope.row)">上线</el-button>
+                    <el-button v-if="scope.row.status == 1" type="text" size="small" @click="timingDialogFn(scope.row)">定时</el-button>
                     <el-button type="text" size="small" @click="editFn(scope.row)">修改</el-button>
                     <el-button v-if="$route.name != 'daily' && $route.name != 'newbie'" size="small" type="text" @click="delFn(scope.row)">删除</el-button>
                     <el-button size="small" v-if="scope.row.user_action_name == 'upload_image'" type="text" @click="$router.push({name: 'play-audit', query:{id:scope.row.id} })">审核</el-button> 
@@ -208,6 +236,18 @@
                            :isRound="true"></ImagEcropperInput>
         <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgupload" :confirmFn="imguploadFn" 
                            ></ImagEcropperInput>
+        <el-dialog class="timing-dialog" :visible.sync="timingDialog" size="tiny" title="选择时间">
+            <el-form :model="form" ref="form" :inline="true" label-width="100px">
+                <el-form-item >
+                    <el-date-picker v-model="form.start_time" type="datetime" placeholder="请选择时间" :picker-options="pickerOptions0"></el-date-picker>
+                </el-form-item>
+            </el-form>
+            <span slot="footer">
+                <el-button @click="timingDialog = false" size="small">取 消</el-button>
+                <el-button type="primary" size="small" @click="timingOnline('form')">确 定</el-button>
+            </span>
+        </el-dialog>
+
     </article>
 </template>
 <script>
@@ -233,7 +273,7 @@
                 search: {
                     category: this.$route.name, // 任务类型
                     title: '',
-                    status: void 0,
+                    status: void -1,
                     user_action_name: '',
                     user_action_icon: '',
                     page: 1,
@@ -249,6 +289,12 @@
                     count: {type: 'number', required: true, message: '必填', trigger: 'blur'},
                     user_action_object_id: {type: 'number', required: true, message: '必填', trigger: 'blur'},
                     reward: {type: 'number', required: true, message: '必填', trigger: 'blur'}
+                },
+                timingDialog: false,
+                pickerOptions0: {
+                    disabledDate (time) {
+                        return time.getTime() < Date.now() - 8.64e7
+                    }
                 }
             }
         },
@@ -350,6 +396,23 @@
                     })
                 })
             },
+            timingDialogFn (row) {
+                this.timingDialog = true
+                this.form = row
+            },
+            timingOnline (form) {
+                if (this.form.start_time) {
+                    this.form.start_time = time2String(new Date(this.form.start_time), false, false)
+                } else {
+                    xmview.showTip('error', '未选择时间')
+                    return
+                }
+                return TaskService.timingOnline({id: this.form.id, start_time: this.form.start_time}).then(() => {
+                    this.timingDialog = false
+                    this.form.status = 2
+                    xmview.showTip('success', '操作成功')
+                })
+            },
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
@@ -395,7 +458,8 @@
             end_time: '', // 有效时间
             app_version: '',  // 客户端版本号
             platform: '', // 发布平台
-            sample_image: ''
+            sample_image: '',
+            start_time: ''
         }
     }
 </script>
