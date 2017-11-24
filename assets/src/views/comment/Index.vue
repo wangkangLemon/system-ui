@@ -11,16 +11,6 @@
                 color: #fff;
                 border-radius: 5px;
             }
-
-            // 添加课程
-            .add {
-                background: rgb(0, 204, 255);
-            }
-
-            // 管理栏目
-            .catmange {
-                background: rgb(153, 102, 204);
-            }
         }
     }
 </style>
@@ -264,7 +254,6 @@
             // 用户信息
             showUserInfo (id) {
                 this.showDetail = true
-                debugger
                 companyUserService.userDetail(id).then((ret) => {
                     this.details = ret.data
                 })
