@@ -34,21 +34,6 @@
                       }
                  }
     }
-    .timing-dialog {
-        .el-dialog {
-            width: 300px;
-        }
-        .el-dialog__header {
-            padding: 10px 10px;
-            border-bottom: 1px solid #EDF2FC;
-        }
-        .el-dialog__body{
-            text-align: center;
-            padding: 10px 20px;
-            height: 60px;
-            line-height: 60px;
-        }
-    }
 </style>
 <template>
     <article class="task-daily-container">
@@ -236,22 +221,13 @@
                            :isRound="true"></ImagEcropperInput>
         <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgupload" :confirmFn="imguploadFn" 
                            ></ImagEcropperInput>
-        <el-dialog class="timing-dialog" :visible.sync="timingDialog" size="tiny" title="选择时间">
-            <el-form :model="form" ref="form" :inline="true" label-width="100px">
-                <el-form-item >
-                    <el-date-picker v-model="form.start_time" type="datetime" placeholder="请选择时间" :picker-options="pickerOptions0"></el-date-picker>
-                </el-form-item>
-            </el-form>
-            <span slot="footer">
-                <el-button @click="timingDialog = false" size="small">取 消</el-button>
-                <el-button type="primary" size="small" @click="timingOnline('form')">确 定</el-button>
-            </span>
-        </el-dialog>
 
+        <TimingDialog v-model="timingDialog" :submit="timingDialogSubmit"></TimingDialog>
     </article>
 </template>
 <script>
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
+    import TimingDialog from '../../component/dialog/Timing.vue'
     import ChooseContent from '../component/ChooseContent.vue'
     import TaskService from '../../../services/usersystem/taskService'
     import clone from 'clone'
@@ -259,7 +235,8 @@
     export default {
         components: {
             ChooseContent,
-            ImagEcropperInput
+            ImagEcropperInput,
+            TimingDialog,
         },
         data () {
             return {
@@ -291,11 +268,7 @@
                     reward: {type: 'number', required: true, message: '必填', trigger: 'blur'}
                 },
                 timingDialog: false,
-                pickerOptions0: {
-                    disabledDate (time) {
-                        return time.getTime() < Date.now() - 8.64e7
-                    }
-                }
+                timingDialogSubmit: void 0
             }
         },
         watch: {
@@ -398,20 +371,13 @@
             },
             timingDialogFn (row) {
                 this.timingDialog = true
-                this.form = row
-            },
-            timingOnline (form) {
-                if (this.form.start_time) {
-                    this.form.start_time = time2String(new Date(this.form.start_time), false, false)
-                } else {
-                    xmview.showTip('error', '未选择时间')
-                    return
+                this.timingDialogSubmit = (start_time) => {
+                    return TaskService.timingOnline({id: row.id, start_time: start_time}).then(() => {
+                        row.status = 2
+                        row.start_time = start_time
+                        xmview.showTip('success', '操作成功')
+                    })
                 }
-                return TaskService.timingOnline({id: this.form.id, start_time: this.form.start_time}).then(() => {
-                    this.timingDialog = false
-                    this.form.status = 2
-                    xmview.showTip('success', '操作成功')
-                })
             },
             submit (form) {
                 this.$refs[form].validate((valid) => {
