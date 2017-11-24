@@ -56,6 +56,7 @@
                 <el-select :clearable="true" @change="getData" v-model="search.status" placeholder="全部">
                     <el-option  label="上线" value="0" ></el-option>
                     <el-option  label="下线" value="1" ></el-option>
+                    <el-option v-if="search.category == 'play'"  label="待上线" value="2"></el-option>
                 </el-select>
             </section>
         </section>
@@ -104,6 +105,18 @@
                     </template>
             </el-table-column>
             <el-table-column
+                    align="center"
+                    width="100"
+                    label="当前状态">
+                <template scope="scope">
+                    <el-tag v-if="scope.row.status == 0" type="success">上线</el-tag>
+                    <el-tag v-else-if="scope.row.status == 1" type="danger">下线</el-tag>
+                    <el-tooltip v-else-if="scope.row.status == 2" :content="scope.row.start_time" placement="top" effect="light">
+                        <el-tag type="warning">待上线</el-tag>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="update_time_name"
                     label="上次设置时间"
                     width="180">
@@ -111,11 +124,11 @@
             <el-table-column
                     prop="operate"
                     label="操作"
-                    width="180">
+                    width="200">
                 <template scope="scope">
-                     <el-button type="text" size="small" @click="disable(scope.row)">
-                            {{scope.row.status === 0 ? '下线' : '上线'}}
-                    </el-button>
+                    <el-button v-if="scope.row.status != 1" type="text" size="small" @click="disable(scope.row)">下线</el-button>
+                    <el-button v-if="scope.row.status == 1" type="text" size="small" @click="disable(scope.row)">上线</el-button>
+                    <el-button v-if="scope.row.status == 1" type="text" size="small" @click="timingDialogFn(scope.row)">定时</el-button>
                     <el-button type="text" size="small" @click="editFn(scope.row)">修改</el-button>
                     <el-button v-if="$route.name != 'daily' && $route.name != 'newbie'" size="small" type="text" @click="delFn(scope.row)">删除</el-button>
                     <el-button size="small" v-if="scope.row.user_action_name == 'upload_image'" type="text" @click="$router.push({name: 'play-audit', query:{id:scope.row.id} })">审核</el-button> 
@@ -208,10 +221,13 @@
                            :isRound="true"></ImagEcropperInput>
         <ImagEcropperInput :compress="1" :isShowBtn="false" ref="imgupload" :confirmFn="imguploadFn" 
                            ></ImagEcropperInput>
+
+        <TimingDialog v-model="timingDialog" :submit="timingDialogSubmit"></TimingDialog>
     </article>
 </template>
 <script>
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
+    import TimingDialog from '../../component/dialog/Timing.vue'
     import ChooseContent from '../component/ChooseContent.vue'
     import TaskService from '../../../services/usersystem/taskService'
     import clone from 'clone'
@@ -219,7 +235,8 @@
     export default {
         components: {
             ChooseContent,
-            ImagEcropperInput
+            ImagEcropperInput,
+            TimingDialog,
         },
         data () {
             return {
@@ -233,7 +250,7 @@
                 search: {
                     category: this.$route.name, // 任务类型
                     title: '',
-                    status: void 0,
+                    status: void -1,
                     user_action_name: '',
                     user_action_icon: '',
                     page: 1,
@@ -249,7 +266,9 @@
                     count: {type: 'number', required: true, message: '必填', trigger: 'blur'},
                     user_action_object_id: {type: 'number', required: true, message: '必填', trigger: 'blur'},
                     reward: {type: 'number', required: true, message: '必填', trigger: 'blur'}
-                }
+                },
+                timingDialog: false,
+                timingDialogSubmit: void 0
             }
         },
         watch: {
@@ -350,6 +369,16 @@
                     })
                 })
             },
+            timingDialogFn (row) {
+                this.timingDialog = true
+                this.timingDialogSubmit = (start_time) => {
+                    return TaskService.timingOnline({id: row.id, start_time: start_time}).then(() => {
+                        row.status = 2
+                        row.start_time = start_time
+                        xmview.showTip('success', '操作成功')
+                    })
+                }
+            },
             submit (form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
@@ -395,7 +424,8 @@
             end_time: '', // 有效时间
             app_version: '',  // 客户端版本号
             platform: '', // 发布平台
-            sample_image: ''
+            sample_image: '',
+            start_time: ''
         }
     }
 </script>
