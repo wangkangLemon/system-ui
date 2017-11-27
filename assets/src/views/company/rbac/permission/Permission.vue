@@ -72,9 +72,10 @@
                 <el-button type="primary" @click="apiSubmit()">保 存</el-button>
             </span>
         </el-dialog>
-        <!-- 分配权限权限 弹窗-->
+        <!-- 分配权限菜单 弹窗-->
         <el-dialog :visible.sync="menuForm" size="tiny" title="权限分配">
-            <el-tree :data="fromData" node-key="id" show-checkbox   :default-checked-keys="toData" ref="tree" :check-strictly="true"></el-tree>            <span slot="footer" class="dialog-footer">
+            <el-tree :data="fromData" node-key="id" show-checkbox :default-checked-keys="toData" ref="tree" :check-strictly="true"></el-tree>            
+            <span slot="footer" class="dialog-footer">
                 <el-button @click="menuForm = false">取 消</el-button>
                 <el-button type="primary" @click="menuSubmit()">保 存</el-button>
             </span>
@@ -342,6 +343,7 @@ export default {
         apiSubmit() {
             this.permissionForm.ids = this.toData.toString()
             let reqFn = permissionService.operation
+            this.permissionForm.category = this.category
             reqFn(this.permissionForm).then((ret) => {
                 if (ret.code === 0) {
                     xmview.showTip('success', '操作成功!')
@@ -355,6 +357,7 @@ export default {
             let checkData = this.$refs.tree.getCheckedKeys()
             this.permissionForm.ids = checkData.toString()
             let reqFn = permissionService.menu
+            this.permissionForm.category = this.category
             reqFn(this.permissionForm).then((ret) => {
                 if (ret.code === 0) {
                     xmview.showTip('success', '操作成功!')
