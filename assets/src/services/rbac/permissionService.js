@@ -29,9 +29,9 @@ class PermissionService {
         return api.post(url, {parent_id, permission_name, disabled})
     }
     // 修改
-    update({id, permission_name = '', disabled}) {
+    update({id, parent_id, permission_name = '', disabled}) {
         let url = `${urlPre}/${id}/`
-        return api.put(url, {permission_name, disabled})
+        return api.put(url, {parent_id, permission_name, disabled})
     }
     // 获取 单个权限信息
     getInfo(id) {

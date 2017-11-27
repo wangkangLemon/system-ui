@@ -19,9 +19,9 @@ class PermissionService {
         return api.post(url, { parent_id, permission_name, disabled })
     }
     // 修改
-    update ({ category, id, permission_name = '', disabled }) {
+    update ({ category, id, parent_id, permission_name = '', disabled }) {
         let url = `${urlPre}/${category}/permission/${id}/`
-        return api.put(url, { permission_name, disabled })
+        return api.put(url, { parent_id, permission_name, disabled })
     }
     // 禁用
     disable ({ category, id, disabled }) {
