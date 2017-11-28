@@ -31,7 +31,8 @@
             </el-table-column>
             <el-table-column
                     prop="disabled"
-                    label="状态">
+                    label="状态"
+                    width="100">
                     <template scope="scope">
                         <el-tag type="success" v-if="!scope.row.disabled">启用</el-tag>
                         <el-tag type="gray" v-if="scope.row.disabled">禁用</el-tag>
@@ -39,15 +40,20 @@
             </el-table-column>
             <el-table-column
                     prop="create_time_name"
-                    label="创建时间">
+                    label="创建时间"
+                    width="170">
             </el-table-column>
             <el-table-column
                     prop="update_time_name"
-                    label="最后编辑时间">
+                    label="最后编辑时间"
+                    width="170">
             </el-table-column>
             <el-table-column
                     prop="operate"
-                    label="操作">
+                    label="操作"
+                    width="200"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                     <el-button type="text" size="small" @click="disable(scope.row)">

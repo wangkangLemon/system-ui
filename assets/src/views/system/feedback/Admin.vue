@@ -43,7 +43,6 @@
             <el-table-column width="120" prop="category_name" label="问题分类"></el-table-column>
             <el-table-column width="120" prop="user_name" label="提交人"></el-table-column>
             <el-table-column min-width="200" prop="content" label="问题描述"></el-table-column>
-            <el-table-column width="180" prop="create_time_name" label="提交时间"></el-table-column>
             <el-table-column width="100" prop="status_name" label="状态">
                 <template scope="scope">
                     <el-tag type="warning" v-if="scope.row.status == 2 || scope.row.status == 4">
@@ -52,7 +51,8 @@
                     <el-tag type="gray" v-else>{{ scope.row.status_name }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column width="100" prop="operate" label="操作">
+            <el-table-column width="170" prop="create_time_name" label="提交时间"></el-table-column>
+            <el-table-column width="100" prop="operate" label="操作" fixed="right" align="center">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="viewFn(scope.row.id)">查看</el-button>
                     <el-button type="text" size="small" @click="deleteFn(scope, scope.row.id)"

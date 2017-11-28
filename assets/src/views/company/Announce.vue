@@ -87,22 +87,24 @@
                         label="标题">
                 </el-table-column>
                 <el-table-column
-                        prop="create_time_name"
-                        width="180"
-                        label="创建时间">
-                </el-table-column>
-                <el-table-column
                         prop="status"
-                        width="100"
+                        width="90"
                         label="状态">
                     <template scope="scope">
                         <el-tag type="gray">{{statusArr[scope.row.status]}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
+                        prop="create_time_name"
+                        width="170"
+                        label="创建时间">
+                </el-table-column>
+                <el-table-column
                         prop="operate"
                         width="100"
-                        label="操作">
+                        label="操作"
+                        fixed="right"
+                        align="center">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看公告

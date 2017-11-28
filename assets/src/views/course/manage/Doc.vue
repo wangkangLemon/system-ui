@@ -133,7 +133,9 @@
             </el-table-column>
             <el-table-column
                     width="180"
-                    label="操作">
+                    label="操作"
+                    fixed="right"
+                    header-align="center">
                 <template scope="scope">
                     <template v-if="scope.row.status != 1 && scope.row.status != 2">
                         <el-button @click="show(scope.$index, scope.row)" type="text" size="small">查看</el-button>

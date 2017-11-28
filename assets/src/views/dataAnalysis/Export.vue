@@ -98,9 +98,9 @@
                 <el-table-column
                         prop="create_time_name"
                         label="创建时间"
-                        width="180">
+                        width="170">
                 </el-table-column>
-                <el-table-column prop="operate" label="操作" width="180">
+                <el-table-column prop="operate" label="操作" width="100" fixed="right" align="center">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="downLoad(scope.row)">
                             下载

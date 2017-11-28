@@ -46,8 +46,7 @@
                 :data="listData">
             <el-table-column
                     prop="company"
-                    label="企业"
-                    width="180">
+                    label="企业">
             </el-table-column>
             <el-table-column
                     prop="user_name"
@@ -64,11 +63,13 @@
             </el-table-column>
             <el-table-column
                     prop="login_ip_name"
-                    label="登录IP">
+                    label="登录IP"
+                    width="170">
             </el-table-column>
             <el-table-column
                     prop="login_time_name"
-                    label="登录时间">
+                    label="登录时间"
+                    width="170">
             </el-table-column>
         </el-table>
         <div class="block">

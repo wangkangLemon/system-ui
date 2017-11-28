@@ -51,12 +51,14 @@
             </el-table-column>
             <el-table-column
                     prop="create_time_name"
-                    label="创建时间">
+                    label="创建时间"
+                    width="170">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    width="207"
-                    label="操作">
+                    width="140"
+                    label="操作"
+                    align="center">
                 <template scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">详情</el-button>
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>

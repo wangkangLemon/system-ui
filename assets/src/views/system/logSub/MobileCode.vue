@@ -66,16 +66,6 @@
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="send_ip_name"
-                    width="120"
-                    label="发送IP">
-            </el-table-column>
-            <el-table-column
-                    prop="send_time_name"
-                    label="发送时间"
-                    width="180">
-            </el-table-column>
-            <el-table-column
                     prop="success"
                     label="状态"
                     width="100">
@@ -83,6 +73,16 @@
                     <el-tag type="success" v-if="scope.row.success == 1">成功</el-tag>
                     <el-tag type="danger" v-if="!scope.row.success">失败</el-tag>
                 </template>
+            </el-table-column>
+            <el-table-column
+                    prop="send_ip_name"
+                    width="170"
+                    label="发送IP">
+            </el-table-column>
+            <el-table-column
+                    prop="send_time_name"
+                    label="发送时间"
+                    width="170">
             </el-table-column>
         </el-table>
         <div class="block">

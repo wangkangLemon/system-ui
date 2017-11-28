@@ -30,12 +30,12 @@
                 </el-table-column>
                 <el-table-column
                         prop="company"
-                        min-width="180"
+                        width="170"
                         label="第一次使用时间">
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
-                        min-width="180"
+                        width="170"
                         label="最后使用时间">
                 </el-table-column>
             </el-table>

@@ -106,8 +106,9 @@
                 </el-table-column>
                 <el-table-column
                     fixed="right"
-                    width="150"
-                    label="操作">
+                    width="80"
+                    label="操作"
+                    align="center">
                     <template scope="scope">
                         <el-button @click="del(scope.$index, scope.row)" type="text" size="small"
                             v-if="scope.row.can_edit == 1 && scope.row.status == 0">删除</el-button>

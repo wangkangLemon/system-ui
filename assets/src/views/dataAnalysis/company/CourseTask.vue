@@ -202,7 +202,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="create_time_name"
-                        min-width="180"
+                        width="170"
                         label="创建时间">
                 </el-table-column>
             </el-table>

@@ -57,15 +57,17 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="190"
+                    width="170"
                     label="创建时间">
                 <template scope="scope">
                     <i>{{scope.row.update_time}}</i>
                 </template>
             </el-table-column>
             <el-table-column
-                    width="200"
-                    label="操作">
+                    width="100"
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button @click="editImg(scope.$index, scope.row)" type="text" size="small" v-if="type == 0">
                         <i>编辑</i>

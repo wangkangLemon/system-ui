@@ -96,24 +96,24 @@
         <el-table border :data="coursetasktemplateData" v-loading="loading">
             <el-table-column
                     prop="title"
-                    label="课程任务">
-            </el-table-column>
-            <el-table-column
-                    prop="create_time_name"
-                    label="创建时间"
-                    width="200">
+                    label="任务名称">
             </el-table-column>
             <el-table-column
                     prop="status_name"
                     label="状态"
-                    width="100">
+                    width="90">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.status == 0">正常</el-tag>
                     <el-tag type="gray" v-if="scope.row.status == 1">草稿</el-tag>
                     <el-tag type="gray" v-if="scope.row.status == 2">下线</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="operate" label="操作" width="160">
+            <el-table-column
+                    prop="create_time_name"
+                    label="创建时间"
+                    width="170">
+            </el-table-column>
+            <el-table-column prop="operate" label="操作" width="140" fixed="right" align="center">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="editItm(scope.row)">
                         修改

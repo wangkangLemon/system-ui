@@ -130,11 +130,6 @@
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="create_time_name"
-                        label="时间"
-                        width="180">
-                </el-table-column>
-                <el-table-column
                         prop="status"
                         label="状态" width="100">
                     <template scope="scope">
@@ -144,8 +139,13 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                        prop="create_time_name"
+                        label="时间"
+                        width="170">
+                </el-table-column>
+                <el-table-column
                         prop="operate"
-                        label="操作" width="100">
+                        label="操作" width="100" fixed="right" align="center">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看

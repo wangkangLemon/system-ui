@@ -64,7 +64,7 @@
                 :data="historyData"
                 stripe>
             <el-table-column
-                    min-width="200"
+                    min-width="300"
                     prop="trade_no"
                     label="流水号">
             </el-table-column>
@@ -110,7 +110,7 @@
             </el-table-column>
              <el-table-column
                     prop="create_time_name"
-                    min-width="100"
+                    min-width="170"
                     label="添加时间">
             </el-table-column>
         </el-table>

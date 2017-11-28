@@ -109,13 +109,13 @@
             </el-table-column>
             <el-table-column prop="role_name" label="角色" width="150">
             </el-table-column>
-            <el-table-column prop="mobile" label="手机" width="180">
+            <el-table-column prop="mobile" label="手机" width="130">
             </el-table-column>
-            <el-table-column prop="email" label="邮箱" width="180">
+            <el-table-column prop="email" label="邮箱" width="150">
             </el-table-column>
-            <el-table-column prop="last_login_time_name" label="上次登录时间" width="180">
+            <el-table-column prop="last_login_time_name" label="上次登录时间" width="170">
             </el-table-column>
-            <el-table-column prop="last_login_ip" label="上次登录IP" width="180">
+            <el-table-column prop="last_login_ip" label="上次登录IP" width="120">
             </el-table-column>
             <el-table-column prop="disabled" label="状态" width="80">
                 <template scope="scope">
@@ -123,7 +123,7 @@
                     <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="operate" label="操作" min-width="200">
+            <el-table-column prop="operate" label="操作" min-width="180" fixed="right" align="center">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
                         详情

@@ -325,7 +325,7 @@
                             {{scope.row.create_time_name && scope.row.create_time_name.slice(0, 10)}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="operate" label="操作" width="100">
+                    <el-table-column prop="operate" label="操作" width="100" fixed="right" align="center">
                         <template scope="scope">
                             <el-button type="text" size="small" @click="updateCourse(scope.$index, scope.row)">
                                 编辑

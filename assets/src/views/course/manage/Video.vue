@@ -107,13 +107,15 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="190"
+                    width="170"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
             <el-table-column
                     width="150"
-                    label="操作">
+                    label="操作"
+                    fixed="right"
+                    header-align="center">
                 <template scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
                                v-if="scope.row.status != 1 && scope.row.status != 2">查看

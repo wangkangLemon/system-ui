@@ -51,13 +51,13 @@
         <el-table class="data-table" v-loading="loadingData" :data="data" border>
             <el-table-column prop="title" label="标题"></el-table-column>
             <el-table-column prop="content" label="内容"></el-table-column>
-            <el-table-column width="100" prop="price_enabled" label="有无红包">
+            <el-table-column width="100" prop="price_enabled" label="有无红包" align="center">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.price_enabled">有</el-tag>
                     <el-tag type="gray" v-else>无</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column width="100" label="状态">
+            <el-table-column width="80" label="状态">
                 <template scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">上线</el-tag>
                     <el-tag v-else-if="scope.row.status == 1" type="primary">草稿</el-tag>
@@ -65,10 +65,12 @@
                 </template>
             </el-table-column>
             <!--<el-table-column width="100" prop="limit" label="练习次数"></el-table-column>-->
-            <el-table-column prop="end_time" label="有效日期"></el-table-column>
+            <el-table-column prop="end_time" label="有效日期" width="170"></el-table-column>
             <el-table-column
-                    width="207"
-                    label="操作">
+                    width="140"
+                    label="操作"
+                    align="center"
+                    fixed="right">
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>

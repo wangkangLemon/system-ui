@@ -54,14 +54,14 @@
                     min-width="200">
             </el-table-column>
             <el-table-column
-                    width="100"
+                    width="170"
                     prop="send_ip_name"
                     label="发送IP">
             </el-table-column>
             <el-table-column
                     prop="send_time_name"
                     label="发送时间"
-                    width="180">
+                    width="170">
             </el-table-column>
         </el-table>
         <div class="block">

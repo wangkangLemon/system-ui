@@ -101,8 +101,10 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="180"
-                    label="操作">
+                    width="170"
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <div class="tab-oepratebtns">
                         <el-button type="text" size="small"

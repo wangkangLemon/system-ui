@@ -52,15 +52,17 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="190"
+                    width="170"
                     label="创建时间">
                 <template scope="scope">
                     <i>{{scope.row.update_time | tamp2Str}}</i>
                 </template>
             </el-table-column>
             <el-table-column
-                    width="200"
-                    label="操作">
+                    width="100"
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button v-if="type == 0"
                                @click="$router.push({name:'im-ystAssistant-material', query:{id:scope.row.id}, params:{ articles:scope.row.articles }})"

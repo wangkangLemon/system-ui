@@ -43,12 +43,12 @@
     <el-table border  v-loading="loading" :data="dataList">
      <el-table-column
             prop="user_name"
-            width="200"
+            width="100"
             label="姓名">
     </el-table-column>
      <el-table-column
             prop="mobile"
-            width="200"
+            width="130"
             label="手机号">
     </el-table-column>
     <el-table-column 
@@ -71,7 +71,7 @@
     </el-table-column>
      <el-table-column 
             prop="growth"
-            min-width="100"
+            min-width="90"
             label="成长值">
     </el-table-column>
      <el-table-column 
@@ -86,7 +86,7 @@
     </el-table-column>
      <el-table-column 
             prop="total_credit"
-            min-width="100"
+            min-width="130"
             label="累计获得积分">
     </el-table-column>
     <el-table-column 
