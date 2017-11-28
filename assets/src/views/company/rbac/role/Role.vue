@@ -30,6 +30,17 @@
                     label="角色名称">
             </el-table-column>
             <el-table-column
+                    prop="owner"
+                    label="类型">
+                    <template scope="scope">
+                        <el-tag type="gray" v-if="scope.row.owner == 'custom'">自定义</el-tag>
+                        <el-tag type="success" v-if="scope.row.owner == 'system'">系统内置</el-tag>
+                        <el-tag type="success" v-if="scope.row.owner == 'store'">连锁平台内置</el-tag>
+                        <el-tag type="success" v-if="scope.row.owner == 'industry'">工业平台内置</el-tag>
+                        <el-tag type="success" v-if="scope.row.owner == 'provider'">提供商平台内置</el-tag>
+                    </template>
+            </el-table-column>
+            <el-table-column
                     prop="disabled"
                     label="状态"
                     width="100">
@@ -59,7 +70,7 @@
                     <el-button type="text" size="small" @click="disable(scope.row)">
                             {{scope.row.disabled === 1 ? '启用' : '禁用'}}
                     </el-button>
-                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    <el-button v-if="scope.row.owner == 'custom'" @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                     <el-button @click="relate(scope.row)" type="text" size="small">权限分配</el-button>
                 </template>
             </el-table-column>
