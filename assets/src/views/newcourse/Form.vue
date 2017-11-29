@@ -89,7 +89,7 @@
                         </CompanySelect>
                     </el-form-item>
                     <el-form-item label="课程售价" prop="price">
-                        <el-input v-model.number="fetchParam.price" v-number-only></el-input>
+                        <el-input v-model.number="fetchParam.price" type="number"></el-input>
                     </el-form-item>
                     <h2>课时类型设置</h2>
                     <el-form-item label="选择类型" prop="lesson_type">
@@ -256,13 +256,9 @@
     import LessonForm from './LessonForm.vue'
     import NestedDialog from '../component/dialog/NestedDialog.vue'
     import Sidebar from '../component/sidebar/Sidebar.vue'
-    import NumberOnly from '../../directives/numberOnly'
 
     export default {
         name: 'newcourse-course-form',
-        directives: {
-            numberOnly: NumberOnly
-        },
         components: {
             DocPreview,
             VideoPreview,
