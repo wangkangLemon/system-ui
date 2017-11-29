@@ -216,6 +216,18 @@ export default {
             meta: {
                 title: '入驻审核(审核)'
             }
+        },
+        {
+            path: 'resources/review',
+            name: 'company-material-show',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/materialAudit.vue'))
+                })
+            },
+            meta: {
+                title: '视频素材审核'
+            }
         }
     ]
 }

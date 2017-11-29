@@ -1,0 +1,136 @@
+<style lang='scss' rel='stylesheet/scss'>
+    #form {
+        width: 630px;
+        hr{
+            margin-bottom: 15px;
+        }
+        .multy-choose-item{
+            padding: 5px 0;
+        }
+        .el-button + .el-button{
+            margin-left: 0;
+        }
+        .title{
+            padding: 5px 0 15px 0;
+        }
+        .text_warning{
+            color: #ff4949;
+            font-size: 12px;
+            line-height: 0.5;
+            padding-top: 15px;
+        }
+    }
+</style>
+<template>
+    <div>
+        <el-form id="form" ref="form" :model="specialInfo" :rules="rules" label-width="120px">
+            <section class="title">
+                <h2>基本信息</h2>
+            </section>    
+            <div class="el-form-item">
+                <label for="score" class="el-form-item__label" style="width: 120px;">连锁名称：</label>
+                <div class="el-form-item__content" style="margin-left: 80px;">
+                    {{specialInfo.store_name}}
+                </div>
+            </div>
+            <div class="el-form-item">
+                <label for="score" class="el-form-item__label" style="width: 120px;">工业名称：</label>
+                <div class="el-form-item__content" style="margin-left: 80px;">
+                    {{specialInfo.company_name}}
+                </div>
+            </div>
+            <el-form-item label="优惠截止日期：" prop="deadline">
+                <el-date-picker
+                        v-model="specialInfo.deadline"
+                        type="datetime"
+                        placeholder="选择截止日期">
+                </el-date-picker>
+                <div class="text_warning">截止日期为所选日期当日00:00:00</div>
+            </el-form-item>
+            <hr>
+            <section class="title">
+                <h2>投放定价信息</h2>
+            </section>
+            <el-form-item label="工业药我说：" prop="vedio_course">
+                <el-input v-model.number="specialInfo.speaking_price" placeholder="请输入工业药我说定价">
+                    <template slot="append">元/人</template>
+                </el-input>
+            </el-form-item>
+             <el-form-item label="独立红包：" prop="vedio_course">
+                <el-input v-model.number="specialInfo.lucky_money_price" placeholder="请输入独立红包定价">
+                    <template slot="append">元/人</template>
+                </el-input>
+            </el-form-item>
+             <el-form-item label="工业课：" prop="vedio_course">
+                <el-input v-model.number="specialInfo.industry_course_price" placeholder="请输入工业课定价">
+                    <template slot="append">元/人</template>
+                </el-input>
+                <div class="text_warning">投放定价信息未填写的项目按照默认定价收费</div>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="submitForm">提交</el-button>
+                <el-button>取消</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+
+<script>
+    import TestSpecialService from '../../../services/finance/specialService'
+    import * as timeUtils from '../../../utils/timeUtils'
+
+    export default{
+        data () {
+            return {
+                specialInfo: {
+                    store_name: '',
+                    store_id: '',
+                    company_name: '',
+                    company_id: '',
+                    deadline: '',
+                    industry_course_price: '',
+                    speaking_price: '',
+                    lucky_money_price: ''
+                },
+                rules: {
+                    deadline: [
+                        { type: 'date', required: true, message: '请选择截止日期', trigger: 'change' },
+                    ],
+                }
+            }
+        },
+        activated () {
+            xmview.setContentLoading(false)
+            this.getSpecialById()
+        },
+        mounted () {
+        },
+        methods: {
+            getSpecialById () {
+                let id = this.$route.params.id
+                TestSpecialService.getSpecialById(id).then((ret) => {
+                    ret.pricing_company.deadline = new Date(ret.pricing_company.deadline)
+                    this.specialInfo = ret.pricing_company
+                    xmview.setContentLoading(false)
+                })
+            },
+            submitForm () {
+                this.$refs['form'].validate((pass) => {
+                    if (!pass) {
+                        xmview.showTip('error', '您填写的数据不对，请检查红色项')
+                        return
+                    }
+                    this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
+                    TestSpecialService.update(this.$route.params.id, this.specialInfo).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.$router.push({name: 'test-special-index'})
+                    })
+                })
+            },
+        },
+        components: {},
+        directives: {
+        }
+    }
+</script>
