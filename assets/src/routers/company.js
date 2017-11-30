@@ -219,10 +219,10 @@ export default {
         },
         {
             path: 'resources/review',
-            name: 'company-material-show',
+            name: 'company-advert-show',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../views/company/materialAudit.vue'))
+                    resolve(require('../views/company/advertAudit.vue'))
                 })
             },
             meta: {

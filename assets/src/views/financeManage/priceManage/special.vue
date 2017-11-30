@@ -31,15 +31,15 @@
              <section class="search">
                 <section>
                     <i>连锁名称</i>
-                    <IndustryCompanySelect :type="2" v-model="fetchParam.company_id"
-                                           v-on:change="val=>fetchParam.company_id=val"
+                    <IndustryCompanySelect :type="2" v-model="fetchParam.store_id"
+                                           v-on:change="val=>fetchParam.store_id=val"
                                            :change="fetchData">
                     </IndustryCompanySelect>
                 </section>
                 <section>
                     <i>工业名称</i>
-                    <IndustryCompanySelect type="1" v-model="fetchParam.store_id"
-                                           v-on:change="val=>fetchParam.store_id=val"
+                    <IndustryCompanySelect :type="1" v-model="fetchParam.company_id"
+                                           v-on:change="val=>fetchParam.company_id=val"
                                            :change="fetchData">
                     </IndustryCompanySelect>
                 </section>
