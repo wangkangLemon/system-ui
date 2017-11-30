@@ -10,7 +10,7 @@
                 color: #fff;
                 border-radius: 5px;
             }
-            top:-60px;
+            top:-60px !important;
         }
         .search {
             @extend %top-search-container;
