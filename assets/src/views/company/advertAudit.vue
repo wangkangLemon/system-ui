@@ -110,8 +110,9 @@
             </el-table>
 
             <el-row :gutter="20" class="utils-top-15">
-                <el-col :span="6" :offset="14">
+                <el-col :span="12" :offset="12">
                     <el-pagination
+                        style="text-align: right"
                         @size-change="val=> {fetchParam.page_size=val; fetchData()}"
                         @current-change="val=> {fetchParam.page=val; fetchData()}"
                         :current-page="fetchParam.page"
