@@ -35,7 +35,7 @@ class PermissionService {
     }
     // 获取 单个权限信息
     getInfo(id) {
-        let url = `${urlPre}/${id}`
+        let url = `${urlPre}/${id}/`
         return api.get(url)
     }
     // 获取指定权限已经关联的操作
