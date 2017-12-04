@@ -51,17 +51,17 @@
             <section class="title">
                 <h2>投放定价信息</h2>
             </section>
-            <el-form-item label="工业药我说" prop="vedio_course">
+            <el-form-item label="工业药我说" prop="speaking_price">
                 <el-input v-model.number="specialInfo.speaking_price" placeholder="请输入工业药我说定价">
                     <template slot="append">元/人</template>
                 </el-input>
             </el-form-item>
-             <el-form-item label="独立红包" prop="vedio_course">
+             <el-form-item label="独立红包" prop="lucky_money_price">
                 <el-input v-model.number="specialInfo.lucky_money_price" placeholder="请输入独立红包定价">
                     <template slot="append">元/人</template>
                 </el-input>
             </el-form-item>
-             <el-form-item label="工业课" prop="vedio_course">
+             <el-form-item label="工业课" prop="industry_course_price">
                 <el-input v-model.number="specialInfo.industry_course_price" placeholder="请输入工业课定价">
                     <template slot="append">元/人</template>
                 </el-input>
@@ -70,7 +70,7 @@
 
             <el-form-item>
                 <el-button type="primary" @click="submitForm">提交</el-button>
-                <el-button @click="$router.go(-1)">取消</el-button>
+                <el-button @click="cancel">取消</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -93,6 +93,16 @@
                     deadline: [
                         { type: 'date', required: true, message: '请选择截止日期', trigger: 'change' },
                     ],
+                    speaking_price: [
+                        { required: false },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                    ],
+                    lucky_money_price: [
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                    ],
+                    industry_course_price: [
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                    ]
                 }
             }
         },
@@ -113,14 +123,18 @@
                     })
                 })
             },
+            cancel () {
+                this.$refs['addForm'].resetFields()
+                this.$router.go(-1)
+            },
             newSpecialInfo () {
                 return {
                     store_id: '',
                     company_id: '',
                     deadline: '',
-                    industry_course_price: '',
-                    speaking_price: '',
-                    lucky_money_price: ''
+                    industry_course_price: void 0,
+                    speaking_price: void 0,
+                    lucky_money_price: void 0
                 }
             }
         },

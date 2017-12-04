@@ -68,7 +68,7 @@
                 </el-col>
             </el-row>
             <!-- 修改售价弹层 -->
-            <el-dialog :title="editDialog" :visible.sync="dialog.edit">
+            <el-dialog :title="editDialog" :visible.sync="dialog.edit" @close='closeDialog'>
                 <div class="el-form-item">
                     <label for="score" class="el-form-item__label" style="width: 150px;">投放类别：</label>
                     <div class="el-form-item__content" style="margin-left: 80px;">
@@ -140,7 +140,8 @@
                 },
                 rules: {
                     price: [
-                        { required: true, message: '请输入当前售价', }
+                        { required: true, message: '请输入当前售价', },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                 }
             }
@@ -210,6 +211,10 @@
                     page_size: 15,
                     page_total: 0,
                 }
+            },
+            closeDialog () {
+                this.dialog.edit = false
+                this.$refs['priceForm'].resetFields()
             }
         },
         components: {}
