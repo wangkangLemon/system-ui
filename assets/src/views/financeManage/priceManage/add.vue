@@ -119,6 +119,7 @@
                     this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
                     return TestSpecialService.create(this.specialInfo).then(() => {
                         xmview.showTip('success', '操作成功')
+                        this.$refs['addForm'].resetFields()
                         this.$router.push({name: 'test-special-index'})
                     })
                 })
