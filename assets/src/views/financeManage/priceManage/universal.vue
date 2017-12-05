@@ -112,6 +112,20 @@
                       :resizable="false">
                     </el-table-column>
                 </el-table>
+                <el-row :gutter="20" class="utils-top-15">
+                    <el-col>
+                        <el-pagination
+                            style="text-align: right"
+                            @size-change="val=> {historyParam.page_size=val; fetchHistory()}"
+                            @current-change="val=> {historyParam.page=val; fetchHistory()}"
+                            :current-page="historyParam.page"
+                            :page-size="historyParam.page_size"
+                            :page-sizes="[10]"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="historyParam.page_total">
+                        </el-pagination>
+                    </el-col>
+                </el-row>
             </el-dialog>
     	</div>
     </section>
@@ -144,6 +158,12 @@
                         { required: true, message: '请输入当前售价', },
                         { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
+                },
+                historyParam: {
+                    page: 1,
+                    page_size: 10,
+                    page_total: 0,
+                    key: void 0
                 }
             }
         },
@@ -164,7 +184,6 @@
                 }
                 universalService.search(data).then((ret) => {
                     this.data = ret.data
-                    this.fetchParam.page_total = ret.total
                     xmview.setContentLoading(false)
                 })
             },
@@ -172,8 +191,13 @@
             changeHistory (index, row) {
                 this.dialog.detail = true
                 this.priceInfo = row
-                universalService.searchHistory({key: row.key}).then((ret) => {
+                this.historyParam.key = row.key
+                this.fetchHistory()
+            },
+            fetchHistory () {
+                universalService.searchHistory(this.historyParam).then((ret) => {
                     this.historyData = ret.data
+                    this.historyParam.page_total = ret.total
                     xmview.setContentLoading(false)
                 })
             },
@@ -208,7 +232,7 @@
             newFetchParam () {
                 return {
                     page: 1,
-                    page_size: 15,
+                    page_size: 10,
                     page_total: 0,
                 }
             },

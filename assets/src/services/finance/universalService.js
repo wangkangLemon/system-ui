@@ -18,9 +18,9 @@ class TestUnversalService {
             return ret.data
         })
     }
-    searchHistory({key}) {
+    searchHistory({key, page, page_size}) {
         let url = `${urlPre}/sys/finance/pricing/history`
-        return api.get(url, {key}).then((ret) => {
+        return api.get(url, {key, page, page_size}).then((ret) => {
             return ret.data
         })
     }
