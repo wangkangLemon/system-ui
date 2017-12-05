@@ -52,8 +52,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-
-            <el-row :gutter="20" class="utils-top-15">
+            <!-- <el-row :gutter="20" class="utils-top-15">
                 <el-col :span="12" :offset="12">
                     <el-pagination
                         style="text-align: right"
@@ -66,7 +65,7 @@
                         :total="fetchParam.page_total">
                     </el-pagination>
                 </el-col>
-            </el-row>
+            </el-row> -->
             <!-- 修改售价弹层 -->
             <el-dialog :title="editDialog" :visible.sync="dialog.edit" @close='closeDialog'>
                 <div class="el-form-item">

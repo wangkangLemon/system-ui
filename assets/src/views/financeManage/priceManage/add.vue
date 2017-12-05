@@ -27,14 +27,14 @@
             <section class="title">
                 <h2>基本信息</h2>
             </section>    
-            <el-form-item prop="store_id" label="工业名称">
-                <IndustryCompanySelect type="1" v-model="specialInfo.store_id"
-                                       v-on:change="val=>specialInfo.store_id=val">
+            <el-form-item prop="company_id" label="工业名称">
+                <IndustryCompanySelect type="1" v-model="specialInfo.company_id"
+                                       v-on:change="val=>specialInfo.company_id=val">
                 </IndustryCompanySelect>
             </el-form-item>
-            <el-form-item label="连锁名称" prop="company_id">
-                <IndustryCompanySelect type="2" v-model="specialInfo.company_id"
-                    v-on:change="val=>specialInfo.company_id=val">
+            <el-form-item label="连锁名称" prop="store_id">
+                <IndustryCompanySelect type="2" v-model="specialInfo.store_id"
+                    v-on:change="val=>specialInfo.store_id=val">
                 </IndustryCompanySelect>
                 <div class="text_warning">若不填写连锁名称，则该工业对所有连锁优惠生效</div>
             </el-form-item>
@@ -87,7 +87,7 @@
             return {
                 specialInfo: this.newSpecialInfo(),
                 rules: {
-                    store_id: [
+                    company_id: [
                         { type: 'number', required: true, message: '请选择工业', trigger: 'change' },
                     ],
                     deadline: [
