@@ -23,18 +23,18 @@
 </style>
 <template>
     <div>
-        <el-form id="form" ref="form" :model="specialInfo" :rules="rules" label-width="120px">
+        <el-form id="form" ref="form" :model="specialInfo" :rules="rules" label-width="150px">
             <section class="title">
                 <h2>基本信息</h2>
             </section>    
             <div class="el-form-item">
-                <label for="score" class="el-form-item__label" style="width: 120px;">连锁名称：</label>
+                <label for="score" class="el-form-item__label" style="width: 150px;">连锁名称：</label>
                 <div class="el-form-item__content" style="margin-left: 80px;">
                     {{specialInfo.store_name}}
                 </div>
             </div>
             <div class="el-form-item">
-                <label for="score" class="el-form-item__label" style="width: 120px;">工业名称：</label>
+                <label for="score" class="el-form-item__label" style="width: 150px;">工业名称：</label>
                 <div class="el-form-item__content" style="margin-left: 80px;">
                     {{specialInfo.company_name}}
                 </div>

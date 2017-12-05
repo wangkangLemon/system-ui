@@ -95,19 +95,21 @@
                         {{priceInfo.desc}}
                     </div>
                 </div>
-                <el-table class="data-table" v-loading="loadingData"
-                          :data="historyData"
-                          :fit="true"
-                          border>
+                <el-table
+                    :data="historyData"
+                    border
+                    style="width: 800px">
                     <el-table-column
-                            width="295"
-                            label="平台使用费单价（元/人）"
-                            prop="after">
+                      prop="after"
+                      label="平台使用费单价（元/人）"
+                      width="300"
+                      :resizable="false">
                     </el-table-column>
                     <el-table-column
-                            width="295"
-                            prop="created_at"
-                            label="更新时间">
+                      prop="created_at"
+                      label="更新时间"
+                      width="500"
+                      :resizable="false">
                     </el-table-column>
                 </el-table>
             </el-dialog>
@@ -186,7 +188,6 @@
                     if (!pass) {
                         return
                     }
-                    this.newPrice.price = this.newPrice.price.toString()
                     return universalService.update(this.priceInfo.key, this.newPrice).then(() => {
                         this.dialog.edit = false
                         this.fetchData()

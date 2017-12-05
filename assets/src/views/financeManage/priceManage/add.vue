@@ -23,23 +23,23 @@
 </style>
 <template>
     <div>
-        <el-form id="form" ref="addForm" :model="specialInfo" :rules="rules" label-width="120px">
+        <el-form id="form" ref="addForm" :model="specialInfo" :rules="rules" label-width="150px">
             <section class="title">
                 <h2>基本信息</h2>
             </section>    
-            <el-form-item prop="company_id" label="工业名称">
+            <el-form-item prop="company_id" label="工业名称：">
                 <IndustryCompanySelect type="1" v-model="specialInfo.company_id"
                                        v-on:change="val=>specialInfo.company_id=val">
                 </IndustryCompanySelect>
             </el-form-item>
-            <el-form-item label="连锁名称" prop="store_id">
+            <el-form-item label="连锁名称：" prop="store_id">
                 <IndustryCompanySelect type="2" v-model="specialInfo.store_id"
                     v-on:change="val=>specialInfo.store_id=val">
                 </IndustryCompanySelect>
                 <div class="text_warning">若不填写连锁名称，则该工业对所有连锁优惠生效</div>
             </el-form-item>
 
-            <el-form-item label="优惠截止日期" prop="deadline">
+            <el-form-item label="优惠截止日期：" prop="deadline">
                 <el-date-picker
                         v-model="specialInfo.deadline"
                         type="date"
@@ -51,17 +51,17 @@
             <section class="title">
                 <h2>投放定价信息</h2>
             </section>
-            <el-form-item label="工业药我说" prop="speaking_price">
+            <el-form-item label="工业药我说：" prop="speaking_price">
                 <el-input v-model.number="specialInfo.speaking_price" placeholder="请输入工业药我说定价">
                     <template slot="append">元/人</template>
                 </el-input>
             </el-form-item>
-             <el-form-item label="独立红包" prop="lucky_money_price">
+             <el-form-item label="独立红包：" prop="lucky_money_price">
                 <el-input v-model.number="specialInfo.lucky_money_price" placeholder="请输入独立红包定价">
                     <template slot="append">元/人</template>
                 </el-input>
             </el-form-item>
-             <el-form-item label="工业课" prop="industry_course_price">
+             <el-form-item label="工业课：" prop="industry_course_price">
                 <el-input v-model.number="specialInfo.industry_course_price" placeholder="请输入工业课定价">
                     <template slot="append">元/人</template>
                 </el-input>

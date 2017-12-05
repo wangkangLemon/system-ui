@@ -60,16 +60,17 @@
                       @select-all="selectRow"
                       border>
                 <el-table-column
-                        min-width="150"
+                        min-width="180"
                         prop="name"
                         label="素材名称">
                 </el-table-column>
                 <el-table-column
                         min-width="100"
-                        label="素材预览">
+                        label="素材预览"
+                        align="center">
                     <template scope="scope">
                         <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
-                            v-if="">预览</el-button>
+                            v-if=""><img src="../images/video.png" style="width:20px"/></el-button>
                     </template>  
                 </el-table-column>
                 <el-table-column
