@@ -71,9 +71,7 @@
                         prop="user_name"
                         label="用户名称">
                         <template scope="scope">
-                            <div slot="reference" class="name-wrapper" @click="showUserInfo(scope.row.user_id)">
-                                <el-tag size="medium">{{scope.row.user_name }}</el-tag>
-                            </div>
+                            <el-button @click="showUserInfo(scope.row.user_id)" type="text" size="small">{{scope.row.user_name }}</el-button>
                         </template>
                 </el-table-column>
                 <el-table-column
