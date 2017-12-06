@@ -23,12 +23,15 @@
                 </el-form-item>
                 <el-form-item label="工业名称">
                         <IndustryCompanySelect type="1" v-model="fetchParam.company_id"
-                                       v-on:change="val=>fetchParam.company_id=val">
+                                       v-on:change="val=>fetchParam.company_id=val"
+                                       :change="fetchData">
                         </IndustryCompanySelect>
                 </el-form-item>
                 <el-form-item label="当前状态">
                     <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
                         <el-option label="待审核" :value="1"></el-option>
+                        <el-option label="转码中" :value="2"></el-option>
+                        <el-option label="转码失败" :value="3"></el-option>
                         <el-option label="已通过" :value="4"></el-option>
                         <el-option label="已驳回" :value="5"></el-option>
                     </el-select>
@@ -89,7 +92,7 @@
                     <template scope="scope">
                         <el-tag v-if="scope.row.status == 0" type="warning">待审核</el-tag>
                         <el-tag v-if="scope.row.status == 1" type="info">转码中</el-tag>
-                        <!-- <el-tag v-if="scope.row.status == 2" type="warning">待审核</el-tag> -->
+                        <el-tag v-if="scope.row.status == 2" type="danger">转码失败</el-tag>
                         <el-tag v-if="scope.row.status == 3" type="success">已通过</el-tag>
                         <el-tag v-if="scope.row.status == 4" type="danger">已驳回</el-tag>
                     </template>
