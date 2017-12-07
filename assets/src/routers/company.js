@@ -219,14 +219,26 @@ export default {
         },
         {
             path: 'resources/review',
-            name: 'company-advert-show',
+            name: 'company-video-show',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('../views/company/advertAudit.vue'))
+                    resolve(require('../views/company/audit/advertAuditVideo.vue'))
                 })
             },
             meta: {
                 title: '视频素材审核'
+            }
+        },
+        {
+            path: 'picture/review',
+            name: 'company-picture-show',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/audit/advertAuditPic.vue'))
+                })
+            },
+            meta: {
+                title: '图片素材审核'
             }
         }
     ]

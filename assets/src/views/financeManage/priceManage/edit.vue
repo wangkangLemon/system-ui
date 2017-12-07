@@ -28,15 +28,15 @@
                 <h2>基本信息</h2>
             </section>    
             <div class="el-form-item">
-                <label for="score" class="el-form-item__label" style="width: 150px;">连锁名称：</label>
-                <div class="el-form-item__content" style="margin-left: 80px;">
-                    {{specialInfo.store_name}}
-                </div>
-            </div>
-            <div class="el-form-item">
                 <label for="score" class="el-form-item__label" style="width: 150px;">工业名称：</label>
                 <div class="el-form-item__content" style="margin-left: 80px;">
                     {{specialInfo.company_name}}
+                </div>
+            </div>
+            <div class="el-form-item">
+                <label for="score" class="el-form-item__label" style="width: 150px;">连锁名称：</label>
+                <div class="el-form-item__content" style="margin-left: 80px;">
+                    {{specialInfo.store_name == '' ? '全部连锁' : specialInfo.store_name}}
                 </div>
             </div>
             <el-form-item label="优惠截止日期：" prop="deadline">
@@ -70,7 +70,7 @@
 
             <el-form-item>
                 <el-button type="primary" @click="submitForm">提交</el-button>
-                <el-button @click="$router.go(-1)">取消</el-button>
+                <el-button @click="cancel">取消</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -121,6 +121,9 @@
                 let id = this.$route.params.id
                 TestSpecialService.getSpecialById(id).then((ret) => {
                     ret.pricing_company.deadline = new Date(ret.pricing_company.deadline)
+                    ret.pricing_company.industry_course_price = ret.pricing_company.industry_course_price == 0 ? void 0 : ret.pricing_company.industry_course_price
+                    ret.pricing_company.lucky_money_price = ret.pricing_company.lucky_money_price == 0 ? void 0 : ret.pricing_company.lucky_money_price
+                    ret.pricing_company.speaking_price = ret.pricing_company.speaking_price == 0 ? void 0 : ret.pricing_company.speaking_price
                     this.specialInfo = ret.pricing_company
                     xmview.setContentLoading(false)
                 })
@@ -134,9 +137,14 @@
                     this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
                     TestSpecialService.update(this.$route.params.id, this.specialInfo).then(() => {
                         xmview.showTip('success', '操作成功')
+                        this.$refs['form'].resetFields()
                         this.$router.push({name: 'test-special-index'})
                     })
                 })
+            },
+            cancel () {
+                this.$refs['form'].resetFields()
+                this.$router.go(-1)
             },
         },
         components: {},

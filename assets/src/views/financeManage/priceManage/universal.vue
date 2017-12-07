@@ -189,6 +189,7 @@
             },
             // 查看修改历史
             changeHistory (index, row) {
+                this.historyData = []
                 this.dialog.detail = true
                 this.priceInfo = row
                 this.historyParam.key = row.key

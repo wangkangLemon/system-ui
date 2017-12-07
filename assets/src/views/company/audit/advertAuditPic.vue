@@ -1,6 +1,6 @@
 <style lang='scss' rel='stylesheet/scss'>
-    @import "../../utils/mixins/common";
-    @import "../../utils/mixins/showDetail";
+    @import "../../../utils/mixins/common";
+    @import "../../../utils/mixins/showDetail";
 
     #test-material-container {
         @extend %content-container;
@@ -29,11 +29,9 @@
                 </el-form-item>
                 <el-form-item label="当前状态">
                     <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
-                        <el-option label="待审核" :value="1"></el-option>
-                        <el-option label="转码中" :value="2"></el-option>
-                        <el-option label="转码失败" :value="3"></el-option>
-                        <el-option label="已通过" :value="4"></el-option>
-                        <el-option label="已驳回" :value="5"></el-option>
+                        <el-option label="待审核" :value="0"></el-option>
+                        <el-option label="已通过" :value="1"></el-option>
+                        <el-option label="已驳回" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -72,8 +70,8 @@
                         label="素材预览"
                         align="center">
                     <template scope="scope">
-                        <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
-                            v-if=""><img src="../images/video.png" style="width:20px"/></el-button>
+                        <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">
+                            <img src="../../images/picture.png" style="width:20px"/></el-button>
                     </template>  
                 </el-table-column>
                 <el-table-column
@@ -83,7 +81,7 @@
                 </el-table-column>
                 <el-table-column
                         width="190"
-                        prop="create_time_name"
+                        prop="create_time"
                         label="创建时间">
                 </el-table-column>
                 <el-table-column
@@ -91,15 +89,13 @@
                         label="当前状态">
                     <template scope="scope">
                         <el-tag v-if="scope.row.status == 0" type="warning">待审核</el-tag>
-                        <el-tag v-if="scope.row.status == 1" type="info">转码中</el-tag>
-                        <el-tag v-if="scope.row.status == 2" type="danger">转码失败</el-tag>
-                        <el-tag v-if="scope.row.status == 3" type="success">已通过</el-tag>
-                        <el-tag v-if="scope.row.status == 4" type="danger">已驳回</el-tag>
+                        <el-tag v-if="scope.row.status == 1" type="success">已通过</el-tag>
+                        <el-tag v-if="scope.row.status == 2" type="danger">已驳回</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
                         width="190"
-                        prop="update_time_name"
+                        prop="update_time"
                         label="更新时间">
                 </el-table-column>
                 <el-table-column
@@ -129,25 +125,28 @@
                     </el-pagination>
                 </el-col>
             </el-row>
-            <VideoPreviewOnly :url="videoUrl" ref="VideoPreviewOnly"></VideoPreviewOnly>
+            <!-- <ImagePreview :url="imageUrl" ref="ImagePreview"></ImagePreview> -->
+            <ImagePreview v-model="previewDialog.isShow" :url="previewDialog.url"></ImagePreview>
         </div>
     </section>
 </template>
 
 <script>
-    import DateRange from '../component/form/DateRangePicker'
-    import IndustryCompanySelect from '../component/select/IndustryCompany.vue'
-    import VideoPreviewOnly from '../component/dialog/VideoPreviewOnly.vue'
-    import TestAdvertService from '../../services/advert/advertAudit'
+    import DateRange from '../../component/form/DateRangePicker'
+    import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
+    import ImagePreview from '../../component/dialog/ImagePreview.vue'
+    import TestAdvertPicService from '../../../services/advert/advertAuditPic'
     export default{
         data () {
             return {
                 loadingData: false,
                 data: [],
-                videoUrl: '',
                 imageUrl: '',
                 fetchParam: this.newFetchParam(),
-                isShow: false
+                previewDialog: {
+                    isShow: false,
+                    url: void 0,
+                },
             }
         },
         activated () {
@@ -168,7 +167,7 @@
                 // let fetchParam = this.fetchParam
                 let data = Object.assign({}, this.fetchParam)
                 data.status = (!data.status && data.status !== 0) ? '' : data.status
-                TestAdvertService.search(data).then((ret) => {
+                TestAdvertPicService.search(data).then((ret) => {
                     this.data = ret.data
                     this.fetchParam.page_total = ret.total
                     xmview.setContentLoading(false)
@@ -199,7 +198,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return TestAdvertService.updateAdvertStatus(row.id, 3).then((ret) => {
+                    return TestAdvertPicService.updateAdvertStatus(row.id, 1).then((ret) => {
                         this.$message({
                             type: 'success',
                             message: '状态更新成功!'
@@ -215,7 +214,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return TestAdvertService.updateAdvertStatus(row.id, 4).then((ret) => {
+                    return TestAdvertPicService.updateAdvertStatus(row.id, 2).then((ret) => {
                         this.$message({
                             type: 'success',
                             message: '状态更新成功!'
@@ -226,11 +225,8 @@
             },
              // 预览视频
             preview (index, row) {
-                // 拿到播放地址
-                TestAdvertService.getVideoPreviewUrl(row.id).then((ret) => {
-                    this.videoUrl = ret.video
-                    this.$refs.VideoPreviewOnly.show(row.name)
-                })
+                this.previewDialog.url = row.source_url
+                this.previewDialog.isShow = true
             },
             newFetchParam () {
                 return {
@@ -250,7 +246,7 @@
         components: {
             DateRange,
             IndustryCompanySelect,
-            VideoPreviewOnly
+            ImagePreview
         }
     }
 </script>

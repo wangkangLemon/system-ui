@@ -66,21 +66,37 @@
                         width="150"
                         label="连锁名称"
                         prop="store_name">
+                        <template scope="scope">
+                            <span v-if="scope.row.store_name == ''">全部连锁</span>
+                            <span v-else>{{scope.row.store_name}}</span>
+                        </template>
                 </el-table-column>
                 <el-table-column
                         width="190"
                         prop="speaking_price"
-                        label="工业药我说">
+                        label="工业药我说(元/人)">
+                        <template scope="scope">
+                            <span v-if="scope.row.speaking_price == 0"></span>
+                            <span v-else>{{scope.row.speaking_price}}</span>
+                        </template>
                 </el-table-column>
                 <el-table-column
                         width="150"
-                        label="独立红包"
+                        label="独立红包(元/人)"
                         prop="lucky_money_price">
+                        <template scope="scope">
+                            <span v-if="scope.row.lucky_money_price == 0"></span>
+                            <span v-else>{{scope.row.lucky_money_price}}</span>
+                        </template>
                 </el-table-column>
                 <el-table-column
-                        width="100"
-                        label="工业课"
+                        width="150"
+                        label="工业课(元/人)"
                         prop="industry_course_price">
+                        <template scope="scope">
+                            <span v-if="scope.row.industry_course_price == 0"></span>
+                            <span v-else>{{scope.row.industry_course_price}}</span>
+                        </template>
                 </el-table-column>
                <el-table-column
                         width="180"
