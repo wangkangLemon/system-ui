@@ -3,7 +3,7 @@ import config from '../../utils/config'
 
 const urlPre = config.apiHost + '/sys/advert/video'
 
-class TestAdvertService {
+class TestAdvertVideoService {
     search({company_id, keyword, status, created_start, created_end, updated_start, updated_end, page, page_size}) {
         let url = `${urlPre}/search`
         return api.get(url, {company_id, keyword, status, created_start, created_end, updated_start, updated_end, page, page_size}).then((ret) => {
@@ -26,4 +26,4 @@ class TestAdvertService {
     }
 }
 
-export default new TestAdvertService()
+export default new TestAdvertVideoService()

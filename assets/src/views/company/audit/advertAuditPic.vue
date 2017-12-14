@@ -19,16 +19,16 @@
         <div id="material-content-container">
             <el-form :inline="true" :model="fetchParam" class="search">
                 <el-form-item label="素材名称">
-                    <el-input v-model="fetchParam.keyword" placeholder="请输入素材名称" @keyup.enter.native="fetchData"></el-input>
+                    <el-input v-model="fetchParam.keyword" placeholder="请输入素材名称" @keyup.enter.native="fetchPicData"></el-input>
                 </el-form-item>
                 <el-form-item label="工业名称">
                         <IndustryCompanySelect type="1" v-model="fetchParam.company_id"
                                        v-on:change="val=>fetchParam.company_id=val"
-                                       :change="fetchData">
+                                       :change="fetchPicData">
                         </IndustryCompanySelect>
                 </el-form-item>
                 <el-form-item label="当前状态">
-                    <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
+                    <el-select v-model="fetchParam.status" @change="fetchPicData" :clearable="true">
                         <el-option label="待审核" :value="0"></el-option>
                         <el-option label="已通过" :value="1"></el-option>
                         <el-option label="已驳回" :value="2"></el-option>
@@ -40,7 +40,7 @@
                     :end="fetchParam.created_end"
                     @changeStart="val=> {fetchParam.created_start=val}"
                     @changeEnd="val=> {fetchParam.created_end=val}" 
-                    :change="fetchData">
+                    :change="fetchPicData">
                     </DateRange>
                 </el-form-item>
                 <el-form-item>
@@ -49,7 +49,7 @@
                     :end="fetchParam.updated_end"
                     @changeStart="val=> {fetchParam.updated_start=val}"
                     @changeEnd="val=> {fetchParam.updated_end=val}" 
-                    :change="fetchData">
+                    :change="fetchPicData">
                     </DateRange>
                 </el-form-item>
             </el-form>
@@ -115,8 +115,8 @@
                 <el-col :span="12" :offset="12">
                     <el-pagination
                         style="text-align: right"
-                        @size-change="val=> {fetchParam.page_size=val; fetchData()}"
-                        @current-change="val=> {fetchParam.page=val; fetchData()}"
+                        @size-change="val=> {fetchParam.page_size=val; fetchPicData()}"
+                        @current-change="val=> {fetchParam.page=val; fetchPicData()}"
                         :current-page="fetchParam.page"
                         :page-size="fetchParam.page_size"
                         :page-sizes="[15, 30, 60, 100]"
@@ -125,7 +125,6 @@
                     </el-pagination>
                 </el-col>
             </el-row>
-            <!-- <ImagePreview :url="imageUrl" ref="ImagePreview"></ImagePreview> -->
             <ImagePreview v-model="previewDialog.isShow" :url="previewDialog.url"></ImagePreview>
         </div>
     </section>
@@ -151,20 +150,20 @@
         },
         activated () {
             xmview.setContentLoading(false)
+            this.initFetchParam()
         },
         created () {
-            this.fetchData()
+            // this.initFetchParam()
         },
         filters: {
         },
         methods: {
             initFetchParam () {
                 this.fetchParam = this.newFetchParam()
-                this.fetchData()
+                this.fetchPicData()
             },
-            fetchData () {
+            fetchPicData () {
                 xmview.setContentLoading(true)
-                // let fetchParam = this.fetchParam
                 let data = Object.assign({}, this.fetchParam)
                 data.status = (!data.status && data.status !== 0) ? '' : data.status
                 TestAdvertPicService.search(data).then((ret) => {
@@ -175,12 +174,12 @@
             },
             handleSizeChange (val) {
                 this.fetchParam.page_size = val
-                this.fetchData()
+                this.fetchPicData()
             },
             handleCurrentChange (val) {
                 if (this.fetchParam.page != val) {
                     this.fetchParam.page = val
-                    this.fetchData()
+                    this.fetchPicData()
                 }
             },
             // 单行被选中
@@ -203,7 +202,7 @@
                             type: 'success',
                             message: '状态更新成功!'
                         })
-                        this.fetchData()
+                        this.fetchPicData()
                     })
                 })
             },
@@ -219,7 +218,7 @@
                             type: 'success',
                             message: '状态更新成功!'
                         })
-                        this.fetchData()
+                        this.fetchPicData()
                     })
                 })
             },

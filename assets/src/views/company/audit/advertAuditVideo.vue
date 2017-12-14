@@ -138,7 +138,7 @@
     import DateRange from '../../component/form/DateRangePicker'
     import IndustryCompanySelect from '../../component/select/IndustryCompany.vue'
     import VideoPreviewOnly from '../../component/dialog/VideoPreviewOnly.vue'
-    import TestAdvertService from '../../../services/advert/advertAudit'
+    import TestAdvertVideoService from '../../../services/advert/advertAuditVideo'
     export default{
         data () {
             return {
@@ -152,9 +152,10 @@
         },
         activated () {
             xmview.setContentLoading(false)
+            this.initFetchParam()
         },
         created () {
-            this.fetchData()
+            // this.initFetchParam()
         },
         filters: {
         },
@@ -165,10 +166,9 @@
             },
             fetchData () {
                 xmview.setContentLoading(true)
-                // let fetchParam = this.fetchParam
                 let data = Object.assign({}, this.fetchParam)
                 data.status = (!data.status && data.status !== 0) ? '' : data.status
-                TestAdvertService.search(data).then((ret) => {
+                TestAdvertVideoService.search(data).then((ret) => {
                     this.data = ret.data
                     this.fetchParam.page_total = ret.total
                     xmview.setContentLoading(false)
@@ -199,7 +199,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return TestAdvertService.updateAdvertStatus(row.id, 3).then((ret) => {
+                    return TestAdvertVideoService.updateAdvertStatus(row.id, 3).then((ret) => {
                         this.$message({
                             type: 'success',
                             message: '状态更新成功!'
@@ -215,7 +215,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return TestAdvertService.updateAdvertStatus(row.id, 4).then((ret) => {
+                    return TestAdvertVideoService.updateAdvertStatus(row.id, 4).then((ret) => {
                         this.$message({
                             type: 'success',
                             message: '状态更新成功!'
@@ -227,7 +227,7 @@
              // 预览视频
             preview (index, row) {
                 // 拿到播放地址
-                TestAdvertService.getVideoPreviewUrl(row.id).then((ret) => {
+                TestAdvertVideoService.getVideoPreviewUrl(row.id).then((ret) => {
                     this.videoUrl = ret.video
                     this.$refs.VideoPreviewOnly.show(row.name)
                 })
