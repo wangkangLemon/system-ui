@@ -109,7 +109,6 @@
                         { type: 'date', required: true, message: '请选择截止日期', trigger: 'change' },
                     ],
                     speaking_price: [
-                        { required: false },
                         { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
                     ],
                     lucky_money_price: [
@@ -131,7 +130,9 @@
             getSpecialById () {
                 let id = this.$route.params.id
                 TestSpecialService.getSpecialById(id).then((ret) => {
-                    ret.pricing_company.deadline = new Date(ret.pricing_company.deadline)
+                    if (ret.pricing_company.deadline && ret.pricing_company.deadline != '') {
+                        ret.pricing_company.deadline = timeUtils.formatDate(ret.pricing_company.deadline, 'yyyy-MM-dd hh:mm:ss')
+                    }
                     ret.pricing_company.industry_course_price = ret.pricing_company.industry_course_price == 0 ? void 0 : ret.pricing_company.industry_course_price
                     ret.pricing_company.lucky_money_price = ret.pricing_company.lucky_money_price == 0 ? void 0 : ret.pricing_company.lucky_money_price
                     ret.pricing_company.speaking_price = ret.pricing_company.speaking_price == 0 ? void 0 : ret.pricing_company.speaking_price

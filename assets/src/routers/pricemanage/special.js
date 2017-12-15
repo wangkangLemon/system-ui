@@ -37,7 +37,7 @@ export default {
             }
         },
         {
-            path: 'edit',
+            path: 'edit/:id',
             name: 'test-special-edit',
             component: resolve => {
                 require.ensure([], () => {
