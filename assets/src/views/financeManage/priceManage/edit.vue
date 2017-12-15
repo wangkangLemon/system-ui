@@ -133,9 +133,9 @@
                     if (ret.pricing_company.deadline && ret.pricing_company.deadline != '') {
                         ret.pricing_company.deadline = timeUtils.formatDate(ret.pricing_company.deadline, 'yyyy-MM-dd hh:mm:ss')
                     }
-                    ret.pricing_company.industry_course_price = ret.pricing_company.industry_course_price == 0 ? void 0 : ret.pricing_company.industry_course_price
-                    ret.pricing_company.lucky_money_price = ret.pricing_company.lucky_money_price == 0 ? void 0 : ret.pricing_company.lucky_money_price
-                    ret.pricing_company.speaking_price = ret.pricing_company.speaking_price == 0 ? void 0 : ret.pricing_company.speaking_price
+                    ret.pricing_company.industry_course_price = ret.pricing_company.industry_course_price == 0 ? void 0 : ret.pricing_company.industry_course_price / 100
+                    ret.pricing_company.lucky_money_price = ret.pricing_company.lucky_money_price == 0 ? void 0 : ret.pricing_company.lucky_money_price / 100
+                    ret.pricing_company.speaking_price = ret.pricing_company.speaking_price == 0 ? void 0 : ret.pricing_company.speaking_price / 100
                     this.specialInfo = ret.pricing_company
                     xmview.setContentLoading(false)
                 })
@@ -149,6 +149,9 @@
                     if (this.specialInfo.deadline && this.specialInfo.deadline != '') {
                         this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
                     }
+                    this.specialInfo.industry_course_price = this.specialInfo.industry_course_price * 100
+                    this.specialInfo.lucky_money_price = this.specialInfo.lucky_money_price * 100
+                    this.specialInfo.speaking_price = this.specialInfo.speaking_price * 100
                     TestSpecialService.update(this.$route.params.id, this.specialInfo).then(() => {
                         xmview.showTip('success', '操作成功')
                         this.$refs['form'].resetFields()

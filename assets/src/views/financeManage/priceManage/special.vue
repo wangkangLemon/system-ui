@@ -77,7 +77,7 @@
                         label="工业药我说(元/人)">
                         <template scope="scope">
                             <span v-if="scope.row.speaking_price == 0"></span>
-                            <span v-else>{{scope.row.speaking_price}}</span>
+                            <span v-else>{{scope.row.speaking_price/100}}</span>
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -86,7 +86,7 @@
                         prop="lucky_money_price">
                         <template scope="scope">
                             <span v-if="scope.row.lucky_money_price == 0"></span>
-                            <span v-else>{{scope.row.lucky_money_price}}</span>
+                            <span v-else>{{scope.row.lucky_money_price/100}}</span>
                         </template>
                 </el-table-column>
                 <el-table-column
@@ -95,7 +95,7 @@
                         prop="industry_course_price">
                         <template scope="scope">
                             <span v-if="scope.row.industry_course_price == 0"></span>
-                            <span v-else>{{scope.row.industry_course_price}}</span>
+                            <span v-else>{{scope.row.industry_course_price/100}}</span>
                         </template>
                 </el-table-column>
                <el-table-column
