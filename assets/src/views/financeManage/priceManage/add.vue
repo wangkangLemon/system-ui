@@ -62,17 +62,20 @@
                 <h2>投放定价信息</h2>
             </section>
             <el-form-item label="工业药我说：" prop="speaking_price">
-                <el-input v-model.number="specialInfo.speaking_price" placeholder="请输入工业药我说定价">
+                <el-input v-model.number="specialInfo.speaking_price" placeholder="请输入工业药我说定价" 
+                @blur="validateSpeaking">
                     <template slot="append">元/人</template>
                 </el-input>
             </el-form-item>
              <el-form-item label="独立红包：" prop="lucky_money_price">
-                <el-input v-model.number="specialInfo.lucky_money_price" placeholder="请输入独立红包定价">
+                <el-input v-model.number="specialInfo.lucky_money_price" placeholder="请输入独立红包定价"
+                @blur="validateLucky">
                     <template slot="append">元/人</template>
                 </el-input>
             </el-form-item>
              <el-form-item label="工业课：" prop="industry_course_price">
-                <el-input v-model.number="specialInfo.industry_course_price" placeholder="请输入工业课定价">
+                <el-input v-model.number="specialInfo.industry_course_price" placeholder="请输入工业课定价"
+                @blur="validateIndustry">
                     <template slot="append">元/人</template>
                 </el-input>
                 <div class="text_warning">投放定价信息未填写的项目按照默认定价收费</div>
@@ -104,11 +107,10 @@
                         { type: 'date', required: true, message: '请选择截止日期', trigger: 'change' },
                     ],
                     speaking_price: [
-                        { required: false },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'change' },
                     ],
                     lucky_money_price: [
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'change' },
                     ],
                     industry_course_price: [
                         { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
@@ -149,6 +151,15 @@
                     speaking_price: void 0,
                     lucky_money_price: void 0
                 }
+            },
+            validateIndustry () {
+                this.specialInfo.industry_course_price === '' && (this.specialInfo.industry_course_price = void 0)
+            },
+            validateSpeaking () {
+                this.specialInfo.speaking_price === '' && (this.specialInfo.speaking_price = void 0)
+            },
+            validateLucky () {
+                this.specialInfo.lucky_money_price === '' && (this.specialInfo.lucky_money_price = void 0)
             }
         },
         components: {
