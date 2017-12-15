@@ -53,6 +53,18 @@ export function history(reqObj) {
     })
 }
 
+// 流水记录
+export function type() {
+    let url = urlPre + '/type'
+    return api.get(url).then(ret => {
+        if (ret.code == 0) {
+            return ret.data
+        } else {
+            return Promise.reject(ret)
+        }
+    })
+}
+
 // 流水记录导出接口
 export function exportHistory (reqObj) {
     let finalUrl = `${urlPre}/history/search`
