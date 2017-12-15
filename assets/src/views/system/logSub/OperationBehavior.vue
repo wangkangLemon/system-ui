@@ -76,7 +76,8 @@
             </el-table-column>
             <el-table-column
                     prop="create_time_name"
-                    label="创建时间">
+                    label="创建时间"
+                    width="170">
             </el-table-column>
         </el-table>
         <div class="block">

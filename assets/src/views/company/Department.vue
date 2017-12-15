@@ -114,19 +114,21 @@
                     label="店员数量">
             </el-table-column>
             <el-table-column
-                    width="150"
+                    width="130"
                     prop="mobile"
                     label="手机">
             </el-table-column>
             <el-table-column
-                    width="180"
+                    width="170"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="120"
+                    width="100"
                     prop="operate"
-                    label="操作">
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="showFn(scope.$index, scope.row)">
                         详情

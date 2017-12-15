@@ -114,7 +114,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="mobile"
-                        width="150"
+                        width="130"
                         label="手机">
                 </el-table-column>
                 <el-table-column
@@ -148,7 +148,9 @@
                 <el-table-column
                         prop="operate"
                         width="80"
-                        label="操作">
+                        label="操作"
+                        fixed="right"
+                        align="center">
                     <template scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             详情

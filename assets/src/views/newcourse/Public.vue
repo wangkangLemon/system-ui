@@ -80,7 +80,7 @@
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true" @select="selectRow" @select-all="selectRow" border>
             <el-table-column type="selection" :selectable="selectable"></el-table-column>
-            <el-table-column min-width="200" prop="name" label="课程">
+            <el-table-column min-width="200" prop="name" label="名称">
             </el-table-column>
             <el-table-column min-width="200" prop="category_name" label="所属栏目">
             </el-table-column>
@@ -89,22 +89,22 @@
                     {{ scope.row.lesson_count}}课时
                 </template>
             </el-table-column>
-            <el-table-column width="190" prop="need_testing" label="是否考试">
+            <el-table-column width="100" prop="need_testing" label="是否考试" align="center">
                 <template scope="scope">
                     <el-tag v-if="scope.row.need_testing == 0">否</el-tag>
                     <el-tag v-if="scope.row.need_testing == 1" type="success">是</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column width="100" label="状态">
+            <el-table-column width="80" label="状态" align="center">
                 <template scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
                     <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
                     <el-tag v-else>下线</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column width="190" prop="create_time_name" label="创建时间">
+            <el-table-column width="170" prop="create_time_name" label="创建时间" align="center">
             </el-table-column>
-            <el-table-column fixed="right" width="207" label="操作">
+            <el-table-column fixed="right" width="140" label="操作" align="center">
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" type="text" size="small" :disabled="scope.row.status == 0">

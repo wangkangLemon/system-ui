@@ -163,9 +163,11 @@
                         </template>
                         </el-table-column>
                         <el-table-column
-                                width="100"
+                                width="80"
                                 prop="operate"
-                                label="操作">
+                                label="操作"
+                                fixed="right"
+                                align="center">
                             <template scope="scope">
                                 <el-button size="small" type="text" @click="editFn(scope.row)">修改</el-button>
                             </template>

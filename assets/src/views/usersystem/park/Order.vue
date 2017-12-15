@@ -81,12 +81,12 @@
                   :fit="true"
                   border>
             <el-table-column
-                    min-width="200"
+                    min-width="220"
                     prop="order_no"
                     label="订单号">
             </el-table-column>
             <el-table-column
-                    min-width="100"
+                    min-width="150"
                     prop="product_no"
                     label="商品编号">
             </el-table-column>
@@ -99,28 +99,30 @@
                     </template>
             </el-table-column>
             <el-table-column
-                    width="150"
+                    width="120"
                     prop="channel"
                     label="销售渠道">
             </el-table-column>
             <el-table-column
-                    width="150"
+                    width="100"
                     prop="user_name"
                     label="领取人">
             </el-table-column>
             <el-table-column
-                    width="150"
+                    width="130"
                     prop="mobile"
                     label="联系方式">
             </el-table-column>
             <el-table-column
-                    width="250"
+                    width="170"
                     prop="create_time_name"
                     label="领取时间">
             </el-table-column>
             <el-table-column
                     width="100"
-                    label="操作">
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <div class="tab-oepratebtns">
                         <el-button type="text" size="small" @click="edit(scope.row)">完善订单</el-button>

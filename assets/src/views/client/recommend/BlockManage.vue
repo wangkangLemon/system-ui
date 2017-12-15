@@ -93,7 +93,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="sort" label="排序" width="100"></el-table-column>
-                    <el-table-column prop="update_time_name" label="更新时间" width="200"></el-table-column>
+                    <el-table-column prop="update_time_name" label="更新时间" width="170"></el-table-column>
                      <!-- <el-table-column
                         prop="status_name"
                         label="状态"
@@ -103,7 +103,7 @@
                         <el-tag type="gray" v-else>下线</el-tag>
                     </template>
                 </el-table-column> -->
-                    <el-table-column prop="operate" label="操作" width="100">
+                    <el-table-column prop="operate" label="操作" width="100" fixed="right" align="center">
                         <template scope="scope">
                             <el-button type="text" size="small" @click="update(scope.$index, scope.row)">
                                 编辑

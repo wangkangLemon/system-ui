@@ -124,7 +124,8 @@
             <el-table-column
                     prop="operate"
                     label="操作"
-                    width="200">
+                    width="180"
+                    fixed="right">
                 <template scope="scope">
                     <el-button v-if="scope.row.status != 1" type="text" size="small" @click="disable(scope.row)">下线</el-button>
                     <el-button v-if="scope.row.status == 1" type="text" size="small" @click="disable(scope.row)">上线</el-button>

@@ -40,7 +40,7 @@
             </section>
             <section>
                 <i>支出类型</i>
-                <el-select v-model="fetchParam.trade_type" placeholder="请选择" clearable>
+                <el-select v-model="fetchParam.trade_type" placeholder="请选择" clearable @change="getData">
                     <el-option v-for="item in tradeTypes" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -64,7 +64,7 @@
                 :data="historyData"
                 stripe>
             <el-table-column
-                    min-width="200"
+                    min-width="300"
                     prop="trade_no"
                     label="流水号">
             </el-table-column>
@@ -74,14 +74,9 @@
                     width="180">
             </el-table-column>
             <el-table-column
+                    prop="trade_type_name"
                     width="180"
                     label="支出类型">
-                <template scope="scope">
-                    <span v-if="scope.row.trade_type == 'course_testing'">培训服务费</span>
-                    <span v-else-if="scope.row.trade_type == 'course_lucky_money'">课程红包费</span>
-                    <span v-else-if="scope.row.trade_type == 'speaking_lucky_money'">药我说赞助</span>
-                    <span v-else>其他费用</span>
-                </template>
             </el-table-column>
             <el-table-column
                     prop="store_name"
@@ -110,7 +105,7 @@
             </el-table-column>
              <el-table-column
                     prop="create_time_name"
-                    min-width="100"
+                    min-width="170"
                     label="添加时间">
             </el-table-column>
         </el-table>
@@ -128,7 +123,7 @@
     </article>
 </template>
 <script>
-    import {history, exportHistory} from '../../../services/finance/finance'
+    import {history, exportHistory, type} from '../../../services/finance/finance'
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import CourseList from '../../component/select/Course'
     import UserList from '../../component/select/User'
@@ -140,6 +135,7 @@
             userSelect: '',
             createTime: '',
             endTime: '',
+            trade_type: '',
         }
     }
     export default {
@@ -156,10 +152,15 @@
                 currentPage: 1,
                 pageSize: 15,
                 historyData: [],
-                total: 0
+                total: 0,
+                tradeTypes: []
             }
         },
         activated () {
+            type().then((data) => {
+                this.tradeTypes = data.types
+            })
+
             this.getData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -186,7 +187,8 @@
                     company_id: this.fetchParam.companySelect,
                     time_start: this.fetchParam.createTime,
                     time_end: this.fetchParam.endTime,
-                    user_id: this.fetchParam.userSelect
+                    user_id: this.fetchParam.userSelect,
+                    trade_type: this.fetchParam.trade_type
                 }
                 return history(params).then((ret) => {
                     this.historyData = ret.data

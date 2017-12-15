@@ -117,10 +117,13 @@
 
                 <el-table-column
                         prop="operate"
-                        label="操作">
+                        label="操作"
+                        width="100"
+                        fixed="right"
+                        align="center">
                     <template scope="scope">
-                        <el-button type="text" @click="editFn(scope.row)">修改</el-button>
-                        <el-button type="text" @click="delReward(scope.row)" v-if="monthGift.length > 1">删除</el-button>
+                        <el-button type="text" size="small" @click="editFn(scope.row)">修改</el-button>
+                        <el-button type="text" size="small" @click="delReward(scope.row)" v-if="monthGift.length > 1">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

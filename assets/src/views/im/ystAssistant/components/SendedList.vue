@@ -88,7 +88,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="100"
+                    width="80"
                     label="对象">
                 <template scope="scope">
                     <el-tag v-if="scope.row.receiver == 'all'" type="success">全部</el-tag>
@@ -102,13 +102,15 @@
                     label="成功数">
             </el-table-column>
             <el-table-column
-                    width="190"
+                    width="160"
                     prop="create_time"
                     label="时间">
             </el-table-column>
             <el-table-column
-                    width="100"
-                    label="操作">
+                    width="80"
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>

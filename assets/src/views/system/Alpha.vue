@@ -49,18 +49,20 @@
                     label="申请人">
             </el-table-column>
             <el-table-column
-                    width="150"
+                    width="130"
                     prop="user_mobile"
                     label="联系方式">
             </el-table-column>
             <el-table-column
-                    width="190"
+                    width="170"
                     prop="create_time"
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="100"
-                    label="操作">
+                    width="80"
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>

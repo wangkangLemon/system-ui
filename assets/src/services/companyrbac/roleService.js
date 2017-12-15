@@ -3,47 +3,47 @@
  */
 import * as api from '../api'
 import config from '../../utils/config'
-const urlPre = config.apiHost + '/com/rbac/role'
+const urlPre = config.apiHost + '/com/rbac'
 
 class RoleService {
     // 角色查询
-    search({page, page_size, disabled}) {
-        let url = `${urlPre}/search`
-        return api.get(url, {page, page_size, disabled}).then((ret) => {
+    search ({ category, disabled, page, page_size }) {
+        let url = `${urlPre}/${category}/role/search`
+        return api.get(url, { disabled, page, page_size }).then((ret) => {
             return ret.data
         })
     }
-    // 禁用
-    disable({id, disabled}) {
-        let url = `${urlPre}/${id}/disable`
-        return api.put(url, {disabled})
-    }
-    // 删除
-    delete(id) {
-        let url = `${urlPre}/${id}/`
-        return api.del(url)
-    }
     // 新增
-    add({id, role_name = '', disabled}) {
-        let url = `${urlPre}/`
-        return api.post(url, {role_name, disabled})
+    add ({ category, role_name, disabled }) {
+        let url = `${urlPre}/${category}/role/`
+        return api.post(url, { role_name, disabled })
     }
     // 修改
-    update({id, role_name = '', disabled}) {
-        let url = `${urlPre}/${id}/`
-        return api.put(url, {role_name, disabled})
+    update ({ category, id, role_name, disabled }) {
+        let url = `${urlPre}/${category}/role/${id}/`
+        return api.put(url, { role_name, disabled })
+    }
+    // 禁用
+    disable ({ category, id, disabled }) {
+        let url = `${urlPre}/${category}/role/${id}/disable`
+        return api.put(url, { disabled })
+    }
+    // 删除
+    delete ({ category, id }) {
+        let url = `${urlPre}/${category}/role/${id}/`
+        return api.del(url)
     }
     // 获取指定角色已经关联的权限
-    searchPermission(id) {
-        let url = `${urlPre}/${id}/permission/search`
+    searchPermission ({ category, id }) {
+        let url = `${urlPre}/${category}/role/${id}/permission/search`
         return api.get(url).then((ret) => {
             return ret.data
         })
     }
     // 更新指定角色的关联权限
-    permission({id, ids}) {
-        let url = `${urlPre}/${id}/permission/`
-        return api.post(url, {ids})
+    permission ({ category, id, ids }) {
+        let url = `${urlPre}/${category}/role/${id}/permission/`
+        return api.post(url, { ids })
     }
 }
 

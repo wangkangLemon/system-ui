@@ -74,7 +74,7 @@
             </section>
         </section>
         <el-table v-loading="loading" :data="dataList" :fit="true" border>
-            <el-table-column prop="trade_no" min-width="180" label="订单编号"></el-table-column>
+            <el-table-column prop="trade_no" min-width="160" label="订单编号"></el-table-column>
             <el-table-column prop="course_name" label="课程名称" width="180"></el-table-column>
             <el-table-column prop="price" label="价格" width="100"></el-table-column>
             <el-table-column prop="user_name" label="下单人" width="100"></el-table-column>
@@ -90,10 +90,10 @@
                     {{payStatus[scope.row.status]}}
                 </template>
             </el-table-column>
-            <el-table-column prop="create_time_name" label="下单时间" width="180"></el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column prop="create_time_name" label="下单时间" width="170"></el-table-column>
+            <el-table-column label="操作" width="80" fixed="right" align="center">
                 <template scope="scope">
-                    <el-button type="text" @click="()=>{showDetail=true;detail=scope.row}">详情</el-button>
+                    <el-button type="text" size="small" @click="()=>{showDetail=true;detail=scope.row}">详情</el-button>
                 </template>
             </el-table-column>
         </el-table>

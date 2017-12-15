@@ -107,7 +107,7 @@
             </el-table-column> -->
             <el-table-column
                     prop="status"
-                    width="180"
+                    width="140"
                     label="状态">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.status">{{scope.row.status}}</el-tag>
@@ -121,13 +121,15 @@
             </el-table-column>
             <el-table-column
                     prop="create_time_name"
-                    width="180"
+                    width="170"
                     label="申请时间">
             </el-table-column>
             <el-table-column
-                    width="100"
+                    width="80"
                     prop="operate"
-                    label="操作">
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button type ="text" 
                      size="small" 

@@ -64,12 +64,12 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="120"
+                    width="170"
                     prop="login_ip_name"
                     label="登录IP">
             </el-table-column>
             <el-table-column
-                    width="180"
+                    width="170"
                     prop="login_time_name"
                     label="登录时间">
             </el-table-column>

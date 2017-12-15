@@ -132,14 +132,16 @@
                     label="变更后余额">
             </el-table-column>
             <el-table-column
-                    width="180"
+                    width="170"
                     prop="create_time_name"
                     label="变更时间">
             </el-table-column>
             <el-table-column
                     width="100"
                     prop="operate"
-                    label="操作">
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="showFn(scope.row)">
                         查看收据

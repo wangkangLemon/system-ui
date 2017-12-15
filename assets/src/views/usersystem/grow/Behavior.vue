@@ -49,10 +49,12 @@
             <el-table-column prop="growth" label="完成一次成长值"></el-table-column>
             <el-table-column prop="limit" label="最多获取成长值"></el-table-column>
             <el-table-column prop="description" label="说明"></el-table-column>
-            <el-table-column prop="update_time_name" label="更新时间"></el-table-column>
+            <el-table-column prop="update_time_name" label="更新时间" width="170"></el-table-column>
             <el-table-column
-                    width="207"
-                    label="操作">
+                    width="80"
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                 </template>

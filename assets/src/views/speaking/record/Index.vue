@@ -59,7 +59,7 @@
                     <i>{{scope.row.recording_text}}</i>
                 </template>
             </el-table-column>
-            <el-table-column prop="create_time_name" label="练习时间" width="180"></el-table-column>
+            <el-table-column prop="create_time_name" label="练习时间" width="170" align="center"></el-table-column>
         </el-table>
 
         <el-pagination class="pagin"

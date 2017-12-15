@@ -3,7 +3,7 @@
 @import "../../../../utils/mixins/common";
 @import "../../../../utils/mixins/topSearch";
 
-.rbac-operation-container {
+#company-rbac-operation-container {
     @extend %content-container;
 
     .manage-container {
@@ -21,8 +21,9 @@
     }
 }
 </style>
+
 <template>
-    <main class="rbac-operation-container">
+    <main id="company-rbac-operation-container">
         <article class="manage-container">
             <el-button icon="plus" type="primary" @click="add()">添加</el-button>
         </article>
@@ -88,30 +89,30 @@
         </el-dialog>
     
         <el-table border v-loading="loading" :data="dataList">
-            <el-table-column prop="operation_name" label="操作名称">
+            <el-table-column prop="operation_name" label="操作名称" min-width="100">
             </el-table-column>
-            <el-table-column prop="operation_url" label="操作地址">
+            <el-table-column prop="operation_url" label="操作地址" min-width="200">
             </el-table-column>
-            <el-table-column prop="operation_method" label="操作方法">
+            <el-table-column prop="operation_method" label="操作方法" width="160">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.operation_method == '*'">get,put,post,delete</el-tag>
                     <el-tag type="success" v-if="scope.row.operation_method != '*'">{{scope.row.operation_method}}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="owner" label="所有权">
+            <el-table-column prop="owner" label="所有权" width="100">
                 <template scope="scope">
                     <el-tag type="success" v-if="scope.row.owner == 'public'">公共接口</el-tag>
                     <el-tag type="gray" v-if="scope.row.owner == 'role'">角色接口</el-tag>
                     <el-tag type="danger" v-if="scope.row.owner == 'disabled'">禁用接口</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="limit" label="限制访问次数">
+            <el-table-column prop="limit" label="限制访问次数" width="130">
             </el-table-column>
-            <el-table-column prop="create_time_name" label="创建时间">
+            <el-table-column prop="create_time_name" label="创建时间" width="170">
             </el-table-column>
-            <el-table-column prop="update_time_name" label="最后编辑时间">
+            <el-table-column prop="update_time_name" label="最后编辑时间" width="170">
             </el-table-column>
-            <el-table-column prop="operate" label="操作">
+            <el-table-column prop="operate" label="操作" width="100" fixed="right" align="center">
                 <template scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
@@ -122,11 +123,14 @@
         </el-pagination>
     </main>
 </template>
+
 <script>
 import operationService from '../../../../services/companyrbac/operationService'
+
 function clearFn() {
     return {
         id: '',
+        category: '',
         operation_name: '',
         operation_url: '',
         operation_method: '',
@@ -136,6 +140,7 @@ function clearFn() {
 }
 function clearSearch() {
     return {
+        category: '',
         page: 1,
         page_size: 15,
         owner: void '',
@@ -144,9 +149,11 @@ function clearSearch() {
         operation_url: void '',
     }
 }
+
 export default {
     data() {
         return {
+            category: '',
             loading: false,
             updateForm: false,
             search: clearSearch(),
@@ -178,6 +185,7 @@ export default {
         }
     },
     activated() {
+        this.category = this.$route.params.category
         this.getData().then(() => {
             xmview.setContentLoading(false)
         })
@@ -188,6 +196,7 @@ export default {
         },
         getData() {
             this.loading = true
+            this.search.category = this.category
             return operationService.search(this.search).then((ret) => {
                 this.dataList = ret.data
                 this.loading = false
@@ -198,6 +207,7 @@ export default {
         },
         add () {
             this.form = clearFn()
+            this.form.category = this.category
             this.updateForm = true
         },
         edit (row) {
@@ -206,7 +216,7 @@ export default {
         },
         del(index, row) {
             xmview.showDialog(`你确认要删除【<i style="color: red">${row.operation_name}</i>】吗？`, () => {
-                operationService.delete(row.id).then(() => {
+                operationService.delete({category: this.category, id: row.id}).then(() => {
                     this.dataList.splice(index, 1)
                     xmview.showTip('success', '操作成功')
                 })
@@ -220,6 +230,7 @@ export default {
                     msg = '修改成功'
                     reqFn = operationService.update
                 }
+                this.form.category = this.category
                 reqFn(this.form).then(() => {
                     this.updateForm = false
                     this.getData()

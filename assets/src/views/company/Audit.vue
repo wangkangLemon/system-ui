@@ -79,11 +79,6 @@
                         label="联系电话">
                 </el-table-column>
                 <el-table-column
-                        width="180"
-                        prop="create_time_name"
-                        label="申请时间">
-                </el-table-column>
-                <el-table-column
                         prop="status"
                         width="100"
                         label="状态">
@@ -94,9 +89,16 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                        width="170"
+                        prop="create_time_name"
+                        label="申请时间">
+                </el-table-column>
+                <el-table-column
                         prop="operate"
                         width="80"
-                        label="操作">
+                        label="操作"
+                        fixed="right"
+                        align="center">
                     <template scope="scope">
                         <router-link class="show-link" :to="{name: 'company-audit-show', params: {id: scope.row.id}}">
                             查看

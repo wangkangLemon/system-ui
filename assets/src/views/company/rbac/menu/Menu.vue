@@ -1,49 +1,49 @@
 <!--菜单管理-->
 <style lang='scss' rel='stylesheet/scss'>
-    @import "../../../../utils/mixins/common";
-    @import "../../../../utils/mixins/mixins";
+@import "../../../../utils/mixins/common";
+@import "../../../../utils/mixins/mixins";
 
-    #sys-rbac-menu {
-        @extend %content-container;
+#company-rbac-menu {
+    @extend %content-container;
 
-        .manage-container {
-            @extend %right-top-btnContainer;
+    .manage-container {
+        @extend %right-top-btnContainer;
+    }
+
+    > section {
+        display: inline-block;
+        vertical-align: top;
+    }
+    .left-container {
+        min-width: 300px;
+        border-right: 1px solid #ededed;
+    }
+
+    .right-container {
+        width: 558px;
+        margin-left: 15px;
+        .edit-content {
+            margin: 10px 0 0
         }
 
-        > section {
-            display: inline-block;
-            vertical-align: top;
-        }
-        .left-container {
-            min-width: 300px;
-            border-right: 1px solid #ededed;
-        }
-
-        .right-container {
-            width: 558px;
-            margin-left: 15px;
-            .edit-content {
-                margin: 10px 0 0
-            }
-
-            .btn-selected {
-                background: #20A0FF;
-                color: #fff;
-            }
-        }
-
-        .el-dialog__wrapper {
-            padding-top: 15px;
-            background: rgba(0, 0, 0, .5);
-            z-index: 1000;
+        .btn-selected {
+            background: #20A0FF;
+            color: #fff;
         }
     }
+
+    .el-dialog__wrapper {
+        padding-top: 15px;
+        background: rgba(0, 0, 0, .5);
+        z-index: 1000;
+    }
+}
 </style>
 
 <template>
-    <article id="sys-rbac-menu">
+    <main id="company-rbac-menu">
         <section class="left-container">
-              <EditorTree v-model='treeData' ref="tree"  @onNodeClick="treeClick"></EditorTree>    
+              <EditorTree v-model='treeData' ref="tree" @onNodeClick="treeClick"></EditorTree>    
         </section>
 
         <section class="right-container">
@@ -110,206 +110,212 @@
                 </section>
             </article>
         </div>
-    </article>
+    </main>
 </template>
+
 <script type="text/jsx">
-    import menuService from '../../../../services/companyrbac/menuService'
-    import EditorTree from '../../../component/tree/EditorTree.vue'
-    export default{
-        data () {
-            return {
-                activeTab: 'root',
-                nodeSelected: void 0, // 被选中的node节点
-                moveToNode: void 0, // 将要移动到最终的分类
-                nodeItem:'',
-                treeData: [],
-                moveTreeData: [],
-                defaultProps: {
-                    children: 'children',
-                    label: 'label'
-                },
-                dialogConfirm: {
-                    isShow: false,
-                    msg: '',
-                    confirmClick: {}
-                },
-                dialogTree: {
-                    isShow: false,
-                    confirmClick: {}
-                },
-                item: {   // 添加元素
-                    id: -1,
-                    label: '',
-                    children: null
-                },
-                fetchParam: getFetchParam(),
-                rules: {
-                    menu_name: [
-                        {required: true, message: '请菜单名称', trigger: 'blur'},
-                    ],
-                    menu_url: [
-                        {required: true, message: '请菜单URL', trigger: 'blur'},
-                    ]
+import menuService from '../../../../services/companyrbac/menuService'
+import EditorTree from '../../../component/tree/EditorTree.vue'
+
+export default{
+    data () {
+        return {
+            category: '',
+            activeTab: 'root',
+            nodeSelected: void 0, // 被选中的node节点
+            moveToNode: void 0, // 将要移动到最终的分类
+            nodeItem:'',
+            treeData: [],
+            moveTreeData: [],
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
+            dialogConfirm: {
+                isShow: false,
+                msg: '',
+                confirmClick: {}
+            },
+            dialogTree: {
+                isShow: false,
+                confirmClick: {}
+            },
+            item: {   // 添加元素
+                id: -1,
+                label: '',
+                children: null
+            },
+            fetchParam: getFetchParam(),
+            rules: {
+                menu_name: [
+                    {required: true, message: '请菜单名称', trigger: 'blur'},
+                ],
+                menu_url: [
+                    {required: true, message: '请菜单URL', trigger: 'blur'},
+                ]
+            }
+        }
+    },
+    watch: {
+        'activeTab'(val) {
+            if (val !== 'edit') {
+                this.resetForm()
+            } else {
+                if (typeof(this.nodeSelected) !== 'undefined' && typeof(this.nodeSelected.id) !== 'undefined') {
+                    menuService.getInfo({category: this.category, id: this.nodeSelected.id}).then((ret) => {
+                        if (ret.code === 0) {
+                            this.fetchParam = ret.data.data
+                        }
+                    })
                 }
             }
         },
-        watch: {
-            'activeTab'(val) {
-                if (val !== 'edit') {
+    },
+    activated () {
+        this.category = this.$route.params.category
+        xmview.setContentLoading(false)
+        this.getTreeData()
+    },
+    methods: {
+        moveTreeClick(obj, node, self) {
+            this.moveToNode = obj
+            
+        },
+        // 点击树发生动作
+        treeClick(obj, node, self) {
+            this.activeTab = 'edit'
+            this.nodeSelected = obj
+            this.nodeItem =node
+            menuService.getInfo({category: this.category, id: this.nodeSelected.id}).then((ret) => {
+                if (ret.code === 0) {
+                    this.fetchParam = ret.data.data
+                    
+                }
+            })
+        },
+        // 获取树结构结构
+        getTreeData (){
+            menuService.search(this.category).then((ret) => {
+                this.treeData = ret.data
+            })
+        },
+        // 删除分类
+        deleteMenu (){
+            if (!this.nodeSelected) {
+                xmview.showTip('warning', '请先选中一个分类')
+                return
+            }
+            let nodeitem = this.nodeItem //查看是子节点
+            let node = this.nodeSelected
+            if (node && nodeitem.childNodes.length > 0) {
+                xmview.showTip('warning', '该分类下还有子分类,不能被删除')
+                return
+            }
+
+            this.dialogConfirm.isShow = true
+            this.dialogConfirm.msg = `是否确认删除分类 <i style="color:red">${node.label}</i> 吗？`
+            this.dialogConfirm.confirmClick = () => {
+                menuService.delete({category: this.category, id: node.id}).then(() => {
+                    xmview.showTip('success', '操作成功!')
+                    node = null
+                    nodeitem = null
+                    this.$refs.tree.removeItem(this.nodeSelected,this.nodeparent) // 删除选中元素
+                    this.dialogConfirm.isShow = false
                     this.resetForm()
+                    
+                })
+            }
+            this.fetchParam = getFetchParam()
+        },
+        // 提交表单
+        submitForm () {
+            this.$refs.form.validate((ret) => {
+                if (!ret) return
+                let p
+                this.fetchParam.category = this.category
+                if (this.activeTab === 'add') {
+                    if (this.fetchParam.id === 0 || typeof(this.fetchParam.id) == 'undefined') {
+                        xmview.showTip('warning', '请先选中一个分类')
+                        return
+                    }
+                    this.fetchParam.parent_id = this.fetchParam.id
+                    p = menuService.add(this.fetchParam)
+                } else if (this.activeTab === 'edit') {
+                    p = menuService.update(this.fetchParam)
                 } else {
-                    if (typeof(this.nodeSelected) !== 'undefined' && typeof(this.nodeSelected.id) !== 'undefined') {
-                        menuService.getInfo(this.nodeSelected.id).then((ret) => {
-                            if (ret.code === 0) {
-                                this.fetchParam = ret.data.data
-                            }
-                        })
-                    }
+                    this.fetchParam.parent_id = 0
+                    p = menuService.add(this.fetchParam)
                 }
-            },
-        },
-        activated () {
-            xmview.setContentLoading(false)
-            this.getTreeData()
-        },
-        methods: {
-            moveTreeClick(obj, node, self) {
-                this.moveToNode = obj
-                
-            },
-            // 点击树发生动作
-            treeClick(obj, node, self) {
-                this.activeTab = 'edit'
-                this.nodeSelected = obj
-                this.nodeItem =node
-                menuService.getInfo(this.nodeSelected.id).then((ret) => {
-                    if (ret.code === 0) {
-                        this.fetchParam = ret.data.data
-                        
-                    }
-                })
-            },
-            // 获取树结构结构
-            getTreeData (){
-                menuService.search().then((ret) => {
-                    this.treeData = ret.data
-                })
-            },
-            // 删除分类
-            deleteMenu (){
-                if (!this.nodeSelected) {
-                    xmview.showTip('warning', '请先选中一个分类')
-                    return
-                }
-                let nodeitem = this.nodeItem //查看是子节点
-                let node = this.nodeSelected
-                if (node && nodeitem.childNodes.length > 0) {
-                    xmview.showTip('warning', '该分类下还有子分类,不能被删除')
-                    return
-                }
-
-                this.dialogConfirm.isShow = true
-                this.dialogConfirm.msg = `是否确认删除分类 <i style="color:red">${node.label}</i> 吗？`
-                this.dialogConfirm.confirmClick = () => {
-                    menuService.delete(node.id).then(() => {
-                        xmview.showTip('success', '操作成功!')
-                        node = null
-                        nodeitem = null
-                        this.$refs.tree.removeItem(this.nodeSelected,this.nodeparent) // 删除选中元素
-                        this.dialogConfirm.isShow = false
-                        this.resetForm()
-                        
-                    })
-                }
-                this.fetchParam = getFetchParam()
-            },
-            // 提交表单
-            submitForm () {
-                this.$refs.form.validate((ret) => {
-                    if (!ret) return
-
-                    let p
-                    if (this.activeTab === 'add') {
-                        if (this.fetchParam.id === 0 || typeof(this.fetchParam.id) == 'undefined') {
-                            xmview.showTip('warning', '请先选中一个分类')
-                            return
-                        }
-                        this.fetchParam.parent_id = this.fetchParam.id
-                        p = menuService.add(this.fetchParam)
-                    } else if (this.activeTab === 'edit') {
-                        p = menuService.update(this.fetchParam)
-                    } else {
-                        this.fetchParam.parent_id = 0
-                        p = menuService.add(this.fetchParam)
-                    }
-        
-                    p.then((ret) => {
-                        if(this.activeTab === 'add') {
+    
+                p.then((ret) => {
+                    if(this.activeTab === 'add') {
+                        this.item.id = ret.data.id
+                        this.item.label = this.fetchParam.menu_name
+                        this.$refs.tree.addItem(this.item, this.nodeSelected)
+                    }else if (this.activeTab==='root') {
                             this.item.id = ret.data.id
                             this.item.label = this.fetchParam.menu_name
-                            this.$refs.tree.addItem(this.item, this.nodeSelected)
-                        }else if (this.activeTab==='root') {
-                              this.item.id = ret.data.id
-                              this.item.label = this.fetchParam.menu_name
-                            this.$refs.tree.addItem(this.item)
-                        }else if(this.activeTab==='edit') {
-                                this.nodeSelected.label = this.fetchParam.menu_name
-                        }
-                        this.$forceUpdate()
-                        xmview.showTip('success', '操作成功!')
-                        // this.getTreeData()
-                    })
-                })
-            },
-            // 重置表单
-            resetForm () {
-                this.$refs.form.resetFields()
-            },
-            // 移动子分类点击
-            moveSubMenu () {
-                if (!this.nodeSelected) {
-                    xmview.showTip('warning', '请先选中一个分类')
-                    return
-                }
-                menuService.search().then((ret) => {
-                    this.moveTreeData = ret.data
-                    this.dialogTree.isShow = true
-                    this.dialogTree.confirmClick = () => {
-                        let id = this.nodeSelected.id
-                        let to = this.moveToNode.id
-                        if (id === to) {
-                            xmview.showTip('warning', '请选择不同的分类')
-                            return
-                        }
-                        this.fetchParam.parent_id = to
-                        menuService.update(this.fetchParam).then((ret) => {
-                            // 重新渲染树节点
-                            if (ret.code === 0) {
-                                xmview.showTip('success', '操作成功!')
-                                 this.dialogTree.isShow = false
-                                 // 移动节点
-                                this.$refs.tree.removeItem(this.nodeSelected)
-                                 this.$refs.tree.addItem(this.nodeSelected, this.moveToNode)
-                                this.$forceUpdate()
-                            } else if (ret.code === 1) {
-                                xmview.showTip('error', ret.message)
-                            }
-                        })
+                        this.$refs.tree.addItem(this.item)
+                    }else if(this.activeTab==='edit') {
+                            this.nodeSelected.label = this.fetchParam.menu_name
                     }
+                    this.$forceUpdate()
+                    xmview.showTip('success', '操作成功!')
+                    // this.getTreeData()
                 })
-            },
+            })
         },
-        components: {EditorTree}
+        // 重置表单
+        resetForm () {
+            this.$refs.form.resetFields()
+        },
+        // 移动子分类点击
+        moveSubMenu () {
+            if (!this.nodeSelected) {
+                xmview.showTip('warning', '请先选中一个分类')
+                return
+            }
+            menuService.search(this.category).then((ret) => {
+                this.moveTreeData = ret.data
+                this.dialogTree.isShow = true
+                this.dialogTree.confirmClick = () => {
+                    let id = this.nodeSelected.id
+                    let to = this.moveToNode.id
+                    if (id === to) {
+                        xmview.showTip('warning', '请选择不同的分类')
+                        return
+                    }
+                    this.fetchParam.parent_id = to
+                    this.fetchParam.category = this.category
+                    menuService.update(this.fetchParam).then((ret) => {
+                        // 重新渲染树节点
+                        if (ret.code === 0) {
+                            xmview.showTip('success', '操作成功!')
+                                this.dialogTree.isShow = false
+                                // 移动节点
+                            this.$refs.tree.removeItem(this.nodeSelected)
+                                this.$refs.tree.addItem(this.nodeSelected, this.moveToNode)
+                            this.$forceUpdate()
+                        } else if (ret.code === 1) {
+                            xmview.showTip('error', ret.message)
+                        }
+                    })
+                }
+            })
+        },
+    },
+    components: {EditorTree}
+}
+function getFetchParam () {
+    return {
+        id: void 0,
+        category: '',
+        parent_id: void 0,
+        menu_name: void '',
+        menu_url: void '',
+        menu_icon: void '',
+        menu_order: void 0,
+        disabled: void 0,
     }
-    function getFetchParam () {
-        return {
-            parent_id: void 0,
-            menu_name: void '',
-            menu_url: void '',
-            menu_icon: void '',
-            menu_order: void 0,
-            disabled: void 0,
-            id: void 1,
-        }
-    }
+}
 </script>

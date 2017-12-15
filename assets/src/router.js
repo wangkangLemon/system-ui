@@ -20,6 +20,7 @@ import newCourse from './routers/newcourse/course' // 系列课程
 import examPaper from './routers/exam/paper' // 试卷管理
 import examLibrary from './routers/exam/library' // 题库管理
 import examQuestion from './routers/exam/question' // 试题管理
+import courseCommnet from './routers/comment' // 评论管理
 import authUtils from './utils/authUtils'
 import * as typeUtils from './utils/typeUtils'
 
@@ -130,6 +131,8 @@ const routes = [
             examLibrary,
             // 试题管理
             examQuestion,
+            // 评论管理
+            courseCommnet,
         ]
     },
     {   // 登录

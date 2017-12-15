@@ -28,7 +28,7 @@
             <el-table-column
                     prop="growth"
                     label="所需成长值"
-                    width="180">
+                    width="110">
             </el-table-column>
             <el-table-column
                     prop="description"
@@ -38,22 +38,24 @@
             <el-table-column
                     prop="credit_times"
                     label="积分收益系数"
-                    width="180">
+                    width="130">
             </el-table-column>
             <el-table-column
                     prop="growth_times"
                     label="每日启动成长值倍数"
-                    width="180">
+                    width="170">
             </el-table-column>
             <el-table-column
                     prop="limit"
                     label="每日成长值上限"
-                    width="180">
+                    width="140">
             </el-table-column>
             <el-table-column
                     prop="operate"
                     label="操作"
-                    width="180">
+                    width="80"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                 </template>

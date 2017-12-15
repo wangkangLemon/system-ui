@@ -47,27 +47,28 @@
                     label="总分数">
             </el-table-column>
             <el-table-column
-                    width="80"
+                    width="100"
                     prop="score_pass"
                     label="及格分数">
             </el-table-column>
             <el-table-column
-                    width="100"
-                    label="当前状态">
+                    width="80"
+                    label="状态">
                 <template scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
                     <el-tag v-else-if="scope.row.status == 1" type="danger">下线</el-tag>
                 </template>
             </el-table-column>
             <el-table-column
-                    width="190"
+                    width="170"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    width="207"
-                    label="操作">
+                    width="140"
+                    label="操作"
+                    align="center">
                 <template scope="scope">
                     <el-button
                             @click="$router.push({name: 'test-paper-edit', params: {exam_id: scope.row.id}})"

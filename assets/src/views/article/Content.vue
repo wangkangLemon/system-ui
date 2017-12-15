@@ -66,24 +66,23 @@
                 <el-table-column
                         prop="status_name"
                         label="状态"
-                        width="200">
+                        width="90">
                     <template scope="scope">
                         <el-tag type="gray" v-if="scope.row.status">{{scope.row.status_name}}</el-tag>
                         <el-tag type="success" v-if="!scope.row.status">{{scope.row.status_name}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="create_time_name"
-                        label="创建时间"
-                        width="200">
-                </el-table-column>
-                <el-table-column
                         prop="hits"
                         label="阅读量"
-                        width="200">
+                        width="90">
                 </el-table-column>
-                
-                <el-table-column prop="operate" label="操作">
+                <el-table-column
+                        prop="create_time_name"
+                        label="创建时间"
+                        width="170">
+                </el-table-column>
+                <el-table-column prop="operate" label="操作" width="140" fixed="right" align="center">
                     <template scope="scope">
                         <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
                             查看

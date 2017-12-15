@@ -161,13 +161,15 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="190"
+                    width="170"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
             <el-table-column
-                    width="150"
-                    label="操作">
+                    width="70"
+                    label="操作"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">

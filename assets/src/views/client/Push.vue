@@ -117,7 +117,7 @@
             <el-table-column
                     prop="send_time"
                     label="发送时间"
-                    width="200">
+                    width="160">
             </el-table-column>
             <el-table-column
                     prop="status"
@@ -129,7 +129,7 @@
                     label="管理员"
                     width="100">
             </el-table-column>
-            <el-table-column prop="operate" label="操作" width="100">
+            <el-table-column prop="operate" label="操作" width="80" fixed="right" align="center">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="checkDetail(scope.$index, scope.row)">
                         详情

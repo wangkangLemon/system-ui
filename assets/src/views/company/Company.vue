@@ -119,13 +119,16 @@
                     label="邮箱">
             </el-table-column>
             <el-table-column
-                    width="180"
+                    width="170"
                     prop="create_time_name"
                     label="创建时间">
             </el-table-column>
             <el-table-column
                     prop="operate"
-                    label="操作" width="180">
+                    label="操作"
+                    width="150"
+                    fixed="right"
+                    align="center">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="adminPage(scope.$index, scope.row)">
                         管理员
