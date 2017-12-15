@@ -29,8 +29,10 @@
                 </el-table-column>
                 <el-table-column
                         width="250"
-                        label="平台使用费单价（元/人）"
-                        prop="val">
+                        label="平台使用费单价（元/人）">
+                        <template scope="scope">
+                            {{scope.row.val/100}}
+                        </template>
                 </el-table-column>
                 <el-table-column
                         width="250"
@@ -100,10 +102,13 @@
                     border
                     style="width: 800px">
                     <el-table-column
-                      prop="after"
                       label="平台使用费单价（元/人）"
                       width="300"
                       :resizable="false">
+                        <template scope="scope">
+                            {{scope.row.after/100}}
+                        </template>
+
                     </el-table-column>
                     <el-table-column
                       prop="created_at"

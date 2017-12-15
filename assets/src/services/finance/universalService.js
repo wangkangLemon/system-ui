@@ -14,6 +14,7 @@ class TestUnversalService {
 
     update(id, {price}) {
         let url = `${urlPre}/sys/finance/pricing/${id}`
+        price = price * 100
         return api.put(url, JSON.stringify({price})).then((ret) => {
             return ret.data
         })
