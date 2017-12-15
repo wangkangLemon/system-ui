@@ -39,7 +39,15 @@
                     {{specialInfo.store_name == '' ? '全部连锁' : specialInfo.store_name}}
                 </div>
             </div>
-            <el-form-item label="优惠截止日期：" prop="deadline">
+            <el-form-item label="优惠截止日期：" prop="deadline" v-if="specialInfo.store_name != ''">
+                <el-date-picker
+                        v-model="specialInfo.deadline"
+                        type="datetime"
+                        placeholder="选择截止日期">
+                </el-date-picker>
+                <div class="text_warning">截止日期为所选日期当日00:00:00</div>
+            </el-form-item>
+            <el-form-item label="优惠截止日期：" prop="deadline1" v-if="specialInfo.store_name == ''">
                 <el-date-picker
                         v-model="specialInfo.deadline"
                         type="datetime"
@@ -134,7 +142,9 @@
                         xmview.showTip('error', '您填写的数据不对，请检查红色项')
                         return
                     }
-                    this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
+                    if (this.specialInfo.deadline && this.specialInfo.deadline != '') {
+                        this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
+                    }
                     TestSpecialService.update(this.$route.params.id, this.specialInfo).then(() => {
                         xmview.showTip('success', '操作成功')
                         this.$refs['form'].resetFields()

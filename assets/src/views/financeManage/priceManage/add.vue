@@ -39,7 +39,7 @@
                 <div class="text_warning">若不填写连锁名称，则该工业对所有连锁优惠生效</div>
             </el-form-item>
 
-            <el-form-item label="优惠截止日期：" prop="deadline">
+            <el-form-item label="优惠截止日期：" prop="deadline" v-if="specialInfo.store_id != ''">
                 <el-date-picker
                         v-model="specialInfo.deadline"
                         type="date"
@@ -47,6 +47,16 @@
                 </el-date-picker>
                 <div class="text_warning">截止日期为所选日期当日00:00:00</div>
             </el-form-item>
+
+            <el-form-item label="优惠截止日期：" prop="deadline1" v-if="specialInfo.store_id == ''">
+                <el-date-picker
+                        v-model="specialInfo.deadline"
+                        type="date"
+                        placeholder="选择截止日期">
+                </el-date-picker>
+                <div class="text_warning">截止日期为所选日期当日00:00:00</div>
+            </el-form-item>
+
             <hr>
             <section class="title">
                 <h2>投放定价信息</h2>
@@ -116,7 +126,9 @@
                     if (!pass) {
                         return
                     }
-                    this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
+                    if (this.specialInfo.deadline && this.specialInfo.deadline != '') {
+                        this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
+                    }
                     return TestSpecialService.create(this.specialInfo).then(() => {
                         xmview.showTip('success', '操作成功')
                         this.$refs['addForm'].resetFields()
