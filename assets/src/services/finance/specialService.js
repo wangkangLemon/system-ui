@@ -14,6 +14,9 @@ class TestSpecialService {
     // 新建模板
     create ({company_id, store_id, deadline, industry_course_price, speaking_price, lucky_money_price}) {
         let url = `${urlPre}/sys/finance/pricing/company`
+        industry_course_price = industry_course_price * 100
+        speaking_price = speaking_price * 100
+        lucky_money_price = lucky_money_price * 100
         return api.post(url, JSON.stringify({company_id, store_id, deadline, industry_course_price, speaking_price, lucky_money_price})).then((ret) => {
             return ret.data
         })
@@ -21,6 +24,9 @@ class TestSpecialService {
     // 更新模板
     update (id, {company_id, store_id, deadline, industry_course_price, speaking_price, lucky_money_price}) {
         let url = `${urlPre}/sys/finance/pricing/company/${id}`
+        industry_course_price = industry_course_price * 100
+        speaking_price = speaking_price * 100
+        lucky_money_price = lucky_money_price * 100
         return api.put(url, JSON.stringify({company_id, store_id, deadline, industry_course_price, speaking_price, lucky_money_price})).then((ret) => {
             return ret.data
         })

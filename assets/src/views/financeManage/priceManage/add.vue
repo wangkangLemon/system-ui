@@ -131,9 +131,6 @@
                     if (this.specialInfo.deadline && this.specialInfo.deadline != '') {
                         this.specialInfo.deadline = timeUtils.formatDate(this.specialInfo.deadline, 'yyyy-MM-dd hh:mm:ss')
                     }
-                    this.specialInfo.industry_course_price = this.specialInfo.industry_course_price * 100
-                    this.specialInfo.lucky_money_price = this.specialInfo.lucky_money_price * 100
-                    this.specialInfo.speaking_price = this.specialInfo.speaking_price * 100
                     return TestSpecialService.create(this.specialInfo).then(() => {
                         xmview.showTip('success', '操作成功')
                         this.$refs['addForm'].resetFields()
