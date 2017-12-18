@@ -130,7 +130,7 @@
             getSpecialById () {
                 let id = this.$route.params.id
                 TestSpecialService.getSpecialById(id).then((ret) => {
-                    ret.pricing_company.deadline = new Date(ret.pricing_company.deadline)
+                    ret.pricing_company.deadline = ret.pricing_company.deadline == '' ? '' : new Date(ret.pricing_company.deadline)
                     ret.pricing_company.industry_course_price = ret.pricing_company.industry_course_price == 0 ? void 0 : ret.pricing_company.industry_course_price / 100
                     ret.pricing_company.lucky_money_price = ret.pricing_company.lucky_money_price == 0 ? void 0 : ret.pricing_company.lucky_money_price / 100
                     ret.pricing_company.speaking_price = ret.pricing_company.speaking_price == 0 ? void 0 : ret.pricing_company.speaking_price / 100
