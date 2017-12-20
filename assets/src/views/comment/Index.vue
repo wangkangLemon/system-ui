@@ -33,8 +33,9 @@
                 </el-form-item>
                 <el-form-item label="当前状态">
                     <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
-                        <el-option label="正常" :value="0"></el-option>
-                        <el-option label="已删除" :value="1"></el-option>
+                        <el-option label="待审核" :value="0"></el-option>
+                        <el-option label="驳回" :value="1"></el-option>
+                        <el-option label="通过" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -75,7 +76,7 @@
                         </template>
                 </el-table-column>
                 <el-table-column
-                        width="120"
+                        width="90"
                         prop="courseType"
                         label="课程类型">
                     <template scope="scope">
@@ -90,28 +91,29 @@
                         label="课程归属">
                 </el-table-column>
                 <el-table-column
-                        width="190"
+                        width="170"
                         prop="create_time"
                         label="评论发表时间">
                 </el-table-column>
                 <el-table-column
-                        width="100"
+                        width="90"
                         label="当前状态">
                     <template scope="scope">
-                        <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
-                        <el-tag v-else-if="scope.row.status == 1" type="danger">已删除</el-tag>
+                        <el-tag v-if="scope.row.status === 0" type="primary">待审核</el-tag>
+                        <el-tag v-if="scope.row.status === 1" type="danger">驳回</el-tag>
+                        <el-tag v-if="scope.row.status === 2" type="success">通过</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
                     fixed="right"
-                    width="80"
+                    width="150"
                     label="操作"
                     align="center">
                     <template scope="scope">
                         <el-button @click="del(scope.$index, scope.row)" type="text" size="small"
-                            v-if="scope.row.can_edit == 1 && scope.row.status == 0">删除</el-button>
+                                   :disabled="scope.row.can_edit == 1 && scope.row.status == 1">驳回</el-button>
                         <el-button @click="recovery(scope.$index, scope.row)" type="text" size="small"
-                            v-if="scope.row.can_edit == 1 && scope.row.status == 1">恢复</el-button>
+                                   :disabled="scope.row.can_edit == 1 && scope.row.status == 2">通过</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -130,24 +132,6 @@
                     </el-pagination>
                 </el-col>
             </el-row>
-
-            <el-dialog class="show-detail" title="查看店员" v-model="showDetail">
-                <div class="avatar" v-if="details != null">
-                    <img :src="{url: details.avatar, sex: details.sex} | defaultAvatar"/>
-                </div>
-                <div class="info" v-if="details != null">
-                    <h2>{{details.name}}({{details.company}})</h2>
-                    <p><i class="title">所属门店：</i><span class="value">{{details.dep_name || '无'}}</span></p>
-                    <p><i class="title">Mobile：</i><span class="value">{{details.mobile || '无'}}</span></p>
-                    <p><i class="title">Email：</i><span class="value">{{details.email || '无'}}</span></p>
-                    <p><i class="title">状态：</i><span class="value"><el-tag
-                            type="success">{{details.disabled ? '异常' : '正常'}}</el-tag></span></p>
-                    <p><i class="title">性别：</i> <span class="value">{{details.sex ? '男' : '女'}}</span></p>
-                    <p><i class="title">生日：</i><span class="value">{{details.birthday || '无'}}</span></p>
-                    <p><i class="title">地址：</i> <span class="value">{{details.address || '无'}}</span></p>
-                    <p><i class="title">注册时间：</i><span class="value">{{details.create_time_name || '无'}}</span></p>
-                </div>
-            </el-dialog>
         </div>
     </section>
 </template>
@@ -209,7 +193,7 @@
                 this.selectedIds = ret
             },
             del (index, row) {
-                this.$confirm('您是否确定删除此评论？', '删除', {
+                this.$confirm('您是否确定驳回此评论？', '驳回', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -217,22 +201,22 @@
                     return testCommentService.updateCommentStatus(row.id, 1).then((ret) => {
                         this.$message({
                             type: 'success',
-                            message: '删除成功!'
+                            message: '操作成功!'
                         })
                         this.fetchData()
                     })
                 })
             },
             recovery (index, row) {
-                this.$confirm('恢复后该评论将在评论区中显示，您是否确定恢复该评论？', '恢复', {
+                this.$confirm('通过后该评论将在评论区中显示，您是否确定通过该评论？', '通过', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return testCommentService.updateCommentStatus(row.id, 0).then((ret) => {
+                    return testCommentService.updateCommentStatus(row.id, 2).then((ret) => {
                         this.$message({
                             type: 'success',
-                            message: '恢复成功!'
+                            message: '操作成功!'
                         })
                         this.fetchData()
                     })
