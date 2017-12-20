@@ -110,10 +110,10 @@
                     label="操作"
                     align="center">
                     <template scope="scope">
-                        <el-button @click="del(scope.$index, scope.row)" type="text" size="small"
-                                   :disabled="scope.row.can_edit == 1 && scope.row.status == 1">驳回</el-button>
                         <el-button @click="recovery(scope.$index, scope.row)" type="text" size="small"
-                                   :disabled="scope.row.can_edit == 1 && scope.row.status == 2">通过</el-button>
+                                   :disabled="scope.row.can_edit === 0 || scope.row.status === 2">通过</el-button>
+                        <el-button @click="del(scope.$index, scope.row)" type="text" size="small"
+                                   :disabled="scope.row.can_edit === 0 || scope.row.status === 1">驳回</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -132,6 +132,24 @@
                     </el-pagination>
                 </el-col>
             </el-row>
+
+            <el-dialog class="show-detail" title="查看店员" v-model="showDetail">
+                <div class="avatar" v-if="details != null">
+                    <img :src="{url: details.avatar, sex: details.sex} | defaultAvatar"/>
+                </div>
+                <div class="info" v-if="details != null">
+                    <h2>{{details.name}}({{details.company}})</h2>
+                    <p><i class="title">所属门店：</i><span class="value">{{details.dep_name || '无'}}</span></p>
+                    <p><i class="title">Mobile：</i><span class="value">{{details.mobile || '无'}}</span></p>
+                    <p><i class="title">Email：</i><span class="value">{{details.email || '无'}}</span></p>
+                    <p><i class="title">状态：</i><span class="value"><el-tag
+                            type="success">{{details.disabled ? '异常' : '正常'}}</el-tag></span></p>
+                    <p><i class="title">性别：</i> <span class="value">{{details.sex ? '男' : '女'}}</span></p>
+                    <p><i class="title">生日：</i><span class="value">{{details.birthday || '无'}}</span></p>
+                    <p><i class="title">地址：</i> <span class="value">{{details.address || '无'}}</span></p>
+                    <p><i class="title">注册时间：</i><span class="value">{{details.create_time_name || '无'}}</span></p>
+                </div>
+            </el-dialog>
         </div>
     </section>
 </template>
