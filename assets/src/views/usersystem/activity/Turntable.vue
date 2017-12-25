@@ -349,10 +349,10 @@
                             return
                         }
                         // 发放量不得减少
-                        if (this.form1.type == 'product' && this.form1.limit < this.preLimit) {
-                            xmview.showTip('error', '商品发放量不得减小')
-                            return
-                        }
+                        // if (this.form1.type == 'product' && this.form1.limit < this.preLimit) {
+                        //     xmview.showTip('error', '商品发放量不得减小')
+                        //     return
+                        // }
                         ActivityService.updateReward(this.form1).then((ret) => {
                             xmview.showTip('success', '修改成功')
                             this.addForm = false
