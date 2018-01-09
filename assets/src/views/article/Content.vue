@@ -51,7 +51,7 @@
             <el-table border :data="articleData" v-loading="loading">
                 <el-table-column
                         label="标题">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
                             {{scope.row.title}}
                             <!--占坑-->
@@ -67,7 +67,7 @@
                         prop="status_name"
                         label="状态"
                         width="90">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag type="gray" v-if="scope.row.status">{{scope.row.status_name}}</el-tag>
                         <el-tag type="success" v-if="!scope.row.status">{{scope.row.status_name}}</el-tag>
                     </template>
@@ -83,7 +83,7 @@
                         width="170">
                 </el-table-column>
                 <el-table-column prop="operate" label="操作" width="140" fixed="right" align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <router-link tag="a" target="_blank" :to="{name: 'articleshow', params: {id: scope.row.id}}">
                             查看
                             <!--zhankeng-->

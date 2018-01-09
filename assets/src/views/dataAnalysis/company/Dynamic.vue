@@ -63,7 +63,7 @@
                         prop="title"
                         min-width="300"
                         label="资讯标题">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="adminPage(scope.row)">
                             {{scope.row.title}}
                         </el-button>
@@ -73,7 +73,7 @@
                         prop="company_name"
                         min-width="180"
                         label="企业">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showCompanyFn(scope.row)">
                             {{scope.row.company_name}}
                         </el-button>

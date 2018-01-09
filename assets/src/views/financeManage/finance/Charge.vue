@@ -142,7 +142,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showFn(scope.row)">
                         查看收据
                     </el-button>

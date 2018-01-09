@@ -150,7 +150,7 @@
     import Region from '../component/select/Region.vue'
     import ChooseCourse from '../component/dialog/ChooseCourse.vue'
     import ChooseSpeaking from './component/ChooseSpeaking.vue'
-    import cityData from '../../assets/city'
+    import cityData from '../../assets/js/area'
     import pushService from '../../services/pushService'
     let iosArr = [
         {

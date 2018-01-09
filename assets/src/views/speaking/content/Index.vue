@@ -52,13 +52,13 @@
             <el-table-column prop="title" label="标题"></el-table-column>
             <el-table-column prop="content" label="内容"></el-table-column>
             <el-table-column width="100" prop="price_enabled" label="有无红包" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.price_enabled">有</el-tag>
                     <el-tag type="gray" v-else>无</el-tag>
                 </template>
             </el-table-column>
             <el-table-column width="80" label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">上线</el-tag>
                     <el-tag v-else-if="scope.row.status == 1" type="primary">草稿</el-tag>
                     <el-tag v-else type="danger">下线</el-tag>
@@ -71,7 +71,7 @@
                     label="操作"
                     align="center"
                     fixed="right">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                     <el-button v-if="scope.row.status != 1" @click="offline(scope.$index, scope.row)" type="text"

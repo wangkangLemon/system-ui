@@ -68,7 +68,7 @@
                 <el-table-column
                         min-width="300"
                         label="图片">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         {{scope.row.logo_app_boot}}
                         <i class="el-icon-picture" v-if="scope.row.logo_app_boot" @mouseover="showImg" @mouseout="hideImg">
                             <div class="img-wrap">

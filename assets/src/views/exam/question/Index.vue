@@ -71,7 +71,7 @@
             <el-table-column
                     prop="type"
                     label="试题类型">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <p v-if="scope.row.type == 0">判断题</p>
                     <p v-if="scope.row.type == 1">单选题</p>
                     <p v-if="scope.row.type == 2">多选题</p>
@@ -86,7 +86,7 @@
                     align="status"
                     width="80"
                     label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.status == 0">上线</el-tag>
                     <el-tag type="danger" v-if="scope.row.status == 1">下线</el-tag>
                 </template>
@@ -101,7 +101,7 @@
                     width="140"
                     label="操作"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">详情</el-button>
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.status == 0">编辑</el-button>
                     <el-button @click="online(scope.$index, scope.row)" type="text" size="small" v-if="scope.row.status == 1">上线</el-button>

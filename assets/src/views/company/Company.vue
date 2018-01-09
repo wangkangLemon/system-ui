@@ -93,7 +93,7 @@
             <el-table-column
                     prop="name"
                     label="名称" min-width="150">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="gray">{{companyType[scope.row.category]}}</el-tag>
                     {{scope.row.name}}
                 </template>
@@ -129,7 +129,7 @@
                     width="150"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="adminPage(scope.$index, scope.row)">
                         管理员
                     </el-button>

@@ -65,7 +65,7 @@
             <el-table-column
                     width="120"
                     label="兑换状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">未领取</el-tag>
                     <el-tag v-else>已领取</el-tag>
                 </template>
@@ -78,7 +78,7 @@
             <!--<el-table-column-->
             <!--width="100"-->
             <!--label="状态">-->
-            <!--<template scope="scope">-->
+            <!--<template slot-scope="scope">-->
             <!--<el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>-->
             <!--<el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>-->
             <!--<el-tag v-else>已下线</el-tag>-->
@@ -87,7 +87,7 @@
             <el-table-column
                     width="130"
                     label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <div class="tab-oepratebtns">
                         <el-button type="text" size="small"
                                    @click="()=>{dialogDetail.model=scope.row; dialogDetail.isShow=true}">详情 <!--a-->

@@ -25,7 +25,7 @@
                 <el-table-column prop="title" label="标题"></el-table-column>
                 <el-table-column prop="create_time" label="创建时间" width="150"></el-table-column>
                 <el-table-column prop="operate" label="类型" width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" @click="speakingConfirm(scope.row)">选取</el-button>
                     </template>
                 </el-table-column>

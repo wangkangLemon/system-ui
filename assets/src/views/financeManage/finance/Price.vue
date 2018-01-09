@@ -102,7 +102,7 @@
             <el-table-column
                     prop="operate"
                     label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showFn(scope.row)">
                         查看数据
                     </el-button>

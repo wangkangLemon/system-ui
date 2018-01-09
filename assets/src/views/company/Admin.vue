@@ -116,7 +116,7 @@
                         width="200">
                 </el-table-column>
                 <el-table-column prop="operate" label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
                             详情
                         </el-button>

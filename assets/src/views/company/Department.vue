@@ -129,7 +129,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showFn(scope.$index, scope.row)">
                         详情
                     </el-button>

@@ -72,7 +72,7 @@
             <br>
             <el-table v-show="type == 0" :data="tableData" border v-loading="loading">
                 <el-table-column label="标题" prop="speaking_name" min-width="180">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name: 'speaking-system-index', query: {type: 1, speaking_id: scope.row.speaking_id}})">
                             {{scope.row.speaking_name}}
@@ -87,7 +87,7 @@
             <el-table v-show="type == 1 || type == 2" :data="tableData" border v-loading="loading">
                 <el-table-column :label="type == 1 ? '连锁' : '门店'" prop="name"
                                  min-width="180">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name: 'speaking-system-index', query: {type: type+1, speaking_id: scope.row.speaking_id, company_id: scope.row.company_id, department_id: scope.row.department_id}})">
                             {{type == 1 ? scope.row.company_name : scope.row.department_name}}

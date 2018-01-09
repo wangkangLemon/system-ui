@@ -112,7 +112,7 @@
             <el-table-column
                     width="120"
                     label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 3" type="success">审核成功</el-tag>
                     <el-tag v-else-if="scope.row.status == 4" type="gray">审核失败</el-tag>
                     <template v-else-if="scope.row.status == 1 && scope.row.job_id > 0">
@@ -136,7 +136,7 @@
                     label="操作"
                     fixed="right"
                     header-align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <template v-if="scope.row.status != 1 && scope.row.status != 2">
                         <el-button @click="show(scope.$index, scope.row)" type="text" size="small">查看</el-button>
                         <el-button @click="download(scope.$index, scope.row)" type="text" size="small">下载</el-button>

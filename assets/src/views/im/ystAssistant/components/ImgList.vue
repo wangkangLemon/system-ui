@@ -47,7 +47,7 @@
                   :fit="true"
                   border>
             <el-table-column label="标题">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <article class="material-title">
                         <img :src="scope.row.thumb_url">
                         <section>
@@ -59,7 +59,7 @@
             <el-table-column
                     width="170"
                     label="创建时间">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <i>{{scope.row.update_time}}</i>
                 </template>
             </el-table-column>
@@ -68,7 +68,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="editImg(scope.$index, scope.row)" type="text" size="small" v-if="type == 0">
                         <i>编辑</i>
                     </el-button>

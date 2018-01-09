@@ -71,7 +71,7 @@
                         min-width="100"
                         label="素材预览"
                         align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
                             v-if=""><img src="../../images/video.png" style="width:20px"/></el-button>
                     </template>  
@@ -89,7 +89,7 @@
                 <el-table-column
                         width="100"
                         label="当前状态">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag v-if="scope.row.status == 0" type="warning">待审核</el-tag>
                         <el-tag v-if="scope.row.status == 1" type="info">转码中</el-tag>
                         <el-tag v-if="scope.row.status == 2" type="danger">转码失败</el-tag>
@@ -106,7 +106,7 @@
                     fixed="right"
                     width="150"
                     label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button @click="agree(scope.$index, scope.row)" type="text" size="small"
                             v-if="scope.row.status == 0">通过</el-button>
                         <el-button @click="refuse(scope.$index, scope.row)" type="text" size="small"

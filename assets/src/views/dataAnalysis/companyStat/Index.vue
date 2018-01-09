@@ -70,7 +70,7 @@
                       :fit="true"
                       border>
                 <el-table-column v-if=" type == 0" label="企业名称" min-width="200">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name:'analysis-company-stat-view', query:{ store_id: scope.row.company_id }})">
                             <i> {{scope.row.company_name}}</i>

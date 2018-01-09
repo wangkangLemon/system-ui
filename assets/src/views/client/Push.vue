@@ -91,7 +91,7 @@
                     prop="target_type"
                     label="推送方式"
                     width="100">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{scope.row.target_type == 'TAG' ? '条件推送' : '全局推送'}}
                 </template>
             </el-table-column>
@@ -130,7 +130,7 @@
                     width="100">
             </el-table-column>
             <el-table-column prop="operate" label="操作" width="80" fixed="right" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="checkDetail(scope.$index, scope.row)">
                         详情
                     </el-button>

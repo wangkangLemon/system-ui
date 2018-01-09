@@ -105,7 +105,7 @@
             <el-table-column
                     width="200"
                     label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">修改</el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
@@ -147,7 +147,7 @@
                     <el-table-column type="selection" :selectable="(row) =>  row.id != -1">
                     </el-table-column>
                     <el-table-column label="课程名">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <i v-if="scope.row.id != -1">{{scope.row.name}}</i>
                             <el-button @click="dialogAdd.page++" class="dialog-getmore-btn" type="text"
                                        v-else :disabled="dialogAdd.data.length - 1 >= dialogAdd.total">
@@ -165,7 +165,7 @@
                     <el-table-column
                             width="50"
                             label="">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-button type="text" @click="deleteCourseAlbum(scope.$index, scope.row)" icon="delete"
                                        size="small">
                             </el-button>

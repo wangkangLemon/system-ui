@@ -88,7 +88,7 @@
                         prop="status"
                         label="状态"
                         width="180">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag type="gray" v-if="scope.row.status == 3">{{statusArr[scope.row.status]}}</el-tag>
                         <el-tag type="primary" v-if="scope.row.status == 1">{{statusArr[scope.row.status]}}</el-tag>
                         <el-tag type="success" v-if="scope.row.status == 0">{{statusArr[scope.row.status]}}</el-tag>
@@ -101,7 +101,7 @@
                         width="170">
                 </el-table-column>
                 <el-table-column prop="operate" label="操作" width="100" fixed="right" align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="downLoad(scope.row)">
                             下载
                         </el-button>

@@ -109,7 +109,7 @@
             <el-table-column
                     width="80"
                     label="题目数">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button style="width: 100%"
                                @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second'}})"
                                type="text" size="small">{{scope.row.subject_num}}  <!--a-->
@@ -129,7 +129,7 @@
             <el-table-column
                     width="100"
                     label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
                     <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
                     <el-tag v-else>已下线</el-tag>
@@ -144,7 +144,7 @@
                     fixed="right"
                     width="207"
                     label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button
                             @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row}, query: {id: scope.row.id}})"

@@ -33,7 +33,7 @@
                     prop="disabled"
                     label="状态"
                     width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag type="success" v-if="!scope.row.disabled">启用</el-tag>
                         <el-tag type="gray" v-if="scope.row.disabled">禁用</el-tag>
                     </template>
@@ -54,7 +54,7 @@
                     width="200"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                     <el-button type="text" size="small" @click="disable(scope.row)">
                             {{scope.row.disabled === 1 ? '启用' : '禁用'}}

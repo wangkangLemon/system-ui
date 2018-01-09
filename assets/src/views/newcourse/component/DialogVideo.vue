@@ -26,7 +26,7 @@
                 <el-table-column prop="name" label="名称">
                 </el-table-column>
                 <el-table-column width="100" label="状态">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag v-if="scope.row.status == 0" type="primary">待审核</el-tag>
                         <el-tag v-else-if="scope.row.status == 1" type="gray">转码中</el-tag>
                         <el-tag v-else-if="scope.row.status == 2" type="warning">转码失败</el-tag>
@@ -38,7 +38,7 @@
                 <el-table-column prop="duration_name" width="80" label="时长">
                 </el-table-column>
                 <el-table-column width="80" prop="score" label="课程">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag v-if="scope.row.course_id != 0" type="success">已关联</el-tag>
                         <el-tag v-else>未关联</el-tag>
                     </template>
@@ -46,7 +46,7 @@
                 <el-table-column width="190" prop="create_time_name" label="创建时间">
                 </el-table-column>
                 <el-table-column fixed="right" width="70" label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button @click="selectVideo(scope.$index, scope.row)" type="text" size="small">选取</el-button>
                     </template>
                 </el-table-column>

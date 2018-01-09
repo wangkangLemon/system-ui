@@ -58,7 +58,7 @@
             <el-table-column
                     min-width="300"
                     label="商品">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <img :src="scope.row.image | fillImgPath" height="30" style="vertical-align: middle">
                     <i>{{scope.row.name}}</i>
                 </template>
@@ -88,14 +88,14 @@
                     width="120"
                     prop="expire"
                     label="商品有效期">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{scope.row.expire}}天 <!--a-->
                 </template>
             </el-table-column>
             <el-table-column
                     width="100"
                     label="商品状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">上架</el-tag>
                     <el-tag v-else>下架</el-tag>
                 </template>
@@ -105,7 +105,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <div class="tab-oepratebtns">
                         <el-button type="text" size="small"
                                    @click="()=>$router.push({name:'usersys-park-stock', query: {prodId: scope.row.id},params: {prod: scope.row}})">库存

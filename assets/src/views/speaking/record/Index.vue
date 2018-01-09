@@ -54,7 +54,7 @@
             <el-table-column prop="score" label="分数" width="100"></el-table-column>
             <el-table-column prop="speaking_content" label="标准录音"></el-table-column>
             <el-table-column label="用户录音">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <VueAmrPlayer :url="scope.row.recording"></VueAmrPlayer>
                     <i>{{scope.row.recording_text}}</i>
                 </template>

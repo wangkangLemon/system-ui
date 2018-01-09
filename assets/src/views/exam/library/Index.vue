@@ -42,7 +42,7 @@
             <el-table-column
                     width="80"
                     label="题目数">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button style="width: 100%"
                                @click="$router.push({name: 'test-question-group', params: {subject_group_id: scope.row.id}})"
                                type="text" size="small">{{scope.row.subject_num}}  <!--a-->
@@ -59,7 +59,7 @@
                     width="140"
                     label="操作"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">详情</el-button>
                     <el-button @click="edit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.subject_num > 0">删除</el-button>
@@ -124,19 +124,19 @@
                     style="width: 100%">
                 <el-table-column
                         label="单选题">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <p>{{ scope.row.single_total }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column
                         label="多选题">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <p>{{ scope.row.multi_total }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column
                         label="判断题">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <p>{{ scope.row.judge_total }}</p>
                     </template>
                 </el-table-column>

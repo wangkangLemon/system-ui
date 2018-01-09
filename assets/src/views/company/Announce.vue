@@ -77,7 +77,7 @@
                         prop="type"
                         width="100"
                         label="类型">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag type="primary" v-if="scope.row.type == 'company'">企业公告</el-tag>
                         <el-tag type="success" v-if="scope.row.type == 'department'">分店公告</el-tag>
                     </template>
@@ -90,7 +90,7 @@
                         prop="status"
                         width="90"
                         label="状态">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag type="gray">{{statusArr[scope.row.status]}}</el-tag>
                     </template>
                 </el-table-column>
@@ -105,7 +105,7 @@
                         label="操作"
                         fixed="right"
                         align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             查看公告
                         </el-button>

@@ -56,7 +56,7 @@
                     width="80"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                 </template>
             </el-table-column>

@@ -47,7 +47,7 @@
             <el-table-column prop="content" label="问题描述"></el-table-column>
             <el-table-column width="170" prop="create_time_name" label="提交时间"></el-table-column>
             <el-table-column width="100" prop="status_name" label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="warning" v-if="scope.row.status == 2 || scope.row.status == 4">
                         {{ scope.row.status_name }}
                     </el-tag>
@@ -55,7 +55,7 @@
                 </template>
             </el-table-column>
             <el-table-column width="100" prop="operate" label="操作" fixed="right" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="viewFn(scope.row.id)">查看</el-button>
                     <el-button type="text" size="small" @click="deleteFn(scope, scope.row.id)"
                                v-if="[0, 9].indexOf(scope.row.status) > -1">删除

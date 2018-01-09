@@ -158,7 +158,7 @@
                       :fit="true"
                       border>
                 <el-table-column label="课程名称">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name:'course-analysis', query:{ type:1,course_id: scope.row.course_id }})">
                             <el-tag type="success" v-if="scope.row.course_type === 'public'">公开课</el-tag>
@@ -173,12 +173,12 @@
                 <el-table-column prop="testing_user_count" label="考试人数" width="100"></el-table-column>
                 <el-table-column prop="passed_user_count" label="及格人数" width="100"></el-table-column>
                 <el-table-column label="及格率" width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <i>{{ scope.row.passed_user_count / scope.row.testing_user_count | passedPercent}} </i>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small"
                                    @click="$router.push({name:'course-manage-course-answer-analysis', params:{id:scope.row.course_id}})">
                             <i>答案分析</i>
@@ -192,7 +192,7 @@
                       :fit="true"
                       border>
                 <el-table-column label="连锁名称">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name:'course-analysis',
                                    query:{ type:type+1,course_id: scope.row.course_id, store_id:scope.row.company_id, department_id:scope.row.department_id }})">
@@ -206,7 +206,7 @@
                 <el-table-column prop="testing_user_count" label="考试人数" width="100"></el-table-column>
                 <el-table-column prop="passed_user_count" label="及格人数" width="100"></el-table-column>
                 <el-table-column label="及格率" width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <i>{{ scope.row.passed_user_count / scope.row.testing_user_count | passedPercent}} </i>
                     </template>
                 </el-table-column>
@@ -217,7 +217,7 @@
                       :fit="true"
                       border>
                 <el-table-column label="门店名称">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text"
                                    @click="$router.push({name:'course-analysis',
                                    query:{ type:type+1,course_id: scope.row.course_id, store_id:scope.row.company_id, department_id:scope.row.department_id }})">
@@ -232,7 +232,7 @@
                 <el-table-column prop="testing_user_count" label="考试人数" width="100"></el-table-column>
                 <el-table-column prop="passed_user_count" label="及格人数" width="100"></el-table-column>
                 <el-table-column label="及格率" width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <i>{{ scope.row.passed_user_count / scope.row.testing_user_count | passedPercent}} </i>
                     </template>
                 </el-table-column>
@@ -247,7 +247,7 @@
                 <el-table-column prop="job" label="职务"></el-table-column>
                 <el-table-column prop="department_name" label="门店名称"></el-table-column>
                 <el-table-column label="学习进度">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <i>{{scope.row.complete_rate}} %</i>
                     </template>
                 </el-table-column>

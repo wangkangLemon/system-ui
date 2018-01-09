@@ -7,6 +7,7 @@ import store from '../store'
 import action from '../store/actions'
 import special from './pricemanage/special'
 import universal from './pricemanage/universal'
+import luckymoney from './luckymoney'
 export default {
     path: pathPre,
     component: resolve => {
@@ -149,6 +150,7 @@ export default {
             }
         },
         special,
-        universal
+        universal,
+        luckymoney
     ]
 }

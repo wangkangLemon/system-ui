@@ -102,7 +102,7 @@
                     prop="status_name"
                     label="状态"
                     width="90">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.status == 0">正常</el-tag>
                     <el-tag type="gray" v-if="scope.row.status == 1">草稿</el-tag>
                     <el-tag type="gray" v-if="scope.row.status == 2">下线</el-tag>
@@ -114,7 +114,7 @@
                     width="170">
             </el-table-column>
             <el-table-column prop="operate" label="操作" width="140" fixed="right" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="editItm(scope.row)">
                         修改
                         <!--点击详情 form数据变成当前管理员的信息-->

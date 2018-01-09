@@ -102,7 +102,7 @@
             <el-table-column
                     min-width="300"
                     label="课程">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.enterprise_id == 1">公开</el-tag>
                     <el-tag type="primary" v-else-if="scope.row.enterprise_id == scope.row.store_id">内训</el-tag>
                     <el-tag type="warning" v-else>工业</el-tag>
@@ -130,7 +130,7 @@
             <el-table-column
                     width="100"
                     label="成绩">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.grade == 1" type="success">满分</el-tag>
                     <el-tag v-else-if="scope.row.grade == 2" type="primary">及格</el-tag>
                     <el-tag v-else type="danger">不及格</el-tag>

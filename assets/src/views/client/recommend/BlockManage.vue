@@ -88,7 +88,7 @@
                 <el-table v-loading="section.loading" border :data="section.data">
                     <el-table-column prop="name" label="名称"></el-table-column>
                     <el-table-column prop="course_category_name" label="绑定栏目" width="200">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             {{scope.row.course_category_name || '无'}}
                         </template>
                     </el-table-column>
@@ -98,13 +98,13 @@
                         prop="status_name"
                         label="状态"
                         width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag  type="success"v-if="scope.row.disabled==0">上线</el-tag>
                         <el-tag type="gray" v-else>下线</el-tag>
                     </template>
                 </el-table-column> -->
                     <el-table-column prop="operate" label="操作" width="100" fixed="right" align="center">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-button type="text" size="small" @click="update(scope.$index, scope.row)">
                                 编辑
                             </el-button>

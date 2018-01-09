@@ -64,7 +64,7 @@
             <el-table-column
             label="任务图标"
             width='100'>
-            <template scope="scope">
+            <template slot-scope="scope">
                 <img v-if="scope.row.icon" class="icon" :src="scope.row.icon | fillImgPath" alt="">
                 <img v-else class="icon" :src="scope.row.user_action_icon" alt="">
             </template>
@@ -100,7 +100,7 @@
                     prop="completed_count"
                     label="完成人数"
                     min-width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                             <el-button type="text" @click="$router.push({name:'task-details', query:{id:scope.row.id} })">{{scope.row.completed_count}}</el-button>
                     </template>
             </el-table-column>
@@ -108,7 +108,7 @@
                     align="center"
                     width="100"
                     label="当前状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">上线</el-tag>
                     <el-tag v-else-if="scope.row.status == 1" type="danger">下线</el-tag>
                     <el-tooltip v-else-if="scope.row.status == 2" :content="scope.row.start_time" placement="top" effect="light">
@@ -126,7 +126,7 @@
                     label="操作"
                     width="180"
                     fixed="right">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button v-if="scope.row.status != 1" type="text" size="small" @click="disable(scope.row)">下线</el-button>
                     <el-button v-if="scope.row.status == 1" type="text" size="small" @click="disable(scope.row)">上线</el-button>
                     <el-button v-if="scope.row.status == 1" type="text" size="small" @click="timingDialogFn(scope.row)">定时</el-button>

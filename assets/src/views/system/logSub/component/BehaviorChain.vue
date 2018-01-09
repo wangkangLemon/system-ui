@@ -13,7 +13,7 @@
                     :data="data"
                     @expand="expandRow">
                 <el-table-column type="expand">
-                    <template scope="props">
+                    <template slot-scope="props">
                         <el-row>
                             <el-col :span="12"><pre class="grid-content bg-purple behavior-diff" v-html="before"></pre></el-col>
                             <el-col :span="12"><pre class="grid-content bg-purple-light behavior-diff" v-html="after"></pre></el-col>

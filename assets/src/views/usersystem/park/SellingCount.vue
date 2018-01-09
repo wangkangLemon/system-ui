@@ -60,7 +60,7 @@
             <el-table-column
                     min-width="100"
                     label="商品名">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <img :src="scope.row.image | fillImgPath" height="30" style="vertical-align: middle">
                         <i>{{scope.row.product_name}}</i>
                     </template>
@@ -88,7 +88,7 @@
             <el-table-column
                     width="100"
                     label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <div class="tab-oepratebtns">
                         <el-button type="text" size="small" @click="edit(scope.row)">完善订单</el-button>
                     </div>

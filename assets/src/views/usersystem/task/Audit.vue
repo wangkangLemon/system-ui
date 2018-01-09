@@ -43,7 +43,7 @@
                 <el-table-column prop="department_name" label="门店" min-width="200">
                 </el-table-column>
                 <el-table-column prop="status" width="180" label="状态">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag type="success" v-if="scope.row.status==1">已通过</el-tag>
                         <el-tag type="warning" v-else-if="scope.row.status==0">未审核</el-tag>
                         <el-tag type="error" v-else-if="scope.row.status==2">已拒绝</el-tag>
@@ -54,7 +54,7 @@
                 <el-table-column prop="create_time_name" label="申请时间" min-width="150">
                 </el-table-column>
                 <el-table-column min-width="100" prop="operate" label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="$router.push({name:'play-audit-details', 
                          query:scope.row})">查看</el-button>
                     </template>

@@ -177,7 +177,7 @@
                         width="200">
                 </el-table-column>
                 <el-table-column prop="operate" label="查看" width="120" fixed="right" align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showFn(scope.row)">
                             连锁信息
                         </el-button>
