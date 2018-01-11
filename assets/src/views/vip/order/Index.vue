@@ -37,7 +37,7 @@
                 </el-input>
             </section>
             <section>
-                <i>会员手机号</i>
+                <i>用户手机号</i>
                 <el-input
                     v-model="fetchParam.user_mobile"
                     @keyup.enter.native="fetchData">
@@ -98,60 +98,57 @@
             <el-table class="data-table" v-loading="loading" :data="data" :fit="true" border>
                 <el-table-column 
                     label="订单编号" 
-                    prop="tradeno" 
-                    width="140">
+                    prop="trade_no" 
+                    min-width="150">
                 </el-table-column>
                 <el-table-column 
-                    label="会员手机号" 
+                    label="用户手机号" 
                     prop="user_mobile" 
-                    width="140">
+                    width="130">
                 </el-table-column>
                 <el-table-column 
                     label="下单时间" 
                     prop="create_time" 
-                    width="140">
+                    width="170">
                 </el-table-column>
                 <el-table-column 
                     label="交易时间" 
                     prop="pay_time" 
-                    width="140">
+                    width="170">
                 </el-table-column>
                 <el-table-column 
                     label="订单金额" 
                     prop="price" 
-                    width="140">
+                    width="100">
                 </el-table-column>
                 <el-table-column 
                     label="支付方式" 
                     prop="pay_method" 
-                    width="140">
+                    width="110">
+                    <el-tag v-if="scope.row.pay_method!=='none'" slot-scope="scope" :type="scope.row.pay_method | payMethodMap('tag')">{{scope.row.pay_method | payMethodMap('label')}}</el-tag>
                 </el-table-column>
                 <el-table-column 
                     label="支付流水" 
                     prop="pay_trade_no" 
-                    width="140">
+                    min-width="140">
                 </el-table-column>
                 <el-table-column 
                     label="订单状态" 
                     prop="status" 
-                    width="140">
+                    width="100">
+                    <el-tag slot-scope="scope" :type="scope.row.status | statusMap('tag')">{{scope.row.status | statusMap('label')}}</el-tag>
                 </el-table-column>
                 <el-table-column 
                     label="到期时间" 
-                    prop="expire_time" 
-                    width="140">
+                    prop="object_expire_time" 
+                    width="170">
                 </el-table-column>
-<!--                 <el-table-column 
-                    label="" 
-                    width="80">
-                    <span slot-scope="scope">{{}}</span>
-                </el-table-column> -->
                 <el-table-column 
                     label="操作" 
                     prop="operate" 
-                    width="165" 
+                    width="70" 
                     fixed="right">
-                    <el-button slot-scope="scope" type="text" size="small" @click="edit(scope.row)">修改</el-button>
+                    <el-button slot-scope="scope" type="text" size="small" :disabled="scope.row.status!==0" @click="edit(scope.row)">修改</el-button>
                 </el-table-column>
             </el-table>
             <el-pagination class="block"
@@ -166,10 +163,14 @@
         </section>
 
         <el-dialog 
+            size="tiny"
             v-if="showDialog"
             :title="修改订单" 
             :visible.sync="showDialog">
-            <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
+            <el-form :model="ruleForm" ref="ruleForm" :rules="rules" labelWidth="100px">
+                <el-form-item label="订单编号">{{row.trade_no}}</el-form-item>
+                <el-form-item label="用户手机号">{{row.user_mobile}}</el-form-item>
+                <el-form-item label="订单金额">{{row.price}}</el-form-item>
                 <el-form-item label="支付方式" prop="pay_method">
                     <el-select v-model="ruleForm.pay_method" filterable clearable placeholder="请选择支付方式">
                         <el-option 
@@ -182,7 +183,8 @@
                 </el-form-item>
                 <el-form-item label="支付流水" prop="pay_trade_no">
                     <el-input
-                        v-model.number="fetchParam.pay_trade_no">
+                        style="max-width: 200px;"
+                        v-model.number="ruleForm.pay_trade_no">
                     </el-input>
                 </el-form-item>
                 <el-form-item>
@@ -195,8 +197,10 @@
 </template>
 
 <script>
-    import memberService from 'services/member'
+    import memberService from 'services/vip'
     import DateRange from 'components/form/DateRangePicker.vue'
+    import * as _ from 'utils/common'
+    import Order from './model'
 
     export default {
         components: {
@@ -231,38 +235,10 @@
                     page: 1,
                     page_size: 15,
                 },
-                statusList: [
-                    {
-                        label: '已支付',
-                        value: 1
-                    },
-                    {
-                        label: '未支付',
-                        value: 0
-                    },
-                    {
-                        label: '已关闭',
-                        value: 2
-                    },
-                    {
-                        label: '已删除',
-                        value: 4
-                    },
-                ],
-                payMethodList: [
-                    {
-                        label: '微信支付',
-                        value: 'wechat',
-                    },
-                    {
-                        label: '支付宝支付',
-                        value: 'alipay',
-                    },
-                    {
-                        label: '药丸支付',
-                        value: 'money',
-                    }
-                ],
+                showDialog: false,
+                statusList: Order.statusList,
+                payMethodList: Order.payMethodList,
+                row: {},
                 ruleForm: {
                     order_id: '',
                     pay_method: '',
@@ -280,7 +256,9 @@
         methods: {
             fetchData () {
                 this.loading = true
-                return memberService.searchOrder(this.fetchParam).then(ret => {
+                let fetchParam = _.clone(this.fetchParam)
+                fetchParam.status = !fetchParam.status && fetchParam.status !== 0 ? -1 : fetchParam.status
+                return memberService.searchOrder(fetchParam).then(ret => {
                     this.data = ret.list
                     this.total = ret.total
                     this.loading = false
@@ -288,6 +266,7 @@
             },
             edit (row) {
                 Object.keys(this.ruleForm).forEach(item => { this.ruleForm[item] = '' })
+                this.row = row
                 this.ruleForm.order_id = row.id
                 this.showDialog = true
             },
@@ -295,13 +274,25 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         memberService.editOrder(this.ruleForm).then(ret => {
+                            xmview.showTip('success', ret.message || '修改成功')
+                            this.fetchData()
                             this.showDialog = false
                         })
                     }
                 })
             },
         },
-        filters: {},
+        filters: {
+            statusMap (val, type) {
+                let result = Order.statusList.filter(item => item.value === val)
+                return result.length > 0 ? result[0][type] : ''
+            },
+            payMethodMap (val, type) {
+                let result = Order.payMethodList.filter(item => item.value === val)
+                return result.length > 0 ? result[0][type] : ''
+            }
+
+        },
         directives: {},
     }
 </script>

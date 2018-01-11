@@ -21,7 +21,7 @@ import examPaper from './routers/exam/paper' // 试卷管理
 import examLibrary from './routers/exam/library' // 题库管理
 import examQuestion from './routers/exam/question' // 试题管理
 import courseCommnet from './routers/comment' // 评论管理
-import member from './routers/member'  // 会员管理
+import vip from './routers/vip'  // 会员管理
 import authUtils from './utils/authUtils'
 import * as typeUtils from './utils/typeUtils'
 
@@ -135,7 +135,7 @@ const routes = [
             // 评论管理
             courseCommnet,
             // 会员管理
-            member
+            vip
         ]
     },
     {   // 登录

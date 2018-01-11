@@ -1,23 +1,23 @@
-const pathPre = '/member'
+const pathPre = '/vip'
 
 export default {
     path: pathPre,
     component: resolve => {
         require.ensure([], () => {
-            resolve(require('@/views/member/Index.vue'))
+            resolve(require('@/views/vip/Index.vue'))
         })
     },
     children: [
         {
             path: 'order',
-            name: 'member-order',
+            name: 'vip-order',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/member/order/Index.vue'))
+                    resolve(require('@/views/vip/order/Index.vue'))
                 })
             },
             meta: {
-                title: '会员购买订单',
+                title: '付费权限购买订单',
                 noback: true
             }
         }

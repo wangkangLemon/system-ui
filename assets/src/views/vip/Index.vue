@@ -1,5 +1,5 @@
 <template>
-    <keep-alive exclude="newcourse-course-form">
+    <keep-alive exclude="">
         <router-view></router-view>
     </keep-alive>
 </template>

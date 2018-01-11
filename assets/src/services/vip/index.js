@@ -1,6 +1,6 @@
 import * as api from '../api'
 import config from 'utils/config'
-const urlPre = config.apiHost + '/member/order'
+const urlPre = config.apiHost + '/sys/vip/order'
 
 class Member {
     searchOrder ({
@@ -29,7 +29,7 @@ class Member {
         pay_trade_no
     }) {
         let finalUrl = `${urlPre}/${order_id}/pay`
-        return api.put(finalUrl, { pay_method, pay_trade_no }).then(ret => xmview.showTip('success', ret.message))
+        return api.put(finalUrl, { pay_method, pay_trade_no })
     }
 }
 export default new Member()

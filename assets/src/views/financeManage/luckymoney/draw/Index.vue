@@ -1,7 +1,7 @@
 <style lang="scss">
     @import "~utils/mixins/common";
     @import "~utils/mixins/topSearch";
-    #index-container {
+    #luckymoney-draw-container {
         @extend %content-container;
         .search {
             @extend %top-search-container;
@@ -26,7 +26,7 @@
 </style>
 
 <template>
-    <main id="index-container">
+    <main id="luckymoney-draw-container">
         <section class="search">
             <!-- 搜索条件 -->
             <section>
@@ -90,6 +90,7 @@
                     label="提现方式" 
                     prop="withdraw_type" 
                     width="100">
+                    <el-tag slot-scope="scope" :type="scope.row.withdraw_type | withdrawMap('tag')">{{scope.row.withdraw_type | withdrawMap('label')}}</el-tag>
                 </el-table-column>
                 <el-table-column 
                     label="流水号" 
@@ -100,6 +101,7 @@
                     label="当前状态" 
                     prop="status" 
                     width="100">
+                    <el-tag slot-scope="scope" :type="scope.row.status | statusMap('tag')">{{scope.row.status | statusMap('label')}}</el-tag>
                 </el-table-column>
                 <el-table-column 
                     label="提现发起时间" 
@@ -169,6 +171,7 @@
 
 <script>
     import luckymoney from 'services/luckymoney'
+    import Draw from './model'
 
     export default {
         components: {},
@@ -196,31 +199,9 @@
                     page: 1,
                     page_size: 15,
                 },
-                withdrawTypeList: [
-                    {
-                        label: '银联',
-                        value: 'bank',
-                    },
-                    {
-                        label: '微信',
-                        value: 'wechat',
-                    },
-                ],
-                statusList: [
-                    {
-                        label: '提现成功',
-                        value: 'complete'
-                    },
-                    {
-                        label: '提现失败',
-                        value: 'close'
-                    },
-                    {
-                        label: '等待提现',
-                        value: 'pending'
-                    },
-                ],
-                row: null,
+                withdrawTypeList: Draw.withdrawTypeList,
+                statusList: Draw.statusList,
+                row: {},
                 ruleForm: {
                     bank_trade_no: '',
                     draw_id: '',
@@ -264,7 +245,17 @@
                 this.row = row
             }
         },
-        filters: {},
+        filters: {
+            withdrawMap (val, type) {
+                let result = Draw.withdrawTypeList.filter(item => item.value === val)
+                return result.length > 0 ? result[0][type] : ''
+            },
+            statusMap (val, type) {
+                let result = Draw.statusList.filter(item => item.value === val)
+                return result.length > 0 ? result[0][type] : ''
+            }
+
+        },
         directives: {},
     }
 </script>
