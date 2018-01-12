@@ -5315,7 +5315,7 @@ vue-ueditor@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/vue-ueditor/-/vue-ueditor-0.1.3.tgz#dcccb6ea83a1570b663a4a6a03ab2ee2acc4c471"
 
-vue@～2.5.4:
+vue@~2.5.4:
   version "2.5.13"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.13.tgz#95bd31e20efcf7a7f39239c9aa6787ce8cf578e1"
 
