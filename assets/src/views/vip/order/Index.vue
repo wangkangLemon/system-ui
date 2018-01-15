@@ -245,7 +245,7 @@
                     pay_trade_no: '',
                 },
                 rules: {
-                    pay_method: { required: true, message: '请选择支付方式', trigger: 'blur' },
+                    pay_method: { required: true, message: '请选择支付方式', trigger: 'change' },
                     pay_trade_no: [
                         { required: true, message: '请输入支付流水' },
                         { type: 'number', message: '请输入数字' },
