@@ -138,7 +138,7 @@
             title="操作提示" 
             size="tiny"
             :visible.sync="showDepositDialog">
-            <p>完成体现后，当前状态将变更为“提现成功”，您是否确定操作？</p>
+            <p>完成提现后，当前状态将变更为“提现成功”，您是否确定操作？</p>
             <el-form :model="ruleForm" ref="ruleForm" :rules="rules" labelWidth="70px">
                 <el-form-item label="流水号" prop="bank_trade_no">
                     <el-input

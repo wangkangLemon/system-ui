@@ -7,10 +7,12 @@ const urlPre = config.apiHost + '/sys/money'
 class LuckyMoney {
     searchRemainingMoney ({
         user_name,
-        mobile
+        mobile,
+        page,
+        page_size,
     }) {
         let finalUrl = `${urlPre}/user/search`
-        return api.get(finalUrl, { user_name, mobile }).then(ret => {
+        return api.get(finalUrl, { user_name, mobile, page, page_size }).then(ret => {
             return ret.data
         })
     }
@@ -18,10 +20,12 @@ class LuckyMoney {
     searchDrawMoney ({
         mobile,
         status,
-        withdraw_type
+        withdraw_type,
+        page,
+        page_size,
     }) {
         let finalUrl = `${urlPre}/draw/search`
-        return api.get(finalUrl, { mobile, status, withdraw_type }).then(ret => ret.data)
+        return api.get(finalUrl, { mobile, status, withdraw_type, page, page_size }).then(ret => ret.data)
     }
 
     draw ({
