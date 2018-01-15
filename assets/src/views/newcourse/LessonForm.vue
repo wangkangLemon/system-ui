@@ -29,14 +29,14 @@
                 </el-button>
             </div>
         </el-form-item>
+        <el-form-item label="快进" v-if="lesson.material_type === 'video'">
+            <el-checkbox v-model.number="lesson.forward_enable" :trueLabel="0" :falseLabel="1">不允许快进</el-checkbox>
+        </el-form-item>
         <el-form-item label="课时名称" prop="name">
             <el-input v-model="lesson.name"></el-input>
         </el-form-item>
         <el-form-item label="免费试看">
             <el-checkbox v-model.number="lesson.try_enable" :trueLabel="1" :falseLabel="0">本课时免费试看</el-checkbox>
-        </el-form-item>
-        <el-form-item label="允许快进" v-if="lesson.material_type === 'video'">
-            <el-checkbox v-model.number="lesson.forward_enable" :trueLabel="1" :falseLabel="0">本课时允许快进</el-checkbox>
         </el-form-item>
         <slot></slot>
         <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="company_id"></DialogVideo>
