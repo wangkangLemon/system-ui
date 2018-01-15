@@ -35,6 +35,9 @@
         <el-form-item label="免费试看">
             <el-checkbox v-model.number="lesson.try_enable" :trueLabel="1" :falseLabel="0">本课时免费试看</el-checkbox>
         </el-form-item>
+        <el-form-item label="允许快进" v-if="lesson.material_type === 'video'">
+            <el-checkbox v-model.number="lesson.forward_enable" :trueLabel="1" :falseLabel="0">本课时允许快进</el-checkbox>
+        </el-form-item>
         <slot></slot>
         <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="company_id"></DialogVideo>
         <DialogDocument :onSelect="handleDocumentSelected" v-model="isShowDocumentDialog" :companyID="company_id" :fileType="fileType" ref="dialogDocument"></DialogDocument>

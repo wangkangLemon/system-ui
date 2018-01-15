@@ -157,7 +157,7 @@
                     <img :src="dialogDetail.model.image" style="width: 120px"/>
                 </el-form-item>
                 <el-form-item label="商品详情">
-                    <pre>{{ dialogDetail.model.description }}</pre>
+                    <pre style="white-space: pre-line;">{{ dialogDetail.model.description }}</pre>
                 </el-form-item>
                 <template v-if="dialogDetail.model.category == 'entity'">
                     <el-form-item label="收货人" prop='receiver'>

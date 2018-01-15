@@ -34,7 +34,7 @@
                 <el-form-item label="当前状态">
                     <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
                         <el-option label="待审核" :value="0"></el-option>
-                        <el-option label="驳回" :value="1"></el-option>
+                        <el-option label="不通过" :value="1"></el-option>
                         <el-option label="通过" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
@@ -100,7 +100,7 @@
                         label="当前状态">
                     <template slot-scope="scope">
                         <el-tag v-if="scope.row.status === 0" type="primary">待审核</el-tag>
-                        <el-tag v-if="scope.row.status === 1" type="danger">驳回</el-tag>
+                        <el-tag v-if="scope.row.status === 1" type="danger">不通过</el-tag>
                         <el-tag v-if="scope.row.status === 2" type="success">通过</el-tag>
                     </template>
                 </el-table-column>
