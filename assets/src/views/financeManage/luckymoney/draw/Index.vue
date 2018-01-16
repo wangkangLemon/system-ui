@@ -236,6 +236,7 @@
                     if (valid) {
                         luckymoney.draw(this.ruleForm).then(() => {
                             this.showDepositDialog = false
+                            this.fetchData()
                         })
                     }
                 })
