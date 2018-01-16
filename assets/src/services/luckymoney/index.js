@@ -34,7 +34,7 @@ class LuckyMoney {
     }) {
         let finalUrl = `${urlPre}/draw/${draw_id}`
         return api.put(finalUrl, { bank_trade_no }).then(ret => {
-            xmview.showTip('success', ret.message)
+            xmview.showTip('success', ret.message || '操作成功')
         })
     }
 }
