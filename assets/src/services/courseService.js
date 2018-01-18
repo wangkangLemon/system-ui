@@ -209,15 +209,13 @@ class CourseService {
 
     // 弹出框请求的视频列表
     getVideo4Dialog ({ companyid, status, keyword, page, page_size }) {
-        companyid = companyid || authUtils.getUserInfo().company_id
-        let finalUrl = `${config.apiHost}/com/${companyid}/course/video/search`
+        let finalUrl = `${urlPre}/video/search`
         return api.get(finalUrl, { keyword, status, page, page_size })
     }
 
     // 弹出框请求的文档列表
     getDoc4Dialog ({ companyid, status, keyword, file_type, page, page_size }) {
-        companyid = companyid || authUtils.getUserInfo().company_id
-        let finalUrl = `${config.apiHost}/com/${companyid}/course/doc/search`
+        let finalUrl = `${urlPre}/doc/search`
         return api.get(finalUrl, { keyword, file_type, status, page, page_size })
     }
 

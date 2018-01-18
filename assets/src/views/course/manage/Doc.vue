@@ -103,7 +103,6 @@
                     prop="file_type"
                     label="类型">
             </el-table-column>
-            </el-table-column>
             <el-table-column
                     width="80"
                     prop="pages"
