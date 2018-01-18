@@ -41,7 +41,7 @@
                   border>
             <el-table-column
                     label="标题">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <article class="material-title">
                         <img :src="scope.row.articles.length > 0 ? scope.row.articles[0].thumb: '' | fillImgPath">
                         <section>
@@ -54,7 +54,7 @@
             <el-table-column
                     width="170"
                     label="创建时间">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <i>{{scope.row.update_time | tamp2Str}}</i>
                 </template>
             </el-table-column>
@@ -63,7 +63,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button v-if="type == 0"
                                @click="$router.push({name:'im-ystAssistant-material', query:{id:scope.row.id}, params:{ articles:scope.row.articles }})"
                                type="text" size="small">

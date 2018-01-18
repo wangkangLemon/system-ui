@@ -64,7 +64,7 @@
                         prop="path"
                         min-width="180"
                         label="链接">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="linkHref(scope.row)">
                             {{scope.row.path}}
                         </el-button>
@@ -74,7 +74,7 @@
                         prop="company_name"
                         min-width="180"
                         label="企业">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showCompanyFn(scope.row)">
                             {{scope.row.company_name}}
                         </el-button>

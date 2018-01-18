@@ -93,13 +93,13 @@
             <el-table-column prop="operation_url" label="操作地址" min-width="200">
             </el-table-column>
             <el-table-column prop="operation_method" label="操作方法" width="160">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.operation_method == '*'">get,put,post,delete</el-tag>
                     <el-tag type="success" v-if="scope.row.operation_method != '*'">{{scope.row.operation_method}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column prop="owner" label="所有权" width="100">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.owner == 'public'">公共接口</el-tag>
                     <el-tag type="gray" v-if="scope.row.owner == 'role'">角色接口</el-tag>
                     <el-tag type="danger" v-if="scope.row.owner == 'disabled'">禁用接口</el-tag>
@@ -112,7 +112,7 @@
             <el-table-column prop="update_time_name" label="最后编辑时间" width="170">
             </el-table-column>
             <el-table-column prop="operate" label="操作" width="100" fixed="right" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>

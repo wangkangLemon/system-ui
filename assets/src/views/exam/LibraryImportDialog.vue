@@ -41,14 +41,14 @@
                     <el-table-column
                             width="55"
                             className="no-padding">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-tag type="primary" v-if="scope.row.type == 0">判断题</el-tag>
                             <el-tag type="danger" v-if="scope.row.type == 1">单选题</el-tag>
                             <el-tag type="warning" v-if="scope.row.type == 2">多选题</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column>
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <p>{{ scope.row.description }}</p>
                         </template>
                     </el-table-column>
@@ -71,14 +71,14 @@
                         height="400">
                     <el-table-column
                             width="70">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-tag type="primary" v-if="scope.row.type == 0">判断题</el-tag>
                             <el-tag type="danger" v-if="scope.row.type == 1">单选题</el-tag>
                             <el-tag type="warning" v-if="scope.row.type == 2">多选题</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column>
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <p>{{ scope.row.description }}</p>
                         </template>
                     </el-table-column>

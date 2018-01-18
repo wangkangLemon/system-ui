@@ -65,7 +65,7 @@
             prop="level"
             min-width="100"
             label="用户等级">
-            <template scope="scope">
+            <template slot-scope="scope">
                 <span>Lv{{scope.row.level}}</span>
             </template>
     </el-table-column>

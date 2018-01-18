@@ -57,7 +57,7 @@
             </section>
             <el-table v-show="!type" :data="tableData" border v-loading="loading">
                 <el-table-column label="连锁" prop="company_name" min-width="180">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" @click="$router.push({name: 'speaking-company-index', query: {type: 1, store_id: scope.row.company_id}})">{{scope.row.company_name}}</el-button>
                     </template>
                 </el-table-column>

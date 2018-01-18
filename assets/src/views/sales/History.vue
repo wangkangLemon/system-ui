@@ -87,7 +87,7 @@
                     width="110"
                     prop="image"
                     label="图片">
-                <template scope="props">
+                <template slot-scope="props">
                     <img :src="props.row.image">
                 </template>
             </el-table-column>
@@ -109,7 +109,7 @@
             <el-table-column
                     width="330"
                     label="门店">
-                <template scope="props">
+                <template slot-scope="props">
                     <i>{{props.row.store_name + ' ' + props.row.department_name}}</i>
                 </template>
             </el-table-column>
@@ -129,7 +129,7 @@
                     width="88"
                     prop="status"
                     label="状态">
-                <template scope="t">
+                <template slot-scope="t">
                     <el-tag type="primary" v-if="t.row.status == 1">待支付</el-tag>
                     <el-tag type="success" v-else-if="t.row.status == 2">已完成</el-tag>
                     <el-tag v-else-if="t.row.status == 0">待确认</el-tag>
@@ -151,7 +151,7 @@
                     align="center"
                     fixed="right"
                     label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="showDetail(scope.$index)" type="text" size="small">查看依据</el-button>
                 </template>
             </el-table-column>

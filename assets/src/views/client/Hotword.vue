@@ -58,7 +58,7 @@
             <el-table-column prop="create_time_name" min-width="170" label="时间">
             </el-table-column>
             <el-table-column prop="cell" label="操作" width="100" fixed="right" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click=" showChange(scope.row)" type="text" size="small">修改</el-button>
                     <el-button @click='handleDelete(scope.$index, scope.row)' type="text" size="small">删除</el-button>
                 </template>

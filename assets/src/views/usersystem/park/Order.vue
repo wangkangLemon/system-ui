@@ -93,7 +93,7 @@
             <el-table-column
                     min-width="100"
                     label="商品名">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <img :src="scope.row.image | fillImgPath" height="30" style="vertical-align: middle">
                         <i>{{scope.row.product_name}}</i>
                     </template>
@@ -123,7 +123,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <div class="tab-oepratebtns">
                         <el-button type="text" size="small" @click="edit(scope.row)">完善订单</el-button>
                     </div>
@@ -157,7 +157,7 @@
                     <img :src="dialogDetail.model.image" style="width: 120px"/>
                 </el-form-item>
                 <el-form-item label="商品详情">
-                    <pre>{{ dialogDetail.model.description }}</pre>
+                    <pre style="white-space: pre-line;">{{ dialogDetail.model.description }}</pre>
                 </el-form-item>
                 <template v-if="dialogDetail.model.category == 'entity'">
                     <el-form-item label="收货人" prop='receiver'>

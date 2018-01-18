@@ -40,8 +40,8 @@ compiler.plugin('compilation', function (compilation) {
 })
 
 // handle vendor
-app.use("/vendor", express.static('../public/vendor',{maxAge:1000*60*60*6}));
-app.use("/upload", express.static('../public/upload',{maxAge:1000*60*60*6}));
+app.use('/vendor', express.static('../public/vendor', {maxAge: 1000 * 60 * 60 * 6}))
+app.use('/upload', express.static('../public/upload', {maxAge: 1000 * 60 * 60 * 6}))
 
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
@@ -55,7 +55,7 @@ app.use(hotMiddleware)
 
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
-app.use(staticPath, express.static('./static',{maxAge:1000*60*60*24}))
+app.use(staticPath, express.static('./static', {maxAge: 1000 * 60 * 60 * 24}))
 
 var uri = 'http://localhost:' + port
 

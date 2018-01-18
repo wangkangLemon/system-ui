@@ -95,12 +95,12 @@
                         prop="weight"
                         label="中奖概率"
                         width="180">
-                    <template scope="scope">{{scope.row.weight}}%</template>
+                    <template slot-scope="scope">{{scope.row.weight}}%</template>
                 </el-table-column>
                 <el-table-column
                         prop="limit"
                         label="发放量">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <span v-if="scope.row.type == 'product'">{{scope.row.limit}}</span>
                         <span v-if="scope.row.type == 'credit' && scope.row.limit == 0">无限</span>
                         <span v-if="scope.row.type == 'credit' && scope.row.limit > 0">{{scope.row.limit}}</span>
@@ -110,7 +110,7 @@
                         prop="left"
                         label="已发放"
                         >
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-button type="text" @click="$router.push({name:'activity-prize', query:{play_type:'sign_month',id:scope.row.id,product_name:scope.row.product_name} })">{{scope.row.left}}</el-button>
                         </template>
                 </el-table-column>
@@ -121,7 +121,7 @@
                         width="100"
                         fixed="right"
                         align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" size="small" @click="editFn(scope.row)">修改</el-button>
                         <el-button type="text" size="small" @click="delReward(scope.row)" v-if="monthGift.length > 1">删除</el-button>
                     </template>
@@ -146,12 +146,12 @@
                         prop="weight"
                         label="中奖概率"
                         width="180">
-                    <template scope="scope">{{scope.row.weight}}%</template>
+                    <template slot-scope="scope">{{scope.row.weight}}%</template>
                 </el-table-column>
                 <el-table-column
                         prop="limit"
                         label="发放量">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <span v-if="scope.row.type == 'product'">{{scope.row.limit}}</span>
                         <span v-if="scope.row.type == 'credit' && scope.row.limit == 0">无限</span>
                         <span v-if="scope.row.type == 'credit' && scope.row.limit > 0">{{scope.row.limit}}</span>
@@ -160,14 +160,14 @@
                 <el-table-column
                         prop="left"
                         label="已发放">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-button type="text" @click="$router.push({name:'activity-prize', query:{play_type:'sign_weekly',id:scope.row.id,product_name:scope.row.product_name} })">{{scope.row.left}}</el-button>
                         </template>
                 </el-table-column>
                 <el-table-column
                         prop="operate"
                         label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" @click="editFn(scope.row)">修改</el-button>
                         <el-button type="text" @click="delReward(scope.row)" v-if="sevenDaysGift.length > 1">删除</el-button>
                     </template>

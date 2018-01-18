@@ -259,7 +259,7 @@
                 <div class="list">
                     <el-table v-loading="section.loading" @row-click="sectionChange" :show-header="false" :highlight-current-row="true" :data="section.classifyData" border>
                         <el-table-column>
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <h2 class="name">{{scope.row.name}}</h2>
                                 <p class="class">{{scope.row.categorys}}</p>
                             </template>
@@ -295,7 +295,7 @@
                     <el-table-column
                             class="course-column"
                             label="标题">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-tag type="primary" class="tag" v-if="scope.row.ref_type == 'course'">课程</el-tag>
                             <el-tag type="success" class="tag" v-if="scope.row.ref_type == 'speaking'">药我说</el-tag>
                             <el-tag type="warning" class="tag" v-if="scope.row.ref_type == 'article'">资讯</el-tag>
@@ -321,12 +321,12 @@
                             prop="date"
                             label="日期"
                             width="120">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             {{scope.row.create_time_name && scope.row.create_time_name.slice(0, 10)}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="operate" label="操作" width="100" fixed="right" align="center">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-button type="text" size="small" @click="updateCourse(scope.$index, scope.row)">
                                 编辑
                             </el-button>

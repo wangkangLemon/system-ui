@@ -34,7 +34,7 @@
                 <el-form-item label="当前状态">
                     <el-select v-model="fetchParam.status" @change="fetchData" :clearable="true">
                         <el-option label="待审核" :value="0"></el-option>
-                        <el-option label="驳回" :value="1"></el-option>
+                        <el-option label="不通过" :value="1"></el-option>
                         <el-option label="通过" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
@@ -71,7 +71,7 @@
                         width="100"
                         prop="user_name"
                         label="用户名称">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-button @click="showUserInfo(scope.row.user_id)" type="text" size="small">{{scope.row.user_name }}</el-button>
                         </template>
                 </el-table-column>
@@ -79,7 +79,7 @@
                         width="90"
                         prop="courseType"
                         label="课程类型">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag v-if="scope.row.course_type == 'public'" type="success">公共课</el-tag>
                         <el-tag v-else-if="scope.row.course_type == 'private'" type="danger">私有课</el-tag>
                         <el-tag v-else-if="scope.row.course_type == 'industry'" type="danger">工业课</el-tag>
@@ -98,9 +98,9 @@
                 <el-table-column
                         width="90"
                         label="当前状态">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag v-if="scope.row.status === 0" type="primary">待审核</el-tag>
-                        <el-tag v-if="scope.row.status === 1" type="danger">驳回</el-tag>
+                        <el-tag v-if="scope.row.status === 1" type="danger">不通过</el-tag>
                         <el-tag v-if="scope.row.status === 2" type="success">通过</el-tag>
                     </template>
                 </el-table-column>
@@ -109,7 +109,7 @@
                     width="150"
                     label="操作"
                     align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button @click="recovery(scope.$index, scope.row)" type="text" size="small"
                                    :disabled="scope.row.can_edit === 0 || scope.row.status === 2">通过</el-button>
                         <el-button @click="del(scope.$index, scope.row)" type="text" size="small"

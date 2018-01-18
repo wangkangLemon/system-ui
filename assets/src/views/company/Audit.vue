@@ -82,7 +82,7 @@
                         prop="status"
                         width="100"
                         label="状态">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag type="primary" v-if="scope.row.status == 1">待审核</el-tag>
                         <el-tag type="success" v-if="scope.row.status == 2">审核通过</el-tag>
                         <el-tag type="danger" v-if="scope.row.status == 3">审核失败</el-tag>
@@ -99,7 +99,7 @@
                         label="操作"
                         fixed="right"
                         align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <router-link class="show-link" :to="{name: 'company-audit-show', params: {id: scope.row.id}}">
                             查看
                         </router-link>

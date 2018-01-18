@@ -54,7 +54,7 @@
             <el-table-column
                     width="80"
                     label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
                     <el-tag v-else-if="scope.row.status == 1" type="danger">下线</el-tag>
                 </template>
@@ -69,7 +69,7 @@
                     width="140"
                     label="操作"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button
                             @click="$router.push({name: 'test-paper-edit', params: {exam_id: scope.row.id}})"
                             type="text"

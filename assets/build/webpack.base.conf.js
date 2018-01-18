@@ -26,7 +26,11 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             '@': resolve('src'),
-            'base': path.resolve(__dirname, '../src')
+            'base': path.resolve(__dirname, '../src'),
+            'services': resolve('src/services'), // Service目录所在路径
+            'utils': resolve('src/utils'), // utils所在路径
+            'components': resolve('src/views/component'), // component目录所在路径
+            'models': path.resolve('src/models')   // model所在路径
         }
     },
     module: {

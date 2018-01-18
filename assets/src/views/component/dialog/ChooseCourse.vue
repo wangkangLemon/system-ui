@@ -29,12 +29,12 @@
                 <el-table-column prop="name" label="课程"></el-table-column>
                 <el-table-column prop="company_name" label="企业" width="200"></el-table-column>
                 <!-- <el-table-column prop="material_type" label="类型" width="150">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         {{material_type[scope.row.material_type]}}
                     </template>
                 </el-table-column> -->
                 <el-table-column prop="operate" label="操作" width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" @click="courseConfirm(scope.row)">选取</el-button>
                     </template>
                 </el-table-column>

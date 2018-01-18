@@ -109,7 +109,7 @@
                     prop="status"
                     width="140"
                     label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.status">{{scope.row.status}}</el-tag>
                     <el-tag type="gray" v-else>未知</el-tag>
                 </template>
@@ -130,7 +130,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type ="text" 
                      size="small" 
                      @click="$router.push({name:'financeManage-money-details', 

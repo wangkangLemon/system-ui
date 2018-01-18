@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import cityData from '../../../assets/city'
+    import cityData from '../../../assets/js/province'
     import treeUtils from '../../../utils/treeUtils'
     export default{
         props: ['change', 'title', 'province', 'disabled'],

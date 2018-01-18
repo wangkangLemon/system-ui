@@ -10,6 +10,7 @@ class Lesson {
         this.id = 0
         this.name = ''
         this.try_enable = 0
+        this.forward_enable = 1
         this.material_type = 'video'
         this.material_id = 0
         this.material_name = ''

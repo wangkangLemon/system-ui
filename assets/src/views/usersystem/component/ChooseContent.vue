@@ -30,21 +30,21 @@
             </section>
             <el-table v-loading="loading" border :data="data" :highlight-current-row="true">
                 <el-table-column label="名称" min-width="200">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <span v-if="category == 'article' || category == 'share_article' || category == 'speaking_pass'">{{ scope.row.title}}</span>
                         <span v-else>{{ scope.row.name }}</span>
                         <el-tag type="success" v-if="scope.row.price">￥{{scope.row.price}}</el-tag>
                     </template>
                     </el-table-column>
                 <el-table-column prop="status" label="状态" width="100">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag type="success" v-if="!scope.row.status">上线</el-tag>
                         <el-tag type="gray" v-if="scope.row.status">下线</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column :prop="category=='speaking_pass' ? 'create_time' : 'create_time_name'" label="创建时间" width="180"></el-table-column>
                 <el-table-column label="操作" width="180">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" @click="confirm(scope.row)">选取</el-button>
                     </template>
                 </el-table-column>

@@ -65,7 +65,7 @@
             <el-table-column
                     prop="name"
                     label="消息">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <!--文字-->
                     <div v-if="scope.row.text">{{scope.row.text.content}}</div>
                     <!--图片-->
@@ -90,7 +90,7 @@
             <el-table-column
                     width="80"
                     label="对象">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.receiver == 'all'" type="success">全部</el-tag>
                     <el-tag v-else-if="scope.row.status == 'manager'" type="primary">店长</el-tag>
                     <el-tag v-else>店员</el-tag>
@@ -111,7 +111,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>
             </el-table-column>

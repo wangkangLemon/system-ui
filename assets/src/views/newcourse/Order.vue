@@ -80,19 +80,19 @@
             <el-table-column prop="user_name" label="下单人" width="100"></el-table-column>
             <el-table-column prop="user_mobile" label="手机号" width="180"></el-table-column>
             <el-table-column prop="pay_method" label="支付方式" width="120">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{payMethods[scope.row.pay_method]}}
                 </template>
             </el-table-column>
             <el-table-column prop="pay_time" label="支付时间" width="180"></el-table-column>
             <el-table-column prop="status" label="订单状态" width="100">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{payStatus[scope.row.status]}}
                 </template>
             </el-table-column>
             <el-table-column prop="create_time_name" label="下单时间" width="170"></el-table-column>
             <el-table-column label="操作" width="80" fixed="right" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="()=>{showDetail=true;detail=scope.row}">详情</el-button>
                 </template>
             </el-table-column>

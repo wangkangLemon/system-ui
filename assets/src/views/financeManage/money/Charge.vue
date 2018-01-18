@@ -140,7 +140,7 @@
                     width="100"
                     prop="operate"
                     label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showFn(scope.row)">
                         查看收据
                     </el-button>

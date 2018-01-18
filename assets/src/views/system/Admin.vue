@@ -118,13 +118,13 @@
             <el-table-column prop="last_login_ip" label="上次登录IP" width="120">
             </el-table-column>
             <el-table-column prop="disabled" label="状态" width="80">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag type="danger" v-if="scope.row.disabled">禁用</el-tag>
                     <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
                 </template>
             </el-table-column>
             <el-table-column prop="operate" label="操作" min-width="180" fixed="right" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
                         详情
                     </el-button>

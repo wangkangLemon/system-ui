@@ -41,7 +41,7 @@
                 <el-table-column
                         width="120"
                         label="状态">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag v-if="scope.row.status == 3" type="success">审核成功</el-tag>
                         <el-tag v-else-if="scope.row.status == 4" type="gray">审核失败</el-tag>
                         <template v-else-if="scope.row.status == 1 && scope.row.job_id > 0">
@@ -54,7 +54,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column width="80" label="课程">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-tag v-if="scope.row.course_id != 0" type="success">已关联</el-tag>
                         <el-tag v-else>未关联</el-tag>
                     </template>
@@ -65,7 +65,7 @@
                         label="创建时间">
                 </el-table-column>
                 <el-table-column fixed="right" width="70" label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button @click="selectItem(scope.$index, scope.row)" type="text" size="small">选取</el-button>
                     </template>
                 </el-table-column>

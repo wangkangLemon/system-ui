@@ -38,7 +38,7 @@
                           @select="rowSelected">
                     <el-table-column type="selection" :selectable="(row) =>  row.id != -1"></el-table-column>
                     <el-table-column>
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <i v-if="scope.row.id != -1">{{scope.row.name}}</i>
                             <el-button @click="fetchData(false)" class="dialog-getmore-btn" type="text"
                                        v-else :disabled="data.length - 1 >= total">
@@ -52,7 +52,7 @@
                 <aside>已选中</aside>
                 <el-table :show-header="false" :height="500" :data="currSelectedList">
                     <el-table-column>
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             {{scope.row.name}}
                             <el-button style="float: right;margin-right: 10px" type="text" size="tiny" icon="delete"
                                        @click="delItem(scope.row)">删除

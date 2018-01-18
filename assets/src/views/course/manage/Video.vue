@@ -95,7 +95,7 @@
             <el-table-column
                     width="120"
                     label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 3" type="success">审核成功</el-tag>
                     <el-tag v-else-if="scope.row.status == 4" type="gray">审核失败</el-tag>
                     <el-tag v-else-if="scope.row.status == 0" type="primary">待审核</el-tag>
@@ -116,7 +116,7 @@
                     label="操作"
                     fixed="right"
                     header-align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small"
                                v-if="scope.row.status != 1 && scope.row.status != 2">查看
                     </el-button>

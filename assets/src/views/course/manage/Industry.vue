@@ -114,7 +114,7 @@
                     label="企业">
             </el-table-column>
             <!-- <el-table-column width="80" label="题目数">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button style="width: 100%"
                                @click="$router.push({name: 'course-manage-addCourse', params: {courseInfo: scope.row, tab:'second', readonly: true}})"
                                type="text" size="small">{{scope.row.subject_num}}
@@ -139,14 +139,14 @@
             <el-table-column
                     width="100"
                     label="考试次数">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <i>{{scope.row.limit_repeat > 0 ? scope.row.limit_repeat : '限制'}}</i>
                 </template>
             </el-table-column>
             <el-table-column
                     width="120"
                     label="红包">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <i v-if="scope.row.price > 0">¥ {{scope.row.price}} +- {{scope.row.price_float}}</i>
                     <i v-else>未开启</i>
                 </template>
@@ -154,7 +154,7 @@
             <el-table-column
                     width="100"
                     label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 0" type="success">正常</el-tag>
                     <el-tag v-else-if="scope.row.status == 2" type="primary">转码中</el-tag>
                     <el-tag v-else>已下线</el-tag>
@@ -170,7 +170,7 @@
                     label="操作"
                     fixed="right"
                     align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>

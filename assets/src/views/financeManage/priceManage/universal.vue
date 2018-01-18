@@ -30,7 +30,7 @@
                 <el-table-column
                         width="250"
                         label="平台使用费单价（元/人）">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             {{scope.row.val/100}}
                         </template>
                 </el-table-column>
@@ -43,7 +43,7 @@
                         fixed="right"
                         width="207"
                         label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                        
                         <el-button @click="changeHistory(scope.$index, scope.row)" 
                             type="text" size="small">
@@ -105,7 +105,7 @@
                       label="平台使用费单价（元/人）"
                       width="300"
                       :resizable="false">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             {{scope.row.after/100}}
                         </template>
 

@@ -126,7 +126,7 @@
                                 prop="product_image"
                                 label="图片"
                                 width="200">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <img v-if="scope.row.type == 'product'" class="img-list" :src="scope.row.product_image" alt="">
                                 <img v-if="scope.row.type == 'credit'" class="img-list" src="../images/credit.png" alt="">
                                 <img v-if="scope.row.type == 'thanks'" class="img-list" src="../images/thanks.png" alt="">
@@ -141,13 +141,13 @@
                                 width="100"
                                 prop="weight"
                                 label="中奖概率">
-                            <template scope="scope">{{scope.row.weight}}%</template>
+                            <template slot-scope="scope">{{scope.row.weight}}%</template>
                         </el-table-column>
                         <el-table-column
                                 prop="limit"
                                 width="100"
                                 label="发放量">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <span v-if="scope.row.type == 'thanks'">无限</span>
                                 <span v-if="scope.row.type == 'product'">{{scope.row.limit}}</span>
                                 <span v-if="scope.row.type == 'credit' && scope.row.limit == 0">无限</span>
@@ -158,7 +158,7 @@
                                 min-width="100"
                                 prop="left"
                                 label="已发放">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-button type="text" @click="$router.push({name:'activity-prize', query:{play_type:'wheel',id:scope.row.id,product_name:scope.row.product_name} })">{{scope.row.left}}</el-button>
                         </template>
                         </el-table-column>
@@ -168,7 +168,7 @@
                                 label="操作"
                                 fixed="right"
                                 align="center">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-button size="small" type="text" @click="editFn(scope.row)">修改</el-button>
                             </template>
                         </el-table-column>

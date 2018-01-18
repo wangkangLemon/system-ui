@@ -77,7 +77,7 @@
                     width="100"
                     prop="deleted"
                     label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-tag v-if="scope.row.deleted">已删除</el-tag>
                     <el-tag v-else type="success">正常</el-tag>
                 </template>

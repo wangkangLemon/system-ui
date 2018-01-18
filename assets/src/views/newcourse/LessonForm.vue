@@ -29,6 +29,9 @@
                 </el-button>
             </div>
         </el-form-item>
+        <el-form-item label="快进" v-if="lesson.material_type === 'video'">
+            <el-checkbox v-model.number="lesson.forward_enable" :trueLabel="0" :falseLabel="1">不允许快进</el-checkbox>
+        </el-form-item>
         <el-form-item label="课时名称" prop="name">
             <el-input v-model="lesson.name"></el-input>
         </el-form-item>
