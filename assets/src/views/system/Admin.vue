@@ -117,6 +117,10 @@
             </el-table-column>
             <el-table-column prop="last_login_ip" label="上次登录IP" width="120">
             </el-table-column>
+            <el-table-column prop="create_time_name" label="创建时间" width="170">
+            </el-table-column>
+            <el-table-column prop="update_time_name" label="更新时间" width="170">
+            </el-table-column>
             <el-table-column prop="disabled" label="状态" width="80">
                 <template slot-scope="scope">
                     <el-tag type="danger" v-if="scope.row.disabled">禁用</el-tag>
