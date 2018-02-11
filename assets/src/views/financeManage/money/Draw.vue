@@ -79,22 +79,25 @@
                     prop="user_name"
                     width="100"
                     label="姓名">
+                <template slot-scope="scope">
+                    <el-button type="text" @click="showUserFn(scope.row)">{{scope.row.user_name}}</el-button>
+                </template>
             </el-table-column>
             <el-table-column
-                    prop="money_name"
+                    prop="money"
                     label="提现金额"
                     width="100">
             </el-table-column>
             <el-table-column
-                    prop="actual_money_name"
+                    prop="actual_money"
                     min-width="120"
                     label="扣税后应付">
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
                     prop="department_name"
                     min-width="100"
                     label="门店">
-            </el-table-column>
+            </el-table-column> -->
             <!-- <el-table-column
                     prop="bank_name"
                     width="120"
@@ -114,13 +117,13 @@
                     <el-tag type="gray" v-else>未知</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
                     prop="admin_name"
                     width="100"
                     label="管理员">
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
-                    prop="create_time_name"
+                    prop="create_time"
                     width="170"
                     label="申请时间">
             </el-table-column>
@@ -158,12 +161,16 @@
                     :total="total">
             </el-pagination>
         </div>
+
+        <UserDetail v-model="showUserDetail" :id="detailUserID"></UserDetail>
+        
     </article>
 </template>
 <script>
     import {drawList, exportDraw, confirmDraw, cancleDraw} from '../../../services/finance/money'
     import UserList from '../../component/select/User'
     import DateRange from '../../component/form/DateRangePicker.vue'
+    import UserDetail from '../../company/usercomponent/Detail.vue'
     function clearFn() {
         return {
             drawStatusSelect: '',
@@ -175,6 +182,7 @@
     export default {
         components: {
             UserList,
+            UserDetail,
             DateRange
         },
         data () {
@@ -189,6 +197,8 @@
                 currentData: null,
                 showDetail: false,
                 showDrawInfo: false,
+                showUserDetail: false,
+                detailUserID: void 0,
                 loading: false,
                 dialogLoading: false,
                 currentPage: 1,
@@ -242,6 +252,11 @@
                 this.showDetail = true
                 this.currentData = row
             },
+            // 显示用户详情
+            showUserFn (row) {
+                this.detailUserID = row.user_id
+                this.showUserDetail = true
+            },
             confirmFn (row, type) {
                 this.showDrawInfo = true
                 this.flag = type
@@ -291,14 +306,13 @@
                 return drawList(params).then((ret) => {
                     console.log(ret)
                     let status = {pending: '未打款', complete: '已打款', close: '身份信息不符'}
-                    ret.list.sort((x, y) => {
+                    this.total = ret.total
+                    this.drawData = ret.list.sort((x, y) => {
                         return y.id - x.id
                     })
-                    ret.list.forEach((item) => {
+                    this.drawData.forEach((item) => {
                         item.status = status[item.status]
                     })
-                    this.drawData = ret.list
-                    this.total = ret.total
                 }).then(() => {
                     this.loading = false
                 })
