@@ -291,12 +291,13 @@
                 return drawList(params).then((ret) => {
                     console.log(ret)
                     let status = {pending: '未打款', complete: '已打款', close: '身份信息不符'}
-                    this.drawData = ret.data.sort((x, y) => {
+                    ret.list.sort((x, y) => {
                         return y.id - x.id
                     })
-                    ret.data.forEach((item) => {
+                    ret.list.forEach((item) => {
                         item.status = status[item.status]
                     })
+                    this.drawData = ret.list
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false
