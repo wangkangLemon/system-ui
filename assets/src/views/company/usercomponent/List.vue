@@ -2,7 +2,6 @@
 <style lang="scss" rel='stylesheet/scss'>
     @import "../../../utils/mixins/mixins";
     @import "../../../utils/mixins/topSearch";
-    @import "../../../utils/mixins/showDetail";
     .company-user-list {
         .status {
             padding: 2px 5px;
@@ -36,24 +35,6 @@
 </style>
 <template>
     <article class="company-user-list">
-        <!--详情-->
-        <el-dialog class="show-detail" title="查看店员" v-model="showDetail">
-            <div class="avatar" v-if="details != null">
-                <img :src="{url: details.avatar, sex: details.sex} | defaultAvatar"/>
-            </div>
-            <div class="info" v-if="details != null">
-                <h2>{{details.name}}({{details.company}})</h2>
-                <p><i class="title">所属门店：</i><span class="value">{{details.dep_name || '无'}}</span></p>
-                <p><i class="title">Mobile：</i><span class="value">{{details.mobile || '无'}}</span></p>
-                <p><i class="title">Email：</i><span class="value">{{details.email || '无'}}</span></p>
-                <p><i class="title">状态：</i><span class="value"><el-tag
-                        type="success">{{details.disabled ? '异常' : '正常'}}</el-tag></span></p>
-                <p><i class="title">性别：</i> <span class="value">{{details.sex ? '男' : '女'}}</span></p>
-                <p><i class="title">生日：</i><span class="value">{{details.birthday || '无'}}</span></p>
-                <p><i class="title">地址：</i> <span class="value">{{details.address || '无'}}</span></p>
-                <p><i class="title">注册时间：</i><span class="value">{{details.create_time_name || '无'}}</span></p>
-            </div>
-        </el-dialog>
         <el-card class="box-card">
             <section class="search">
                 <section>
@@ -170,12 +151,16 @@
                 </el-pagination>
             </div>
         </el-card>
+
+        <UserDetail v-model="showDetail" :id="detailUserID"></UserDetail>
+
     </article>
 </template>
 <script>
     import IndustryCompanySelect from '../../component/select/IndustryCompany'
     import DateRange from '../../component/form/DateRangePicker.vue'
     import DatePicker from '../../component/form/DatePicker.vue'
+    import UserDetail from './Detail.vue'
     import CompanyUserService from '../../../services/companyUserService'
     import {defaultAvatar} from '../../../utils/filterUtils'
     export default {
@@ -185,12 +170,14 @@
         components: {
             IndustryCompanySelect,
             DateRange,
-            DatePicker
+            DatePicker,
+            UserDetail
         },
         data () {
             return {
                 showDetail: false,
                 details: null,
+                detailUserID: void 0,
                 loading: false,
                 currentPage: 1,
                 pageSize: 15,
@@ -231,11 +218,8 @@
             },
             // 显示详情
             showFn (row) {
-                CompanyUserService.userDetail(row.id).then((ret) => {
-                    this.details = ret.data
-                }).then(() => {
-                    this.showDetail = true
-                })
+                this.detailUserID = row.id
+                this.showDetail = true
             },
             handleSizeChange (val) {
                 this.pageSize = val
