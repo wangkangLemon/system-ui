@@ -53,6 +53,11 @@
                       @select-all="selectRow"
                       border>
                 <el-table-column
+                    type="selection"
+                    width="55"
+                    :selectable="selectableFn">
+                </el-table-column>
+                <el-table-column
                         min-width="100"
                         prop="course_name"
                         label="课程名称">
@@ -119,7 +124,11 @@
             </el-table>
 
             <el-row :gutter="20" class="utils-top-15">
-                <el-col :span="12" :offset="12">
+                <el-col :span="12">
+                    <el-button type='primary' @click="batchOperate(2)" :disabled="!selectedIds.length">批量通过</el-button>
+                    <el-button type='warning' @click="batchOperate(1)" :disabled="!selectedIds.length">批量驳回</el-button>
+                </el-col>
+                <el-col :span="12">
                     <el-pagination
                         style="text-align: right"
                         @size-change="val=> {fetchParam.page_size=val; fetchData()}"
@@ -166,6 +175,7 @@
                 showDetail: false,
                 fetchParam: this.newFetchParam(),
                 details: this.clearFn(),
+                selectedIds: []
             }
         },
         activated () {
@@ -186,9 +196,9 @@
                 let data = Object.assign({}, this.fetchParam)
                 data.status = (!data.status && data.status !== 0) ? -1 : data.status
                 testCommentService.search(data).then((ret) => {
-                    console.log(ret)
                     this.data = ret.data
                     this.fetchParam.page_total = ret.total
+                    this.selectedIds = []
                     xmview.setContentLoading(false)
                 })
             },
@@ -237,6 +247,33 @@
                             message: '操作成功!'
                         })
                         this.fetchData()
+                    })
+                })
+            },
+            selectableFn (row, index) {
+                return !(row.can_edit === 0 || (row.status === 1 && row.status === 2))
+            },
+            batchOperate (status) {
+                let confirmMap = {
+                    1: '您是否确定批量驳回选中的评论？',
+                    2: '通过后该评论将在评论区中显示，您是否确定批量通过选中的评论？',
+                }
+                let tipMap = {
+                    1: '批量驳回',
+                    2: '批量通过',
+                }
+                this.$confirm(confirmMap[status], tipMap[status], {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    testCommentService.batch({
+                        comment_id: this.selectedIds.join(','),
+                        status
+                    }).then(() => {
+                        this.fetchData()
+                    }).catch(e => {
+                        console.log(e)
                     })
                 })
             },
