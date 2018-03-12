@@ -17,6 +17,15 @@ class TestCommentService {
             return ret.data
         })
     }
+    batch ({
+        comment_id,
+        status
+    }) {
+        let url = `${urlPre}/batch`
+        return api.put(url, JSON.stringify({ comment_id, status })).then(ret => {
+            xmview.showTip('success', ret.message || `批量${status === 1 ? '驳回' : '通过'}成功`)
+        })
+    }
 }
 
 export default new TestCommentService()
