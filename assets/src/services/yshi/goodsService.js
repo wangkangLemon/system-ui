@@ -1,31 +1,22 @@
-import authUtils from 'utils/authUtils'
+/**
+ * Created by kangcc@vodjk.com at 2018/04/12
+ */
+
 import * as api from '../api'
 import config from 'utils/config'
-let company_id = authUtils.getUserInfo().company_id
-const urlPre = `${config.apiHost}/com/${company_id}/newcourse`
+const urlPre = config.apiHost + '/goods'
 
 class GoodsService {
     // 搜索
-    search ({
-        keyword = '',
-        status = -1,
-        category_id = 0,
-        album_id = -1,
-        course_type = '',   // 课程类别
-        need_testing = '',
-        time_start,
-        time_end,
+    searchGoods ({
+        name,
+        start_time,
+        end_time,
         page,
         page_size
     }) {
-        let url = urlPre + '/search'
-        return api.get(url, { keyword, status, category_id, album_id, course_type, need_testing, time_start, time_end, page, page_size, company_id }, false).then(ret => {
-            if (ret.code == 0) {
-                return ret.data
-            } else {
-                return Promise.reject(ret)
-            }
-        })
+        let url = `${urlPre}/list`
+        return api.get(url, { name, start_time, end_time, page, page_size }, false).then(ret => ret.list)
     }
 
     // 获取课程下拉列表
