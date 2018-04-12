@@ -45,16 +45,9 @@
         <main class="search">
             <section>
                 <i>名称</i>
-                <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
+                <el-input v-model="fetchParam.name" @keyup.enter.native="fetchData"></el-input>
             </section>
-            <section>
-                <i>状态</i>
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                    <el-option label="正常" value="0"></el-option>
-                    <el-option label="下线" value="1"></el-option>
-                </el-select>
-            </section>
-            <DateRange title="创建时间" :start="fetchParam.time_start" :end="fetchParam.time_end" @changeStart="val=> {fetchParam.time_start=val}" @changeEnd="val=> {fetchParam.time_end=val}" :change="fetchData">
+            <DateRange title="创建时间" :start="fetchParam.start_time" :end="fetchParam.end_time" @changeStart="val=> {fetchParam.start_time=val}" @changeEnd="val=> {fetchParam.end_time=val}" :change="fetchData">
             </DateRange>
 
         </main>
@@ -62,19 +55,13 @@
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
             <el-table-column align="center" min-width="300" prop="name" label="名称">
             </el-table-column>
-            <el-table-column align="center" min-width="100" prop="creator_id" label="素材数">
+            <el-table-column align="center" min-width="100" prop="object_count" label="素材数">
             </el-table-column>
-            <el-table-column align="center" width="130" prop="award_price_float" label="原价">
+            <el-table-column align="center" width="130" prop="price" label="原价">
             </el-table-column>
-            <el-table-column align="center" width="130" prop="price" label="优惠价">
+            <el-table-column align="center" width="130" prop="favorable_price" label="优惠价">
             </el-table-column>
-            <el-table-column align="center" width="100" label="状态">
-                <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status == 0" type="success">已上线</el-tag>
-                    <el-tag v-else type="info">已下线</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" width="190" prop="create_time_name" label="创建时间">
+            <el-table-column align="center" width="190" prop="create_time" label="创建时间">
             </el-table-column>
             <el-table-column align="center" width="200" label="操作">
                 <template slot-scope="scope">
@@ -85,13 +72,6 @@
                         size="small" 
                         :disabled="scope.row.status == 0 || creatorDisabled(scope.row.creator_id)">
                         编辑
-                    </el-button>
-                    <el-button 
-                        @click="offline(scope.$index, scope.row)" 
-                        type="text" 
-                        size="small"
-                        :disabled="creatorDisabled(scope.row.creator_id)">
-                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
@@ -122,14 +102,11 @@ import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
 function getFetchParam () {
     return {
-        keyword: void '',
-        status: void 0, // 1 下线，0 正常
-        category_id: void 0, // 栏目id
-        time_start: void 0,
-        time_end: void 0,
+        name: void '',
+        start_time: '',
+        end_time: '',
         page: 1,
-        page_size: 15,
-        course_type: 'private',
+        page_size: 15
     }
 }
 export default {
@@ -172,19 +149,7 @@ export default {
                 this.data = ret.data
                 this.total = ret.total
                 this.loadingData = false
-                this.selectedIds = []
                 xmview.setContentLoading(false)
-            })
-        },
-        // 下线 或者上线课程 0为下线，1为上线
-        offline (index, row) {
-            let txt = row.status == 0 ? '下线' : '上线'
-            let finalStatus = row.status == 0 ? 1 : 0
-            let reqFn = row.status == 0 ? goodsService.offline : goodsService.online
-            xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                reqFn(row.id).then((ret) => {
-                    row.status = finalStatus
-                })
             })
         },
         // 单条删除

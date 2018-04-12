@@ -27,6 +27,10 @@
             display: block;
             line-height: 30px;
         }
+        .col-btn-block{
+            display: block;
+            margin-top: 10px;
+        }
     }
     .dialog {
             section {
@@ -53,39 +57,71 @@
                 <el-radio v-model="form.type" label="0">图片</el-radio>
                 <el-radio v-model="form.type" label="1">视频</el-radio>
                 <p v-if="form.type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
-                <UploadFile v-else :on-success="filesHandleChange" btnTitle='选择文件'></UploadFile>
+                <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
+                    <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
+                    <i v-else>选择视频</i>
+                </el-button>
             </el-form-item>
             <el-form-item label="组合介绍" prop="content">
                 <el-input :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容" type="textarea" v-model="form.content">
                 </el-input>
             </el-form-item>
             <el-form-item label="添加商品" prop="goods">
-                <el-button size="small">选择素材</el-button>
+                <el-button size="small" @click="dialogCourse.isShow=true">选择商品</el-button>
+                <template v-if="form.course.length">
+                    <el-table class="data-table" :data="form.course" :fit="true" border show-summary style="margin-top: 5px;">
+                        <el-table-column label="名称" prop="name"></el-table-column>
+                        <el-table-column label="原价" prop="name"></el-table-column>
+                        <el-table-column label="优惠价" prop="name"></el-table-column>
+                    </el-table>
+                </template>
             </el-form-item>
             <el-form-item label="设置组合售卖优惠">
+                <PlusOrRemove @res="groupDiscounts"></PlusOrRemove>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit('ruleForm')" type="primary">保存</el-button>
             </el-form-item>
+            <dialogSelectData ref="dialogSelect" v-model="dialogCourse.isShow" :getData="fetchCourse" title="选择商品"
+                          :selectedList="form.course" @changeSelected="val=>form.course=val">
+                <div slot="search" class="course-search">
+                    <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogCourse.keyword"
+                            icon="search"
+                            placeholder="请输入关键字搜索"></el-input>
+                </div>
+            </dialogSelectData>
+            <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
         </el-form>
     </article>
 </template>
 <script>
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
+    import dialogSelectData from 'components/dialog/SelectData4table.vue'
+    import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
+    import courseService from 'services/newcourse/courseService'
+    import PlusOrRemove from '../component/PlusOrRemove.vue'
     function clearFn () {
         return {
             id: '',
             name: '',
             image: '',
             type: '0', // 0 图片 1视频
-            content: ''
+            content: '',
+            course: []
         }
     }
     export default {
         data () {
             return {
+                isShowVideoDialog: false,
                 push_type_list: [],
+                lesson: {type: Object, required: true},
+                dialogCourse: {
+                    loading: false,
+                    isShow: false,
+                    keyword: void 0,
+                },
                 form: clearFn(),
                 rules: {
                     name: [
@@ -104,6 +140,7 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ]
                 },
+                groupDiscount: []
             }
         },
         mounted() {
@@ -122,10 +159,28 @@
                 })
                 return pass
             },
+            fetchCourse (params) {
+                params.course_type = 'public'
+                params.status = 0
+                return courseService.search(Object.assign({}, this.dialogCourse, params))
+            },
+            // 处理视频选取
+            handleVideoSelected(row) {
+                this.lesson.material_name = row.name
+                this.lesson.material_id = row.id
+            },
+            // 组合优惠
+            groupDiscounts(val) {
+                console.log(val)
+                this.groupDiscount = val
+            }
         },
         components: {
             ImagEcropperInput,
-            UploadFile
+            UploadFile,
+            dialogSelectData,
+            DialogVideo,
+            PlusOrRemove
         }
     }
 </script>

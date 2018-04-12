@@ -1,4 +1,4 @@
-<!--课程列表-->
+<!--活动列表-->
 <style lang='scss' rel='stylesheet/scss'>
 @import "~utils/mixins/common";
 @import "~utils/mixins/topSearch";
