@@ -145,7 +145,7 @@ export default {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
             fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
-            return goodsService.search(fetchParam).then((ret) => {
+            return goodsService.searchGoods(fetchParam).then((ret) => {
                 this.data = ret.data
                 this.total = ret.total
                 this.loadingData = false

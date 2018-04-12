@@ -38,6 +38,11 @@ module.exports = {
         // In our experience, they generally work as expected,
         // just be aware of this issue when enabling this option.
         cssSourceMap: false,
-        apiHost: apiConfig.API_HOST_DEV,
+        get apiHost () {
+            return process.env.MOCK_ENV ? this.apiMockHost : apiConfig.API_HOST_DEV
+        },
+        get apiMockHost () {
+            return JSON.stringify(`${apiConfig.API_HOST_MOCK}:${this.port}`)
+        }
     }
 }
