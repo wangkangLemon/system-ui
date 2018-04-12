@@ -82,13 +82,13 @@
             },
             getRes () {
                 let _discountValue = this.discountValue.map(item => {
-                    return {discountValue: item}
+                    return {discount: item}
                 })
                 let _moneyValue = this.moneyValue.map(item => {
-                    return {moneyValue: item}
+                    return {reach: item}
                 })
                 _moneyValue.forEach((item, index) => {
-                    item.discountValue = _discountValue[index] && _discountValue[index].discountValue
+                    item.discount = _discountValue[index] && _discountValue[index].discount
                 })
                 return _moneyValue
             }

@@ -44,35 +44,34 @@
 </style>
 <template>
     <article id="speaking-content-add">
-        <el-form :model="form" :rules="rules" class="form" label-width="180px" ref="ruleForm">
+        <el-form :model="fetchParam" :rules="rules" class="form" label-width="180px" ref="ruleForm">
             <el-form-item label="组合名称" prop="name">
-                <el-input placeholder="请输入内容" v-model="form.name">
+                <el-input placeholder="请输入内容" v-model="fetchParam.name">
                 </el-input>
             </el-form-item>
             <el-form-item label="组合图片" prop="image">
-                <img :src="form.image | fillImgPath" alt="" class="img" v-if="form.image" style="margin-bottom: 10px;" />
+                <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示" prop="img_video">
-                <el-radio v-model="form.type" label="0">图片</el-radio>
-                <el-radio v-model="form.type" label="1">视频</el-radio>
-                <p v-if="form.type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
+                <el-radio v-model="fetchParam.show_type" label="0">图片</el-radio>
+                <el-radio v-model="fetchParam.show_type" label="1">视频</el-radio>
+                <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
                     <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
             <el-form-item label="组合介绍" prop="content">
-                <el-input :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容" type="textarea" v-model="form.content">
-                </el-input>
+                <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
             </el-form-item>
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogCourse.isShow=true">选择商品</el-button>
-                <template v-if="form.course.length">
-                    <el-table class="data-table" :data="form.course" :fit="true" border show-summary style="margin-top: 5px;">
+                <template v-if="fetchParam.goods.length">
+                    <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
                         <el-table-column label="名称" prop="name"></el-table-column>
-                        <el-table-column label="原价" prop="name"></el-table-column>
-                        <el-table-column label="优惠价" prop="name"></el-table-column>
+                        <el-table-column label="原价" prop="price"></el-table-column>
+                        <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
                     </el-table>
                 </template>
             </el-form-item>
@@ -80,10 +79,10 @@
                 <PlusOrRemove @res="groupDiscounts"></PlusOrRemove>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit('ruleForm')" type="primary">保存</el-button>
+                <el-button @click="submit" type="primary">保存</el-button>
             </el-form-item>
             <dialogSelectData ref="dialogSelect" v-model="dialogCourse.isShow" :getData="fetchCourse" title="选择商品"
-                          :selectedList="form.course" @changeSelected="val=>form.course=val">
+                          :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
                 <div slot="search" class="course-search">
                     <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogCourse.keyword"
                             icon="search"
@@ -95,6 +94,7 @@
     </article>
 </template>
 <script>
+    import VueEditor from 'components/form/UEditor.vue'
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
     import dialogSelectData from 'components/dialog/SelectData4table.vue'
@@ -105,15 +105,17 @@
         return {
             id: '',
             name: '',
-            image: '',
-            type: '0', // 0 图片 1视频
-            content: '',
-            course: []
+            cover: '',
+            show_type: '0', // 0 图片 1视频
+            introduce: '',
+            favorable: [],
+            goods: []
         }
     }
     export default {
         data () {
             return {
+                editor: null,
                 isShowVideoDialog: false,
                 push_type_list: [],
                 lesson: {type: Object, required: true},
@@ -122,7 +124,7 @@
                     isShow: false,
                     keyword: void 0,
                 },
-                form: clearFn(),
+                fetchParam: clearFn(),
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -139,8 +141,7 @@
                     goods: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ]
-                },
-                groupDiscount: []
+                }
             }
         },
         mounted() {
@@ -172,7 +173,12 @@
             // 组合优惠
             groupDiscounts(val) {
                 console.log(val)
-                this.groupDiscount = val
+                this.fetchParam.favorable = val
+            },
+            ueReady (ue) {
+                this.editor = ue
+            },
+            submit () {
             }
         },
         components: {
@@ -180,6 +186,7 @@
             UploadFile,
             dialogSelectData,
             DialogVideo,
+            VueEditor,
             PlusOrRemove
         }
     }

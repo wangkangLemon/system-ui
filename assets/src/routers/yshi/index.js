@@ -36,7 +36,7 @@ export default {
             }
         },
         {
-            path: 'goods/edit',
+            path: 'goods/edit/:good_id',
             name: 'yshi-goods-edit',
             component: resolve => {
                 require.ensure([], () => {
@@ -74,7 +74,7 @@ export default {
             }
         },
         {
-            path: 'group/edit',
+            path: 'group/edit/:group_id',
             name: 'yshi-group-edit',
             component: resolve => {
                 require.ensure([], () => {
@@ -112,7 +112,7 @@ export default {
             }
         },
         {
-            path: 'activity/edit',
+            path: 'activity/edit/:activity_id',
             name: 'yshi-activity-edit',
             component: resolve => {
                 require.ensure([], () => {
@@ -121,6 +121,44 @@ export default {
             },
             meta: {
                 title: '编辑活动'
+            }
+        },
+        // 弹框管理
+        {
+            path: 'dialog',
+            name: 'yshi-dialog',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/yshi/dialogSetting/Index.vue'))
+                })
+            },
+            meta: {
+                title: '弹框设置',
+                noback: true
+            }
+        },
+        {
+            path: 'dialog/add',
+            name: 'yshi-dialog-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/yshi/dialogSetting/form.vue'))
+                })
+            },
+            meta: {
+                title: '创建弹框'
+            }
+        },
+        {
+            path: 'dialog/edit/:dialog_id',
+            name: 'yshi-dialog-edit',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/yshi/dialogSetting/form.vue'))
+                })
+            },
+            meta: {
+                title: '编辑弹框'
             }
         }
     ]

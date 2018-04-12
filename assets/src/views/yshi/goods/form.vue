@@ -31,6 +31,11 @@
             display: block;
             margin-top: 10px;
         }
+        .input-price {
+            display: inline-block;
+            width: 120px !important;
+        }
+        
     }
     .dialog {
             section {
@@ -44,28 +49,26 @@
 </style>
 <template>
     <article id="speaking-content-add">
-        <el-form :model="form" :rules="rules" class="form" label-width="180px" ref="ruleForm">
+        <el-form :model="fetchParam" :rules="rules" class="form" label-width="180px" ref="ruleForm">
             <el-form-item label="商品名称" prop="name">
-                <el-input placeholder="请输入内容" v-model="form.name">
+                <el-input placeholder="请输入内容" v-model="fetchParam.name">
                 </el-input>
             </el-form-item>
             <el-form-item label="商品封面" prop="image">
-                <img :src="form.cover | fillImgPath" alt="" class="img" v-if="form.cover" style="margin-bottom: 10px;" />
+                <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示" prop="img_video">
-                <el-radio v-model="form.show_type" label="0">图片</el-radio>
-                <el-radio v-model="form.show_type" label="1">视频</el-radio>
-                <p v-if="form.type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
+                <el-radio v-model="fetchParam.show_type" label="0">图片</el-radio>
+                <el-radio v-model="fetchParam.show_type" label="1">视频</el-radio>
+                <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
                     <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
-                <!-- <UploadFile v-else :on-success="filesHandleChange" btnTitle='选择文件'></UploadFile> -->
             </el-form-item>
             <el-form-item label="商品介绍" prop="content">
-                <el-input :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容" type="textarea" v-model="form.introduce">
-                </el-input>
+                <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
             </el-form-item>
             <el-form-item label="添加素材" prop="fodder">
                 <el-button size="small">选择素材</el-button>
@@ -88,29 +91,32 @@
                 </template>
             </el-form-item>
             <el-form-item label="商品定价" prop="price">
-                <el-input placeholder="请输入价格" v-model="form.price" type="Number"></el-input>
-            </el-form-item>
-            <el-form-item label="优惠价格" prop="price">
-                <el-input placeholder="请输入价格" v-model="form.favorable_price" type="Number"></el-input><span class="label">元</span>
+                <template>
+                    <el-input class="input-price" placeholder="请输入价格" v-model="fetchParam.price" type="Number"></el-input><i> 元</i>
+                    <i style="margin-left:10px;">优惠价格</i>
+                    <el-input class="input-price" placeholder="请输入价格" v-model="fetchParam.favorable_price" type="Number"></el-input><i> 元</i>
+                </template>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit('ruleForm')" type="primary">保存</el-button>
+                <el-button @click="submit" type="primary">保存</el-button>
             </el-form-item>
             <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
         </el-form>
     </article>
 </template>
 <script>
+    import VueEditor from 'components/form/UEditor.vue'
     import CourseCategorySelect from 'components/select/CourseCategory.vue'
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
+    import goodsService from 'services/yshi/goodsService'
     function clearFn () {
         return {
             id: '',
             name: '',
             cover: '',
-            show_type: 0, // 0 图片 1视频
+            show_type: '0', // 0 图片 1视频
             show_picture: '',
             show_video: 0,
             introduce: '',
@@ -122,15 +128,12 @@
     export default {
         data () {
             return {
+                editor: null,
                 isShowVideoDialog: false,
                 lesson: {type: Object, required: true},
-                push_type_list: [],
                 selectFodder: [],
-                form: clearFn(),
+                fetchParam: clearFn(),
                 rules: {
-                    classify: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
@@ -152,8 +155,15 @@
                 },
             }
         },
-        mounted() {
+        create() {
             xmview.setContentLoading(false)
+            if (this.$route.params.good_id != undefined) {
+                goodsService.getCourseInfo({
+                    id: this.$route.params.good_id
+                }).then((ret) => {
+
+                })
+            }
         },
         methods: {
             cropperFn (data, ext) {
@@ -173,12 +183,33 @@
                 this.lesson.material_name = row.name
                 this.lesson.material_id = row.id
             },
+            ueReady (ue) {
+                this.editor = ue
+            },
+            submit () {
+                this.$refs['ruleForm'].validate((valid) => {
+                    if (!valid) return
+                    if (!this.editor.getContentTxt()) {
+                        xmview.showTip('error', '请填写正文内容')
+                        return
+                    }
+                    this.fetchParam.introduce = this.editor.getContent()
+                    let req = goodsService.create
+                    if (this.fetchParam.id) req = goodsService.update
+                    req(this.fetchParam).then((ret) => {
+                        // 重置当前数据
+                        this.data = []
+                        if (!this.fetchParam.id) this.fetchParam.id = ret.id
+                    })
+                })
+            },
         },
         components: {
             ImagEcropperInput,
             CourseCategorySelect,
             UploadFile,
-            DialogVideo
+            DialogVideo,
+            VueEditor,
         }
     }
 </script>
