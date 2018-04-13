@@ -4,31 +4,45 @@
 
 import * as api from '../api'
 import config from 'utils/config'
-const urlPre = config.apiHost + '/goods'
+const urlPre = config.apiHost + '/activity'
 
-class GoodsService {
+class ActivityService {
     // 搜索
-    searchGoods ({
+    searchActivity ({
         name,
+        status,
         start_time,
         end_time,
         page,
         page_size
     }) {
         let url = `${urlPre}/list`
-        return api.get(url, { name, start_time, end_time, page, page_size }, false).then(ret => {
-            if (ret.code == 0) {
-                return ret.data
-            } else {
+        return api.get(url, { name, status, start_time, end_time, page, page_size }, false).then(ret => ret.data)
+    }
+    // 上下线
+    offline (id) {
+        let url = `${urlPre}/${id}/offline`
+        return api.put(url, {})
+    }
+    // 上下线
+    online (id) {
+        let url = `${urlPre}/${id}/online`
+        return api.put(url, {})
+    }
+    // 删除
+    delete (id) {
+        let url = `${urlPre}/${id}`
+        return api.del(url, {}).then(ret => {
+            if (ret.code) {
                 return Promise.reject(ret)
             }
         })
     }
     // 创建
-    createGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }) {
+    createActivity ({ name, cover, show_type, show_video_id, show_video_name, introduce, favorable_price, end_time, goods_ids }) {
         debugger
         let url = urlPre
-        return api.post(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }).then(ret => {
+        return api.post(url, { name, cover, show_type, show_video_id, show_video_name, introduce, favorable_price, end_time, goods_ids }).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -37,16 +51,16 @@ class GoodsService {
         })
     }
     // 获取商品详情
-    getGoodInfo ({id}) {
+    getActivityInfo ({id}) {
         let url = `${urlPre}/${id}`
         return api.get(url).then((ret) => {
             return ret.data
         })
     }
     // 更新
-    updateGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }) {
+    updateActivity ({ id, cover, show_type, show_video_id, show_video_name, introduce, favorable_price, end_time, goods_ids }) {
         let url = `${urlPre}/${id}`
-        return api.put(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }).then(ret => {
+        return api.put(url, { id, cover, show_type, show_video_id, show_video_name, introduce, favorable_price, end_time, goods_ids }).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -59,16 +73,6 @@ class GoodsService {
             return ret.data
         })
     }
-    // 删除
-    delete (id) {
-        let url = `${urlPre}/${id}`
-        return api.del(url, {}).then(ret => {
-            if (ret.code) {
-                return Promise.reject(ret)
-            }
-        })
-    }
-
     // 批量删除课程
     deleteMulty (ids) {
         let url = `${urlPre}/batchdel`
@@ -90,19 +94,6 @@ class GoodsService {
             }
         })
     }
-
-    // 上下线课程
-    offline (id) {
-        let url = `${urlPre}/${id}/offline`
-        return api.put(url, {})
-    }
-
-    // 上下线课程
-    online (id) {
-        let url = `${urlPre}/${id}/online`
-        return api.put(url, {})
-    }
-
     // 获取添加编辑课程上传图片的url
     getUploadUrl ({image, alias}) {
         let url = `${urlPre}/upload`
@@ -117,4 +108,4 @@ class GoodsService {
         return api.put(url, jsonstr)
     }
 }
-export default new GoodsService()
+export default new ActivityService()

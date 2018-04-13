@@ -4,7 +4,7 @@
   "author": "vodjk",
   "private": true,
   "scripts": {
-    "mock": "cross-env MOCK_ENV=true yarn dev",
+    "mock": "cross-env MOCK_ENV=true npm run dev",
     "dev": "supervisor --harmony --watch build,config,proxy build/dev-server.js",
     "build": "node build/build.js",
     "dll": "webpack --config ./build/webpack.dll.config.js",

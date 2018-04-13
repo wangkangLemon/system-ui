@@ -38,7 +38,7 @@
 <template>
     <main id="newcourse-course-public-container">
         <section class="manage-container">
-            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-activity-add'})" v-operation="auth.com_course_create"><i>创建活动</i>
+            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-activity-add'})"><i>创建活动</i>
             </el-button>
         </section>
 
@@ -66,11 +66,11 @@
             </el-table-column>
             <el-table-column align="center" width="130" prop="price" label="原价">
             </el-table-column>
-            <el-table-column align="center" width="130" prop="favorable_time" label="优惠价">
+            <el-table-column align="center" width="130" prop="favorable_price" label="优惠价">
             </el-table-column>
             <el-table-column align="center" width="190" prop="end_time" label="截止时间">
             </el-table-column>
-            <el-table-column align="center" width="190" prop="creat_time" label="创建时间">
+            <el-table-column align="center" width="190" prop="create_time" label="创建时间">
             </el-table-column>
             <el-table-column align="center" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
@@ -79,21 +79,20 @@
                         @click="$router.push({name: 'yshi-activity-edit', params: {activity_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 0 || creatorDisabled(scope.row.creator_id)">
+                        :disabled="scope.row.status == 0">
                         编辑
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
-                        size="small"
-                        :disabled="creatorDisabled(scope.row.id)">
+                        size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 0 || creatorDisabled(scope.row.id)">
+                        :disabled="scope.row.status == 0">
                         删除
                     </el-button>
                 </template>
@@ -113,7 +112,7 @@
 </template>
 
 <script>
-import courseService from 'services/newcourse/courseService'
+import activityService from 'services/yshi/activityService'
 import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
 function getFetchParam () {
@@ -158,8 +157,8 @@ export default {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
             fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
-            return courseService.search(fetchParam).then((ret) => {
-                this.data = ret.data
+            return activityService.searchActivity(fetchParam).then((ret) => {
+                this.data = ret.list
                 this.total = ret.total
                 this.loadingData = false
                 xmview.setContentLoading(false)
@@ -169,7 +168,7 @@ export default {
         offline (index, row) {
             let txt = row.status == 0 ? '下线' : '上线'
             let finalStatus = row.status == 0 ? 1 : 0
-            let reqFn = row.status == 0 ? courseService.offline : courseService.online
+            let reqFn = row.status == 0 ? activityService.offline : activityService.online
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                 reqFn(row.id).then((ret) => {
                     row.status = finalStatus
@@ -179,7 +178,7 @@ export default {
         // 单条删除
         del (index, row) {
             xmview.showDialog(`你将要删除课程 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
-                courseService.delete(row.id).then(() => {
+                activityService.delete(row.id).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.fetchData()
                 })

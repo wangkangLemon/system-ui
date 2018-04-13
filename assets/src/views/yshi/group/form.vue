@@ -58,7 +58,7 @@
                 <el-radio v-model="fetchParam.show_type" label="1">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
-                    <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
+                    <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
@@ -66,8 +66,8 @@
                 <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
             </el-form-item>
             <el-form-item label="添加商品" prop="goods">
-                <el-button size="small" @click="dialogCourse.isShow=true">选择商品</el-button>
-                <template v-if="fetchParam.goods.length">
+                <el-button size="small" @click="dialogGoods.isShow=true">选择商品</el-button>
+                <template v-if="fetchParam.goods.length > 0">
                     <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
@@ -81,10 +81,10 @@
             <el-form-item>
                 <el-button @click="submit" type="primary">保存</el-button>
             </el-form-item>
-            <dialogSelectData ref="dialogSelect" v-model="dialogCourse.isShow" :getData="fetchCourse" title="选择商品"
+            <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
                           :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
                 <div slot="search" class="course-search">
-                    <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogCourse.keyword"
+                    <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.keyword"
                             icon="search"
                             placeholder="请输入关键字搜索"></el-input>
                 </div>
@@ -97,9 +97,10 @@
     import VueEditor from 'components/form/UEditor.vue'
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
-    import dialogSelectData from 'components/dialog/SelectData4table.vue'
+    import dialogSelectData from 'components/dialog/SelectData5table.vue'
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
-    import courseService from 'services/newcourse/courseService'
+    import goodsService from 'services/yshi/goodsService'
+    import goodsGroupService from 'services/yshi/goodsGroupService'
     import PlusOrRemove from '../component/PlusOrRemove.vue'
     function clearFn () {
         return {
@@ -107,9 +108,12 @@
             name: '',
             cover: '',
             show_type: '0', // 0 图片 1视频
+            show_video_name: '',
+            show_video_id: 0,
             introduce: '',
             favorable: [],
-            goods: []
+            goods: [],
+            goods_ids: []
         }
     }
     export default {
@@ -118,8 +122,7 @@
                 editor: null,
                 isShowVideoDialog: false,
                 push_type_list: [],
-                lesson: {type: Object, required: true},
-                dialogCourse: {
+                dialogGoods: {
                     loading: false,
                     isShow: false,
                     keyword: void 0,
@@ -144,7 +147,16 @@
                 }
             }
         },
-        mounted() {
+        created() {
+            if (this.$route.params.group_id != undefined) {
+                goodsGroupService.getGoodGroupInfo({
+                    id: this.$route.params.group_id
+                }).then((ret) => {
+                    console.log(ret)
+                    this.fetchParam = ret
+                    this.editor && this.editor.setContent(ret.data.introduce)
+                })
+            }
             xmview.setContentLoading(false)
         },
         methods: {
@@ -160,25 +172,48 @@
                 })
                 return pass
             },
-            fetchCourse (params) {
-                params.course_type = 'public'
-                params.status = 0
-                return courseService.search(Object.assign({}, this.dialogCourse, params))
+            fetchGood (params) {
+                return goodsService.searchGoods(Object.assign({}, this.dialogGoods, params))
             },
             // 处理视频选取
             handleVideoSelected(row) {
-                this.lesson.material_name = row.name
-                this.lesson.material_id = row.id
+                this.fetchParam.show_video_name = row.name
+                this.fetchParam.show_video_id = row.id
             },
             // 组合优惠
             groupDiscounts(val) {
-                console.log(val)
-                this.fetchParam.favorable = val
+                let a = JSON.stringify(val)
+                console.log(a)
+                this.fetchParam.favorable = a
             },
             ueReady (ue) {
                 this.editor = ue
             },
             submit () {
+                // this.$refs['ruleForm'].validate((valid) => {
+                //     if (!valid) return
+                //     if (!this.editor.getContentTxt()) {
+                //         xmview.showTip('error', '请填写正文内容')
+                //         return
+                //     }
+                // })
+                this.fetchParam.introduce = this.editor.getContent()
+                this.fetchParam.goods_ids = JSON.stringify(this.fetchParam.goods.map(item => {
+                    return item.id
+                }))
+                let req = goodsGroupService.createGoodGroup
+                let msg = '添加成功'
+                if (this.fetchParam.id) {
+                    req = goodsGroupService.updateGoodGroup
+                    msg = '修改成功'
+                }
+                req(this.fetchParam).then((ret) => {
+                    xmview.showTip('success', msg)
+                    this.fetchParam = []
+                    this.$router.push({name: 'group'})
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             }
         },
         components: {

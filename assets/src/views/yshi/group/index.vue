@@ -38,7 +38,7 @@
 <template>
     <main id="newcourse-course-public-container">
         <section class="manage-container">
-            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-group-add'})" v-operation="auth.com_course_create"><i>创建组合售卖</i>
+            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-group-add'})"><i>创建组合售卖</i>
             </el-button>
         </section>
 
@@ -50,8 +50,8 @@
             <section>
                 <i>状态</i>
                 <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                    <el-option label="正常" value="0"></el-option>
-                    <el-option label="下线" value="1"></el-option>
+                    <el-option label="已上线" value="1"></el-option>
+                    <el-option label="已下线" value="0"></el-option>
                 </el-select>
             </section>
             <DateRange title="创建时间" :start="fetchParam.start_time" :end="fetchParam.end_time" @changeStart="val=> {fetchParam.start_time=val}" @changeEnd="val=> {fetchParam.end_time=val}" :change="fetchData">
@@ -66,13 +66,19 @@
             </el-table-column>
             <el-table-column align="center" min-width="100" prop="favorable_count" label="优惠阶梯数">
             </el-table-column>
-            <el-table-column align="center" width="130" prop="favorable[0].reach" label="满">
+            <el-table-column align="center" width="130" label="满">
+                <template slot-scope="scope">
+                    <p>{{ scope.row.favorable[0].reach }}</p>
+                </template>
             </el-table-column>
-            <el-table-column align="center" width="130" prop="favorable[0].discount" label="打折">
+            <el-table-column align="center" width="130" label="打折">
+                <template slot-scope="scope">
+                    <p>{{ scope.row.favorable[0].discount }}</p>
+                </template>
             </el-table-column>
             <el-table-column align="center" width="100" label="状态">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status == 0" type="success">已上线</el-tag>
+                    <el-tag v-if="scope.row.status == 1" type="success">已上线</el-tag>
                     <el-tag v-else type="info">已下线</el-tag>
                 </template>
             </el-table-column>
@@ -85,21 +91,20 @@
                         @click="$router.push({name: 'yshi-group-edit', params: {group_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 0 || creatorDisabled(scope.row.creator_id)">
+                        :disabled="scope.row.status == 1">
                         编辑
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
-                        size="small"
-                        :disabled="creatorDisabled(scope.row.creator_id)">
-                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
+                        size="small">
+                        <i>{{ scope.row.status == 0 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 0 || creatorDisabled(scope.row.creator_id)">
+                        :disabled="scope.row.status == 1">
                         删除
                     </el-button>
                 </template>
@@ -119,13 +124,13 @@
 </template>
 
 <script>
-import courseService from 'services/newcourse/courseService'
+import goodsGroupService from 'services/yshi/goodsGroupService'
 import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
 function getFetchParam () {
     return {
         name: void '',
-        status: void 0, // 1 下线，0 正常
+        status: void 0, // 0 下线，1 正常
         start_time: void 0,
         end_time: void 0,
         page: 1,
@@ -163,8 +168,8 @@ export default {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
             fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
-            return courseService.search(fetchParam).then((ret) => {
-                this.data = ret.data
+            return goodsGroupService.searchGoodsGroup(fetchParam).then((ret) => {
+                this.data = ret.list
                 this.total = ret.total
                 this.loadingData = false
                 xmview.setContentLoading(false)
@@ -174,7 +179,7 @@ export default {
         offline (index, row) {
             let txt = row.status == 0 ? '下线' : '上线'
             let finalStatus = row.status == 0 ? 1 : 0
-            let reqFn = row.status == 0 ? courseService.offline : courseService.online
+            let reqFn = row.status == 0 ? goodsGroupService.offline : goodsGroupService.online
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                 reqFn(row.id).then((ret) => {
                     row.status = finalStatus
@@ -184,7 +189,7 @@ export default {
         // 单条删除
         del (index, row) {
             xmview.showDialog(`你将要删除课程 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
-                courseService.delete(row.id).then(() => {
+                goodsGroupService.delete(row.id).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.fetchData()
                 })

@@ -59,11 +59,11 @@
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示" prop="img_video">
-                <el-radio v-model="fetchParam.show_type" label="0">图片</el-radio>
-                <el-radio v-model="fetchParam.show_type" label="1">视频</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typeimg">图片</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typevideo">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
-                    <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
+                    <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
@@ -116,9 +116,10 @@
             id: '',
             name: '',
             cover: '',
-            show_type: '0', // 0 图片 1视频
+            show_type: 0, // 0 图片 1视频
             show_picture: '',
-            show_video: 0,
+            show_video_id: 0,
+            show_video_name: '',
             introduce: '',
             price: '',
             favorable_price: '',
@@ -129,6 +130,8 @@
         data () {
             return {
                 editor: null,
+                typeimg: 0,
+                typevideo: 1,
                 isShowVideoDialog: false,
                 lesson: {type: Object, required: true},
                 selectFodder: [],
@@ -155,15 +158,17 @@
                 },
             }
         },
-        create() {
-            xmview.setContentLoading(false)
+        created () {
             if (this.$route.params.good_id != undefined) {
-                goodsService.getCourseInfo({
+                goodsService.getGoodInfo({
                     id: this.$route.params.good_id
                 }).then((ret) => {
-
+                    console.log(ret)
+                    this.fetchParam = ret
+                    this.editor && this.editor.setContent(ret.data.introduce)
                 })
             }
+            xmview.setContentLoading(false)
         },
         methods: {
             cropperFn (data, ext) {
@@ -180,27 +185,33 @@
             },
             // 处理视频选取
             handleVideoSelected(row) {
-                this.lesson.material_name = row.name
-                this.lesson.material_id = row.id
+                this.fetchParam.show_video_name = row.name
+                this.fetchParam.show_video_id = row.id
             },
             ueReady (ue) {
                 this.editor = ue
             },
             submit () {
-                this.$refs['ruleForm'].validate((valid) => {
-                    if (!valid) return
-                    if (!this.editor.getContentTxt()) {
-                        xmview.showTip('error', '请填写正文内容')
-                        return
-                    }
-                    this.fetchParam.introduce = this.editor.getContent()
-                    let req = goodsService.create
-                    if (this.fetchParam.id) req = goodsService.update
-                    req(this.fetchParam).then((ret) => {
-                        // 重置当前数据
-                        this.data = []
-                        if (!this.fetchParam.id) this.fetchParam.id = ret.id
-                    })
+                // this.$refs['ruleForm'].validate((valid) => {
+                //     if (!valid) return
+                //     if (!this.editor.getContentTxt()) {
+                //         xmview.showTip('error', '请填写正文内容')
+                //         return
+                //     }
+                // })
+                this.fetchParam.introduce = this.editor.getContent()
+                let req = goodsService.createGood
+                let msg = '添加成功'
+                if (this.fetchParam.id) {
+                    req = goodsService.updateGood
+                    msg = '修改成功'
+                }
+                req(this.fetchParam).then((ret) => {
+                    xmview.showTip('success', msg)
+                    this.fetchParam = []
+                    this.$router.push({name: 'goods'})
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
                 })
             },
         },

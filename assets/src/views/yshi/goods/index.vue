@@ -38,7 +38,7 @@
 <template>
     <main id="newcourse-course-public-container">
         <section class="manage-container">
-            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-goods-add'})" v-operation="auth.com_course_create"><i>添加商品</i>
+            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-goods-add'})"><i>添加商品</i>
             </el-button>
         </section>
 
@@ -69,15 +69,13 @@
                     <el-button 
                         @click="$router.push({name: 'yshi-goods-edit', params: {good_id: scope.row.id}})" 
                         type="text" 
-                        size="small" 
-                        :disabled="scope.row.status == 0 || creatorDisabled(scope.row.creator_id)">
+                        size="small" >
                         编辑
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
-                        size="small" 
-                        :disabled="scope.row.status == 0 || creatorDisabled(scope.row.creator_id)">
+                        size="small" >
                         删除
                     </el-button>
                 </template>
@@ -141,12 +139,11 @@ export default {
             this.fetchParam.page_size = val
             this.fetchData()
         },
-        fetchData (val) {
+        fetchData () {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
-            fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
             return goodsService.searchGoods(fetchParam).then((ret) => {
-                this.data = ret.data
+                this.data = ret.list
                 this.total = ret.total
                 this.loadingData = false
                 xmview.setContentLoading(false)

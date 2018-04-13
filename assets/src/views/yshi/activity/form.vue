@@ -66,15 +66,22 @@
                 <el-radio v-model="fetchParam.show_type" label="1">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
-                    <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
+                    <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
-            <el-form-item label="添加商品" prop="fodder">
-                <el-button size="small">选择商品</el-button>
+            <el-form-item label="添加商品" prop="goods">
+                <el-button size="small" @click="dialogGoods.isShow=true">选择商品</el-button>
+                <template v-if="fetchParam.goods.length">
+                    <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
+                        <el-table-column label="名称" prop="name"></el-table-column>
+                        <el-table-column label="原价" prop="price"></el-table-column>
+                        <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
+                    </el-table>
+                </template>
             </el-form-item>
             <el-form-item label="优惠活动价" prop="price">
-                <el-input placeholder="请输入价格" v-model="fetchParam.favorable_price">
+                <el-input placeholder="请输入价格" type="Number" v-model="fetchParam.favorable_price">
                 </el-input>
             </el-form-item>
             <el-form-item label="截止日期">
@@ -86,6 +93,14 @@
             <el-form-item>
                 <el-button @click="submit" type="primary">保存</el-button>
             </el-form-item>
+            <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
+                          :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
+                <div slot="search" class="course-search">
+                    <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.keyword"
+                            icon="search"
+                            placeholder="请输入关键字搜索"></el-input>
+                </div>
+            </dialogSelectData>
             <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
         </el-form>
     </article>
@@ -94,19 +109,25 @@
     import VueEditor from 'components/form/UEditor.vue'
     import CourseCategorySelect from 'components/select/CourseCategory.vue'
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
+    import dialogSelectData from 'components/dialog/SelectData5table.vue'
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
     import DateRange from 'components/form/DatePicker.vue'
+    import goodsService from 'services/yshi/goodsService'
+    import activityService from 'services/yshi/activityService'
     function clearFn () {
         return {
             id: '',
             name: '',
             cover: '',
             show_type: '0', // 0 图片 1视频
+            show_video_id: 0,
+            show_video_name: '',
             introduce: '',
-            price: '',
             favorable_price: '',
-            end_time: ''
+            end_time: '',
+            goods: [],
+            goods_ids: []
         }
     }
     export default {
@@ -114,8 +135,11 @@
             return {
                 editor: null,
                 isShowVideoDialog: false,
-                lesson: {type: Object, required: true},
-                push_type_list: [],
+                dialogGoods: {
+                    loading: false,
+                    isShow: false,
+                    keyword: void 0,
+                },
                 fetchParam: clearFn(),
                 rules: {
                     classify: [
@@ -133,7 +157,7 @@
                     content: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    fodder: [
+                    goods: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     price: [
@@ -142,7 +166,16 @@
                 },
             }
         },
-        mounted() {
+        created() {
+            if (this.$route.params.group_id != undefined) {
+                activityService.getActivityInfo({
+                    id: this.$route.params.group_id
+                }).then((ret) => {
+                    console.log(ret)
+                    this.fetchParam = ret
+                    this.editor && this.editor.setContent(ret.data.introduce)
+                })
+            }
             xmview.setContentLoading(false)
         },
         methods: {
@@ -162,14 +195,40 @@
             },
             // 处理视频选取
             handleVideoSelected(row) {
-                this.lesson.material_name = row.name
-                this.lesson.material_id = row.id
-                this.fetchParam.show_video = row.id
+                this.fetchParam.show_video_name = row.name
+                this.fetchParam.show_video_id = row.id
             },
             ueReady (ue) {
                 this.editor = ue
             },
+            fetchGood (params) {
+                return goodsService.searchGoods(Object.assign({}, this.dialogGoods, params))
+            },
             submit() {
+                // this.$refs['ruleForm'].validate((valid) => {
+                //     if (!valid) return
+                //     if (!this.editor.getContentTxt()) {
+                //         xmview.showTip('error', '请填写正文内容')
+                //         return
+                //     }
+                // })
+                this.fetchParam.introduce = this.editor.getContent()
+                this.fetchParam.goods_ids = JSON.stringify(this.fetchParam.goods.map(item => {
+                    return item.id
+                }))
+                let req = activityService.createActivity
+                let msg = '添加成功'
+                if (this.fetchParam.id) {
+                    req = activityService.updateActivity
+                    msg = '修改成功'
+                }
+                req(this.fetchParam).then((ret) => {
+                    xmview.showTip('success', msg)
+                    this.fetchParam = []
+                    this.$router.push({name: 'group'})
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             }
         },
         components: {
@@ -178,7 +237,8 @@
             UploadFile,
             DialogVideo,
             VueEditor,
-            DateRange
+            DateRange,
+            dialogSelectData
         }
     }
 </script>

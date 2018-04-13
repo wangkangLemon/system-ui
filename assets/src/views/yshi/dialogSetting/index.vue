@@ -38,7 +38,7 @@
 <template>
     <main id="newcourse-course-public-container">
         <section class="manage-container">
-            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-activity-add'})" v-operation="auth.com_course_create"><i>创建活动</i>
+            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-dialog-add'})"><i>创建弹框</i>
             </el-button>
         </section>
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
@@ -61,21 +61,20 @@
                         @click="$router.push({name: 'yshi-activity-edit', params: {dialog_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 0 || creatorDisabled(scope.row.creator_id)">
+                        :disabled="scope.row.status == 0">
                         编辑
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small"
-                        :disabled="creatorDisabled(scope.row.creator_id)">
                         <i>{{ scope.row.status == 1 ? '启动' : '撤销' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 0 || creatorDisabled(scope.row.creator_id)">
+                        :disabled="scope.row.status == 0">
                         删除
                     </el-button>
                 </template>
