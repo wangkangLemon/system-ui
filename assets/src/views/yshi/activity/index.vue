@@ -68,6 +68,8 @@
             </el-table-column>
             <el-table-column align="center" width="130" prop="favorable_price" label="优惠价">
             </el-table-column>
+            <el-table-column align="center" width="130" prop="order" label="排序">
+            </el-table-column>
             <el-table-column align="center" width="190" prop="end_time" label="截止时间">
             </el-table-column>
             <el-table-column align="center" width="190" prop="create_time" label="创建时间">

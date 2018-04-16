@@ -4,20 +4,16 @@
 
 import * as api from '../api'
 import config from 'utils/config'
-const urlPre = config.apiHost + '/goods_group'
+const urlPre = config.apiHost + '/toast'
 
-class GoodsGroupService {
+class ToastService {
     // 搜索
-    searchGoodsGroup ({
-        name,
-        status,
-        start_time,
-        end_time,
+    searchToast ({
         page,
         page_size
     }) {
         let url = `${urlPre}/list`
-        return api.get(url, { name, status, start_time, end_time, page, page_size }, false).then(ret => {
+        return api.get(url, { page, page_size }, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -45,10 +41,10 @@ class GoodsGroupService {
         })
     }
     // 创建
-    createGoodGroup ({ name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }) {
+    createToast ({ name, image, url, end_time, status }) {
         debugger
-        let url = urlPre
-        return api.post(url, { name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }).then(ret => {
+        let urls = urlPre
+        return api.post(urls, { name, image, url, end_time, status }).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -57,17 +53,17 @@ class GoodsGroupService {
         })
     }
     // 获取商品组合详情
-    getGoodGroupInfo ({id}) {
+    getToastInfo ({id}) {
         let url = `${urlPre}/${id}`
         return api.get(url).then((ret) => {
             return ret.data
         })
     }
     // 更新
-    updateGoodGroup ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }) {
+    updateToast ({ id, name, image, url, end_time, status }) {
         debugger
-        let url = `${urlPre}`
-        return api.put(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }).then(ret => {
+        let urls = `${urlPre}`
+        return api.put(urls, { id, name, image, url, end_time, status }).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -115,4 +111,4 @@ class GoodsGroupService {
         return api.put(url, jsonstr)
     }
 }
-export default new GoodsGroupService()
+export default new ToastService()

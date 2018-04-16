@@ -31,6 +31,7 @@ class ActivityService {
     }
     // 删除
     delete (id) {
+        debugger
         let url = `${urlPre}/${id}`
         return api.del(url, {}).then(ret => {
             if (ret.code) {
@@ -40,7 +41,6 @@ class ActivityService {
     }
     // 创建
     createActivity ({ name, cover, show_type, show_video_id, show_video_name, introduce, favorable_price, end_time, goods_ids }) {
-        debugger
         let url = urlPre
         return api.post(url, { name, cover, show_type, show_video_id, show_video_name, introduce, favorable_price, end_time, goods_ids }).then(ret => {
             if (ret.code == 0) {
@@ -59,7 +59,7 @@ class ActivityService {
     }
     // 更新
     updateActivity ({ id, cover, show_type, show_video_id, show_video_name, introduce, favorable_price, end_time, goods_ids }) {
-        let url = `${urlPre}/${id}`
+        let url = `${urlPre}`
         return api.put(url, { id, cover, show_type, show_video_id, show_video_name, introduce, favorable_price, end_time, goods_ids }).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)

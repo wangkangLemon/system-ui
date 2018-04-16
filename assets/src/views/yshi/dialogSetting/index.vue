@@ -44,37 +44,33 @@
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
             <el-table-column align="center" min-width="300" prop="name" label="推广名称">
             </el-table-column>
-            <el-table-column align="center" min-width="100" prop="creator_id" label="使用弹框">
+            <el-table-column align="center" min-width="100" prop="url" label="跳转链接">
             </el-table-column>
-            <el-table-column align="center" min-width="100" prop="creator_id" label="跳转链接">
+            <el-table-column align="center" width="190" prop="create_time" label="创建时间">
             </el-table-column>
-            <el-table-column align="center" width="130" prop="award_price_float" label="截止时间">
-            </el-table-column>
-            <el-table-column align="center" width="130" prop="price" label="优惠价">
-            </el-table-column>
-            <el-table-column align="center" width="190" prop="create_time_name" label="创建时间">
+            <el-table-column align="center" width="130" prop="end_time" label="截止时间">
             </el-table-column>
             <el-table-column align="center" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
                     <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">查看</el-button>
                     <el-button 
-                        @click="$router.push({name: 'yshi-activity-edit', params: {dialog_id: scope.row.id}})" 
+                        @click="$router.push({name: 'yshi-dialog-edit', params: {dialog_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 0">
+                        :disabled="scope.row.status == 1">
                         编辑
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
-                        size="small"
-                        <i>{{ scope.row.status == 1 ? '启动' : '撤销' }}</i>
+                        size="small">
+                        <i>{{ scope.row.status == 2 ? '启动' : '撤销' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 0">
+                        :disabled="scope.row.status == 1">
                         删除
                     </el-button>
                 </template>
@@ -94,19 +90,13 @@
 </template>
 
 <script>
-import courseService from 'services/newcourse/courseService'
+import toastService from 'services/yshi/toastService'
 import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
 function getFetchParam () {
     return {
-        keyword: void '',
-        status: void 0, // 1 下线，0 正常
-        category_id: void 0, // 栏目id
-        time_start: void 0,
-        time_end: void 0,
         page: 1,
         page_size: 15,
-        course_type: 'private',
     }
 }
 export default {
@@ -144,12 +134,10 @@ export default {
         fetchData (val) {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
-            fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
-            return courseService.search(fetchParam).then((ret) => {
-                this.data = ret.data
+            return toastService.searchToast(fetchParam).then((ret) => {
+                this.data = ret.list
                 this.total = ret.total
                 this.loadingData = false
-                this.selectedIds = []
                 xmview.setContentLoading(false)
             })
         },
@@ -157,7 +145,7 @@ export default {
         offline (index, row) {
             let txt = row.status == 0 ? '下线' : '上线'
             let finalStatus = row.status == 0 ? 1 : 0
-            let reqFn = row.status == 0 ? courseService.offline : courseService.online
+            let reqFn = row.status == 0 ? toastService.offline : toastService.online
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                 reqFn(row.id).then((ret) => {
                     row.status = finalStatus
@@ -167,7 +155,7 @@ export default {
         // 单条删除
         del (index, row) {
             xmview.showDialog(`你将要删除课程 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
-                courseService.delete(row.id).then(() => {
+                toastService.delete(row.id).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.fetchData()
                 })

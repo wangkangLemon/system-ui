@@ -43,12 +43,15 @@
     import InputText from './InputText.vue'
     export default{
         props: {
+            money: Array,
+            discount: Array,
+            favorable: Array
         },
         data () {
             return {
-                dataArr: [''],
-                moneyValue: [],
-                discountValue: [],
+                dataArr: this.favorable,
+                moneyValue: this.money,
+                discountValue: this.discount
             }
         },
         created () {

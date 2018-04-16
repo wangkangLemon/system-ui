@@ -31,6 +31,10 @@
             display: block;
             margin-top: 10px;
         }
+        .input-price {
+            display: inline-block;
+            width: 120px !important;
+        }
     }
     .dialog {
             section {
@@ -54,8 +58,8 @@
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示" prop="img_video">
-                <el-radio v-model="fetchParam.show_type" label="0">图片</el-radio>
-                <el-radio v-model="fetchParam.show_type" label="1">视频</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typeimg">图片</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typevideo">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
                     <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
@@ -75,8 +79,13 @@
                     </el-table>
                 </template>
             </el-form-item>
+            <el-form-item label="排序" prop="order">
+                <template>
+                    <el-input class="input-price" placeholder="组合顺序" v-model="fetchParam.order" type="Number"></el-input>
+                </template>
+            </el-form-item>
             <el-form-item label="设置组合售卖优惠">
-                <PlusOrRemove @res="groupDiscounts"></PlusOrRemove>
+                <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="fetchParam.favorable"></PlusOrRemove>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary">保存</el-button>
@@ -84,6 +93,7 @@
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
                           :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
                 <div slot="search" class="course-search">
+                    <span>{{fetchParam.goods}}</span>
                     <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.keyword"
                             icon="search"
                             placeholder="请输入关键字搜索"></el-input>
@@ -107,11 +117,12 @@
             id: '',
             name: '',
             cover: '',
-            show_type: '0', // 0 图片 1视频
+            show_type: 0, // 0 图片 1视频
             show_video_name: '',
             show_video_id: 0,
             introduce: '',
-            favorable: [],
+            favorable: [''],
+            order: 0,
             goods: [],
             goods_ids: []
         }
@@ -119,6 +130,8 @@
     export default {
         data () {
             return {
+                typeimg: 0,
+                typevideo: 1,
                 editor: null,
                 isShowVideoDialog: false,
                 push_type_list: [],
@@ -128,6 +141,8 @@
                     keyword: void 0,
                 },
                 fetchParam: clearFn(),
+                moneyarr: [],
+                discountarr: [],
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -143,6 +158,9 @@
                     ],
                     goods: [
                         {required: true, message: '必须填写', trigger: 'blur'}
+                    ],
+                    order: [
+                        {required: true, message: '必须填写', trigger: 'blur'}
                     ]
                 }
             }
@@ -154,6 +172,11 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    ret.favorable.forEach(item => {
+                        this.moneyarr.push(item.reach)
+                        this.discountarr.push(item.discount)
+                    })
+                    this.fetchParam.goods = ret.goods
                     this.editor && this.editor.setContent(ret.data.introduce)
                 })
             }
@@ -182,9 +205,7 @@
             },
             // 组合优惠
             groupDiscounts(val) {
-                let a = JSON.stringify(val)
-                console.log(a)
-                this.fetchParam.favorable = a
+                this.fetchParam.favorable = val
             },
             ueReady (ue) {
                 this.editor = ue
@@ -201,6 +222,7 @@
                 this.fetchParam.goods_ids = JSON.stringify(this.fetchParam.goods.map(item => {
                     return item.id
                 }))
+                this.fetchParam.favorable = JSON.stringify(this.fetchParam.favorable)
                 let req = goodsGroupService.createGoodGroup
                 let msg = '添加成功'
                 if (this.fetchParam.id) {
@@ -210,7 +232,7 @@
                 req(this.fetchParam).then((ret) => {
                     xmview.showTip('success', msg)
                     this.fetchParam = []
-                    this.$router.push({name: 'group'})
+                    this.$router.push({name: 'yshi-group'})
                 }).catch((ret) => {
                     xmview.showTip('error', ret.message)
                 })

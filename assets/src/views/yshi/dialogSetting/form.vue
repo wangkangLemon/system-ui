@@ -49,94 +49,85 @@
 </style>
 <template>
     <article id="speaking-content-add">
-        <el-form :model="form" :rules="rules" class="form" label-width="180px" ref="ruleForm">
-            <!-- <el-form-item label="所属栏目" prop="classify">
-                <CourseCategorySelect type="newcourse" :autoClear="true" :showNotCat="false" v-model="form.classify"></CourseCategorySelect>
-            </el-form-item> -->
-            <el-form-item label="活动名称" prop="推广名称">
-                <el-input placeholder="请输入内容" v-model="form.name">
+        <el-form :model="fetchParam" :rules="rules" class="form" label-width="180px" ref="ruleForm">
+            <el-form-item label="活动名称" prop="name">
+                <el-input placeholder="请输入内容" v-model="fetchParam.name">
                 </el-input>
             </el-form-item>
             <el-form-item label="弹出图片" prop="image">
-                <img :src="form.image | fillImgPath" alt="" class="img" v-if="form.image" style="margin-bottom: 10px;" />
+                <img :src="fetchParam.image | fillImgPath" alt="" class="img" v-if="fetchParam.image" style="margin-bottom: 10px;" />
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
             </el-form-item>
-            <el-form-item label="跳转链接" prop="推广名称">
-                <el-input placeholder="请输入内容" v-model="form.name">
+            <el-form-item label="跳转链接" prop="url">
+                <el-input placeholder="请输入内容" v-model="fetchParam.url">
                 </el-input>
             </el-form-item>
-            <el-form-item label="截止日期">
-                <DateRange :start="form.time_start"
-                    v-on:changeStart="val=> from.time_start=val "
+            <el-form-item label="截止日期" prop="time">
+                <DateRange :start="fetchParam.end_time"
+                    v-on:changeStart="val=> fetchParam.end_time=val "
                     :change="endTimeData">
                 </DateRange>
             </el-form-item>
             <el-form-item label="启用推荐">
                 <el-switch
-                    v-model="form.tjian">
+                    v-model="fetchParam.status" :active-value="two" :inactive-value="one">
                 </el-switch>
-                <i class="col-tip-small" v-if="form.tjian"> 启动推荐后,会关闭其他限时活动的推荐</i>
+                <span>{{fetchParam.status}}</span>
+                <i class="col-tip-small" v-if="fetchParam.status == 2"> 启动推荐后,会关闭其他限时活动的推荐</i>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary">保存</el-button>
             </el-form-item>
-            <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
         </el-form>
     </article>
 </template>
 <script>
     import CourseCategorySelect from 'components/select/CourseCategory.vue'
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
-    import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
     import DateRange from 'components/form/DatePicker.vue'
+    import toastService from 'services/yshi/toastService'
     function clearFn () {
         return {
             id: '',
-            classify: 1,
             name: '',
             image: '',
-            type: '0', // 0 图片 1视频
-            content: '',
-            price: '',
-            sell_price: '',
-            time_start: '',
-            tjian: false
+            url: '',
+            end_time: '',
+            status: 1,
         }
     }
     export default {
         data () {
             return {
-                isShowVideoDialog: false,
-                lesson: {type: Object, required: true},
-                push_type_list: [],
-                form: clearFn(),
+                fetchParam: clearFn(),
+                one: 1,
+                two: 2,
                 rules: {
-                    classify: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     image: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    img_video: [
+                    url: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    content: [
+                    time: [
                         {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
-                    fodder: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
-                    price: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
+                    ]
                 },
             }
         },
-        mounted() {
+        created() {
+            if (this.$route.params.dialog_id != undefined) {
+                toastService.getToastInfo({
+                    id: this.$route.params.dialog_id
+                }).then((ret) => {
+                    console.log(ret)
+                    this.fetchParam = ret
+                })
+            }
             xmview.setContentLoading(false)
         },
         methods: {
@@ -159,14 +150,33 @@
             },
             endTimeData() {
             },
-            submit() {
+            submit () {
+                // this.$refs['ruleForm'].validate((valid) => {
+                //     if (!valid) return
+                //     if (!this.editor.getContentTxt()) {
+                //         xmview.showTip('error', '请填写正文内容')
+                //         return
+                //     }
+                // })
+                let req = toastService.createToast
+                let msg = '添加成功'
+                if (this.fetchParam.id) {
+                    req = toastService.updateToast
+                    msg = '修改成功'
+                }
+                req(this.fetchParam).then((ret) => {
+                    xmview.showTip('success', msg)
+                    this.fetchParam = []
+                    this.$router.push({name: 'yshi-dialog'})
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             }
         },
         components: {
             ImagEcropperInput,
             CourseCategorySelect,
             UploadFile,
-            DialogVideo,
             DateRange
         }
     }

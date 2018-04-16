@@ -1,0 +1,16 @@
+{
+    "code": 0,
+    "message": "this is the success message",
+    "data": {
+        "id":222,
+        "name":"222",
+        "cover":"222",
+        "show_type":1,
+        "show_video_id":"111",
+        "show_video_name":"111",
+        "introduce":"111",
+        "price":100,
+        "favorable_price":80,
+        "object":[{"object_type":1,"object_id":12}]
+    }
+}

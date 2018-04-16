@@ -82,6 +82,8 @@
                     <el-tag v-else type="info">已下线</el-tag>
                 </template>
             </el-table-column>
+            <el-table-column align="center" width="190" prop="order" label="排序">
+            </el-table-column>
             <el-table-column align="center" width="190" prop="create_time" label="创建时间">
             </el-table-column>
             <el-table-column align="center" width="180" label="操作" fixed="right">
