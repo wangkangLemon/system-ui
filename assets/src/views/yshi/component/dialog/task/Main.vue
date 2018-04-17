@@ -68,7 +68,7 @@
                                 <el-button 
                                     type="text" 
                                     @click="deleteRow(scope.$index, scope.row)" 
-                                    icon="el-icon-delete"
+                                    icon="delete"
                                     size="small">
                                 </el-button>
                             </template>
@@ -88,6 +88,7 @@
     import Transfer from '@/views/yshi/component/dialog/Transfer2.vue'
     import CourseTransfer from '@/views/yshi/component/dialog/transfer/CourseTransfer.vue'
     import ExamTransfer from '@/views/yshi/component/dialog/transfer/ExamTransfer.vue'
+    import PracticeTransfer from '@/views/yshi/component/dialog/transfer/PracticeTransfer.vue'
     import Task from './model'
 
     export default {
@@ -95,6 +96,7 @@
             Transfer,
             CourseTransfer,
             ExamTransfer,
+            PracticeTransfer
         },
         props: {
             initTabs: Array,

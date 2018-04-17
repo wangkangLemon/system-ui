@@ -36,12 +36,19 @@ export default class Task {
             },
             {
                 label: '试卷',
-                value: 4,
+                value: 2,
                 type: 'exam',
                 selected: [],
                 component: 'ExamTransfer'
+            },
+            {
+                label: '练习',
+                value: 3,
+                type: 'practice',
+                selected: [],
+                component: 'PracticeTransfer'
             }
         ]
     }
 }
-Task.keys = ['course', 'exam']
+Task.keys = ['course', 'exam', 'practice']

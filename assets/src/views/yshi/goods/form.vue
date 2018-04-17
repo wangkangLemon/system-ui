@@ -74,15 +74,15 @@
                 <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
             </el-form-item>
             <el-form-item label="添加素材" prop="fodder">
-                <el-button size="small" @click="addRequiredTask(1)">选择素材</el-button>
-                <template v-if="selectFodder.length">
-                    <el-table class="data-table" :data="selectFodder" :fit="true" border style="margin-top: 5px;">
+                <el-button size="small" @click="chooseMaterial">选择素材</el-button>
+                <template v-if="transferRight.length">
+                    <el-table class="data-table" :data="transferRight" :fit="true" border style="margin-top: 5px;">
                         <el-table-column 
                             label="类型" 
                             prop="type"
                             width="100">
-                            <el-tag slot-scope="scope" :type="scope.row.type === 'course' ? 'success' : 'warning'">
-                                {{scope.row.type | type}}
+                            <el-tag slot-scope="scope" :type="scope.row.type | taskType('tag')">
+                                {{scope.row.type | taskType('label')}}
                             </el-tag>
                         </el-table-column>
                         <el-table-column 
@@ -90,7 +90,7 @@
                             prop="name">
                         </el-table-column>
                     </el-table>
-                    <el-tag>总计：{{selectFodder.length}}个素材</el-tag>
+                    <el-tag>总计：{{transferRight.length}}个素材</el-tag>
                 </template>
             </el-form-item>
             <el-form-item label="商品定价" prop="price">
@@ -105,11 +105,10 @@
             </el-form-item>
             <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
             <Task
-                ref="requiredTaskRef"
-                :visible.sync="showRequiredTaskDialog"
-                :selected="requiredTaskSelected"
-                :initTabs="transferLeft['requiredTaskSelected']"
-                :taskType="taskType"
+                ref="material"
+                :visible.sync="showMaterialDialog"
+                :selected="transferRight"
+                :initTabs="transferLeft"
                 @submit="getTaskData">
             </Task>
         </el-form>
@@ -123,6 +122,8 @@
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
     import goodsService from 'services/yshi/goodsService'
     import Task from '@/views/yshi/component/dialog/task/Main.vue'
+    import TaskModel from '@/views/yshi/component/dialog/task/model'
+
     function clearFn () {
         return {
             id: '',
@@ -146,10 +147,9 @@
                 typevideo: 1,
                 isShowVideoDialog: false,
                 taskType: void 0,
-                showRequiredTaskDialog: false,
-                requiredTaskSelected: [],
-                transferLeft: '',
-                selectFodder: [],
+                showMaterialDialog: false,
+                transferLeft: [],
+                transferRight: [],
                 fetchParam: clearFn(),
                 rules: {
                     name: [
@@ -180,12 +180,36 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    // this.transferLeft = this.getTaskSelected(ret.object).resLeft
+                    // this.transferRight = this.getTaskSelected(ret.object).resRight
                     this.editor && this.editor.setContent(ret.data.introduce)
                 })
             }
             xmview.setContentLoading(false)
         },
         methods: {
+            getTaskSelected (list) {
+                let resLeft = new TaskModel().getTabs()
+                let resRight = []
+                list.forEach(item => {
+                    // 适配器，适配task组件中的数据
+                    resRight.push(item)
+                    resLeft.forEach(tab => {
+                        // if (tab.childType && tab.childType.includes(item.type)) {
+                        //     tab.selected.push(item)
+                        // } else if (tab.type === item.type) {
+                        //     tab.selected.push(item)
+                        // }
+                        if (tab.type === item.type) {
+                            tab.selected.push(item)
+                        }
+                    })
+                })
+                return {
+                    resLeft,
+                    resRight
+                }
+            },
             cropperFn (data, ext) {
             },
             filesHandleChange (res) {
@@ -206,11 +230,11 @@
             ueReady (ue) {
                 this.editor = ue
             },
-            addRequiredTask (type) {
-                this.showRequiredTaskDialog = true
-                this.taskType = type
+            chooseMaterial () {
+                this.showMaterialDialog = true
             },
             getTaskData() {
+                this.showMaterialDialog = false
             },
             submit () {
                 // this.$refs['ruleForm'].validate((valid) => {
