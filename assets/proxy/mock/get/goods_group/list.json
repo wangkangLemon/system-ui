@@ -8,7 +8,7 @@
             "goods_count":3,
             "favorable_count":3,
             "favorable":[{"reach":8888,"discount":7}],
-            "status":1,
+            "status":2,
             "order":1,
             "create_time":"2015"
             },
@@ -18,7 +18,7 @@
                 "goods_count":3,
                 "favorable_count":2,
                 "favorable":[{"reach":8888,"discount":7}],
-                "status":0,
+                "status":1,
                 "order":2,
                 "create_time":"2015"
             }],

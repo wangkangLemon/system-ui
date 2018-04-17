@@ -80,21 +80,13 @@
                     <el-button 
                         @click="$router.push({name: 'yshi-activity-edit', params: {activity_id: scope.row.id}})" 
                         type="text" 
-                        size="small" 
-                        :disabled="scope.row.status == 0">
+                        size="small" >
                         编辑
-                    </el-button>
-                    <el-button 
-                        @click="offline(scope.$index, scope.row)" 
-                        type="text" 
-                        size="small">
-                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
-                        size="small" 
-                        :disabled="scope.row.status == 0">
+                        size="small" >
                         删除
                     </el-button>
                 </template>

@@ -95,7 +95,7 @@ export default {
                 })
             },
             meta: {
-                title: '活动管理',
+                title: '打包售卖',
                 noback: true
             }
         },

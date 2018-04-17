@@ -63,14 +63,13 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="截止日期" prop="time">
-                <DateRange :start="fetchParam.end_time"
-                    v-on:changeStart="val=> fetchParam.end_time=val "
-                    :change="endTimeData">
-                </DateRange>
+                <el-date-picker v-model="fetchParam.end_time" type="date" placeholder="选择日期" 
+                    format="yyyy-MM-d" value-format="yyyy-MM-dd" @change="datechange"> 
+                </el-date-picker>
             </el-form-item>
             <el-form-item label="启用推荐">
                 <el-switch
-                    v-model="fetchParam.status" :active-value="two" :inactive-value="one">
+                    v-model="fetchParam.status" :on-value="2" :off-value="1">
                 </el-switch>
                 <span>{{fetchParam.status}}</span>
                 <i class="col-tip-small" v-if="fetchParam.status == 2"> 启动推荐后,会关闭其他限时活动的推荐</i>
@@ -85,7 +84,6 @@
     import CourseCategorySelect from 'components/select/CourseCategory.vue'
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
-    import DateRange from 'components/form/DatePicker.vue'
     import toastService from 'services/yshi/toastService'
     function clearFn () {
         return {
@@ -101,8 +99,6 @@
         data () {
             return {
                 fetchParam: clearFn(),
-                one: 1,
-                two: 2,
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -148,7 +144,11 @@
                 this.lesson.material_name = row.name
                 this.lesson.material_id = row.id
             },
-            endTimeData() {
+            datechange(val) {
+                this.fetchParam.end_time = val
+            },
+            changes() {
+                console.log(this.fetchParam.status)
             },
             submit () {
                 // this.$refs['ruleForm'].validate((valid) => {
@@ -177,7 +177,6 @@
             ImagEcropperInput,
             CourseCategorySelect,
             UploadFile,
-            DateRange
         }
     }
 </script>

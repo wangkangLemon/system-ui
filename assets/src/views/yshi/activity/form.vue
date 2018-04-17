@@ -94,10 +94,9 @@
                 </template>
             </el-form-item>
             <el-form-item label="截止日期">
-                <DateRange :start="fetchParam.end_time"
-                    v-on:changeStart="val=> fetchParam.end_time=val "
-                    :change="endTimeData">
-                </DateRange>
+                <el-date-picker v-model="fetchParam.end_time" type="date" placeholder="选择日期" 
+                    format="yyyy-MM-d" value-format="yyyy-MM-dd" @change="datechange"> 
+                </el-date-picker>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary">保存</el-button>
@@ -206,7 +205,8 @@
                 })
                 return pass
             },
-            endTimeData() {
+            datechange(val) {
+                this.fetchParam.end_time = val
             },
             // 处理视频选取
             handleVideoSelected(row) {

@@ -141,13 +141,12 @@ export default {
                 xmview.setContentLoading(false)
             })
         },
-        // 下线 或者上线课程 0为下线，1为上线
+        // 下线 或者上线课程 1为下线，2为上线
         offline (index, row) {
-            let txt = row.status == 0 ? '下线' : '上线'
-            let finalStatus = row.status == 0 ? 1 : 0
-            let reqFn = row.status == 0 ? toastService.offline : toastService.online
+            let txt = row.status == 1 ? '撤销' : '启动'
+            let finalStatus = row.status == 1 ? 2 : 1
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                reqFn(row.id).then((ret) => {
+                toastService.statusline(row.id, row.status).then((ret) => {
                     row.status = finalStatus
                 })
             })

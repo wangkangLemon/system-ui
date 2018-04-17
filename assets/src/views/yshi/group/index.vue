@@ -78,7 +78,7 @@
             </el-table-column>
             <el-table-column align="center" width="100" label="状态">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status == 1" type="success">已上线</el-tag>
+                    <el-tag v-if="scope.row.status == 2" type="success">已上线</el-tag>
                     <el-tag v-else type="info">已下线</el-tag>
                 </template>
             </el-table-column>
@@ -93,20 +93,20 @@
                         @click="$router.push({name: 'yshi-group-edit', params: {group_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 1">
+                        :disabled="scope.row.status == 2">
                         编辑
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small">
-                        <i>{{ scope.row.status == 0 ? '上线' : '下线' }}</i>
+                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 1">
+                        :disabled="scope.row.status == 2">
                         删除
                     </el-button>
                 </template>
@@ -132,7 +132,7 @@ import * as _ from 'utils/common'
 function getFetchParam () {
     return {
         name: void '',
-        status: void 0, // 0 下线，1 正常
+        status: '', // 1 下线，2 正常
         start_time: void 0,
         end_time: void 0,
         page: 1,
@@ -177,13 +177,12 @@ export default {
                 xmview.setContentLoading(false)
             })
         },
-        // 下线 或者上线课程 0为下线，1为上线
+        // 下线  1为下线，2为上线
         offline (index, row) {
-            let txt = row.status == 0 ? '下线' : '上线'
-            let finalStatus = row.status == 0 ? 1 : 0
-            let reqFn = row.status == 0 ? goodsGroupService.offline : goodsGroupService.online
+            let txt = row.status == 1 ? '下线' : '上线'
+            let finalStatus = row.status == 1 ? 2 : 1
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                reqFn(row.id).then((ret) => {
+                goodsGroupService.statusline(row.id, row.status).then((ret) => {
                     row.status = finalStatus
                 })
             })

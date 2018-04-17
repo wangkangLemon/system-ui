@@ -22,9 +22,9 @@ class ToastService {
         })
     }
     // 上下线
-    offline (id) {
-        let url = `${urlPre}/${id}/offline`
-        return api.put(url, {})
+    statusline (id, status) {
+        let url = `${urlPre}/status`
+        return api.put(url, {id, status})
     }
     // 上下线
     online (id) {
