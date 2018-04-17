@@ -20,6 +20,7 @@ import newCourse from './routers/newcourse/course' // 系列课程
 import examPaper from './routers/exam/paper' // 试卷管理
 import examLibrary from './routers/exam/library' // 题库管理
 import examQuestion from './routers/exam/question' // 试题管理
+import examPractice from './routers/exam/practice' // 练习管理
 import courseCommnet from './routers/comment' // 评论管理
 import vip from './routers/vip'  // 会员管理
 import yshi from './routers/yshi' // 职业药师
@@ -133,6 +134,8 @@ const routes = [
             examLibrary,
             // 试题管理
             examQuestion,
+            // 练习管理
+            examPractice,
             // 评论管理
             courseCommnet,
             // 会员管理

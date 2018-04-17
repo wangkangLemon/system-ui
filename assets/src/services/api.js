@@ -171,6 +171,14 @@ export function processParams (params) {
     return data.join('&')
 }
 
+export function processJSONParams (params) {
+    if (params === '') return params
+    for (let k in params) {
+        params[k] = params[k] === '' ? void 0 : params[k]
+    }
+    return JSON.stringify(params)
+}
+
 // 处理登录超时
 function processLoginOut (ret) {
     // 如果已经在登录页面 不做任何处理
