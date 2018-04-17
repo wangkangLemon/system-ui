@@ -35,6 +35,9 @@
             display: inline-block;
             width: 120px !important;
         }
+        .el-dialog--small{
+            width: 80%;
+        }
         
     }
     .dialog {
@@ -71,7 +74,7 @@
                 <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
             </el-form-item>
             <el-form-item label="添加素材" prop="fodder">
-                <el-button size="small">选择素材</el-button>
+                <el-button size="small" @click="addRequiredTask(1)">选择素材</el-button>
                 <template v-if="selectFodder.length">
                     <el-table class="data-table" :data="selectFodder" :fit="true" border style="margin-top: 5px;">
                         <el-table-column 
@@ -101,6 +104,14 @@
                 <el-button @click="submit" type="primary">保存</el-button>
             </el-form-item>
             <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
+            <Task
+                ref="requiredTaskRef"
+                :visible.sync="showRequiredTaskDialog"
+                :selected="requiredTaskSelected"
+                :initTabs="transferLeft['requiredTaskSelected']"
+                :taskType="taskType"
+                @submit="getTaskData">
+            </Task>
         </el-form>
     </article>
 </template>
@@ -111,6 +122,7 @@
     import UploadFile from 'components/upload/UploadFiles.vue'
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
     import goodsService from 'services/yshi/goodsService'
+    import Task from '@/views/yshi/component/dialog/task/Main.vue'
     function clearFn () {
         return {
             id: '',
@@ -133,7 +145,10 @@
                 typeimg: 0,
                 typevideo: 1,
                 isShowVideoDialog: false,
-                lesson: {type: Object, required: true},
+                taskType: void 0,
+                showRequiredTaskDialog: false,
+                requiredTaskSelected: [],
+                transferLeft: '',
                 selectFodder: [],
                 fetchParam: clearFn(),
                 rules: {
@@ -191,6 +206,12 @@
             ueReady (ue) {
                 this.editor = ue
             },
+            addRequiredTask (type) {
+                this.showRequiredTaskDialog = true
+                this.taskType = type
+            },
+            getTaskData() {
+            },
             submit () {
                 // this.$refs['ruleForm'].validate((valid) => {
                 //     if (!valid) return
@@ -221,6 +242,7 @@
             UploadFile,
             DialogVideo,
             VueEditor,
+            Task
         }
     }
 </script>
