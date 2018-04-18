@@ -12,6 +12,6 @@
         "favorable":[{"reach":8888,"discount":7}],
         "state":1,
         "order":1,
-        "goods":[{"id":123,"name":"中药学知识","price":2000,"favorable_price":2000}]
+        "goods":[{"id":222,"name":"中药学知识","price":2000,"favorable_price":2000}]
     }
 }

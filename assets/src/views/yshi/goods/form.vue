@@ -57,11 +57,11 @@
                 <el-input placeholder="请输入内容" v-model="fetchParam.name">
                 </el-input>
             </el-form-item>
-            <el-form-item label="商品封面" prop="image">
+            <el-form-item label="商品封面" prop="cover">
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
             </el-form-item>
-            <el-form-item label="宣传展示" prop="img_video">
+            <el-form-item label="宣传展示">
                 <el-radio v-model="fetchParam.show_type" :label="typeimg">图片</el-radio>
                 <el-radio v-model="fetchParam.show_type" :label="typevideo">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
@@ -70,10 +70,10 @@
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
-            <el-form-item label="商品介绍" prop="content">
+            <el-form-item label="商品介绍" prop="introduce">
                 <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
             </el-form-item>
-            <el-form-item label="添加素材" prop="fodder">
+            <el-form-item label="添加素材">
                 <el-button size="small" @click="chooseMaterial">选择素材</el-button>
                 <template v-if="transferRight.length">
                     <el-table class="data-table" :data="transferRight" :fit="true" border style="margin-top: 5px;">
@@ -94,11 +94,10 @@
                 </template>
             </el-form-item>
             <el-form-item label="商品定价" prop="price">
-                <template>
-                    <el-input class="input-price" placeholder="请输入价格" v-model="fetchParam.price" type="Number"></el-input><i> 元</i>
-                    <i style="margin-left:10px;">优惠价格</i>
-                    <el-input class="input-price" placeholder="请输入价格" v-model="fetchParam.favorable_price" type="Number"></el-input><i> 元</i>
-                </template>
+                <el-input class="input-price" placeholder="请输入价格" v-model.number="fetchParam.price" type="Number"></el-input><i> 元</i>
+            </el-form-item>
+             <el-form-item label="优惠价格" prop="favorable_price">
+                <el-input class="input-price" placeholder="请输入价格" v-model.number="fetchParam.favorable_price" type="Number"></el-input><i> 元</i>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary">保存</el-button>
@@ -134,13 +133,26 @@
             show_video_id: 0,
             show_video_name: '',
             introduce: '',
-            price: '',
-            favorable_price: '',
-            object: [], // object_type = 0 课程 1试卷 object_id = num
+            price: 0,
+            favorable_price: 0,
+            object: [], // type = 0 公开课程 1内训课 2试卷 3练习 id = num
         }
     }
     export default {
         data () {
+            let checkMoney = (rule, value, callback) => {
+                let value1 = this.fetchParam.price
+                if (!value) {
+                    return callback(new Error('不能为空'));
+                }
+                setTimeout(() => {
+                    if (value > value1) {
+                        callback(new Error('优惠价格不能高于商品定价'))
+                    } else {
+                        callback()
+                    }
+                }, 1000);
+            }
             return {
                 editor: null,
                 typeimg: 0,
@@ -155,21 +167,18 @@
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    image: [
+                    cover: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    img_video: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
-                    content: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
-                    fodder: [
+                    introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     price: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
+                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
                     ],
+                    favorable_price: [
+                        {type: 'number', required: true, validator:checkMoney, trigger: 'blur'}
+                    ]
                 },
             }
         },
@@ -180,10 +189,13 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    // this.transferLeft = this.getTaskSelected(ret.object).resLeft
-                    // this.transferRight = this.getTaskSelected(ret.object).resRight
+                    let obj = this.getTaskSelected(ret.object)
+                    this.transferLeft = obj.resLeft
+                    this.transferRight = obj.resRight
                     this.editor && this.editor.setContent(ret.data.introduce)
                 })
+            } else {
+                this.transferLeft = new TaskModel().initTabs()
             }
             xmview.setContentLoading(false)
         },
@@ -191,18 +203,21 @@
             getTaskSelected (list) {
                 let resLeft = new TaskModel().getTabs()
                 let resRight = []
+                console.log(list)
                 list.forEach(item => {
                     // 适配器，适配task组件中的数据
+                    let type = item.type === 0 ? 'public' : item.type === 1 ? 'private' : item.type === 2 ? 'exam' : 'practice'
+                    item.type = type
                     resRight.push(item)
                     resLeft.forEach(tab => {
-                        // if (tab.childType && tab.childType.includes(item.type)) {
-                        //     tab.selected.push(item)
-                        // } else if (tab.type === item.type) {
-                        //     tab.selected.push(item)
-                        // }
-                        if (tab.type === item.type) {
+                        if (tab.childType && tab.childType.includes(item.type)) {
+                            tab.selected.push(item)
+                        } else if (tab.type === item.type) {
                             tab.selected.push(item)
                         }
+                        // if (tab.type === item.type) {
+                        //     tab.selected.push(item)
+                        // }
                     })
                 })
                 return {
@@ -211,6 +226,15 @@
                 }
             },
             cropperFn (data, ext) {
+                // ArticleService.ArticleUploadUrl({
+                //     avatar: data,
+                //     alias: `${Date.now()}${ext}`
+                // }).then((ret) => {
+                //     xmview.showTip('success', '上传成功')
+                //     this.fetchParam.cover = ret.data.url // 显示图片
+                // }).catch((ret) => {
+                //     xmview.showTip('error', ret.message)
+                // })
             },
             filesHandleChange (res) {
                 console.log(res)
@@ -237,27 +261,35 @@
                 this.showMaterialDialog = false
             },
             submit () {
-                // this.$refs['ruleForm'].validate((valid) => {
-                //     if (!valid) return
-                //     if (!this.editor.getContentTxt()) {
-                //         xmview.showTip('error', '请填写正文内容')
-                //         return
-                //     }
-                // })
-                this.fetchParam.introduce = this.editor.getContent()
-                let req = goodsService.createGood
-                let msg = '添加成功'
-                if (this.fetchParam.id) {
-                    req = goodsService.updateGood
-                    msg = '修改成功'
-                }
-                req(this.fetchParam).then((ret) => {
-                    xmview.showTip('success', msg)
-                    this.fetchParam = []
-                    this.$router.push({name: 'goods'})
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
+                this.$refs['ruleForm'].validate((valid) => {
+                    if (!valid) return
+                    if (!this.editor.getContentTxt()) {
+                        xmview.showTip('error', '请填写正文内容')
+                        return
+                    }
+                    this.fetchParam.object = JSON.stringify(this.transferRight.map(item => {
+                        return {
+                            type: item.type === 'public' ? 0 : item.type === 'private' ? 1 : item.type === 'exam' ? 2 : 3,
+                            id: item.id,
+                            name: item.name
+                        }
+                    }))
+                    this.fetchParam.introduce = this.editor.getContent()
+                    let req = goodsService.createGood
+                    let msg = '添加成功'
+                    if (this.fetchParam.id) {
+                        req = goodsService.updateGood
+                        msg = '修改成功'
+                    }
+                    req(this.fetchParam).then((ret) => {
+                        xmview.showTip('success', msg)
+                        this.fetchParam = clearFn()
+                        this.$router.push({name: 'yshi-goods'})
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
+                
             },
         },
         components: {

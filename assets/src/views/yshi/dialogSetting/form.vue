@@ -62,16 +62,15 @@
                 <el-input placeholder="请输入内容" v-model="fetchParam.url">
                 </el-input>
             </el-form-item>
-            <el-form-item label="截止日期" prop="time">
+            <el-form-item label="截止日期" prop="end_time">
                 <el-date-picker v-model="fetchParam.end_time" type="date" placeholder="选择日期" 
                     format="yyyy-MM-d" value-format="yyyy-MM-dd" @change="datechange"> 
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="启用推荐">
                 <el-switch
-                    v-model="fetchParam.status" :on-value="2" :off-value="1">
+                    v-model="fetchParam.status" :on-value="2" :off-value="1" on-color="#13ce66">
                 </el-switch>
-                <span>{{fetchParam.status}}</span>
                 <i class="col-tip-small" v-if="fetchParam.status == 2"> 启动推荐后,会关闭其他限时活动的推荐</i>
             </el-form-item>
             <el-form-item>
@@ -85,6 +84,7 @@
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
     import toastService from 'services/yshi/toastService'
+    import * as timeUtils from 'utils/timeUtils'
     function clearFn () {
         return {
             id: '',
@@ -109,7 +109,7 @@
                     url: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    time: [
+                    end_time: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ]
                 },
@@ -128,6 +128,15 @@
         },
         methods: {
             cropperFn (data, ext) {
+                // ArticleService.ArticleUploadUrl({
+                //     avatar: data,
+                //     alias: `${Date.now()}${ext}`
+                // }).then((ret) => {
+                //     xmview.showTip('success', '上传成功')
+                //     this.fetchParam.cover = ret.data.url // 显示图片
+                // }).catch((ret) => {
+                //     xmview.showTip('error', ret.message)
+                // })
             },
             filesHandleChange (res) {
                 console.log(res)
@@ -151,26 +160,29 @@
                 console.log(this.fetchParam.status)
             },
             submit () {
-                // this.$refs['ruleForm'].validate((valid) => {
-                //     if (!valid) return
-                //     if (!this.editor.getContentTxt()) {
-                //         xmview.showTip('error', '请填写正文内容')
-                //         return
-                //     }
-                // })
-                let req = toastService.createToast
-                let msg = '添加成功'
-                if (this.fetchParam.id) {
-                    req = toastService.updateToast
-                    msg = '修改成功'
-                }
-                req(this.fetchParam).then((ret) => {
-                    xmview.showTip('success', msg)
-                    this.fetchParam = []
-                    this.$router.push({name: 'yshi-dialog'})
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
+                this.$refs['ruleForm'].validate((valid) => {
+                    if (!valid) return
+                    let date = new Date(this.fetchParam.end_time)
+                    let compare = timeUtils.compareDate(date, new Date())
+                    if (compare !== 1){
+                        xmview.showTip('error', '截止日期不能小于当前日期')
+                        return
+                    }
+                    let req = toastService.createToast
+                    let msg = '添加成功'
+                    if (this.fetchParam.id) {
+                        req = toastService.updateToast
+                        msg = '修改成功'
+                    }
+                    req(this.fetchParam).then((ret) => {
+                        xmview.showTip('success', msg)
+                        this.fetchParam = []
+                        this.$router.push({name: 'yshi-dialog'})
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
+                
             }
         },
         components: {

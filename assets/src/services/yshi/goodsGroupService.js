@@ -51,7 +51,6 @@ class GoodsGroupService {
     }
     // 创建
     createGoodGroup ({ name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }) {
-        debugger
         let url = urlPre
         return api.post(url, { name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }).then(ret => {
             if (ret.code == 0) {
@@ -70,7 +69,6 @@ class GoodsGroupService {
     }
     // 更新
     updateGoodGroup ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }) {
-        debugger
         let url = `${urlPre}`
         return api.put(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }).then(ret => {
             if (ret.code) {

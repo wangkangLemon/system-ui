@@ -31,7 +31,6 @@ class ActivityService {
     }
     // 删除
     delete (id) {
-        debugger
         let url = `${urlPre}/${id}`
         return api.del(url, {}).then(ret => {
             if (ret.code) {

@@ -42,7 +42,6 @@ class ToastService {
     }
     // 创建
     createToast ({ name, image, url, end_time, status }) {
-        debugger
         let urls = urlPre
         return api.post(urls, { name, image, url, end_time, status }).then(ret => {
             if (ret.code == 0) {
@@ -61,7 +60,6 @@ class ToastService {
     }
     // 更新
     updateToast ({ id, name, image, url, end_time, status }) {
-        debugger
         let urls = `${urlPre}`
         return api.put(urls, { id, name, image, url, end_time, status }).then(ret => {
             if (ret.code) {

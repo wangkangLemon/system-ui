@@ -28,7 +28,7 @@ export default {
             name: 'yshi-goods-add',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/yshi/goods/form.vue'))
+                    resolve(require('@/views/yshi/goods/Form.vue'))
                 })
             },
             meta: {
@@ -40,7 +40,7 @@ export default {
             name: 'yshi-goods-edit',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/yshi/goods/form.vue'))
+                    resolve(require('@/views/yshi/goods/Form.vue'))
                 })
             },
             meta: {
@@ -66,7 +66,7 @@ export default {
             name: 'yshi-group-add',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/yshi/group/form.vue'))
+                    resolve(require('@/views/yshi/group/Form.vue'))
                 })
             },
             meta: {
@@ -78,7 +78,7 @@ export default {
             name: 'yshi-group-edit',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/yshi/group/form.vue'))
+                    resolve(require('@/views/yshi/group/Form.vue'))
                 })
             },
             meta: {
@@ -104,11 +104,11 @@ export default {
             name: 'yshi-activity-add',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/yshi/activity/form.vue'))
+                    resolve(require('@/views/yshi/activity/Form.vue'))
                 })
             },
             meta: {
-                title: '创建活动'
+                title: '创建打包售卖'
             }
         },
         {
@@ -116,11 +116,11 @@ export default {
             name: 'yshi-activity-edit',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/yshi/activity/form.vue'))
+                    resolve(require('@/views/yshi/activity/Form.vue'))
                 })
             },
             meta: {
-                title: '编辑活动'
+                title: '编辑打包售卖'
             }
         },
         // 弹框管理
@@ -142,7 +142,7 @@ export default {
             name: 'yshi-dialog-add',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/yshi/dialogSetting/form.vue'))
+                    resolve(require('@/views/yshi/dialogSetting/Form.vue'))
                 })
             },
             meta: {
@@ -154,7 +154,7 @@ export default {
             name: 'yshi-dialog-edit',
             component: resolve => {
                 require.ensure([], () => {
-                    resolve(require('@/views/yshi/dialogSetting/form.vue'))
+                    resolve(require('@/views/yshi/dialogSetting/Form.vue'))
                 })
             },
             meta: {

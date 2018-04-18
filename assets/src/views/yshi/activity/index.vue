@@ -38,7 +38,7 @@
 <template>
     <main id="newcourse-course-public-container">
         <section class="manage-container">
-            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-activity-add'})"><i>创建活动</i>
+            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-activity-add'})"><i>创建打包售卖</i>
             </el-button>
         </section>
 

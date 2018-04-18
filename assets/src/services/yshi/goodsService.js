@@ -26,7 +26,6 @@ class GoodsService {
     }
     // 创建
     createGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }) {
-        debugger
         let url = urlPre
         return api.post(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }).then(ret => {
             if (ret.code == 0) {
@@ -45,7 +44,7 @@ class GoodsService {
     }
     // 更新
     updateGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }) {
-        let url = `${urlPre}/${id}`
+        let url = `${urlPre}`
         return api.put(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)

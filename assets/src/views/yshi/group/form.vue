@@ -53,11 +53,11 @@
                 <el-input placeholder="请输入内容" v-model="fetchParam.name">
                 </el-input>
             </el-form-item>
-            <el-form-item label="组合图片" prop="image">
+            <el-form-item label="组合图片" prop="cover">
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
             </el-form-item>
-            <el-form-item label="宣传展示" prop="img_video">
+            <el-form-item label="宣传展示">
                 <el-radio v-model="fetchParam.show_type" :label="typeimg">图片</el-radio>
                 <el-radio v-model="fetchParam.show_type" :label="typevideo">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
@@ -66,10 +66,10 @@
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
-            <el-form-item label="组合介绍" prop="content">
+            <el-form-item label="组合介绍" prop="introduce">
                 <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
             </el-form-item>
-            <el-form-item label="添加商品" prop="goods">
+            <el-form-item label="添加商品">
                 <el-button size="small" @click="dialogGoods.isShow=true">选择商品</el-button>
                 <template v-if="fetchParam.goods.length > 0">
                     <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
@@ -81,11 +81,11 @@
             </el-form-item>
             <el-form-item label="排序" prop="order">
                 <template>
-                    <el-input class="input-price" placeholder="组合顺序" v-model="fetchParam.order" type="Number"></el-input>
+                    <el-input class="input-price" placeholder="组合顺序" v-model.number="fetchParam.order" type="Number"></el-input>
                 </template>
             </el-form-item>
             <el-form-item label="设置组合售卖优惠">
-                <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="fetchParam.favorable"></PlusOrRemove>
+                <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="favorables"></PlusOrRemove>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary">保存</el-button>
@@ -93,7 +93,6 @@
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
                           :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
                 <div slot="search" class="course-search">
-                    <span>{{fetchParam.goods}}</span>
                     <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.keyword"
                             icon="search"
                             placeholder="请输入关键字搜索"></el-input>
@@ -121,7 +120,7 @@
             show_video_name: '',
             show_video_id: 0,
             introduce: '',
-            favorable: [''],
+            favorable: [],
             order: 0,
             goods: [],
             goods_ids: []
@@ -134,7 +133,7 @@
                 typevideo: 1,
                 editor: null,
                 isShowVideoDialog: false,
-                push_type_list: [],
+                favorables: [''],
                 dialogGoods: {
                     loading: false,
                     isShow: false,
@@ -147,20 +146,14 @@
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    image: [
+                    cover: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    img_video: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
-                    content: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
-                    ],
-                    goods: [
+                    introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     order: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
+                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
                     ]
                 }
             }
@@ -172,6 +165,7 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    this.favorables = ret.favorable
                     ret.favorable.forEach(item => {
                         this.moneyarr.push(item.reach)
                         this.discountarr.push(item.discount)
@@ -184,6 +178,15 @@
         },
         methods: {
             cropperFn (data, ext) {
+                // ArticleService.ArticleUploadUrl({
+                //     avatar: data,
+                //     alias: `${Date.now()}${ext}`
+                // }).then((ret) => {
+                //     xmview.showTip('success', '上传成功')
+                //     this.fetchParam.cover = ret.data.url // 显示图片
+                // }).catch((ret) => {
+                //     xmview.showTip('error', ret.message)
+                // })
             },
             filesHandleChange (res) {
                 console.log(res)
@@ -205,37 +208,38 @@
             },
             // 组合优惠
             groupDiscounts(val) {
-                this.fetchParam.favorable = val
+                this.favorables = val
             },
             ueReady (ue) {
                 this.editor = ue
             },
             submit () {
-                // this.$refs['ruleForm'].validate((valid) => {
-                //     if (!valid) return
-                //     if (!this.editor.getContentTxt()) {
-                //         xmview.showTip('error', '请填写正文内容')
-                //         return
-                //     }
-                // })
-                this.fetchParam.introduce = this.editor.getContent()
-                this.fetchParam.goods_ids = JSON.stringify(this.fetchParam.goods.map(item => {
-                    return item.id
-                }))
-                this.fetchParam.favorable = JSON.stringify(this.fetchParam.favorable)
-                let req = goodsGroupService.createGoodGroup
-                let msg = '添加成功'
-                if (this.fetchParam.id) {
-                    req = goodsGroupService.updateGoodGroup
-                    msg = '修改成功'
-                }
-                req(this.fetchParam).then((ret) => {
-                    xmview.showTip('success', msg)
-                    this.fetchParam = []
-                    this.$router.push({name: 'yshi-group'})
-                }).catch((ret) => {
-                    xmview.showTip('error', ret.message)
+                this.$refs['ruleForm'].validate((valid) => {
+                    if (!valid) return
+                    if (!this.editor.getContentTxt()) {
+                        xmview.showTip('error', '请填写正文内容')
+                        return
+                    }
+                    this.fetchParam.introduce = this.editor.getContent()
+                    this.fetchParam.goods_ids = JSON.stringify(this.fetchParam.goods.map(item => {
+                        return item.id
+                    }))
+                    this.fetchParam.favorable = JSON.stringify(this.favorables)
+                    let req = goodsGroupService.createGoodGroup
+                    let msg = '添加成功'
+                    if (this.fetchParam.id) {
+                        req = goodsGroupService.updateGoodGroup
+                        msg = '修改成功'
+                    }
+                    req(this.fetchParam).then((ret) => {
+                        xmview.showTip('success', msg)
+                        this.fetchParam = clearFn()
+                        this.$router.push({name: 'yshi-group'})
+                    }).catch((ret) => {
+                        xmview.showTip('error', ret.message)
+                    })
                 })
+                
             }
         },
         components: {

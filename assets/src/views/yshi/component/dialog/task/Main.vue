@@ -34,7 +34,7 @@
             width="70%">
             <el-tabs type="border-card" @tab-click="handleTabClick" v-model="tabs">
                 <el-tab-pane 
-                    v-for="tab in tabList"
+                    v-for="tab in initTabs"
                     :key="tab.value"
                     :label="tab.label"
                     :name="tab.type">
@@ -133,6 +133,7 @@
             return {
                 showDialog: this.visible,
                 tabList: new Task().initTabs(this.keys, this.initTabs),
+                // tabList: this.initTabs,
                 tabKeys: this.keys || Task.keys,
                 tabs: this.defaultTabs,
             }
