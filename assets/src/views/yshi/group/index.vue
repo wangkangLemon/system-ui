@@ -60,53 +60,53 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
-            <el-table-column align="center" min-width="300" prop="name" label="组合名称">
+            <el-table-column align="center" min-width="200" prop="name" label="组合名称">
             </el-table-column>
             <el-table-column align="center" min-width="100" prop="goods_count" label="商品数">
             </el-table-column>
-            <el-table-column align="center" min-width="100" prop="favorable_count" label="优惠阶梯数">
+            <el-table-column align="center" min-width="130" prop="favorable_count" label="优惠阶梯数">
             </el-table-column>
             <el-table-column align="center" width="130" label="满">
                 <template slot-scope="scope">
-                    <p>{{ scope.row.favorable[0].reach }}</p>
+                    <p v-if="scope.row.favorable.length">{{ scope.row.favorable[0].reach }}</p>
                 </template>
             </el-table-column>
             <el-table-column align="center" width="130" label="打折">
                 <template slot-scope="scope">
-                    <p>{{ scope.row.favorable[0].discount }}</p>
+                    <p v-if="scope.row.favorable.length">{{ scope.row.favorable[0].discount }}</p>
                 </template>
             </el-table-column>
             <el-table-column align="center" width="100" label="状态">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status == 2" type="success">已上线</el-tag>
+                    <el-tag v-if="scope.row.status == 1" type="success">已上线</el-tag>
                     <el-tag v-else type="info">已下线</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="190" prop="order" label="排序">
+            <el-table-column align="center" width="100" prop="order" label="排序">
             </el-table-column>
             <el-table-column align="center" width="190" prop="create_time" label="创建时间">
             </el-table-column>
             <el-table-column align="center" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
-                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">查看</el-button>
+                    <el-button @click="$router.push({name: 'yshi-group-preview', params: {group_id: scope.row.id}})" type="text" size="small">查看</el-button>
                     <el-button 
                         @click="$router.push({name: 'yshi-group-edit', params: {group_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 2">
+                        :disabled="scope.row.status == 1">
                         编辑
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small">
-                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
+                        <i>{{ scope.row.status == 0 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 2">
+                        :disabled="scope.row.status == 1">
                         删除
                     </el-button>
                 </template>
@@ -132,7 +132,7 @@ import * as _ from 'utils/common'
 function getFetchParam () {
     return {
         name: void '',
-        status: '', // 1 下线，2 正常
+        status: void 0, // 0 下线，1 正常
         start_time: void 0,
         end_time: void 0,
         page: 1,
@@ -177,12 +177,12 @@ export default {
                 xmview.setContentLoading(false)
             })
         },
-        // 下线  1为下线，2为上线
+        // 下线  0为下线，1为上线
         offline (index, row) {
-            let txt = row.status == 1 ? '下线' : '上线'
-            let finalStatus = row.status == 1 ? 2 : 1
+            let txt = row.status == 0 ? '下线' : '上线'
+            let finalStatus = row.status == 0 ? 1 : 0
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                goodsGroupService.statusline(row.id, row.status).then((ret) => {
+                goodsGroupService.statusline(row.id, finalStatus).then((ret) => {
                     row.status = finalStatus
                 })
             })

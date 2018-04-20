@@ -31,10 +31,10 @@
 <template>
     <article id="component-form-group">
         <div v-for="( item , index ) in dataArr">
-            <InputText textLeft="满" textRight="元" :value="moneyValue[index]" @input="inputFn(arguments[0], moneyValue, index)"></InputText>
-            <InputText textLeft="打" textRight="折" :value="discountValue[index]" @input="inputFn(arguments[0], discountValue, index)"></InputText>
-            <el-button v-if="dataArr.length > 1" class="el-icon-minus icon-btn minus" @click="removeitem(index)"></el-button>
-            <el-button v-if="dataArr.length == 1 || dataArr.length == index+1" size="small" class="el-icon-plus icon-btn plus" @click="additem(moneyValue[index], discountValue[index])"></el-button>
+            <InputText textLeft="满" textRight="元" :value="moneyValue[index]" @input="inputFn(arguments[0], moneyValue, index)" :disable="disable"></InputText>
+            <InputText textLeft="打" textRight="折" :value="discountValue[index]" @input="inputFn(arguments[0], discountValue, index)" :disable="disable" :isdis="isdis"></InputText>
+            <el-button v-if="dataArr.length > 1" class="el-icon-minus icon-btn minus" @click="removeitem(index)" :disabled="disable" ></el-button>
+            <el-button v-if="dataArr.length == 1 || dataArr.length == index+1" size="small" class="el-icon-plus icon-btn plus" @click="additem(moneyValue[index], discountValue[index])" :disabled="disable"></el-button>
         </div>
     </article>
 </template>
@@ -45,13 +45,18 @@
         props: {
             money: Array,
             discount: Array,
-            favorable: Array
+            favorable: Array,
+            disable: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             return {
                 dataArr: this.favorable,
                 moneyValue: this.money,
-                discountValue: this.discount
+                discountValue: this.discount,
+                isdis: true
             }
         },
         created () {
@@ -79,16 +84,20 @@
             },
             inputFn (val, array, index) {
                 this.$set(array, index, val)
+                // var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
+                // if (!re.test(val)) {
+                //     xmview.showTip('error', '价格只能是最多两位小数')
+                // }
                 // let a = this.getRes()
                 // console.log(a)
                 // this.$emit('res', this.getRes())
             },
             getRes () {
                 let _discountValue = this.discountValue.map(item => {
-                    return {discount: item}
+                    return {discount: Number(item)}
                 })
                 let _moneyValue = this.moneyValue.map(item => {
-                    return {reach: item}
+                    return {reach: Number(item)}
                 })
                 _moneyValue.forEach((item, index) => {
                     item.discount = _discountValue[index] && _discountValue[index].discount

@@ -24,7 +24,7 @@ class ToastService {
     // 上下线
     statusline (id, status) {
         let url = `${urlPre}/status`
-        return api.put(url, {id, status})
+        return api.put(url, JSON.stringify({id, status}))
     }
     // 上下线
     online (id) {
@@ -43,7 +43,7 @@ class ToastService {
     // 创建
     createToast ({ name, image, url, end_time, status }) {
         let urls = urlPre
-        return api.post(urls, { name, image, url, end_time, status }).then(ret => {
+        return api.post(urls, JSON.stringify({ name, image, url, end_time, status })).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -55,16 +55,23 @@ class ToastService {
     getToastInfo ({id}) {
         let url = `${urlPre}/${id}`
         return api.get(url).then((ret) => {
-            return ret.data
+            return ret.data.toast
         })
     }
     // 更新
     updateToast ({ id, name, image, url, end_time, status }) {
         let urls = `${urlPre}`
-        return api.put(urls, { id, name, image, url, end_time, status }).then(ret => {
+        return api.put(urls, JSON.stringify({ id, name, image, url, end_time, status })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
+        })
+    }
+    // 获取添加编辑课程上传图片的url
+    getUploadUrl ({image, alias}) {
+        let url = `${urlPre}/upload`
+        return api.post(url, {image, alias}).then((ret) => {
+            return ret.data
         })
     }
     // 获取课程下拉列表
@@ -95,14 +102,6 @@ class ToastService {
             }
         })
     }
-    // 获取添加编辑课程上传图片的url
-    getUploadUrl ({image, alias}) {
-        let url = `${urlPre}/upload`
-        return api.post(url, {image, alias}).then((ret) => {
-            return ret.data
-        })
-    }
-
     // 设置课时
     setLessons ({course_id, jsonstr}) {
         let url = `${urlPre}/${course_id}/lesson`

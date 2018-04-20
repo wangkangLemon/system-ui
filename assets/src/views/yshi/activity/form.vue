@@ -1,9 +1,9 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "../../../utils/mixins/common";
-     #speaking-content-add {
+     #activity-content-add {
         @extend %content-container;
     .form {
-        width: 50%;
+        width: 80%;
         .btn {
             float: right;
         }
@@ -52,31 +52,32 @@
      }
 </style>
 <template>
-    <article id="speaking-content-add">
+    <article id="activity-content-add">
         <el-form :model="fetchParam" :rules="rules" class="form" label-width="180px" ref="ruleForm">
             <el-form-item label="活动名称" prop="name">
-                <el-input placeholder="请输入内容" v-model="fetchParam.name">
+                <el-input placeholder="请输入内容" v-model="fetchParam.name" :disabled="disable">
                 </el-input>
             </el-form-item>
             <el-form-item label="封面图片" prop="cover">
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
+                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="优惠介绍" prop="introduce">
-               <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
+               <vue-editor v-model="fetchParam.introduce" @ready="ueReady" v-if="!disable"></vue-editor>
+               <div v-if="disable" ref="cont">{{fetchParam.introduce}}</div>
             </el-form-item>
             <el-form-item label="宣传展示">
-                <el-radio v-model="fetchParam.show_type" :label="typeimg">图片</el-radio>
-                <el-radio v-model="fetchParam.show_type" :label="typevideo">视频</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typeimg" :disabled="disable">图片</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typevideo" :disabled="disable">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
-                <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
+                <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true" :disabled="disable">
                     <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
-            <el-form-item label="添加商品">
-                <el-button size="small" @click="dialogGoods.isShow=true">选择商品</el-button>
-                <template v-if="fetchParam.goods.length > 0">
+            <el-form-item label="添加商品" prop="goods">
+                <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
+                <template v-if="fetchParam.goods.length">
                     <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
@@ -85,19 +86,19 @@
                 </template>
             </el-form-item>
             <el-form-item label="优惠活动价" prop="favorable_price">
-                <el-input placeholder="请输入价格" type="Number" v-model="fetchParam.favorable_price">
+                <el-input placeholder="请输入价格" type="Number" v-model.number="fetchParam.favorable_price" :disabled="disable">
                 </el-input>
             </el-form-item>
             <el-form-item label="排序" prop="order">
-                <el-input class="input-price" placeholder="排列顺序" v-model.number="fetchParam.order" type="Number"></el-input>
+                <el-input class="input-price" placeholder="排列顺序" v-model.number="fetchParam.order" type="Number" :disabled="disable"></el-input>
             </el-form-item>
             <el-form-item label="截止日期" prop="end_time">
-                <el-date-picker v-model="fetchParam.end_time" type="date" placeholder="选择日期" 
-                    format="yyyy-MM-d" value-format="yyyy-MM-dd" @change="datechange"> 
+                <el-date-picker v-model="fetchParam.end_time" type="datetime" placeholder="选择日期" 
+                    format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" @change="datechange" :disabled="disable"> 
                 </el-date-picker>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit" type="primary">保存</el-button>
+                <el-button @click="submit" type="primary" :disabled="disable">保存</el-button>
             </el-form-item>
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
                           :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
@@ -124,32 +125,35 @@
     import * as timeUtils from 'utils/timeUtils'
     function clearFn () {
         return {
-            id: '',
-            name: '',
-            cover: '',
+            id: void 0,
+            name: void '',
+            cover: void '',
             show_type: 0, // 0 图片 1视频
-            show_video_id: 0,
-            show_video_name: '',
-            introduce: '',
-            favorable_price: 0,
-            end_time: '',
-            order: 1,
+            show_video_id: void 0,
+            show_video_name: void '',
+            introduce: void '',
+            favorable_price: void 0,
+            end_time: void '',
+            order: void 0,
             goods: [],
             goods_ids: []
         }
     }
     export default {
         data () {
-            let checkTime = (callback) => {
-                let value = this.fetchParam.end_time
-                if (value === '') {
-                    this.msg = '不能是空'
+            let checkPrice = (rule, value, callback) => {
+                var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
+                if (!re.test(value)) {
+                    return callback(new Error('大于零的最多两位小数'))
                 }
-                let compare = timeUtils.compareDate(value, new Date())
-                if (compare !== 1){
-                    this.msg = '不能小于当前时间'
+                callback()
+            }
+            let checkHas = (rule, value, callback) => {
+                if (!value.length) {
+                    callback(new Error('不能是空'))
+                } else {
+                    callback()
                 }
-                console.log(compare)
             }
             return {
                 editor: null,
@@ -163,6 +167,7 @@
                 },
                 msg: '',
                 fetchParam: clearFn(),
+                disable: false,
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -174,40 +179,51 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     favorable_price: [
-                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
+                        {type: 'number', validator:checkPrice, required: true, trigger: 'blur'}
                     ],
                     order: [
                         {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     end_time: [
                         {required: true, message: '必须填写', trigger: 'blur'}
+                    ],
+                    goods: [
+                        {required: true, validator: checkHas, trigger: 'blur'}
                     ]
                 },
             }
         },
         created() {
             if (this.$route.params.activity_id != undefined) {
+                if (this.$route.name === 'yshi-activity-preview'){
+                    this.disable = true
+                } else {
+                    this.disable = false
+                }
                 activityService.getActivityInfo({
                     id: this.$route.params.activity_id
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    this.editor && this.editor.setContent(ret.data.introduce)
+                    this.editor && this.editor.setContent(ret.introduce)
+                    this.$refs.cont.innerHTML = ret.introduce
                 })
+            } else {
+                this.disable = false
             }
             xmview.setContentLoading(false)
         },
         methods: {
             cropperFn (data, ext) {
-                // ArticleService.ArticleUploadUrl({
-                //     avatar: data,
-                //     alias: `${Date.now()}${ext}`
-                // }).then((ret) => {
-                //     xmview.showTip('success', '上传成功')
-                //     this.fetchParam.cover = ret.data.url // 显示图片
-                // }).catch((ret) => {
-                //     xmview.showTip('error', ret.message)
-                // })
+                activityService.getUploadUrl({
+                    image: data,
+                    alias: `${Date.now()}${ext}`
+                }).then((ret) => {
+                    xmview.showTip('success', '上传成功')
+                    this.fetchParam.cover = ret.url // 显示图片
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             filesHandleChange (res) {
                 console.log(res)
@@ -251,9 +267,9 @@
                         return
                     }
                     this.fetchParam.introduce = this.editor.getContent()
-                    this.fetchParam.goods_ids = JSON.stringify(this.fetchParam.goods.map(item => {
+                    this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
                         return item.id
-                    }))
+                    })
                     let req = activityService.createActivity
                     let msg = '添加成功'
                     if (this.fetchParam.id) {

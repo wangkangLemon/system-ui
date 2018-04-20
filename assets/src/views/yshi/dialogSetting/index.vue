@@ -48,11 +48,11 @@
             </el-table-column>
             <el-table-column align="center" width="190" prop="create_time" label="创建时间">
             </el-table-column>
-            <el-table-column align="center" width="130" prop="end_time" label="截止时间">
+            <el-table-column align="center" width="190" prop="end_time" label="截止时间">
             </el-table-column>
             <el-table-column align="center" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
-                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">查看</el-button>
+                    <el-button @click="$router.push({name: 'yshi-dialog-preview', params: {dialog_id: scope.row.id}})" type="text" size="small">查看</el-button>
                     <el-button 
                         @click="$router.push({name: 'yshi-dialog-edit', params: {dialog_id: scope.row.id}})" 
                         type="text" 
@@ -64,7 +64,7 @@
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small">
-                        <i>{{ scope.row.status == 2 ? '启动' : '撤销' }}</i>
+                        <i>{{ scope.row.status == 0 ? '启动' : '撤销' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
@@ -141,12 +141,12 @@ export default {
                 xmview.setContentLoading(false)
             })
         },
-        // 下线 或者上线课程 1为下线，2为上线
+        // 下线 或者上线课程 0为下线，1为上线
         offline (index, row) {
-            let txt = row.status == 1 ? '撤销' : '启动'
-            let finalStatus = row.status == 1 ? 2 : 1
+            let txt = row.status == 0 ? '撤销' : '启动'
+            let finalStatus = row.status == 0 ? 1 : 0
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                toastService.statusline(row.id, row.status).then((ret) => {
+                toastService.statusline(row.id, finalStatus).then((ret) => {
                     row.status = finalStatus
                 })
             })

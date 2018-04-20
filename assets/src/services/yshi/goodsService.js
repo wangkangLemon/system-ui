@@ -25,9 +25,9 @@ class GoodsService {
         })
     }
     // 创建
-    createGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }) {
+    createGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, objects, price, favorable_price }) {
         let url = urlPre
-        return api.post(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }).then(ret => {
+        return api.post(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, objects, price, favorable_price })).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -39,16 +39,23 @@ class GoodsService {
     getGoodInfo ({id}) {
         let url = `${urlPre}/${id}`
         return api.get(url).then((ret) => {
-            return ret.data
+            return ret.data.goods
         })
     }
     // 更新
-    updateGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }) {
+    updateGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, objects, price, favorable_price }) {
         let url = `${urlPre}`
-        return api.put(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, object, price, favorable_price }).then(ret => {
+        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, objects, price, favorable_price })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
+        })
+    }
+    // 获取添加编辑课程上传图片的url
+    getUploadUrl ({image, alias}) {
+        let url = `${urlPre}/upload`
+        return api.post(url, {image, alias}).then((ret) => {
+            return ret.data
         })
     }
     // 获取课程下拉列表
@@ -101,15 +108,6 @@ class GoodsService {
         let url = `${urlPre}/${id}/online`
         return api.put(url, {})
     }
-
-    // 获取添加编辑课程上传图片的url
-    getUploadUrl ({image, alias}) {
-        let url = `${urlPre}/upload`
-        return api.post(url, {image, alias}).then((ret) => {
-            return ret.data
-        })
-    }
-
     // 设置课时
     setLessons ({course_id, jsonstr}) {
         let url = `${urlPre}/${course_id}/lesson`

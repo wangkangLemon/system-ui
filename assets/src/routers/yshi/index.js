@@ -47,6 +47,18 @@ export default {
                 title: '编辑售卖商品'
             }
         },
+        {
+            path: 'goods/preview/:good_id',
+            name: 'yshi-goods-preview',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/yshi/goods/Form.vue'))
+                })
+            },
+            meta: {
+                title: '查看售卖商品'
+            }
+        },
         // 组合售卖
         {
             path: 'group',
@@ -83,6 +95,18 @@ export default {
             },
             meta: {
                 title: '编辑组合售卖'
+            }
+        },
+        {
+            path: 'group/preview/:group_id',
+            name: 'yshi-group-preview',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/yshi/group/Form.vue'))
+                })
+            },
+            meta: {
+                title: '查看组合售卖'
             }
         },
         // 活动管理
@@ -123,6 +147,18 @@ export default {
                 title: '编辑打包售卖'
             }
         },
+        {
+            path: 'activity/preview/:activity_id',
+            name: 'yshi-activity-preview',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/yshi/activity/Form.vue'))
+                })
+            },
+            meta: {
+                title: '查看打包售卖'
+            }
+        },
         // 弹框管理
         {
             path: 'dialog',
@@ -159,6 +195,18 @@ export default {
             },
             meta: {
                 title: '编辑弹框'
+            }
+        },
+        {
+            path: 'dialog/preview/:dialog_id',
+            name: 'yshi-dialog-preview',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/yshi/dialogSetting/Form.vue'))
+                })
+            },
+            meta: {
+                title: '查看弹框'
             }
         }
     ]

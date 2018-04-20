@@ -28,7 +28,7 @@ class GoodsGroupService {
     // 上下线
     statusline (goods_group_id, status) {
         let url = `${urlPre}/status`
-        return api.put(url, {goods_group_id, status})
+        return api.put(url, JSON.stringify({goods_group_id, status}))
     }
     // 上下线
     offline (id) {
@@ -50,9 +50,9 @@ class GoodsGroupService {
         })
     }
     // 创建
-    createGoodGroup ({ name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }) {
+    createGoodGroup ({ name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable }) {
         let url = urlPre
-        return api.post(url, { name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }).then(ret => {
+        return api.post(url, JSON.stringify({ name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable })).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -64,16 +64,23 @@ class GoodsGroupService {
     getGoodGroupInfo ({id}) {
         let url = `${urlPre}/${id}`
         return api.get(url).then((ret) => {
-            return ret.data
+            return ret.data.goods_group
         })
     }
     // 更新
-    updateGoodGroup ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }) {
+    updateGoodGroup ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable }) {
         let url = `${urlPre}`
-        return api.put(url, { id, name, cover, show_type, show_video_id, show_video_name, introduce, goods_ids, favorable }).then(ret => {
+        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
+        })
+    }
+    // 获取添加编辑课程上传图片的url
+    getUploadUrl ({image, alias}) {
+        let url = `${urlPre}/upload`
+        return api.post(url, {image, alias}).then((ret) => {
+            return ret.data
         })
     }
     // 获取课程下拉列表
@@ -104,14 +111,6 @@ class GoodsGroupService {
             }
         })
     }
-    // 获取添加编辑课程上传图片的url
-    getUploadUrl ({image, alias}) {
-        let url = `${urlPre}/upload`
-        return api.post(url, {image, alias}).then((ret) => {
-            return ret.data
-        })
-    }
-
     // 设置课时
     setLessons ({course_id, jsonstr}) {
         let url = `${urlPre}/${course_id}/lesson`

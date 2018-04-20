@@ -65,7 +65,7 @@
             </el-table-column>
             <el-table-column align="center" width="200" label="操作">
                 <template slot-scope="scope">
-                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">查看</el-button>
+                    <el-button @click="$router.push({name: 'yshi-goods-preview', params: {good_id: scope.row.id}})" type="text" size="small">查看</el-button>
                     <el-button 
                         @click="$router.push({name: 'yshi-goods-edit', params: {good_id: scope.row.id}})" 
                         type="text" 
@@ -101,8 +101,8 @@ import * as _ from 'utils/common'
 function getFetchParam () {
     return {
         name: void '',
-        start_time: '',
-        end_time: '',
+        start_time: void '',
+        end_time: void '',
         page: 1,
         page_size: 15
     }

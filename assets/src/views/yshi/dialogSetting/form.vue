@@ -1,9 +1,9 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "../../../utils/mixins/common";
-     #speaking-content-add {
+     #dialog-content-add {
         @extend %content-container;
     .form {
-        width: 50%;
+        width: 80%;
         .btn {
             float: right;
         }
@@ -48,33 +48,33 @@
      }
 </style>
 <template>
-    <article id="speaking-content-add">
+    <article id="dialog-content-add">
         <el-form :model="fetchParam" :rules="rules" class="form" label-width="180px" ref="ruleForm">
             <el-form-item label="活动名称" prop="name">
-                <el-input placeholder="请输入内容" v-model="fetchParam.name">
+                <el-input placeholder="请输入内容" v-model="fetchParam.name" :disabled="disable">
                 </el-input>
             </el-form-item>
             <el-form-item label="弹出图片" prop="image">
                 <img :src="fetchParam.image | fillImgPath" alt="" class="img" v-if="fetchParam.image" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
+                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="跳转链接" prop="url">
-                <el-input placeholder="请输入内容" v-model="fetchParam.url">
+                <el-input placeholder="请输入内容" v-model="fetchParam.url" :disabled="disable">
                 </el-input>
             </el-form-item>
             <el-form-item label="截止日期" prop="end_time">
-                <el-date-picker v-model="fetchParam.end_time" type="date" placeholder="选择日期" 
-                    format="yyyy-MM-d" value-format="yyyy-MM-dd" @change="datechange"> 
+                <el-date-picker v-model="fetchParam.end_time" type="datetime" placeholder="选择日期" 
+                    format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" @change="datechange" :disabled="disable"> 
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="启用推荐">
                 <el-switch
-                    v-model="fetchParam.status" :on-value="2" :off-value="1" on-color="#13ce66">
+                    v-model="fetchParam.status" :on-value="1" :off-value="0" on-color="#13ce66" :disabled="disable">
                 </el-switch>
-                <i class="col-tip-small" v-if="fetchParam.status == 2"> 启动推荐后,会关闭其他限时活动的推荐</i>
+                <i class="col-tip-small" v-if="fetchParam.status == 1"> 启动推荐后,会关闭其他限时活动的推荐</i>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit" type="primary">保存</el-button>
+                <el-button @click="submit" type="primary" :disabled="disable">保存</el-button>
             </el-form-item>
         </el-form>
     </article>
@@ -87,18 +87,19 @@
     import * as timeUtils from 'utils/timeUtils'
     function clearFn () {
         return {
-            id: '',
-            name: '',
-            image: '',
-            url: '',
-            end_time: '',
-            status: 1,
+            id: void 0,
+            name: void '',
+            image: void '',
+            url: void '',
+            end_time: void '',
+            status: void 0,
         }
     }
     export default {
         data () {
             return {
                 fetchParam: clearFn(),
+                disable: false,
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -117,26 +118,33 @@
         },
         created() {
             if (this.$route.params.dialog_id != undefined) {
+                if (this.$route.name === 'yshi-dialog-preview'){
+                    this.disable = true
+                } else {
+                    this.disable = false
+                }
                 toastService.getToastInfo({
                     id: this.$route.params.dialog_id
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
                 })
+            } else {
+                this.disable = false
             }
             xmview.setContentLoading(false)
         },
         methods: {
             cropperFn (data, ext) {
-                // ArticleService.ArticleUploadUrl({
-                //     avatar: data,
-                //     alias: `${Date.now()}${ext}`
-                // }).then((ret) => {
-                //     xmview.showTip('success', '上传成功')
-                //     this.fetchParam.cover = ret.data.url // 显示图片
-                // }).catch((ret) => {
-                //     xmview.showTip('error', ret.message)
-                // })
+                toastService.getUploadUrl({
+                    image: data,
+                    alias: `${Date.now()}${ext}`
+                }).then((ret) => {
+                    xmview.showTip('success', '上传成功')
+                    this.fetchParam.image = ret.url // 显示图片
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             filesHandleChange (res) {
                 console.log(res)
@@ -176,7 +184,7 @@
                     }
                     req(this.fetchParam).then((ret) => {
                         xmview.showTip('success', msg)
-                        this.fetchParam = []
+                        this.fetchParam = clearFn()
                         this.$router.push({name: 'yshi-dialog'})
                     }).catch((ret) => {
                         xmview.showTip('error', ret.message)

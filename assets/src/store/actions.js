@@ -16,6 +16,14 @@ const actions = {
     // 清空列表的筛选条件
     clearFetchParam (store, need) {
         store.commit(types.INDEX_SET__CLEARFETCHPARAM, need)
+    },
+
+    // 药师 组合添加
+    setYshiGroupError (store) {
+        store.commit(types.YSHI_GROUP_ERROR)
+    },
+    setYshiGroupSuccess (store) {
+        store.commit(types.YSHI_GROUP_SUCCES)
     }
 }
 

@@ -1,9 +1,9 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "../../../utils/mixins/common";
-     #speaking-content-add {
+     #good-content-add {
         @extend %content-container;
     .form {
-        width: 50%;
+        width: 80%;
         .btn {
             float: right;
         }
@@ -51,32 +51,33 @@
      }
 </style>
 <template>
-    <article id="speaking-content-add">
+    <article id="good-content-add">
         <el-form :model="fetchParam" :rules="rules" class="form" label-width="180px" ref="ruleForm">
             <el-form-item label="商品名称" prop="name">
-                <el-input placeholder="请输入内容" v-model="fetchParam.name">
+                <el-input placeholder="请输入内容" v-model="fetchParam.name" :disabled="disable">
                 </el-input>
             </el-form-item>
             <el-form-item label="商品封面" prop="cover">
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
+                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示">
-                <el-radio v-model="fetchParam.show_type" :label="typeimg">图片</el-radio>
-                <el-radio v-model="fetchParam.show_type" :label="typevideo">视频</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typeimg" :disabled="disable">图片</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typevideo" :disabled="disable">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
-                <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
+                <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true" :disabled="disable">
                     <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
             <el-form-item label="商品介绍" prop="introduce">
-                <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
+                <vue-editor v-model="fetchParam.introduce" @ready="ueReady" v-if="!disable"></vue-editor>
+                <div v-if="disable" ref="cont">{{fetchParam.introduce}}</div>
             </el-form-item>
-            <el-form-item label="添加素材">
-                <el-button size="small" @click="chooseMaterial">选择素材</el-button>
-                <template v-if="transferRight.length">
-                    <el-table class="data-table" :data="transferRight" :fit="true" border style="margin-top: 5px;">
+            <el-form-item label="添加素材" prop="transferRight">
+                <el-button size="small" @click="chooseMaterial" :disabled="disable">选择素材</el-button>
+                <template v-if="fetchParam.transferRight.length">
+                    <el-table class="data-table" :data="fetchParam.transferRight" :fit="true" border style="margin-top: 5px;">
                         <el-table-column 
                             label="类型" 
                             prop="type"
@@ -90,23 +91,23 @@
                             prop="name">
                         </el-table-column>
                     </el-table>
-                    <el-tag>总计：{{transferRight.length}}个素材</el-tag>
+                    <el-tag>总计：{{fetchParam.transferRight.length}}个素材</el-tag>
                 </template>
             </el-form-item>
             <el-form-item label="商品定价" prop="price">
-                <el-input class="input-price" placeholder="请输入价格" v-model.number="fetchParam.price" type="Number"></el-input><i> 元</i>
+                <el-input class="input-price" placeholder="请输入价格" v-model.number="fetchParam.price" type="Number" :disabled="disable"></el-input><i> 元</i>
             </el-form-item>
              <el-form-item label="优惠价格" prop="favorable_price">
-                <el-input class="input-price" placeholder="请输入价格" v-model.number="fetchParam.favorable_price" type="Number"></el-input><i> 元</i>
+                <el-input class="input-price" placeholder="请输入价格" v-model.number="fetchParam.favorable_price" type="Number" :disabled="disable"></el-input><i> 元</i>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit" type="primary">保存</el-button>
+                <el-button @click="submit" type="primary" :disabled="disable">保存</el-button>
             </el-form-item>
             <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
             <Task
                 ref="material"
                 :visible.sync="showMaterialDialog"
-                :selected="transferRight"
+                :selected="fetchParam.transferRight"
                 :initTabs="transferLeft"
                 @submit="getTaskData">
             </Task>
@@ -125,25 +126,27 @@
 
     function clearFn () {
         return {
-            id: '',
-            name: '',
-            cover: '',
+            id: void 0,
+            name: void '',
+            cover: void '',
             show_type: 0, // 0 图片 1视频
-            show_picture: '',
-            show_video_id: 0,
-            show_video_name: '',
-            introduce: '',
-            price: 0,
-            favorable_price: 0,
-            object: [], // type = 0 公开课程 1内训课 2试卷 3练习 id = num
+            show_picture: void '',
+            show_video_id: void 0,
+            show_video_name: void '',
+            introduce: void '',
+            price: void 0,
+            favorable_price: void 0,
+            objects: [], // type = 0 公开课程 1内训课 2试卷 3练习 id = num
+            transferRight: []
         }
     }
     export default {
         data () {
             let checkMoney = (rule, value, callback) => {
                 let value1 = this.fetchParam.price
-                if (!value) {
-                    return callback(new Error('不能为空'));
+                var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
+                if (!re.test(value)) {
+                    return callback(new Error('大于零的最多两位小数'))
                 }
                 setTimeout(() => {
                     if (value > value1) {
@@ -153,6 +156,20 @@
                     }
                 }, 1000);
             }
+            let checkPrice = (rule, value, callback) => {
+                var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
+                if (!re.test(value)) {
+                    return callback(new Error('大于零的最多两位小数'))
+                }
+                callback()
+            }
+            let checkHas = (rule, value, callback) => {
+                if (!value.length){
+                    return callback(new Error('不能是空'))
+                } else {
+                    callback()
+                }
+            }
             return {
                 editor: null,
                 typeimg: 0,
@@ -161,8 +178,8 @@
                 taskType: void 0,
                 showMaterialDialog: false,
                 transferLeft: [],
-                transferRight: [],
                 fetchParam: clearFn(),
+                disable: false,
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -174,7 +191,10 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     price: [
-                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
+                        {type: 'number', required: true, validator:checkPrice, trigger: 'blur'}
+                    ],
+                    transferRight: [
+                        {required: true, validator: checkHas, trigger: 'blur'}
                     ],
                     favorable_price: [
                         {type: 'number', required: true, validator:checkMoney, trigger: 'blur'}
@@ -183,19 +203,44 @@
             }
         },
         created () {
-            if (this.$route.params.good_id != undefined) {
+            console.log(this.$route.name)
+            if(this.$route.name === 'yshi-goods-preview' && this.$route.params.good_id != undefined){
                 goodsService.getGoodInfo({
                     id: this.$route.params.good_id
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    let obj = this.getTaskSelected(ret.object)
-                    this.transferLeft = obj.resLeft
-                    this.transferRight = obj.resRight
-                    this.editor && this.editor.setContent(ret.data.introduce)
+                    let obj = this.getTaskSelected(ret.objects)
+                    this.fetchParam.transferRight = obj.resRight
+                    if(this.fetchParam.transferRight.length > 0){
+                        this.transferLeft = obj.resLeft
+                    } else {
+                        this.transferLeft = new TaskModel().initTabs()
+                    }
+                    this.editor && this.editor.setContent(ret.introduce)
+                    this.$refs.cont.innerHTML = ret.introduce
                 })
+                this.disable = true
             } else {
-                this.transferLeft = new TaskModel().initTabs()
+                this.disable = false
+                if (this.$route.params.good_id != undefined) {
+                    goodsService.getGoodInfo({
+                        id: this.$route.params.good_id
+                    }).then((ret) => {
+                        console.log(ret)
+                        this.fetchParam = ret
+                        let obj = this.getTaskSelected(ret.objects)
+                        this.fetchParam.transferRight = obj.resRight
+                        if(this.fetchParam.transferRight.length > 0){
+                            this.transferLeft = obj.resLeft
+                        } else {
+                            this.transferLeft = new TaskModel().initTabs()
+                        }
+                        this.editor && this.editor.setContent(ret.introduce)
+                    })
+                } else {
+                    this.transferLeft = new TaskModel().initTabs()
+                }
             }
             xmview.setContentLoading(false)
         },
@@ -226,15 +271,15 @@
                 }
             },
             cropperFn (data, ext) {
-                // ArticleService.ArticleUploadUrl({
-                //     avatar: data,
-                //     alias: `${Date.now()}${ext}`
-                // }).then((ret) => {
-                //     xmview.showTip('success', '上传成功')
-                //     this.fetchParam.cover = ret.data.url // 显示图片
-                // }).catch((ret) => {
-                //     xmview.showTip('error', ret.message)
-                // })
+                goodsService.getUploadUrl({
+                    image: data,
+                    alias: `${Date.now()}${ext}`
+                }).then((ret) => {
+                    xmview.showTip('success', '上传成功')
+                    this.fetchParam.cover = ret.url // 显示图片
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             filesHandleChange (res) {
                 console.log(res)
@@ -267,13 +312,13 @@
                         xmview.showTip('error', '请填写正文内容')
                         return
                     }
-                    this.fetchParam.object = JSON.stringify(this.transferRight.map(item => {
+                    this.fetchParam.objects = this.fetchParam.transferRight.map(item => {
                         return {
                             type: item.type === 'public' ? 0 : item.type === 'private' ? 1 : item.type === 'exam' ? 2 : 3,
                             id: item.id,
                             name: item.name
                         }
-                    }))
+                    })
                     this.fetchParam.introduce = this.editor.getContent()
                     let req = goodsService.createGood
                     let msg = '添加成功'
@@ -281,6 +326,8 @@
                         req = goodsService.updateGood
                         msg = '修改成功'
                     }
+                    console.log(JSON.stringify(this.fetchParam))
+                    // debugger
                     req(this.fetchParam).then((ret) => {
                         xmview.showTip('success', msg)
                         this.fetchParam = clearFn()

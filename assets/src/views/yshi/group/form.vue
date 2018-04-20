@@ -1,9 +1,9 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "../../../utils/mixins/common";
-     #speaking-content-add {
+     #group-content-add {
         @extend %content-container;
     .form {
-        width: 50%;
+        width: 80%;
         .btn {
             float: right;
         }
@@ -47,31 +47,32 @@
      }
 </style>
 <template>
-    <article id="speaking-content-add">
+    <article id="group-content-add">
         <el-form :model="fetchParam" :rules="rules" class="form" label-width="180px" ref="ruleForm">
             <el-form-item label="组合名称" prop="name">
-                <el-input placeholder="请输入内容" v-model="fetchParam.name">
+                <el-input placeholder="请输入内容" v-model="fetchParam.name" :disabled="disable">
                 </el-input>
             </el-form-item>
             <el-form-item label="组合图片" prop="cover">
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false"></ImagEcropperInput>
+                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示">
-                <el-radio v-model="fetchParam.show_type" :label="typeimg">图片</el-radio>
-                <el-radio v-model="fetchParam.show_type" :label="typevideo">视频</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typeimg" :disabled="disable">图片</el-radio>
+                <el-radio v-model="fetchParam.show_type" :label="typevideo" :disabled="disable">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
-                <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true">
+                <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true" :disabled="disable">
                     <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
             </el-form-item>
             <el-form-item label="组合介绍" prop="introduce">
-                <vue-editor v-model="fetchParam.introduce" @ready="ueReady"></vue-editor>
+                <vue-editor v-model="fetchParam.introduce" @ready="ueReady" v-if="!disable"></vue-editor>
+                <div v-if="disable" ref="cont">{{fetchParam.introduce}}</div>
             </el-form-item>
-            <el-form-item label="添加商品">
-                <el-button size="small" @click="dialogGoods.isShow=true">选择商品</el-button>
-                <template v-if="fetchParam.goods.length > 0">
+            <el-form-item label="添加商品" prop="goods">
+                <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
+                <template v-if="fetchParam.goods.length">
                     <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
@@ -81,14 +82,14 @@
             </el-form-item>
             <el-form-item label="排序" prop="order">
                 <template>
-                    <el-input class="input-price" placeholder="组合顺序" v-model.number="fetchParam.order" type="Number"></el-input>
+                    <el-input class="input-price" placeholder="组合顺序" v-model.number="fetchParam.order" type="Number" :disabled="disable"></el-input>
                 </template>
             </el-form-item>
-            <el-form-item label="设置组合售卖优惠">
-                <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="favorables"></PlusOrRemove>
+            <el-form-item label="设置组合售卖优惠" prop="favorable">
+                <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="fetchParam.favorable" :disable="disable"></PlusOrRemove>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit" type="primary">保存</el-button>
+                <el-button @click="submit" type="primary" :disabled="disable">保存</el-button>
             </el-form-item>
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
                           :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
@@ -113,33 +114,49 @@
     import PlusOrRemove from '../component/PlusOrRemove.vue'
     function clearFn () {
         return {
-            id: '',
-            name: '',
-            cover: '',
+            id: void 0,
+            name: void '',
+            cover: void '',
             show_type: 0, // 0 图片 1视频
-            show_video_name: '',
-            show_video_id: 0,
-            introduce: '',
-            favorable: [],
-            order: 0,
+            show_video_name: void '',
+            show_video_id: void 0,
+            introduce: void '',
+            favorable: [''],
+            order: void 0,
             goods: [],
             goods_ids: []
         }
     }
     export default {
         data () {
+            let checkHas = (rule, value, callback) => {
+                if (!value.length) {
+                    callback(new Error('不能是空'))
+                } else {
+                    callback()
+                }
+            }
+            let checkHas2 = (rule, value, callback) => {
+                value.forEach((item) => {
+                    if (item.reach && item.discount) {
+                        callback()
+                    } else {
+                        callback(new Error('不能是空'))
+                    }
+                })
+            }
             return {
                 typeimg: 0,
                 typevideo: 1,
                 editor: null,
                 isShowVideoDialog: false,
-                favorables: [''],
                 dialogGoods: {
                     loading: false,
                     isShow: false,
                     keyword: void 0,
                 },
                 fetchParam: clearFn(),
+                disable: false,
                 moneyarr: [],
                 discountarr: [],
                 rules: {
@@ -154,39 +171,52 @@
                     ],
                     order: [
                         {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
+                    ],
+                    goods: [
+                        {required: true, validator:checkHas, trigger: 'blur'}
+                    ],
+                    favorable: [
+                        {required: true, validator:checkHas2, trigger: 'blur'}
                     ]
                 }
             }
         },
         created() {
             if (this.$route.params.group_id != undefined) {
+                if (this.$route.name === 'yshi-group-preview'){
+                    this.disable = true
+                } else {
+                    this.disable = false
+                }
                 goodsGroupService.getGoodGroupInfo({
                     id: this.$route.params.group_id
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    this.favorables = ret.favorable
                     ret.favorable.forEach(item => {
                         this.moneyarr.push(item.reach)
                         this.discountarr.push(item.discount)
                     })
                     this.fetchParam.goods = ret.goods
-                    this.editor && this.editor.setContent(ret.data.introduce)
+                    this.editor && this.editor.setContent(ret.introduce)
+                    this.$refs.cont.innerHTML = ret.introduce
                 })
+            } else {
+                this.disable = false
             }
             xmview.setContentLoading(false)
         },
         methods: {
             cropperFn (data, ext) {
-                // ArticleService.ArticleUploadUrl({
-                //     avatar: data,
-                //     alias: `${Date.now()}${ext}`
-                // }).then((ret) => {
-                //     xmview.showTip('success', '上传成功')
-                //     this.fetchParam.cover = ret.data.url // 显示图片
-                // }).catch((ret) => {
-                //     xmview.showTip('error', ret.message)
-                // })
+                goodsService.getUploadUrl({
+                    image: data,
+                    alias: `${Date.now()}${ext}`
+                }).then((ret) => {
+                    xmview.showTip('success', '上传成功')
+                    this.fetchParam.cover = ret.url // 显示图片
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             filesHandleChange (res) {
                 console.log(res)
@@ -208,7 +238,8 @@
             },
             // 组合优惠
             groupDiscounts(val) {
-                this.favorables = val
+                console.log(val)
+                this.fetchParam.favorable = val
             },
             ueReady (ue) {
                 this.editor = ue
@@ -221,10 +252,10 @@
                         return
                     }
                     this.fetchParam.introduce = this.editor.getContent()
-                    this.fetchParam.goods_ids = JSON.stringify(this.fetchParam.goods.map(item => {
+                    this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
                         return item.id
-                    }))
-                    this.fetchParam.favorable = JSON.stringify(this.favorables)
+                    })
+                    if ( !this.$store.state.component.yshiGroupSussess) return
                     let req = goodsGroupService.createGoodGroup
                     let msg = '添加成功'
                     if (this.fetchParam.id) {

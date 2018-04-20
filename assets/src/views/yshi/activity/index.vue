@@ -60,7 +60,7 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
-            <el-table-column align="center" min-width="300" prop="name" label="优惠名称">
+            <el-table-column align="center" min-width="200" prop="name" label="优惠名称">
             </el-table-column>
             <el-table-column align="center" min-width="100" prop="goods_count" label="商品数">
             </el-table-column>
@@ -76,7 +76,7 @@
             </el-table-column>
             <el-table-column align="center" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
-                    <el-button @click="preview(scope.$index, scope.row)" type="text" size="small">查看</el-button>
+                    <el-button @click="$router.push({name: 'yshi-activity-preview', params: {activity_id: scope.row.id}})" type="text" size="small">查看</el-button>
                     <el-button 
                         @click="$router.push({name: 'yshi-activity-edit', params: {activity_id: scope.row.id}})" 
                         type="text" 
@@ -112,7 +112,7 @@ import * as _ from 'utils/common'
 function getFetchParam () {
     return {
         name: void '',
-        status: void 0, // 1 下线，0 正常
+        // status: void 0, // 1 下线，0 正常
         start_time: void 0,
         end_time: void 0,
         page: 1,
@@ -150,7 +150,7 @@ export default {
         fetchData (val) {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
-            fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
+            // fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
             return activityService.searchActivity(fetchParam).then((ret) => {
                 this.data = ret.list
                 this.total = ret.total
