@@ -42,7 +42,7 @@
             :loading="loading"
             :showHeader="true"
             :isSearch="false"
-            :type="cacheType"
+            :type="type"
             :current-page="fetchParam.page"
             :page-size="fetchParam.page_size"
             :total="total"
@@ -93,11 +93,7 @@
             this.fetchData()
         },
         mounted () {},
-        computed: {
-            cacheType () {
-                return this.fetchParam.type
-            }
-        },
+        computed: {},
         watch: {
             value (val) {
                 this.selected = val
@@ -138,7 +134,7 @@
             },
             getCurRow (row, all) {
                 if (this.type) {
-                    row.type = this.cacheType
+                    row.type = this.type
                     row.taskType = this.taskType
                     this.$emit('curRow', row, all)
                 }
