@@ -13,14 +13,14 @@ class TestPracticeService {
     // 创建
     create ({ name, description, single_num, single_score, multi_num, multi_score, judge_num, judge_score, score_pass, limit_time, subject_group_id }) {
         let url = `${urlPre}`
-        return api.post(url, { name, description, single_num, single_score, multi_num, multi_score, judge_num, judge_score, score_pass, limit_time, subject_group_id }, false, true).then((ret) => {
+        return api.post(url, JSON.stringify({ name, description, single_num, single_score, multi_num, multi_score, judge_num, judge_score, score_pass, limit_time, subject_group_id }), false, true).then((ret) => {
             return ret.data
         })
     }
     // 更新
     update (id, { name, description, single_num, single_score, multi_num, multi_score, judge_num, judge_score, score_pass, limit_time, subject_group_id }) {
         let url = `${urlPre}/${id}`
-        return api.put(url, { name, description, single_num, single_score, multi_num, multi_score, judge_num, judge_score, score_pass, limit_time, subject_group_id }, false, true).then((ret) => {
+        return api.put(url, JSON.stringify({ name, description, single_num, single_score, multi_num, multi_score, judge_num, judge_score, score_pass, limit_time, subject_group_id }), false, true).then((ret) => {
             return ret.data
         })
     }

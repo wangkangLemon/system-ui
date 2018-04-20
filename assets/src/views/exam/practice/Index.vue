@@ -57,30 +57,28 @@
                         @click="$router.push({name: 'exam-practice-edit', params: {practice_id: scope.row.id}})"
                         type="text"
                         size="small"
-                        :disabled="scope.row.status != 1 || creatorDisabled(scope.row.creator_id)">
+                        :disabled="scope.row.status != 1">
                         编辑
                     </el-button>
                     <el-button 
                         @click="online(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        v-if="scope.row.status == 1"
-                        :disabled="creatorDisabled(scope.row.creator_id)">
+                        v-if="scope.row.status == 1">
                         <i>上线</i>
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        v-if="scope.row.status != 1"
-                        :disabled="creatorDisabled(scope.row.creator_id)">
+                        v-if="scope.row.status != 1">
                         <i>下线</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status != 1 || creatorDisabled(scope.row.creator_id)">
+                        :disabled="scope.row.status != 1">
                         删除
                     </el-button>
                 </template>

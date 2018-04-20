@@ -210,12 +210,12 @@
                 </table>
             </el-form-item>
             <el-form-item label="考试时间" prop="limit_time">
-                <el-input v-model.number="fetchParam.limit_time" style="width: 300px" v-number-only>
+                <el-input v-model.number="fetchParam.limit_time" style="width: 300px" type="Number">
                     <template slot="append">分钟</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="及格分数" prop="score_pass">
-                <el-input v-model.number="fetchParam.score_pass" style="width: 300px" v-number-only>
+                <el-input v-model.number="fetchParam.score_pass" style="width: 300px" type="Number">
                     <template slot="append">分</template>
                 </el-input>
             </el-form-item>
