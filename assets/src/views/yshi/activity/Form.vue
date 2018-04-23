@@ -205,6 +205,7 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    this.fetchParam.favorable_price = parseInt(ret.favorable_price)
                     this.editor && this.editor.setContent(ret.introduce)
                     this.$refs.cont.innerHTML = ret.introduce
                 })
