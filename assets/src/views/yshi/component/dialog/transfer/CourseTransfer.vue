@@ -23,7 +23,7 @@
                     placeholder="请选择课程类型"
                     @change="fetchData">
                     <el-option label="公开课" value="public"></el-option>
-                    <el-option label="内训课" value="private"></el-option>
+                    <!-- <el-option label="内训课" value="private"></el-option> -->
                 </el-select>
             </section>
             <section>

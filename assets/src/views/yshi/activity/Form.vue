@@ -40,6 +40,21 @@
             display: inline-block;
             width: 120px !important;
         }
+        .el-input-number{
+            .el-input__inner{
+                float: left;
+                width: 260px;
+            }
+            .el-input-group__append{
+                width: 40px;
+                height: 36px;
+            }
+        }
+        .data-table{
+            .gutter{
+                display: none;
+            }
+        }
     }
     .dialog {
             section {
@@ -66,7 +81,7 @@
                <vue-editor v-model="fetchParam.introduce" @ready="ueReady" v-if="!disable"></vue-editor>
                <div v-if="disable" ref="cont">{{fetchParam.introduce}}</div>
             </el-form-item>
-            <el-form-item label="宣传展示">
+            <el-form-item label="宣传展示" prop="show_type">
                 <el-radio v-model="fetchParam.show_type" :label="typeimg" :disabled="disable">图片</el-radio>
                 <el-radio v-model="fetchParam.show_type" :label="typevideo" :disabled="disable">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
@@ -86,11 +101,13 @@
                 </template>
             </el-form-item>
             <el-form-item label="优惠活动价" prop="favorable_price">
-                <el-input placeholder="请输入价格" type="Number" v-model.number="fetchParam.favorable_price" :disabled="disable">
+                <el-input v-model.number="fetchParam.favorable_price" style="width: 300px" placeholder="请输入价格" type="number" :disabled="disable">
+                    <template slot="append">元</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="排序" prop="order">
-                <el-input class="input-price" placeholder="排列顺序" v-model.number="fetchParam.order" type="Number" :disabled="disable"></el-input>
+                <el-input-number placeholder="排列顺序" style="width: 300px" v-model.number="fetchParam.order" :min="1" :controls="false" :disabled="disable">
+                </el-input-number>
             </el-form-item>
             <el-form-item label="截止日期" prop="end_time">
                 <el-date-picker v-model="fetchParam.end_time" type="datetime" placeholder="选择日期" 
@@ -155,6 +172,17 @@
                     callback()
                 }
             }
+            let checkHasShow = (rule, value, callback) => {
+                if (value === 1) {
+                    if (this.fetchParam.show_video_name){
+                        callback()
+                    } else {
+                        callback(new Error('请选择视频'))
+                    }
+                } else {
+                    callback()
+                }
+            }
             return {
                 editor: null,
                 isShowVideoDialog: false,
@@ -175,6 +203,9 @@
                     cover: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
+                    show_type: [
+                        {required: true, validator: checkHasShow, trigger: 'blur'}
+                    ],
                     introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
@@ -182,7 +213,8 @@
                         {type: 'number', validator:checkPrice, required: true, trigger: 'blur'}
                     ],
                     order: [
-                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
+                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'},
+                        { type: 'number', min: 1, message: '请输入正整数', trigger: 'blur' },
                     ],
                     end_time: [
                         {message: "不能为空",required: 1},
@@ -206,8 +238,8 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    this.fetchParam.favorable_price = parseInt(ret.favorable_price)
-                    this.editor && this.editor.setContent(ret.introduce)
+                    this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
+                    this.editor && this.editor.parseFloat(ret.introduce)
                     this.$refs.cont.innerHTML = ret.introduce
                 })
             } else {

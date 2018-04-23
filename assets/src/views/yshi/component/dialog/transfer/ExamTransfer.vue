@@ -98,10 +98,6 @@
                     {
                         value: 'score_pass',
                         label: '及格分数'
-                    },
-                    {
-                        value: 'status',
-                        label: '状态'
                     }
                 ]
             }
