@@ -101,9 +101,9 @@
                 </template>
             </el-form-item>
             <el-form-item label="优惠活动价" prop="favorable_price">
-                <el-input-number v-model.number="fetchParam.favorable_price" style="width: 300px" placeholder="请输入价格" :controls="false" :disabled="disable">
+                <el-input v-model.number="fetchParam.favorable_price" style="width: 300px" placeholder="请输入价格" type="number" :disabled="disable">
                     <template slot="append">元</template>
-                </el-input-number>
+                </el-input>
             </el-form-item>
             <el-form-item label="排序" prop="order">
                 <el-input-number placeholder="排列顺序" style="width: 300px" v-model.number="fetchParam.order" :min="1" :controls="false" :disabled="disable">
