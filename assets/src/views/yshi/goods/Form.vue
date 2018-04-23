@@ -326,7 +326,6 @@
                         req = goodsService.updateGood
                         msg = '修改成功'
                     }
-                    console.log(JSON.stringify(this.fetchParam))
                     // debugger
                     req(this.fetchParam).then((ret) => {
                         xmview.showTip('success', msg)

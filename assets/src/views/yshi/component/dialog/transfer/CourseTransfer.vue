@@ -20,7 +20,6 @@
                 <el-select 
                     v-model="fetchParam.type" 
                     filterable 
-                    clearable 
                     placeholder="请选择课程类型"
                     @change="fetchData">
                     <el-option label="公开课" value="public"></el-option>
