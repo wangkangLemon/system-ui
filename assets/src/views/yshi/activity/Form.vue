@@ -40,6 +40,16 @@
             display: inline-block;
             width: 120px !important;
         }
+        .el-input-number{
+            .el-input__inner{
+                float: left;
+                width: 260px;
+            }
+            .el-input-group__append{
+                width: 40px;
+                height: 36px;
+            }
+        }
     }
     .dialog {
             section {
@@ -86,8 +96,9 @@
                 </template>
             </el-form-item>
             <el-form-item label="优惠活动价" prop="favorable_price">
-                <el-input placeholder="请输入价格" type="Number" v-model.number="fetchParam.favorable_price" :disabled="disable">
-                </el-input>
+                <el-input-number v-model.number="fetchParam.favorable_price" style="width: 300px" placeholder="请输入价格" :controls="false" :disabled="disable">
+                    <template slot="append">元</template>
+                </el-input-number>
             </el-form-item>
             <el-form-item label="排序" prop="order">
                 <el-input class="input-price" placeholder="排列顺序" v-model.number="fetchParam.order" type="Number" :disabled="disable"></el-input>
@@ -206,8 +217,8 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    this.fetchParam.favorable_price = parseInt(ret.favorable_price)
-                    this.editor && this.editor.setContent(ret.introduce)
+                    this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
+                    this.editor && this.editor.parseFloat(ret.introduce)
                     this.$refs.cont.innerHTML = ret.introduce
                 })
             } else {

@@ -38,6 +38,16 @@
         .el-dialog--small{
             width: 80%;
         }
+        .el-input-number{
+            .el-input__inner{
+                float: left;
+                width: 260px;
+            }
+            .el-input-group__append{
+                width: 40px;
+                height: 36px;
+            }
+        }
         
     }
     .dialog {
@@ -95,10 +105,14 @@
                 </template>
             </el-form-item>
             <el-form-item label="商品定价" prop="price">
-                <el-input class="input-price" placeholder="请输入价格" v-model.number="fetchParam.price" type="Number" :disabled="disable"></el-input><i> 元</i>
+                <el-input type="number" v-model.number="fetchParam.price" style="width: 300px" placeholder="请输入价格" @input="handleChangeinp" :controls="false" :disabled="disable" :min="0">
+                    <template slot="append">元</template>
+                </el-input>
             </el-form-item>
              <el-form-item label="优惠价格" prop="favorable_price">
-                <el-input class="input-price" placeholder="请输入价格" v-model.number="fetchParam.favorable_price" type="Number" :disabled="disable"></el-input><i> 元</i>
+                <el-input-number v-model.number="fetchParam.favorable_price" style="width:300px;" placeholder="请输入价格" :controls="false" :disabled="disable" :min="0">
+                    <template slot="append">元</template>
+                </el-input-number>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary" :disabled="disable">保存</el-button>
@@ -149,7 +163,7 @@
                     return callback(new Error('大于零的最多两位小数'))
                 }
                 setTimeout(() => {
-                    if (value > parseInt(value1)) {
+                    if (value > parseFloat(value1)) {
                         callback(new Error('优惠价格不能高于商品定价'))
                     } else {
                         callback()
@@ -191,7 +205,8 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     price: [
-                        {type: 'number', required: true, validator:checkPrice, trigger: 'blur'}
+                        {type: 'number', required: true, trigger: 'blur', message: '请输入商品定价'},
+                        {validator:checkPrice}
                     ],
                     transferRight: [
                         {required: true, validator: checkHas, trigger: 'blur'}
@@ -202,6 +217,11 @@
                 },
             }
         },
+        watch: {
+            'fetchParam.price' (val) {
+                this.fetchParam.price = 1
+            }
+        },
         created () {
             console.log(this.$route.name)
             if(this.$route.name === 'yshi-goods-preview' && this.$route.params.good_id != undefined){
@@ -210,8 +230,8 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    this.fetchParam.price = parseInt(ret.price)
-                    this.fetchParam.favorable_price = parseInt(ret.favorable_price)
+                    this.fetchParam.price = parseFloat(ret.price)
+                    this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
                     let obj = this.getTaskSelected(ret.objects)
                     this.fetchParam.transferRight = obj.resRight
                     if(this.fetchParam.transferRight.length > 0){
@@ -231,8 +251,8 @@
                     }).then((ret) => {
                         console.log(ret)
                         this.fetchParam = ret
-                        this.fetchParam.price = parseInt(ret.price)
-                        this.fetchParam.favorable_price = parseInt(ret.favorable_price)
+                        this.fetchParam.price = parseFloat(ret.price)
+                        this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
                         let obj = this.getTaskSelected(ret.objects)
                         this.fetchParam.transferRight = obj.resRight
                         if(this.fetchParam.transferRight.length > 0){
@@ -306,6 +326,10 @@
             chooseMaterial () {
                 this.showMaterialDialog = true
             },
+            handleChangeinp(value) {
+                // this.fetchParam.price = 222
+                // console.log(value);
+            },
             getTaskData() {
                 this.showMaterialDialog = false
             },
@@ -349,6 +373,6 @@
             DialogVideo,
             VueEditor,
             Task
-        }
+        },
     }
 </script>
