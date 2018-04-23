@@ -149,7 +149,7 @@
                     return callback(new Error('大于零的最多两位小数'))
                 }
                 setTimeout(() => {
-                    if (value > value1) {
+                    if (value > parseInt(value1)) {
                         callback(new Error('优惠价格不能高于商品定价'))
                     } else {
                         callback()
@@ -210,6 +210,8 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    this.fetchParam.price = parseInt(ret.price)
+                    this.fetchParam.favorable_price = parseInt(ret.favorable_price)
                     let obj = this.getTaskSelected(ret.objects)
                     this.fetchParam.transferRight = obj.resRight
                     if(this.fetchParam.transferRight.length > 0){
@@ -229,6 +231,8 @@
                     }).then((ret) => {
                         console.log(ret)
                         this.fetchParam = ret
+                        this.fetchParam.price = parseInt(ret.price)
+                        this.fetchParam.favorable_price = parseInt(ret.favorable_price)
                         let obj = this.getTaskSelected(ret.objects)
                         this.fetchParam.transferRight = obj.resRight
                         if(this.fetchParam.transferRight.length > 0){
@@ -326,7 +330,6 @@
                         req = goodsService.updateGood
                         msg = '修改成功'
                     }
-                    console.log(JSON.stringify(this.fetchParam))
                     // debugger
                     req(this.fetchParam).then((ret) => {
                         xmview.showTip('success', msg)
