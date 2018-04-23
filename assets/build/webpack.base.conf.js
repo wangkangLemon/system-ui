@@ -24,7 +24,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.vue', '.json'],
         alias: {
-            'vue$': 'vue/dist/vue.esm.js',
+            // 'vue$': 'vue/dist/vue.esm.js',
             '@': resolve('src'),
             'base': path.resolve(__dirname, '../src'),
             'services': resolve('src/services'), // Service目录所在路径
