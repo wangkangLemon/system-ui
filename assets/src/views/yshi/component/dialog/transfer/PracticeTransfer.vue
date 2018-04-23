@@ -147,7 +147,7 @@
             initFetchParam () {
                 return {
                     keyword: '',
-                    status: -1,
+                    status: 0,
                     time_start: '',
                     time_end: '',
                     page: 1,

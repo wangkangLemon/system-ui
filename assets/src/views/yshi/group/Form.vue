@@ -35,6 +35,11 @@
             display: inline-block;
             width: 120px !important;
         }
+        .data-table{
+            .gutter{
+                display: none;
+            }
+        }
     }
     .dialog {
             section {
@@ -57,7 +62,7 @@
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
-            <el-form-item label="宣传展示">
+            <el-form-item label="宣传展示" prop="show_type">
                 <el-radio v-model="fetchParam.show_type" :label="typeimg" :disabled="disable">图片</el-radio>
                 <el-radio v-model="fetchParam.show_type" :label="typevideo" :disabled="disable">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
@@ -81,9 +86,8 @@
                 </template>
             </el-form-item>
             <el-form-item label="排序" prop="order">
-                <template>
-                    <el-input class="input-price" placeholder="组合顺序" v-model.number="fetchParam.order" type="Number" :disabled="disable"></el-input>
-                </template>
+                <el-input-number placeholder="排列顺序" style="width: 300px" v-model.number="fetchParam.order" :min="1" :controls="false" :disabled="disable">
+                </el-input-number>
             </el-form-item>
             <el-form-item label="设置组合售卖优惠" prop="favorable">
                 <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="fetchParam.favorable" :disable="disable"></PlusOrRemove>
@@ -145,6 +149,17 @@
                     }
                 })
             }
+            let checkHasShow = (rule, value, callback) => {
+                if (value === 1) {
+                    if (this.fetchParam.show_video_name){
+                        callback()
+                    } else {
+                        callback(new Error('请选择视频'))
+                    }
+                } else {
+                    callback()
+                }
+            }
             return {
                 typeimg: 0,
                 typevideo: 1,
@@ -166,11 +181,15 @@
                     cover: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
+                    show_type: [
+                        {required: true, validator: checkHasShow, trigger: 'blur'}
+                    ],
                     introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     order: [
-                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
+                        {type: 'number', required: true, message: '必须填写', trigger: 'blur'},
+                        { type: 'number', min: 1, message: '请输入正整数', trigger: 'blur' },
                     ],
                     goods: [
                         {required: true, validator:checkHas, trigger: 'blur'}

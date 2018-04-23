@@ -71,7 +71,7 @@
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
-            <el-form-item label="宣传展示">
+            <el-form-item label="宣传展示" prop="show_type">
                 <el-radio v-model="fetchParam.show_type" :label="typeimg" :disabled="disable">图片</el-radio>
                 <el-radio v-model="fetchParam.show_type" :label="typevideo" :disabled="disable">视频</el-radio>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
@@ -184,6 +184,17 @@
                     callback()
                 }
             }
+            let checkHasShow = (rule, value, callback) => {
+                if (value === 1) {
+                    if (this.fetchParam.show_video_name){
+                        callback()
+                    } else {
+                        callback(new Error('请选择视频'))
+                    }
+                } else {
+                    callback()
+                }
+            }
             return {
                 editor: null,
                 typeimg: 0,
@@ -200,6 +211,9 @@
                     ],
                     cover: [
                         {required: true, message: '必须填写', trigger: 'blur'}
+                    ],
+                    show_type: [
+                        {required: true, validator: checkHasShow, trigger: 'blur'}
                     ],
                     introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
