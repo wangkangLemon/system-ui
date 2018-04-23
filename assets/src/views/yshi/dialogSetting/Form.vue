@@ -111,7 +111,8 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     end_time: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
+                        {message: "不能为空",required: 1},
+                        {pattern: null,type: "string",message: null}
                     ]
                 },
             }

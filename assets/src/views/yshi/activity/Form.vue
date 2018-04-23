@@ -77,7 +77,7 @@
             </el-form-item>
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
-                <template v-if="fetchParam.goods">
+                <template v-if="fetchParam.goods.length">
                     <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
@@ -185,7 +185,8 @@
                         {type: 'number', required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     end_time: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
+                        {message: "不能为空",required: 1},
+                        {pattern: null,type: "string",message: null}
                     ],
                     goods: [
                         {required: true, validator: checkHas, trigger: 'blur'}
