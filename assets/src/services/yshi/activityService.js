@@ -56,9 +56,9 @@ class ActivityService {
         })
     }
     // 更新
-    updateActivity ({ id, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids }) {
+    updateActivity ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids }) {
         let url = `${urlPre}`
-        return api.put(url, JSON.stringify({ id, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids })).then(ret => {
+        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }

@@ -26,9 +26,9 @@ class GoodsGroupService {
         })
     }
     // 上下线
-    statusline (goods_group_id, status) {
+    statusline (id, status) {
         let url = `${urlPre}/status`
-        return api.put(url, JSON.stringify({goods_group_id, status}))
+        return api.put(url, JSON.stringify({id, status}))
     }
     // 上下线
     offline (id) {
