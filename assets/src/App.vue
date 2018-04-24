@@ -17,9 +17,11 @@
 <script>
     import store from './store/index'
     import * as filters from 'utils/filterUtils'
+    import * as directives from 'utils/directivesUtils'
 
     export default {
         filters,
+        directives,
         data () {
             return {
                 dialog: {
