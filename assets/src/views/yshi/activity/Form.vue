@@ -160,10 +160,17 @@
         data () {
             let checkPrice = (rule, value, callback) => {
                 var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
+                let pricez = 0
+                this.fetchParam.goods.forEach( item => {
+                    pricez = pricez + parseFloat(item.favorable_price)
+                })
                 if (!re.test(value)) {
                     return callback(new Error('大于零的最多两位小数'))
+                } else if ( value > pricez){
+                    return callback(new Error('不能高于优惠价'))
+                } else {
+                    callback()
                 }
-                callback()
             }
             let checkHas = (rule, value, callback) => {
                 if (!value.length) {
