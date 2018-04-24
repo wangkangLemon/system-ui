@@ -105,7 +105,7 @@
                 </template>
             </el-form-item>
             <el-form-item label="商品定价" prop="price">
-                <el-input type="number" v-model.number="fetchParam.price" style="width: 300px" placeholder="请输入价格" @input="handleChangeinp" :controls="false" :disabled="disable" :min="0">
+                <el-input type="number" v-model.number="fetchParam.price" style="width: 300px" placeholder="请输入价格" :disabled="disable">
                     <template slot="append">元</template>
                 </el-input>
             </el-form-item>
@@ -229,11 +229,6 @@
                         {type: 'number', required: true, validator:checkMoney, trigger: 'blur'}
                     ]
                 },
-            }
-        },
-        watch: {
-            'fetchParam.price' (val) {
-                this.fetchParam.price = 1
             }
         },
         created () {

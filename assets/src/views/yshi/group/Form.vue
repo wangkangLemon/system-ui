@@ -35,11 +35,11 @@
             display: inline-block;
             width: 120px !important;
         }
-        .data-table{
-            .gutter{
-                display: none;
-            }
-        }
+        // .data-table{
+        //     .gutter{
+        //         display: none;
+        //     }
+        // }
     }
     .dialog {
             section {

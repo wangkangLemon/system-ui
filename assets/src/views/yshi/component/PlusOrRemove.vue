@@ -71,6 +71,9 @@
             },
             discountValue() {
                 this.$emit('res', this.getRes())
+            },
+            favorable() {
+                this.dataArr = this.favorable
             }
         },
         methods: {
@@ -84,13 +87,6 @@
             },
             inputFn (val, array, index) {
                 this.$set(array, index, val)
-                // var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
-                // if (!re.test(val)) {
-                //     xmview.showTip('error', '价格只能是最多两位小数')
-                // }
-                // let a = this.getRes()
-                // console.log(a)
-                // this.$emit('res', this.getRes())
             },
             getRes () {
                 let _discountValue = this.discountValue.map(item => {
