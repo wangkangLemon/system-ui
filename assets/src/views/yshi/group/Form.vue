@@ -35,9 +35,6 @@
             display: inline-block;
             width: 120px !important;
         }
-        .gutter{
-            display: none;
-        }
     }
     .dialog {
             section {
@@ -76,7 +73,7 @@
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
                 <template v-if="fetchParam.goods.length">
-                    <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary :summary-method="getSummaries" style="margin-top: 5px;">
+                    <el-table class="data-table" :data="fetchParam.goods" border show-summary style="width:100%;" ref="table">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
                         <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
@@ -96,7 +93,7 @@
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
                           :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
                 <div slot="search" class="course-search">
-                    <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.keyword"
+                    <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.name"
                             icon="search"
                             placeholder="请输入关键字搜索"></el-input>
                 </div>
@@ -166,7 +163,7 @@
                 dialogGoods: {
                     loading: false,
                     isShow: false,
-                    keyword: void 0,
+                    name: void 0,
                 },
                 fetchParam: clearFn(),
                 disable: false,
@@ -210,6 +207,9 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    this.$nextTick(() => {
+                        this.initTable()
+                    })
                     ret.favorable.forEach(item => {
                         this.moneyarr.push(item.reach)
                         this.discountarr.push(item.discount)
@@ -224,6 +224,9 @@
             xmview.setContentLoading(false)
         },
         methods: {
+            initTable () {
+                this.$refs.table.layout.gutterWidth = 0
+            },
             cropperFn (data, ext) {
                 goodsService.getUploadUrl({
                     image: data,
@@ -288,32 +291,6 @@
                     })
                 })
                 
-            },
-             getSummaries(param) {
-                const { columns, data } = param;
-                const sums = [];
-                columns.forEach((column, index) => {
-                if (index === 0) {
-                    sums[index] = '总价';
-                    return;
-                }
-                const values = data.map(item => Number(item[column.property]));
-                if (!values.every(value => isNaN(value))) {
-                    sums[index] = values.reduce((prev, curr) => {
-                    const value = Number(curr);
-                    if (!isNaN(value)) {
-                        return prev + curr;
-                    } else {
-                        return prev;
-                    }
-                    }, 0);
-                    sums[index] += ' 元';
-                } else {
-                    sums[index] = 'N/A';
-                }
-                });
-
-                return sums;
             }
         },
         components: {

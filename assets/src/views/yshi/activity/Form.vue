@@ -50,11 +50,6 @@
                 height: 36px;
             }
         }
-        // .data-table{
-        //     .gutter{
-        //         display: none;
-        //     }
-        // }
     }
     .dialog {
             section {
@@ -93,7 +88,7 @@
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
                 <template v-if="fetchParam.goods.length">
-                    <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
+                    <el-table class="data-table" :data="fetchParam.goods" border show-summary style="width:100%;" ref="table">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
                         <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
@@ -101,7 +96,7 @@
                 </template>
             </el-form-item>
             <el-form-item label="优惠活动价" prop="favorable_price">
-                <el-input v-model.number="fetchParam.favorable_price" style="width: 300px" placeholder="请输入价格" type="number" :disabled="disable">
+                <el-input v-numberOnly v-model.number="fetchParam.favorable_price" style="width: 300px" placeholder="请输入价格" type="number" :disabled="disable">
                     <template slot="append">元</template>
                 </el-input>
             </el-form-item>
@@ -110,7 +105,7 @@
                 </el-input-number>
             </el-form-item>
             <el-form-item label="截止日期" prop="end_time">
-                <el-date-picker v-model="fetchParam.end_time" type="datetime" placeholder="选择日期" 
+                <el-date-picker v-model="fetchParam.end_time" type="datetime" placeholder="选择日期" :picker-options="pickerOptions"
                     format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" @change="datechange" :disabled="disable"> 
                 </el-date-picker>
             </el-form-item>
@@ -120,7 +115,7 @@
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
                           :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
                 <div slot="search" class="course-search">
-                    <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.keyword"
+                    <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.name"
                             icon="search"
                             placeholder="请输入关键字搜索"></el-input>
                 </div>
@@ -156,6 +151,7 @@
             goods_ids: []
         }
     }
+    let _this
     export default {
         data () {
             let checkPrice = (rule, value, callback) => {
@@ -198,11 +194,17 @@
                 dialogGoods: {
                     loading: false,
                     isShow: false,
-                    keyword: void 0,
+                    name: void 0,
                 },
                 msg: '',
                 fetchParam: clearFn(),
                 disable: false,
+                pickerOptions: {
+                    disabledDate(time) {
+                        return !_this.fetchParam.end_time ? null
+                            : (time.getTime() <= new Date().getTime() && timeUtils.compareDate(time, new Date()) !== 0)
+                    }
+                },
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -233,6 +235,9 @@
                 },
             }
         },
+        beforeCreate () {
+            _this = this
+        },
         created() {
             if (this.$route.params.activity_id != undefined) {
                 if (this.$route.name === 'yshi-activity-preview'){
@@ -245,8 +250,11 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    this.$nextTick(() => {
+                        this.initTable()
+                    })
                     this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
-                    this.editor && this.editor.parseFloat(ret.introduce)
+                    this.editor && this.editor.setContent(ret.introduce)
                     this.$refs.cont.innerHTML = ret.introduce
                 })
             } else {
@@ -255,6 +263,9 @@
             xmview.setContentLoading(false)
         },
         methods: {
+            initTable () {
+                this.$refs.table.layout.gutterWidth = 0
+            },
             cropperFn (data, ext) {
                 activityService.getUploadUrl({
                     image: data,
@@ -302,7 +313,7 @@
                         return
                     }
                     let date = new Date(this.fetchParam.end_time)
-                    let compare = timeUtils.compareDate(date, new Date())
+                    let compare = timeUtils.compareDateTime(date, new Date())
                     if (compare !== 1){
                         xmview.showTip('error', '截止日期不能小于当前日期')
                         return

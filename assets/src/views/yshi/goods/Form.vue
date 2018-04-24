@@ -105,14 +105,14 @@
                 </template>
             </el-form-item>
             <el-form-item label="商品定价" prop="price">
-                <el-input type="number" v-model.number="fetchParam.price" style="width: 300px" placeholder="请输入价格" :disabled="disable">
+                <el-input type="number" v-numberOnly v-model.number="fetchParam.price" style="width: 300px" placeholder="请输入价格" :disabled="disable">
                     <template slot="append">元</template>
                 </el-input>
             </el-form-item>
              <el-form-item label="优惠价格" prop="favorable_price">
-                <el-input-number v-model.number="fetchParam.favorable_price" style="width:300px;" placeholder="请输入价格" :controls="false" :disabled="disable" :min="0">
+                <el-input type="number" v-numberOnly v-model.number="fetchParam.favorable_price" style="width:300px;" placeholder="请输入价格" :disabled="disable">
                     <template slot="append">元</template>
-                </el-input-number>
+                </el-input>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
@@ -168,7 +168,7 @@
                     } else {
                         callback()
                     }
-                }, 1000);
+                }, 1000)
             }
             let checkPrice = (rule, value, callback) => {
                 var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
@@ -178,7 +178,7 @@
                 callback()
             }
             let checkHas = (rule, value, callback) => {
-                if (!value.length){
+                if (!value.length) {
                     return callback(new Error('不能是空'))
                 } else {
                     callback()
@@ -186,7 +186,7 @@
             }
             let checkHasShow = (rule, value, callback) => {
                 if (value === 1) {
-                    if (this.fetchParam.show_video_name){
+                    if (this.fetchParam.show_video_name) {
                         callback()
                     } else {
                         callback(new Error('请选择视频'))
@@ -220,20 +220,20 @@
                     ],
                     price: [
                         {type: 'number', required: true, trigger: 'blur', message: '请输入商品定价'},
-                        {validator:checkPrice}
+                        {validator: checkPrice}
                     ],
                     transferRight: [
                         {required: true, validator: checkHas, trigger: 'blur'}
                     ],
                     favorable_price: [
-                        {type: 'number', required: true, validator:checkMoney, trigger: 'blur'}
+                        {type: 'number', required: true, validator: checkMoney, trigger: 'blur'}
                     ]
                 },
             }
         },
         created () {
             console.log(this.$route.name)
-            if(this.$route.name === 'yshi-goods-preview' && this.$route.params.good_id != undefined){
+            if (this.$route.name === 'yshi-goods-preview' && this.$route.params.good_id != undefined) {
                 goodsService.getGoodInfo({
                     id: this.$route.params.good_id
                 }).then((ret) => {
@@ -243,7 +243,7 @@
                     this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
                     let obj = this.getTaskSelected(ret.objects)
                     this.fetchParam.transferRight = obj.resRight
-                    if(this.fetchParam.transferRight.length > 0){
+                    if (this.fetchParam.transferRight.length > 0) {
                         this.transferLeft = obj.resLeft
                     } else {
                         this.transferLeft = new TaskModel().initTabs()
@@ -264,7 +264,7 @@
                         this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
                         let obj = this.getTaskSelected(ret.objects)
                         this.fetchParam.transferRight = obj.resRight
-                        if(this.fetchParam.transferRight.length > 0){
+                        if (this.fetchParam.transferRight.length > 0) {
                             this.transferLeft = obj.resLeft
                         } else {
                             this.transferLeft = new TaskModel().initTabs()
@@ -372,7 +372,6 @@
                         xmview.showTip('error', ret.message)
                     })
                 })
-                
             },
         },
         components: {
