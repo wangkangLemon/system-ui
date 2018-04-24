@@ -115,7 +115,7 @@
                 </el-input-number>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit" type="primary" :disabled="disable">保存</el-button>
+                <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
             </el-form-item>
             <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog"></DialogVideo>
             <Task

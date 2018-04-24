@@ -74,7 +74,7 @@
                 <i class="col-tip-small" v-if="fetchParam.status == 1"> 启动推荐后,会关闭其他限时活动的推荐</i>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit" type="primary" :disabled="disable">保存</el-button>
+                <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
             </el-form-item>
         </el-form>
     </article>
