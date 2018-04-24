@@ -78,7 +78,7 @@
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
                 <template v-if="fetchParam.goods.length">
-                    <el-table class="data-table" :data="fetchParam.goods" :fit="true" border style="margin-top: 5px;">
+                    <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary :summary-method="getSummaries" style="margin-top: 5px;">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
                         <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
