@@ -91,7 +91,7 @@
                 <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="fetchParam.favorable" :disable="disable"></PlusOrRemove>
             </el-form-item>
             <el-form-item>
-                <el-button @click="submit" type="primary" :disabled="disable">保存</el-button>
+                <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
             </el-form-item>
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
                           :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
