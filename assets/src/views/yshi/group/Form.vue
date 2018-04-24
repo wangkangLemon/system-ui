@@ -78,7 +78,7 @@
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
                 <template v-if="fetchParam.goods.length">
-                    <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary style="margin-top: 5px;">
+                    <el-table class="data-table" :data="fetchParam.goods" :fit="true" border show-summary :summary-method="getSummaries" style="margin-top: 5px;">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
                         <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
@@ -290,6 +290,32 @@
                     })
                 })
                 
+            },
+             getSummaries(param) {
+                const { columns, data } = param;
+                const sums = [];
+                columns.forEach((column, index) => {
+                if (index === 0) {
+                    sums[index] = '总价';
+                    return;
+                }
+                const values = data.map(item => Number(item[column.property]));
+                if (!values.every(value => isNaN(value))) {
+                    sums[index] = values.reduce((prev, curr) => {
+                    const value = Number(curr);
+                    if (!isNaN(value)) {
+                        return prev + curr;
+                    } else {
+                        return prev;
+                    }
+                    }, 0);
+                    sums[index] += ' 元';
+                } else {
+                    sums[index] = 'N/A';
+                }
+                });
+
+                return sums;
             }
         },
         components: {

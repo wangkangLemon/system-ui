@@ -50,11 +50,11 @@
                 height: 36px;
             }
         }
-        .data-table{
-            .gutter{
-                display: none;
-            }
-        }
+        // .data-table{
+        //     .gutter{
+        //         display: none;
+        //     }
+        // }
     }
     .dialog {
             section {
