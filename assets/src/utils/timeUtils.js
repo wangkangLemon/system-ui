@@ -159,7 +159,16 @@ export function compareDate (date1, date2) {
         return 1
     }
 }
-
+// 比较两个时间的大小()
+// 传入的参数必须是 Date 类型
+export function compareDateTime (date1, date2) {
+    let time = [date1.getTime(), date2.getTime()]
+    if (time[0] < time[1]) {
+        return -1
+    } else {
+        return 1
+    }
+}
 // 判断是否是闰年
 export function leapYear (year) {
     return !(year % (year % 100 ? 4 : 400))

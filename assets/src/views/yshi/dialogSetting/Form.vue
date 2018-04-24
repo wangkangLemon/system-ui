@@ -63,7 +63,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="截止日期" prop="end_time">
-                <el-date-picker v-model="fetchParam.end_time" type="datetime" placeholder="选择日期" 
+                <el-date-picker v-model="fetchParam.end_time" type="datetime" placeholder="选择日期" :picker-options="pickerOptions"
                     format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" @change="datechange" :disabled="disable"> 
                 </el-date-picker>
             </el-form-item>
@@ -95,11 +95,18 @@
             status: void 0,
         }
     }
+    let _this
     export default {
         data () {
             return {
                 fetchParam: clearFn(),
                 disable: false,
+                pickerOptions: {
+                    disabledDate(time) {
+                        return !_this.fetchParam.end_time ? null
+                            : (time.getTime() <= new Date().getTime() && timeUtils.compareDate(time, new Date()) !== 0)
+                    }
+                },
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -116,6 +123,9 @@
                     ]
                 },
             }
+        },
+        beforeCreate () {
+            _this = this
         },
         created() {
             if (this.$route.params.dialog_id != undefined) {
@@ -172,7 +182,7 @@
                 this.$refs['ruleForm'].validate((valid) => {
                     if (!valid) return
                     let date = new Date(this.fetchParam.end_time)
-                    let compare = timeUtils.compareDate(date, new Date())
+                    let compare = timeUtils.compareDateTime(date, new Date())
                     if (compare !== 1){
                         xmview.showTip('error', '截止日期不能小于当前日期')
                         return

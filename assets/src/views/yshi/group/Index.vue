@@ -179,7 +179,7 @@ export default {
         },
         // 下线  0为下线，1为上线
         offline (index, row) {
-            let txt = row.status == 0 ? '下线' : '上线'
+            let txt = row.status == 1 ? '下线' : '上线'
             let finalStatus = row.status == 0 ? 1 : 0
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                 goodsGroupService.statusline(row.id, finalStatus).then((ret) => {
