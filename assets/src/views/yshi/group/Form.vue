@@ -35,6 +35,12 @@
             display: inline-block;
             width: 120px !important;
         }
+        .o-error {
+            color:red;
+            font-size:10px;
+            line-height:10px;
+            height:10px;
+        }
     }
     .dialog {
             section {
@@ -83,6 +89,7 @@
             <el-form-item label="排序" prop="order">
                 <el-input-number placeholder="排列顺序" style="width: 300px" v-model.number="fetchParam.order" :min="1" :controls="false" :disabled="disable">
                 </el-input-number>
+                <p v-if="orderErr" class="o-error">此序号已经存在</p>
             </el-form-item>
             <el-form-item label="设置组合售卖优惠" prop="favorable">
                 <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="fetchParam.favorable" :disable="disable"></PlusOrRemove>
@@ -169,6 +176,7 @@
                 disable: false,
                 moneyarr: [],
                 discountarr: [],
+                orderErr : false,
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -276,6 +284,11 @@
                         return item.id
                     })
                     if ( !this.$store.state.component.yshiGroupSussess) return
+                    this.fetchParam.favorable.forEach( (item,index) => {
+                        if (!item.reach || !item.discount){
+                            this.fetchParam.favorable.splice(index,1)
+                        }
+                    })
                     let req = goodsGroupService.createGoodGroup
                     let msg = '添加成功'
                     if (this.fetchParam.id) {
@@ -287,6 +300,9 @@
                         this.fetchParam = clearFn()
                         this.$router.push({name: 'yshi-group'})
                     }).catch((ret) => {
+                        if (ret.message === 'exist'){
+                            this.orderErr = true
+                        }
                         xmview.showTip('error', ret.message)
                     })
                 })

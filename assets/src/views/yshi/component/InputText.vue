@@ -4,7 +4,7 @@
         display: inline-block;
         .input-new-tag {
             display: inline-block;
-            width: 80px !important;
+            width: 100px !important;
         }
         .err-red{
             color: red;
@@ -16,7 +16,7 @@
 <template>
     <article id="component-from-input-text">
         <i>{{textLeft}}</i>
-        <el-input type="Number" size="mini" class="input-new-tag" ref="input" v-model="inputValue" :disabled="disable"></el-input>
+        <el-input type="tel" size="small" class="input-new-tag" ref="input" v-model="inputValue" :disabled="disable"></el-input>
         <i>{{textRight}}</i>
         <i v-if="error" class="err-red">{{msg}}</i>
     </article>
@@ -50,28 +50,34 @@
         },
         watch: {
             inputValue (val) {
-                if (this.isdis){
-                    var re = /^(?=0\.[1-9]|[1-9]\.\d).{3}$|^([1-9])$/
-                    if (!re.test(val)) {
-                        this.error = true
-                        this.msg = '0-9最多1位小数'
-                        this.$store.dispatch('setYshiGroupError')
+                if(val){
+                    if (this.isdis){
+                        var re = /^(?=0\.[1-9]|[1-9]\.\d).{3}$|^([1-9])$/
+                        if (!re.test(val)) {
+                            this.error = true
+                            this.msg = '0-9最多1位小数'
+                            this.$store.dispatch('setYshiGroupError')
+                        } else {
+                            this.error = false
+                            this.$store.dispatch('setYshiGroupSuccess')
+                            this.$emit('input', val)
+                        }
                     } else {
-                        this.error = false
-                        this.$store.dispatch('setYshiGroupSuccess')
-                        this.$emit('input', val)
+                        var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
+                        if (!re.test(val)) {
+                            this.error = true
+                            this.msg = '最多两位小数的数字'
+                            this.$store.dispatch('setYshiGroupError')
+                        } else {
+                            this.error = false
+                            this.$store.dispatch('setYshiGroupSuccess')
+                            this.$emit('input', val)
+                        }
                     }
                 } else {
-                    var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
-                    if (!re.test(val)) {
-                        this.error = true
-                        this.msg = '大于0最多两位小数'
-                        this.$store.dispatch('setYshiGroupError')
-                    } else {
-                        this.error = false
-                        this.$store.dispatch('setYshiGroupSuccess')
-                        this.$emit('input', val)
-                    }
+                    this.error = true
+                    this.msg = '不能是空'
+                    this.$store.dispatch('setYshiGroupError')
                 }
                 
             },

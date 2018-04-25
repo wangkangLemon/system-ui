@@ -74,6 +74,11 @@
             },
             favorable() {
                 this.dataArr = this.favorable
+            },
+            dataArr(val) {
+                if(val.length < 1){
+                    this.dataArr = ['']
+                }
             }
         },
         methods: {
@@ -81,9 +86,12 @@
                 this.dataArr.push('')
             },
             removeitem(index) {
-                this.dataArr.pop(index)
-                this.moneyValue.splice(index, 1)
-                this.discountValue.splice(index, 1)
+                if (this.dataArr.length > 1){
+                    this.dataArr.pop(index)
+                    this.moneyValue.splice(index, 1)
+                    this.discountValue.splice(index, 1)
+                }
+                console.log(this.dataArr)
             },
             inputFn (val, array, index) {
                 this.$set(array, index, val)
