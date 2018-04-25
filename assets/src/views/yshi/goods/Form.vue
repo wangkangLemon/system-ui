@@ -105,12 +105,12 @@
                 </template>
             </el-form-item>
             <el-form-item label="商品定价" prop="price">
-                <el-input type="number" v-numberOnly v-model.number="fetchParam.price" style="width: 300px" placeholder="请输入价格" :disabled="disable">
+                <el-input type="tel" v-numberOnly v-model.number="fetchParam.price" style="width: 300px" placeholder="请输入价格" :disabled="disable">
                     <template slot="append">元</template>
                 </el-input>
             </el-form-item>
              <el-form-item label="优惠价格" prop="favorable_price">
-                <el-input type="number" v-numberOnly v-model.number="fetchParam.favorable_price" style="width:300px;" placeholder="请输入价格" :disabled="disable">
+                <el-input type="tel" v-numberOnly v-model.number="fetchParam.favorable_price" style="width:300px;" placeholder="请输入价格" :disabled="disable">
                     <template slot="append">元</template>
                 </el-input>
             </el-form-item>

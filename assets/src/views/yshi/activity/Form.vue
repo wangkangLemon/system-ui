@@ -50,6 +50,12 @@
                 height: 36px;
             }
         }
+        .o-error {
+            color:red;
+            font-size:10px;
+            line-height:10px;
+            height:10px;
+        }
     }
     .dialog {
             section {
@@ -96,19 +102,27 @@
                 </template>
             </el-form-item>
             <el-form-item label="优惠活动价" prop="favorable_price">
-                <el-input v-numberOnly v-model.number="fetchParam.favorable_price" style="width: 300px" placeholder="请输入价格" type="number" :disabled="disable">
+                <el-input v-numberOnly v-model.number="fetchParam.favorable_price" style="width: 300px" placeholder="请输入价格" type="tel" :disabled="disable">
                     <template slot="append">元</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="排序" prop="order">
                 <el-input-number placeholder="排列顺序" style="width: 300px" v-model.number="fetchParam.order" :min="1" :controls="false" :disabled="disable">
                 </el-input-number>
+                <p v-if="orderErr" class="o-error">此序号已经存在</p>
             </el-form-item>
             <el-form-item label="截止日期" prop="end_time">
                 <el-date-picker v-model="fetchParam.end_time" type="datetime" placeholder="选择日期" :picker-options="pickerOptions"
                     format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" @change="datechange" :disabled="disable"> 
                 </el-date-picker>
             </el-form-item>
+            <!-- <el-form-item label="截止日期2" prop="end_time">
+                <el-date-picker
+                    v-model="fetchParam.end_time"
+                    type="datetime"
+                    placeholder="选择日期时间">
+                </el-date-picker>
+            </el-form-item> -->
             <el-form-item>
                 <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
             </el-form-item>
@@ -199,6 +213,7 @@
                 msg: '',
                 fetchParam: clearFn(),
                 disable: false,
+                orderErr : false,
                 pickerOptions: {
                     disabledDate(time) {
                         return !_this.fetchParam.end_time ? null
@@ -225,10 +240,10 @@
                         {type: 'number', required: true, message: '必须填写', trigger: 'blur'},
                         { type: 'number', min: 1, message: '请输入正整数', trigger: 'blur' },
                     ],
-                    end_time: [
-                        {message: "不能为空",required: 1},
-                        {pattern: null,type: "string",message: null}
-                    ],
+                    // end_time: [
+                    //     {message: "不能为空",required: 1},
+                    //     {pattern: null,type: "string",message: null}
+                    // ],
                     goods: [
                         {required: true, validator: checkHas, trigger: 'blur'}
                     ]
@@ -333,6 +348,9 @@
                         this.fetchParam = clearFn()
                         this.$router.push({name: 'yshi-activity'})
                     }).catch((ret) => {
+                        if (ret.message === 'exist'){
+                            this.orderErr = true
+                        }
                         xmview.showTip('error', ret.message)
                     })
                 })
