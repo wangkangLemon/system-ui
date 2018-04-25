@@ -72,18 +72,18 @@
             discountValue() {
                 this.$emit('res', this.getRes())
             },
-            favorable() {
-                this.dataArr = this.favorable
+            favorable(val) {
+                this.dataArr = val
             },
             dataArr(val) {
                 if(val.length < 1){
-                    this.dataArr = ['']
+                    this.dataArr = [{}]
                 }
             }
         },
         methods: {
             additem(moneyValue, discountValue) {
-                this.dataArr.push('')
+                this.dataArr.push({})
             },
             removeitem(index) {
                 if (this.dataArr.length > 1){

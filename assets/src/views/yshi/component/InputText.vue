@@ -10,14 +10,23 @@
             color: red;
             font-size: 12px;
         }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input[type="number"]{
+            -moz-appearance: textfield;
+        }
+
     }
 </style>
 
 <template>
     <article id="component-from-input-text">
-        <i>{{textLeft}}</i>
-        <el-input type="tel" size="small" class="input-new-tag" ref="input" v-model="inputValue" :disabled="disable"></el-input>
-        <i>{{textRight}}</i>
+        <el-input type="tel" size="small" v-numbera style="width:180px;" ref="input" v-model="inputValue" :disabled="disable">
+            <template slot="prepend">{{textLeft}}</template>
+            <template slot="append">{{textRight}}</template>
+        </el-input>
         <i v-if="error" class="err-red">{{msg}}</i>
     </article>
 </template>
@@ -85,7 +94,30 @@
                 this.inputValue = val
             }
         },
-        methods: {},
-        components: {}
+        methods: {
+        },
+        components: {},
+        directives: {
+            numbera: {
+                bind: function (el) {
+                    el.addEventListener('keyup', () => {
+                        let input = el.querySelector('.el-input__inner')
+                        let value = input.value
+                        const newVal = value === '' ? undefined : Number(value)
+                        if (isNaN(newVal)) {
+                            value.replace(/([^.\d+])|(\d*\.?\d*)/, (match, p1, p2, p3) => {
+                                console.log(match + '-' + p1 + '-' + p2 + '-' + p3)
+                                if (p2 != undefined) {
+                                    input.value = p2
+                                } else {
+                                    input.value = ''
+                                }
+                            })
+                        }
+                        // input.value = newVal.replace(/[^.\d+]|(\d+\.)\.?$/, '$1')
+                    })
+                },
+            }
+        }
     }
 </script>

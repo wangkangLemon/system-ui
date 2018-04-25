@@ -117,10 +117,10 @@
                     url: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    end_time: [
-                        {message: "不能为空",required: 1},
-                        {pattern: null,type: "string",message: null}
-                    ]
+                    // end_time: [
+                    //     {message: "不能为空",required: 1},
+                    //     {pattern: null,type: "string",message: null}
+                    // ]
                 },
             }
         },

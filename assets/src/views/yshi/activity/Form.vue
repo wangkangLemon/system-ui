@@ -240,10 +240,10 @@
                         {type: 'number', required: true, message: '必须填写', trigger: 'blur'},
                         { type: 'number', min: 1, message: '请输入正整数', trigger: 'blur' },
                     ],
-                    end_time: [
-                        {message: "不能为空",required: 1},
-                        {pattern: null,type: "string",message: null}
-                    ],
+                    // end_time: [
+                    //     {message: "不能为空",required: 1},
+                    //     {pattern: null,type: "string",message: null}
+                    // ],
                     goods: [
                         {required: true, validator: checkHas, trigger: 'blur'}
                     ]

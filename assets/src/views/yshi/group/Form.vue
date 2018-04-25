@@ -127,7 +127,7 @@
             show_video_name: void '',
             show_video_id: void 0,
             introduce: void '',
-            favorable: [''],
+            favorable: [{}],
             order: void 0,
             goods: [],
             goods_ids: []
@@ -284,11 +284,12 @@
                         return item.id
                     })
                     if ( !this.$store.state.component.yshiGroupSussess) return
-                    this.fetchParam.favorable.forEach( (item,index) => {
-                        if (!item.reach || !item.discount){
-                            this.fetchParam.favorable.splice(index,1)
+                    // 去除favorable空值
+                    for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
+                        if (!this.fetchParam.favorable[i].reach || !this.fetchParam.favorable[i].discount){
+                            this.fetchParam.favorable.splice(i,1)
                         }
-                    })
+                    }
                     let req = goodsGroupService.createGoodGroup
                     let msg = '添加成功'
                     if (this.fetchParam.id) {
