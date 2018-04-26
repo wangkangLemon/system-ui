@@ -93,8 +93,8 @@
             </el-form-item>
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
-                <template v-if="fetchParam.goods.length">
-                    <el-table class="data-table" :data="fetchParam.goods" border show-summary style="width:100%;" ref="table">
+                <template v-if="goods.length">
+                    <el-table class="data-table" :data="goods" border show-summary style="width:100%;" ref="table">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
                         <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
@@ -127,7 +127,7 @@
                 <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
             </el-form-item>
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
-                          :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
+                          :selectedList="goods" @changeSelected="val=>goods=val">
                 <div slot="search" class="course-search">
                     <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.name"
                             icon="search"
@@ -171,7 +171,7 @@
             let checkPrice = (rule, value, callback) => {
                 var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
                 let pricez = 0
-                this.fetchParam.goods.forEach( item => {
+                this.goods.forEach( item => {
                     pricez = pricez + parseFloat(item.favorable_price)
                 })
                 if (!re.test(value)) {
@@ -183,7 +183,7 @@
                 }
             }
             let checkHas = (rule, value, callback) => {
-                if (!value.length) {
+                if (!this.goods.length) {
                     callback(new Error('不能是空'))
                 } else {
                     callback()
@@ -212,12 +212,16 @@
                 },
                 msg: '',
                 fetchParam: clearFn(),
+                goods: [],
                 disable: false,
                 orderErr : false,
                 pickerOptions: {
+                    // disabledDate(time) {
+                    //     return !_this.fetchParam.end_time ? null
+                    //         : (time.getTime() <= new Date().getTime() && timeUtils.compareDate(time, new Date()) !== 0)
+                    // }
                     disabledDate(time) {
-                        return !_this.fetchParam.end_time ? null
-                            : (time.getTime() <= new Date().getTime() && timeUtils.compareDate(time, new Date()) !== 0)
+                        return time.getTime() <= new Date().getTime() && timeUtils.compareDate(time, new Date()) !== 0
                     }
                 },
                 rules: {
@@ -277,7 +281,18 @@
             }
             xmview.setContentLoading(false)
         },
+        watch: {
+            goods(val) {
+                console.log(val.length)
+                if(val.length >= 1){
+                    this.$nextTick(() => {
+                        this.initTable()
+                    })
+                }
+            }
+        },
         methods: {
+            // 处理windows下 表格合计出多的gutter
             initTable () {
                 this.$refs.table.layout.gutterWidth = 0
             },
@@ -334,7 +349,7 @@
                         return
                     }
                     this.fetchParam.introduce = this.editor.getContent()
-                    this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
+                    this.fetchParam.goods_ids = this.goods.map(item => {
                         return item.id
                     })
                     let req = activityService.createActivity

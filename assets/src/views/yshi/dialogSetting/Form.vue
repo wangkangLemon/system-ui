@@ -102,9 +102,12 @@
                 fetchParam: clearFn(),
                 disable: false,
                 pickerOptions: {
+                    // disabledDate(time) {
+                    //     return !_this.fetchParam.end_time ? null
+                    //         : (time.getTime() <= new Date().getTime() && timeUtils.compareDate(time, new Date()) !== 0)
+                    // }
                     disabledDate(time) {
-                        return !_this.fetchParam.end_time ? null
-                            : (time.getTime() <= new Date().getTime() && timeUtils.compareDate(time, new Date()) !== 0)
+                        return time.getTime() <= new Date().getTime() && timeUtils.compareDate(time, new Date()) !== 0
                     }
                 },
                 rules: {
