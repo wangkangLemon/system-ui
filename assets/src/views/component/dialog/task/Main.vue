@@ -85,10 +85,10 @@
 </template>
 
 <script>
-    import Transfer from '@/views/yshi/component/dialog/Transfer2.vue'
-    import CourseTransfer from '@/views/yshi/component/dialog/transfer/CourseTransfer.vue'
-    import ExamTransfer from '@/views/yshi/component/dialog/transfer/ExamTransfer.vue'
-    import PracticeTransfer from '@/views/yshi/component/dialog/transfer/PracticeTransfer.vue'
+    import Transfer from 'components/dialog/Transfer2.vue'
+    import CourseTransfer from 'components/dialog/transfer/CourseTransfer.vue'
+    import ExamTransfer from 'components/dialog/transfer/ExamTransfer.vue'
+    import PracticeTransfer from 'components/dialog/transfer/PracticeTransfer.vue'
     import Task from './model'
 
     export default {

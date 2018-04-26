@@ -49,6 +49,10 @@
             <el-table-column align="center" width="190" prop="create_time" label="创建时间">
             </el-table-column>
             <el-table-column align="center" width="190" prop="end_time" label="截止时间">
+                <template slot-scope="scope">
+                    <p v-if="scope.row.end_time">{{scope.row.end_time}}</p>
+                    <p v-else>--</p>
+                </template>
             </el-table-column>
             <el-table-column align="center" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">

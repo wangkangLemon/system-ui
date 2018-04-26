@@ -135,8 +135,8 @@
     import UploadFile from 'components/upload/UploadFiles.vue'
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
     import goodsService from 'services/yshi/goodsService'
-    import Task from '@/views/yshi/component/dialog/task/Main.vue'
-    import TaskModel from '@/views/yshi/component/dialog/task/model'
+    import Task from 'components/dialog/task/Main.vue'
+    import TaskModel from 'components/dialog/task/model'
 
     function clearFn () {
         return {

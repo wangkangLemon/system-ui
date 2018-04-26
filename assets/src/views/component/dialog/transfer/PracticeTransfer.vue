@@ -15,41 +15,26 @@
 <template>
     <main id="learning-map-course-container">
         <section class="search">
-            <section>
+<!--             <section>
                 <i>课程类型</i>
                 <el-select 
                     v-model="fetchParam.type" 
                     filterable 
+                    clearable 
                     placeholder="请选择课程类型"
                     @change="fetchData">
                     <el-option label="公开课" value="public"></el-option>
-                    <!-- <el-option label="内训课" value="private"></el-option> -->
+                    <el-option label="内训课" value="private"></el-option>
                 </el-select>
-            </section>
+            </section> -->
             <section>
-                <i>课程名称</i>
+                <i>练习名称</i>
                 <el-input
                     v-model="fetchParam.keyword"
                     suffix-icon="el-icon-search"
                     @keyup.enter.native="fetchData">
                 </el-input>
             </section>
-            <!-- <section>
-                <i>课程载体</i>
-                <el-select 
-                    v-model="fetchParam.type" 
-                    filterable 
-                    clearable
-                    placeholder="请选择课程载体"
-                    @change="fetchData">
-                    <el-option 
-                        v-for="item in TYPE" 
-                        :key="item.value"
-                        :label="item.label" 
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </section> -->
         </section>
         <Transfer 
             ref="transfer"
@@ -57,7 +42,7 @@
             :loading="loading"
             :showHeader="true"
             :isSearch="false"
-            :type="cacheType"
+            :type="type"
             :current-page="fetchParam.page"
             :page-size="fetchParam.page_size"
             :total="total"
@@ -77,27 +62,9 @@
 </template>
 
 <script>
-    import courseService from 'services/courseService'
-    import Transfer from '@/views/yshi/component/dialog/Transfer2.vue'
+    import practiceService from 'services/exam/practiceService'
+    import Transfer from 'components/dialog/Transfer2.vue'
 
-    // const TYPE = [
-    //     {
-    //         label: '视频',
-    //         value: 'video',
-    //     },
-    //     {
-    //         label: 'Word文档',
-    //         value: 'word',
-    //     },
-    //     {
-    //         label: 'PPT文档',
-    //         value: 'ppt',
-    //     },
-    //     {
-    //         label: 'PDF文档',
-    //         value: 'pdf',
-    //     },
-    // ]
     export default {
         components: {
             Transfer
@@ -126,11 +93,7 @@
             this.fetchData()
         },
         mounted () {},
-        computed: {
-            cacheType () {
-                return this.fetchParam.type
-            }
-        },
+        computed: {},
         watch: {
             value (val) {
                 this.selected = val
@@ -149,8 +112,8 @@
         methods: {
             fetchData () {
                 this.loading = true
-                return courseService.getPublicCourselistByName(this.fetchParam).then(ret => {
-                    this.data = ret.data
+                return practiceService.search(this.fetchParam).then(ret => {
+                    this.data = ret.list
                     this.total = ret.total
                     this.loading = false
                 })
@@ -171,7 +134,7 @@
             },
             getCurRow (row, all) {
                 if (this.type) {
-                    row.type = this.cacheType
+                    row.type = this.type
                     row.taskType = this.taskType
                     this.$emit('curRow', row, all)
                 }
@@ -183,13 +146,12 @@
             },
             initFetchParam () {
                 return {
-                    type: 'public',
-                    status: 0,
-                    is_task: -1,
-                    need_testing: -1,
                     keyword: '',
+                    status: 0,
+                    time_start: '',
+                    time_end: '',
                     page: 1,
-                    page_size: 15
+                    page_size: 15,
                 }
             }
         },

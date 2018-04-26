@@ -78,8 +78,8 @@
             </el-form-item>
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
-                <template v-if="fetchParam.goods.length">
-                    <el-table class="data-table" :data="fetchParam.goods" border show-summary style="width:100%;" ref="table">
+                <template v-if="goods.length">
+                    <el-table class="data-table" :data="goods" border show-summary style="width:100%;" ref="table">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
                         <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
@@ -98,7 +98,7 @@
                 <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
             </el-form-item>
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
-                          :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
+                          :selectedList="goods" @changeSelected="val=>goods=val">
                 <div slot="search" class="course-search">
                     <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.name"
                             icon="search"
@@ -136,7 +136,7 @@
     export default {
         data () {
             let checkHas = (rule, value, callback) => {
-                if (!value.length) {
+                if (!this.goods.length) {
                     callback(new Error('不能是空'))
                 } else {
                     callback()
@@ -173,6 +173,7 @@
                     name: void 0,
                 },
                 fetchParam: clearFn(),
+                goods: [],
                 disable: false,
                 moneyarr: [],
                 discountarr: [],
@@ -222,7 +223,7 @@
                         this.moneyarr.push(item.reach)
                         this.discountarr.push(item.discount)
                     })
-                    this.fetchParam.goods = ret.goods
+                    this.goods = ret.goods
                     this.editor && this.editor.setContent(ret.introduce)
                     this.$refs.cont.innerHTML = ret.introduce
                 })
@@ -230,6 +231,16 @@
                 this.disable = false
             }
             xmview.setContentLoading(false)
+        },
+        watch: {
+            goods(val) {
+                console.log(val.length)
+                if(val.length >= 1){
+                    this.$nextTick(() => {
+                        this.initTable()
+                    })
+                }
+            }
         },
         methods: {
             initTable () {
@@ -280,7 +291,7 @@
                         return
                     }
                     this.fetchParam.introduce = this.editor.getContent()
-                    this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
+                    this.fetchParam.goods_ids = this.goods.map(item => {
                         return item.id
                     })
                     if ( !this.$store.state.component.yshiGroupSussess) return
