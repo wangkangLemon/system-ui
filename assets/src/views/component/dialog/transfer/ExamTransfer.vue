@@ -48,7 +48,7 @@
 
 <script>
     import examService from 'services/exam/pagerService'
-    import Transfer from '@/views/yshi/component/dialog/Transfer2.vue'
+    import Transfer from 'components/dialog/Transfer2.vue'
 
     export default {
         components: {
