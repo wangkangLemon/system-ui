@@ -269,6 +269,7 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    this.goods = ret.goods
                     this.$nextTick(() => {
                         this.initTable()
                     })
