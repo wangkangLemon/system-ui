@@ -197,6 +197,8 @@
                         callback(new Error('请选择视频'))
                     }
                 } else {
+                    this.fetchParam.show_video_id = 0
+                    this.fetchParam.show_video_name = ''
                     callback()
                 }
             }
@@ -366,8 +368,9 @@
                     }).catch((ret) => {
                         if (ret.message === 'exist'){
                             this.orderErr = true
+                        } else {
+                            xmview.showTip('error', ret.message)
                         }
-                        xmview.showTip('error', ret.message)
                     })
                 })
                 

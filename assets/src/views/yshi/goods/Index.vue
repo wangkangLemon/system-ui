@@ -38,7 +38,7 @@
 <template>
     <main id="newcourse-course-public-container">
         <section class="manage-container">
-            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-goods-add'})"><i>添加商品</i>
+            <el-button type="primary" icon="el-icon-plus" @click="$router.push({name: 'yshi-goods-add'})"><i>添加单品</i>
             </el-button>
         </section>
 
@@ -81,7 +81,7 @@
                 </template>
             </el-table-column>
         </el-table>
-
+        <ErrorDialog :error="error"></ErrorDialog>
         <el-pagination class="pagin"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -97,6 +97,7 @@
 <script>
 import goodsService from 'services/yshi/goodsService'
 import DateRange from 'components/form/DateRangePicker.vue'
+import ErrorDialog from 'components/dialog/ErrorDialog.vue'
 import * as _ from 'utils/common'
 function getFetchParam () {
     return {
@@ -117,6 +118,11 @@ export default {
             dialogTree: {
                 isShow: false,
                 selectedId: void 0,
+            },
+            error: {
+                showDialog: false,
+                message: '',
+                data: []
             }
         }
     },
@@ -155,6 +161,10 @@ export default {
                 goodsService.delete(row.id).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.fetchData()
+                }).catch(ret => {
+                    this.error.message = ret.data.message
+                    this.error.data = ret.data.list
+                    this.error.showDialog = true
                 })
             })
         },
