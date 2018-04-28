@@ -98,7 +98,7 @@ class CourseService {
         is_task,
         time_start = '',
         time_end = '',
-        albumid = '',
+        album_id = '',
         category_id = '',
         companyid = '',
         need_testing = '',
@@ -114,7 +114,7 @@ class CourseService {
             is_task,
             time_start,
             time_end,
-            albumid,
+            album_id,
             category_id,
             need_testing, // 课后考试 不赋值则表示全部，0为不需要，1为需要
             page,

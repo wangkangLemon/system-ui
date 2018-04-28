@@ -169,6 +169,16 @@
     export default {
         data () {
             let checkPrice = (rule, value, callback) => {
+                let valuestr = value.toString()
+                let moneystr = ''
+                if(valuestr.indexOf('.') != -1){
+                    moneystr = valuestr.split(".")[0]
+                }else {
+                    moneystr = valuestr
+                }
+                if (valuestr.length > 7){
+                    callback(new Error('金额不能高于百万'))
+                }
                 var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
                 let pricez = 0
                 this.goods.forEach( item => {
