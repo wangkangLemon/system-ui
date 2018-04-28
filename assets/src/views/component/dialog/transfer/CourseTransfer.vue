@@ -189,7 +189,8 @@
                     need_testing: -1,
                     keyword: '',
                     page: 1,
-                    page_size: 15
+                    page_size: 15,
+                    album_id: -1
                 }
             }
         },
