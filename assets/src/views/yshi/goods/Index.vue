@@ -169,6 +169,6 @@ export default {
             })
         },
     },
-    components: { DateRange }
+    components: { DateRange, ErrorDialog}
 }
 </script>

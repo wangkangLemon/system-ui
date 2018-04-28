@@ -11,6 +11,7 @@
         margin-top: 10px;
         li {
             margin-bottom: 7px;
+            list-style: none;
         }
     }
 </style>
