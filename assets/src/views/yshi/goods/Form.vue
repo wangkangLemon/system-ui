@@ -162,6 +162,16 @@
                 if (!re.test(value)) {
                     return callback(new Error('大于零的最多两位小数'))
                 }
+                let valuestr = value.toString()
+                let moneystr = ''
+                if(valuestr.indexOf('.') != -1){
+                    moneystr = valuestr.split(".")[0]
+                }else {
+                    moneystr = valuestr
+                }
+                if (valuestr.length > 7){
+                    callback(new Error('金额不能高于百万'))
+                }
                 setTimeout(() => {
                     if (value > parseFloat(value1)) {
                         callback(new Error('优惠价格不能高于商品定价'))
@@ -174,6 +184,16 @@
                 var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
                 if (!re.test(value)) {
                     return callback(new Error('大于零的最多两位小数'))
+                }
+                let valuestr = value.toString()
+                let moneystr = ''
+                if(valuestr.indexOf('.') != -1){
+                    moneystr = valuestr.split(".")[0]
+                }else {
+                    moneystr = valuestr
+                }
+                if (valuestr.length > 7){
+                    callback(new Error('金额不能多余7位'))
                 }
                 callback()
             }
