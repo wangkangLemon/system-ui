@@ -19,7 +19,7 @@ export default {
                 })
             },
             meta: {
-                title: '商品管理',
+                title: '单品管理',
                 noback: true
             }
         },

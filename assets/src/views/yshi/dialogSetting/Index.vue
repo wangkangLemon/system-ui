@@ -97,6 +97,7 @@
 import toastService from 'services/yshi/toastService'
 import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
+import * as timeUtils from 'utils/timeUtils'
 function getFetchParam () {
     return {
         page: 1,
@@ -147,6 +148,14 @@ export default {
         },
         // 下线 或者上线课程 0为下线，1为上线
         offline (index, row) {
+            if(row.status == 0) {
+                let date = new Date(row.end_time)
+                let compare = timeUtils.compareDateTime(date, new Date())
+                if (compare !== 1){
+                    xmview.showTip('error', '截止时间已到期，请先修改。')
+                    return
+                }
+            }
             let txt = row.status == 1 ? '撤销' : '启动'
             let finalStatus = row.status == 0 ? 1 : 0
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
