@@ -115,7 +115,7 @@
                                    @click="()=>$router.push({name:'usersys-park-sellingcount', query: {prodId: scope.row.id}})">销量 <!--a-->
                         </el-button>
                         <el-button type="text" size="small"
-                                   @click="$router.push({name:'usersys-park-publishprod', query: {id: scope.row.id},params: {prod: scope.row}})">
+                                   @click="$router.push({name:'usersys-park-publishprod', query: {id: scope.row.id}})">
                             编辑 <!--a-->
                         </el-button>
                         <el-button type="text" size="small" @click="disableProd(scope.row)">

@@ -31,10 +31,10 @@
                 <el-input v-model.number="fetchParam.quota" placeholder="设置卡券的面值"></el-input>
             </el-form-item>
             <el-form-item label="天数" v-if="isShowDay" prop="day">
-                <el-input type="number" v-model.number="fetchParam.day" placeholder="设置卡券的面值"></el-input>
+                <el-input type="number" v-model.number="fetchParam.day" placeholder="设置卡券的天数"></el-input>
             </el-form-item>
             <el-form-item label="倍数" v-if="isShowTimes" prop="quota">
-                <el-input type="number" v-model.number="fetchParam.quota" placeholder="设置卡券的面值"></el-input>
+                <el-input type="number" v-model.number="fetchParam.quota" placeholder="设置卡券的倍数"></el-input>
             </el-form-item>
             <el-form-item label="商品名称" prop="name">
                 <el-input :disabled="fetchParam.id != null" v-model="fetchParam.name"
@@ -130,15 +130,16 @@
             }
         },
         mounted () {
-            this.fetchParam = this.$route.params.prod || initParam()
-//            this.fetchParam.id = this.$route.query.id
-            this.fetchParam.quota = this.fetchParam.quota ? parseFloat(this.fetchParam.quota) : ''
-            this.fetchParam.day = Number(this.fetchParam.day)
-            debugger
-            if (this.fetchParam.id) xmview.setContentTile('编辑商品-用户体系管理')
-            this.$refs.prodCategory.fetchData().then(() => {
-                xmview.setContentLoading(false)
-            })
+            this.fetchParam.id = this.$route.query.id
+            if (this.fetchParam.id) {
+                xmview.setContentTile('编辑商品-用户体系管理')
+                parkService.prodDetail({id:this.fetchParam.id}).then((ret) => {
+                    this.fetchParam = ret
+                    this.fetchParam.quota = this.fetchParam.quota ? parseFloat(this.fetchParam.quota) : ''
+                    this.fetchParam.day = Number(this.fetchParam.day)
+                })
+            }
+            xmview.setContentLoading(false)
         },
         methods: {
             // 裁切完毕后的回调
