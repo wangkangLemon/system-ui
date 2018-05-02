@@ -4,9 +4,9 @@ import config from '../../utils/config'
 const urlPre = config.apiHost + '/sys/coupon'
 
 class CouponService {
-    // 搜索
+    // 搜索优惠券列表 name,id
     search({ name = '', page, page_size }) {
-        let url = urlPre + '/search'
+        let url = urlPre + '/search/name'
         return api.get(url, { name, page, page_size }, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
