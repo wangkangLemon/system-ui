@@ -193,7 +193,7 @@
                     moneystr = valuestr
                 }
                 if (valuestr.length > 7){
-                    callback(new Error('金额不能多余7位'))
+                    callback(new Error('金额不能高于百万'))
                 }
                 callback()
             }
