@@ -24,6 +24,9 @@
                 <ProdCategorySelect :disabled="fetchParam.id != null" ref="prodCategory"
                                     v-model="fetchParam.category"></ProdCategorySelect>
             </el-form-item>
+            <el-form-item label="优惠券" v-if="isShowCoupon" prop="coupon_id">
+                <CouponSelect v-model="fetchParam.coupon_id"></CouponSelect>
+            </el-form-item>
             <el-form-item label="面值" v-if="isShowMianzhi" prop="quota">
                 <el-input v-model.number="fetchParam.quota" placeholder="设置卡券的面值"></el-input>
             </el-form-item>
@@ -69,6 +72,7 @@
     import ImgCropper from '../../component/upload/ImagEcropperInput.vue'
     import parkService from '../../../services/usersystem/parkService'
     import ProdCategorySelect from '../../component/select/ProdCategory.vue'
+    import CouponSelect from 'components/select/Coupon.vue'
     export default{
         name: 'usersystem-park-publishprod',
         data () {
@@ -85,6 +89,7 @@
                 isShowMianzhi: false, // 是否显示面值
                 isShowDay: false, // 是否显示 天数
                 isShowTimes: false, // 是否显示 倍数
+                isShowCoupon: false, // 是否显示优惠券
             }
         },
         watch: {
@@ -92,6 +97,7 @@
                 this.isShowMianzhi = false
                 this.isShowDay = false
                 this.isShowTimes = false
+                this.isShowCoupon = false
 
                 delete this.rules.quota
                 delete this.rules.day
@@ -110,6 +116,16 @@
                 if (val === 'growth_plus_card') {
                     this.isShowDay = true
                     this.rules['day'] = {required: true, type: 'number', message: '请输入天数', trigger: 'blur'}
+                }
+                // 显示优惠券
+                if (val === 'discount_coupon') {
+                    this.isShowCoupon = true
+                    this.rules['coupon_id'] = {required: true, validator: ((rule, value, callback) => {
+                        if(!value){
+                            callback(new Error("请选择优惠券"))
+                        }
+                        callback()
+                    }), trigger: 'change'}
                 }
             }
         },
@@ -150,7 +166,7 @@
                 })
             }
         },
-        components: {ImgCropper, ProdCategorySelect}
+        components: {ImgCropper, ProdCategorySelect, CouponSelect}
     }
 
     function initParam () {
@@ -166,6 +182,7 @@
             quota: void 0,
             day: void 0,
             id: void 0,
+            coupon_id: void 0
         }
     }
 </script>
