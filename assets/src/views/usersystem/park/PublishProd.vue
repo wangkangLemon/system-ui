@@ -134,6 +134,7 @@
 //            this.fetchParam.id = this.$route.query.id
             this.fetchParam.quota = this.fetchParam.quota ? parseFloat(this.fetchParam.quota) : ''
             this.fetchParam.day = Number(this.fetchParam.day)
+            debugger
             if (this.fetchParam.id) xmview.setContentTile('编辑商品-用户体系管理')
             this.$refs.prodCategory.fetchData().then(() => {
                 xmview.setContentLoading(false)

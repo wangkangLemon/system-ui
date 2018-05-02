@@ -202,12 +202,14 @@
                         <el-option label="成长值加倍卡" value="growth_plus_card"></el-option>
                         <el-option label="实物" value="entity"></el-option>
                         <el-option label="外部虚拟卡券" value="coupon"></el-option>
+                        <el-option label="优惠券" value="discount_coupon"></el-option>
                     </el-select>
-                    <el-select @change="getStockCount" v-if="form1.category"
+                    <el-select @change="getStockCount" v-if="form1.category && form1.category != 'discount_coupon'"
                                v-model="form1.product_id">
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products"
                                    :key="index"></el-option>
                     </el-select>
+                    <CouponSelect v-model="form1.product_id" v-if="form1.category && form1.category == 'discount_coupon'"></CouponSelect>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form1.product_id) && form1.product_id > 0">
                     {{stockCount}}
@@ -242,9 +244,11 @@
     import ActivityService from '../../../services/usersystem/activityService'
     import ParkService from '../../../services/usersystem/parkService'
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
+    import CouponSelect from 'components/select/Coupon.vue'
     export default {
         components: {
-            ImagEcropperInput
+            ImagEcropperInput,
+            CouponSelect
         },
         data () {
             return {

@@ -1,7 +1,7 @@
 import * as api from '../api'
 import authUtils from '../../utils/authUtils'
 import config from '../../utils/config'
-const urlPre = config.apiHost + '/coupon'
+const urlPre = config.apiHost + '/sys/coupon'
 
 class CouponService {
     // 搜索
