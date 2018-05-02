@@ -34,7 +34,6 @@
         },
         methods: {
             handleChange(val) {
-                console.log(val)
                 this.currVal = val
                 this.$emit('input', val)
                 this.$emit('change', val)

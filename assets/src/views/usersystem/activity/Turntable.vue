@@ -209,7 +209,9 @@
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products"
                                    :key="index"></el-option>
                     </el-select>
-                    <CouponSelect v-model="form1.product_id" v-if="form1.category && form1.category == 'discount_coupon'"></CouponSelect>
+                    <template v-if="form1.category && form1.category == 'discount_coupon'">
+                        <CouponSelect v-model="form1.product_id" placeholder="" @change="getStockCount"></CouponSelect>
+                    </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form1.product_id) && form1.product_id > 0">
                     {{stockCount}}
@@ -263,7 +265,8 @@
 //                    url: '',
                     description: ''
                 },
-                form1: {},
+                form1: {
+                },
                 cloneForm1: {},
                 rules: {
                     title: {required: true, message: '必填项', trigger: 'blur'},
@@ -305,7 +308,7 @@
                         }
                     })
                 }
-            }
+            },
         },
         methods: {
             // 获取库存

@@ -25,7 +25,8 @@
                                     v-model="fetchParam.category"></ProdCategorySelect>
             </el-form-item>
             <el-form-item label="优惠券" v-if="isShowCoupon" prop="coupon_id">
-                <CouponSelect v-model="fetchParam.coupon_id"></CouponSelect>
+                <CouponSelect @change="val=>{fetchParam.coupon_id=val}" :placeholder="fetchParam.coupon_name"></CouponSelect>
+                <!-- <i>{{typeof fetchParam.coupon_id}}</i> -->
             </el-form-item>
             <el-form-item label="面值" v-if="isShowMianzhi" prop="quota">
                 <el-input v-model.number="fetchParam.quota" placeholder="设置卡券的面值"></el-input>
@@ -137,9 +138,12 @@
                     this.fetchParam = ret
                     this.fetchParam.quota = this.fetchParam.quota ? parseFloat(this.fetchParam.quota) : ''
                     this.fetchParam.day = Number(this.fetchParam.day)
+                    // this.fetchParam.coupon_id = ret.coupon_name
                 })
             }
-            xmview.setContentLoading(false)
+            this.$refs.prodCategory.fetchData().then(() => {
+                xmview.setContentLoading(false)
+            })
         },
         methods: {
             // 裁切完毕后的回调
