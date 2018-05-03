@@ -210,10 +210,14 @@
                         <el-option label="成长值加倍卡" value="growth_plus_card"></el-option>
                         <el-option label="实物" value="entity"></el-option>
                         <el-option label="外部虚拟卡券" value="coupon"></el-option>
+                        <el-option label="优惠券" value="discount_coupon"></el-option>
                     </el-select>
-                    <el-select @change="getStockCount" v-if="form.product_id && form.type == 'product'" v-model="form.product_id">
+                    <el-select @change="getStockCount" v-if="form.product_id && form.type == 'product' && form.category != 'discount_coupon'" v-model="form.product_id">
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
+                    <template v-if="form.category && form.category == 'discount_coupon'">
+                        <CouponSelect v-model="form.product_id" placeholder="" @change="getStockCount"></CouponSelect>
+                    </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form.product_id) && form.product_id > 0">
                     {{stockCount}}
@@ -247,10 +251,12 @@
     import ToggleMonth from '../component/ToggleMonth.vue'
     import MonthCalendar from '../component/MonthCalendar'
     import clone from 'clone'
+    import CouponSelect from 'components/select/CouponProduct.vue'
     export default {
         components: {
             ToggleMonth,
-            MonthCalendar
+            MonthCalendar,
+            CouponSelect
         },
         data () {
             return {

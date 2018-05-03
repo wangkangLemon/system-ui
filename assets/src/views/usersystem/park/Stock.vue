@@ -244,7 +244,7 @@
                 this.isShowImport = false
                 this.isShowAdd = false
                 let cat = this.prod.category
-                if (cat === 'sign_card' || cat === 'wheel_card' || cat === 'price_plus_card' || cat === 'growth_charge_card' || cat === 'growth_plus_card' || cat === 'entity') this.isShowAdd = true
+                if (cat === 'sign_card' || cat === 'wheel_card' || cat === 'price_plus_card' || cat === 'growth_charge_card' || cat === 'growth_plus_card' || cat === 'entity' || cat === 'discount_coupon') this.isShowAdd = true
                 if (cat === 'coupon') this.isShowImport = true
                 if (cat === 'entity') this.isShowImport = true
             })
