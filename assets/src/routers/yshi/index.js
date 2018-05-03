@@ -1,5 +1,10 @@
 //  职业药师
 const pathPre = '/yshi'
+import goods from './goods'
+import group from './group'
+import activity from './activity'
+import dialog from './dialog'
+import coupon from './coupon'
 
 export default {
     path: pathPre,
@@ -10,204 +15,14 @@ export default {
     },
     children: [
         // 商品管理
-        {
-            path: 'goods',
-            name: 'yshi-goods',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/goods/Index.vue'))
-                })
-            },
-            meta: {
-                title: '单品管理',
-                noback: true
-            }
-        },
-        {
-            path: 'goods/add',
-            name: 'yshi-goods-add',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/goods/Form.vue'))
-                })
-            },
-            meta: {
-                title: '添加售卖商品'
-            }
-        },
-        {
-            path: 'goods/edit/:good_id',
-            name: 'yshi-goods-edit',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/goods/Form.vue'))
-                })
-            },
-            meta: {
-                title: '编辑售卖商品'
-            }
-        },
-        {
-            path: 'goods/preview/:good_id',
-            name: 'yshi-goods-preview',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/goods/Form.vue'))
-                })
-            },
-            meta: {
-                title: '查看售卖商品'
-            }
-        },
+        ...goods,
         // 组合售卖
-        {
-            path: 'group',
-            name: 'yshi-group',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/group/Index.vue'))
-                })
-            },
-            meta: {
-                title: '组合售卖管理',
-                noback: true
-            }
-        },
-        {
-            path: 'group/add',
-            name: 'yshi-group-add',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/group/Form.vue'))
-                })
-            },
-            meta: {
-                title: '创建组合售卖'
-            }
-        },
-        {
-            path: 'group/edit/:group_id',
-            name: 'yshi-group-edit',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/group/Form.vue'))
-                })
-            },
-            meta: {
-                title: '编辑组合售卖'
-            }
-        },
-        {
-            path: 'group/preview/:group_id',
-            name: 'yshi-group-preview',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/group/Form.vue'))
-                })
-            },
-            meta: {
-                title: '查看组合售卖'
-            }
-        },
+        ...group,
         // 活动管理
-        {
-            path: 'activity',
-            name: 'yshi-activity',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/activity/Index.vue'))
-                })
-            },
-            meta: {
-                title: '打包售卖',
-                noback: true
-            }
-        },
-        {
-            path: 'activity/add',
-            name: 'yshi-activity-add',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/activity/Form.vue'))
-                })
-            },
-            meta: {
-                title: '创建打包售卖'
-            }
-        },
-        {
-            path: 'activity/edit/:activity_id',
-            name: 'yshi-activity-edit',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/activity/Form.vue'))
-                })
-            },
-            meta: {
-                title: '编辑打包售卖'
-            }
-        },
-        {
-            path: 'activity/preview/:activity_id',
-            name: 'yshi-activity-preview',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/activity/Form.vue'))
-                })
-            },
-            meta: {
-                title: '查看打包售卖'
-            }
-        },
+        ...activity,
         // 弹框管理
-        {
-            path: 'dialog',
-            name: 'yshi-dialog',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/dialogSetting/Index.vue'))
-                })
-            },
-            meta: {
-                title: '弹框设置',
-                noback: true
-            }
-        },
-        {
-            path: 'dialog/add',
-            name: 'yshi-dialog-add',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/dialogSetting/Form.vue'))
-                })
-            },
-            meta: {
-                title: '创建弹框'
-            }
-        },
-        {
-            path: 'dialog/edit/:dialog_id',
-            name: 'yshi-dialog-edit',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/dialogSetting/Form.vue'))
-                })
-            },
-            meta: {
-                title: '编辑弹框'
-            }
-        },
-        {
-            path: 'dialog/preview/:dialog_id',
-            name: 'yshi-dialog-preview',
-            component: resolve => {
-                require.ensure([], () => {
-                    resolve(require('@/views/yshi/dialogSetting/Form.vue'))
-                })
-            },
-            meta: {
-                title: '查看弹框'
-            }
-        }
+        ...dialog,
+        // 优惠券设置
+        ...coupon
     ]
 }
