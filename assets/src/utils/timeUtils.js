@@ -134,9 +134,14 @@ export function date2Str (date, split = '-', {hashour = false, hasDay = true} = 
     let ret = [date.getFullYear(), fillZero((date.getMonth() + 1), 2)]
     if (hasDay) {
         ret.push(fillZero(date.getDate(), 2))
+        ret = ret.join(split)
+    }
+    if (hashour) {
+        let ret2 = [fillZero(date.getHours(), 2), fillZero(date.getMinutes(), 2), fillZero(date.getSeconds(), 2)]
+        ret2 = ret2.join(':')
+        ret = ret + ' ' + ret2
     }
 
-    ret = ret.join(split)
     return ret
 }
 
