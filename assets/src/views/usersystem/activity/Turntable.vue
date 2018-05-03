@@ -246,7 +246,7 @@
     import ActivityService from '../../../services/usersystem/activityService'
     import ParkService from '../../../services/usersystem/parkService'
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
-    import CouponSelect from 'components/select/Coupon.vue'
+    import CouponSelect from 'components/select/CouponProduct.vue'
     export default {
         components: {
             ImagEcropperInput,

@@ -134,6 +134,7 @@
     import goodsService from 'services/yshi/goodsService'
     import Task from 'components/dialog/task/Main.vue'
     import TaskModel from 'components/dialog/task/model'
+    import formCheck from 'utils/formCheckUtils'
 
     function clearFn () {
         return {
@@ -176,23 +177,6 @@
                         callback()
                     }
                 }, 1000)
-            }
-            let checkPrice = (rule, value, callback) => {
-                var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
-                if (!re.test(value)) {
-                    return callback(new Error('大于零的最多两位小数'))
-                }
-                let valuestr = value.toString()
-                let moneystr = ''
-                if(valuestr.indexOf('.') != -1){
-                    moneystr = valuestr.split(".")[0]
-                }else {
-                    moneystr = valuestr
-                }
-                if (valuestr.length > 7){
-                    callback(new Error('金额不能高于百万'))
-                }
-                callback()
             }
             let checkHas = (rule, value, callback) => {
                 if (!value.length) {
@@ -239,7 +223,9 @@
                     ],
                     price: [
                         {type: 'number', required: true, trigger: 'blur', message: '请输入商品定价'},
-                        {validator: checkPrice}
+                        {validator: (rule, value, callbac) => {
+                            formCheck.checkPrice(rule, value, callbac)
+                        }}
                     ],
                     transferRight: [
                         {required: true, validator: checkHas, trigger: 'blur'}
