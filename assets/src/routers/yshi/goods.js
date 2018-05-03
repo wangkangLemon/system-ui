@@ -21,7 +21,7 @@ export default [
             })
         },
         meta: {
-            title: '添加售卖商品'
+            title: '添加售卖单品'
         }
     },
     {
@@ -33,7 +33,7 @@ export default [
             })
         },
         meta: {
-            title: '编辑售卖商品'
+            title: '编辑售卖单品'
         }
     },
     {
@@ -45,7 +45,7 @@ export default [
             })
         },
         meta: {
-            title: '查看售卖商品'
+            title: '查看售卖单品'
         }
     }
 ]

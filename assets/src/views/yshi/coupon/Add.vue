@@ -4,6 +4,12 @@
        @extend %content-container;
         .form {
             width: 50%;
+            .line {
+                text-align: center;
+            }
+            .input-append {
+                vertical-align: text-bottom;
+            }
         }
     }
 </style>
@@ -15,30 +21,33 @@
                 <el-input v-model="ruleForm.name"></el-input>
             </el-form-item>
             <el-form-item label="优惠金额" prop="money">
-                <el-input-number :controls="false" type="number" v-model="ruleForm.money"></el-input-number>
+                <el-input-number :controls="false" type="number" v-model="ruleForm.money">
+                </el-input-number>
+                <span class="input-append">元</span>
             </el-form-item>
             <el-form-item label="使用门槛" prop="threshold">
-                <el-input-number :controls="false" type="number" v-model="ruleForm.threshold"></el-input-number>
+                <el-input-number :controls="false" type="number" v-model="ruleForm.threshold">
+                </el-input-number>
+                <span class="input-append">元</span>
             </el-form-item>
             <el-form-item label="使用时间">
-                <DateRange 
+<!--                 <DateRange 
                     :start="ruleForm.start_time" 
                     :end="ruleForm.end_time" 
                     @changeStart="val => {ruleForm.start_time=val}" 
                     @changeEnd="val => {ruleForm.end_time=val}">
-                </DateRange>
-                <!-- <el-col :span="11">
+                </DateRange> -->
+                <el-col :span="11">
                     <el-form-item prop="start_time">
-                        <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.start_time" style="width: 100%;"></el-date-picker>
-
+                        <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.start_time" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col class="line" :span="2">-</el-col>
                 <el-col :span="11">
                     <el-form-item prop="end_time">
-                        <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.end_time" style="width: 100%;"></el-time-picker>
+                        <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.end_time" style="width: 100%;"></el-date-picker>
                     </el-form-item>
-                </el-col> -->
+                </el-col>
             </el-form-item>
             <el-form-item label="指定商品" prop="">
                 <el-button type='primary' @click="chooseGoods">选择商品</el-button>
@@ -77,6 +86,7 @@
     import couponService from 'services/yshi/couponService'
     import DateRange from 'components/form/DateRangePicker.vue'
     import Task from 'components/dialog/task2/Main.vue'
+    import { date2Str } from 'utils/timeUtils'
 
     export default {
         components: {
@@ -92,6 +102,14 @@
         computed: {},
         watch: {},
         data () {
+            const timeValidator = (rule, value, callback) => {
+                let start_time = Date.parse(this.ruleForm.start_time)
+                let end_time = Date.parse(this.ruleForm.end_time)
+                let handleTime = new HandleTime()
+                rule.field === 'start_time'
+                    ? handleTime.handleStartTime(start_time, end_time, callback)
+                    : handleTime.handleEndTime(start_time, end_time, callback)
+            }
             return {
                 ruleForm: {
                     name: '',
@@ -106,6 +124,8 @@
                         {required: true, message: '请输入名称', trigger: 'blur'}
                     ],
                     money: { required: true, message: '请输入金额' },
+                    start_time: { validator: timeValidator },
+                    end_time: { validator: timeValidator },
                 },
                 transferRight: [],  // 从组件功能上命名，即transfer右边选中的数据
                 showGoodsDialog: false,
@@ -121,20 +141,57 @@
             submitForm (formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        this.ruleForm.goods_list = this.transferRight.map(item => {
-                            return {
-                                goods_id: item.id,
-                                goods_type: item.type
-                            }
-                        })
-                        couponService.addCoupon(this.ruleForm).then(() => {
+                        let param = this.handleParam(this.ruleForm)
+                        couponService.addCoupon(param).then(() => {
                             this.$router.back()
                         })
                     }
                 })
+            },
+            handleParam (param) {
+                let result = {}
+                result.goods_list = this.transferRight.map(item => {
+                    return {
+                        goods_id: item.id,
+                        goods_type: item.type
+                    }
+                })
+                for (let i in param) {
+                    if (~['money', 'threshold'].indexOf(i)) {
+                        result[i] = param[i] * 100
+                    } else if (~['start_time', 'end_time'].indexOf(i)) {
+                        result[i] = date2Str(param[i], '-', { hashour: true })
+                    } else {
+                        result[i] = param[i]
+                    }
+                }
+                return result
             }
         },
         filters: {},
         directives: {},
     }
+    class HandleTime {
+        constructor () {
+            if (!HandleTime.single) {
+                HandleTime.single = this
+            }
+            return HandleTime.single
+        }
+        handleStartTime (start_time, end_time, callback) {
+            if (start_time > end_time) {
+                callback(new Error('开始时间大于结束时间，请修改'))
+            } else {
+                callback()
+            }
+        }
+        handleEndTime (start_time, end_time, callback) {
+            if (end_time < start_time) {
+                callback(new Error('结束时间小于开始时间，请修改'))
+            } else {
+                callback()
+            }
+        }
+    }
+    HandleTime.single = null
 </script>
