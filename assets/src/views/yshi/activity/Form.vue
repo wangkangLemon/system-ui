@@ -265,7 +265,6 @@
         },
         watch: {
             'fetchParam.goods'(val) {
-                console.log(val.length)
                 if(val.length >= 1){
                     this.$nextTick(() => {
                         this.initTable()
