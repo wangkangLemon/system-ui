@@ -19,9 +19,19 @@ class CouponService {
         })
     }
     // 搜索优惠券名称
-    searchName () {
+    searchName ({
+        name,
+        page,
+        page_size
+    }) {
         let url = urlPre + '/search/name'
-        return api.get(url).then(ret => ret.data)
+        return api.get(url, { name, page, page_size }, false).then(ret => {
+            if (ret.code == 0) {
+                return ret.data
+            } else {
+                return Promise.reject(ret)
+            }
+        })
     }
     // 发放优惠券
     putCoupon ({
