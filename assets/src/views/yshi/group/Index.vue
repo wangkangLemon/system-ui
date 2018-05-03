@@ -50,8 +50,8 @@
             <section>
                 <i>状态</i>
                 <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                    <el-option label="已上线" value="1"></el-option>
-                    <el-option label="已下线" value="0"></el-option>
+                    <el-option label="已上线" value="2"></el-option>
+                    <el-option label="已下线" value="1"></el-option>
                 </el-select>
             </section>
             <DateRange title="创建时间" :start="fetchParam.start_time" :end="fetchParam.end_time" @changeStart="val=> {fetchParam.start_time=val}" @changeEnd="val=> {fetchParam.end_time=val}" :change="fetchData">
@@ -78,7 +78,7 @@
             </el-table-column>
             <el-table-column align="center" width="100" label="状态">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status == 1" type="success">已上线</el-tag>
+                    <el-tag v-if="scope.row.status == 2" type="success">已上线</el-tag>
                     <el-tag v-else type="info">已下线</el-tag>
                 </template>
             </el-table-column>
@@ -93,20 +93,20 @@
                         @click="$router.push({name: 'yshi-group-edit', params: {group_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 1">
+                        :disabled="scope.row.status == 2">
                         编辑
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small">
-                        <i>{{ scope.row.status == 0 ? '上线' : '下线' }}</i>
+                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 1">
+                        :disabled="scope.row.status == 2">
                         删除
                     </el-button>
                 </template>
@@ -132,7 +132,7 @@ import * as _ from 'utils/common'
 function getFetchParam () {
     return {
         name: void '',
-        status: void 0, // 0 下线，1 正常
+        status: void 0, // 1 下线，2 上线
         start_time: void 0,
         end_time: void 0,
         page: 1,
@@ -169,7 +169,7 @@ export default {
         fetchData (val) {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
-            fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
+            fetchParam.status = (!fetchParam.status && fetchParam.status !== 1) ? 0 : fetchParam.status
             return goodsGroupService.searchGoodsGroup(fetchParam).then((ret) => {
                 this.data = ret.list
                 this.total = ret.total
@@ -179,8 +179,8 @@ export default {
         },
         // 下线  0为下线，1为上线
         offline (index, row) {
-            let txt = row.status == 1 ? '下线' : '上线'
-            let finalStatus = row.status == 0 ? 1 : 0
+            let txt = row.status == 2 ? '下线' : '上线'
+            let finalStatus = row.status == 1 ? 2 : 1
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                 goodsGroupService.statusline(row.id, finalStatus).then((ret) => {
                     row.status = finalStatus

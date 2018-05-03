@@ -61,20 +61,20 @@
                         @click="$router.push({name: 'yshi-dialog-edit', params: {dialog_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 1">
+                        :disabled="scope.row.status == 2">
                         编辑
                     </el-button>
                     <el-button 
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small">
-                        <i>{{ scope.row.status == 0 ? '启动' : '撤销' }}</i>
+                        <i>{{ scope.row.status == 1 ? '启动' : '撤销' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 1">
+                        :disabled="scope.row.status == 2">
                         删除
                     </el-button>
                 </template>
@@ -148,7 +148,7 @@ export default {
         },
         // 下线 或者上线课程 0为下线，1为上线
         offline (index, row) {
-            if(row.status == 0) {
+            if(row.status == 1) {
                 let date = new Date(row.end_time)
                 let compare = timeUtils.compareDateTime(date, new Date())
                 if (compare !== 1){
@@ -156,8 +156,8 @@ export default {
                     return
                 }
             }
-            let txt = row.status == 1 ? '撤销' : '启动'
-            let finalStatus = row.status == 0 ? 1 : 0
+            let txt = row.status == 2 ? '撤销' : '启动'
+            let finalStatus = row.status == 1 ? 2 : 1
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                 toastService.statusline(row.id, finalStatus).then((ret) => {
                     row.status = finalStatus
