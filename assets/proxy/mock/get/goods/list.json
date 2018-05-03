@@ -3,7 +3,7 @@
     "message": "this is the success message",
     "data": {
         "list":[
-            {"id":111,
+            {"id":3,
             "name":"中药学知识",
             "object_count":3,
             "price":100,
@@ -11,7 +11,7 @@
             "create_time":"2015"
             },
             {
-                "id":222,
+                "id":4,
                 "name":"中药学知识",
                 "object_count":3,
                 "price":100,

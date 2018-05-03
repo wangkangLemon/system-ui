@@ -35,9 +35,6 @@
             display: inline-block;
             width: 120px !important;
         }
-        .el-dialog--small{
-            width: 80%;
-        }
         .el-input-number{
             .el-input__inner{
                 float: left;

@@ -43,7 +43,7 @@
                 let name = val
                 let page = parseInt(length / this.pageSize) + 1
                 let page_size = this.pageSize
-                return couponService.search({name, page, page_size})
+                return couponService.searchName({name, page, page_size})
             }
         }
     }

@@ -25,7 +25,7 @@
                                     v-model="fetchParam.category"></ProdCategorySelect>
             </el-form-item>
             <el-form-item label="优惠券" v-if="isShowCoupon" prop="coupon_id">
-                <CouponSelect @change="val=>{fetchParam.coupon_id=val}" :placeholder="fetchParam.coupon_name"></CouponSelect>
+                <CouponSelect @change="val=>{fetchParam.coupon_id=val}" :value="fetchParam.coupon_id" :placeholder="fetchParam.coupon_name"></CouponSelect>
                 <!-- <i>{{typeof fetchParam.coupon_id}}</i> -->
             </el-form-item>
             <el-form-item label="面值" v-if="isShowMianzhi" prop="quota">

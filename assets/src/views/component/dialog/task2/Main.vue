@@ -15,7 +15,7 @@
                     border-bottom: none;
                 }
                 position: absolute;
-                top: 85px;
+                top: 31px;
                 right: 55px;
                 height: 500px;
                 width: 42%;
@@ -88,25 +88,28 @@
 
 <script>
     import Transfer from 'components/dialog/Transfer2.vue'
-    import CourseTransfer from 'components/dialog/transfer/CourseTransfer.vue'
-    import ExamTransfer from 'components/dialog/transfer/ExamTransfer.vue'
-    import PracticeTransfer from 'components/dialog/transfer/PracticeTransfer.vue'
-    import Task from './model'
+    import GoodsTransfer from 'components/dialog/transfer/GoodsTransfer.vue'
+    import GroupTransfer from 'components/dialog/transfer/GroupTransfer.vue'
+    import ActivityTransfer from 'components/dialog/transfer/ActivityTransfer.vue'
+    import TaskModel from './model'
 
     export default {
         components: {
             Transfer,
-            CourseTransfer,
-            ExamTransfer,
-            PracticeTransfer
+            GoodsTransfer,
+            GroupTransfer,
+            ActivityTransfer
         },
         props: {
-            initTabs: Array,
+            initTabs: {
+                type: Array,
+                default: () => new TaskModel().initTabs()
+            },
             selected: Array,
             visible: Boolean,
             title: {
                 type: String,
-                default: '选取商品素材'
+                default: '选取商品'
             },
             taskType: Number,
             keys: {
@@ -115,7 +118,7 @@
             },
             defaultTabs: {
                 type: String,
-                default: 'course'
+                default: 'goods'
             }
         },
         activated () {},
@@ -132,11 +135,12 @@
             },
         },
         data () {
+            console.log(this.initTabs)
             return {
                 showDialog: this.visible,
-                tabList: new Task().initTabs(this.keys, this.initTabs),
+                tabList: new TaskModel().initTabs(this.keys, this.initTabs),
                 // tabList: this.initTabs,
-                tabKeys: this.keys || Task.keys,
+                tabKeys: this.keys || TaskModel.keys,
                 tabs: this.defaultTabs,
             }
         },
@@ -160,7 +164,7 @@
                 }
             },
             getCurRow (row, all) {
-                this.formatRow(row)
+                // this.formatRow(row)
                 if (all) {
                     if (!this.selected.some(item => item.id === row.id)) {
                         this.selected.push(row)

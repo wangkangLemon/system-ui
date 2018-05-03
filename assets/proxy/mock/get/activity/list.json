@@ -4,7 +4,7 @@
     "data": {
         "list":[
             {
-                "id":111,
+                "id":1,
                 "name":"执业药师考前冲刺优惠",
                 "goods_count":3,
                 "price":10000,
@@ -14,7 +14,7 @@
                 "create_time":1234567
             },
             {
-                "id":222,
+                "id":2,
                 "name":"执业药师考前冲刺优惠",
                 "goods_count":3,
                 "price":10000,
