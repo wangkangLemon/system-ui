@@ -83,8 +83,10 @@
                <div v-if="disable" ref="cont">{{fetchParam.introduce}}</div>
             </el-form-item>
             <el-form-item label="宣传展示" prop="show_type">
-                <el-radio v-model="fetchParam.show_type" :label="typeimg" :disabled="disable">图片</el-radio>
-                <el-radio v-model="fetchParam.show_type" :label="typevideo" :disabled="disable">视频</el-radio>
+                <el-radio-group v-model="fetchParam.show_type">
+                    <el-radio :label="typeimg" :disabled="disable">图片</el-radio>
+                    <el-radio :label="typevideo" :disabled="disable">视频</el-radio>
+                </el-radio-group>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true" :disabled="disable">
                     <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
@@ -93,8 +95,8 @@
             </el-form-item>
             <el-form-item label="添加商品" prop="goods">
                 <el-button size="small" @click="dialogGoods.isShow=true" :disabled="disable">选择商品</el-button>
-                <template v-if="goods.length">
-                    <el-table class="data-table" :data="goods" border show-summary style="width:100%;" ref="table">
+                <template v-if="fetchParam.goods.length">
+                    <el-table class="data-table" :data="fetchParam.goods" border show-summary style="width:100%;" ref="table">
                         <el-table-column label="名称" prop="name"></el-table-column>
                         <el-table-column label="原价" prop="price"></el-table-column>
                         <el-table-column label="优惠价" prop="favorable_price"></el-table-column>
@@ -127,7 +129,7 @@
                 <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
             </el-form-item>
             <dialogSelectData ref="dialogSelect" v-model="dialogGoods.isShow" :getData="fetchGood" title="选择商品"
-                          :selectedList="goods" @changeSelected="val=>goods=val">
+                          :selectedList="fetchParam.goods" @changeSelected="val=>fetchParam.goods=val">
                 <div slot="search" class="course-search">
                     <el-input @keyup.enter.native="$refs.dialogSelect.fetchData(true)" v-model="dialogGoods.name"
                             icon="search"
@@ -149,6 +151,7 @@
     import goodsService from 'services/yshi/goodsService'
     import activityService from 'services/yshi/activityService'
     import * as timeUtils from 'utils/timeUtils'
+    import formCheck from 'utils/formCheckUtils'
     function clearFn () {
         return {
             id: void 0,
@@ -168,50 +171,6 @@
     let _this
     export default {
         data () {
-            let checkPrice = (rule, value, callback) => {
-                let valuestr = value.toString()
-                let moneystr = ''
-                if(valuestr.indexOf('.') != -1){
-                    moneystr = valuestr.split(".")[0]
-                }else {
-                    moneystr = valuestr
-                }
-                if (valuestr.length > 7){
-                    callback(new Error('金额不能高于百万'))
-                }
-                var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
-                let pricez = 0
-                this.goods.forEach( item => {
-                    pricez = pricez + parseFloat(item.favorable_price)
-                })
-                if (!re.test(value)) {
-                    return callback(new Error('大于零的最多两位小数'))
-                } else if ( value > pricez){
-                    return callback(new Error('不能高于优惠价'))
-                } else {
-                    callback()
-                }
-            }
-            let checkHas = (rule, value, callback) => {
-                if (!this.goods.length) {
-                    callback(new Error('不能是空'))
-                } else {
-                    callback()
-                }
-            }
-            let checkHasShow = (rule, value, callback) => {
-                if (value === 1) {
-                    if (this.fetchParam.show_video_name){
-                        callback()
-                    } else {
-                        callback(new Error('请选择视频'))
-                    }
-                } else {
-                    this.fetchParam.show_video_id = 0
-                    this.fetchParam.show_video_name = ''
-                    callback()
-                }
-            }
             return {
                 editor: null,
                 isShowVideoDialog: false,
@@ -224,7 +183,6 @@
                 },
                 msg: '',
                 fetchParam: clearFn(),
-                goods: [],
                 disable: false,
                 orderErr : false,
                 pickerOptions: {
@@ -244,13 +202,25 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     show_type: [
-                        {required: true, validator: checkHasShow, trigger: 'blur'}
+                        {   required: true, trigger: 'change', validator: (rule, value, callback) => {
+                            formCheck.checkHasShow(rule, value, callback, this.fetchParam.show_video_name, () => {
+                                this.fetchParam.show_video_id = 0
+                                this.fetchParam.show_video_name = ''
+                            })
+                        }}
                     ],
                     introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     favorable_price: [
-                        {type: 'number', validator:checkPrice, required: true, trigger: 'blur'}
+                        {type: 'number', message: '必须填写', required: true, trigger: 'blur'},
+                        {validator: (rule, value, callback) => {
+                            let pricez = 0
+                            this.fetchParam.goods.forEach( item => {
+                                pricez = pricez + parseFloat(item.favorable_price)
+                            })
+                            formCheck.checkMoney(rule, value, pricez, callback)
+                        }}
                     ],
                     order: [
                         {type: 'number', required: true, message: '必须填写', trigger: 'blur'},
@@ -261,7 +231,7 @@
                     //     {pattern: null,type: "string",message: null}
                     // ],
                     goods: [
-                        {required: true, validator: checkHas, trigger: 'blur'}
+                        {required: true, message: '必须填写'}
                     ]
                 },
             }
@@ -281,7 +251,6 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    this.goods = ret.goods
                     this.$nextTick(() => {
                         this.initTable()
                     })
@@ -295,7 +264,7 @@
             xmview.setContentLoading(false)
         },
         watch: {
-            goods(val) {
+            'fetchParam.goods'(val) {
                 console.log(val.length)
                 if(val.length >= 1){
                     this.$nextTick(() => {
@@ -362,7 +331,7 @@
                         return
                     }
                     this.fetchParam.introduce = this.editor.getContent()
-                    this.fetchParam.goods_ids = this.goods.map(item => {
+                    this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
                         return item.id
                     })
                     let req = activityService.createActivity

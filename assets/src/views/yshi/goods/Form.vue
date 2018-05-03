@@ -69,8 +69,10 @@
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示" prop="show_type">
-                <el-radio v-model="fetchParam.show_type" :label="typeimg" :disabled="disable">图片</el-radio>
-                <el-radio v-model="fetchParam.show_type" :label="typevideo" :disabled="disable">视频</el-radio>
+                <el-radio-group v-model="fetchParam.show_type">
+                    <el-radio :label="typeimg" :disabled="disable">图片</el-radio>
+                    <el-radio :label="typevideo" :disabled="disable">视频</el-radio>
+                </el-radio-group>
                 <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true" :disabled="disable">
                     <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
@@ -154,50 +156,6 @@
     }
     export default {
         data () {
-            let checkMoney = (rule, value, callback) => {
-                let value1 = this.fetchParam.price
-                var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
-                if (!re.test(value)) {
-                    return callback(new Error('大于零的最多两位小数'))
-                }
-                let valuestr = value.toString()
-                let moneystr = ''
-                if(valuestr.indexOf('.') != -1){
-                    moneystr = valuestr.split(".")[0]
-                }else {
-                    moneystr = valuestr
-                }
-                if (valuestr.length > 7){
-                    callback(new Error('金额不能高于百万'))
-                }
-                setTimeout(() => {
-                    if (value > parseFloat(value1)) {
-                        callback(new Error('优惠价格不能高于商品定价'))
-                    } else {
-                        callback()
-                    }
-                }, 1000)
-            }
-            let checkHas = (rule, value, callback) => {
-                if (!value.length) {
-                    return callback(new Error('不能是空'))
-                } else {
-                    callback()
-                }
-            }
-            let checkHasShow = (rule, value, callback) => {
-                if (value === 1) {
-                    if (this.fetchParam.show_video_name) {
-                        callback()
-                    } else {
-                        callback(new Error('请选择视频'))
-                    }
-                } else {
-                    this.fetchParam.show_video_id = 0
-                    this.fetchParam.show_video_name = ''
-                    callback()
-                }
-            }
             return {
                 editor: null,
                 typeimg: 0,
@@ -216,22 +174,30 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     show_type: [
-                        {required: true, validator: checkHasShow, trigger: 'blur'}
+                        {required: true, trigger: 'change', validator: (rule, value, callback) => {
+                            formCheck.checkHasShow(rule, value, callback, this.fetchParam.show_video_name, () => {
+                                this.fetchParam.show_video_id = 0
+                                this.fetchParam.show_video_name = ''
+                            })
+                        }},
                     ],
                     introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     price: [
                         {type: 'number', required: true, trigger: 'blur', message: '请输入商品定价'},
-                        {validator: (rule, value, callbac) => {
-                            formCheck.checkPrice(rule, value, callbac)
+                        {validator: (rule, value, callback) => {
+                            formCheck.checkPrice(rule, value, callback)
                         }}
                     ],
                     transferRight: [
-                        {required: true, validator: checkHas, trigger: 'blur'}
+                        {required: true, message: '请选择至少一个素材'}
                     ],
                     favorable_price: [
-                        {type: 'number', required: true, validator: checkMoney, trigger: 'blur'}
+                        {type: 'number', required: true,trigger: 'blur', message: '请输入优惠价格'},
+                        {validator: (rule, value, callback) => {
+                            formCheck.checkMoney(rule, value, this.fetchParam.price, callback)
+                        }}
                     ]
                 },
             }
