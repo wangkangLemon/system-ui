@@ -183,10 +183,10 @@
             image: void 0,
             price: void 0,
             expire: void 0,
-            sort: void 0,
+            sort: 0,
             status: void 0,
-            quota: void 0,
-            day: void 0,
+            quota: 0,
+            day: '',
             id: void 0,
             coupon_id: void 0
         }
