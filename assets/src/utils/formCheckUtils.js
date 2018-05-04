@@ -1,8 +1,17 @@
 class FormCheckUtils {
-    // 整数部分不大于7位 小数部分不大于2位
-    checkPrice(rule, value, callback) {
+    // 正整数
+    checkNumber(rule, value, callback) {
+        if (!limitNumberReg.test(value)) {
+            return callback(new Error('只能输入正整数'))
+        }
+        callback()
+    }
+    _checkPrice (value) {
         if (!limitTwoFloatReg.test(value)) {
-            return callback(new Error('大于零的最多两位小数'))
+            return {
+                status: false,
+                msg: '大于零的最多两位小数'
+            }
         }
         let valuestr = value.toString()
         let moneystr = ''
@@ -12,26 +21,43 @@ class FormCheckUtils {
             moneystr = valuestr
         }
         if (moneystr.length > 7) {
-            callback(new Error('金额不能高于百万'))
+            return {
+                status: false,
+                msg: '金额不能高于百万'
+            }
+        }
+        return {
+            status: true,
+            msg: ''
         }
     }
-
+    // 整数部分不大于7位 小数部分不大于2位
+    checkPrice(rule, value, callback) {
+        let a = this._checkPrice(value)
+        if (a.status) {
+            callback()
+        } else {
+            callback(new Error(this._checkPrice(value).msg))
+        }
+    }
     // 价格不高于
     checkMoney (rule, value, price, callback) {
-        this.checkPrice(rule, value, callback)
-        setTimeout(() => {
-            if (value > parseFloat(price)) {
-                callback(new Error('优惠价格不能高于商品定价'))
-            } else {
-                callback()
-            }
-        }, 1000)
+        if (this._checkPrice(value).status) {
+            setTimeout(() => {
+                if (value > parseFloat(price)) {
+                    callback(new Error('优惠价格不能高于商品定价'))
+                } else {
+                    callback()
+                }
+            }, 1000)
+        } else {
+            callback(new Error(this._checkPrice(value).msg))
+        }
     }
-
     // 检查视频是否选择 单选框
     checkHasShow (rule, value, callback, videoname, cb) {
         console.log(videoname)
-        if (value === 1) {
+        if (value === 2) {
             if (videoname) {
                 callback()
             } else {
@@ -53,4 +79,5 @@ class FormCheckUtils {
     }
 }
 let limitTwoFloatReg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
+let limitNumberReg = /^[1-9][0-9]*$/
 export default new FormCheckUtils()

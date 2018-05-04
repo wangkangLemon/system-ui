@@ -87,7 +87,7 @@
                     <el-radio :label="typeimg" :disabled="disable">图片</el-radio>
                     <el-radio :label="typevideo" :disabled="disable">视频</el-radio>
                 </el-radio-group>
-                <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
+                <p v-if="fetchParam.show_type==1" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true" :disabled="disable">
                     <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
                     <i v-else>选择视频</i>
@@ -157,7 +157,7 @@
             id: void 0,
             name: void '',
             cover: void '',
-            show_type: 0, // 0 图片 1视频
+            show_type: 1, // 0 图片 1视频
             show_video_id: void 0,
             show_video_name: void '',
             introduce: void '',
@@ -174,8 +174,8 @@
             return {
                 editor: null,
                 isShowVideoDialog: false,
-                typeimg: 0,
-                typevideo: 1,
+                typeimg: 1,
+                typevideo: 2,
                 dialogGoods: {
                     loading: false,
                     isShow: false,

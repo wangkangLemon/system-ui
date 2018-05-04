@@ -40,7 +40,7 @@ class CouponService {
     }) {
         let url = urlPre + '/put'
         return api.post(url, JSON.stringify({ coupon_id, mobile })).then(ret => {
-            xmview.showTip('success', ret.message || '发放成功')
+            return ret.data
         })
     }
     // 上下线
@@ -50,7 +50,8 @@ class CouponService {
     }) {
         let url = `${urlPre}/${coupon_id}`
         return api.put(url, JSON.stringify({ status })).then(ret => {
-            xmview.showTip('success', ret.message || '失败')
+            xmview.showTip('success', ret.message || `${status === 1 ? '上线' : '下线'}成功`)
+            return 
         })
     }
     // 删除
@@ -59,7 +60,7 @@ class CouponService {
     }) {
         let url = `${urlPre}/${coupon_id}`
         return api.del(url).then(ret => {
-            xmview.showTip('success', ret.message || '删除失败')
+            xmview.showTip('success', ret.message || '删除成功')
         })
     }
     // 添加优惠券
@@ -82,6 +83,23 @@ class CouponService {
     }) {
         let url = `${urlPre}/${coupon_id}`
         return api.get(url).then(ret => ret.data)
+    }
+    // 查看指定商品
+    viewGoods ({
+        coupon_id
+    }) {
+        let url = `${urlPre}/${coupon_id}/goods`
+        return api.get(url).then(ret => ret.data)
+    }
+    // 领取/发放次数
+    viewUser ({
+        coupon_id,
+        type,  // 1发放 2领取
+        page,
+        page_size
+    }) {
+        let url = `${urlPre}/${coupon_id}/user`
+        return api.get(url, { type, page, page_size }).then(ret => ret.data)
     }
 }
 export default new CouponService()

@@ -9,6 +9,9 @@ class ParkService {
     // ============================商品部分============================
     // 搜索商品
     prodSearch ({name, status = -1, category, page, page_size}) {
+        if (status === '') {
+            status = -1
+        }
         let url = `${urlPre}/product/search`
         return api.get(url, {name, status, category, page, page_size}).then((ret) => {
             return ret.data

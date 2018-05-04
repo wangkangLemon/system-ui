@@ -59,7 +59,7 @@
                 <el-input size="small" placeholder="设置兑换单个商品所需要的积分" v-model.number="fetchParam.price"></el-input>
             </el-form-item>
             <el-form-item label="商品有效期(天)" prop="expire">
-                <el-input v-model.number="fetchParam.expire"></el-input>
+                <el-input-number v-model.number="fetchParam.expire" :controls="false" placeholder="商品有效期"></el-input-number>
             </el-form-item>
             <el-form-item label="">
                 <el-button type="primary" @click="publish(0)">发布并上架</el-button>
@@ -74,6 +74,7 @@
     import parkService from '../../../services/usersystem/parkService'
     import ProdCategorySelect from '../../component/select/ProdCategory.vue'
     import CouponSelect from 'components/select/Coupon.vue'
+    import formCheck from 'utils/formCheckUtils'
     export default{
         name: 'usersystem-park-publishprod',
         data () {
@@ -85,7 +86,9 @@
                     description: {required: true, message: '请填写商品的介绍内容', trigger: 'blur'},
                     image: {required: true, message: '请上传封面图片', trigger: 'change'},
                     price: {required: true, type: 'number', message: '请输入兑换积分', trigger: 'blur'},
-                    expire: {required: true, type: 'number', message: '请设置该商品兑换所需积分', trigger: 'blur'},
+                    expire: {required: true, type: 'number', trigger: 'blur',validator: (rule, value, callback) => {
+                        formCheck.checkNumber(rule, value, callback)
+                    }},
                 },
                 isShowMianzhi: false, // 是否显示面值
                 isShowDay: false, // 是否显示 天数
@@ -171,7 +174,7 @@
                 })
             }
         },
-        components: {ImgCropper, ProdCategorySelect, CouponSelect}
+        components: {ImgCropper, ProdCategorySelect, CouponSelect},
     }
 
     function initParam () {

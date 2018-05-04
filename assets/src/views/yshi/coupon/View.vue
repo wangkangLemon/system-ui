@@ -25,22 +25,9 @@
             </el-form-item>
             <el-form-item label="指定商品">
                 <template v-if="transferRight.length">
-                    <el-table class="data-table" :data="transferRight" :fit="true" border style="margin-top: 5px;">
-                        <el-table-column 
-                            label="类型" 
-                            prop="type"
-                            width="100">
-                            <el-tag slot-scope="scope" :type="scope.row.type | taskType('tag')">
-                                {{scope.row.type | taskType('label')}}
-                            </el-tag>
-                        </el-table-column>
-                        <el-table-column 
-                            label="名称" 
-                            prop="name">
-                        </el-table-column>
-                    </el-table>
-                    <el-tag>总计：{{transferRight.length}}个商品</el-tag>
+                    <GoodsList :data="transferRight"></GoodsList>
                 </template>
+                <template v-else>所有商品</template>
             </el-form-item>
         </el-form>
     </main>
@@ -48,9 +35,12 @@
 
 <script>
     import couponService from 'services/yshi/couponService'
+    import GoodsList from '../component/GoodsList.vue'
 
     export default {
-        components: {},
+        components: {
+            GoodsList
+        },
         props: {},
         activated () {},
         created () {
@@ -77,10 +67,10 @@
         methods: {
             fetchData (coupon_id) {
                 return couponService.view({ coupon_id }).then(ret => {
-                    this.transferRight = ret.goods_list
-                    for (let i in ret) {
+                    this.transferRight = ret.data.goods_list
+                    for (let i in ret.data) {
                         if (i in this.ruleForm) {
-                            this.ruleForm[i] = ret[i]
+                            this.ruleForm[i] = ret.data[i]
                         }
                     }
                 })

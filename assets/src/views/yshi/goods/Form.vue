@@ -73,7 +73,7 @@
                     <el-radio :label="typeimg" :disabled="disable">图片</el-radio>
                     <el-radio :label="typevideo" :disabled="disable">视频</el-radio>
                 </el-radio-group>
-                <p v-if="fetchParam.show_type==0" class="el-icon-picture col-tip"> 使用封面图片</p>
+                <p v-if="fetchParam.show_type==1" class="el-icon-picture col-tip"> 使用封面图片</p>
                 <el-button class="col-btn-block" v-else @click="isShowVideoDialog=true" :disabled="disable">
                     <i v-if="fetchParam.show_video_name">{{ fetchParam.show_video_name }}</i>
                     <i v-else>选择视频</i>
@@ -143,7 +143,7 @@
             id: void 0,
             name: void '',
             cover: void '',
-            show_type: 0, // 0 图片 1视频
+            show_type: 1, // 0 图片 1视频
             show_picture: void '',
             show_video_id: void 0,
             show_video_name: void '',
@@ -156,10 +156,22 @@
     }
     export default {
         data () {
+            let checkHasShow = (rule, value, callback) => {
+                formCheck.checkHasShow(rule, value, callback, this.fetchParam.show_video_name, () => {
+                    this.fetchParam.show_video_id = 0
+                    this.fetchParam.show_video_name = ''
+                })
+            }
+            let checkPrice = (rule, value, callback) => {
+                formCheck.checkPrice(rule, value, callback)
+            }
+            let checkMoney = (rule, value, callback) => {
+                formCheck.checkMoney(rule, value, this.fetchParam.price, callback)
+            }
             return {
                 editor: null,
-                typeimg: 0,
-                typevideo: 1,
+                typeimg: 1,
+                typevideo: 2,
                 isShowVideoDialog: false,
                 taskType: void 0,
                 showMaterialDialog: false,
@@ -174,30 +186,21 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     show_type: [
-                        {required: true, trigger: 'change', validator: (rule, value, callback) => {
-                            formCheck.checkHasShow(rule, value, callback, this.fetchParam.show_video_name, () => {
-                                this.fetchParam.show_video_id = 0
-                                this.fetchParam.show_video_name = ''
-                            })
-                        }},
+                        {required: true, trigger: 'change', validator: checkHasShow},
                     ],
                     introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     price: [
                         {type: 'number', required: true, trigger: 'blur', message: '请输入商品定价'},
-                        {validator: (rule, value, callback) => {
-                            formCheck.checkPrice(rule, value, callback)
-                        }}
+                        {validator: checkPrice}
                     ],
                     transferRight: [
                         {required: true, message: '请选择至少一个素材'}
                     ],
                     favorable_price: [
                         {type: 'number', required: true,trigger: 'blur', message: '请输入优惠价格'},
-                        {validator: (rule, value, callback) => {
-                            formCheck.checkMoney(rule, value, this.fetchParam.price, callback)
-                        }}
+                        {validator: checkMoney}
                     ]
                 },
             }
@@ -322,7 +325,7 @@
                     }
                     this.fetchParam.objects = this.fetchParam.transferRight.map(item => {
                         return {
-                            type: item.type === 'public' ? 0 : item.type === 'private' ? 1 : item.type === 'exam' ? 2 : 3,
+                            type: item.type === 'public' ? 4 : item.type === 'private' ? 1 : item.type === 'exam' ? 2 : 3,
                             id: item.id,
                             name: item.name
                         }
@@ -334,7 +337,6 @@
                         req = goodsService.updateGood
                         msg = '修改成功'
                     }
-                    // debugger
                     req(this.fetchParam).then((ret) => {
                         xmview.showTip('success', msg)
                         this.fetchParam = clearFn()

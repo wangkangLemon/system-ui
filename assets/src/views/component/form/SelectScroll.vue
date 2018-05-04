@@ -147,6 +147,8 @@
             },
             // 处理请求后的结果 type- 0:追加 1-重新赋值
             processRequestRet (ret, type = 0) {
+                // 兼容后续接口字段
+                ret.data = ret.data || ret.list || []
                 if (type === 0) {
                     // 把结果过滤掉当前选中的
                     ret.data = ret.data.filter((item) => {
