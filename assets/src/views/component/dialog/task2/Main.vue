@@ -135,7 +135,6 @@
             },
         },
         data () {
-            console.log(this.initTabs)
             return {
                 showDialog: this.visible,
                 tabList: new TaskModel().initTabs(this.keys, this.initTabs),
@@ -149,7 +148,7 @@
                 let ref = this.getRefsByType(this.$refs.transfers, row)
                 ref.$refs.transfer.toggleRowSelectionById(row)
                 ref.$refs.transfer.selectData.forEach((item, index, array) => {
-                    row.id === item.id && array.splice(index, 1)
+                    (row.id + row.type) === (item.id + item.type) && array.splice(index, 1)
                 })
                 this.selected.splice(index, 1)
             },
@@ -166,13 +165,13 @@
             getCurRow (row, all) {
                 // this.formatRow(row)
                 if (all) {
-                    if (!this.selected.some(item => item.id === row.id)) {
+                    if (!this.selected.some(item => item.id + item.type === row.id + row.type)) {
                         this.selected.push(row)
                     }
                 } else {
-                    if (this.selected.some(item => item.id === row.id)) {
+                    if (this.selected.some(item => item.id + item.type === row.id + row.type)) {
                         for (let i = 0; i < this.selected.length; i++) {
-                            if (this.selected[i].id === row.id) {
+                            if (this.selected[i].id + this.selected[i].type === row.id + row.type) {
                                 this.selected.splice(i, 1)
                                 return
                             }
