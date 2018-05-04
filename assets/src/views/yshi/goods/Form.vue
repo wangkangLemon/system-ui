@@ -66,7 +66,7 @@
             </el-form-item>
             <el-form-item label="商品封面" prop="cover">
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
+                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" :aspectRatio="aspectRatio" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示" prop="show_type">
                 <el-radio-group v-model="fetchParam.show_type">
@@ -172,6 +172,7 @@
                 editor: null,
                 typeimg: 1,
                 typevideo: 2,
+                aspectRatio: 527 / 521,
                 isShowVideoDialog: false,
                 taskType: void 0,
                 showMaterialDialog: false,
@@ -258,7 +259,7 @@
                 console.log(list)
                 list.forEach(item => {
                     // 适配器，适配task组件中的数据
-                    let type = item.type === 0 ? 'public' : item.type === 1 ? 'private' : item.type === 2 ? 'exam' : 'practice'
+                    let type = item.type === 4 ? 'public' : item.type === 1 ? 'private' : item.type === 2 ? 'exam' : 'practice'
                     item.type = type
                     resRight.push(item)
                     resLeft.forEach(tab => {

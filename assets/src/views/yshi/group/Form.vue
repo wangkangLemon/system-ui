@@ -61,7 +61,7 @@
             </el-form-item>
             <el-form-item label="组合图片" prop="cover">
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
+                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" :aspectRatio="aspectRatio" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="宣传展示" prop="show_type">
                 <el-radio-group v-model="fetchParam.show_type">
@@ -141,6 +141,7 @@
             return {
                 typeimg: 1,
                 typevideo: 2,
+                aspectRatio: 527 / 521,
                 editor: null,
                 isShowVideoDialog: false,
                 dialogGoods: {
