@@ -1,3 +1,8 @@
+<style lang="scss" scoped>
+    .el-select {
+        width: 50%;
+    }
+</style>
 <template>
     <el-dialog 
         :title="title"

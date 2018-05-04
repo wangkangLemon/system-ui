@@ -45,7 +45,7 @@
                 <el-table-column 
                     label="优惠券名称" 
                     prop="name" 
-                    min-width="140">
+                    min-width="170">
                 </el-table-column>
                 <el-table-column 
                     label="金额(元)" 
@@ -60,7 +60,7 @@
                 <el-table-column 
                     label="使用时间" 
                     width="310">
-                    <span slot-scope="scope">{{scope.row.start_time}}-{{scope.row.end_time}}</span>
+                    <span slot-scope="scope">{{scope.row.start_time || "-"}}-{{scope.row.end_time || "-"}}</span>
                 </el-table-column>
                 <el-table-column 
                     label="指定商品数" 
@@ -175,10 +175,16 @@
                     this.fetchData()
                 })
             },
-            del (row) {
-                let coupon_id = row.id
-                couponService.delete({ coupon_id }).then(ret => {
-                    this.fetchData()
+            del (row) {                
+                this.$confirm('确定删除该优惠券吗', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let coupon_id = row.id
+                    couponService.delete({ coupon_id }).then(ret => {
+                        this.fetchData()
+                    })
                 })
             },
             publish () {

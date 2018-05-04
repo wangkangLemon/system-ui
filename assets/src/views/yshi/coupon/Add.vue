@@ -117,7 +117,7 @@
                     threshold: '',
                     start_time: '',
                     end_time: '',
-                    goods_list: [],
+                    // goods_list: [],
                 },
                 rules: {
                     name: [
@@ -157,9 +157,7 @@
                     }
                 })
                 for (let i in param) {
-                    if (~['money', 'threshold'].indexOf(i)) {
-                        result[i] = param[i] * 100
-                    } else if (~['start_time', 'end_time'].indexOf(i)) {
+                    if (~['start_time', 'end_time'].indexOf(i)) {
                         result[i] = date2Str(param[i], '-', { hashour: true })
                     } else {
                         result[i] = param[i]
