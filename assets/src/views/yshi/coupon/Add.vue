@@ -52,21 +52,7 @@
             <el-form-item label="指定商品" prop="">
                 <el-button type='primary' @click="chooseGoods">选择商品</el-button>
                 <template v-if="transferRight.length">
-                    <el-table class="data-table" :data="transferRight" :fit="true" border style="margin-top: 5px;">
-                        <el-table-column 
-                            label="类型" 
-                            prop="type"
-                            width="100">
-                            <el-tag slot-scope="scope" :type="scope.row.type | taskType('tag')">
-                                {{scope.row.type | taskType('label')}}
-                            </el-tag>
-                        </el-table-column>
-                        <el-table-column 
-                            label="名称" 
-                            prop="name">
-                        </el-table-column>
-                    </el-table>
-                    <el-tag>总计：{{transferRight.length}}个商品</el-tag>
+                    <GoodsList :data="transferRight" columnType="type" columnName="name"></GoodsList>
                 </template>
             </el-form-item>
             <el-form-item>
@@ -85,13 +71,15 @@
 <script>
     import couponService from 'services/yshi/couponService'
     import DateRange from 'components/form/DateRangePicker.vue'
+    import GoodsList from '../component/GoodsList.vue'
     import Task from 'components/dialog/task2/Main.vue'
     import { date2Str } from 'utils/timeUtils'
 
     export default {
         components: {
             DateRange,
-            Task
+            Task,
+            GoodsList
         },
         props: {},
         activated () {},
@@ -117,7 +105,7 @@
                     threshold: '',
                     start_time: '',
                     end_time: '',
-                    goods_list: [],
+                    // goods_list: [],
                 },
                 rules: {
                     name: [
@@ -157,9 +145,7 @@
                     }
                 })
                 for (let i in param) {
-                    if (~['money', 'threshold'].indexOf(i)) {
-                        result[i] = param[i] * 100
-                    } else if (~['start_time', 'end_time'].indexOf(i)) {
+                    if (~['start_time', 'end_time'].indexOf(i)) {
                         result[i] = date2Str(param[i], '-', { hashour: true })
                     } else {
                         result[i] = param[i]
