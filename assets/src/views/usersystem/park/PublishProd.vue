@@ -137,8 +137,7 @@
                 parkService.prodDetail({id:this.fetchParam.id}).then((ret) => {
                     this.fetchParam = ret
                     this.fetchParam.quota = this.fetchParam.quota ? parseFloat(this.fetchParam.quota) : ''
-                    this.fetchParam.day = Number(this.fetchParam.day)
-                    // this.fetchParam.coupon_id = ret.coupon_name
+                    this.fetchParam.day = this.fetchParam.day ? Number(this.fetchParam.day) : ''
                 })
             }
             this.$refs.prodCategory.fetchData().then(() => {
@@ -183,12 +182,12 @@
             image: void 0,
             price: void 0,
             expire: void 0,
-            sort: 0,
+            sort: '',
             status: void 0,
-            quota: 0,
+            quota: '',
             day: '',
             id: void 0,
-            coupon_id: void 0
+            coupon_id: ''
         }
     }
 </script>
