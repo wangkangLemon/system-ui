@@ -76,7 +76,7 @@
             </el-form-item>
             <el-form-item label="封面图片" prop="cover">
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
+                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" :aspectRatio="aspectRatio" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="优惠介绍" prop="introduce">
                <vue-editor v-model="fetchParam.introduce" @ready="ueReady" v-if="!disable"></vue-editor>
@@ -176,6 +176,7 @@
                 isShowVideoDialog: false,
                 typeimg: 1,
                 typevideo: 2,
+                aspectRatio: 527 / 521,
                 dialogGoods: {
                     loading: false,
                     isShow: false,
