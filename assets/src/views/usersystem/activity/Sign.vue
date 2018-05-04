@@ -385,7 +385,11 @@
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         // 判断库存
-                        if (this.form.type == 'product' && this.stockCount < this.form.quota) {
+                        // if (this.form.type == 'product' && this.stockCount < this.form.quota) {
+                        //     xmview.showTip('error', '库存不足')
+                        //     return
+                        // }
+                        if (this.form.type == 'product' && this.stockCount < this.form.limit) {
                             xmview.showTip('error', '库存不足')
                             return
                         }
