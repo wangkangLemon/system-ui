@@ -112,7 +112,7 @@
             initFetchParam () {
                 return {
                     name: '',
-                    // status: 0,
+                    status: 2,
                     page: 1,
                     page_size: 15
                 }
