@@ -146,7 +146,7 @@ export default {
                 xmview.setContentLoading(false)
             })
         },
-        // 下线 或者上线课程 0为下线，1为上线
+        // 下线 或者上线课程 1为下线，2为上线
         offline (index, row) {
             if(row.status == 1) {
                 let date = new Date(row.end_time)
