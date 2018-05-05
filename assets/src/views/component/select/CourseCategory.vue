@@ -78,6 +78,7 @@
                             this.options = treeUtils.arr2Cascader(ret, 0, void 0, void 0, 'name', 'id')
                             this.loading = false
                         })
+                        .catch(e => console.log(e))
                 }
             })
         },
