@@ -60,8 +60,8 @@
                 </el-table-column>
                 <el-table-column 
                     label="使用时间" 
-                    width="310">
-                    <span slot-scope="scope">{{scope.row.start_time || "-"}}-{{scope.row.end_time || "-"}}</span>
+                    width="200">
+                    <span slot-scope="scope">{{scope.row.start_date || "-"}} - {{scope.row.end_date || "-"}}</span>
                 </el-table-column>
                 <el-table-column 
                     label="指定商品数" 
@@ -249,7 +249,7 @@
                     })
                 })
             },
-            del (row) {                
+            del (row) {
                 this.$confirm(`确定删除优惠券【${row.name}】吗`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

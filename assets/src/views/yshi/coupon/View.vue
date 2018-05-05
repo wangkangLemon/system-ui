@@ -21,7 +21,7 @@
                 <span>{{ruleForm.threshold}}元</span>
             </el-form-item>
             <el-form-item label="使用时间">
-                <span>{{ruleForm.start_time}} - {{ruleForm.end_time}}</span>
+                <span>{{ruleForm.start_date || '-'}} - {{ruleForm.end_date || '-'}}</span>
             </el-form-item>
             <el-form-item label="指定商品">
                 <template v-if="transferRight.length">
@@ -57,8 +57,8 @@
                     name: '',
                     money: '',
                     threshold: '',
-                    start_time: '',
-                    end_time: '',
+                    start_date: '',
+                    end_date: '',
                     goods_list: [],
                 },
                 transferRight: [],  // 从组件功能上命名，即transfer右边选中的数据
