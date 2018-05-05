@@ -71,7 +71,7 @@
     import ImagEcropperInput from '../component/upload/ImagEcropperInput.vue'
     import * as filterUtils from '../../utils/filterUtils'
     import authUtils from '../../utils/authUtils'
-    import config from '../../utils/config'
+
     export default {
         filterUtils,
         components: {
@@ -98,8 +98,7 @@
             // 获取个人信息
             mineService.getProfile().then((ret) => {
                 this.form = ret
-//                this.imgUrl = ret.avatar
-                this.imgUrl = ret.avatar.indexOf(config.apiHost) > -1 ? ret.avatar : config.apiHost + ret.avatar
+                this.imgUrl = ret.avatar
             }).then(() => {
                 xmview.setContentLoading(false)
             })
