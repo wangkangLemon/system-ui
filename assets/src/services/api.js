@@ -153,8 +153,8 @@ function processCodeError (ret, url) {
         ret.tipCom = xmview.showTip('error', ret.message)
         return Promise.reject(ret)
     } else if (ret.code != 0) {
-        // ret.tipCom = xmview.showTip('error', ret.message || '远程服务器出现问题!')
-        ret.message ? (ret.tipCom = xmview.showTip('error', ret.message || '远程服务器出现问题!')) : (ret.tipCom = '')
+        ret.tipCom = xmview.showTip('error', ret.message || '远程服务器出现问题!')
+        // ret.message ? (ret.tipCom = xmview.showTip('error', ret.message || '远程服务器出现问题!')) : (ret.tipCom = '')
         return Promise.reject(ret)
     }
 }
