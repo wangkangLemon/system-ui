@@ -141,7 +141,8 @@
                 result.goods_list = this.transferRight.map(item => {
                     return {
                         goods_id: item.id,
-                        goods_type: item.type
+                        goods_type: item.type,
+                        goods_name: item.name
                     }
                 })
                 for (let i in param) {
