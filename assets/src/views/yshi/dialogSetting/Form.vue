@@ -101,7 +101,7 @@
             return {
                 fetchParam: clearFn(),
                 disable: false,
-                aspectRatio: 527 / 521,
+                aspectRatio: 521 / 527,
                 pickerOptions: {
                     // disabledDate(time) {
                     //     return !_this.fetchParam.end_time ? null
