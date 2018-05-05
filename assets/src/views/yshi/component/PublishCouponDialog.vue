@@ -17,7 +17,7 @@
         <main>
             <el-form :model="ruleForm" ref="ruleForm" :rules="rules" label-width="100px">
                 <el-form-item label="选择优惠券" prop="couponIds">
-                    <el-select v-model="ruleForm.couponIds" multiple placeholder="请选择">
+                    <el-select v-model="ruleForm.couponIds" multiple filterable placeholder="请选择">
                         <el-option 
                             v-for="item in multiSelectModel.data"
                             :key="item.id"
@@ -52,7 +52,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">立即发放</el-button>
                     <el-button @click="showDialog = false">取消</el-button>
                 </el-form-item>
             </el-form>
