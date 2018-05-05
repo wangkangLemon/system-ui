@@ -56,7 +56,7 @@
             </el-form-item>
             <el-form-item label="弹出图片" prop="image">
                 <img :src="fetchParam.image | fillImgPath" alt="" class="img" v-if="fetchParam.image" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
+                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" :aspectRatio="aspectRatio" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="跳转链接" prop="url">
                 <el-input placeholder="请输入内容" v-model="fetchParam.url" :disabled="disable">
@@ -101,6 +101,7 @@
             return {
                 fetchParam: clearFn(),
                 disable: false,
+                aspectRatio: 527 / 521,
                 pickerOptions: {
                     // disabledDate(time) {
                     //     return !_this.fetchParam.end_time ? null
