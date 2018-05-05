@@ -49,7 +49,7 @@
             </section>
             <section>
                 <i>状态</i>
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
+                <el-select v-model="fetchParam.status" placeholder="全部" @change="fetchData" :clearable="true">
                     <el-option label="已上线" value="2"></el-option>
                     <el-option label="已下线" value="1"></el-option>
                 </el-select>

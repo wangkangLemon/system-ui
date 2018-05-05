@@ -50,9 +50,9 @@ class GoodsGroupService {
         })
     }
     // 创建
-    createGoodGroup ({ name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable }) {
+    createGoodGroup ({ status = 1, name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable }) {
         let url = urlPre
-        return api.post(url, JSON.stringify({ name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable })).then(ret => {
+        return api.post(url, JSON.stringify({ status, name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable })).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -68,9 +68,9 @@ class GoodsGroupService {
         })
     }
     // 更新
-    updateGoodGroup ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable }) {
+    updateGoodGroup ({ id, status, name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable }) {
         let url = `${urlPre}`
-        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable })).then(ret => {
+        return api.put(url, JSON.stringify({ id, status, name, cover, show_type, show_video_id, show_video_name, introduce, order, goods_ids, favorable })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }

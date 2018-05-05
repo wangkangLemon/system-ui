@@ -124,6 +124,7 @@
     function clearFn () {
         return {
             id: void 0,
+            status: void 0,
             name: void '',
             cover: void '',
             show_type: 1, // 0 图片 1视频
