@@ -51,7 +51,6 @@ class CouponService {
         let url = `${urlPre}/${coupon_id}`
         return api.put(url, JSON.stringify({ status })).then(ret => {
             xmview.showTip('success', ret.message || `${status === 1 ? '上线' : '下线'}成功`)
-            return 
         })
     }
     // 删除
@@ -68,12 +67,12 @@ class CouponService {
         name,
         money,
         threshold,
-        start_time,
-        end_time,
+        start_date,
+        end_date,
         goods_list
     }) {
         let url = urlPre + '/create'
-        return api.post(url, JSON.stringify({ name, money, threshold, start_time, end_time, goods_list })).then(ret => {
+        return api.post(url, JSON.stringify({ name, money, threshold, start_date, end_date, goods_list })).then(ret => {
             xmview.showTip('success', ret.message || '添加成功')
         })
     }
