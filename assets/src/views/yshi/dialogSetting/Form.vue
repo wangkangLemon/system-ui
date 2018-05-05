@@ -69,9 +69,9 @@
             </el-form-item>
             <el-form-item label="启用推荐">
                 <el-switch
-                    v-model="fetchParam.status" :on-value="1" :off-value="0" on-color="#13ce66" :disabled="disable">
+                    v-model="fetchParam.status" :on-value="2" :off-value="1" on-color="#13ce66" :disabled="disable">
                 </el-switch>
-                <i class="col-tip-small" v-if="fetchParam.status == 1"> 启动推荐后,会关闭其他限时活动的推荐</i>
+                <i class="col-tip-small" v-if="fetchParam.status == 2"> 启动推荐后,会关闭其他限时活动的推荐</i>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
