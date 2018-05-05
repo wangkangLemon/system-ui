@@ -10,14 +10,20 @@
 <!--</dialogSelectData>-->
 
 <style lang='scss' rel='stylesheet/scss'>
-    .comp-dialog-select4table {
+    .comp-dialog-select5table {
         main {
             > section {
                 >aside{
-                    margin-bottom: 5px;
+                    line-height: 40px;
+                    font-size: 14px;
+                    padding-left: 20px;
+                    background: #fbfdff;
+                    border: 1px solid #d1dbe5;
+                    border-bottom: none;
+                    margin-top: 20px;
                 }
                 display: inline-block;
-                width: 43%;
+                width: 47%;
 
                 &:first-of-type {
                     margin-right: 5%;
@@ -28,7 +34,7 @@
 </style>
 
 <template>
-    <el-dialog :title="title" v-model="currVal" class="comp-dialog-select4table">
+    <el-dialog :title="title" v-model="currVal" class="comp-dialog-select5table">
         <main>
             <slot name="search"></slot>
             <section>
