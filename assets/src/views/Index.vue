@@ -29,7 +29,7 @@
             height: 55px;
             line-height: 55px;
             text-align: center;
-            z-index: 11;
+            z-index: 10000;
             background: #fff;
 
             .logo {
