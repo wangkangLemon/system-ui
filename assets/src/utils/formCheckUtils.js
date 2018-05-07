@@ -45,7 +45,7 @@ class FormCheckUtils {
         if (this._checkPrice(value).status) {
             setTimeout(() => {
                 if (value > parseFloat(price)) {
-                    callback(new Error('优惠价格不能高于商品定价'))
+                    callback(new Error('活动优惠价格不能高于单品优惠价总和'))
                 } else {
                     callback()
                 }

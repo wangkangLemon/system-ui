@@ -42,19 +42,19 @@
             </el-button>
         </section>
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
-            <el-table-column align="center" min-width="300" prop="name" label="推广名称">
+            <el-table-column align="left" min-width="300" prop="name" label="推广名称">
             </el-table-column>
-            <el-table-column align="center" min-width="100" prop="url" label="跳转链接">
+            <el-table-column align="left" min-width="100" prop="url" label="跳转链接">
             </el-table-column>
-            <el-table-column align="center" width="190" prop="create_time" label="创建时间">
+            <el-table-column align="left" width="190" prop="create_time" label="创建时间">
             </el-table-column>
-            <el-table-column align="center" width="190" prop="end_time" label="截止时间">
+            <el-table-column align="left" width="190" prop="end_time" label="截止时间">
                 <template slot-scope="scope">
                     <p v-if="scope.row.end_time">{{scope.row.end_time}}</p>
                     <p v-else>--</p>
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="180" label="操作" fixed="right">
+            <el-table-column align="left" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
                     <el-button @click="$router.push({name: 'yshi-dialog-preview', params: {dialog_id: scope.row.id}})" type="text" size="small">查看</el-button>
                     <el-button 

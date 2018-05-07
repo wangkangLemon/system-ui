@@ -60,33 +60,33 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
-            <el-table-column align="center" min-width="200" prop="name" label="组合名称">
+            <el-table-column align="left" min-width="200" prop="name" label="组合名称">
             </el-table-column>
-            <el-table-column align="center" min-width="100" prop="goods_count" label="商品数">
+            <el-table-column align="left" min-width="100" prop="goods_count" label="商品数">
             </el-table-column>
-            <el-table-column align="center" min-width="130" prop="favorable_count" label="优惠阶梯数">
+            <el-table-column align="left" min-width="130" prop="favorable_count" label="优惠阶梯数">
             </el-table-column>
-            <el-table-column align="center" width="130" label="满">
+            <el-table-column align="left" width="130" label="满">
                 <template slot-scope="scope">
                     <p v-if="scope.row.favorable.length">{{ scope.row.favorable[0].reach }}</p>
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="130" label="打折">
+            <el-table-column align="left" width="130" label="打折">
                 <template slot-scope="scope">
                     <p v-if="scope.row.favorable.length">{{ scope.row.favorable[0].discount }}</p>
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="100" label="状态">
+            <el-table-column align="left" width="100" label="状态">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.status == 2" type="success">已上线</el-tag>
                     <el-tag v-else type="info">已下线</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column align="center" width="100" prop="order" label="排序">
+            <el-table-column align="left" width="100" prop="order" label="排序">
             </el-table-column>
-            <el-table-column align="center" width="190" prop="create_time" label="创建时间">
+            <el-table-column align="left" width="190" prop="create_time" label="创建时间">
             </el-table-column>
-            <el-table-column align="center" width="180" label="操作" fixed="right">
+            <el-table-column align="left" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
                     <el-button @click="$router.push({name: 'yshi-group-preview', params: {group_id: scope.row.id}})" type="text" size="small">查看</el-button>
                     <el-button 
