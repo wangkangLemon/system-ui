@@ -161,6 +161,7 @@ export default {
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                 toastService.statusline(row.id, finalStatus).then((ret) => {
                     row.status = finalStatus
+                    this.fetchData()
                 })
             })
         },
