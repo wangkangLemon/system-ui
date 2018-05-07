@@ -24,6 +24,10 @@
                 padding: 6px 8px;
                 text-align: left;
             }
+            .el-form-item__error{
+                top: 36px;
+            }
+            
         }
         .library {
             margin-bottom: 10px;
