@@ -302,35 +302,35 @@
                     ],
                     single_num: [
                         { type: 'number', required: true, message: '请输入单选题数量', trigger: 'blur' },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数' },
                     ],
                     single_score: [
                         { type: 'number', required: true, message: '请输入单选题分数', trigger: 'blur' },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数' },
                     ],
                     multi_num: [
                         { type: 'number', required: true, message: '请输入多选题数量', trigger: 'blur' },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数' },
                     ],
                     multi_score: [
                         { type: 'number', required: true, message: '请输入多选题分数', trigger: 'blur' },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数' },
                     ],
                     judge_num: [
                         { type: 'number', required: true, message: '请输入判断题数量', trigger: 'blur' },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数' },
                     ],
                     judge_score: [
                         { type: 'number', required: true, message: '请输入判断题分数', trigger: 'blur' },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数' },
                     ],
                     limit_time: [
                         { type: 'number', required: true, message: '请输入考试时间', trigger: 'blur' },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数' },
                     ],
                     score_pass: [
                         { type: 'number', required: true, message: '请输入及格分数', trigger: 'blur' },
-                        { type: 'number', min: 0, message: '请输入正整数', trigger: 'blur' },
+                        { type: 'number', min: 0, message: '请输入正整数' },
                         { validator: validateScorePass }
                     ],
                     subject_group: { type: 'array', required: true, message: '请选择关联题库' }
@@ -425,14 +425,14 @@
         return {
             name: '',
             description: '',
-            single_num: void 0,
-            single_score: void 0,
-            multi_num: void 0,
-            multi_score: void 0,
-            judge_num: void 0,
-            judge_score: void 0,
-            limit_time: void 0,
-            score_pass: void 0,
+            single_num: 0,
+            single_score: 0,
+            multi_num: 0,
+            multi_score: 0,
+            judge_num: 0,
+            judge_score: 0,
+            limit_time: 0,
+            score_pass: 0,
             subject_group_id: [],
             subject_group: []
         }
