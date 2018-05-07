@@ -300,7 +300,7 @@
                         this.fetchParam = clearFn()
                         this.$router.push({name: 'yshi-group'})
                     }).catch((ret) => {
-                        if (ret.message === 'exist'){
+                        if (ret.data.data === 'exist'){
                             this.orderErr = true
                         } else {
                             xmview.showTip('error', ret.message)

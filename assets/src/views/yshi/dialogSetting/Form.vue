@@ -85,6 +85,7 @@
     import UploadFile from 'components/upload/UploadFiles.vue'
     import toastService from 'services/yshi/toastService'
     import * as timeUtils from 'utils/timeUtils'
+    import formCheck from 'utils/formCheckUtils'
     function clearFn () {
         return {
             id: void 0,
@@ -119,7 +120,9 @@
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
                     url: [
-                        {required: true, message: '必须填写', trigger: 'blur'}
+                        {required: true, trigger: 'blur', validator: (rule, value, callback) => {
+                            formCheck.checkUrl(rule, value, callback)
+                        }}
                     ],
                     // end_time: [
                     //     {message: "不能为空",required: 1},

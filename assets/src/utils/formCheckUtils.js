@@ -45,7 +45,7 @@ class FormCheckUtils {
         if (this._checkPrice(value).status) {
             setTimeout(() => {
                 if (value > parseFloat(price)) {
-                    callback(new Error('优惠价格不能高于商品定价'))
+                    callback(new Error('活动优惠价格不能高于单品优惠价总和'))
                 } else {
                     callback()
                 }
@@ -77,7 +77,16 @@ class FormCheckUtils {
             callback()
         }
     }
-}
+
+    // 检查是否是 URL 只能以 http:// https:// yst:// 开头
+    checkUrl(rule, value, callback) {
+        if (!urlReg.test(value)) {
+            return callback(new Error('只能以 http:// 或者 https:// 或者 yst:// 开头'))
+        }
+        callback()
+    }
+ }
 let limitTwoFloatReg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
 let limitNumberReg = /^[1-9][0-9]*$/
+let urlReg = /^(http||https||yst):\/\//
 export default new FormCheckUtils()
