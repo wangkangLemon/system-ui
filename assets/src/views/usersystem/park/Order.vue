@@ -92,7 +92,7 @@
                     label="商品编号">
             </el-table-column>
             <el-table-column
-                    min-width="100"
+                    min-width="250"
                     label="商品名">
                     <template slot-scope="scope">
                         <img :src="scope.row.image | fillImgPath" height="30" style="vertical-align: middle">
