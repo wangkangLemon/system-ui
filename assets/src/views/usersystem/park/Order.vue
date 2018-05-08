@@ -21,7 +21,7 @@
         }
 
         .el-dialog {
-            top: 15px !important;
+            // top: 15px !important;
         }
     }
 </style>
@@ -60,6 +60,7 @@
                     <el-option label="成长值加倍卡" value="growth_plus_card"></el-option>
                     <el-option label="外部虚拟卡券" value="coupon"></el-option>
                     <el-option label="实物" value="entity"></el-option>
+                    <el-option label="优惠券" value="discount_coupon"></el-option>
                 </el-select>
             </section>
             <section>
