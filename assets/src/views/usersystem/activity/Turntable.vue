@@ -210,7 +210,7 @@
                                    :key="index"></el-option>
                     </el-select>
                     <template v-if="form1.category && form1.category == 'discount_coupon'">
-                        <CouponSelect v-model="form1.product_id" :placeholder="form1.product_name" @change="getStockCount"></CouponSelect>
+                        <CouponSelect :value="form1.product_name" :placeholder="form1.product_name" @change="val=>{form1.product_id=val;getStockCount()}"></CouponSelect>
                     </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form1.product_id) && form1.product_id > 0">
