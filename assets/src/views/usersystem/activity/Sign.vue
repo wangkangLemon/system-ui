@@ -397,10 +397,10 @@
                         if (this.form.play_type == 'sign_weekly') dataList = this.sevenDaysGift
                         else dataList = this.monthGift
                         // 发放量不得改小
-                        if (this.form.type == 'product' && this.form.limit < this.preLimit) {
-                            xmview.showTip('error', '不得减少商品的发放量')
-                            return
-                        }
+                        // if (this.form.type == 'product' && this.form.limit < this.preLimit) {
+                        //     xmview.showTip('error', '不得减少商品的发放量')
+                        //     return
+                        // }
                         // 请求接口
                         let msg
                         let reqFn
