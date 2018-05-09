@@ -216,7 +216,7 @@
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
                     <template v-if="form.category && form.category == 'discount_coupon'">
-                        <CouponSelect :value="form.product_name" :placeholder="form.product_name" @change="val=>{form.product_id=val;getStockCount()}"></CouponSelect>
+                        <CouponSelect :value="form.product_id" :placeholder="form.product_name" @change="val=>{form.product_id=val;getStockCount()}"></CouponSelect>
                     </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form.product_id) && form.product_id > 0">
