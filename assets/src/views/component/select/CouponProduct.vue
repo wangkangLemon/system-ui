@@ -35,9 +35,16 @@
             }
         },
         watch: {
-            'value'(val, oldValue) {
-                this.currVal !== val && (this.currVal = val)
+            'value': {
+                handler (val, oldValue) {
+                    this.currVal !== val && (this.currVal = val)
+                },
+                immediate: true
             },
+            // 'value' (val, oldValue) {
+            //     debugger
+            //     this.currVal !== val && (this.currVal = val)                
+            // }
         },
         methods: {
             handleChange(val) {

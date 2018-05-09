@@ -216,7 +216,7 @@
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
                     <template v-if="form.category && form.category == 'discount_coupon'">
-                        <CouponSelect :value="form.product_name" :placeholder="form.product_name" @change="val=>{form.product_id=val;getStockCount()}"></CouponSelect>
+                        <CouponSelect :value="couponForm.product_id" :placeholder="couponForm.product_name" @change="val=>{couponForm.product_id=val;getStockCount()}"></CouponSelect>
                     </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form.product_id) && form.product_id > 0">
@@ -275,6 +275,10 @@
                 products: [],
                 form: clearForm(),
                 cloneForm1: '',
+                couponForm: {
+                    product_id: '',
+                    product_name: ''
+                },
                 rules: {
                     type: {required: true, message: '必填项'}, // 类型
                     category: {required: true, message: '必填项'}, // 分类
@@ -326,6 +330,7 @@
                     this.$refs.form.resetFields()
                     this.form = clone(row)
                     this.cloneForm1 = clone(row)
+                    this.initCouponForm()
                     this.preLimit = row.limit
                     this.getStockCount()
                 })
@@ -462,8 +467,25 @@
                     this.form.product_id = ''
                 }
             },
+            initCouponForm () {
+                if (this.form.category === 'discount_coupon' && this.cloneForm1.category !== 'discount_coupon') {
+                    this.couponForm.product_name = ''
+                    this.couponForm.product_id = ''
+                } else if (this.cloneForm1.category === 'discount_coupon') {
+                    this.couponForm.product_name = this.form.product_name
+                    this.couponForm.product_id = this.form.product_id
+                }
+                // this.cloneForm1.category == 'discount_coupon' 
+                //     this.form.category === 'discount_coupon'
+                //     this.form.category !== 'discount_coupon'
+
+                // this.cloneForm1.category !== 'discount_coupon' 
+                //     this.form.category !== 'discount_coupon'
+                //     this.form.category === 'discount_coupon'
+            },
             // select获取选择分类的产品列表
             getSelectPorduct () {
+                this.initCouponForm()                
                 if (this.form.category != this.cloneForm1.category) this.form.product_id = ' '
                 // 获取选中产品列表 products
                 ActivityService.productSearch({category: this.form.category}).then((ret) => {
@@ -472,6 +494,9 @@
             },
             // 获取库存值
             getStockCount () {
+                if (this.form.category === 'discount_coupon') {
+                    this.form.product_id = this.couponForm.product_id
+                }
                 if (this.form.product_id && this.form.product_id != ' ') {
                     // 获取库存量
                     return ParkService.prodDetail({id: this.form.product_id}).then((ret) => {

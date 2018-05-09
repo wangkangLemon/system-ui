@@ -210,7 +210,7 @@
                                    :key="index"></el-option>
                     </el-select>
                     <template v-if="form1.category && form1.category == 'discount_coupon'">
-                        <CouponSelect :value="form1.product_name" :placeholder="form1.product_name" @change="val=>{form1.product_id=val;getStockCount()}"></CouponSelect>
+                        <CouponSelect :value="couponForm.product_id" :placeholder="couponForm.product_name" @change="val=>{couponForm.product_id=val;getStockCount()}"></CouponSelect>
                     </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form1.product_id) && form1.product_id > 0">
@@ -268,6 +268,10 @@
                 form1: {
                 },
                 cloneForm1: {},
+                couponForm: {
+                    product_id: '',
+                    product_name: ''
+                },
                 rules: {
                     title: {required: true, message: '必填项', trigger: 'blur'},
                     limit: {type: 'number', required: true, message: '必填项', trigger: 'blur'},
@@ -313,6 +317,9 @@
         methods: {
             // 获取库存
             getStockCount () {
+                if (this.form1.category === 'discount_coupon') {
+                    this.form1.product_id = this.couponForm.product_id
+                }
                 if (this.form1.type == 'product' && this.form1.product_id) {
                     // 获取库存量
                     return ParkService.prodDetail({id: this.form1.product_id}).then((ret) => {
@@ -332,6 +339,7 @@
                     this.$refs.form1.resetFields()
                     this.form1 = clone(row)
                     this.cloneForm1 = clone(row)
+                    this.initCouponForm()
                     this.preLimit = row.limit
                     this.getStockCount()
                 })
@@ -390,7 +398,17 @@
                     }
                 })
             },
+            initCouponForm () {
+                if (this.form1.category === 'discount_coupon' && this.cloneForm1.category !== 'discount_coupon') {
+                    this.couponForm.product_name = ''
+                    this.couponForm.product_id = ''
+                } else if (this.cloneForm1.category === 'discount_coupon') {
+                    this.couponForm.product_name = this.form1.product_name
+                    this.couponForm.product_id = this.form1.product_id
+                }
+            },
             getSelectPorduct () {
+                this.initCouponForm() 
                 if (this.form1.category != this.cloneForm1.category) this.form1.product_id = ''
                 // 获取选中产品列表 products
                 ActivityService.productSearch({category: this.form1.category}).then((ret) => {

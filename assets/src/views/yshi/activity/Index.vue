@@ -47,13 +47,13 @@
                 <i>活动名称</i>
                 <el-input v-model="fetchParam.name" @keyup.enter.native="fetchData"></el-input>
             </section>
-            <!-- <section>
+            <section>
                 <i>状态</i>
-                <el-select v-model="fetchParam.status" placeholder="未选择" @change="fetchData" :clearable="true">
-                    <el-option label="正常" value="0"></el-option>
-                    <el-option label="下线" value="1"></el-option>
+                <el-select v-model="fetchParam.status" placeholder="全部" @change="fetchData" :clearable="true">
+                    <el-option label="正常" value="1"></el-option>
+                    <el-option label="下线" value="2"></el-option>
                 </el-select>
-            </section> -->
+            </section>
             <DateRange title="创建时间" :start="fetchParam.start_time" :end="fetchParam.end_time" @changeStart="val=> {fetchParam.start_time=val}" @changeEnd="val=> {fetchParam.end_time=val}" :change="fetchData">
             </DateRange>
 
@@ -78,6 +78,12 @@
                     <p v-else>--</p>
                 </template>
             </el-table-column>
+            <el-table-column align="left" width="190" prop="url" label="链接">
+                <template slot-scope="scope">
+                    <p >{{scope.row.url}}</p>
+                    <i >点击复制</i>
+                </template>
+            </el-table-column>
             <el-table-column align="left" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
                     <el-button @click="$router.push({name: 'yshi-activity-preview', params: {activity_id: scope.row.id}})" type="text" size="small">查看</el-button>
@@ -86,6 +92,12 @@
                         type="text" 
                         size="small" >
                         编辑
+                    </el-button>
+                    <el-button 
+                        @click="offline(scope.$index, scope.row)" 
+                        type="text" 
+                        size="small">
+                        <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
@@ -162,11 +174,19 @@ export default {
                 xmview.setContentLoading(false)
             })
         },
-        // 下线 或者上线课程 0为下线，1为上线
+        // 下线 或者上线课程 1为下线，2为上线
         offline (index, row) {
-            let txt = row.status == 0 ? '下线' : '上线'
-            let finalStatus = row.status == 0 ? 1 : 0
-            let reqFn = row.status == 0 ? activityService.offline : activityService.online
+            if(row.status == 1) {
+                let date = new Date(row.end_time)
+                let compare = timeUtils.compareDateTime(date, new Date())
+                if (compare !== 1){
+                    xmview.showTip('error', '截止时间已到期，请先修改。')
+                    return
+                }
+            }
+            let txt = row.status == 1 ? '下线' : '上线'
+            let finalStatus = row.status == 1 ? 2 : 1
+            let reqFn = row.status == 1 ? activityService.offline : activityService.online
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                 reqFn(row.id).then((ret) => {
                     row.status = finalStatus
