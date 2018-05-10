@@ -30,7 +30,7 @@
                 </el-input-number>
                 <span class="input-append">元</span>
             </el-form-item>
-            <el-form-item label="使用时间">
+            <el-form-item label="使用时间" prop="start_date">
                 <DateRange 
                     :start="ruleForm.start_date" 
                     :end="ruleForm.end_date" 
@@ -98,6 +98,16 @@
             //         ? handleTime.handleStartTime(start_time, end_time, callback)
             //         : handleTime.handleEndTime(start_time, end_time, callback)
             // }
+            let self = this
+            const timeValidator = (rule, value, callback) => {
+                let start_date = self.ruleForm.start_date ? Date.parse(self.ruleForm.start_date) : Date.now()
+                let end_date = self.ruleForm.end_date ? Date.parse(self.ruleForm.end_date) : Date.now()
+                if (start_date - Date.now() < 0 || end_date - Date.now() < 0) {
+                    callback(new Error('不能小于今天'))
+                } else {
+                    callback()
+                }
+            }
             return {
                 ruleForm: {
                     name: '',
@@ -112,7 +122,7 @@
                         {required: true, message: '请输入名称', trigger: 'blur'}
                     ],
                     money: { required: true, message: '请输入金额' },
-                    // start_time: { validator: timeValidator },
+                    start_date: { validator: timeValidator },
                     // end_time: { validator: timeValidator },
                 },
                 transferRight: [],  // 从组件功能上命名，即transfer右边选中的数据
