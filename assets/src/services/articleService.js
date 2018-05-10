@@ -37,7 +37,7 @@ class ArticleService {
     getCategoryTree ({id = 'tree', filter = true}) {
         let finalUrl = `${urlPre}/category/children`
         return api.get(finalUrl, {id, filter}).catch((ret) => {
-            ret.tipCom.close()
+            ret.tipCom && ret.tipCom.close()
             return ret
         })
     }

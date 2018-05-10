@@ -81,7 +81,9 @@
             </el-table-column>
             <el-table-column align="left" width="250" prop="url" label="链接">
                 <template slot-scope="scope">
-                    <p class="i-url">{{scope.row.url}}</p>
+                    <el-tooltip class="item" effect="dark" :content="scope.row.url" placement="top">
+                        <p class="i-url">{{scope.row.url}}</p>
+                    </el-tooltip>
                     <el-button type="text" size="small" v-clipboard="copy(scope.row)" @success="handleSuccess" @error="handleError" >
                         点击复制
                     </el-button>
