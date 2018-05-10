@@ -326,6 +326,7 @@
             clearScroll () {
                 if (this.$refs.couponSelect) {
                     this.$refs.couponSelect.$refs.scroll.data = []
+                    this.$refs.couponSelect.$refs.scroll.isShowGetMore = true
                     // this.$refs.couponSelect.$refs.scroll.currPlaceholder = ''
                 }
             },

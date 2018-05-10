@@ -73,7 +73,6 @@
         watch: {
             'data'(val) {
                 if (val.length < 1) this.currPlaceholder = this.placeholder
-                this.initGetMore()
                 this.loading = false
             },
             'placeholder' (val) {
@@ -88,9 +87,13 @@
             }
         },
         created () {
+            this.initGetMore()
             if (this.value && this.currPlaceholder && this.data.length < 1) {      
                 this.data.push({id: this.value, name: this.placeholder})
             }
+        },
+        activated () {
+            this.initGetMore()
         },
         mounted () {
             this.input = this.$refs.container.$el.querySelector('input')
@@ -137,7 +140,7 @@
                     this.currPlaceholder = this.placeholder
                     return
                 }
-                this.initGetMore()
+                // this.initGetMore()
                 // 判断是否有数据 没有数据进行加载
                 if (!this.data || this.data.length < 1) {
                     this.loading = true
