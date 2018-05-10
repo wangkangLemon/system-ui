@@ -291,7 +291,7 @@ class CourseService {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category/children`
         return api.get(finalUrl, { id, filter, type }).catch((ret) => {
-            ret.tipCom.close()
+            ret.tipCom && ret.tipCom.close()
             return ret
         })
     }
