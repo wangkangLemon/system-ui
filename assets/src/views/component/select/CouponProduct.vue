@@ -1,5 +1,5 @@
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder"
+    <SelectScroll ref="scroll" :changeCb="handleChange" :requestCb="fetchData" :placeholder="currPlaceholder"
                   v-model="currVal" :disabled="disabled">
     </SelectScroll>
 </template>
@@ -24,6 +24,7 @@
         data () {
             return {
                 currVal: this.value,
+                currPlaceholder: this.placeholder,
                 pageSize: 10,
                 fetchParam: {
                     name: void 0,
@@ -41,6 +42,9 @@
                 },
                 immediate: true
             },
+            'placeholder' (val) {
+                this.currPlaceholder !== val && (this.currPlaceholder = val)
+            }
             // 'value' (val, oldValue) {
             //     debugger
             //     this.currVal !== val && (this.currVal = val)                

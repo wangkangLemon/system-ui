@@ -82,7 +82,6 @@
             'value' (val) {
                 this.selectVal != val && (this.selectVal = val)
                 // 在观察者 这里初始化data
-                this.data = this.list == null ? [] : this.list
                 if (this.value != null && this.currPlaceholder && this.data.length < 1) {
                     this.data.push({id: this.value, name: this.placeholder})
                 }
