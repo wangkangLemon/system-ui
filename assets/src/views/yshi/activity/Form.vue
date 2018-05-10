@@ -220,7 +220,7 @@
                             this.fetchParam.goods.forEach( item => {
                                 pricez = pricez + parseFloat(item.favorable_price)
                             })
-                            formCheck.checkMoney(rule, value, pricez, callback)
+                            formCheck.checkMoney(rule, value, pricez, '优惠活动价不能高于单品优惠价总和', callback)
                         }}
                     ],
                     order: [
