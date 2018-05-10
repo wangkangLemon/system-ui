@@ -151,9 +151,13 @@
                 // 排除已选课程
                 if (selection.indexOf(row) > -1)
                     this.currSelectedList.push(row)
-                else
-                    this.currSelectedList.splice(this.currSelectedList.indexOf(row), 1)
-
+                else {
+                    // this.currSelectedList.splice(this.currSelectedList.indexOf(row), 1)
+                    let index = this.currSelectedList.findIndex(value => {
+                        return value.id === row.id
+                    })
+                    this.currSelectedList.splice(index, 1)
+                }
                 this.$emit('changeSelected', this.currSelectedList)
             },
             delItem (row) {
