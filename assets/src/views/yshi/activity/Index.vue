@@ -39,6 +39,7 @@
         height: 20px;
         width: 150px;
         float: left;
+        margin-right: 10px;
     }
 }
 </style>
@@ -58,7 +59,7 @@
             <section>
                 <i>状态</i>
                 <el-select v-model="fetchParam.status" placeholder="全部" @change="fetchData" :clearable="true">
-                    <el-option label="正常" value="2"></el-option>
+                    <el-option label="上线" value="2"></el-option>
                     <el-option label="下线" value="1"></el-option>
                 </el-select>
             </section>
@@ -88,9 +89,9 @@
             </el-table-column>
             <el-table-column align="left" width="250" prop="url" label="链接">
                 <template slot-scope="scope">
-                    <p class="i-url">http://www.baidu.comaaaaaaaa</p>
-                    <el-button type="text" size="small" v-clipboard="xxx" @success="handleSuccess" @error="handleError" @click="copy(scope.row)">
-                        点击复制{{copyData}}
+                    <p class="i-url">{{scope.row.url}}</p>
+                    <el-button type="text" size="small" v-clipboard="copy(scope.row)" @success="handleSuccess" @error="handleError" >
+                        点击复制
                     </el-button>
                 </template>
             </el-table-column>
@@ -164,7 +165,7 @@ export default {
     },
     methods: {
         copy (row) {
-            this.copyData = this.xxx
+            return row.url
         },
         handleType (type) {
             if (type === 'course') this.$router.push({name: 'course-manage-addCourse'})
@@ -220,10 +221,11 @@ export default {
             })
         },
         handleSuccess(e) {
-            console.log(e);
+            console.log(e)
+            xmview.showTip('success', '复制成功')
         },
         handleError (e) {
-            console.log(e)
+            xmview.showTip('error', '复制失败')
         }
         
     },
