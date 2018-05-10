@@ -186,7 +186,7 @@
             <el-button type="primary" @click="submit('form')">保存生效</el-button>
         </el-card>
         <!--奖品设置-->
-        <el-dialog v-model="addForm" title="奖品设置" size="small">
+        <el-dialog v-model="addForm" title="奖品设置" size="small" @close="clearScroll">
             <el-form :model="form1" :rules="rules1" ref="form1" label-width="100px">
                 <el-form-item label="奖品类型" prop="type">
                     <el-select @change="changeProduct" v-model="form1.type">
@@ -210,7 +210,7 @@
                                    :key="index"></el-option>
                     </el-select>
                     <template v-if="form1.category && form1.category == 'discount_coupon'">
-                        <CouponSelect :value="couponForm.product_id" :placeholder="couponForm.product_name" @change="val=>{couponForm.product_id=val;getStockCount()}"></CouponSelect>
+                        <CouponSelect ref="couponSelect" :value="couponForm.product_id" :placeholder="couponForm.product_name" @change="val=>{couponForm.product_id=val;getStockCount()}"></CouponSelect>
                     </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form1.product_id) && form1.product_id > 0">
@@ -315,6 +315,12 @@
             },
         },
         methods: {
+            clearScroll () {
+                if (this.$refs.couponSelect) {
+                    this.$refs.couponSelect.$refs.scroll.data = []
+                    // this.$refs.couponSelect.$refs.scroll.currPlaceholder = ''
+                }
+            },
             // 获取库存
             getStockCount () {
                 if (this.form1.category === 'discount_coupon') {
@@ -402,6 +408,7 @@
                 if (this.form1.category === 'discount_coupon' && this.cloneForm1.category !== 'discount_coupon') {
                     this.couponForm.product_name = ''
                     this.couponForm.product_id = ''
+                    this.clearScroll()
                 } else if (this.cloneForm1.category === 'discount_coupon') {
                     this.couponForm.product_name = this.form1.product_name
                     this.couponForm.product_id = this.form1.product_id
