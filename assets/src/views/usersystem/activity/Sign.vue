@@ -477,6 +477,7 @@
                 if (this.form.category === 'discount_coupon' && this.cloneForm1.category !== 'discount_coupon') {
                     this.couponForm.product_name = ''
                     this.couponForm.product_id = ''
+                    this.clearScroll()
                 } else if (this.cloneForm1.category === 'discount_coupon') {
                     this.couponForm.product_name = this.form.product_name
                     this.couponForm.product_id = this.form.product_id
