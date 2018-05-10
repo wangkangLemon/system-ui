@@ -41,11 +41,11 @@ class FormCheckUtils {
         }
     }
     // 价格不高于
-    checkMoney (rule, value, price, callback) {
+    checkMoney (rule, value, price, errorMsg, callback) {
         if (this._checkPrice(value).status) {
             setTimeout(() => {
                 if (value > parseFloat(price)) {
-                    callback(new Error('活动优惠价格不能高于单品优惠价总和'))
+                    callback(new Error(errorMsg))
                 } else {
                     callback()
                 }

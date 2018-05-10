@@ -102,13 +102,22 @@
                     <el-tag v-else>下线</el-tag>
                 </template>
             </el-table-column>
+            <el-table-column width="100" label="发布状态" align="center">
+                <template slot-scope="scope">
+                    <el-tag v-if="scope.row.publish_status == 0" type="success">已发布</el-tag>
+                    <el-tag v-else-if="scope.row.publish_status == 1" type="primary">已撤回</el-tag>
+                </template>
+            </el-table-column>
             <el-table-column width="170" prop="create_time_name" label="创建时间" align="center">
             </el-table-column>
-            <el-table-column fixed="right" width="140" label="操作" align="center">
+            <el-table-column fixed="right" width="190" label="操作" align="center">
                 <template slot-scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" type="text" size="small" :disabled="scope.row.status == 0">
                         编辑
+                    </el-button>
+                    <el-button @click="publish(scope.$index, scope.row)" type="text" size="small">
+                        <i>{{ scope.row.publish_status == 0 ? '撤回' : '发布' }}</i>
                     </el-button>
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
@@ -232,6 +241,15 @@ export default {
                 ret.push(item.id)
             })
             this.selectedIds = ret
+        },
+        publish (index, row) {
+            let txt = row.publish_status == 0 ? '撤回' : '发布'
+            let publish_status = row.publish_status == 0 ? 1 : 0
+            xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
+                courseService.publish({id: row.id, publish_status }).then((ret) => {
+                    this.fetchData()
+                })
+            })
         },
         // 下线 或者上线课程 0为下线，1为上线
         offline(index, row) {

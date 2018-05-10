@@ -166,7 +166,7 @@
                 formCheck.checkPrice(rule, value, callback)
             }
             let checkMoney = (rule, value, callback) => {
-                formCheck.checkMoney(rule, value, this.fetchParam.price, callback)
+                formCheck.checkMoney(rule, value, this.fetchParam.price, '优惠价格不能高于商品定价', callback)
             }
             return {
                 editor: null,
