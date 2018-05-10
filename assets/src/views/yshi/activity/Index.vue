@@ -69,23 +69,15 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
-            <el-table-column align="left" min-width="200" prop="name" label="优惠名称">
+            <el-table-column align="left" min-width="200" prop="name" label="活动名称">
             </el-table-column>
-            <el-table-column align="left" min-width="100" prop="goods_count" label="商品数">
+            <el-table-column align="left" min-width="80" prop="goods_count" label="商品数">
             </el-table-column>
             <el-table-column align="left" width="130" prop="price" label="原价">
             </el-table-column>
             <el-table-column align="left" width="130" prop="favorable_price" label="优惠价">
             </el-table-column>
-            <el-table-column align="left" width="130" prop="order" label="排序">
-            </el-table-column>
-            <el-table-column align="left" width="190" prop="create_time" label="创建时间">
-            </el-table-column>
-            <el-table-column align="left" width="190" prop="end_time" label="截止时间">
-                <template slot-scope="scope">
-                    <p v-if="scope.row.end_time">{{scope.row.end_time}}</p>
-                    <p v-else>--</p>
-                </template>
+            <el-table-column align="left" width="80" prop="order" label="排序">
             </el-table-column>
             <el-table-column align="left" width="250" prop="url" label="链接">
                 <template slot-scope="scope">
@@ -94,6 +86,14 @@
                         点击复制
                     </el-button>
                 </template>
+            </el-table-column>
+            <el-table-column align="left" width="190" prop="end_time" label="截止时间">
+                <template slot-scope="scope">
+                    <p v-if="scope.row.end_time">{{scope.row.end_time}}</p>
+                    <p v-else>--</p>
+                </template>
+            </el-table-column>
+            <el-table-column align="left" width="190" prop="create_time" label="创建时间">
             </el-table-column>
             <el-table-column align="left" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">

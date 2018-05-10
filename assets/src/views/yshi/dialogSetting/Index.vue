@@ -42,9 +42,9 @@
             </el-button>
         </section>
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
-            <el-table-column align="left" min-width="300" prop="name" label="推广名称">
+            <el-table-column align="left" min-width="200" prop="name" label="推广名称">
             </el-table-column>
-            <el-table-column align="left" min-width="100" prop="url" label="跳转链接">
+            <el-table-column align="left" min-width="250" prop="url" label="跳转链接">
             </el-table-column>
             <el-table-column align="left" width="190" prop="create_time" label="创建时间">
             </el-table-column>

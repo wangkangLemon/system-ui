@@ -53,9 +53,9 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
-            <el-table-column align="left" min-width="300" prop="name" label="名称">
+            <el-table-column align="left" min-width="200" prop="name" label="名称">
             </el-table-column>
-            <el-table-column align="left" min-width="100" prop="object_count" label="素材数">
+            <el-table-column align="left" min-width="50" prop="object_count" label="素材数">
             </el-table-column>
             <el-table-column align="left" width="130" prop="price" label="原价">
             </el-table-column>
