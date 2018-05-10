@@ -62,16 +62,16 @@
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
             <el-table-column align="left" min-width="200" prop="name" label="组合名称">
             </el-table-column>
-            <el-table-column align="left" min-width="100" prop="goods_count" label="商品数">
+            <el-table-column align="left" min-width="80" prop="goods_count" label="商品数">
             </el-table-column>
-            <el-table-column align="left" min-width="130" prop="favorable_count" label="优惠阶梯数">
+            <el-table-column align="left" min-width="110" prop="favorable_count" label="优惠阶梯数">
             </el-table-column>
-            <el-table-column align="left" width="130" label="满">
+            <el-table-column align="left" width="100" label="满">
                 <template slot-scope="scope">
                     <p v-if="scope.row.favorable.length">{{ scope.row.favorable[0].reach }}</p>
                 </template>
             </el-table-column>
-            <el-table-column align="left" width="130" label="打折">
+            <el-table-column align="left" width="80" label="打折">
                 <template slot-scope="scope">
                     <p v-if="scope.row.favorable.length">{{ scope.row.favorable[0].discount }}</p>
                 </template>

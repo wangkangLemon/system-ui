@@ -194,7 +194,7 @@
             </div>
         </el-card>
         <!--选择奖品-->
-        <el-dialog v-model="addForm" title="选择奖品" size="small">
+        <el-dialog v-model="addForm" title="选择奖品" size="small" @close="clearScroll">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item label="奖品类型" prop="type">
                     <el-select @change="changeProduct" v-model="form.type">
@@ -216,7 +216,7 @@
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
                     <template v-if="form.category && form.category == 'discount_coupon'">
-                        <CouponSelect :value="couponForm.product_id" :placeholder="couponForm.product_name" @change="val=>{couponForm.product_id=val;getStockCount()}"></CouponSelect>
+                        <CouponSelect ref="couponSelect" :value="couponForm.product_id" :placeholder="couponForm.product_name" @change="val=>{couponForm.product_id=val;getStockCount()}"></CouponSelect>
                     </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form.product_id) && form.product_id > 0">
@@ -323,6 +323,12 @@
             this.getSelectPorduct()
         },
         methods: {
+            clearScroll () {
+                if (this.$refs.couponSelect) {
+                    this.$refs.couponSelect.$refs.scroll.data = []
+                    // this.$refs.couponSelect.$refs.scroll.currPlaceholder = ''
+                }
+            },
             // 编辑奖品
             editFn (row) {
                 this.addForm = true

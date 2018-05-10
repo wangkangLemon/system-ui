@@ -32,6 +32,15 @@
         background: rgba(0, 0, 0, .5);
         z-index: 1000;
     }
+    .i-url{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        height: 20px;
+        width: 150px;
+        float: left;
+        margin-right: 10px;
+    }
 }
 </style>
 
@@ -50,8 +59,8 @@
             <section>
                 <i>状态</i>
                 <el-select v-model="fetchParam.status" placeholder="全部" @change="fetchData" :clearable="true">
-                    <el-option label="正常" value="1"></el-option>
-                    <el-option label="下线" value="2"></el-option>
+                    <el-option label="上线" value="2"></el-option>
+                    <el-option label="下线" value="1"></el-option>
                 </el-select>
             </section>
             <DateRange title="创建时间" :start="fetchParam.start_time" :end="fetchParam.end_time" @changeStart="val=> {fetchParam.start_time=val}" @changeEnd="val=> {fetchParam.end_time=val}" :change="fetchData">
@@ -60,17 +69,23 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true"  border>
-            <el-table-column align="left" min-width="200" prop="name" label="优惠名称">
+            <el-table-column align="left" min-width="200" prop="name" label="活动名称">
             </el-table-column>
-            <el-table-column align="left" min-width="100" prop="goods_count" label="商品数">
+            <el-table-column align="left" min-width="80" prop="goods_count" label="商品数">
             </el-table-column>
             <el-table-column align="left" width="130" prop="price" label="原价">
             </el-table-column>
             <el-table-column align="left" width="130" prop="favorable_price" label="优惠价">
             </el-table-column>
-            <el-table-column align="left" width="130" prop="order" label="排序">
+            <el-table-column align="left" width="80" prop="order" label="排序">
             </el-table-column>
-            <el-table-column align="left" width="190" prop="create_time" label="创建时间">
+            <el-table-column align="left" width="250" prop="url" label="链接">
+                <template slot-scope="scope">
+                    <p class="i-url">{{scope.row.url}}</p>
+                    <el-button type="text" size="small" v-clipboard="copy(scope.row)" @success="handleSuccess" @error="handleError" >
+                        点击复制
+                    </el-button>
+                </template>
             </el-table-column>
             <el-table-column align="left" width="190" prop="end_time" label="截止时间">
                 <template slot-scope="scope">
@@ -78,11 +93,7 @@
                     <p v-else>--</p>
                 </template>
             </el-table-column>
-            <el-table-column align="left" width="190" prop="url" label="链接">
-                <template slot-scope="scope">
-                    <p >{{scope.row.url}}</p>
-                    <i >点击复制</i>
-                </template>
+            <el-table-column align="left" width="190" prop="create_time" label="创建时间">
             </el-table-column>
             <el-table-column align="left" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
@@ -90,7 +101,8 @@
                     <el-button 
                         @click="$router.push({name: 'yshi-activity-edit', params: {activity_id: scope.row.id}})" 
                         type="text" 
-                        size="small" >
+                        size="small" 
+                        :disabled="scope.row.status == 2">
                         编辑
                     </el-button>
                     <el-button 
@@ -102,7 +114,8 @@
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
-                        size="small" >
+                        size="small" 
+                        :disabled="scope.row.status == 2">
                         删除
                     </el-button>
                 </template>
@@ -125,10 +138,11 @@
 import activityService from 'services/yshi/activityService'
 import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
+import * as timeUtils from 'utils/timeUtils'
 function getFetchParam () {
     return {
         name: void '',
-        // status: void 0, // 1 下线，0 正常
+        status: void 0, // 1 下线，0 正常
         start_time: void 0,
         end_time: void 0,
         page: 1,
@@ -140,6 +154,8 @@ export default {
         return {
             data: [], // 表格数据
             total: 0,
+            copyData: '',
+            xxx: 'sdf',
             dialogVisible: false,
             fetchParam: getFetchParam(),
         }
@@ -148,6 +164,9 @@ export default {
         this.fetchData()
     },
     methods: {
+        copy (row) {
+            return row.url
+        },
         handleType (type) {
             if (type === 'course') this.$router.push({name: 'course-manage-addCourse'})
             else this.$router.push({name: 'newcourse-course-add'})
@@ -166,7 +185,7 @@ export default {
         fetchData (val) {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
-            // fetchParam.status = (!fetchParam.status && fetchParam.status !== 0) ? -1 : fetchParam.status
+            fetchParam.status = (!fetchParam.status && fetchParam.status !== 1) ? 0 : fetchParam.status
             return activityService.searchActivity(fetchParam).then((ret) => {
                 this.data = ret.list
                 this.total = ret.total
@@ -184,11 +203,10 @@ export default {
                     return
                 }
             }
-            let txt = row.status == 1 ? '下线' : '上线'
+            let txt = row.status == 2 ? '下线' : '上线'
             let finalStatus = row.status == 1 ? 2 : 1
-            let reqFn = row.status == 1 ? activityService.offline : activityService.online
             xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                reqFn(row.id).then((ret) => {
+                activityService.statusline(row.id, finalStatus).then((ret) => {
                     row.status = finalStatus
                 })
             })
@@ -202,6 +220,14 @@ export default {
                 })
             })
         },
+        handleSuccess(e) {
+            console.log(e)
+            xmview.showTip('success', '复制成功')
+        },
+        handleError (e) {
+            xmview.showTip('error', '复制失败')
+        }
+        
     },
     components: { DateRange }
 }

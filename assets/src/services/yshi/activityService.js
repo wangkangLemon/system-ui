@@ -10,13 +10,19 @@ class ActivityService {
     // 搜索
     searchActivity ({
         name,
+        status,
         start_time,
         end_time,
         page,
         page_size
     }) {
         let url = `${urlPre}/list`
-        return api.get(url, { name, start_time, end_time, page, page_size }, false).then(ret => ret.data)
+        return api.get(url, { name, status, start_time, end_time, page, page_size }, false).then(ret => ret.data)
+    }
+    // 上下线
+    statusline (id, status) {
+        let url = `${urlPre}/status`
+        return api.put(url, JSON.stringify({id, status}))
     }
     // 上下线
     offline (id) {
@@ -38,9 +44,9 @@ class ActivityService {
         })
     }
     // 创建
-    createActivity ({ name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids }) {
+    createActivity ({ status = 1, name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids }) {
         let url = urlPre
-        return api.post(url, JSON.stringify({ name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids })).then(ret => {
+        return api.post(url, JSON.stringify({ status, name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids })).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -56,9 +62,9 @@ class ActivityService {
         })
     }
     // 更新
-    updateActivity ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids }) {
+    updateActivity ({ id, status, name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids }) {
         let url = `${urlPre}`
-        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids })).then(ret => {
+        return api.put(url, JSON.stringify({ id, status, name, cover, show_type, show_video_id, show_video_name, introduce, order, favorable_price, end_time, goods_ids })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
