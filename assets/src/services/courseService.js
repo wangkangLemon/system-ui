@@ -91,6 +91,39 @@ class CourseService {
         })
     }
 
+    getPublicCourselistByName ({
+        keyword = '',
+        status = '',
+        type = '',
+        is_task,
+        time_start = '',
+        time_end = '',
+        album_id = '',
+        category_id = '',
+        companyid = '',
+        need_testing = '',
+        page = '',
+        page_size = '',
+    }) {
+        companyid = companyid || authUtils.getUserInfo().company_id
+        let finalUrl = `${config.apiHost}/newcourse/search`
+        return api.get(finalUrl, {
+            keyword, // 课程名称
+            status, // 课程状态 不赋值则表示全部，0为正常，1为下线，2为视频转码中
+            type,
+            is_task,
+            time_start,
+            time_end,
+            album_id,
+            category_id,
+            need_testing, // 课后考试 不赋值则表示全部，0为不需要，1为需要
+            page,
+            page_size,
+        }).then(ret => {
+            return ret.data
+        })
+    }
+
     // 获取课程列表
     getCourseList ({ status, category, company_id, page, page_size, time_start, time_end, keyword }) {
         let url = urlPre + '/search'
@@ -258,7 +291,7 @@ class CourseService {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category/children`
         return api.get(finalUrl, { id, filter, type }).catch((ret) => {
-            ret.tipCom.close()
+            ret.tipCom && ret.tipCom.close()
             return ret
         })
     }

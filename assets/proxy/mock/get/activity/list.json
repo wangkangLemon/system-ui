@@ -1,0 +1,29 @@
+{
+    "code": 0,
+    "message": "this is the success message",
+    "data": {
+        "list":[
+            {
+                "id":1,
+                "name":"执业药师考前冲刺优惠",
+                "goods_count":3,
+                "price":10000,
+                "favorable_price":8000,
+                "end_time":"111",
+                "order":1,
+                "create_time":1234567
+            },
+            {
+                "id":2,
+                "name":"执业药师考前冲刺优惠",
+                "goods_count":3,
+                "price":10000,
+                "favorable_price":8000,
+                "end_time":"111",
+                "order":2,
+                "create_time":1234567
+            }],
+        "total":12,
+        "version":1
+    }
+}

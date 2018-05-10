@@ -13,7 +13,7 @@ class SectionService {
     }) {
         let finalUrl = `${urlPre}/category/children`
         return api.get(finalUrl, {id}).catch((ret) => {
-            ret.tipCom.close()
+            ret.tipCom && ret.tipCom.close()
             return ret
         })
     }

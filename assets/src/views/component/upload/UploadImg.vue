@@ -160,7 +160,7 @@
                 }
             },
             'defaultImg' (val) {
-                this.currImg = val ? [{name: val, url: config.apiHost + val}] : []
+                this.currImg = val ? [{name: val, url: val}] : []
             },
             'disabled' (val) {
                 this.isShowDelAndPreview(!val)

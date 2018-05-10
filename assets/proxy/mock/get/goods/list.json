@@ -1,0 +1,24 @@
+{
+    "code": 0,
+    "message": "this is the success message",
+    "data": {
+        "list":[
+            {"id":3,
+            "name":"中药学知识",
+            "object_count":3,
+            "price":100,
+            "favorable_price":80,
+            "create_time":"2015"
+            },
+            {
+                "id":4,
+                "name":"中药学知识",
+                "object_count":3,
+                "price":100,
+                "favorable_price":80,
+                "create_time":"2015"
+            }],
+        "total":12,
+        "version":1
+    }
+}

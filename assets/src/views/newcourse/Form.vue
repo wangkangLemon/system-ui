@@ -256,6 +256,7 @@
     import LessonForm from './LessonForm.vue'
     import NestedDialog from '../component/dialog/NestedDialog.vue'
     import Sidebar from '../component/sidebar/Sidebar.vue'
+    import * as _ from 'utils/common'
 
     export default {
         name: 'newcourse-course-form',
@@ -306,6 +307,7 @@
                     accept: '*.doc,*.docx', // 上传的文件格式
                     form: new Lesson(),
                     paperLesson: null,
+                    _paperLesson: null,
                     rules: {
                         name: { required: true, message: '请输入课程名称', trigger: 'change' },
                         material_type: { required: true, message: '请选择课时类型', trigger: 'change' },
@@ -455,7 +457,10 @@
                 if (row.id !== 0) {
                     row.deleted = true
                     if (this.fetchParam.lesson_type === 'single') {
+                        // this.classhour.form.deleted = row.deleted
+                        this.classhour._paperLesson = _.clone(this.classhour.paperLesson)
                         this.classhour.paperLesson = null
+
                     }
                 } else {
                     if (this.fetchParam.lesson_type === 'multi') {
@@ -511,6 +516,9 @@
                     chapter.addLesson(this.classhour.form)
                     if (this.classhour.paperLesson) {
                         chapter.addLesson(this.classhour.paperLesson)
+                    }
+                    if (this.classhour._paperLesson) {
+                        chapter.addLesson(this.classhour._paperLesson)
                     }
 
                     chapters.push(chapter)

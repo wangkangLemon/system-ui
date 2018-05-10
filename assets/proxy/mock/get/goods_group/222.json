@@ -1,0 +1,17 @@
+{
+    "code": 0,
+    "message": "this is the success message",
+    "data": {
+        "id":222,
+        "name":"中药学知识",
+        "cover":"111",
+        "show_type":1,
+        "show_video_id":"111",
+        "show_video_name":222,
+        "introduce":"介绍文本",
+        "favorable":[{"reach":8888,"discount":7}],
+        "state":1,
+        "order":1,
+        "goods":[{"id":222,"name":"中药学知识","price":2000,"favorable_price":2000}]
+    }
+}

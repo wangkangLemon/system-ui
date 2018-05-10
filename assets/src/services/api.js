@@ -153,7 +153,8 @@ function processCodeError (ret, url) {
         ret.tipCom = xmview.showTip('error', ret.message)
         return Promise.reject(ret)
     } else if (ret.code != 0) {
-        ret.tipCom = xmview.showTip('error', ret.message || '远程服务器出现问题!')
+        // ret.tipCom = xmview.showTip('error', ret.message || '远程服务器出现问题!')
+        ret.message ? (ret.tipCom = xmview.showTip('error', ret.message || '远程服务器出现问题!')) : (ret.tipCom = '')
         return Promise.reject(ret)
     }
 }
@@ -169,6 +170,14 @@ export function processParams (params) {
     }
 
     return data.join('&')
+}
+
+export function processJSONParams (params) {
+    if (params === '') return params
+    for (let k in params) {
+        params[k] = params[k] === '' ? void 0 : params[k]
+    }
+    return JSON.stringify(params)
 }
 
 // 处理登录超时

@@ -56,7 +56,7 @@
                   :fit="true"
                   border>
             <el-table-column
-                    min-width="300"
+                    min-width="350"
                     label="商品">
                 <template slot-scope="scope">
                     <img :src="scope.row.image | fillImgPath" height="30" style="vertical-align: middle">
@@ -64,7 +64,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    width="200"
+                    width="100"
                     prop="price"
                     label="所需积分">
             </el-table-column>
@@ -115,7 +115,7 @@
                                    @click="()=>$router.push({name:'usersys-park-sellingcount', query: {prodId: scope.row.id}})">销量 <!--a-->
                         </el-button>
                         <el-button type="text" size="small"
-                                   @click="$router.push({name:'usersys-park-publishprod', query: {id: scope.row.id},params: {prod: scope.row}})">
+                                   @click="$router.push({name:'usersys-park-publishprod', query: {id: scope.row.id}})">
                             编辑 <!--a-->
                         </el-button>
                         <el-button type="text" size="small" @click="disableProd(scope.row)">

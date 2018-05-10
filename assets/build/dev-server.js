@@ -1,31 +1,58 @@
 require('./check-versions')()
 
-var config = require('../config')
+const config = require('../config')
 if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
 
-var opn = require('opn')
-var path = require('path')
-var express = require('express')
-var webpack = require('webpack')
-var webpackConfig = require('./webpack.dev.conf')
+const opn = require('opn')
+const path = require('path')
+const Koa = require('koa')
+const mount = require('koa-mount')
+const koaStatic = require('koa-static')
+const webpack = require('webpack')
+const webpackConfig = require('./webpack.dev.conf')
+const proxy = require('../proxy/app')
 
 // default port where dev server listens for incoming traffic
-var port = process.env.PORT || config.dev.port
+const port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
-var autoOpenBrowser = !!config.dev.autoOpenBrowser
+const autoOpenBrowser = !!config.dev.autoOpenBrowser
 
-var app = express()
-var compiler = webpack(webpackConfig)
+const app = new Koa()
 
-var devMiddleware = require('webpack-dev-middleware')(compiler, {
+app.use(async (ctx, next) => {
+    try {
+        await next()
+    } catch (err) {
+        ctx.throw(500, err)
+    }
+})
+
+if (process.env.MOCK_ENV) {
+    const apiConfig = require('../config/config')
+    // app.use(require('koa-body')({
+    //     patchNode: true
+    // }))
+    console.log('you are at mock mode')
+    app.use(proxy({
+        // target: 'http://127.0.0.1:3000',
+        target: [JSON.parse(apiConfig.API_HOST_DEV), JSON.parse(apiConfig.API_HOST_ZZA)],
+        options: {
+            verbose: true
+        }
+    }))
+}
+
+const compiler = webpack(webpackConfig)
+
+const devMiddleware = require('koa-webpack-dev-middleware')(compiler, {
     publicPath: webpackConfig.output.publicPath,
     quiet: true
 })
 
 // hot load
-var hotMiddleware = require('webpack-hot-middleware')(compiler, {
+const hotMiddleware = require('koa-webpack-hot-middleware')(compiler, {
     heartbeat: 2000,
     log: false,
     overlay: false
@@ -40,11 +67,11 @@ compiler.plugin('compilation', function (compilation) {
 })
 
 // handle vendor
-app.use('/vendor', express.static('../public/vendor', {maxAge: 1000 * 60 * 60 * 6}))
-app.use('/upload', express.static('../public/upload', {maxAge: 1000 * 60 * 60 * 6}))
+app.use(mount('/vendor', koaStatic('../public/vendor', {maxAge: 1000 * 60 * 60 * 6})))
+app.use(mount('/upload', koaStatic('../public/upload', {maxAge: 1000 * 60 * 60 * 6})))
 
 // handle fallback for HTML5 history API
-app.use(require('connect-history-api-fallback')())
+app.use(require('koa2-connect-history-api-fallback')())
 
 // serve webpack bundle output
 app.use(devMiddleware)
@@ -55,7 +82,7 @@ app.use(hotMiddleware)
 
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
-app.use(staticPath, express.static('./static', {maxAge: 1000 * 60 * 60 * 24}))
+app.use(mount(staticPath, koaStatic('./static', {maxAge: 1000 * 60 * 60 * 24})))
 
 var uri = 'http://localhost:' + port
 

@@ -24,7 +24,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.vue', '.json'],
         alias: {
-            'vue$': 'vue/dist/vue.esm.js',
+            // 'vue$': 'vue/dist/vue.esm.js',
             '@': resolve('src'),
             'base': path.resolve(__dirname, '../src'),
             'services': resolve('src/services'), // Service目录所在路径
@@ -35,14 +35,14 @@ module.exports = {
     },
     module: {
         rules: [
-            {
-                test: /\.(js|vue|jsx)$/,
-                loader: 'eslint-loader',
-                enforce: 'pre',
-                options: {
-                    formatter: require('eslint-friendly-formatter')
-                }
-            },
+            // {
+            //     test: /\.(js|vue|jsx)$/,
+            //     loader: 'eslint-loader',
+            //     enforce: 'pre',
+            //     options: {
+            //         formatter: require('eslint-friendly-formatter')
+            //     }
+            // },
             {
                 test: /\.vue$/,
                 loader: 'vue-loader',

@@ -134,9 +134,14 @@ export function date2Str (date, split = '-', {hashour = false, hasDay = true} = 
     let ret = [date.getFullYear(), fillZero((date.getMonth() + 1), 2)]
     if (hasDay) {
         ret.push(fillZero(date.getDate(), 2))
+        ret = ret.join(split)
+    }
+    if (hashour) {
+        let ret2 = [fillZero(date.getHours(), 2), fillZero(date.getMinutes(), 2), fillZero(date.getSeconds(), 2)]
+        ret2 = ret2.join(':')
+        ret = ret + ' ' + ret2
     }
 
-    ret = ret.join(split)
     return ret
 }
 
@@ -159,7 +164,16 @@ export function compareDate (date1, date2) {
         return 1
     }
 }
-
+// 比较两个时间的大小()
+// 传入的参数必须是 Date 类型
+export function compareDateTime (date1, date2) {
+    let time = [date1.getTime(), date2.getTime()]
+    if (time[0] < time[1]) {
+        return -1
+    } else {
+        return 1
+    }
+}
 // 判断是否是闰年
 export function leapYear (year) {
     return !(year % (year % 100 ? 4 : 400))

@@ -24,14 +24,18 @@
                 <ProdCategorySelect :disabled="fetchParam.id != null" ref="prodCategory"
                                     v-model="fetchParam.category"></ProdCategorySelect>
             </el-form-item>
+            <el-form-item label="优惠券" v-if="isShowCoupon" prop="coupon_id">
+                <CouponSelect @change="val=>{fetchParam.coupon_id=val}" :value="fetchParam.coupon_id" :placeholder="fetchParam.coupon_name"></CouponSelect>
+                <!-- <i>{{typeof fetchParam.coupon_id}}</i> -->
+            </el-form-item>
             <el-form-item label="面值" v-if="isShowMianzhi" prop="quota">
                 <el-input v-model.number="fetchParam.quota" placeholder="设置卡券的面值"></el-input>
             </el-form-item>
             <el-form-item label="天数" v-if="isShowDay" prop="day">
-                <el-input type="number" v-model.number="fetchParam.day" placeholder="设置卡券的面值"></el-input>
+                <el-input type="number" v-model.number="fetchParam.day" placeholder="设置卡券的天数"></el-input>
             </el-form-item>
             <el-form-item label="倍数" v-if="isShowTimes" prop="quota">
-                <el-input type="number" v-model.number="fetchParam.quota" placeholder="设置卡券的面值"></el-input>
+                <el-input type="number" v-model.number="fetchParam.quota" placeholder="设置卡券的倍数"></el-input>
             </el-form-item>
             <el-form-item label="商品名称" prop="name">
                 <el-input :disabled="fetchParam.id != null" v-model="fetchParam.name"
@@ -55,7 +59,7 @@
                 <el-input size="small" placeholder="设置兑换单个商品所需要的积分" v-model.number="fetchParam.price"></el-input>
             </el-form-item>
             <el-form-item label="商品有效期(天)" prop="expire">
-                <el-input v-model.number="fetchParam.expire"></el-input>
+                <el-input-number v-model.number="fetchParam.expire" :controls="false" placeholder="商品有效期"></el-input-number>
             </el-form-item>
             <el-form-item label="">
                 <el-button type="primary" @click="publish(0)">发布并上架</el-button>
@@ -69,6 +73,8 @@
     import ImgCropper from '../../component/upload/ImagEcropperInput.vue'
     import parkService from '../../../services/usersystem/parkService'
     import ProdCategorySelect from '../../component/select/ProdCategory.vue'
+    import CouponSelect from 'components/select/Coupon.vue'
+    import formCheck from 'utils/formCheckUtils'
     export default{
         name: 'usersystem-park-publishprod',
         data () {
@@ -80,11 +86,14 @@
                     description: {required: true, message: '请填写商品的介绍内容', trigger: 'blur'},
                     image: {required: true, message: '请上传封面图片', trigger: 'change'},
                     price: {required: true, type: 'number', message: '请输入兑换积分', trigger: 'blur'},
-                    expire: {required: true, type: 'number', message: '请设置该商品兑换所需积分', trigger: 'blur'},
+                    expire: {required: true, type: 'number', trigger: 'blur',validator: (rule, value, callback) => {
+                        formCheck.checkNumber(rule, value, callback)
+                    }},
                 },
                 isShowMianzhi: false, // 是否显示面值
                 isShowDay: false, // 是否显示 天数
                 isShowTimes: false, // 是否显示 倍数
+                isShowCoupon: false, // 是否显示优惠券
             }
         },
         watch: {
@@ -92,6 +101,7 @@
                 this.isShowMianzhi = false
                 this.isShowDay = false
                 this.isShowTimes = false
+                this.isShowCoupon = false
 
                 delete this.rules.quota
                 delete this.rules.day
@@ -111,14 +121,28 @@
                     this.isShowDay = true
                     this.rules['day'] = {required: true, type: 'number', message: '请输入天数', trigger: 'blur'}
                 }
+                // 显示优惠券
+                if (val === 'discount_coupon') {
+                    this.isShowCoupon = true
+                    this.rules['coupon_id'] = {required: true, validator: ((rule, value, callback) => {
+                        if(!value){
+                            callback(new Error("请选择优惠券"))
+                        }
+                        callback()
+                    }), trigger: 'change'}
+                }
             }
         },
         mounted () {
-            this.fetchParam = this.$route.params.prod || initParam()
-//            this.fetchParam.id = this.$route.query.id
-            this.fetchParam.quota = this.fetchParam.quota ? parseFloat(this.fetchParam.quota) : ''
-            this.fetchParam.day = Number(this.fetchParam.day)
-            if (this.fetchParam.id) xmview.setContentTile('编辑商品-用户体系管理')
+            this.fetchParam.id = this.$route.query.id
+            if (this.fetchParam.id) {
+                xmview.setContentTile('编辑商品-用户体系管理')
+                parkService.prodDetail({id:this.fetchParam.id}).then((ret) => {
+                    this.fetchParam = ret
+                    this.fetchParam.quota = this.fetchParam.quota ? parseFloat(this.fetchParam.quota) : ''
+                    this.fetchParam.day = this.fetchParam.day ? Number(this.fetchParam.day) : ''
+                })
+            }
             this.$refs.prodCategory.fetchData().then(() => {
                 xmview.setContentLoading(false)
             })
@@ -150,7 +174,7 @@
                 })
             }
         },
-        components: {ImgCropper, ProdCategorySelect}
+        components: {ImgCropper, ProdCategorySelect, CouponSelect},
     }
 
     function initParam () {
@@ -161,11 +185,12 @@
             image: void 0,
             price: void 0,
             expire: void 0,
-            sort: void 0,
+            sort: '',
             status: void 0,
-            quota: void 0,
-            day: void 0,
+            quota: '',
+            day: '',
             id: void 0,
+            coupon_id: ''
         }
     }
 </script>

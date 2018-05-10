@@ -73,7 +73,6 @@
         watch: {
             'data'(val) {
                 if (val.length < 1) this.currPlaceholder = this.placeholder
-                this.initGetMore()
                 this.loading = false
             },
             'placeholder' (val) {
@@ -81,15 +80,20 @@
             },
             'value' (val) {
                 this.selectVal != val && (this.selectVal = val)
+                // 在观察者 这里初始化data
                 if (this.value != null && this.currPlaceholder && this.data.length < 1) {
                     this.data.push({id: this.value, name: this.placeholder})
                 }
             }
         },
         created () {
-            if (this.value && this.currPlaceholder && this.data.length < 1) {
+            this.initGetMore()
+            if (this.value && this.currPlaceholder && this.data.length < 1) {      
                 this.data.push({id: this.value, name: this.placeholder})
             }
+        },
+        activated () {
+            this.initGetMore()
         },
         mounted () {
             this.input = this.$refs.container.$el.querySelector('input')
@@ -136,7 +140,7 @@
                     this.currPlaceholder = this.placeholder
                     return
                 }
-                this.initGetMore()
+                // this.initGetMore()
                 // 判断是否有数据 没有数据进行加载
                 if (!this.data || this.data.length < 1) {
                     this.loading = true
@@ -147,6 +151,8 @@
             },
             // 处理请求后的结果 type- 0:追加 1-重新赋值
             processRequestRet (ret, type = 0) {
+                // 兼容后续接口字段
+                ret.data = ret.data || ret.list || []
                 if (type === 0) {
                     // 把结果过滤掉当前选中的
                     ret.data = ret.data.filter((item) => {

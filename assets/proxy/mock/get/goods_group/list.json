@@ -1,0 +1,28 @@
+{
+    "code": 0,
+    "message": "this is the success message",
+    "data": {
+        "list":[
+            {"id":3,
+            "name":"中药学知识",
+            "goods_count":3,
+            "favorable_count":3,
+            "favorable":[{"reach":8888,"discount":7}],
+            "status":2,
+            "order":1,
+            "create_time":"2015"
+            },
+            {   
+                "id":4,
+                "name":"中药学知识",
+                "goods_count":3,
+                "favorable_count":2,
+                "favorable":[{"reach":8888,"discount":7}],
+                "status":1,
+                "order":2,
+                "create_time":"2015"
+            }],
+        "total":12,
+        "version":1
+    }
+}

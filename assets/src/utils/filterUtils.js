@@ -46,3 +46,41 @@ export const fillZero = Vue.filter('fillZero', function (orignStr, maxLength = 2
 
     return zeroStr + orignStr
 })
+
+export const taskType = Vue.filter('taskType', (val, type) => {
+    let map = {
+        public: {
+            label: '公开课',
+            tag: ''
+        },
+        private: {
+            label: '内训课',
+            tag: 'danger'
+        },
+        speaking: {
+            label: '药我说',
+            tag: 'warning'
+        },
+        exam: {
+            label: '考试',
+            tag: 'success'
+        },
+        practice: {
+            label: '练习',
+            tag: 'warning'
+        },
+        goods: {
+            label: '单品',
+            tag: 'success',
+        },
+        group: {
+            label: '组合',
+            tag: 'warning',
+        },
+        activity: {
+            label: '打包',
+            tag: 'danger',
+        },
+    }
+    return map[val][type]
+})

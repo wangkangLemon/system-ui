@@ -8,6 +8,7 @@ import config from './utils/config'
 import authUtils from './utils/authUtils'
 import VueDND from 'awe-dnd'
 import SidePannel from './views/component/mixin/sidePannel'
+import VueClipboards from 'vue-clipboards'
 
 // keep router and vuex store in sync
 sync(store, router)
@@ -16,7 +17,7 @@ Vue.config.devtools = config.debug
 document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
 Vue.use(ElementUI)
 Vue.use(VueDND)
-
+Vue.use(VueClipboards)
 /*
 添加全局认证方法
 */

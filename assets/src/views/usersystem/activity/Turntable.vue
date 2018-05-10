@@ -186,7 +186,7 @@
             <el-button type="primary" @click="submit('form')">保存生效</el-button>
         </el-card>
         <!--奖品设置-->
-        <el-dialog v-model="addForm" title="奖品设置" size="small">
+        <el-dialog v-model="addForm" title="奖品设置" size="small" @close="clearScroll">
             <el-form :model="form1" :rules="rules1" ref="form1" label-width="100px">
                 <el-form-item label="奖品类型" prop="type">
                     <el-select @change="changeProduct" v-model="form1.type">
@@ -202,12 +202,16 @@
                         <el-option label="成长值加倍卡" value="growth_plus_card"></el-option>
                         <el-option label="实物" value="entity"></el-option>
                         <el-option label="外部虚拟卡券" value="coupon"></el-option>
+                        <el-option label="优惠券" value="discount_coupon"></el-option>
                     </el-select>
-                    <el-select @change="getStockCount" v-if="form1.category"
+                    <el-select @change="getStockCount" v-if="form1.category && form1.category != 'discount_coupon'"
                                v-model="form1.product_id">
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products"
                                    :key="index"></el-option>
                     </el-select>
+                    <template v-if="form1.category && form1.category == 'discount_coupon'">
+                        <CouponSelect ref="couponSelect" :value="couponForm.product_id" :placeholder="couponForm.product_name" @change="val=>{couponForm.product_id=val;getStockCount()}"></CouponSelect>
+                    </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form1.product_id) && form1.product_id > 0">
                     {{stockCount}}
@@ -242,9 +246,11 @@
     import ActivityService from '../../../services/usersystem/activityService'
     import ParkService from '../../../services/usersystem/parkService'
     import ImagEcropperInput from '../../component/upload/ImagEcropperInput.vue'
+    import CouponSelect from 'components/select/CouponProduct.vue'
     export default {
         components: {
-            ImagEcropperInput
+            ImagEcropperInput,
+            CouponSelect
         },
         data () {
             return {
@@ -259,8 +265,13 @@
 //                    url: '',
                     description: ''
                 },
-                form1: {},
+                form1: {
+                },
                 cloneForm1: {},
+                couponForm: {
+                    product_id: '',
+                    product_name: ''
+                },
                 rules: {
                     title: {required: true, message: '必填项', trigger: 'blur'},
                     limit: {type: 'number', required: true, message: '必填项', trigger: 'blur'},
@@ -301,11 +312,20 @@
                         }
                     })
                 }
-            }
+            },
         },
         methods: {
+            clearScroll () {
+                if (this.$refs.couponSelect) {
+                    this.$refs.couponSelect.$refs.scroll.data = []
+                    // this.$refs.couponSelect.$refs.scroll.currPlaceholder = ''
+                }
+            },
             // 获取库存
             getStockCount () {
+                if (this.form1.category === 'discount_coupon') {
+                    this.form1.product_id = this.couponForm.product_id
+                }
                 if (this.form1.type == 'product' && this.form1.product_id) {
                     // 获取库存量
                     return ParkService.prodDetail({id: this.form1.product_id}).then((ret) => {
@@ -325,6 +345,7 @@
                     this.$refs.form1.resetFields()
                     this.form1 = clone(row)
                     this.cloneForm1 = clone(row)
+                    this.initCouponForm()
                     this.preLimit = row.limit
                     this.getStockCount()
                 })
@@ -383,7 +404,18 @@
                     }
                 })
             },
+            initCouponForm () {
+                if (this.form1.category === 'discount_coupon' && this.cloneForm1.category !== 'discount_coupon') {
+                    this.couponForm.product_name = ''
+                    this.couponForm.product_id = ''
+                    this.clearScroll()
+                } else if (this.cloneForm1.category === 'discount_coupon') {
+                    this.couponForm.product_name = this.form1.product_name
+                    this.couponForm.product_id = this.form1.product_id
+                }
+            },
             getSelectPorduct () {
+                this.initCouponForm() 
                 if (this.form1.category != this.cloneForm1.category) this.form1.product_id = ''
                 // 获取选中产品列表 products
                 ActivityService.productSearch({category: this.form1.category}).then((ret) => {

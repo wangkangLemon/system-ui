@@ -194,7 +194,7 @@
             </div>
         </el-card>
         <!--选择奖品-->
-        <el-dialog v-model="addForm" title="选择奖品" size="small">
+        <el-dialog v-model="addForm" title="选择奖品" size="small" @close="clearScroll">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item label="奖品类型" prop="type">
                     <el-select @change="changeProduct" v-model="form.type">
@@ -210,10 +210,14 @@
                         <el-option label="成长值加倍卡" value="growth_plus_card"></el-option>
                         <el-option label="实物" value="entity"></el-option>
                         <el-option label="外部虚拟卡券" value="coupon"></el-option>
+                        <el-option label="优惠券" value="discount_coupon"></el-option>
                     </el-select>
-                    <el-select @change="getStockCount" v-if="form.product_id && form.type == 'product'" v-model="form.product_id">
+                    <el-select @change="getStockCount" v-if="form.product_id && form.type == 'product' && form.category != 'discount_coupon'" v-model="form.product_id">
                         <el-option :label="item.name" :value="item.id" v-for="(item,index) in products" :key="index"></el-option>
                     </el-select>
+                    <template v-if="form.category && form.category == 'discount_coupon'">
+                        <CouponSelect ref="couponSelect" :value="couponForm.product_id" :placeholder="couponForm.product_name" @change="val=>{couponForm.product_id=val;getStockCount()}"></CouponSelect>
+                    </template>
                 </el-form-item>
                 <el-form-item label="库存量" v-if="!isNaN(form.product_id) && form.product_id > 0">
                     {{stockCount}}
@@ -247,10 +251,12 @@
     import ToggleMonth from '../component/ToggleMonth.vue'
     import MonthCalendar from '../component/MonthCalendar'
     import clone from 'clone'
+    import CouponSelect from 'components/select/CouponProduct.vue'
     export default {
         components: {
             ToggleMonth,
-            MonthCalendar
+            MonthCalendar,
+            CouponSelect
         },
         data () {
             return {
@@ -269,6 +275,10 @@
                 products: [],
                 form: clearForm(),
                 cloneForm1: '',
+                couponForm: {
+                    product_id: '',
+                    product_name: ''
+                },
                 rules: {
                     type: {required: true, message: '必填项'}, // 类型
                     category: {required: true, message: '必填项'}, // 分类
@@ -313,6 +323,13 @@
             this.getSelectPorduct()
         },
         methods: {
+            clearScroll () {
+                if (this.$refs.couponSelect) {
+                    this.$refs.couponSelect.$refs.scroll.data = []
+                    this.$refs.couponSelect.$refs.scroll.isShowGetMore = true
+                    // this.$refs.couponSelect.$refs.scroll.currPlaceholder = ''
+                }
+            },
             // 编辑奖品
             editFn (row) {
                 this.addForm = true
@@ -320,6 +337,7 @@
                     this.$refs.form.resetFields()
                     this.form = clone(row)
                     this.cloneForm1 = clone(row)
+                    this.initCouponForm()
                     this.preLimit = row.limit
                     this.getStockCount()
                 })
@@ -379,7 +397,11 @@
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         // 判断库存
-                        if (this.form.type == 'product' && this.stockCount < this.form.quota) {
+                        // if (this.form.type == 'product' && this.stockCount < this.form.quota) {
+                        //     xmview.showTip('error', '库存不足')
+                        //     return
+                        // }
+                        if (this.form.type == 'product' && this.stockCount < this.form.limit) {
                             xmview.showTip('error', '库存不足')
                             return
                         }
@@ -387,10 +409,10 @@
                         if (this.form.play_type == 'sign_weekly') dataList = this.sevenDaysGift
                         else dataList = this.monthGift
                         // 发放量不得改小
-                        if (this.form.type == 'product' && this.form.limit < this.preLimit) {
-                            xmview.showTip('error', '不得减少商品的发放量')
-                            return
-                        }
+                        // if (this.form.type == 'product' && this.form.limit < this.preLimit) {
+                        //     xmview.showTip('error', '不得减少商品的发放量')
+                        //     return
+                        // }
                         // 请求接口
                         let msg
                         let reqFn
@@ -452,8 +474,26 @@
                     this.form.product_id = ''
                 }
             },
+            initCouponForm () {
+                if (this.form.category === 'discount_coupon' && this.cloneForm1.category !== 'discount_coupon') {
+                    this.couponForm.product_name = ''
+                    this.couponForm.product_id = ''
+                    this.clearScroll()
+                } else if (this.cloneForm1.category === 'discount_coupon') {
+                    this.couponForm.product_name = this.form.product_name
+                    this.couponForm.product_id = this.form.product_id
+                }
+                // this.cloneForm1.category == 'discount_coupon' 
+                //     this.form.category === 'discount_coupon'
+                //     this.form.category !== 'discount_coupon'
+
+                // this.cloneForm1.category !== 'discount_coupon' 
+                //     this.form.category !== 'discount_coupon'
+                //     this.form.category === 'discount_coupon'
+            },
             // select获取选择分类的产品列表
             getSelectPorduct () {
+                this.initCouponForm()                
                 if (this.form.category != this.cloneForm1.category) this.form.product_id = ' '
                 // 获取选中产品列表 products
                 ActivityService.productSearch({category: this.form.category}).then((ret) => {
@@ -462,6 +502,9 @@
             },
             // 获取库存值
             getStockCount () {
+                if (this.form.category === 'discount_coupon') {
+                    this.form.product_id = this.couponForm.product_id
+                }
                 if (this.form.product_id && this.form.product_id != ' ') {
                     // 获取库存量
                     return ParkService.prodDetail({id: this.form.product_id}).then((ret) => {

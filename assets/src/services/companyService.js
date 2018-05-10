@@ -263,7 +263,7 @@ class CompanyService {
     getCategoryTree ({id = 'tree', filter = true}) {
         let finalUrl = config.apiHost + '/sys/coursetask/template/category/children'
         return api.get(finalUrl, {id, filter}).catch((ret) => {
-            ret.tipCom.close()
+            ret.tipCom && ret.tipCom.close()
             return ret
         })
     }
