@@ -83,7 +83,17 @@ class CourseService {
         let url = `${urlPre}/${id}/online`
         return api.put(url, {})
     }
-
+    // 发布
+    publish ({
+        id,
+        publish_status
+    }) {
+        let url = `${urlPre}/${id}/publish`
+        let txt = publish_status == 1 ? '撤回' : '发布'
+        return api.put(url, { publish_status }).then(ret => {
+            xmview.showTip('success', ret.message || `${txt}成功`)
+        })
+    }
     // 获取添加编辑课程上传图片的url
     getUploadUrl({image, alias}) {
         let url = `${urlPre}/upload`
