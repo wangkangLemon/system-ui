@@ -105,7 +105,7 @@
             <el-table-column width="100" label="发布状态" align="center">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.publish_status == 0" type="success">已发布</el-tag>
-                    <el-tag v-else-if="scope.row.publish_status == 1" type="primary">已撤回</el-tag>
+                    <el-tag v-else-if="scope.row.publish_status == 1">已撤回</el-tag>
                 </template>
             </el-table-column>
             <el-table-column width="170" prop="create_time_name" label="创建时间" align="center">
@@ -122,7 +122,8 @@
                     <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
-                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.status == 0">删除</el-button>
+                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="!(scope.row.status == 0 && scope.row.publish_status == 0)">删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
