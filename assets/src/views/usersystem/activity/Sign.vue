@@ -339,6 +339,8 @@
                     this.cloneForm1 = clone(row)
                     this.initCouponForm()
                     this.preLimit = row.limit
+                    // 重新获取下选择商品
+                    this.getSelectPorduct()
                     this.getStockCount()
                 })
             },
