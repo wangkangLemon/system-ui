@@ -94,7 +94,7 @@ class CourseService {
     getPublicCourselistByName ({
         keyword = '',
         status = '',
-        type = '',
+        course_type = '',
         is_task,
         time_start = '',
         time_end = '',
@@ -110,7 +110,7 @@ class CourseService {
         return api.get(finalUrl, {
             keyword, // 课程名称
             status, // 课程状态 不赋值则表示全部，0为正常，1为下线，2为视频转码中
-            type,
+            course_type,
             is_task,
             time_start,
             time_end,
