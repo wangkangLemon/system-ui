@@ -183,7 +183,7 @@
             },
             initFetchParam () {
                 return {
-                    type: 'public',
+                    course_type: 'public',
                     status: 0,
                     is_task: -1,
                     need_testing: -1,
