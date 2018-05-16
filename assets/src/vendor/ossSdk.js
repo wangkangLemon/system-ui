@@ -33,6 +33,7 @@ export default function (ossOption, changeToken) {
 
     function saveCheckPoint (file, checkpoint) {
         var key = _this.getFileKey(file);
+        checkPointIndexes[key] = checkpoint
         window.localStorage.setItem(key, JSON.stringify(checkpoint));
     }
 
@@ -85,7 +86,8 @@ export default function (ossOption, changeToken) {
                 changeToken(function (ret) {
                     client.options.accessKeyId = ret.accessKeyId;
                     client.options.accessKeySecret = ret.accessKeySecret;
-                    client.options.stsToken = ret.stsToken;
+                    // client.options.stsToken = ret.stsToken;
+                    client.options.stsToken = ret.securityToken;
                     _this.uploadFile(name, file, progress, success, error);
                 });
             } else {
