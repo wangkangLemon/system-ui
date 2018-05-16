@@ -18,7 +18,7 @@
             <section>
                 <i>课程类型</i>
                 <el-select 
-                    v-model="fetchParam.type" 
+                    v-model="fetchParam.course_type" 
                     filterable 
                     placeholder="请选择课程类型"
                     @change="fetchData">
@@ -128,7 +128,7 @@
         mounted () {},
         computed: {
             cacheType () {
-                return this.fetchParam.type
+                return this.fetchParam.course_type
             }
         },
         watch: {
