@@ -18,7 +18,7 @@
             <section>
                 <i>课程类型</i>
                 <el-select 
-                    v-model="fetchParam.type" 
+                    v-model="fetchParam.course_type" 
                     filterable 
                     placeholder="请选择课程类型"
                     @change="fetchData">
@@ -128,7 +128,7 @@
         mounted () {},
         computed: {
             cacheType () {
-                return this.fetchParam.type
+                return this.fetchParam.course_type
             }
         },
         watch: {
@@ -144,6 +144,7 @@
                 fetchParam: this.initFetchParam(),
                 data: [],
                 total: 0,
+                selectedArr: []
             }
         },
         methods: {
@@ -177,9 +178,17 @@
                 }
             },
             getSelectAll (selection) {
-                selection.forEach(sel => {
-                    this.getCurRow(sel, true)
-                })
+                if(selection.length) {
+                    this.selectedArr = []
+                    this.selectedArr = [...selection]
+                    selection.forEach(sel => {
+                        this.getCurRow(sel, true)
+                    })
+                }else {
+                    this.selectedArr.forEach(sel => {
+                        this.getCurRow(sel, false)
+                    })
+                }
             },
             initFetchParam () {
                 return {

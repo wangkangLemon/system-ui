@@ -342,7 +342,7 @@
             editFn (row) {
                 this.addForm = true
                 this.$nextTick(() => {
-                    this.$refs.form1.resetFields()
+                    this.form1 = {}
                     this.form1 = clone(row)
                     this.cloneForm1 = clone(row)
                     this.initCouponForm()
@@ -350,6 +350,7 @@
                     // 重新获取下选择商品
                     this.getSelectPorduct()
                     this.getStockCount()
+                    this.$refs.form1.resetFields()
                 })
             },
             awardSet (form) {
