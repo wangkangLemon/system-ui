@@ -131,6 +131,7 @@
                 dom.value = null
             },
             deleteVideo (index) {
+                this.uploading && ossSdk.cancelUploadFile(this.file)
                 this.listData.splice(index, 1)
             },
             fileClick() {
@@ -143,7 +144,11 @@
             uploadVideo (count = 0) {
                 let item = this.listData[count]
                 courseService.getOssToken().then((ret) => {
-                    ossSdk = new OssSdk(ret)
+                    ossSdk = new OssSdk(ret, fn => {
+                        courseService.getOssToken().then(ret => {
+                            fn(ret)
+                        })
+                    })
                     // 开始上传
                     // 格式化名称
                     var now = new Date()
