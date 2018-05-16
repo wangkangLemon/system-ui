@@ -99,7 +99,8 @@
                         value: 'score_pass',
                         label: '及格分数'
                     }
-                ]
+                ],
+                selectedArr: []
             }
         },
         methods: {
@@ -133,9 +134,17 @@
                 }
             },
             getSelectAll (selection) {
-                selection.forEach(sel => {
-                    this.getCurRow(sel, true)
-                })
+                if(selection.length) {
+                    this.selectedArr = []
+                    this.selectedArr = [...selection]
+                    selection.forEach(sel => {
+                        this.getCurRow(sel, true)
+                    })
+                }else {
+                    this.selectedArr.forEach(sel => {
+                        this.getCurRow(sel, false)
+                    })
+                }
             },
             initFetchParam () {
                 return {
