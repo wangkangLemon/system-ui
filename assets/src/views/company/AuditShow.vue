@@ -173,9 +173,9 @@
                     this.detail = ret.signing
                     this.form.status = ret.status
                     this.invoice = ret.invoice
-                    // if(ret.status === signStatus.uninvoice || ret.status === signStatus.invoice){
-                    //     this.activeTab = 'invoice'
-                    // }
+                    if(ret.status === this.signStatus.uninvoice || ret.status === this.signStatus.invoice){
+                        this.activeTab = 'invoice'
+                    }
                 }).then(() => {
                     xmview.setContentLoading(false)
                 })
@@ -203,10 +203,9 @@
                 })
             },
             submit2 () {
-                companyService.addAudit({
-                    audit_id: this.signingId,
-                    status: this.form.status,
-                    note: this.form.note
+                signingService.updateInvoice({
+                    id: this.signingId,
+                    remark: this.form1.note
                 }).then((ret) => {
                     xmview.showTip('success', '提交成功')
                     this.$router.push({name: 'company-audit'})

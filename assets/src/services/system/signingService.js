@@ -34,6 +34,14 @@ class SigningService {
             return ret.data
         })
     }
+
+    // 审核结果更新
+    updateInvoice ({id, remark}) {
+        let url = `${urlPre}/${id}/invoice`
+        return api.put(url,{remark}).then((ret) => {
+            return ret.data
+        })
+    }
     
 }
 export default new SigningService()
