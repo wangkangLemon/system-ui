@@ -10,6 +10,10 @@
                         .note {
                             width: 100%;
                         }
+                        &.invoice{
+                            padding: 20px;
+                            background: #eee;
+                        }
                     }
                     .audit-show-select {
                         width: 110px;
@@ -20,52 +24,119 @@
                 text-align: center;
             }
         }
+        
     }
 </style>
 <template>
     <article class="company-audit-show">
-        <section class="show-detail">
-            <div class="info" v-if="detail">
-                <p><i class="title">药店名称：</i><span class="value">{{detail.name}}</span></p>
-                <p><i class="title">药店地址：</i><span class="value">{{detail.address}}</span></p>
-                <p><i class="title">门店数量：</i><span class="value">{{detail.department_range}}</span></p>
-                <p><i class="title">店员数量：</i><span class="value">{{detail.user_range}}</span></p>
-                <p><i class="title">运营联系人：</i><span class="value">{{detail.contact}}</span></p>
-                <p><i class="title">联系人电话：</i><span class="value">{{detail.phone}}</span></p>
-                <p><i class="title">联系人邮箱：</i><span class="value">{{detail.email}}</span></p>
-                <p>
-                    <i class="title">营业执照：</i><span class="value">
-                    <img :src="detail.business_license | fillImgPath" alt="" @click="screenImg(detail.business_license)"></span></p>
-                <p><i class="title">经营许可证：</i><span class="value"><img :src="detail.business_permit | fillImgPath" alt="" @click="screenImg(detail.business_permit)"></span></p>
-                <p><i class="title">GSP/GSM认证：</i><span class="value"><img :src="detail.gsp | fillImgPath" alt="" @click="screenImg(detail.gsp)"></span></p>
-                <p><i class="title">负责人身份证：</i><span class="value"><img :src="detail.id_card | fillImgPath" alt="" @click="screenImg(detail.id_card)"></span></p>
-                <p class="select">
-                    <i class="title">审核结果：</i>
-                    <span class="value">
-                        <el-select class="audit-show-select" v-model="form.status">
-                            <el-option label="待审核" :value="1"></el-option>
-                            <el-option label="审核通过" :value="2"></el-option>
-                            <el-option label="审核失败" :value="3"></el-option>
-                        </el-select>
-                    </span>
-                </p>
-                <p class="select">
-                    <i class="title">备注：</i>
-                    <span class="value">
-                        <el-input class="note" type="textarea" v-model="form.note" :rows="6"></el-input>
-                    </span>
-                </p>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="submit">提 交</el-button>
-            </div>
-        </section>
-        <screenImg></screenImg>
+        <el-tabs v-model="activeTab" type="card" @tab-click="handleClick">
+            <el-tab-pane label="资质审核" name="signing">
+                <section class="show-detail">
+                    <div class="info" v-if="detail">
+                        <p><i class="title">连锁名称：</i><span class="value">{{detail.company_name}}</span></p>
+                        <p><i class="title">连锁地址：</i><span class="value">{{detail.company_address}}</span></p>
+                        <p><i class="title">门店数量：</i><span class="value">{{detail.department_count}}</span></p>
+                        <p><i class="title">店员数量：</i><span class="value">{{detail.user_count}}</span></p>
+                        <p><i class="title">运营联系人：</i><span class="value">{{detail.user_name}}</span></p>
+                        <p><i class="title">联系人电话：</i><span class="value">{{detail.mobile}}</span></p>
+                        <p><i class="title">联系人邮箱：</i><span class="value">{{detail.email}}</span></p>
+                        <p>
+                            <i class="title">营业执照：</i>
+                            <span class="value">
+                                <img :src="detail.business_license_image | fillImgPath" alt="" @click="screenImg(detail.business_license_image)">
+                            </span>
+                        </p>
+                        <p>
+                            <i class="title">经营许可证：</i>
+                            <span class="value">
+                                <img :src="detail.business_certificate_image | fillImgPath" alt="" @click="screenImg(detail.business_certificate_image)">
+                            </span>
+                        </p>
+                        <p>
+                            <i class="title">GSP/GSM认证：</i>
+                            <span class="value">
+                                <img :src="detail.GSP_image | fillImgPath" alt="" @click="screenImg(detail.GSP_image)">
+                            </span>
+                        </p>
+                        <p>
+                            <i class="title">负责人身份证(正)：</i>
+                            <span class="value">
+                                <img :src="detail.idcard_front_image | fillImgPath" alt="" @click="screenImg(detail.idcard_front_image)">
+                            </span>
+                        </p>
+                        <p>
+                            <i class="title">负责人身份证(反)：</i>
+                            <span class="value">
+                                <img :src="detail.idcard_reverse_image | fillImgPath" alt="" @click="screenImg(detail.idcard_reverse_image)">
+                            </span>
+                        </p>
+                        <p class="select">
+                            <i class="title">审核结果：</i>
+                            <span class="value">
+                                <el-select class="audit-show-select" v-model="form.status">
+                                    <el-option label="资质待审核" :value="signStatus.checking"></el-option>
+                                    <el-option label="资质未通过" :value="signStatus.reject"></el-option>
+                                    <el-option label="资质通过" :value="signStatus.pass"></el-option>
+                                </el-select>
+                            </span>
+                        </p>
+                        <p class="select">
+                            <i class="title">备注：</i>
+                            <span class="value">
+                                <el-input class="note" type="textarea" v-model="form.note" :rows="6"></el-input>
+                            </span>
+                        </p>
+                    </div>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button type="primary" @click="submit">提 交</el-button>
+                    </div>
+                </section>
+                <screenImg></screenImg>
+            </el-tab-pane>
+            <el-tab-pane :disabled="!(form.status === signStatus.uninvoice || form.status === signStatus.invoice)" label="发票邮寄" name="invoice">
+                <section class="show-detail">
+                    <div class="info" v-if="invoice">
+                        <p class="select">
+                            <i class="title">发票信息</i>
+                            <span class="value invoice">
+                                <p>发票类型 ：{{invoice.type === 'electronics'?'电子发票':'纸质发票'}}</p>
+                                <p>单位名称 ：{{invoice.company_name}}</p>
+                                <p>纳税人识别号 ：{{invoice.number}}</p>
+                                <p>地址 ：{{invoice.company_address}}</p>
+                                <p>电话 ：{{invoice.company_mobile}}</p>
+                                <p>开户行 ：{{invoice.opening_bank}}</p>
+                                <p>账号 ：{{invoice.bank_card}}</p>
+                            </span>
+                        </p>
+                        <p class="select">
+                            <i class="title">处理状态</i>
+                            <span class="value">
+                                <el-select class="audit-show-select" v-model="form1.status">
+                                    <el-option label="已发邮箱" :value="1"></el-option>
+                                    <el-option label="已寄出" :value="2"></el-option>
+                                </el-select>
+                            </span>
+                        </p>
+                        <p class="select">
+                            <i class="title">备注：</i>
+                            <span class="value">
+                                <el-input class="note" type="textarea" v-model="form1.note" :rows="3"></el-input>
+                            </span>
+                        </p>
+                    </div>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button type="primary" @click="submit2">提 交</el-button>
+                    </div>
+                </section>
+            </el-tab-pane>
+        </el-tabs>
+        
     </article>
 </template>
 <script>
     import screenImg from '../component/dialog/FullScreenImg.vue'
     import companyService from '../../services/companyService'
+    import signingService from 'services/system/signingService'
     export default {
         components: {
             screenImg
@@ -76,28 +147,64 @@
                     status: '',
                     note: ''
                 },
+                form1: {
+                    status: '',
+                    note: ''
+                },
                 detail: null,
-            }
-        },
-        computed: {
-            auditID () {
-                return this.$route.params.id
+                activeTab: 'signing',
+                invoice: {},
+                signingId: '',
+                signStatus: {
+                    checking: 10,
+                    reject: 11,
+                    pass: 12,
+                    unpay: 20,
+                    paid: 22,
+                    uninvoice: 30,
+                    invoice: 31
+                }
             }
         },
         activated () {
-            companyService.getAuditDetail(this.auditID).then((ret) => {
-                this.detail = ret.data
-                this.form.status = ret.data.status
-                this.form.note = ret.data.note
-                xmview.setContentTile(`${ret.data.name} - 审核`)
-            }).then(() => {
-                xmview.setContentLoading(false)
-            })
+            if(this.$route.params.id){
+                this.signingId = this.$route.params.id
+                signingService.getSigningInfo(this.signingId).then((ret) => {
+                    this.detail = ret.signing
+                    this.form.status = ret.status
+                    this.invoice = ret.invoice
+                    // if(ret.status === signStatus.uninvoice || ret.status === signStatus.invoice){
+                    //     this.activeTab = 'invoice'
+                    // }
+                }).then(() => {
+                    xmview.setContentLoading(false)
+                })
+            }
+        },
+        deactivated() {
+            this.activeTab = 'signing'
+            this.invoice = {}
+            this.signingId = ''
         },
         methods: {
+            handleClick(tab, event) {
+                console.log(tab, event);
+            },
             submit () {
+                signingService.updateResult({
+                    id: this.signingId,
+                    status: this.form.status,
+                    remark: this.form.note
+                }).then((ret) => {
+                    xmview.showTip('success', '提交成功')
+                    this.$router.push({name: 'company-audit'})
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
+            },
+            submit2 () {
                 companyService.addAudit({
-                    audit_id: this.auditID,
+                    audit_id: this.signingId,
                     status: this.form.status,
                     note: this.form.note
                 }).then((ret) => {

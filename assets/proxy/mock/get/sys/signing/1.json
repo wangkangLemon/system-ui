@@ -1,0 +1,32 @@
+{
+	"code": 0,
+	"message": "",
+	"data": {
+		"status": 12,
+		"signing": {
+			"id": 1,
+			"company_name": "怡康连锁",
+			"company_address": "高新四路",
+			"department_count": 3,
+			"user_count": 10,
+			"user_name": "王海玲",
+			"mobile": "13333333333",
+			"email": "wangkai@vodjk.com",
+			"business_license_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg",
+			"business_certificate_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg",
+			"GSP_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg",
+			"idcard_front_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg",
+			"idcard_reverse_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg"
+		},
+		"invoice": {
+			"id": 1,
+			"type": "electronics",
+			"company_name": "西安新玛互动传媒股份有限公司",
+			"number": "9123123123",
+			"company_address": "高新四路",
+			"company_mobile": "13333333333",
+			"opening_bank": "高新四路建设银行",
+			"bank_card": "6123123124145131232156546"
+		}
+	}
+}
