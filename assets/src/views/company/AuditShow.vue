@@ -111,9 +111,9 @@
                         <p class="select">
                             <i class="title">处理状态</i>
                             <span class="value">
-                                <el-select class="audit-show-select" v-model="form1.status">
-                                    <el-option label="已发邮箱" :value="1"></el-option>
-                                    <el-option label="已寄出" :value="2"></el-option>
+                                <el-select class="audit-show-select">
+                                    <el-option label="已发邮箱" v-if="invoice.type === 'electronics'?true:false"></el-option>
+                                    <el-option label="已寄出" v-if="invoice.type === 'paper'?true:false"></el-option>
                                 </el-select>
                             </span>
                         </p>
@@ -148,7 +148,6 @@
                     note: ''
                 },
                 form1: {
-                    status: '',
                     note: ''
                 },
                 detail: null,
@@ -166,6 +165,7 @@
                 }
             }
         },
+        // keep-alive 相应使用activated,deactivated
         activated () {
             if(this.$route.params.id){
                 this.signingId = this.$route.params.id
