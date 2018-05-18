@@ -91,7 +91,7 @@
             </article>
         </el-card>
 
-        <el-dialog title="绑定" v-model="dialogBind.isShow" size="tiny">
+        <el-dialog title="绑定" :visible.sync="dialogBind.isShow" width="30%">
             <el-form label-width="80px">
                 <el-form-item :label="fetchParam.type == 'email' ? '电子邮箱' : '手机号码'">
                     <el-input v-model="fetchParam.receiver" auto-complete="off"
@@ -114,7 +114,7 @@
             </el-form>
         </el-dialog>
 
-        <el-dialog title="更换绑定" v-model="dialogChange.isShow" size="tiny">
+        <el-dialog title="更换绑定" :visible.sync="dialogChange.isShow" width="30%">
             <el-form label-width="80px">
                 <el-form-item label="验证方式">
                     <i>{{(fetchParam.type == 'email' ? '电子邮箱' : '手机号码') + ' (' + fetchParam.receiver + ')'}}</i>

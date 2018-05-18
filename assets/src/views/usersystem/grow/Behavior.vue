@@ -18,7 +18,7 @@
 <template>
     <main id="usersystem-grow-behavior">
          <!--修改表单-->
-        <el-dialog v-model="addForm" title="成长值获取方式" size="tiny">
+        <el-dialog :visible.sync="addForm" title="成长值获取方式" width="30%">
             <el-form class="addForm" :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item  prop="name" label="用户行为">
                     <el-input type="text" v-model="form.name" :disabled="true"></el-input>

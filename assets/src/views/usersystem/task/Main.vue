@@ -146,7 +146,7 @@
                     :total="total">
             </el-pagination>
         </section>
-        <el-dialog :visible.sync="addForm" size="tiny" :title="dialogTitle[search.category]">
+        <el-dialog :visible.sync="addForm" width="30%" :title="dialogTitle[search.category]">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item prop="user_action_name" label="任务类型">
                     <el-select @change="changeActionFn" v-model="form.user_action_name" :disabled="$route.name == 'daily' || $route.name == 'newbie'">

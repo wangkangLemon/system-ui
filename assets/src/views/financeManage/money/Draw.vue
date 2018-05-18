@@ -18,14 +18,14 @@
 <template>
     <article class="financeManage-money-draw">
         <!--详情-->
-        <el-dialog size="tiny" class="show-detail" title="提供凭据" v-model="showDetail">
+        <el-dialog width="30%" class="show-detail" title="提供凭据" :visible.sync="showDetail">
             <div v-if="currentData != null">{{currentData.receipts || '未提供凭据'}}</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>
             </div>
         </el-dialog>
         <!--结束或确认提取-->
-        <el-dialog v-model="showDrawInfo" :title="title" size="tiny" v-loading="dialogLoading">
+        <el-dialog :visible.sync="showDrawInfo" :title="title" width="30%" v-loading="dialogLoading">
             <el-form class="addForm" :model="submitParam" :rules="rules" ref="form" label-width="100px">
                 <el-form-item  label="注意">
                     请通过线下渠道给该提现请求打款, 完成后在此输入打款得到的凭据.

@@ -29,7 +29,7 @@
 <template>
     <article class="company-index">
         <!--详情-->
-        <el-dialog size="small" v-if="details != null" class="show-detail" v-model="showDetail" title="企业信息">
+        <el-dialog width="50%" v-if="details != null" class="show-detail" :visible.sync="showDetail" title="企业信息">
             <div class="info">
                 <h2>
                     {{details.name}}

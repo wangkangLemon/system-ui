@@ -2,7 +2,7 @@
 <!-- 使用姿势 -->
 <!-- <ImagePreview v-model="isShow" :url="imgage"></ImagePreview> -->
 <template>
-    <el-dialog :title="title" v-model="isShow" size="tiny">
+    <el-dialog :title="title" :visible.sync="isShow" width="30%">
         <img width="100%" :src="imgURL" alt="">
     </el-dialog>
 </template>

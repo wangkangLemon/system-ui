@@ -46,7 +46,7 @@
 <template>
     <article class="block-manage">
         <!--添加/编辑区块-->
-        <el-dialog v-model="addForm" :title="formTitle" size="tiny">
+        <el-dialog :visible.sync="addForm" :title="formTitle" width="30%">
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
                 <el-form-item prop="name" label="名称" :label-width="formLabelWidth">
                     <el-input v-model="form.name" auto-complete="off"></el-input>

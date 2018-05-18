@@ -68,7 +68,7 @@
 </style>
 <template>
     <article class="index-nav-container">
-        <el-dialog class="form" title="修改图标" v-model="changeIcon" size="tiny">
+        <el-dialog class="form" title="修改图标" :visible.sync="changeIcon" width="30%">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="name" v-loading="loading" label="导航图标" label-width="120px">
                     <div class="img-wrap">

@@ -194,7 +194,7 @@
             </div>
         </el-card>
         <!--选择奖品-->
-        <el-dialog v-model="addForm" title="选择奖品" size="small" @close="clearScroll">
+        <el-dialog :visible.sync="addForm" title="选择奖品" width="50%" @close="clearScroll">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item label="奖品类型" prop="type">
                     <el-select @change="changeProduct" v-model="form.type">

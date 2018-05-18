@@ -30,6 +30,8 @@ cp config/config.js.default config/config.js
 ```
 $ npm run dll   
 构建脚本在 ./build/weboack.dll.config.js
+
+当vendors数组中的包改变(升级，去除或者其他动态操作)时需要执行该命令
 ```
 
 ### 运行前端热构建

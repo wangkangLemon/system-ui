@@ -19,14 +19,14 @@
 <template>
     <article class="financeManage-finance-charge">
         <!--详情-->
-        <el-dialog size="tiny" class="show-detail" title="充值收据" v-model="showDetail">
+        <el-dialog width="30%" class="show-detail" title="充值收据" :visible.sync="showDetail">
             <div v-if="currentData">{{currentData.desc}}</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>
             </div>
         </el-dialog>
         <!--充值表单-->
-        <el-dialog v-model="addForm" :title="form.category == 'transfer' ? '财务转入' : '充值'" size="tiny">
+        <el-dialog :visible.sync="addForm" :title="form.category == 'transfer' ? '财务转入' : '充值'" width="30%">
             <el-form class="addForm" :model="form" :rules="rules" ref="form" label-width="100px">
                 <!--转入表单-->
                 <el-form-item v-if="form.category == 'transfer'" prop="companyID" label="选择企业">

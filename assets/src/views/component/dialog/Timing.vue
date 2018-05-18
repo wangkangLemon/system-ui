@@ -20,7 +20,7 @@
 </style>
 
 <template>
-    <el-dialog class="timing-dialog" :visible.sync="curValue" size="tiny" title="选择时间">
+    <el-dialog class="timing-dialog" :visible.sync="curValue" width="30%" title="选择时间">
         <el-form :model="form" ref="form" :inline="true" label-width="100px">
             <el-form-item>
                 <el-date-picker v-model="form.start_time" type="datetime" placeholder="请选择时间" :picker-options="pickerOptions"></el-date-picker>

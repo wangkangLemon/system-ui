@@ -134,7 +134,7 @@
             <ImgList ref="imglist" :type="1" :onSelected="selectedImg"></ImgList>
         </el-dialog>
 
-        <el-dialog title="输入预览人手机号" v-model="dialogPewviewMsg.isShow" size="tiny">
+        <el-dialog title="输入预览人手机号" :visible.sync="dialogPewviewMsg.isShow" width="30%">
             <el-input v-model="dialogPewviewMsg.mobile" placeholder="预览人手机号"></el-input>
             <div slot="footer">
                 <el-button @click="dialogPewviewMsg.isShow = false">取 消</el-button>
