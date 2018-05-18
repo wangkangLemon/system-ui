@@ -381,7 +381,7 @@
             </el-col>
         </el-row>
 
-        <el-dialog v-model="dialogVisible" size="tiny">
+        <el-dialog :visible.sync="dialogVisible" width="30%">
             <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
 

@@ -88,8 +88,7 @@
                 class="row-class"
                 @select="selectRow"
                 @selection-change="selectionChange"
-                @select-all="selectionAll"
-                >
+                @select-all="selectionAll">
                 <el-table-column type="selection" :selectable="(row) => row.id != -1"></el-table-column>
                 <el-table-column label="名称">
                     <template slot-scope="scope">
@@ -267,7 +266,7 @@
                 if (selection.length) {
                     this.selections = selection
                 } else {
-                    this.$refs.multiple.store.states.selection = this.selections
+                    // this.$refs.multiple.store.states.selection = this.selections
                 }
             },
             selectionAll (selection) {

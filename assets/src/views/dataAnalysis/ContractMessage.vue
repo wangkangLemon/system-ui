@@ -87,7 +87,7 @@
         </div>
 
         <!--导入弹窗-->
-        <el-dialog v-model="isImport" title="导入企业签约信息" size="tiny">
+        <el-dialog :visible.sync="isImport" title="导入企业签约信息" width="30%">
             <UploadFile :beforeUpload="beforeUpload" :url='uploadFileUrl' :on-success="uploadImgSucc" btnTitle='上传文件'></UploadFile>
             <div class="upload-tip">
                 <h2>注意事项</h2>

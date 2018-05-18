@@ -56,7 +56,7 @@
             </section>
         </article>
         <!--添加/删除 -->
-        <el-dialog :visible.sync="updateForm" size="tiny" title="API管理">
+        <el-dialog :visible.sync="updateForm" width="30%" title="API管理">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item label="操作名称" prop="operation_name">
                     <el-input v-model="form.operation_name" type="text"></el-input>

@@ -64,7 +64,7 @@
             </article>
         </div>
         <!-- 分配权限API 弹窗-->
-        <el-dialog  :visible.sync="apiForm" size="tiny" title="API分配">
+        <el-dialog  :visible.sync="apiForm" width="30%" title="API分配">
             <el-transfer v-model="toData" :data="fromData" :titles="['未选择', '已选择']" filterable></el-transfer>      
             <span slot="footer" class="dialog-footer">
                 <el-button @click="apiForm = false">取 消</el-button>
@@ -72,7 +72,7 @@
             </span>
         </el-dialog>
         <!-- 分配权限权限 弹窗-->
-        <el-dialog :visible.sync="menuForm" size="tiny" title="权限分配">
+        <el-dialog :visible.sync="menuForm" width="30%" title="权限分配">
             <el-tree :data="fromData" node-key="id" show-checkbox   :default-checked-keys="toData" ref="tree" :check-strictly="true"></el-tree>            <span slot="footer" class="dialog-footer">
                 <el-button @click="menuForm = false">取 消</el-button>
                 <el-button type="primary" @click="menuSubmit()">保 存</el-button>

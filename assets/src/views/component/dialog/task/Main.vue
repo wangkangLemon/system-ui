@@ -33,6 +33,7 @@
     <main id="learning-maps-task-container">
         <el-dialog 
             :title="title" 
+            width="70%"
             :visible.sync="showDialog">
             <el-tabs type="border-card" @tab-click="handleTabClick" v-model="tabs">
                 <el-tab-pane 
@@ -70,7 +71,7 @@
                                 <el-button 
                                     type="text" 
                                     @click="deleteRow(scope.$index, scope.row)" 
-                                    icon="delete"
+                                    icon="el-icon-delete"
                                     size="small">
                                 </el-button>
                             </template>
