@@ -13,12 +13,6 @@
             @extend %right-top-btnContainer;
             right: 130px;
         }
-
-        .block {
-            float: right;
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
     }
 </style>
 

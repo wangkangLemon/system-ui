@@ -92,7 +92,7 @@
             </el-pagination>
         </div>
         <BehaviorChain ref="behaviorChain"></BehaviorChain>
-        <el-dialog title="高级筛选" v-model="moreSettingShow" class="more-setting">
+        <el-dialog title="高级筛选" :visible.sync="moreSettingShow" class="more-setting">
             <el-form>
             <el-tabs type="border-card">
                 <el-tab-pane>

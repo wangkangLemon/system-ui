@@ -47,7 +47,7 @@
             </div>
         </el-dialog>
         <!--添加/编辑表单-->
-        <el-dialog v-model="addForm">
+        <el-dialog :visible.sync="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item v-if="category == 2" prop="department_id" label="门店" :label-width="formLabelWidth">
                     <departmentSelect :type="companyID" v-model="form.department_id"
