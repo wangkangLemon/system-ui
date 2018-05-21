@@ -2,7 +2,6 @@
 	"code": 0,
 	"message": "",
 	"data": {
-		"status":30,
 		"signing": {
 			"id": 1,
 			"company_name": "怡康连锁",
@@ -16,7 +15,8 @@
 			"business_certificate_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg",
 			"GSP_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg",
 			"idcard_front_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg",
-			"idcard_reverse_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg"
+			"idcard_reverse_image": "https://s.yst.vodjk.com/upload/goods-image/1526457689173756.jpg",
+			"status":30,
 		},
 		"invoice": {
 			"id": 1,
@@ -26,7 +26,18 @@
 			"company_address": "高新四路",
 			"company_mobile": "13333333333",
 			"opening_bank": "高新四路建设银行",
-			"bank_card": "6123123124145131232156546"
+			"bank_card": "6123123124145131232156546",
+			"recipients": {
+                "name": "张三",
+                "mobile": "13333333333",
+                "province_id": 1,
+                "province_name": "陕西省",
+                "city_id": 2,
+                "city_name": "西安市",
+                "district_id": 3,
+                "district_name": "雁塔区",
+                "address": "高新四路"
+            }
 		}
 	}
 }

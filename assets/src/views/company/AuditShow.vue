@@ -108,6 +108,15 @@
                                 <p>账号 ：{{invoice.bank_card}}</p>
                             </span>
                         </p>
+                        <p class="select" v-if="invoice.type === 'paper'">
+                            <i class="title">收件信息</i>
+                            <span class="value invoice">
+                                <p>收件人 ：{{invoice.recipients.name}}</p>
+                                <p>联系电话 ：{{invoice.recipients.mobile}}</p>
+                                <p>所在地区 ：{{invoice.recipients.province_name + invoice.recipients.city_name + invoice.recipients.district_name}}</p>
+                                <p>详细地址 ：{{invoice.recipients.address}}</p>
+                            </span>
+                        </p>
                         <p class="select">
                             <i class="title">处理状态</i>
                             <span class="value">
@@ -171,9 +180,9 @@
                 this.signingId = this.$route.params.id
                 signingService.getSigningInfo(this.signingId).then((ret) => {
                     this.detail = ret.signing
-                    this.form.status = ret.status
+                    this.form.status = ret.signing.status
                     this.invoice = ret.invoice
-                    if(ret.status === this.signStatus.uninvoice || ret.status === this.signStatus.invoice){
+                    if(ret.signing.status === this.signStatus.uninvoice || ret.signing.status === this.signStatus.invoice){
                         this.activeTab = 'invoice'
                     }
                 }).then(() => {
