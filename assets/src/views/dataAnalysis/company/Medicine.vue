@@ -116,7 +116,7 @@
                 <router-link tag="p" :to="{name: 'company-user', query: {status: 1}}">发布练习次数</router-link>
             </div>
         </section>
-        <el-dialog class="show-detail" title="企业公告信息" v-model="showCompany">
+        <el-dialog class="show-detail" title="企业公告信息" :visible.sync="showCompany">
             <div class="info" v-if="medicineTaskCompany">
                 <h2>{{medicineTaskCompany.company_name}}</h2>
                 <p><i class="title">第一次使用时间：</i><span class="value">{{medicineTaskCompany.first_time}}</span></p>
@@ -126,7 +126,7 @@
                 <p><i class="title">使用次数最多门店：</i><span class="value">{{medicineTaskCompany.department_max_name}}（{{medicineTaskCompany.department_max_number}}次）</span></p>
             </div>
         </el-dialog>
-        <el-dialog class="show-detail" title="分店公告信息" v-model="showDepartment">
+        <el-dialog class="show-detail" title="分店公告信息" :visible.sync="showDepartment">
             <div class="info" v-if="medicineTaskDepartment">
                 <h2>{{medicineTaskDepartment.department_name}}-使用概况</h2>
                 <p><i class="title">第一次使用时间：</i><span class="value">{{medicineTaskDepartment.first_time}}</span></p>

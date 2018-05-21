@@ -4,7 +4,7 @@
 </style>
 
 <template>
-    <el-dialog class="show-detail" title="查看店员" v-model="isShow">
+    <el-dialog class="show-detail" title="查看店员" :visible.sync="isShow">
         <div class="avatar" v-if="detail != null">
             <img :src="{url: detail.avatar, sex: detail.sex} | defaultAvatar"/>
         </div>
