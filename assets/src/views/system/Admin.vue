@@ -56,7 +56,7 @@
             </div>
         </el-dialog>
         <!--添加/编辑表单-->
-        <el-dialog v-model="addForm">
+        <el-dialog :visible.sync="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="form.name" placeholder="管理员姓名" auto-complete="off"></el-input>

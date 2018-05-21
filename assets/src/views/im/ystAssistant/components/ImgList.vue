@@ -92,7 +92,7 @@
                        :total="paramImgs.total">
         </el-pagination>
 
-        <el-dialog title="编辑图片信息" v-model="dialogImg.isShow">
+        <el-dialog title="编辑图片信息" :visible.sync="dialogImg.isShow">
             <el-form>
                 <el-form-item label="图片名称">
                     <el-input @keyup.enter.native="dialogImg.confirmFn" v-model="dialogImg.model.name"

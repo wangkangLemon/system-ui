@@ -24,7 +24,9 @@
                 }
                 display: inline-block;
                 width: 47%;
-
+                .custom-table {
+                    border: 1px solid #d1dbe5
+                }
                 &:first-of-type {
                     margin-right: 5%;
                 }
@@ -34,20 +36,32 @@
 </style>
 
 <template>
-    <el-dialog :title="title" v-model="currVal" class="comp-dialog-select5table">
+    <el-dialog :title="title" :visible.sync="currVal" class="comp-dialog-select5table">
         <main>
             <slot name="search"></slot>
             <section>
                 <aside>未选中</aside>
-                <el-table ref="goodTable" v-loading="loading" :data="data" :show-header="false"
-                          :height="500"
-                          @select="rowSelected">
-                    <el-table-column type="selection" :selectable="(row) =>  row.id != -1"></el-table-column>
+                <el-table 
+                    ref="goodTable" 
+                    v-loading="loading" 
+                    :data="data" 
+                    :show-header="false"
+                    :height="500"
+                    class="custom-table"
+                    @select="rowSelected">
+                    <el-table-column 
+                        type="selection" 
+                        :selectable="(row) =>  row.id != -1">
+                    </el-table-column>
                     <el-table-column>
                         <template slot-scope="scope">
                             <i v-if="scope.row.id != -1">{{scope.row.name}}</i>
-                            <el-button @click="fetchData(false)" class="dialog-getmore-btn" type="text"
-                                       v-else :disabled="data.length - 1 >= total">
+                            <el-button 
+                                @click="fetchData(false)" 
+                                class="dialog-getmore-btn" 
+                                type="text"
+                                v-else 
+                                :disabled="data.length - 1 >= total">
                                 <i>{{data.length - 1 >= total ? '已无更多' : '点击加载更多'}}</i>
                             </el-button>
                         </template>
@@ -56,13 +70,21 @@
             </section>
             <section>
                 <aside>已选中</aside>
-                <el-table :show-header="false" :height="500" :data="currSelectedList">
+                <el-table 
+                    :show-header="false" 
+                    :height="500" 
+                    :data="currSelectedList"
+                    class="custom-table">
                     <el-table-column>
                         <template slot-scope="scope">
                             {{scope.row.name}}
-                            <el-button style="float: right;margin-right: 10px" type="text" size="tiny" icon="delete"
-                                       @click="delItem(scope.row)">删除
-                                <!--i-->
+                            <el-button 
+                                style="float: right;margin-right: 10px" 
+                                type="text" 
+                                size="tiny" 
+                                icon="el-icon-delete"
+                                @click="delItem(scope.row)">
+                                删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -171,7 +193,7 @@
             // 设置选中
             setSelected () {
                 this.$nextTick(() => {
-                    this.$refs.goodTable.clearSelection()
+                    this.$refs.goodTable && this.$refs.goodTable.clearSelection()
                     this.currSelectedList.forEach((row) => {
                         let currRow = this.data.find((item) => {
                             return item.id == row.id

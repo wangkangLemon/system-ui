@@ -5,7 +5,7 @@
 </style>
 
 <template>
-    <el-dialog title="查看操作行为" v-model="isShow">
+    <el-dialog title="查看操作行为" :visible.sync="isShow">
         <el-card class="box-card">
             <el-table
                     v-loading="loading"
