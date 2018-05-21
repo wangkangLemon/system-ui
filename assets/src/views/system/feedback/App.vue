@@ -43,7 +43,7 @@
 <template>
     <article class="system-manage">
         <!--详情-->
-        <el-dialog title="查看详情" class="show-detail" v-model="showDetail">
+        <el-dialog title="查看详情" class="show-detail" :visible.sync="showDetail">
             <div class="info" v-if="detail != null">
                 <p><i class="title">问题类型：</i><span class="value">{{detail.category_name}}</span></p>
                 <p><i class="title">提交时间：</i><span class="value">{{detail.create_time_name}}</span></p>

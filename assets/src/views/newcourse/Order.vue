@@ -100,7 +100,7 @@
         <el-pagination class="block" @size-change="val=> {fetchParam.page_size=val; getData()}" @current-change="val=> {fetchParam.page=val; getData()}" :current-page="fetchParam.page" :page-size="fetchParam.page_size" :page-sizes="[15, 30, 60, 100]" layout="sizes,total, prev, pager, next" :total="total">
         </el-pagination>
         <!--详情-->
-        <el-dialog title="订单详情" class="show-detail" v-model="showDetail">
+        <el-dialog title="订单详情" class="show-detail":visible.sync="showDetail">
             <div class="info" v-if="detail != null">
                 <p>
                     <i class="title">订单号：</i>

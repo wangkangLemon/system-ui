@@ -12,7 +12,10 @@
 }
 </style>
 <template>
-    <NestedDialog title="选取文档" v-model="isShowDialog">
+    <el-dialog 
+        title="选取文档" 
+        :visible.sync="isShowDialog"
+        append-to-body>
         <span slot="title"><span class="el-dialog__title">选取文档</span>  <span style="color:#FF4949">只能选取审核通过的文档</span></span>
         <article id="course-manage-component--dialogvideo">
             <article class="search">
@@ -75,12 +78,11 @@
             </el-pagination>
 
         </article>
-    </NestedDialog>
+    </el-dialog>
 </template>
 
 <script>
 import courseService from '../../../services/courseService'
-import NestedDialog from '../../component/dialog/NestedDialog.vue'
 
 export default {
     props: {
@@ -154,6 +156,6 @@ export default {
             this.fetchParam.page = 1
         }
     },
-    components: {NestedDialog}
+    components: {}
 }
 </script>
