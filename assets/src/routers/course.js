@@ -137,5 +137,79 @@ export default {
                 noback: true
             }
         },
+        {
+            path: 'teaching',
+            name: 'course-teaching',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/teaching/Main.vue'))
+                })
+            },
+            meta: {
+                title: '带教模版管理',
+                noback: true
+            }
+        },
+        {
+            path: 'teaching/add',
+            name: 'course-teaching-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/teaching/Add.vue'))
+                })
+            },
+            meta: {
+                title: '创建带教模版',
+            }
+        },
+        {
+            path: 'teaching/edit',
+            name: 'course-teaching-edit',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/teaching/Add.vue'))
+                })
+            },
+            meta: {
+                title: '修改带教模版'
+            }
+        },
+        {
+            path: 'learnmap',
+            name: 'course-learnmap',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/learnmap/Main.vue'))
+                })
+            },
+            meta: {
+                title: '学习地图模版管理',
+                noback: true
+            }
+        },
+        {
+            path: 'learnmap/add',
+            name: 'course-learnmap-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/learnmap/Add.vue'))
+                })
+            },
+            meta: {
+                title: '创建学习地图模版',
+            }
+        },
+        {
+            path: 'learnmap/edit',
+            name: 'course-learnmap-edit',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/learnmap/Add.vue'))
+                })
+            },
+            meta: {
+                title: '编辑学习地图模版',
+            }
+        },
     ]
 }

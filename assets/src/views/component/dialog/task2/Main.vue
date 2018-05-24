@@ -1,8 +1,8 @@
+<!-- 
+    单品，组合，打包
+ -->
 <style lang="scss">
     #learning-maps-task-container {
-        .el-dialog--small{
-            width: 80%;
-        }
         .el-tabs__content {
             position: relative;
             .dialog-select-item {
@@ -32,6 +32,7 @@
 <template>
     <main id="learning-maps-task-container">
         <el-dialog 
+            width="80%"
             :title="title" 
             :visible.sync="showDialog">
             <el-tabs type="border-card" @tab-click="handleTabClick" v-model="tabs">

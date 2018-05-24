@@ -106,7 +106,7 @@
                     </el-radio-group>
                 </el-form-item>
                     <el-form-item>
-                        <el-button  type="info" @click="submitForm">保存</el-button>
+                        <el-button  type="primary" @click="submitForm">保存</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>

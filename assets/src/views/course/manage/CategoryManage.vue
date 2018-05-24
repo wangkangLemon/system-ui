@@ -21,7 +21,7 @@
 
         .right-container {
             margin-left: 15px;
-            width: 555px;
+            width: 605px;
             .edit-content {
                 margin: 10px 0 0
             }
@@ -88,7 +88,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="info" @click="submitForm" :disabled="fetchParam.parent_id == null">保存
+                        <el-button type="primary" @click="submitForm" :disabled="fetchParam.parent_id == null">保存
                             <!--zhankeng-->
                         </el-button>
                     </el-form-item>

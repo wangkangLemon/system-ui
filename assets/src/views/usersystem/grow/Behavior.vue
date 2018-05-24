@@ -33,7 +33,7 @@
                     <el-input type="textarea" :rows="3" v-model="form.description" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer">
                 <el-button type="primary" @click="submit('form')">保存</el-button>
             </div>
         </el-dialog>
@@ -51,24 +51,25 @@
             <el-table-column prop="description" label="说明"></el-table-column>
             <el-table-column prop="update_time_name" label="更新时间" width="170"></el-table-column>
             <el-table-column
-                    width="80"
-                    label="操作"
-                    fixed="right"
-                    align="center">
+                width="80"
+                label="操作"
+                fixed="right"
+                align="center">
                 <template slot-scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <el-pagination class="pagin"
-                       @size-change="handleSizeChange"
-                       @current-change="handleCurrentChange"
-                       :current-page="fetchParam.page"
-                       :page-size="fetchParam.page_size"
-                       :page-sizes="[15, 30, 60, 100]"
-                       layout="sizes,total, prev, pager, next"
-                       :total="total">
+        <el-pagination 
+            class="pagin"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="fetchParam.page"
+            :page-size="fetchParam.page_size"
+            :page-sizes="[15, 30, 60, 100]"
+            layout="sizes,total, prev, pager, next"
+            :total="total">
         </el-pagination>
 
     </main>
