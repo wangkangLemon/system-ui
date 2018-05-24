@@ -39,3 +39,22 @@ export function clone (obj) {
         return obj
     }
 }
+
+/**
+ * 覆盖target中已有的变量，没有的变量不赋值
+ */
+export function objectMerge (target, ...sources) {
+    for (let source of sources) {
+        Object.keys(source).forEach(item => {
+            if (item in target) {
+                target[item] = source[item]
+            }
+        })
+    }
+}
+
+export function validatePositiveNum (num) {
+    let reg = /^[1-9]\d*$/g
+    return reg.test(num)
+}
+

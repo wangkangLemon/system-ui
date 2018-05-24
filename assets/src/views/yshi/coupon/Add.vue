@@ -3,7 +3,7 @@
     #yshi-coupon-add-container {
        @extend %content-container;
         .form {
-            width: 50%;
+            width: 55%;
             .line {
                 text-align: center;
             }
@@ -61,8 +61,12 @@
         </el-form>
         <Task
             ref="goods"
+            title="选取商品"
             :visible.sync="showGoodsDialog"
+            defaultTabs="goods"
             :selected="transferRight"
+            :keys="['goods', 'group', 'activity']"
+            :customStyle="{ top: '33px' }"
             @submit="getTaskData">
         </Task>
     </main>
@@ -72,7 +76,7 @@
     import couponService from 'services/yshi/couponService'
     import DateRange from 'components/form/DateRangePicker.vue'
     import GoodsList from '../component/GoodsList.vue'
-    import Task from 'components/dialog/task2/Main.vue'
+    import Task from 'components/dialog/task/Main.vue'
     // import { date2Str } from 'utils/timeUtils'
 
     export default {

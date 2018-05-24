@@ -21,7 +21,7 @@
 
         .right-container {
             margin-left: 15px;
-            width: 558px;
+            width: 605px;
             .edit-content {
                 margin: 10px 0 0
             }
@@ -79,7 +79,7 @@
                         <el-input placeholder="最小的排在前面" :disabled="fetchParam.parent_id == null" v-model.number="fetchParam.sort"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="info" :disabled="fetchParam.parent_id == null" @click="submitForm">保存</el-button>
+                        <el-button type="primary" :disabled="fetchParam.parent_id == null" @click="submitForm">保存</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>

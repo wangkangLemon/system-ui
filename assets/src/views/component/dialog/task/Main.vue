@@ -1,8 +1,8 @@
+<!-- 
+    课程，考试，练习，药我说，拿药练习(不属于transfer)
+ -->
 <style lang="scss">
     #learning-maps-task-container {
-        .el-dialog--small{
-            width: 80%;
-        }
         .el-tabs__content {
             position: relative;
             .dialog-select-item {
@@ -33,11 +33,11 @@
     <main id="learning-maps-task-container">
         <el-dialog 
             :title="title" 
-            width="70%"
+            width="80%"
             :visible.sync="showDialog">
             <el-tabs type="border-card" @tab-click="handleTabClick" v-model="tabs">
                 <el-tab-pane 
-                    v-for="tab in initTabs"
+                    v-for="tab in tabList"
                     :key="tab.value"
                     :label="tab.label"
                     :name="tab.type">
@@ -51,7 +51,7 @@
                         @curRow="getCurRow">
                     </component>
                 </el-tab-pane>
-                <div class="dialog-select-item">
+                <div class="dialog-select-item" :style="customStyle" v-if="tabs !== 'medicine'">
                     <h5>已选择</h5>
                     <el-table class="row-class" :show-header="false" :data="selected" :height="440" :row-key="selected.object_id" v-if="showDialog">
                         <el-table-column
@@ -89,9 +89,18 @@
 
 <script>
     import Transfer from 'components/dialog/Transfer2.vue'
+
     import CourseTransfer from 'components/dialog/transfer/CourseTransfer.vue'
     import ExamTransfer from 'components/dialog/transfer/ExamTransfer.vue'
     import PracticeTransfer from 'components/dialog/transfer/PracticeTransfer.vue'
+
+    import SpeakingTransfer from 'components/dialog/transfer/SpeakingTransfer.vue'
+    import MedicineTaken from 'components/form/MedicineTaken.vue'
+
+    import GoodsTransfer from 'components/dialog/transfer/GoodsTransfer.vue'
+    import GroupTransfer from 'components/dialog/transfer/GroupTransfer.vue'
+    import ActivityTransfer from 'components/dialog/transfer/ActivityTransfer.vue'
+
     import Task from './model'
 
     export default {
@@ -99,10 +108,18 @@
             Transfer,
             CourseTransfer,
             ExamTransfer,
-            PracticeTransfer
+            PracticeTransfer,
+            SpeakingTransfer,
+            MedicineTaken,
+            GoodsTransfer,
+            GroupTransfer,
+            ActivityTransfer,
         },
         props: {
-            initTabs: Array,
+            customStyle: Object,
+            initTabs: {
+                type: Array,
+            },
             selected: Array,
             visible: Boolean,
             title: {
@@ -131,12 +148,14 @@
             showDialog (val) {
                 this.$emit('update:visible', val)
             },
+            initTabs (val) {
+                this.tabList = this.initTabs || new Task().initTabs(this.keys)
+            }
         },
         data () {
             return {
                 showDialog: this.visible,
-                tabList: new Task().initTabs(this.keys, this.initTabs),
-                // tabList: this.initTabs,
+                tabList: this.initTabs || new Task().initTabs(this.keys),
                 tabKeys: this.keys || Task.keys,
                 tabs: this.defaultTabs,
             }
@@ -146,7 +165,7 @@
                 let ref = this.getRefsByType(this.$refs.transfers, row)
                 ref.$refs.transfer.toggleRowSelectionById(row)
                 ref.$refs.transfer.selectData.forEach((item, index, array) => {
-                    row.id === item.id && array.splice(index, 1)
+                    (row.id + row.type) === (item.id + item.type) && array.splice(index, 1)
                 })
                 this.selected.splice(index, 1)
             },
@@ -163,13 +182,13 @@
             getCurRow (row, all) {
                 this.formatRow(row)
                 if (all) {
-                    if (!this.selected.some(item => item.id === row.id)) {
+                    if (!this.selected.some(item => item.id + item.type === row.id + row.type)) {
                         this.selected.push(row)
                     }
                 } else {
-                    if (this.selected.some(item => item.id === row.id)) {
+                    if (this.selected.some(item => item.id + item.type === row.id + row.type)) {
                         for (let i = 0; i < this.selected.length; i++) {
-                            if (this.selected[i].id === row.id) {
+                            if (this.selected[i].id + this.selected[i].type === row.id + row.type) {
                                 this.selected.splice(i, 1)
                                 return
                             }
