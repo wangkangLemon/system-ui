@@ -129,12 +129,13 @@
                         <p class="select">
                             <i class="title">备注：</i>
                             <span class="value">
-                                <el-input class="note" type="textarea" v-model="form1.note" :rows="3"></el-input>
+                                <el-input class="note" type="textarea" v-model="form1.note" :rows="3" 
+                                    :disabled="form.status === signStatus.invoice"></el-input>
                             </span>
                         </p>
                     </div>
                     <div slot="footer" class="dialog-footer">
-                        <el-button type="primary" @click="submit2">提 交</el-button>
+                        <el-button type="primary" @click="submit2" :disabled="form.status === signStatus.invoice">提 交</el-button>
                     </div>
                 </section>
             </el-tab-pane>
@@ -181,9 +182,13 @@
                 signingService.getSigningInfo(this.signingId).then((ret) => {
                     this.detail = ret.signing
                     this.form.status = ret.signing.status
-                    this.invoice = ret.invoice
+                    this.form.note = ret.signing.remark
                     if(ret.signing.status === this.signStatus.uninvoice || ret.signing.status === this.signStatus.invoice){
+                        this.invoice = ret.invoice
+                        this.form1.note = ret.invoice.remark
                         this.activeTab = 'invoice'
+                    }else {
+                        this.activeTab = 'signing'
                     }
                 }).then(() => {
                     xmview.setContentLoading(false)
@@ -194,6 +199,8 @@
             this.activeTab = 'signing'
             this.invoice = {}
             this.signingId = ''
+            this.form = {}
+            this.form1 = {}
         },
         methods: {
             handleClick(tab, event) {

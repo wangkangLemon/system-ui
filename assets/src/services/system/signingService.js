@@ -4,7 +4,7 @@
 
 import * as api from '../api'
 import config from 'utils/config'
-const urlPre = config.apiHost + '/sys/signing'
+const urlPre = config.apiHost + '/signing'
 
 class SigningService {
     // 搜索
@@ -30,7 +30,7 @@ class SigningService {
     // 审核结果更新
     updateResult ({id, status, remark}) {
         let url = `${urlPre}/${id}/result`
-        return api.put(url,{status,remark}).then((ret) => {
+        return api.put(url,JSON.stringify({status,remark})).then((ret) => {
             return ret.data
         })
     }
@@ -38,7 +38,7 @@ class SigningService {
     // 审核结果更新
     updateInvoice ({id, remark}) {
         let url = `${urlPre}/${id}/invoice`
-        return api.put(url,{remark}).then((ret) => {
+        return api.put(url,JSON.stringify({remark})).then((ret) => {
             return ret.data
         })
     }

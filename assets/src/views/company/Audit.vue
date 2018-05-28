@@ -63,7 +63,7 @@
                     border
                     :data="signList">
                 <el-table-column
-                        width="200"
+                        min-width="250"
                         prop="company_name"
                         label="企业名称">
                 </el-table-column>
