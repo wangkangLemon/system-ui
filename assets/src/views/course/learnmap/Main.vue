@@ -171,7 +171,7 @@
                     status: '',
                     create_start_time: '',
                     create_end_time: '',
-                    type: 'learn_map',  // learn_map/teaching
+                    type: 'learning_map',  // learning_map/teaching
                     page: 1,
                     page_size: 15,
                 }
@@ -180,6 +180,7 @@
         methods: {
             fetchData () {
                 this.loading = true
+                this.fetchParam.type = 'learning_map'
                 return mapService.searchMap(this.fetchParam).then(ret => {
                     this.data = ret.list || []
                     this.total = ret.total

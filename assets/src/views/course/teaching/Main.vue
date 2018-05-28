@@ -116,7 +116,7 @@
                         <el-button 
                             type="text" 
                             size="small" 
-                            @click="$router.push({name: '', query: {}})">
+                            @click="$router.push({name: 'course-teaching-edit', query: {id: row.id}})">
                             编辑
                         </el-button>
                         <el-button type="text" size="small" @click="disableMap(row)">
@@ -180,6 +180,7 @@
         methods: {
             fetchData () {
                 this.loading = true
+                this.fetchParam.type = 'teaching'
                 return mapService.searchMap(this.fetchParam).then(ret => {
                     this.data = ret.list || []
                     this.total = ret.total

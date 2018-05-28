@@ -3,6 +3,18 @@
     @import "~utils/mixins/topSearch";
     #teaching-map-template-container {
         @extend %content-container;
+        .task-item {
+            width: 80%;
+            margin: 10px 0;
+            border: 1px dashed #dadada;
+            padding: 0 10px;
+            .delete {
+                cursor: pointer;
+                line-height: 40px;
+                float: right;
+                // margin-left: 100px;
+            }
+        }
         .custom-form {
             max-width: 60%
         }
@@ -84,7 +96,10 @@
             </el-form-item>
             <el-form-item label="结业考试">
                 <el-button type='primary' class="task-add-btn" @click="addExam" size="medium">添加考试</el-button>
-                <span>{{ruleForm.finish_exam_name}}</span>
+                <div class="task-item" v-if="ruleForm.finish_exam_name">
+                    <span>{{ruleForm.finish_exam_name}}</span>
+                    <i class="el-icon-delete delete" title="删除任务" @click="deleteFinishExam"></i>
+                </div>
             </el-form-item>
             <el-form-item label="课程是否收费" prop="is_buy">
                 <el-radio v-model="ruleForm.is_buy" :label="1">是</el-radio>
@@ -199,16 +214,17 @@
                 this.ruleForm.finish_exam_name = data.name
                 this.ruleForm.finish_exam_id = data.id
             },
-            delFinishedExamData () {
-
+            deleteFinishExam () {
+                this.ruleForm.finish_exam_name = ''
+                this.ruleForm.finish_exam_id = ''
             },
             submitForm (formName) {
                 if (this.validateAllForm(formName)) {
                     this.submitLoading = true
-                    let service = this.ruleForm.data ? mapService.updateMaps : mapService.createMaps
+                    let service = this.ruleForm.data ? mapService.updateMap : mapService.createMap
                     service(this.ruleForm.save('id')).then(() => {
                         this.submitLoading = false
-                        this.$router.replace({name: 'learning-maps-info'})
+                        this.$router.replace({name: 'course-teaching'})
                     }).catch(() => {
                         this.submitLoading = false
                     })
