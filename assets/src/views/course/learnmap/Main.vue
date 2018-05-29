@@ -66,12 +66,12 @@
                 </el-table-column>
                 <el-table-column 
                     label="必修数量" 
-                    prop="compulsory_object_numeber" 
+                    prop="compulsory_object_number" 
                     width="100">
                 </el-table-column>
                 <el-table-column 
                     label="选修数量" 
-                    prop="elective_object_numeber" 
+                    prop="elective_object_number" 
                     width="100">
                 </el-table-column>
                 <el-table-column 
@@ -85,7 +85,7 @@
                     prop="status" 
                     width="80">
                     <template slot-scope="{row}">
-                        <el-tag v-if="row.status === 1" type="success">上线</el-tag>
+                        <el-tag v-if="row.status === 0" type="success">上线</el-tag>
                         <el-tag v-else type="info">下线</el-tag>
                     </template>
                 </el-table-column>
@@ -101,7 +101,7 @@
                 </el-table-column>
                 <el-table-column 
                     label="最近修改时间" 
-                    prop="" 
+                    prop="update_time" 
                     width="170">
                 </el-table-column>
                 <el-table-column 
@@ -110,19 +110,30 @@
                     width="180" 
                     fixed="right">
                     <template slot-scope="{row}">
-                        <el-button type="text" size="small" @click="">
+                        <el-button 
+                            type="text" 
+                            size="small" 
+                            @click="$router.push({name: 'course-learnmap-view', query: { id: row.id, view: 1 }})">
                             查看
                         </el-button>
                         <el-button 
                             type="text" 
                             size="small" 
+                            :disabled="row.status === 0"
                             @click="$router.push({name: 'course-learnmap-edit', query: { id: row.id }})">
                             编辑
                         </el-button>
-                        <el-button type="text" size="small" @click="disableMap(row)">
-                            {{row.status === 2 ? '上线' : '下线'}}
+                        <el-button 
+                            type="text" 
+                            size="small" 
+                            @click="disableMap(row)">
+                            {{row.status === 0 ? '下线' : '上线'}}
                         </el-button>
-                        <el-button type="text" size="small" @click="del(row)">
+                        <el-button 
+                            type="text" 
+                            size="small" 
+                            :disabled="row.status === 0"
+                            @click="del(row)">
                             删除
                         </el-button>
                     </template>
@@ -188,8 +199,8 @@
                 })
             },
             disableMap (row) {
-                let statusTip = row.status === 2 ? '上线' : '下线'
-                let disabled = row.status === 2 ? 0 : 1
+                let statusTip = row.status === 1 ? '上线' : '下线'  
+                let disabled = row.status === 1 ? 0 : 1
                 this.$confirm(`是否${statusTip}【${row.title}】`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

@@ -132,7 +132,7 @@
             initFetchParam () {
                 return {
                     keyword: '',
-                    sender_type: 'system,company',
+                    sender_type: 'system',
                     status: 0,
                     page: 1,
                     page_size: 15
