@@ -6,16 +6,17 @@ import Task from 'components/dialog/task/model'
 
 export default class Maps {
     constructor (options = {}) {
+        this.id = '' // 更新id
         this.title = ''
         this.image = ''
-        this.type = ''                   // 地图类型
+        this.type = ''                   // 地图类型 learning_map/teaching
         this.phase_type = void 0         // 周期类型  将可能不需要传的置为undefined，序列化的时候就会被过滤掉
         this.phase_list = []
         this.origin_length = 0
         this.total_phase = 0
         this.finish_exam_id = ''  // 结业考试id
         this.finish_exam_name = '' // 结业考试名称
-        this.is_buy = 1   // 是否购买
+        this.is_free = 1   // 是否购买
         for (let [item, value] of Object.entries(options)) {
             this[item] = value
         }

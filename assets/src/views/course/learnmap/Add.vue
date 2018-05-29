@@ -96,16 +96,22 @@
                     <i class="el-icon-delete delete" title="删除任务" @click="deleteFinishExam"></i>
                 </div>
             </el-form-item>
-            <el-form-item label="课程是否收费" prop="is_buy">
-                <el-radio v-model="ruleForm.is_buy" :label="1">是</el-radio>
-                <el-radio v-model="ruleForm.is_buy" :label="0">否</el-radio>
+            <el-form-item label="课程是否收费" prop="is_free">
+                <el-radio v-model="ruleForm.is_free" :label="0">是</el-radio>
+                <el-radio v-model="ruleForm.is_free" :label="1">否</el-radio>
             </el-form-item>
             <el-form-item>
                 <el-button 
+                    v-if="!$route.query.view"
                     type="primary" 
                     @click="submitForm('ruleForm')" 
                     v-loading="submitLoading">
                     {{ruleForm.data ? '更新' : '发布'}}
+                </el-button>
+                <el-button 
+                    type='primary' 
+                    @click="$router.replace({name: 'course-learnmap'})">
+                    关闭
                 </el-button>
             </el-form-item>
         </el-form>
@@ -124,6 +130,7 @@
     import Phase from '../component/Phase.vue'
     import Exam from '../component/Exam.vue'
     import mapService from 'services/course/mapService.js'
+    import commonService from 'services/commonService'
     import Maps from 'models/learningMaps'
 
     export default {
@@ -164,9 +171,9 @@
                     return mapService.viewMap(id).then(ret => {
                         // 后端将发布对象列表没有和data一起返回
                         this.ruleForm = new Maps({
-                            data: ret.data
+                            data: ret.data,
+                            type: 'learning_map'
                         })
-                        this.ruleForm.learning_maps_id = this.$route.query.id
                     })
                 } else {
                     return Promise.resolve(this.ruleForm = new Maps({
@@ -175,7 +182,8 @@
                 }
             },
             cropperFn (data, ext) {
-                mapService.uploadCover({
+                commonService.uploadCover({
+                    upload_type: 'image',
                     image: data,
                     alias: `${Date.now()}.${ext}`
                 }).then((ret) => {

@@ -175,6 +175,18 @@ export default {
             }
         },
         {
+            path: 'teaching/view',
+            name: 'course-teaching-view',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/teaching/Add.vue'))
+                })
+            },
+            meta: {
+                title: '查看带教模版'
+            }
+        },
+        {
             path: 'learnmap',
             name: 'course-learnmap',
             component: resolve => {
@@ -209,6 +221,18 @@ export default {
             },
             meta: {
                 title: '编辑学习地图模版',
+            }
+        },
+        {
+            path: 'learnmap/view',
+            name: 'course-learnmap-view',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/learnmap/Add.vue'))
+                })
+            },
+            meta: {
+                title: '查看学习地图模版',
             }
         },
     ]
