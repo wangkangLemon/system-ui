@@ -72,7 +72,7 @@
                 </el-table-column>
                 <el-table-column 
                     label="任务数量" 
-                    prop="object_numeber" 
+                    prop="object_number" 
                     width="100">
                 </el-table-column>
                 <el-table-column 
