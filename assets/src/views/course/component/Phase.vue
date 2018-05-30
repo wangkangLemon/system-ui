@@ -28,18 +28,25 @@
         <el-form label-width="150px" :rules="rules" :model="ruleForm" ref="ruleForm" inline-message>
             <el-form-item label="学分奖励" prop="study_score">
                 <el-input-number 
+                    :disabled="disabled"
                     v-model.number="ruleForm.study_score"
                     :controls="false">
                 </el-input-number>
             </el-form-item>
             <el-form-item label="必修任务学习顺序" prop="sequence">
-                <el-radio-group v-model="ruleForm.sequence">
+                <el-radio-group v-model="ruleForm.sequence" :disabled="disabled">
                     <el-radio :label="1">按计划顺序</el-radio>
                     <el-radio :label="2">自由顺序</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="必修任务" required>
-                <el-button type='primary' @click="addRequiredTask(1)" size="medium">添加必修任务</el-button>
+                <el-button 
+                    type='primary' 
+                    @click="addRequiredTask(1)" 
+                    size="medium" 
+                    :disabled="disabled">
+                    添加必修任务
+                </el-button>
                 <SelectedTask
                     :selected="ruleForm.phase_object_list"
                     :taskType="1"
@@ -49,12 +56,19 @@
                 </SelectedTask>
             </el-form-item>
             <el-form-item label="选修任务" :prop="this.ruleForm.elective === 2 ? 'elective' : ''">
-                <el-radio-group v-model="ruleForm.elective">
+                <el-radio-group v-model="ruleForm.elective" :disabled="disabled">
                     <el-radio :label="2">添加选修</el-radio>
                     <el-radio :label="1">不添加选修</el-radio>
                 </el-radio-group>
                 <div v-if="ruleForm.elective === 2" class="task-list unrequired-task-list">
-                    <el-button type='primary' class="task-add-btn" @click="addUnRequiredTask(2)" size="medium">添加选修任务</el-button>
+                    <el-button 
+                        type='primary' 
+                        class="task-add-btn" 
+                        @click="addUnRequiredTask(2)" 
+                        :disabled="disabled"
+                        size="medium">
+                        添加选修任务
+                    </el-button>
                     <SelectedTask 
                         :selected="ruleForm.phase_object_list"
                         :taskType="2"
@@ -69,10 +83,18 @@
                 </el-input-number>
             </el-form-item>
             <el-form-item label="阶段考试">
-                <el-button type='primary' class="task-add-btn" @click="addExam(3)" size="medium">添加考试</el-button>
+                <el-button 
+                    type='primary' 
+                    class="task-add-btn" 
+                    @click="addExam(3)"
+                    :disabled="disabled" 
+                    size="medium">
+                    添加考试
+                </el-button>
                 <SelectedTask 
                     :selected="ruleForm.phase_object_list"
                     :taskType="3"
+                    :disabled="disabled"
                     :delete="deleteExamTask">
                 </SelectedTask>
             </el-form-item>
@@ -126,6 +148,7 @@
             SelectedTask
         },
         props: {
+            disabled: Boolean,
             phase: Object,
             keys: {
                 type: Array,

@@ -60,17 +60,17 @@
                     min-width="170">
                 </el-table-column>
                 <el-table-column 
-                    label="阶段数" 
+                    label="周期数" 
                     prop="total_phase" 
                     width="80">
                 </el-table-column>
                 <el-table-column 
-                    label="必修数量" 
+                    label="周期类型" 
                     prop="compulsory_object_number" 
                     width="100">
                 </el-table-column>
                 <el-table-column 
-                    label="选修数量" 
+                    label="任务数量" 
                     prop="elective_object_number" 
                     width="100">
                 </el-table-column>
