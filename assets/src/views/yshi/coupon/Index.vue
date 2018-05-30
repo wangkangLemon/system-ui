@@ -161,7 +161,7 @@
                 @current-change="val=> {userModel.fetchParam.page=val; getUserData()}"
                 :current-page="userModel.fetchParam.page"
                 :page-size="userModel.fetchParam.page_size"
-                :page-sizes="[15, 30, 60, 100]"
+                :page-sizes="[10, 15, 30, 60, 100]"
                 layout="sizes, total, prev, pager, next" 
                 :total="userModel.total">
             </el-pagination>
