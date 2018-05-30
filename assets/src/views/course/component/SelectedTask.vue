@@ -41,7 +41,12 @@
                 :key="task.object_id">
                 <el-tag :type="task.object_type | taskType('tag')">{{task.object_type | taskType('label')}}</el-tag>
                 <span>{{task.object_name}}</span>
-                <i v-if="taskType === 3" class="el-icon-delete delete" title="删除任务" @click="deleteTask(task, index)"></i>
+                <i 
+                    v-if="taskType === 3 && !disabled" 
+                    class="el-icon-delete delete" 
+                    title="删除任务"
+                    @click="deleteTask(task, index)">
+                </i>
             </li>
         </ul>
     </main>
@@ -55,6 +60,7 @@
             draggable
         },
         props: {
+            disabled: Boolean,
             selected: Array,
             taskType: Number,
             delete: Function,
