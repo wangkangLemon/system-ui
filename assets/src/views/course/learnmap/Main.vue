@@ -78,7 +78,7 @@
                     label="是否付费" 
                     prop="is_free" 
                     width="100">
-                    <span slot-scope="{row}">{{row.is_free ? '是' : '否'}}</span>
+                    <span slot-scope="{row}">{{row.is_free ? '否' : '是'}}</span>
                 </el-table-column>
                 <el-table-column 
                     label="状态" 

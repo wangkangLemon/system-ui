@@ -66,19 +66,20 @@
                 </el-table-column>
                 <el-table-column 
                     label="周期类型" 
-                    prop="compulsory_object_number" 
+                    prop="phase_type" 
                     width="100">
+                    <span slot-scope="{row}">{{row.phase_type | phaseType}}</span>
                 </el-table-column>
                 <el-table-column 
                     label="任务数量" 
-                    prop="elective_object_number" 
+                    prop="object_numeber" 
                     width="100">
                 </el-table-column>
                 <el-table-column 
                     label="是否付费" 
                     prop="is_free" 
                     width="100">
-                    <span slot-scope="{row}">{{row.is_free ? '是' : '否'}}</span>
+                    <span slot-scope="{row}">{{row.is_free ? '否' : '是'}}</span>
                 </el-table-column>
                 <el-table-column 
                     label="状态" 
@@ -97,7 +98,8 @@
                 <el-table-column 
                     label="创建时间" 
                     prop="create_time" 
-                    width="170">
+                    width=340">
+                    <span slot-scope="{row}">{{row.create_time}}-{{row.end_time}}</span>
                 </el-table-column>
                 <el-table-column 
                     label="最近修改时间" 
@@ -223,7 +225,16 @@
                 })
             }
         },
-        filters: {},
+        filters: {
+            phaseType (val) {
+                let map = {
+                    1: '天',
+                    2: '周',
+                    3: '月'
+                }
+                return map[val]
+            }
+        },
         directives: {},
     }
 </script>
