@@ -26,13 +26,13 @@
         <!-- 内容主体 -->
         <!-- <p class="phase-sort">第{{ruleForm.phase}}阶段</p> -->
         <el-form label-width="150px" :rules="rules" :model="ruleForm" ref="ruleForm" inline-message>
-            <el-form-item label="学分奖励" prop="study_score">
+<!--             <el-form-item label="学分奖励" prop="study_score">
                 <el-input-number 
                     :disabled="disabled"
                     v-model.number="ruleForm.study_score"
                     :controls="false">
                 </el-input-number>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="必修任务学习顺序" prop="sequence">
                 <el-radio-group v-model="ruleForm.sequence" :disabled="disabled">
                     <el-radio :label="1">按计划顺序</el-radio>

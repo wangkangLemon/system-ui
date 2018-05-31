@@ -98,8 +98,7 @@
                 <el-table-column 
                     label="创建时间" 
                     prop="create_time" 
-                    width="300">
-                    <span slot-scope="{row}">{{row.create_time}}~{{row.update_time}}</span>
+                    width="170">
                 </el-table-column>
                 <el-table-column 
                     label="最近修改时间" 

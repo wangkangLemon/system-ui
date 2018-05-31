@@ -6,25 +6,26 @@
 <template>
     <section>
         <i>{{title}}</i>
-        <el-date-picker @change="setCurrVal(0)" ref="start"
-                        :editable="false"
-                        clearable
-                        v-model="timespan[0]"
-                        align="right"
-                        type="date"
-                        :picker-options="pickerOptionsStart"
-                        placeholder="开始日期">
+        <el-date-picker 
+            @change="setCurrVal(0)" ref="start"
+            :editable="false"
+            clearable
+            v-model="timespan[0]"
+            align="right"
+            type="date"
+            :picker-options="pickerOptionsStart"
+            placeholder="开始日期">
         </el-date-picker>
         <el-date-picker
-                ref="end"
-                clearable
-                :editable="false"
-                @change="setCurrVal(1)"
-                v-model="timespan[1]"
-                align="right"
-                type="date"
-                :picker-options="pickerOptionsEnd"
-                placeholder="结束日期">
+            ref="end"
+            clearable
+            :editable="false"
+            @change="setCurrVal(1)"
+            v-model="timespan[1]"
+            align="right"
+            type="date"
+            :picker-options="pickerOptionsEnd"
+            placeholder="结束日期">
         </el-date-picker>
     </section>
 </template>
@@ -59,15 +60,15 @@
         watch: {
             'start'(val) {
                 if (getTimeStr(this.timespan[0]) != val) {
-                    this.timespan[0] = val
+                    this.$set(this.timespan, 0, val)
                     // 置空之后, 控件上面显示的值不会被清空  所以要自己操作dom进行操作
-                    if (!val) this.$refs.start.$el.querySelector('input').value = ''
+                    // if (!val) this.$refs.start.$el.querySelector('input').value = ''
                 }
             },
             'end'(val) {
                 if (getTimeStr(this.timespan[1]) != val) {
-                    this.timespan[1] = val
-                    if (!val) this.$refs.end.$el.querySelector('input').value = ''
+                    this.$set(this.timespan, 1, val)
+                    // if (!val) this.$refs.end.$el.querySelector('input').value = ''
                 }
             }
         },
