@@ -14,10 +14,23 @@
                             padding: 20px;
                             background: #eee;
                         }
+                        &.ck{
+                            line-height: 30px;
+                            font-size: 16px;
+                            margin-left: 20px;
+                            .ck-item {
+                                margin-right:20px;
+                                input {
+                                    margin-right:10px;
+                                }
+                            }
+                        }
+
                     }
                     .audit-show-select {
                         width: 110px;
                     }
+                    
                 }
             }
             .dialog-footer {
@@ -89,6 +102,46 @@
                     </div>
                     <div slot="footer" class="dialog-footer">
                         <el-button type="primary" @click="submit">提 交</el-button>
+                    </div>
+                </section>
+                <screenImg></screenImg>
+            </el-tab-pane>
+            <el-tab-pane label="付款审核" name="pay">
+                <section class="show-detail">
+                    <div class="info" v-if="payinfo">
+                        <p><i class="title">应付款金额: </i><span class="value">{{299.00}}元</span></p>
+                        <p class="select">
+                            <i class="title">财务是否已收到汇款: </i>
+                            <span class="value ck">
+                                <label class="ck-item"><input type="radio" name="papertype" 
+                                    value="1" @change="val => {this.hasMoney=1}" :checked="hasMoney === 1" />是</label>  
+                                <label class="ck-item"><input type="radio" name="papertype" 
+                                    value="2" @change="val => {this.hasMoney=2}" :checked="hasMoney === 2"/>否</label> 
+                            </span> 
+                        </p>
+                        <p class="select">
+                            <i class="title">付款流水号: </i>
+                            <span class="value">
+                                <el-input class="note" type="number" v-model="form.note" :rows="1"></el-input>
+                            </span>
+                        </p>
+                        <p class="select">
+                            <i class="title">备注: </i>
+                            <span class="value">
+                                <el-input class="note" type="textarea" v-model="form.note" :rows="6"></el-input>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="info" v-if="payinfo">
+                        <p><i class="title">付款状态: </i><span class="value">已付款</span></p>
+                        <p><i class="title">付款方式: </i><span class="value">支付宝</span></p>
+                        <p><i class="title">付款金额: </i><span class="value">399.00元</span></p>
+                        <p><i class="title">付款方: </i><span class="value">张三/公司xxx</span></p>
+                        <p><i class="title">付款交易号: </i><span class="value">222</span></p>
+                        <p><i class="title">付款时间: </i><span class="value">2018-09-32</span></p>
+                    </div>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button type="primary" @click="submit">确认</el-button>
                     </div>
                 </section>
                 <screenImg></screenImg>
@@ -172,7 +225,9 @@
                     paid: 22,
                     uninvoice: 30,
                     invoice: 31
-                }
+                },
+                hasMoney: 1,
+                payinfo: true
             }
         },
         // keep-alive 相应使用activated,deactivated
