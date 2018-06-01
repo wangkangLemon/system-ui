@@ -78,6 +78,7 @@
             </el-form-item>
             <el-form-item label="店员需选修任务数量" v-if="ruleForm.elective === 2" prop="elective_count">
                 <el-input-number
+                    :disabled="disabled"
                     v-model.number="ruleForm.elective_count"
                     :controls="false">
                 </el-input-number>
@@ -281,6 +282,11 @@
                         message: `喂，第${level}阶段必修任务、选修任务和阶段考试有重复的，请仔细检查`,
                         tipsType: 'warning',
                         legality: this.validateRepeatTask(this.ruleForm.phase_object_list)
+                    },
+                    {
+                        message: '店员需选修任务数量应该小于等于实际选修的任务数量，请修改',
+                        tipsType: 'warning',
+                        legality: this.ruleForm.elective_count <= this.unRequiredTaskSelected.length
                     }
                 ]
                 list.forEach(item => {

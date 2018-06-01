@@ -172,8 +172,10 @@
             deleteAll () {
                 for (let ref of Object.values(this.$refs.transfers)) {
                     let transfer = ref.$refs.transfer
-                    transfer.toggleRowSelection()
-                    transfer.selectData = []
+                    if (this.$refs.transfers.toggleRowSelection) {
+                        transfer.toggleRowSelection()
+                        transfer.selectData = []
+                    }
                 }
                 while (this.selected.length > 0) {
                     this.selected.splice(0, 1)
