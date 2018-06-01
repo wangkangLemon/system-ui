@@ -42,6 +42,14 @@ class SigningService {
             return ret.data
         })
     }
+
+    // 线下支付确认
+    offlinePay ({id, status, remark}) {
+        let url = `${urlPre}/${id}/offlinepay`
+        return api.put(url,JSON.stringify({status, remark})).then((ret) => {
+            return ret.data
+        })
+    }
     
 }
 export default new SigningService()

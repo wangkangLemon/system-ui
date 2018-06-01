@@ -43,6 +43,9 @@
                         <el-option label="资质未通过" :value="signStatus.reject"></el-option>
                         <el-option label="资质通过" :value="signStatus.pass"></el-option>
                         <el-option label="待付款" :value="signStatus.unpay"></el-option>
+                        <el-option label="付款关闭" :value="signStatus.payclose"></el-option>
+                        <el-option label="线下支付待确认" :value="signStatus.payline"></el-option>
+                        <el-option label="线下支付确认失败" :value="signStatus.paylinefail"></el-option>
                         <el-option label="已付款" :value="signStatus.paid"></el-option>
                         <el-option label="待开发票" :value="signStatus.uninvoice"></el-option>
                         <el-option label="发票已寄出" :value="signStatus.invoice"></el-option>
@@ -91,6 +94,9 @@
                         <el-tag type="danger" v-if="scope.row.status == signStatus.reject">资质未通过</el-tag>
                         <el-tag type="success" v-if="scope.row.status == signStatus.pass">资质通过</el-tag>
                         <el-tag type="primary" v-if="scope.row.status == signStatus.unpay">待付款</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == signStatus.payclose">付款关闭</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == signStatus.payline">线下支付待确认</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == signStatus.paylinefail">线下支付确认失败</el-tag>
                         <el-tag type="success" v-if="scope.row.status == signStatus.paid">已付款</el-tag>
                         <el-tag type="warning" v-if="scope.row.status == signStatus.uninvoice">待开发票</el-tag>
                         <el-tag type="success" v-if="scope.row.status == signStatus.invoice">发票已寄出</el-tag>
@@ -149,7 +155,10 @@
                     reject: 11,
                     pass: 12,
                     unpay: 20,
-                    paid: 22,
+                    payclose: 21,
+                    payline: 22,
+                    paylinefail: 23,
+                    paid: 25,
                     uninvoice: 30,
                     invoice: 31
                 }
