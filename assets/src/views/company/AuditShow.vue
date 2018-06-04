@@ -147,7 +147,7 @@
             </el-tab-pane>
             <el-tab-pane :disabled="!(curStatus === signStatus.uninvoice || curStatus === signStatus.invoice)" label="发票邮寄" name="invoice">
                 <section class="show-detail">
-                    <div class="info" v-if="invoice">
+                    <div class="info" v-if="invoice.id">
                         <p class="select">
                             <i class="title">发票信息</i>
                             <span class="value invoice">
@@ -249,7 +249,6 @@
                 signingService.getSigningInfo(this.signingId).then((ret) => {
                     this.detail = ret.signing
                     if(ret.signing.status >= this.signStatus.pass) {
-                        debugger
                         this.form.status = '资质通过'
                     }else {
                         this.form.status = ret.signing.status
