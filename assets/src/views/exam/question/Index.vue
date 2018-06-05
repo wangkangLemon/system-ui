@@ -129,7 +129,10 @@
             </el-col>
         </el-row>
 
-        <NestedDialog :title="editDialog" :visible.sync="dialog.edit">
+        <el-dialog 
+            :title="editDialog" 
+            :visible.sync="dialog.edit"
+            append-to-body>
             <el-form :model="model" label-width="80px" :rules="rules" ref="form">
                 <el-form-item label="试题类型" class="is-required">
                     <el-radio-group v-model="model.type" @change="onQuestionTypeChange" :disabled="model.id !== 0">
@@ -198,9 +201,13 @@
                     <el-button type="primary" @click="submitForm">确定</el-button>
                 </el-form-item>
             </el-form>
-        </NestedDialog>
+        </el-dialog>
 
-        <NestedDialog id="view" title="详情" :visible.sync="dialog.view">
+        <el-dialog 
+            id="view" 
+            title="详情" 
+            :visible.sync="dialog.view"
+            append-to-body>
             <div class="el-form-item">
                 <label class="el-form-item__label">试题类型：</label>
                 <div class="el-form-item__content">
@@ -271,7 +278,7 @@
                     </div>
                 </div>
             </div>
-        </NestedDialog>
+        </el-dialog>
 
         <LocalImportDialog
                 :onSuccess="importQuestion"
@@ -291,17 +298,16 @@
 </template>
 
 <script>
-    import DateRange from '../../component/form/DateRangePicker.vue'
-    import testQuestionService from '../../../services/exam/questionService'
-    import testLibraryService from '../../../services/exam/libraryService'
-    import UploadImg from '../../component/upload/UploadImg.vue'
-    import SelectScroll from '../../component/form/SelectScroll.vue'
-    import Tags from '../../component/form/Tags.vue'
-    import Question from '../../../models/quesion'
-    import Option from '../../../models/option'
+    import DateRange from 'components/form/DateRangePicker.vue'
+    import testQuestionService from 'services/exam/questionService'
+    import testLibraryService from 'services/exam/libraryService'
+    import UploadImg from 'components/upload/UploadImg.vue'
+    import SelectScroll from 'components/form/SelectScroll.vue'
+    import Tags from 'components/form/Tags.vue'
+    import Question from 'models/quesion'
+    import Option from 'models/option'
     import LocalImportDialog from '../LocalImportDialog.vue'
-    import config from '../../../utils/config'
-    import NestedDialog from '../../component/dialog/NestedDialog.vue'
+    import config from 'utils/config'
 
     export default{
         data () {
@@ -516,6 +522,6 @@
                 }
             }
         },
-        components: {DateRange, UploadImg, SelectScroll, Tags, LocalImportDialog, NestedDialog}
+        components: {DateRange, UploadImg, SelectScroll, Tags, LocalImportDialog}
     }
 </script>

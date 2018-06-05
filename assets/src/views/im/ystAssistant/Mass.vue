@@ -126,11 +126,11 @@
             </el-tab-pane>
         </el-tabs>
 
-        <el-dialog title="选择图文消息" v-model="dialogMaterial.isShow">
+        <el-dialog title="选择图文消息" :visible.sync="dialogMaterial.isShow">
             <MaterialList ref="materiallist" :type="1" :onSelected="selectedMaterial"></MaterialList>
         </el-dialog>
 
-        <el-dialog title="选择图片" v-model="dialogImg.isShow">
+        <el-dialog title="选择图片" :visible.sync="dialogImg.isShow">
             <ImgList ref="imglist" :type="1" :onSelected="selectedImg"></ImgList>
         </el-dialog>
 

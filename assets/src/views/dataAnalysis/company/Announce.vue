@@ -140,7 +140,7 @@
                 </div>
             </div>
         </section>
-        <el-dialog class="show-detail" title="企业公告信息" v-model="showCompany">
+        <el-dialog class="show-detail" title="企业公告信息" :visible.sync="showCompany">
             <div class="info" v-if="announceCompany">
                 <h2>{{announceCompany.company_name}}</h2>
                 <p><i class="title">第一次发送公告时间：</i><span class="value">{{announceCompany.first_time}}</span></p>
@@ -148,7 +148,7 @@
                 <p><i class="title">共发送条数：</i><span class="value">{{announceCompany.announce_count}}条（{{announceCompany.company_count}}条企业公告，{{announceCompany.department_count}}条分店公告）</span></p>
             </div>
         </el-dialog>
-        <el-dialog class="show-detail" title="分店公告信息" v-model="showDepartment">
+        <el-dialog class="show-detail" title="分店公告信息" :visible.sync="showDepartment">
             <div class="info" v-if="announceDepartment">
                 <h2>{{announceDepartment.department_name}}-使用概况</h2>
                 <p><i class="title">第一次发送公告时间：</i><span class="value">{{announceDepartment.first_time}}</span></p>

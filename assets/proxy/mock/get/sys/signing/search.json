@@ -1,0 +1,27 @@
+{
+	"code": 0,
+	"message": "",
+	"data": {
+		"list": [
+			{
+				"id": 1,
+				"company_name": "怡康连锁",
+				"company_address": "高新四路",
+				"user_name": "张三",
+				"mobile": "13333333333",
+				"status": 12,
+				"created_at": "2006-01-02 13:00:33"
+			},
+			{
+				"id": 2,
+				"company_name": "怡康连锁",
+				"company_address": "高新四路",
+				"user_name": "张三",
+				"mobile": "13333333333",
+				"status": 30,
+				"created_at": "2006-01-02 13:00:33"
+			}
+		],
+		"total": 2
+	}
+}

@@ -20,7 +20,7 @@
         }
 
         .right-container {
-            width: 558px;
+            width: 590px;
             margin-left: 15px;
             .edit-content {
                 margin: 10px 0 0
@@ -75,7 +75,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item>
-                        <el-button  type="info" @click="submitForm">保存</el-button>
+                        <el-button  type="primary" @click="submitForm">保存</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>

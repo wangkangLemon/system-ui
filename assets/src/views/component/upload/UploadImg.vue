@@ -113,19 +113,18 @@
                    :file-list="currImg">
             <i class="el-icon-plus"></i>
         </el-upload>
-        <NestedDialog v-model="dialogVisible" size="tiny">
+        <el-dialog :visible.sync="dialogVisible" append-to-body>
             <img width="100%" :src="currImg.length > 0 && currImg[0].url" alt="">
-        </NestedDialog>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import authUtils from '../../../utils/authUtils'
-    import config from '../../../utils/config'
-    import NestedDialog from '../../component/dialog/NestedDialog.vue'
+    import authUtils from 'utils/authUtils'
+    import config from 'utils/config'
 
     export default{
-        components: {NestedDialog},
+        components: {},
         props: {
             // 要上传的url地址
             url: {

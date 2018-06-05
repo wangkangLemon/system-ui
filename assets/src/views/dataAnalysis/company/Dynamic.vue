@@ -45,7 +45,7 @@
                            :change="getData">
                 </DateRange>
             </section>
-            <el-dialog class="show-detail" title="企业公告信息" v-model="showCompany">
+            <el-dialog class="show-detail" title="企业公告信息" :visible.sync="showCompany">
                 <div class="info" v-if="articleCompany">
                     <h2>{{articleCompany.company_name}}</h2>
                     <p><i class="title">第一次发布时间：</i><span class="value">{{articleCompany.first_time}}</span></p>

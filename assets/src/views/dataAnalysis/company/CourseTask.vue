@@ -148,7 +148,7 @@
                            :change="getData">
                 </DateRange>
             </section>
-            <el-dialog class="show-detail" title="企业公告信息" v-model="showCompany">
+            <el-dialog class="show-detail" title="企业公告信息" :visible.sync="showCompany">
                 <div class="info" v-if="courseTaskCompany">
                     <h2>{{courseTaskCompany.company_name}}</h2>
                     <p><i class="title">第一次发布时间：</i><span class="value">{{courseTaskCompany.first_time}}</span></p>
@@ -156,7 +156,7 @@
                     <p><i class="title">发布个数：</i><span class="value">{{courseTaskCompany.course_task_count}}条（{{courseTaskCompany.company_count}}条企业课程任务，{{courseTaskCompany.department_count}}条分店课程任务）</span></p>
                 </div>
             </el-dialog>
-            <el-dialog class="show-detail" title="分店公告信息" v-model="showDepartment">
+            <el-dialog class="show-detail" title="分店公告信息" :visible.sync="showDepartment">
                 <div class="info" v-if="courseTaskDepartment">
                     <h2>{{courseTaskDepartment.department_name}}-使用概况</h2>
                     <p><i class="title">第一次发布时间：</i><span class="value">{{courseTaskDepartment.first_time}}</span></p>

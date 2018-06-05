@@ -9,7 +9,7 @@ class SpeakingContentService {
     // 药我说记录列表
     search({page, page_size, status = -1, price_enabled = -1, keyword, time_start, time_end, sender_type = ''}) {
         let url = `${urlPre}/search`
-        if (status == '') {
+        if (status == undefined) {
             status = -1
         }
         if (price_enabled == '') {

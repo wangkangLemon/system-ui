@@ -142,7 +142,7 @@
                 </el-col>
             </el-row>
 
-            <el-dialog class="show-detail" title="查看店员" v-model="showDetail">
+            <el-dialog class="show-detail" title="查看店员" :visible.sync="showDetail">
                 <div class="avatar" v-if="details != null">
                     <img :src="{url: details.avatar, sex: details.sex} | defaultAvatar"/>
                 </div>

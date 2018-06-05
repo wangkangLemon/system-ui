@@ -1,9 +1,12 @@
+var path = require('path')
 var utils = require('./utils')
 var webpack = require('webpack')
 var config = require('../config')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
+var manifiest = require('./manifest.json')
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 // add hot-reload related code to entry chunks
@@ -18,6 +21,10 @@ module.exports = merge(baseWebpackConfig, {
     // cheap-module-eval-source-map is faster for development
     devtool: 'source-map',
     plugins: [
+        new webpack.DllReferencePlugin({
+            context: path.resolve('./'),
+            manifest: manifiest,
+        }),
         new webpack.ProvidePlugin({
             Promise: "promise",
             "window.Promise": "promise"
@@ -35,7 +42,16 @@ module.exports = merge(baseWebpackConfig, {
             //filename: 'index.html',
             template: 'src/index.html',
             inject: true,
+            vendorjs: config.dev.assetsPublicPath + config.dev.assetsSubDirectory + '/' + manifiest.name + '.js?v=' + utils.getMd5(path.resolve('./public/vendor.js'))
         }),
+        // copy custom static assets
+        new CopyWebpackPlugin([
+            {
+                from: path.resolve(__dirname, '../public'),
+                to: config.build.assetsSubDirectory,
+                ignore: ['.*']
+            }
+        ]),
         new FriendlyErrorsPlugin()
     ]
 })

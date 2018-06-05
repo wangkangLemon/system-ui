@@ -246,7 +246,7 @@
 <template>
     <article id="feedback-view">
         <div class="manage-container">
-            <el-button type="info" @click="$router.push({name: 'feedback-index'})">返回列表</el-button>
+            <el-button type="primary" @click="$router.push({name: 'feedback-index'})">返回列表</el-button>
         </div>
 
         <el-row :gutter="20">

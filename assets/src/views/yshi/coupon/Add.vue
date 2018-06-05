@@ -3,7 +3,7 @@
     #yshi-coupon-add-container {
        @extend %content-container;
         .form {
-            width: 50%;
+            width: 55%;
             .line {
                 text-align: center;
             }
@@ -61,8 +61,12 @@
         </el-form>
         <Task
             ref="goods"
+            title="选取商品"
             :visible.sync="showGoodsDialog"
+            defaultTabs="goods"
             :selected="transferRight"
+            :keys="['goods', 'group', 'activity']"
+            :customStyle="{ top: '33px' }"
             @submit="getTaskData">
         </Task>
     </main>
@@ -72,7 +76,7 @@
     import couponService from 'services/yshi/couponService'
     import DateRange from 'components/form/DateRangePicker.vue'
     import GoodsList from '../component/GoodsList.vue'
-    import Task from 'components/dialog/task2/Main.vue'
+    import Task from 'components/dialog/task/Main.vue'
     // import { date2Str } from 'utils/timeUtils'
 
     export default {
@@ -99,11 +103,16 @@
             //         : handleTime.handleEndTime(start_time, end_time, callback)
             // }
             let self = this
+            let date = new Date()
+            
+            // 相对于本地时区的时间
+            let now = new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`).getTime() 
             const timeValidator = (rule, value, callback) => {
-                let start_date = self.ruleForm.start_date ? Date.parse(self.ruleForm.start_date) : Date.now()
-                let end_date = self.ruleForm.end_date ? Date.parse(self.ruleForm.end_date) : Date.now()
-                if (start_date - Date.now() < 0 || end_date - Date.now() < 0) {
-                    callback(new Error('不能小于今天'))
+                // UTC时间，显示的时间会加上本地时区（东八区）的 8 小时偏移
+                let start_date = self.ruleForm.start_date ? new Date(self.ruleForm.start_date).getTime() : now
+                let end_date = self.ruleForm.end_date ? new Date(self.ruleForm.end_date).getTime() : now
+                if (start_date - now < 0 || end_date - now < 0) {
+                    callback(new Error('必须大于等于今天'))
                 } else {
                     callback()
                 }

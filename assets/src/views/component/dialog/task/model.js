@@ -27,27 +27,62 @@ export default class Task {
     getTabList () {
         return [
             {
-                label: '课程',
+                label: '单品',
                 value: 1,
+                type: 'goods',
+                selected: [],
+                component: 'GoodsTransfer'
+            },
+            {
+                label: '组合',
+                value: 2,
+                type: 'group',
+                selected: [],
+                component: 'GroupTransfer'
+            },
+            {
+                label: '打包',
+                value: 3,
+                type: 'activity',
+                selected: [],
+                component: 'ActivityTransfer'
+            },
+            {
+                label: '药我说',
+                value: 4,
+                type: 'speaking',
+                selected: [],
+                component: 'SpeakingTransfer'
+            },
+            {
+                label: '课程',
+                value: 6,
                 type: 'course',
                 childType: ['public', 'private'],
                 selected: [],
                 component: 'CourseTransfer'
             },
             {
-                label: '试卷',
-                value: 2,
+                label: '考试',
+                value: 7,
                 type: 'exam',
                 selected: [],
                 component: 'ExamTransfer'
             },
             {
                 label: '练习',
-                value: 3,
+                value: 8,
                 type: 'practice',
                 selected: [],
                 component: 'PracticeTransfer'
-            }
+            },
+            {
+                label: '拿药练习',
+                value: 5,
+                type: 'medicine_task',
+                selected: [],
+                component: 'MedicineTaken'
+            },
         ]
     }
 }

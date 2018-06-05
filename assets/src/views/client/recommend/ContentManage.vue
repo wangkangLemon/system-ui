@@ -203,7 +203,7 @@
 <template>
     <article class="client-content-manage">
         <!--添加/编辑课程-->
-        <el-dialog v-model="addForm" :title="formTitle">
+        <el-dialog :visible.sync="addForm" :title="formTitle">
             <section v-if="form.ref_id">
                 <div class="keep" v-if="form.ref_sync"></div>
                 <div class="synchronize">

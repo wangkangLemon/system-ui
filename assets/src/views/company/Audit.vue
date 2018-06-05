@@ -37,16 +37,23 @@
         <el-card class="box-card">
             <section class="search">
                 <section>
-                    <i>审核结果</i>
-                    <el-select clearable v-model="fetchParam.result" @change="getData">
-                        <el-option label="待审核" :value="1"></el-option>
-                        <el-option label="审核通过" :value="2"></el-option>
-                        <el-option label="审核失败" :value="3"></el-option>
+                    <i>状态</i>
+                    <el-select clearable v-model="fetchParam.status" @change="getData">
+                        <el-option label="资质待审核" :value="signStatus.checking"></el-option>
+                        <el-option label="资质未通过" :value="signStatus.reject"></el-option>
+                        <el-option label="资质通过" :value="signStatus.pass"></el-option>
+                        <el-option label="待付款" :value="signStatus.unpay"></el-option>
+                        <el-option label="付款关闭" :value="signStatus.payclose"></el-option>
+                        <el-option label="线下支付待确认" :value="signStatus.payline"></el-option>
+                        <el-option label="线下支付确认失败" :value="signStatus.paylinefail"></el-option>
+                        <el-option label="已付款" :value="signStatus.paid"></el-option>
+                        <el-option label="待开发票" :value="signStatus.uninvoice"></el-option>
+                        <el-option label="发票已寄出" :value="signStatus.invoice"></el-option>
                     </el-select>
                 </section>
-                <DateRange title="日期查找" :start="fetchParam.createTime" :end="fetchParam.endTime"
-                           v-on:changeStart="val=> fetchParam.createTime=val"
-                           v-on:changeEnd="val=> fetchParam.endTime=val"
+                <DateRange title="日期查找" :start="fetchParam.start_date" :end="fetchParam.end_date"
+                           v-on:changeStart="val=> fetchParam.start_date=val"
+                           v-on:changeEnd="val=> fetchParam.end_date=val"
                            :change="getData">
                 </DateRange>
                 <section>
@@ -57,40 +64,47 @@
             <el-table
                     v-loading="loading"
                     border
-                    :data="auditData">
+                    :data="signList">
                 <el-table-column
-                        width="200"
-                        prop="name"
+                        min-width="250"
+                        prop="company_name"
                         label="企业名称">
                 </el-table-column>
                 <el-table-column
                         min-width="200"
-                        prop="address"
+                        prop="company_address"
                         label="企业地址">
                 </el-table-column>
                 <el-table-column
                         width="100"
-                        prop="contact"
+                        prop="user_name"
                         label="联系人">
                 </el-table-column>
                 <el-table-column
                         width="150"
-                        prop="phone"
+                        prop="mobile"
                         label="联系电话">
                 </el-table-column>
                 <el-table-column
                         prop="status"
-                        width="100"
+                        width="150"
                         label="状态">
                     <template slot-scope="scope">
-                        <el-tag type="primary" v-if="scope.row.status == 1">待审核</el-tag>
-                        <el-tag type="success" v-if="scope.row.status == 2">审核通过</el-tag>
-                        <el-tag type="danger" v-if="scope.row.status == 3">审核失败</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == signStatus.checking">资质待审核</el-tag>
+                        <el-tag type="danger" v-if="scope.row.status == signStatus.reject">资质未通过</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == signStatus.pass">资质通过</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == signStatus.unpay">待付款</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == signStatus.payclose">付款关闭</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == signStatus.payline">线下支付待确认</el-tag>
+                        <el-tag type="primary" v-if="scope.row.status == signStatus.paylinefail">线下支付确认失败</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == signStatus.paid">已付款</el-tag>
+                        <el-tag type="warning" v-if="scope.row.status == signStatus.uninvoice">待开发票</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == signStatus.invoice">发票已寄出</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
                         width="170"
-                        prop="create_time_name"
+                        prop="created_at"
                         label="申请时间">
                 </el-table-column>
                 <el-table-column
@@ -122,6 +136,7 @@
 </template>
 <script>
     import companyService from '../../services/companyService'
+    import signingService from 'services/system/signingService'
     import DateRange from '../component/form/DateRangePicker'
     export default {
         components: {
@@ -132,9 +147,21 @@
                 loading: false,
                 currentPage: 1,
                 pageSize: 15,
-                auditData: [],
+                signList: [],
                 total: 0,
-                fetchParam: clearSearch()
+                fetchParam: clearSearch(),
+                signStatus: {
+                    checking: 10,
+                    reject: 11,
+                    pass: 12,
+                    unpay: 20,
+                    payclose: 21,
+                    payline: 22,
+                    paylinefail: 23,
+                    paid: 25,
+                    uninvoice: 30,
+                    invoice: 31
+                }
             }
         },
         activated () {
@@ -161,12 +188,12 @@
                     page: this.currentPage,
                     page_size: this.pageSize,
                     keyword: this.fetchParam.keyword,
-                    status: this.fetchParam.result,
-                    time_start: this.fetchParam.createTime,
-                    time_end: this.fetchParam.endTime
+                    status: this.fetchParam.status,
+                    start_date: this.fetchParam.start_date,
+                    end_date: this.fetchParam.end_date
                 }
-                return companyService.getAuditList(params).then((ret) => {
-                    this.auditData = ret.data
+                return signingService.searchList(params).then((ret) => {
+                    this.signList = ret.list
                     this.total = ret.total
                 }).then(() => {
                     this.loading = false
@@ -176,10 +203,10 @@
     }
     function clearSearch() {
         return {
-            createTime: '',
-            endTime: '',
+            start_date: '',
+            end_date: '',
             keyword: '', // 关键字
-            result: '', // 审核结果
+            status: '', // 审核结果
         }
     }
 </script>
