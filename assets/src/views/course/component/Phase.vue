@@ -270,19 +270,19 @@
                 let pass = true
                 let list = [
                     {
-                        message: `细心点啊，第${level}阶段没有添加必修任务！`,
+                        message: `第${level}阶段没有添加必修任务`,
                         tipsType: 'warning',
                         legality: this.requiredTaskSelected.length > 0
                     },
                     {
                         message: (level) => {
-                            return `真粗心啊，第${level}阶段没有添加选修任务～`
+                            return `第${level}阶段没有添加选修任务`
                         },
                         tipsType: 'warning',
                         legality: (this.ruleForm.elective === 2 && this.unRequiredTaskSelected.length > 0) || this.ruleForm.elective === 1
                     },
                     {
-                        message: `喂，第${level}阶段必修任务、选修任务和阶段考试有重复的，请仔细检查`,
+                        message: `第${level}阶段必修任务、选修任务和阶段考试有重复的，请仔细检查`,
                         tipsType: 'warning',
                         legality: this.validateRepeatTask(this.ruleForm.phase_object_list)
                     },

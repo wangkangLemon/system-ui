@@ -166,7 +166,7 @@
             deleteRow (index, row) {
                 let ref = this.getRefsByType(this.$refs.transfers, row)
                 if (row.type === 'medicine_task') {
-                    ref.handleClose(row.name)
+                    ref.handleClose(row.name, true)
                 } else {
                     ref.$refs.transfer.toggleRowSelectionById(row)
                     ref.$refs.transfer.selectData.forEach((item, index, array) => {

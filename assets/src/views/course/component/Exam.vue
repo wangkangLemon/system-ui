@@ -52,8 +52,9 @@
                     </el-table-column>
                     <el-table-column 
                         label="可考试次数" 
-                        prop="limit_time" 
+                        prop="limit_repeat" 
                         width="80">
+                        <span slot-scope="{row}">{{row.limit_repeat === 0 ? '不限制' : row.limit_repeat}}</span>
                     </el-table-column>
                     <el-table-column>
                         <el-button slot-scope="scope" type='text' @click="pick(scope.row)">选取</el-button>
