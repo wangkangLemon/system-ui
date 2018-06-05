@@ -27,6 +27,34 @@ export default class Task {
     getTabList () {
         return [
             {
+                label: '单品',
+                value: 1,
+                type: 'goods',
+                selected: [],
+                component: 'GoodsTransfer'
+            },
+            {
+                label: '组合',
+                value: 2,
+                type: 'group',
+                selected: [],
+                component: 'GroupTransfer'
+            },
+            {
+                label: '打包',
+                value: 3,
+                type: 'activity',
+                selected: [],
+                component: 'ActivityTransfer'
+            },
+            {
+                label: '药我说',
+                value: 4,
+                type: 'speaking',
+                selected: [],
+                component: 'SpeakingTransfer'
+            },
+            {
                 label: '课程',
                 value: 6,
                 type: 'course',
@@ -49,40 +77,12 @@ export default class Task {
                 component: 'PracticeTransfer'
             },
             {
-                label: '药我说',
-                value: 4,
-                type: 'speaking',
-                selected: [],
-                component: 'SpeakingTransfer'
-            },
-            {
                 label: '拿药练习',
                 value: 5,
-                type: 'medicine',
-                selected: '',
+                type: 'medicine_task',
+                selected: [],
                 component: 'MedicineTaken'
             },
-            {
-                label: '单品',
-                value: 1,
-                type: 'goods',
-                selected: [],
-                component: 'GoodsTransfer'
-            },
-            {
-                label: '组合',
-                value: 2,
-                type: 'group',
-                selected: [],
-                component: 'GroupTransfer'
-            },
-            {
-                label: '打包',
-                value: 3,
-                type: 'activity',
-                selected: [],
-                component: 'ActivityTransfer'
-            }
         ]
     }
 }

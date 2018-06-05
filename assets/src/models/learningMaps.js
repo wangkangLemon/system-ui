@@ -16,7 +16,7 @@ export default class Maps {
         this.total_phase = 0
         this.finish_exam_id = ''  // 结业考试id
         this.finish_exam_name = '' // 结业考试名称
-        this.is_free = 1   // 是否购买
+        this.is_free = 0   // 是否购买
         for (let [item, value] of Object.entries(options)) {
             this[item] = value
         }
@@ -173,7 +173,11 @@ class Phase {
                     if (tab.childType && tab.childType.includes(phase_task.object_type)) {
                         tab.selected.push(task)
                     } else if (tab.type === phase_task.object_type) {
-                        tab.selected.push(task)
+                        if (tab.type === 'medicine_task') {
+                            tab.selected.push(task.name)
+                        } else {
+                            tab.selected.push(task)
+                        }
                     }
                 })
             })

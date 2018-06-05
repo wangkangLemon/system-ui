@@ -50,19 +50,29 @@
 <template>
     <main id="learning-map-template-container">
         <Pad 
+            v-if="!view"
             @addPhase="addPhase"
             :total="ruleForm.phase_list && ruleForm.phase_list.length">
         </Pad>
         <el-form :model="ruleForm" ref="ruleForm" :rules="rules" label-width="140px" class="custom-form">
             <el-form-item label="模板名称" prop="title">
                 <el-input
+                    :disabled="view"
                     class="custom-input"
                     v-model="ruleForm.title">
                 </el-input>
             </el-form-item>
             <el-form-item label="封面" prop="image">
-                <ImagEcropperInput :isRound="false" :confirmFn="cropperFn"></ImagEcropperInput>
-                <img class="custom-img" v-if="ruleForm.image" :src="ruleForm.image | fillImgPath"  alt="封面图">
+                <ImagEcropperInput 
+                     v-if="!view"
+                    :isRound="false" 
+                    :confirmFn="cropperFn">
+                </ImagEcropperInput>
+                <img 
+                    class="custom-img" 
+                    v-if="ruleForm.image" 
+                    :src="ruleForm.image | fillImgPath"  
+                    alt="封面图">
             </el-form-item>
             <el-form-item label="阶段任务" prop="phase_list">
                 <el-collapse v-model="activeNames" @change="collapseChange">
@@ -74,7 +84,7 @@
                         <template slot="title">
                             <span class="phase-sort">第{{phase.phase}}阶段</span>
                             <el-button 
-                                v-if="index!==0"
+                                v-if="index!==0 && !view"
                                 type='text' 
                                 @click.stop="deletePhase(phase, index)">
                                 删除阶段
@@ -82,6 +92,7 @@
                             <!-- <input type="hidden" :value="phase.data.id"> -->
                        </template>
                         <Phase
+                            :disabled="!!view"
                             :keys="['course', 'speaking', 'exam']"
                             ref="phase"
                             :phase="phase">
@@ -90,19 +101,31 @@
                 </el-collapse>
             </el-form-item>
             <el-form-item label="结业考试">
-                <el-button type='primary' class="task-add-btn" @click="addExam" size="medium">添加考试</el-button>
+                <el-button 
+                    :disabled="view"
+                    type='primary' 
+                    class="task-add-btn" 
+                    @click="addExam" 
+                    size="medium">
+                    添加考试
+                </el-button>
                 <div class="task-item" v-if="ruleForm.finish_exam_name">
                     <span>{{ruleForm.finish_exam_name}}</span>
-                    <i class="el-icon-delete delete" title="删除任务" @click="deleteFinishExam"></i>
+                    <i 
+                        class="el-icon-delete delete" 
+                        title="删除任务" 
+                        v-if="!view"
+                        @click="deleteFinishExam">
+                    </i>
                 </div>
             </el-form-item>
             <el-form-item label="课程是否收费" prop="is_free">
-                <el-radio v-model="ruleForm.is_free" :label="0">是</el-radio>
-                <el-radio v-model="ruleForm.is_free" :label="1">否</el-radio>
+                <el-radio v-model="ruleForm.is_free" :label="0" :disabled="view">是</el-radio>
+                <el-radio v-model="ruleForm.is_free" :label="1" :disabled="view">否</el-radio>
             </el-form-item>
             <el-form-item>
                 <el-button 
-                    v-if="!$route.query.view"
+                    v-if="!view"
                     type="primary" 
                     @click="submitForm('ruleForm')" 
                     v-loading="submitLoading">
@@ -154,6 +177,7 @@
         watch: {},
         data () {
             return {
+                view: !!this.$route.query.view,
                 activeNames: [1],
                 submitLoading: false,
                 ruleForm: {},

@@ -81,6 +81,10 @@ export const taskType = Vue.filter('taskType', (val, type) => {
             label: '打包',
             tag: 'danger',
         },
+        medicine_task: {
+            label: '拿药练习',
+            tag: 'warning'
+        }
     }
     return map[val][type]
 })

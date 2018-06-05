@@ -91,7 +91,7 @@
                         <Phase
                             :disabled="!!view"
                             ref="phase"
-                            :keys="['course', 'speaking', 'exam', 'medicine']"
+                            :keys="['course', 'speaking', 'exam', 'medicine_task']"
                             :phase="phase">
                         </Phase>
                     </el-collapse-item>

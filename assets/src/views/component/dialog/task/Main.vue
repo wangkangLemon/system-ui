@@ -34,6 +34,7 @@
         <el-dialog 
             :title="title" 
             width="80%"
+            @close="close"
             :visible.sync="showDialog">
             <el-tabs type="border-card" @tab-click="handleTabClick" v-model="tabs">
                 <el-tab-pane 
@@ -48,10 +49,11 @@
                         :taskType="taskType"
                         :childType="tab.childType"
                         v-model="tab.selected"
+                        @medicineTaken="getMedicine"
                         @curRow="getCurRow">
                     </component>
                 </el-tab-pane>
-                <div class="dialog-select-item" :style="customStyle" v-if="tabs !== 'medicine'">
+                <div class="dialog-select-item" :style="customStyle">
                     <h5>已选择</h5>
                     <el-table class="row-class" :show-header="false" :data="selected" :height="440" :row-key="selected.object_id" v-if="showDialog">
                         <el-table-column
@@ -163,18 +165,24 @@
         methods: {
             deleteRow (index, row) {
                 let ref = this.getRefsByType(this.$refs.transfers, row)
-                ref.$refs.transfer.toggleRowSelectionById(row)
-                ref.$refs.transfer.selectData.forEach((item, index, array) => {
-                    (row.id + row.type) === (item.id + item.type) && array.splice(index, 1)
-                })
+                if (row.type === 'medicine_task') {
+                    ref.handleClose(row.name)
+                } else {
+                    ref.$refs.transfer.toggleRowSelectionById(row)
+                    ref.$refs.transfer.selectData.forEach((item, index, array) => {
+                        (row.id + row.type) === (item.id + item.type) && array.splice(index, 1)
+                    })
+                }
                 this.selected.splice(index, 1)
             },
             deleteAll () {
                 for (let ref of Object.values(this.$refs.transfers)) {
-                    let transfer = ref.$refs.transfer
-                    if (this.$refs.transfers.toggleRowSelection) {
-                        transfer.toggleRowSelection()
+                    let transfer = ref.$refs.transfer || {}
+                    if (transfer.toggleRowSelection) {
+                        transfer.deleteAll()
                         transfer.selectData = []
+                    } else {
+                        ref.deleteAll()
                     }
                 }
                 while (this.selected.length > 0) {
@@ -200,12 +208,27 @@
                     }
                 }
             },
+            getMedicine (row, isAdd) {
+                if (isAdd) {
+                    this.selected.push(row)
+                } else {
+                    for (let i = 0; i < this.selected.length; i++) {
+                        if (this.selected[i].type === row.type) {
+                            this.selected.splice(i, 1)
+                            return
+                        }
+                    }
+                }
+            },
             formatRow (row) {
                 if (row.type === 'speaking') row.name = row.title
             },
             submit () {
                 this.$emit('submit', this.selected)
                 this.showDialog = false
+            },
+            close () {
+                this.$emit('close')
             },
             handleTabClick () {},
             getRefsByType (refs, row) {
