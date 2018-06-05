@@ -30,7 +30,7 @@ export const tamp2Str = Vue.filter('tamp2Str', function (timetamp) {
 export const fillImgPath = Vue.filter('fillImgPath', function (url) {
     if (!url || !config.debug) return url
     let apiUrl = config.apiHost.replace(/(^")|("$)/g, '')
-    return url.indexOf('http://') > -1 ? url : apiUrl + url
+    return url.indexOf('http://') > -1 || url.indexOf('https://') > -1 ? url : apiUrl + url
 })
 
 export const fillZero = Vue.filter('fillZero', function (orignStr, maxLength = 2) {
@@ -81,6 +81,10 @@ export const taskType = Vue.filter('taskType', (val, type) => {
             label: '打包',
             tag: 'danger',
         },
+        medicine_task: {
+            label: '拿药练习',
+            tag: 'warning'
+        }
     }
     return map[val][type]
 })

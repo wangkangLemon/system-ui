@@ -25,7 +25,7 @@
             <div 
                 class="task-item" 
                 v-for="task in phase_object_list" 
-                :key="task.object_id"  
+                :key="task.object_id + task.object_name"  
                 v-if="task.type === taskType"
                 title="可拖动">
                 <i class="el-icon-sort"></i>
@@ -38,7 +38,7 @@
                 class="task-item" 
                 v-for="(task, index) in phase_object_list"
                 v-if="task.type === taskType" 
-                :key="task.object_id">
+                :key="task.object_id + task.object_name">
                 <el-tag :type="task.object_type | taskType('tag')">{{task.object_type | taskType('label')}}</el-tag>
                 <span>{{task.object_name}}</span>
                 <i 

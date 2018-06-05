@@ -112,6 +112,7 @@
             :taskType="taskType"
             :initTabs="transferLeft['requiredTaskSelected']"
             :keys="keys"
+            @close="getTaskData"
             @submit="getTaskData">
         </Task>
         
@@ -123,6 +124,7 @@
             :taskType="taskType"
             :initTabs="transferLeft['unRequiredTaskSelected']"
             :keys="keys"
+            @close="getTaskData"
             @submit="getTaskData">
         </Task>
         <!-- 添加考试 -->
@@ -234,7 +236,8 @@
             deleteExamTask () {
                 this.examTaskSelected.splice(0, 1)
             },
-            getTaskData (data, type) {
+            getTaskData (data) {
+                // close也会触发getTaskData，但是该函数只需要执行一次即可
                 this.ruleForm.phase_object_list =
                 [
                     ...this.ruleForm.createPhaseTask(this.requiredTaskSelected),
@@ -286,7 +289,7 @@
                     {
                         message: '店员需选修任务数量应该小于等于实际选修的任务数量，请修改',
                         tipsType: 'warning',
-                        legality: this.ruleForm.elective_count <= this.unRequiredTaskSelected.length
+                        legality: (this.ruleForm.elective === 2 && this.ruleForm.elective_count <= this.unRequiredTaskSelected.length) || this.ruleForm.elective === 1
                     }
                 ]
                 list.forEach(item => {
@@ -306,7 +309,7 @@
                 let container = []
                 let pass = true
                 for (let i = 0; i < _array.length; i++) {
-                    let uuid = array[i].object_type + array[i].object_id
+                    let uuid = array[i].object_type + array[i].object_id + array[i].object_name
                     if (container.includes(uuid)) {
                         pass = false
                         return
