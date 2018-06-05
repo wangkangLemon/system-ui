@@ -12,7 +12,7 @@ class SpeakingContentService {
         if (status == undefined) {
             status = -1
         }
-        if (price_enabled == '') {
+        if (price_enabled === '') {
             price_enabled = -1
         }
         return api.get(url, {page, page_size, status, price_enabled, keyword, time_start, time_end, sender_type}).then((ret) => {

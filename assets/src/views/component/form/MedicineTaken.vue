@@ -109,13 +109,15 @@
             }
         },
         methods: {
-            handleClose(tag) {
+            handleClose(tag, noemit) {
                 this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
-                this.$emit('medicineTaken', {
-                    taskType: this.taskType,
-                    type: this.type,
-                    name: tag
-                }, false)
+                if (!noemit) {
+                    this.$emit('medicineTaken', {
+                        taskType: this.taskType,
+                        type: this.type,
+                        name: tag
+                    }, false)
+                }
             },
             showInput() {
                 this.inputVisible = true
