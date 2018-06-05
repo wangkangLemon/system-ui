@@ -123,7 +123,7 @@
                 </template>
             </el-table-column>
         </el-table>
-
+        <ErrorDialog :error="error"></ErrorDialog>
         <el-pagination class="pagin"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -141,6 +141,7 @@ import activityService from 'services/yshi/activityService'
 import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
 import * as timeUtils from 'utils/timeUtils'
+import ErrorDialog from 'components/dialog/ErrorDialog.vue'
 function getFetchParam () {
     return {
         name: void '',
@@ -160,6 +161,11 @@ export default {
             xxx: 'sdf',
             dialogVisible: false,
             fetchParam: getFetchParam(),
+            error: {
+                showDialog: false,
+                message: '',
+                data: []
+            }
         }
     },
     created () {
@@ -219,6 +225,11 @@ export default {
                 activityService.delete(row.id).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.fetchData()
+                }).catch(ret => {
+                    console.log(ret)
+                    this.error.message = ret.data.message
+                    this.error.data = ret.data.list
+                    this.error.showDialog = true
                 })
             })
         },
@@ -231,6 +242,6 @@ export default {
         }
         
     },
-    components: { DateRange }
+    components: { DateRange, ErrorDialog }
 }
 </script>

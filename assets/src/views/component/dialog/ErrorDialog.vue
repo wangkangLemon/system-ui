@@ -57,6 +57,10 @@
                         'tag': 'warning',
                         'name': '组合售卖'
                     },
+                    'toast': {
+                        'tag': 'warning',
+                        'name': '弹框'
+                    },
                     'practice': {
                         'tag': 'success',
                         'name': '练习'
