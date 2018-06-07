@@ -87,7 +87,7 @@
                             <i class="title">审核结果：</i>
                             <span class="value">
                                 <el-select class="audit-show-select" v-model="form.status" :disabled="curStatus > signStatus.checking">
-                                    <el-option label="资质待审核" :value="signStatus.checking"></el-option>
+                                    <el-option label="请选择" :value="signStatus.checking"></el-option>
                                     <el-option label="资质未通过" :value="signStatus.reject"></el-option>
                                     <el-option label="资质通过" :value="signStatus.pass"></el-option>
                                 </el-select>
