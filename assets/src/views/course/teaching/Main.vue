@@ -193,10 +193,21 @@
             fetchData () {
                 this.loading = true
                 this.fetchParam.type = 'teaching'
+                this.initPage()
                 return mapService.searchMap(this.fetchParam).then(ret => {
                     this.data = ret.list || []
                     this.total = ret.total
                     this.loading = false
+                })
+            },
+            initPage () {
+                ['title', 'status', 'create_start_time', 'create_end_time'].forEach(item => {
+                    if (this['$_' + item] !== this.fetchParam[item]) {
+                        this.fetchParam.page = 1
+                    }
+                    this['$_' + item] = this.fetchParam[item]
+                    // console.log(this)
+                    console.log(this['$_' + item])
                 })
             },
             disableMap (row) {
