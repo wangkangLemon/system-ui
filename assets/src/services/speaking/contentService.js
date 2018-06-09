@@ -31,7 +31,14 @@ class SpeakingContentService {
         let finalUrl = `${urlPre}/${speaking_id}/disable`
         return api.put(finalUrl, {disabled})
     }
-
+    // 发布撤回药我说
+    publishSpeaking ({
+        speaking_id,
+        status,
+    }) {
+        let finalUrl = `${urlPre}/${speaking_id}/publish`
+        return api.put(finalUrl, { status })
+    }
     // 上传红包图片
     speakingImageUpload ({image, alias}) {
         let finalUrl = `${urlPre}/cover`
