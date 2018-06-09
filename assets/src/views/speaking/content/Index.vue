@@ -69,7 +69,7 @@
             </el-table-column>
             <el-table-column width="120" label="发布状态">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.publish_status == 1" type="success">发布</el-tag>
+                    <el-tag v-if="scope.row.publish_status == 0" type="success">发布</el-tag>
                     <el-tag v-else-if="scope.row.publish_status == 2" type="warning">撤回</el-tag>
                 </template>
             </el-table-column>
@@ -210,7 +210,7 @@
             // 发布撤回药我说, 0发布，1撤回，2待发布
             publish (index, row) {
                 let tip = row.publish_status === 2 ? '发布' : '撤回'
-                let status = row.publish_status == 2 ? 0 : 1
+                let status = row.publish_status == 2 ? 0 : 2
                 this.$confirm(`你将要${tip}药我说 【${row.title}】 确认吗?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
