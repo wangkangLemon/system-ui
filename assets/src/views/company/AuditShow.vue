@@ -68,7 +68,7 @@
                         <p>
                             <i class="title">GSP/GSM认证：</i>
                             <span class="value">
-                                <img :src="detail.GSP_image | fillImgPath" alt="" @click="screenImg(detail.GSP_image)">
+                                <img :src="detail.gsp_image | fillImgPath" alt="" @click="screenImg(detail.gsp_image)">
                             </span>
                         </p>
                         <p>
