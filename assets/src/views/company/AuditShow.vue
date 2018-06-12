@@ -283,6 +283,10 @@
                 console.log(tab, event);
             },
             submit () {
+                if(this.form.status === signStatus.checking){
+                    xmview.showTip('warning', '请选择审核结果')
+                    return
+                }
                 signingService.updateResult({
                     id: this.signingId,
                     status: this.form.status,
