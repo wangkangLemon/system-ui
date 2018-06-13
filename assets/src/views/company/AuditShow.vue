@@ -106,7 +106,7 @@
                 </section>
                 <screenImg></screenImg>
             </el-tab-pane>
-            <el-tab-pane :disabled="!(curStatus === signStatus.payline || curStatus === signStatus.paid)" label="付款审核" name="payinfo">
+            <el-tab-pane :disabled="!(curStatus === signStatus.payline || curStatus >= signStatus.paid)" label="付款审核" name="payinfo">
                 <section class="show-detail">
                     <div class="info" v-if="curStatus === signStatus.payline">
                         <p><i class="title">应付款金额: </i><span class="value">{{payinfo.real_money}}元</span></p>
@@ -132,7 +132,7 @@
                             </span>
                         </p>
                     </div>
-                    <div class="info" v-if="curStatus === signStatus.paid">
+                    <div class="info" v-if="curStatus >= signStatus.paid">
                         <p><i class="title">付款状态: </i><span class="value">已付款</span></p>
                         <p><i class="title">付款方式: </i><span class="value">{{payinfo.pay_method}}</span></p>
                         <p><i class="title">付款金额: </i><span class="value">{{payinfo.real_money}}元</span></p>
@@ -258,6 +258,7 @@
                     if(ret.signing.status === this.signStatus.uninvoice || ret.signing.status === this.signStatus.invoice){
                         this.invoice = ret.invoice
                         this.form1.note = ret.invoice.remark
+                        this.payinfo = ret.payinfo
                         this.activeTab = 'invoice'
                     }else if(ret.signing.status === this.signStatus.payline || ret.signing.status === this.signStatus.paid){
                         this.payinfo = ret.payinfo
