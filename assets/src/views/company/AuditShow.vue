@@ -50,7 +50,7 @@
                         <p><i class="title">连锁地址：</i><span class="value">{{detail.company_address}}</span></p>
                         <p><i class="title">门店数量：</i><span class="value">{{detail.department_count}}</span></p>
                         <p><i class="title">店员数量：</i><span class="value">{{detail.user_count}}</span></p>
-                        <p><i class="title">运营联系人：</i><span class="value">{{detail.user_name}}</span></p>
+                        <!-- <p><i class="title">运营联系人：</i><span class="value">{{detail.user_name}}</span></p> -->
                         <p><i class="title">联系人电话：</i><span class="value">{{detail.mobile}}</span></p>
                         <p><i class="title">联系人邮箱：</i><span class="value">{{detail.email}}</span></p>
                         <p>
@@ -86,7 +86,7 @@
                         <p class="select">
                             <i class="title">审核结果：</i>
                             <span class="value">
-                                <el-select class="audit-show-select" v-model="form.status" :disabled="curStatus > signStatus.checking">
+                                <el-select class="audit-show-select" v-model="signS" :disabled="curStatus > signStatus.checking">
                                     <el-option label="请选择" :value="signStatus.checking"></el-option>
                                     <el-option label="资质未通过" :value="signStatus.reject"></el-option>
                                     <el-option label="资质通过" :value="signStatus.pass"></el-option>
@@ -96,7 +96,7 @@
                         <p class="select">
                             <i class="title">备注：</i>
                             <span class="value">
-                                <el-input class="note" type="textarea" v-model="form.note" :rows="6" :disabled="curStatus > signStatus.checking"></el-input>
+                                <el-input class="note" type="textarea" v-model="signNote" :rows="6" :disabled="curStatus > signStatus.checking"></el-input>
                             </span>
                         </p>
                     </div>
@@ -106,7 +106,7 @@
                 </section>
                 <screenImg></screenImg>
             </el-tab-pane>
-            <el-tab-pane :disabled="!(curStatus === signStatus.payline || curStatus === signStatus.paid)" label="付款审核" name="payinfo">
+            <el-tab-pane :disabled="!(curStatus === signStatus.payline || curStatus >= signStatus.paid)" label="付款审核" name="payinfo">
                 <section class="show-detail">
                     <div class="info" v-if="curStatus === signStatus.payline">
                         <p><i class="title">应付款金额: </i><span class="value">{{payinfo.real_money}}元</span></p>
@@ -114,11 +114,11 @@
                             <i class="title">财务是否已收到汇款: </i>
                             <span class="value ck">
                                 <label class="ck-item"><input type="radio" name="papertype"
-                                    :value="signStatus.paid" @change="val => {this.form2.status = signStatus.paid}" 
-                                    :checked="form2.status === signStatus.paid" />是</label>  
+                                    :value="signStatus.paid" @change="val => {this.payS = signStatus.paid}" 
+                                    :checked="payS === signStatus.paid" />是</label>  
                                 <label class="ck-item"><input type="radio" name="papertype" 
-                                    :value="signStatus.paylinefail" @change="val => {this.form2.status = signStatus.paylinefail}" 
-                                    :checked="form2.status === signStatus.paylinefail"/>否</label> 
+                                    :value="signStatus.paylinefail" @change="val => {this.payS = signStatus.paylinefail}" 
+                                    :checked="payS === signStatus.paylinefail"/>否</label> 
                             </span> 
                         </p>
                         <p class="select">
@@ -128,11 +128,11 @@
                         <p class="select">
                             <i class="title">备注: </i>
                             <span class="value">
-                                <el-input class="note" type="textarea" v-model="form2.remark" :rows="6"></el-input>
+                                <el-input class="note" type="textarea" v-model="payNote" :rows="6"></el-input>
                             </span>
                         </p>
                     </div>
-                    <div class="info" v-if="curStatus === signStatus.paid">
+                    <div class="info" v-if="curStatus >= signStatus.paid">
                         <p><i class="title">付款状态: </i><span class="value">已付款</span></p>
                         <p><i class="title">付款方式: </i><span class="value">{{payinfo.pay_method}}</span></p>
                         <p><i class="title">付款金额: </i><span class="value">{{payinfo.real_money}}元</span></p>
@@ -177,7 +177,7 @@
                         <p class="select">
                             <i class="title">处理状态</i>
                             <span class="value">
-                                <el-select class="audit-show-select">
+                                <el-select class="audit-show-select" :disabled="curStatus === signStatus.invoice">
                                     <el-option label="已发邮箱" v-if="invoice.type === 'electronics'?true:false"></el-option>
                                     <el-option label="已寄出" v-if="invoice.type === 'paper'?true:false"></el-option>
                                 </el-select>
@@ -186,7 +186,7 @@
                         <p class="select">
                             <i class="title">备注：</i>
                             <span class="value">
-                                <el-input class="note" type="textarea" v-model="form1.note" :rows="3" 
+                                <el-input class="note" type="textarea" v-model="invoiceNote" :rows="3" 
                                     :disabled="curStatus === signStatus.invoice"></el-input>
                             </span>
                         </p>
@@ -210,17 +210,11 @@
         },
         data () {
             return {
-                form: {
-                    status: '',
-                    note: ''
-                },
-                form1: {
-                    note: ''
-                },
-                form2: {
-                    remark: '',
-                    status: ''
-                },
+                signNote:'',
+                signS:'',
+                invoiceNote: '',
+                payNote: '',
+                payS: '',
                 detail: null,
                 activeTab: 'signing',
                 invoice: {},
@@ -249,19 +243,21 @@
                 signingService.getSigningInfo(this.signingId).then((ret) => {
                     this.detail = ret.signing
                     if(ret.signing.status >= this.signStatus.pass) {
-                        this.form.status = '资质通过'
+                        this.signS = this.signStatus.pass
                     }else {
-                        this.form.status = ret.signing.status
+                        this.signS = ret.signing.status
                     }
                     this.curStatus = ret.signing.status
-                    this.form.note = ret.signing.remark
+                    if(ret.signing.remark) this.signNote = ret.signing.remark
                     if(ret.signing.status === this.signStatus.uninvoice || ret.signing.status === this.signStatus.invoice){
                         this.invoice = ret.invoice
-                        this.form1.note = ret.invoice.remark
+                        if(ret.invoice.remark) this.invoiceNote = ret.invoice.remark
+                        this.payinfo = ret.payinfo
                         this.activeTab = 'invoice'
                     }else if(ret.signing.status === this.signStatus.payline || ret.signing.status === this.signStatus.paid){
+                        if(ret.payinfo.remark) this.payNote = ret.payinfo.remark
                         this.payinfo = ret.payinfo
-                        this.form2.status = ret.payinfo.status
+                        this.payS = ret.payinfo.status
                         this.activeTab = 'payinfo'
                     }else {
                         this.activeTab = 'signing'
@@ -272,25 +268,26 @@
             }
         },
         deactivated() {
-            this.activeTab = 'signing'
-            this.invoice = {}
-            this.signingId = ''
-            this.form = {}
-            this.form1 = {}
+            // this.activeTab = 'signing'
+            // this.invoice = {}
+            // this.signingId = ''
+            this.signNote = ''
+            this.invoiceNote = ''
+            this.payNote = ''
         },
         methods: {
             handleClick(tab, event) {
                 console.log(tab, event);
             },
             submit () {
-                if(this.form.status === signStatus.checking){
+                if(this.signS === this.signStatus.checking){
                     xmview.showTip('warning', '请选择审核结果')
                     return
                 }
                 signingService.updateResult({
                     id: this.signingId,
-                    status: this.form.status,
-                    remark: this.form.note
+                    status: this.signS,
+                    remark: this.signNote
                 }).then((ret) => {
                     xmview.showTip('success', '提交成功')
                     this.$router.push({name: 'company-audit'})
@@ -301,7 +298,7 @@
             submit2 () {
                 signingService.updateInvoice({
                     id: this.signingId,
-                    remark: this.form1.note
+                    remark: this.invoiceNote
                 }).then((ret) => {
                     xmview.showTip('success', '提交成功')
                     this.$router.push({name: 'company-audit'})
@@ -312,8 +309,8 @@
             submitPay() {
                 signingService.offlinePay({
                     id: this.signingId,
-                    remark: this.form2.remark,
-                    status: this.form2.status
+                    remark: this.payNote,
+                    status: this.payS
                 }).then((ret) => {
                     xmview.showTip('success', '提交成功')
                     this.$router.push({name: 'company-audit'})
