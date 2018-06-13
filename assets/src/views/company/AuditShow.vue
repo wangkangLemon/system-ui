@@ -177,10 +177,14 @@
                         <p class="select">
                             <i class="title">处理状态</i>
                             <span class="value">
-                                <el-select class="audit-show-select" :disabled="curStatus === signStatus.invoice">
-                                    <el-option label="已发邮箱" v-if="invoice.type === 'electronics'?true:false"></el-option>
-                                    <el-option label="已寄出" v-if="invoice.type === 'paper'?true:false"></el-option>
-                                </el-select>
+                                <!-- <el-select class="audit-show-select" :disabled="curStatus === signStatus.invoice" v-model="">
+                                    <el-option label="已发邮箱" v-if="invoice.type === 'electronics'?true:false" :value="1"></el-option>
+                                    <el-option label="已寄出" v-if="invoice.type === 'paper'?true:false" :value="2"></el-option>
+                                </el-select> -->
+                                <div class="audit-show-select">
+                                    <p v-if="invoice.type === 'electronics'?true:false">已发邮箱</p>
+                                    <p v-if="invoice.type === 'paper'?true:false">已寄出</p>
+                                </div>
                             </span>
                         </p>
                         <p class="select">

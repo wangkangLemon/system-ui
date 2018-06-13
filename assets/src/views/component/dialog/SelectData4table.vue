@@ -28,7 +28,7 @@
 </style>
 
 <template>
-    <el-dialog :title="title" v-model="currVal" class="comp-dialog-select4table">
+    <el-dialog :title="title" :visible.sync="currVal" class="comp-dialog-select4table">
         <main>
             <slot name="search"></slot>
             <section>

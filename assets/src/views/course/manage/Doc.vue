@@ -183,30 +183,32 @@
             <!-- 查看  -->
         <el-dialog title="查看" :visible.sync="docshow">
             <DocShow ref="docShow" :docurl="docurl" class="docshow"></DocShow>
-             <el-form label-width="100px":model="form" class="form" ref="form" >
-            <el-form-item label="审核结果" prop='flag' >
-                <el-select v-model="form.status" :disabled="disabled">
-                <el-option label="审核成功" value="3"></el-option>
-                <el-option label="审核失败" value="4"></el-option>
-                <el-option label="待审核" value="0"></el-option>
-                </el-select>
-            </el-form-item>
-        <el-form-item label='备注说明' prop="remark">
-         <el-input  
-            :disabled="disabled"
-            type="textarea"
-            v-model="form.remark"
-            :autosize="{ minRows: 4, maxRows: 6}"
-            placeholder="请输入内容">
-        </el-input>
-        </el-form-item>
-            <el-button v-if="!disabled" type='primary' class="bottom-btn" @click="submit()">确定</el-button>
-            <el-button v-else type='primary' class="bottom-btn" @click="docshow=false">取消</el-button>
-        </el-form>
-
+            <el-form label-width="100px":model="form" class="form" ref="form" >
+                <el-form-item label="审核结果" prop='flag' >
+                    <el-select v-model="form.status" :disabled="disabled">
+                    <el-option label="审核成功" value="3"></el-option>
+                    <el-option label="审核失败" value="4"></el-option>
+                    <el-option label="待审核" value="0"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label='备注说明' prop="remark">
+                    <el-input  
+                        :disabled="disabled"
+                        type="textarea"
+                        v-model="form.remark"
+                        :autosize="{ minRows: 4, maxRows: 6}"
+                        placeholder="请输入内容">
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer">
+                <el-button v-if="!disabled" type='primary' @click="submit()">确定</el-button>
+                <el-button v-else type='primary' @click="docshow=false">取消</el-button>
+            </span>
         </el-dialog>
+
         <!-- 替换文档 -->
-        <el-dialog :title="dialogReplace.title" v-model="dialogReplace.isShow" @close="dialogClose" class="doc-update">
+        <el-dialog :title="dialogReplace.title" :visible.sync="dialogReplace.isShow" @close="dialogClose" class="doc-update">
             <el-form label-position="right" label-width="80px" :model="docModel">
                 <el-form-item label="文档名称">
                     <span>{{docModel.file_name}}</span>
