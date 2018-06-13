@@ -141,7 +141,7 @@
                        :total="total">
         </el-pagination>
 
-        <el-dialog :title="dialogAdd.title" v-model="dialogAdd.isShow">
+        <el-dialog :title="dialogAdd.title" :visible.sync="dialogAdd.isShow">
             <el-form label-position="right" label-width="80px" :model="videoModel">
                 <el-form-item label="视频名称">
                     <el-input v-model="videoModel.name"></el-input>
