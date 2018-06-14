@@ -216,7 +216,7 @@
             return {
                 signNote:'',
                 signS:'',
-                invoiceNote: '',
+                invoiceNote: '已处理',
                 payNote: '',
                 payS: '',
                 detail: null,
@@ -288,6 +288,12 @@
                     xmview.showTip('warning', '请选择审核结果')
                     return
                 }
+                if(this.signS === this.signStatus.reject) {
+                    if(!this.signNote) {
+                        xmview.showTip('warning', '请填写备注')
+                        return
+                    }
+                }
                 signingService.updateResult({
                     id: this.signingId,
                     status: this.signS,
@@ -300,6 +306,10 @@
                 })
             },
             submit2 () {
+                if(!this.invoiceNote) {
+                    xmview.showTip('warning', '请填写备注')
+                    return
+                }
                 signingService.updateInvoice({
                     id: this.signingId,
                     remark: this.invoiceNote
@@ -311,6 +321,12 @@
                 })
             },
             submitPay() {
+                if(this.payS === this.signStatus.paylinefail) {
+                    if(!this.payNote) {
+                        xmview.showTip('warning', '请填写备注')
+                        return
+                    }
+                }
                 signingService.offlinePay({
                     id: this.signingId,
                     remark: this.payNote,
