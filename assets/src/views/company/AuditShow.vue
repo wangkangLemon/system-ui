@@ -216,7 +216,7 @@
             return {
                 signNote:'',
                 signS:'',
-                invoiceNote: '已处理',
+                invoiceNote: '',
                 payNote: '',
                 payS: '',
                 detail: null,
