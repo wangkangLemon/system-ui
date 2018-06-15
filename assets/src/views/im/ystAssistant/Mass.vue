@@ -126,15 +126,15 @@
             </el-tab-pane>
         </el-tabs>
 
-        <el-dialog title="选择图文消息" v-model="dialogMaterial.isShow">
+        <el-dialog title="选择图文消息" :visible.sync="dialogMaterial.isShow">
             <MaterialList ref="materiallist" :type="1" :onSelected="selectedMaterial"></MaterialList>
         </el-dialog>
 
-        <el-dialog title="选择图片" v-model="dialogImg.isShow">
+        <el-dialog title="选择图片" :visible.sync="dialogImg.isShow">
             <ImgList ref="imglist" :type="1" :onSelected="selectedImg"></ImgList>
         </el-dialog>
 
-        <el-dialog title="输入预览人手机号" v-model="dialogPewviewMsg.isShow" size="tiny">
+        <el-dialog title="输入预览人手机号" :visible.sync="dialogPewviewMsg.isShow" width="30%">
             <el-input v-model="dialogPewviewMsg.mobile" placeholder="预览人手机号"></el-input>
             <div slot="footer">
                 <el-button @click="dialogPewviewMsg.isShow = false">取 消</el-button>

@@ -218,14 +218,17 @@
                 </section>
             </el-tab-pane>
         </el-tabs>
-        <NestedDialog :title="classhour.title" :visible.sync="classhour.showDialog">
+        <el-dialog 
+            :title="classhour.title" 
+            :visible.sync="classhour.showDialog"
+            append-to-body>
             <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id" ref="multiForm"></LessonForm>
             <el-form label-width="120px">
                 <el-form-item>
                     <el-button type="primary" @click="addMultiSubmit">保存</el-button>
                 </el-form-item>
             </el-form>
-        </NestedDialog>
+        </el-dialog>
         <el-dialog title="查看" :visible.sync="docshow">
             <DocPreview ref="docShow" :docurl="docurl" class="docshow"></DocPreview>
         </el-dialog>
@@ -254,7 +257,6 @@
     import Chapter from '../../models/chapter'
     import Lesson from '../../models/lesson'
     import LessonForm from './LessonForm.vue'
-    import NestedDialog from '../component/dialog/NestedDialog.vue'
     import Sidebar from '../component/sidebar/Sidebar.vue'
     import * as _ from 'utils/common'
 
@@ -270,7 +272,6 @@
             UploadFile,
             CompanySelect,
             LessonForm,
-            NestedDialog,
             Sidebar,
             PaperForm
         },

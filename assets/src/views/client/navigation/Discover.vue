@@ -277,7 +277,7 @@
             </div>
         </el-dialog>
         <!--分组弹窗-->
-        <el-dialog class="group-list-container" title="分组" v-model="groupDialog">
+        <el-dialog class="group-list-container" title="分组" :visible.sync="groupDialog">
             <div class="tip">同一组应用请用相同数字标识，分组的排序按照数字从小到大排列</div>
             <article class="group-list">
                 <section class="group-item" v-for="(item,index) in groupList.grouplist">

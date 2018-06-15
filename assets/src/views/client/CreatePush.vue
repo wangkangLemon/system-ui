@@ -128,7 +128,7 @@
         <div slot="footer" class="footer">
             <el-button type="primary" @click="confirmFn('form')">发 送</el-button>
         </div>
-        <el-dialog class="show-detail" title="发送确认" v-model="confirmDialog">
+        <el-dialog class="show-detail" title="发送确认" :visible.sync="confirmDialog">
             <div class="info">
                 <p><span>推荐标题 </span>{{form.title}}</p>
                 <p><span>推荐内容 </span>{{form.content}}</p>

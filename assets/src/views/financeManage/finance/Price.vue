@@ -20,14 +20,14 @@
 <template>
     <article class="financeManage-finance-charge">
         <!--详情-->
-        <el-dialog size="tiny"  class="show-detail" title="调整依据" v-model="showDetail">
+        <el-dialog width="30%" class="show-detail" title="调整依据" :visible.sync="showDetail">
             <div v-if="currentData != null">{{currentData.desc}}</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showDetail = false">关 闭</el-button>
             </div>
         </el-dialog>
         <!--充值表单-->
-        <el-dialog v-model="addForm" title="调整" size="tiny">
+        <el-dialog :visible.sync="addForm" title="调整" width="30%">
             <el-form label-position="top" class="addForm" :model="form" :rules="rules" ref="form">
                 <el-form-item label="" prop="name">
                     <IndustryCompanySelect type="1" v-model="form.company_id"

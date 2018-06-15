@@ -87,7 +87,7 @@
         </div>
 
         <!--导入弹窗-->
-        <el-dialog v-model="isImport" title="导入企业签约信息" size="tiny">
+        <el-dialog :visible.sync="isImport" title="导入企业签约信息" width="30%">
             <UploadFile :beforeUpload="beforeUpload" :url='uploadFileUrl' :on-success="uploadImgSucc" btnTitle='上传文件'></UploadFile>
             <div class="upload-tip">
                 <h2>注意事项</h2>
@@ -102,7 +102,7 @@
             <el-button @click="exportData" type="warning"><i class="iconfont icon-iconfontexcel"></i>导出Excel</el-button>
         </div>
         <!--详情-->
-        <el-dialog class="show-detail" title="连锁详情" v-model="showDetial">
+        <el-dialog class="show-detail" title="连锁详情" :visible.sync="showDetial">
             <div class="info" v-if="currentItems">
                 <h2>{{currentItems.name}}</h2>
                 <p><i class="title">门店数量：</i><span class="value">{{currentItems.department_number}}</span></p>

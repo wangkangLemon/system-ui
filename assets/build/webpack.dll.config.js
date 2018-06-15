@@ -11,7 +11,7 @@ const vendors = [
     'element-ui/lib',          // babel-plugin-component中将element-ui解析路径指向lib/index.js
     'eventsource-polyfill',
     'promise',
-    'vue',    // webpack alias中配置了vue指向vue/dist/vue.esm.js
+    'vue',     // 打包时只需打包运行时，不需要打包完整版(运行时+编译器，vue-loader已经做了这些)
     'vue-router',
     'vuex',
     'vuex-router-sync',

@@ -186,7 +186,7 @@
             <el-button type="primary" @click="submit('form')">保存生效</el-button>
         </el-card>
         <!--奖品设置-->
-        <el-dialog v-model="addForm" title="奖品设置" size="small" @close="clearScroll">
+        <el-dialog :visible.sync="addForm" title="奖品设置" width="50%" @close="clearScroll">
             <el-form :model="form1" :rules="rules1" ref="form1" label-width="100px">
                 <el-form-item label="奖品类型" prop="type">
                     <el-select @change="changeProduct" v-model="form1.type">

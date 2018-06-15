@@ -20,7 +20,7 @@
         }
 
         .right-container {
-            width: 558px;
+            width: 605px;
             margin-left: 15px;
             .edit-content {
                 margin: 10px 0 0
@@ -79,13 +79,13 @@
                         <el-input :disabled="fetchParam.parent_id == null" placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button :disabled="fetchParam.parent_id == null" type="info" @click="submitForm">保存</el-button>
+                        <el-button :disabled="fetchParam.parent_id == null" type="primary" @click="submitForm">保存</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>
         </section>
 
-        <el-dialog title="操作提示" v-model="dialogConfirm.isShow" size="tiny">
+        <el-dialog title="操作提示" :visible.sync="dialogConfirm.isShow" width="30%">
             <span v-html="dialogConfirm.msg"></span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogConfirm.isShow = false">取 消</el-button>

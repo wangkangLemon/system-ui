@@ -71,7 +71,7 @@
                     :total="total">
             </el-pagination>
         </section>
-        <el-dialog :visible.sync="updateForm" size="tiny" title="等级特权设置">
+        <el-dialog :visible.sync="updateForm" width="30%" title="等级特权设置">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item label="用户等级">
                     <el-input-number v-model="form.level" :disabled="flag == 1"></el-input-number>

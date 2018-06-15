@@ -19,7 +19,14 @@
     <article ref="container" id="image-ecropper-input-container">
         <el-button v-show="isShowBtn" type="primary" @click="chooseImg">上传<i class="el-icon-upload el-icon--right"></i>
         </el-button>
-        <NestedDialog @click.native.stop :close-on-click-modal="false" title="裁切图片" v-model="showCropper" size="large" top="15px">
+        <el-dialog 
+            @click.native.stop 
+            :close-on-click-modal="false" 
+            title="裁切图片" 
+            :visible.sync="showCropper" 
+            width="90%" 
+            top="15px"
+            append-to-body>
             <div class="croppercontainer">
                 <img @load="startCropper()" class="image-preview" :src="imgData" ref="cropper-image">
             </div>
@@ -27,7 +34,7 @@
                 <el-button @click="showCropper = false">取 消</el-button>
                 <el-button type="primary" @click="confirmCropper()">确 定</el-button>
             </span>
-        </NestedDialog>
+        </el-dialog>
 
         <input accept="image/jpg,image/jpeg,image/png" type="file" style="display: none" @change="fileChange($event)"
                ref="file">
@@ -37,7 +44,6 @@
 <script>
     import Cropper from 'cropperjs'
     import '../../../../node_modules/cropperjs/dist/cropper.min.css'
-    import NestedDialog from '../dialog/NestedDialog.vue'
 
     export default{
         props: {
@@ -145,6 +151,6 @@
                 })
             }
         },
-        components: {NestedDialog}
+        components: {}
     }
 </script>

@@ -76,7 +76,7 @@
 <template>
     <article class="course-task-template-index">
         <!--添加/编辑表单-->
-        <el-dialog v-model="addForm">
+        <el-dialog :visible.sync="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
                     <CourseTaskTemplateCategorySelect :placeholder="currCategoryName" v-model="form.category"></CourseTaskTemplateCategorySelect>

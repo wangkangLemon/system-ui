@@ -21,7 +21,7 @@
 
         .right-container {
             margin-left: 15px;
-            width: 555px;
+            width: 605px;
             .edit-content {
                 margin: 10px 0 0
             }
@@ -88,7 +88,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="info" @click="submitForm" :disabled="fetchParam.parent_id == null">保存
+                        <el-button type="primary" @click="submitForm" :disabled="fetchParam.parent_id == null">保存
                             <!--zhankeng-->
                         </el-button>
                     </el-form-item>
@@ -96,7 +96,7 @@
             </el-card>
         </section>
 
-        <el-dialog title="操作提示" v-model="dialogConfirm.isShow" size="tiny">
+        <el-dialog title="操作提示" :visible.sync="dialogConfirm.isShow" width="30%">
             <span v-html="dialogConfirm.msg"></span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogConfirm.isShow = false">取 消</el-button>

@@ -4,7 +4,7 @@
             <router-view></router-view>
         </transition>
 
-        <el-dialog :title="dialog.title" v-model="dialog.isShow" size="tiny">
+        <el-dialog :title="dialog.title" :visible.sync="dialog.isShow" width="30%">
             <span v-html="dialog.content"></span>
             <span slot="footer" class="dialog-footer">
             <el-button @click="dialog.isShow = false">取 消</el-button>

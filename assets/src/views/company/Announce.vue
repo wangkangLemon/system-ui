@@ -26,7 +26,7 @@
 <template>
     <article class="company-user-list">
         <!--详情-->
-        <el-dialog size="tiny" title="查看公告" class="show-detail" v-model="showDetail">
+        <el-dialog width="30%" title="查看公告" class="show-detail" :visible.sync="showDetail">
             <div class="info">
                 <h2>{{currentItem.title}}</h2>
                 <div>

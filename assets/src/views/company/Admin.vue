@@ -24,7 +24,7 @@
 <template>
     <article class="company-admin-container">
         <!--详情-->
-        <el-dialog class="show-detail" title="查看管理员" v-model="showDetail">
+        <el-dialog class="show-detail" title="查看管理员" :visible.sync="showDetail">
             <div class="avatar">
                 <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar" />
             </div>
@@ -47,7 +47,7 @@
             </div>
         </el-dialog>
         <!--添加/编辑表单-->
-        <el-dialog v-model="addForm">
+        <el-dialog :visible.sync="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item v-if="category == 2" prop="department_id" label="门店" :label-width="formLabelWidth">
                     <departmentSelect :type="companyID" v-model="form.department_id"

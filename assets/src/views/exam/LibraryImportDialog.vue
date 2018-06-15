@@ -13,7 +13,12 @@
     }
 </style>
 <template>
-    <NestedDialog id="dialog-library-import" title="试题导入" :visible.sync="isOpen" @click.native.stop>
+    <el-dialog 
+        id="dialog-library-import" 
+        title="试题导入" 
+        :visible.sync="isOpen" 
+        @click.native.stop 
+        append-to-body>
         <el-form :inline="true" :model="search" class="demo-form-inline">
             <el-form-item label="题库名称">
                 <SelectScroll :requestCb="fetchLibrary" v-model="search.subject_group_id" :changeCb="changeLibrary"></SelectScroll>
@@ -86,14 +91,13 @@
             </el-col>
         </el-row>
         <el-button type="primary" @click="importQuestion">插入</el-button>
-    </NestedDialog>
+    </el-dialog>
 </template>
 <script>
     import testLibraryService from '../../services/exam/libraryService'
     import testQuestionService from '../../services/exam/questionService'
     import SelectScroll from '../component/form/SelectScroll.vue'
     import Question from '../../models/quesion'
-    import NestedDialog from '../component/dialog/NestedDialog.vue'
 
     export default {
         props: {
@@ -204,6 +208,6 @@
                 this.fetchQuestion()
             },
         },
-        components: {SelectScroll, NestedDialog}
+        components: {SelectScroll}
     }
 </script>

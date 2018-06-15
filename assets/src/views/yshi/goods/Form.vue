@@ -135,7 +135,7 @@
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
     import goodsService from 'services/yshi/goodsService'
     import Task from 'components/dialog/task/Main.vue'
-    import TaskModel from 'components/dialog/task/model'
+    import TaskModel from 'components/dialog/task/model' // 不应该把这个引入在这里初始化initTabs的值
     import formCheck from 'utils/formCheckUtils'
 
     function clearFn () {

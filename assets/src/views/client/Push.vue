@@ -27,7 +27,7 @@
 <template>
     <article class="client-push-container">
         <!--详情-->
-        <el-dialog class="show-detail" title="推送详情" v-model="showDetail">
+        <el-dialog class="show-detail" title="推送详情" :visible.sync="showDetail">
             <div class="info">
                 <p><i class="title">标题： </i><span class="value">{{details.title}}</span></p>
                 <p><i class="title">内容： </i><span class="value">{{details.content}}</span></p>
@@ -80,56 +80,64 @@
                 <i>关键字</i>
                 <el-input @keyup.enter.native="getData" class="name" v-model="fetchParam.keyword"/>
             </section>
-            <DateRange title="日期查找" :start="fetchParam.time_start" :end="fetchParam.time_end"
-                       v-on:changeStart="val=>fetchParam.time_start=val"
-                       v-on:changeEnd="val=>fetchParam.time_end=val"
-                       :change="getData">
+            <DateRange 
+                title="日期查找" 
+                :start="fetchParam.time_start" 
+                :end="fetchParam.time_end"
+                v-on:changeStart="val=>fetchParam.time_start=val"
+                v-on:changeEnd="val=>fetchParam.time_end=val"
+                :change="getData">
             </DateRange>
         </section>
         <el-table border v-loading="loading" :data="pushData">
             <el-table-column
-                    prop="target_type"
-                    label="推送方式"
-                    width="100">
+                prop="target_type"
+                label="推送方式"
+                width="100">
                 <template slot-scope="scope">
                     {{scope.row.target_type == 'TAG' ? '条件推送' : '全局推送'}}
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="model_name"
-                    label="类型"
-                    width="120">
+                prop="model_name"
+                label="类型"
+                width="120">
             </el-table-column>
             <el-table-column
-                    prop="title"
-                    label="标题"
-                    width="100">
+                prop="title"
+                label="标题"
+                width="100">
             </el-table-column>
             <el-table-column
-                    prop="content"
-                    label="内容">
+                prop="content"
+                label="内容">
             </el-table-column>
             <el-table-column
-                    prop="devices"
-                    label="平台"
-                    width="120">
+                prop="devices"
+                label="平台"
+                width="120">
             </el-table-column>
             <el-table-column
-                    prop="send_time"
-                    label="发送时间"
-                    width="160">
+                prop="send_time"
+                label="发送时间"
+                width="160">
             </el-table-column>
             <el-table-column
-                    prop="status"
-                    label="状态"
-                    width="100">
+                prop="status"
+                label="状态"
+                width="100">
             </el-table-column>
             <el-table-column
-                    prop="admin"
-                    label="管理员"
-                    width="100">
+                prop="admin"
+                label="管理员"
+                width="100">
             </el-table-column>
-            <el-table-column prop="operate" label="操作" width="80" fixed="right" align="center">
+            <el-table-column 
+                prop="operate" 
+                label="操作" 
+                width="80" 
+                fixed="right" 
+                align="center">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="checkDetail(scope.$index, scope.row)">
                         详情
@@ -139,12 +147,12 @@
         </el-table>
         <section class="block">
             <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-sizes="[15, 30, 60, 100]"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[15, 30, 60, 100]"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
             </el-pagination>
         </section>
     </article>

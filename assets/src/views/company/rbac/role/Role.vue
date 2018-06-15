@@ -86,7 +86,7 @@
             </el-pagination>
         </section>
         <!--添加 修改 弹窗-->
-        <el-dialog :visible.sync="updateForm" size="tiny" title="角色设置">
+        <el-dialog :visible.sync="updateForm" width="30%" title="角色设置">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item label="角色名称" prop="role_name">
                     <el-input v-model="form.role_name" type="text"></el-input>
@@ -104,7 +104,7 @@
             </span>
         </el-dialog>
         <!-- 分配权限 弹窗-->
-        <el-dialog class="dialog" :visible.sync="relateForm" size="tiny" title="分配权限">
+        <el-dialog class="dialog" :visible.sync="relateForm" width="30%" title="分配权限">
             <el-tree :data="fromData" node-key="id" show-checkbox :default-checked-keys="toData" ref="tree"></el-tree>     
             <span slot="footer" class="dialog-footer">
                 <el-button @click="relateForm = false">取 消</el-button>

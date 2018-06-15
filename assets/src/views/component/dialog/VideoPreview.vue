@@ -11,7 +11,7 @@
 </style>
 
 <template>
-    <el-dialog :title="title || '视频预览'" v-model="isShow">
+    <el-dialog :title="title || '视频预览'" :visible.sync="isShow">
         <div id="J_prismPlayer" class="prism-player"></div>
 
         <el-form label-width="100px" :model="form" class="form" ref="form" v-if="!type">

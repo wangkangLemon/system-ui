@@ -33,7 +33,7 @@
                    accept="image/jpg,image/jpeg,image/png,image/gif">
             <i v-if="showUploadBtn" class="el-icon-plus"></i>
         </el-upload>
-        <el-dialog v-model="dialogVisible" size="tiny">
+        <el-dialog :visible.sync="dialogVisible" width="30%">
             <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
     </div>

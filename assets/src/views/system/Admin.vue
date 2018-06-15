@@ -20,7 +20,7 @@
 <template>
     <article class="admin-container">
         <!--详情-->
-        <el-dialog class="show-detail" title="查看管理员账号" v-model="showDetail">
+        <el-dialog class="show-detail" title="查看管理员账号" :visible.sync="showDetail">
             <div class="avatar" v-if="clerkDetail != null">
                 <img :src="{url:clerkDetail.avatar, sex: clerkDetail.sex} | defaultAvatar" />
             </div>
@@ -56,7 +56,7 @@
             </div>
         </el-dialog>
         <!--添加/编辑表单-->
-        <el-dialog v-model="addForm">
+        <el-dialog :visible.sync="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="form.name" placeholder="管理员姓名" auto-complete="off"></el-input>

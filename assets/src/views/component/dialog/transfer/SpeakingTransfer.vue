@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import speakingService from 'services/server/speakingService'
+    import speakingService from 'services/speaking/contentService'
     import Transfer from 'components/dialog/Transfer2.vue'
 
     export default {
@@ -97,7 +97,7 @@
         methods: {
             fetchData () {
                 this.loading = true
-                return speakingService.getSpeakingList(this.fetchParam).then(ret => {
+                return speakingService.search(this.fetchParam).then(ret => {
                     this.data = ret.data
                     this.total = ret.total
                     this.loading = false
@@ -132,8 +132,9 @@
             initFetchParam () {
                 return {
                     keyword: '',
-                    send_type: 'system,company',
+                    sender_type: 'system',
                     status: 0,
+                    price_enabled: 0,
                     page: 1,
                     page_size: 15
                 }

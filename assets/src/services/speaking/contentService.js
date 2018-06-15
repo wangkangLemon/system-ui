@@ -9,10 +9,10 @@ class SpeakingContentService {
     // 药我说记录列表
     search({page, page_size, status = -1, price_enabled = -1, keyword, time_start, time_end, sender_type = ''}) {
         let url = `${urlPre}/search`
-        if (status == '') {
+        if (status == undefined) {
             status = -1
         }
-        if (price_enabled == '') {
+        if (price_enabled === '') {
             price_enabled = -1
         }
         return api.get(url, {page, page_size, status, price_enabled, keyword, time_start, time_end, sender_type}).then((ret) => {
@@ -31,7 +31,14 @@ class SpeakingContentService {
         let finalUrl = `${urlPre}/${speaking_id}/disable`
         return api.put(finalUrl, {disabled})
     }
-
+    // 发布撤回药我说
+    publishSpeaking ({
+        speaking_id,
+        status,
+    }) {
+        let finalUrl = `${urlPre}/${speaking_id}/publish`
+        return api.put(finalUrl, { status })
+    }
     // 上传红包图片
     speakingImageUpload ({image, alias}) {
         let finalUrl = `${urlPre}/cover`

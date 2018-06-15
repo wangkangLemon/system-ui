@@ -36,7 +36,7 @@
 <template>
     <article class="company-department">
         <!--详情-->
-        <el-dialog size="small" v-if="show.detail" class="show-detail" title="查看门店" v-model="show.showDetail">
+        <el-dialog width="30%" v-if="show.detail" class="show-detail" title="查看门店" :visible.sync="show.showDetail">
             <div class="info">
                 <h2>{{show.detail.name}}<i class="sub-title">{{show.detail.company}}</i></h2>
                 <p><i class="title">店长：</i><span class="value">{{show.detail.contact || '无'}}</span></p>
