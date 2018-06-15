@@ -182,8 +182,8 @@
                                     <el-option label="已寄出" v-if="invoice.type === 'paper'?true:false" :value="2"></el-option>
                                 </el-select> -->
                                 <div class="audit-show-select">
-                                    <p v-if="invoice.type === 'electronics'?true:false">已发邮箱</p>
-                                    <p v-if="invoice.type === 'paper'?true:false">已寄出</p>
+                                    <p v-if="invoice.type === 'electronics'">已发邮箱</p>
+                                    <p v-if="invoice.type === 'paper'">已寄出</p>
                                 </div>
                             </span>
                         </p>
@@ -216,7 +216,7 @@
             return {
                 signNote:'',
                 signS:'',
-                invoiceNote: '已处理',
+                invoiceNote: '',
                 payNote: '',
                 payS: '',
                 detail: null,
@@ -232,8 +232,9 @@
                     payline: 22,
                     paylinefail: 23,
                     paid: 25,
-                    uninvoice: 30,
-                    invoice: 31
+                    invoiceunpay: 30,
+                    uninvoice: 35,
+                    invoice: 38
                 },
                 hasMoney: 1,
                 payinfo: {},
@@ -258,7 +259,7 @@
                         if(ret.invoice.remark) this.invoiceNote = ret.invoice.remark
                         this.payinfo = ret.payinfo
                         this.activeTab = 'invoice'
-                    }else if(ret.signing.status === this.signStatus.payline || ret.signing.status === this.signStatus.paid){
+                    }else if(ret.signing.status === this.signStatus.payline || ret.signing.status === this.signStatus.paid || ret.signing.status === this.signStatus.invoiceunpay){
                         if(ret.payinfo.remark) this.payNote = ret.payinfo.remark
                         this.payinfo = ret.payinfo
                         this.payS = ret.payinfo.status
@@ -288,11 +289,9 @@
                     xmview.showTip('warning', '请选择审核结果')
                     return
                 }
-                if(this.signS === this.signStatus.reject) {
-                    if(!this.signNote) {
-                        xmview.showTip('warning', '请填写备注')
-                        return
-                    }
+                if(this.signS === this.signStatus.reject && !this.signNote) {
+                    xmview.showTip('warning', '请填写备注')
+                    return
                 }
                 signingService.updateResult({
                     id: this.signingId,

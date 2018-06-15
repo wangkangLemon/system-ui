@@ -47,8 +47,9 @@
                         <el-option label="线下支付待确认" :value="signStatus.payline"></el-option>
                         <el-option label="线下支付确认失败" :value="signStatus.paylinefail"></el-option>
                         <el-option label="已付款" :value="signStatus.paid"></el-option>
-                        <el-option label="待开发票" :value="signStatus.uninvoice"></el-option>
-                        <el-option label="发票已寄出" :value="signStatus.invoice"></el-option>
+                        <el-option label="发票待付款" :value="signStatus.invoiceunpay"></el-option>
+                        <el-option label="发票待处理" :value="signStatus.uninvoice"></el-option>
+                        <el-option label="发票已处理" :value="signStatus.invoice"></el-option>
                     </el-select>
                 </section>
                 <DateRange title="日期查找" :start="fetchParam.start_date" :end="fetchParam.end_date"
@@ -98,8 +99,9 @@
                         <el-tag type="primary" v-if="scope.row.status == signStatus.payline">线下支付待确认</el-tag>
                         <el-tag type="primary" v-if="scope.row.status == signStatus.paylinefail">线下支付确认失败</el-tag>
                         <el-tag type="success" v-if="scope.row.status == signStatus.paid">已付款</el-tag>
-                        <el-tag type="warning" v-if="scope.row.status == signStatus.uninvoice">待开发票</el-tag>
-                        <el-tag type="success" v-if="scope.row.status == signStatus.invoice">发票已寄出</el-tag>
+                        <el-tag type="warning" v-if="scope.row.status == signStatus.invoiceunpay">发票待付款</el-tag>
+                        <el-tag type="danger" v-if="scope.row.status == signStatus.uninvoice">发票待处理</el-tag>
+                        <el-tag type="success" v-if="scope.row.status == signStatus.invoice">发票已处理</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -159,8 +161,9 @@
                     payline: 22,
                     paylinefail: 23,
                     paid: 25,
-                    uninvoice: 30,
-                    invoice: 31
+                    invoiceunpay: 30,
+                    uninvoice: 35,
+                    invoice: 38
                 }
             }
         },
