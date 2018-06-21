@@ -50,7 +50,7 @@
                         <p><i class="title">连锁地址：</i><span class="value">{{detail.company_address}}</span></p>
                         <p><i class="title">门店数量：</i><span class="value">{{detail.department_count}}</span></p>
                         <p><i class="title">店员数量：</i><span class="value">{{detail.user_count}}</span></p>
-                        <!-- <p><i class="title">运营联系人：</i><span class="value">{{detail.user_name}}</span></p> -->
+                        <p><i class="title">运营联系人：</i><span class="value">{{detail.user_name}}</span></p>
                         <p><i class="title">联系人电话：</i><span class="value">{{detail.mobile}}</span></p>
                         <p><i class="title">联系人邮箱：</i><span class="value">{{detail.email}}</span></p>
                         <p>
