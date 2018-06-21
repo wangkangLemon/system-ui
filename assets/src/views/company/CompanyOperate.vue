@@ -194,8 +194,8 @@
                         {validator: validateMobile, trigger: 'blur'}
                     ],
                     email: [
-                        {required: true, message: '必填项', trigger: 'blur'},
-                        {validator: validateEmail, trigger: 'blur'}
+                        {required: false, message: '必填项', trigger: 'blur'},
+                        // {validator: validateEmail, trigger: 'blur'}
                     ]
                 }
             }
