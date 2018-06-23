@@ -99,6 +99,22 @@
                     label="所属企业">
             </el-table-column>
             <el-table-column
+                    width="100"
+                    prop="doc_type"
+                    label="课件类型">
+                    <span slot-scope="{row}">{{row.doc_type | materialType}}</span>
+            </el-table-column>
+            <el-table-column
+                    min-width="100"
+                    prop="product_name"
+                    label="关联产品">
+            </el-table-column>
+            <el-table-column
+                    min-width="200"
+                    prop="industry_name"
+                    label="关联工业">
+            </el-table-column>
+            <el-table-column
                     width="80"
                     prop="file_type"
                     label="类型">
@@ -416,6 +432,15 @@
                 })
             },
         },
-        components: {courseService, DateRange, IndustryCompanySelect, UploadFile, DocShow}
+        components: {courseService, DateRange, IndustryCompanySelect, UploadFile, DocShow},
+        filters: {
+            materialType (val) {
+                let map = {
+                    product: '产品课件',
+                    private: '内训课件'
+                }
+                return map[val]
+            }
+        }
     }
 </script>
