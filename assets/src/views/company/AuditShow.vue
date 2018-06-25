@@ -134,7 +134,11 @@
                     </div>
                     <div class="info" v-if="curStatus === signStatus.paid">
                         <p><i class="title">付款状态: </i><span class="value">已付款</span></p>
-                        <p><i class="title">付款方式: </i><span class="value">{{payinfo.pay_method}}</span></p>
+                        <p><i class="title">付款方式: </i>
+                            <span class="value">
+                                {{paymethod}}
+                            </span>
+                        </p>
                         <p><i class="title">付款金额: </i><span class="value">{{payinfo.real_money}}元</span></p>
                         <p><i class="title">付款方: </i><span class="value">{{payinfo.pay_user_name}}</span></p>
                         <p><i class="title">付款交易号: </i><span class="value">{{payinfo.trade_no}}</span></p>
@@ -240,6 +244,20 @@
                 hasMoney: 1,
                 payinfo: {},
                 curStatus: ''
+            }
+        },
+        computed: {
+            paymethod() {
+                if(this.payinfo.pay_method === 'wechat'){
+                    return '微信'
+                }else if(this.payinfo.pay_method === 'alipay'){
+                    return '支付宝'
+                }else if(this.payinfo.pay_method === 'bank'){
+                    return '银联'
+                }else if(payinfo.pay_method === 'offlinepay'){
+                    return '线下支付'
+                }
+                return ''
             }
         },
         // keep-alive 相应使用activated,deactivated
