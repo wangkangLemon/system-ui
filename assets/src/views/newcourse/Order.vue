@@ -72,6 +72,13 @@
                     <el-option label="已删除" :value="4"></el-option>
                 </el-select>
             </section>
+            <section>
+                <i>订单类型</i>
+                <el-select clearable @change="getData" v-model="fetchParam.object_type" placeholder="全部">
+                    <el-option label="课程" value="course"></el-option>
+                    <el-option label="商品" value="goods"></el-option>
+                </el-select>
+            </section>
         </section>
         <el-table v-loading="loading" :data="dataList" :fit="true" border>
             <el-table-column prop="trade_no" min-width="160" label="订单编号"></el-table-column>
@@ -180,6 +187,7 @@ export default {
                 time_start: '',
                 time_end: '',
                 status: -1,
+                object_type: '',
                 in_company: -1
             },
             dataList: [],
