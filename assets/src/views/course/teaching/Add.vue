@@ -220,12 +220,12 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    if (phase.data) {
-                        mapService.deletePhase({
-                            learning_maps_id: this.$route.query.id,
-                            phase_id: phase.id
-                        })
-                    }
+                    // if (phase.data) {
+                    //     mapService.deletePhase({
+                    //         learning_maps_id: this.$route.query.id,
+                    //         phase_id: phase.id
+                    //     })
+                    // }
                     this.ruleForm.deletePhase(index)
                 })
             },
