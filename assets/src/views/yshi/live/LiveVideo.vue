@@ -66,14 +66,14 @@
                             :icon="istest?'el-icon-circle-close':'el-icon-caret-right'">
                             {{istest?'结束测试':'开始测试'}}
                         </el-button>
-                        <p>00时00分00秒{{sect}}</p>
+                        <p>{{timet}}</p>
                     </div>
                     <div class="btn">
                         <el-button type="danger" plain @click="live"
                             :icon="islive?'el-icon-circle-close':'el-icon-caret-right'">
                             {{islive?'结束直播':'开始直播'}}
                         </el-button>
-                        <p>00时00分00秒</p>
+                        <p>{{timel}}</p>
                     </div>
                 </section>
                 <div class="play">
@@ -123,6 +123,7 @@
     import screenImg from 'components/dialog/FullScreenImg.vue'
     import companyService from 'services/companyService'
     import signingService from 'services/system/signingService'
+    import * as timeUtils from 'utils/timeUtils'
     var video
     export default {
         components: {
@@ -135,9 +136,8 @@
                 src: 'http://www.w3school.com.cn/i/movie.mp4',
                 istest: false,
                 islive: false,
-                hourt: "00",
-                mint: '00',
-                sect: '00',
+                timet: '00时00分00秒',
+                timel: '00时00分00秒',
                 tableData: [],
                 fileList: []
             }
@@ -186,9 +186,58 @@
                     this.istest = false
                     this.islive = false
                 })
+                video.addEventListener("timeupdate",() => {
+                    this.timeFormat()
+                })
+                // this.setInterval()
             },
             keyupEnter() {
                 alert(this.videosrc)
+            },
+            setInterval() {
+                // 定时器 测试时分秒
+                let numtime = 7138
+                let second = 0
+                let min = 0
+                let hour = 0
+                setInterval( ()=> {
+                    numtime++
+                    if(parseInt(numtime)/60 >= 1){
+                        min = parseInt(numtime/60)
+                        if(parseInt(min)/60 >= 1){
+                            hour = parseInt(min / 60)
+                            min = parseInt(min % 60)
+                        }else {
+                            min = parseInt(min % 60)
+                        }
+                        second = parseInt(numtime%60)
+                    }else {
+                        second = parseInt(numtime) % 60
+                    }
+                    if(second < 1){
+                        second = '00'
+                    }else if(second < 10){
+                        second = '0' + second
+                    }
+                    if(min < 1){
+                        min = '00'
+                    }else if(min < 10){
+                        min = '0' + min
+                    }
+                    if(hour < 1){
+                        hour = '00'
+                    }else if(hour < 10){
+                        hour = '0' + hour
+                    }
+                    this.timet = `${hour}时${min}分${second}秒`
+                },1000)
+            },
+            timeFormat() {
+                if(this.istest){
+                    this.timet = timeUtils.timeFormat(video.currentTime)
+                }else if(this.islive) {
+                    this.timel = timeUtils.timeFormat(video.currentTime)
+                }
             },
             test() {
                 if(this.islive) this.islive = false
@@ -196,20 +245,10 @@
                 if(this.istest) {
                     video.currentTime = 0
                     video.play()
+                    this.timel = '00时00分00秒'
                 }else {
                     video.pause()
                 }
-                video.addEventListener("timeupdate",() => {
-                    // let second = 0
-                    // let min = 0
-                    // let hour = 0
-                    // if(parseInt(video.currentTime)/60 > 1){
-                    //     let min = parseInt(video.currentTime)/60
-                    //     if(min / 60 > 1){
-                    //     }
-                    // }
-                    this.sect = parseInt(video.currentTime)
-                })
             },
             live() {
                 if(this.istest) this.istest = false
@@ -217,6 +256,7 @@
                 if(this.islive) {
                     video.currentTime = 0
                     video.play()
+                    this.timet = '00时00分00秒'
                 }else {
                     video.pause()
                 }
