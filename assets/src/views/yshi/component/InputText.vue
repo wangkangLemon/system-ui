@@ -17,22 +17,30 @@
         input[type="number"]{
             -moz-appearance: textfield;
         }
-
     }
 </style>
 
 <template>
     <article id="component-from-input-text">
-        <el-input type="tel" size="small" v-numbera style="width:180px;" ref="input" v-model="inputValue" :disabled="disable">
-            <template slot="prepend">{{textLeft}}</template>
-            <template slot="append">{{textRight}}</template>
-        </el-input>
+        <div style="display: inline-block;">
+            <el-input 
+                type="tel" 
+                size="small" 
+                v-numbera 
+                style="width:180px;" 
+                ref="input" 
+                v-model="inputValue" 
+                :disabled="disable">
+                <template slot="prepend">{{textLeft}}</template>
+                <template slot="append">{{textRight}}</template>
+            </el-input>
+        </div>
         <i v-if="error" class="err-red">{{msg}}</i>
     </article>
 </template>
 
 <script>
-    export default{
+    export default {
         props: {
             value: [String, Number],
             textLeft: String,

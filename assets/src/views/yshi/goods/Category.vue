@@ -1,7 +1,7 @@
 <!--分类管理-->
 <style lang='scss' rel='stylesheet/scss'>
-    @import "../../utils/mixins/common";
-    @import "../../utils/mixins/mixins";
+    @import "~utils/mixins/common";
+    @import "~utils/mixins/mixins";
 
     #course-manage-coursecategory {
         @extend %content-container;
@@ -49,8 +49,8 @@
         <section class="left-container">
             <ArticleCategoryTree 
                 v-model="treeData" 
+                type="goods"
                 ref="articleCategory"
-                type="article"
                 :onNodeClick="treeNodeClick.bind(this,1)">
             </ArticleCategoryTree>
         </section>
@@ -72,12 +72,28 @@
                     <el-form-item label="分类名称" prop="name">
                         <el-input v-model="fetchParam.name" :disabled="fetchParam.parent_id == null"></el-input>
                     </el-form-item>
-                    <el-form-item label="图片" prop="image">
-                        <UploadImg ref="uploadImg"
-                                   :disabled="fetchParam.parent_id == null"
-                                   :defaultImg="fetchParam.image"
-                                   :url="uploadImgUrl"
-                                   :onSuccess="handleImgUploaded"></UploadImg>
+                    <!-- <el-form-item label="图片" prop="image">
+                        <UploadImg 
+                            ref="uploadImg"
+                            :disabled="fetchParam.parent_id == null"
+                            :defaultImg="fetchParam.image | fillImgPath"
+                            :url="uploadImgUrl"
+                            :onSuccess="handleImgUploaded">
+                        </UploadImg>
+                    </el-form-item> -->
+                    <el-form-item label="栏目展示">
+                        <el-checkbox 
+                            v-model="fetchParam.show_in_app"
+                            :true-label="1"
+                            :false-label="0">
+                            前端展示
+                        </el-checkbox>
+                        <el-checkbox 
+                            v-model="fetchParam.show_in_com"
+                            :true-label="1"
+                            :false-label="0">
+                            后端展示
+                        </el-checkbox>
                     </el-form-item>
                     <el-form-item label="分类排序" prop="sort">
                         <el-input :disabled="fetchParam.parent_id == null" placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
@@ -107,8 +123,12 @@
                     </span> <i>】到</i>
                 </section>
                 <section class="el-dialog__body">
-                    <ArticleCategoryTree v-model="treeData" node-key="id"
-                                        :onNodeClick="treeNodeClick.bind(this,2)"></ArticleCategoryTree>
+                    <ArticleCategoryTree 
+                        v-model="treeData" 
+                        node-key="id"
+                        type="goods"
+                        :onNodeClick="treeNodeClick.bind(this,2)">
+                    </ArticleCategoryTree>
                 </section>
 
                 <section class="el-dialog__footer">
@@ -122,17 +142,16 @@
     </article>
 </template>
 
-<script type="text/jsx">
-    import articleService from '../../services/articleService'
-    import treeUtils from '../../utils/treeUtils'
-    import ArticleCategoryTree from '../component/tree/ArticleCategory.vue'
-    import UploadImg from '../component/upload/UploadImg.vue'
+<script>
+    import goodsService from 'services/yshi/goodsService'
+    import treeUtils from 'utils/treeUtils'
+    import ArticleCategoryTree from 'components/tree/ArticleCategory.vue'
+    import UploadImg from 'components/upload/UploadImg.vue'
     import clone from 'clone'
     export default{
         data () {
             return {
                 activeTab: 'add',
-                uploadImgUrl: void 0,
                 nodeSelected: void 0, // 被选中的node节点
                 nodeParentSelected: void 0, // 被选中node节点的父节点
                 moveToNode: void 0, // 将要移动到最终的分类
@@ -161,9 +180,8 @@
                 }
             },
         },
-        activated () {
+        created () {
             xmview.setContentLoading(false)
-            this.uploadImgUrl = articleService.getCategoryImageUrl()
         },
         methods: {
             // 删除分类
@@ -177,7 +195,7 @@
                 this.dialogConfirm.isShow = true
                 this.dialogConfirm.msg = `是否确认删除分类 <i style="color:red">${node.label}</i> 吗？`
                 this.dialogConfirm.confirmClick = () => {
-                    articleService.delCategory({id: node.value}).then(() => {
+                    goodsService.delCategory({id: node.value}).then(() => {
                         xmview.showTip('success', '操作成功!')
                         this.$refs.articleCategory.removeItem(node, this.nodeParentSelected)
                         node = null
@@ -194,8 +212,8 @@
                     this.activeTab = 'edit'
                     this.nodeParentSelected = node.parent// 记录父节点
                     this.nodeSelected = data // 记录当前节点
-                    this.$refs.uploadImg.clearFiles()
-                    this.$refs.form.resetFields()
+                    // this.$refs.uploadImg.clearFiles()
+                    // this.$refs.form.resetFields()
                     this.fetchParam = clone(data.item)
                     this.fetchParam.parent_id = data.value // 重新指向当前的id
                 } else if (type == 2) {
@@ -220,12 +238,14 @@
 
                     let p
                     if (this.activeTab === 'add')
-                        p = articleService.createCategory(this.fetchParam)
+                        p = goodsService.createCategory(this.fetchParam)
                     else
-                        p = articleService.updateCategory(this.fetchParam)
+                        p = goodsService.updateCategory(this.fetchParam)
 
                     p.then((ret) => {
                         xmview.showTip('success', '操作成功!')
+                        // debugger
+                        console.log(this.fetchParam)
                         if (this.activeTab === 'edit') {
                             this.nodeSelected.label = this.fetchParam.name
                             this.nodeSelected.item = this.fetchParam
@@ -243,12 +263,16 @@
                             else if (this.nodeSelected.children[0].value) this.nodeSelected.children.push(addedItem)
                             this.fetchParam = getFetchParam()
                         }
+                    }).catch(err => {
+                        console.log(err)
                     })
                 })
             },
             // 重置表单
             resetForm () {
-                this.$refs.form.resetFields()
+                let parent_id = this.fetchParam.parent_id
+                this.fetchParam = getFetchParam()
+                this.fetchParam.parent_id = parent_id
             },
             // 移动子分类点击
             moveSubCategory () {
@@ -265,7 +289,7 @@
                         xmview.showTip('warning', '请选择不同的分类')
                         return
                     }
-                    articleService.moveCategory({id, to}).then((ret) => {
+                    goodsService.moveCategory({id, to}).then((ret) => {
                         // 重新渲染树节点
                         if (ret.code === 0) {
                             xmview.showTip('success', '操作成功!')
@@ -292,7 +316,7 @@
                         xmview.showTip('warning', '请选择不同的分类')
                         return
                     }
-                    articleService.moveCategoryContent({id, to}).then((ret) => {
+                    goodsService.moveCategoryContent({id, to}).then((ret) => {
                         // 重新渲染树节点
                         if (ret.code === 0) {
                             xmview.showTip('success', '操作成功!')
@@ -310,8 +334,10 @@
         return {
             parent_id: void 0,
             name: void 0,
-            image: void 0,
+            // image: void 0,
             sort: void 0,
+            show_in_app: 0,
+            show_in_com: 0,
             id: 0
         }
     }
