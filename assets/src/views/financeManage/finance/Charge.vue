@@ -86,9 +86,11 @@
             <section>
                 <i>类型</i>
                 <el-select v-model="fetchParam.category" placeholder="全部" @change="getData" :clearable="true">
-                    <el-option label="充值" value="balance"></el-option>
+                    <el-option label="充值" value="recharge"></el-option>
                     <el-option label="转入" value="transfer_in"></el-option>
                     <el-option label="转出" value="transfer_out"></el-option>
+                    <el-option label="服务费" value="server_fee"></el-option>
+                    <el-option label="推广提成费" value="promote_course"></el-option>
                 </el-select>
             </section>
             <DateRange title="创建时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
