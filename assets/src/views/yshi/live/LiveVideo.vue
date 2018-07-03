@@ -42,7 +42,7 @@
             margin: 0 20px;
             p {
                 line-height: 40px;
-                font-size:13px;
+                font-size:14px;
                 color:#333;
             }
         }
@@ -51,22 +51,22 @@
 </style>
 <template>
     <article class="company-audit-show">
-        <el-tabs v-model="activeTab" type="card" @tab-click="handleClick">
+        <el-tabs v-model="activeTab" type="card">
             <el-tab-pane label="直播" name="live">
                 <section class="live">
                     <div class="title">
                         <p>推流地址:</p>
                     </div>
                     <div class="src">
-                        <el-input placeholder="请输入内容" v-model="videosrc"></el-input>
-                        <p>视频流获取正常，可正常推流</p>
+                        <el-input placeholder="请输入内容" v-model="videosrc" @keyup.native.enter="keyupEnter"></el-input>
+                        <!-- <p>视频流获取正常，可正常推流</p> -->
                     </div>
                     <div class="btn">
                         <el-button plain @click="test"
                             :icon="istest?'el-icon-circle-close':'el-icon-caret-right'">
                             {{istest?'结束测试':'开始测试'}}
                         </el-button>
-                        <p>00时00分00秒{{time}}</p>
+                        <p>00时00分00秒{{sect}}</p>
                     </div>
                     <div class="btn">
                         <el-button type="danger" plain @click="live"
@@ -87,8 +87,9 @@
                         class="upload-demo"
                         action="https://jsonplaceholder.typicode.com/posts/"
                         accept=".mp4,.flv,.mov"
-                        :on-change="handleChange"
-                        :file-list="fileList3">
+                        :on-change="uploadChange"
+                        :before-upload="beforeUpload"
+                        :file-list="fileList">
                         <el-button size="small">选择视频</el-button>
                         <div slot="tip" class="el-upload__tip">请注意您只能上传.mp4 .flv .mov格式的视频文件</div>
                     </el-upload>
@@ -134,24 +135,15 @@
                 src: 'http://www.w3school.com.cn/i/movie.mp4',
                 istest: false,
                 islive: false,
-                time: "0",
-                tableData: [{
-                    name:'ahhhh.mp4'
-                }],
-                fileList3: [{
-                    name: 'food.jpeg',
-                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                }, {
-                    name: 'food2.jpeg',
-                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                }]
+                hourt: "00",
+                mint: '00',
+                sect: '00',
+                tableData: [],
+                fileList: []
             }
         },
         watch: {
-            time(){
-                debugger
-                return video.currentTime()
-            }
+           
 
         },
         created () {
@@ -169,26 +161,61 @@
             this.fetchData()
         },
         methods: {
-            handleClick(tab, event) {
-                console.log(tab, event);
+            uploadChange(file, fileList) {
+                console.log(file)
             },
-            handleChange(file, fileList) {
-                this.fileList3 = fileList.slice(-3);
+            beforeUpload (file) {
+                console.log(file)
+                let fd = new FormData()
+                fd.append('file', file)
+                fd.append('groupId', this.groupId)
+                console.log(fd)
+                // newVideo(fd).then(res => {
+                //     console.log(res)
+                // })
+                let obj = {
+                    name: file.name,
+                    url: ''
+                }
+                this.tableData.push(obj)
+                return true
             },
             fetchData(){
                 video = this.$refs.video
+                video.addEventListener("ended",() => {
+                    this.istest = false
+                    this.islive = false
+                })
+            },
+            keyupEnter() {
+                alert(this.videosrc)
             },
             test() {
+                if(this.islive) this.islive = false
                 this.istest = !this.istest
                 if(this.istest) {
+                    video.currentTime = 0
                     video.play()
                 }else {
                     video.pause()
                 }
+                video.addEventListener("timeupdate",() => {
+                    // let second = 0
+                    // let min = 0
+                    // let hour = 0
+                    // if(parseInt(video.currentTime)/60 > 1){
+                    //     let min = parseInt(video.currentTime)/60
+                    //     if(min / 60 > 1){
+                    //     }
+                    // }
+                    this.sect = parseInt(video.currentTime)
+                })
             },
             live() {
+                if(this.istest) this.istest = false
                 this.islive = !this.islive
                 if(this.islive) {
+                    video.currentTime = 0
                     video.play()
                 }else {
                     video.pause()
