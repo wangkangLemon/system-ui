@@ -40,7 +40,11 @@
                 </section>
                 <section>
                     <i>类别</i>
-                    <ArticleCategorySelect :onchange="getData" v-model="fetchParam.category_id"></ArticleCategorySelect>
+                    <ArticleCategorySelect 
+                        :onchange="getData" 
+                        type="article"
+                        v-model="fetchParam.category_id">
+                    </ArticleCategorySelect>
                 </section>
                 <DateRange title="时间" :start="fetchParam.createTime" :end="fetchParam.endTime"
                            v-on:changeStart="val=> fetchParam.createTime=val"
@@ -113,9 +117,9 @@
     </article>
 </template>
 <script>
-    import DateRange from '../component/form/DateRangePicker.vue'
-    import ArticleService from '../../services/articleService'
-    import ArticleCategorySelect from '../component/select/ArticleCategory.vue'
+    import DateRange from 'components/form/DateRangePicker.vue'
+    import ArticleService from 'services/articleService'
+    import ArticleCategorySelect from 'components/select/ArticleCategory.vue'
     export default {
         components: {
             DateRange,

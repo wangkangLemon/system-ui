@@ -5,6 +5,7 @@ import group from './group'
 import activity from './activity'
 import dialog from './dialog'
 import coupon from './coupon'
+import favorable from './favorable'
 
 export default {
     path: pathPre,
@@ -23,6 +24,8 @@ export default {
         // 弹框管理
         ...dialog,
         // 优惠券设置
-        ...coupon
+        ...coupon,
+        // 优惠设置
+        ...favorable
     ]
 }

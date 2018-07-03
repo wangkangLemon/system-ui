@@ -1,13 +1,18 @@
 <!--课程栏目-->
 
 <template>
-    <el-tree v-loading="loading" :data="data" :expand-on-click-node="false" @node-click="handleNodeClick"
-             @node-expand="handleNodeExpand" :highlight-current="selectable">
+    <el-tree 
+        v-loading="loading" 
+        :data="data" 
+        :expand-on-click-node="false" 
+        @node-click="handleNodeClick"
+        @node-expand="handleNodeExpand" 
+        :highlight-current="selectable">
     </el-tree>
 </template>
 
 <script>
-    import treeUtils from '../../../utils/treeUtils'
+    import treeUtils from 'utils/treeUtils'
 
     export default{
         props: {
@@ -29,8 +34,9 @@
             }
         },
         created () {
-            if (!this.value || this.value.length < 1)
+            if (!this.value || this.value.length < 1) {
                 this.initData()
+            }
         },
         deactivated () {
         },

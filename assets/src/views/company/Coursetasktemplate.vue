@@ -79,7 +79,10 @@
         <el-dialog :visible.sync="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
-                    <CourseTaskTemplateCategorySelect :placeholder="currCategoryName" v-model="form.category"></CourseTaskTemplateCategorySelect>
+                    <CourseTaskTemplateCategorySelect 
+                        :placeholder="currCategoryName" 
+                        v-model="form.category">
+                    </CourseTaskTemplateCategorySelect>
                 </el-form-item>
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>
@@ -91,8 +94,12 @@
                     <div class="img-wrap" v-if="form.image">
                         <img :src="form.image | fillImgPath" alt="" />
                     </div>
-                    <ImagEcropperInput :isRound="false" :aspectRatio="1" :confirmFn="cropperFn"
-                                       class="upload-btn"></ImagEcropperInput>
+                    <ImagEcropperInput 
+                        :isRound="false" 
+                        :aspectRatio="1" 
+                        :confirmFn="cropperFn"
+                        class="upload-btn">
+                    </ImagEcropperInput>
                 </el-form-item>
                 <el-form-item prop="course" label="选择课程" :label-width="formLabelWidth">
                     <el-input v-model="form.course_id" auto-complete="off"></el-input>
@@ -162,12 +169,12 @@
                 </el-table>
                 <section class="block">
                     <el-pagination
-                            @size-change="handleSizeChange"
-                            @current-change="handleCurrentChange"
-                            :current-page="currentPage"
-                            :page-sizes="[15, 30, 60, 100]"
-                            layout="total, sizes, ->, prev, pager, next, jumper"
-                            :total="total">
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[15, 30, 60, 100]"
+                        layout="total, sizes, ->, prev, pager, next, jumper"
+                        :total="total">
                     </el-pagination>
                 </section>
             </el-card>

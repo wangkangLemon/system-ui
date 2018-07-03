@@ -31,10 +31,34 @@
 <template>
     <article id="component-form-group">
         <div v-for="( item , index ) in dataArr">
-            <InputText textLeft="满" textRight="元" :value="moneyValue[index]" @input="inputFn(arguments[0], moneyValue, index)" :disable="disable"></InputText>
-            <InputText textLeft="打" textRight="折" :value="discountValue[index]" @input="inputFn(arguments[0], discountValue, index)" :disable="disable" :isdis="isdis"></InputText>
-            <el-button v-if="dataArr.length > 1" class="el-icon-minus icon-btn minus" @click="removeitem(index)" :disabled="disable" ></el-button>
-            <el-button v-if="dataArr.length == 1 || dataArr.length == index+1" size="small" class="el-icon-plus icon-btn plus" @click="additem(moneyValue[index], discountValue[index])" :disabled="disable"></el-button>
+            <InputText 
+                textLeft="满" 
+                :textRight="textRight" 
+                :value="moneyValue[index]" 
+                @input="inputFn(arguments[0], moneyValue, index)" 
+                :disable="disable">
+            </InputText>
+            <InputText 
+                textLeft="打" 
+                textRight="折" 
+                :value="discountValue[index]" 
+                @input="inputFn(arguments[0], discountValue, index)" 
+                :disable="disable" 
+                :isdis="isdis">
+            </InputText>
+            <el-button 
+                v-if="dataArr.length > 1" 
+                class="el-icon-minus icon-btn minus" 
+                @click="removeitem(index)" 
+                :disabled="disable">
+            </el-button>
+            <el-button 
+                v-if="dataArr.length == 1 || dataArr.length == index+1" 
+                size="small" 
+                class="el-icon-plus icon-btn plus" 
+                @click="additem(moneyValue[index], discountValue[index])" 
+                :disabled="disable">
+            </el-button>
         </div>
     </article>
 </template>
@@ -46,6 +70,10 @@
             money: Array,
             discount: Array,
             favorable: Array,
+            textRight: {
+                type: String,
+                default: '元'
+            },
             disable: {
                 type: Boolean,
                 default: false

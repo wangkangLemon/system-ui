@@ -10,19 +10,24 @@
         :show-all-levels="false"
         @active-item-change="handleItemChange"
         :clearable="true"
+        :disabled="disabled"
         :props="props"
         @change="setCurrVal"
-        :placeholder="placeholder"
-    ></el-cascader>
+        :placeholder="placeholder">
+    </el-cascader>
 </template>
 
 <script>
     import treeUtils from 'utils/treeUtils'
-    import CompanyService from 'services/companyService'
+    import goodsService from 'services/yshi/goodsService'
     export default{
         props: {
             value: [String, Number],
             onchange: Function,
+            disabled: {
+                type: Boolean,
+                default: false
+            },
             placeholder: {
                 type: String,
                 default: '请选择'
@@ -40,7 +45,7 @@
             }
         },
         created () {
-            CompanyService.getCategoryTree({}).then((ret) => {
+            goodsService.getCategoryTree({}).then((ret) => {
                 ret.map((item) => {
                     item.children = item.has_children ? [{label: '加载中...'}] : null
                 })
@@ -57,9 +62,9 @@
             handleItemChange (val) {
                 if (val.length < 1) return
                 // 递归找到该项
-                let currItem = treeUtils.findItem(this.options, val, 'value')
+                let currItem = treeUtils.findItem(this.options, val, 'id')
                 if (!currItem.children || (currItem.children.length > 0 && currItem.children[0].value)) return
-                CompanyService.getCategoryTree({
+                goodsService.getCategoryTree({
                     id: val[val.length - 1]
                 }).then((ret) => {
                     // 重新组合数据
