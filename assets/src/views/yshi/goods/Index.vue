@@ -149,7 +149,7 @@
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small">
-                        <i>{{ scope.row.status == 0 ? '上架' : '下架' }}</i>
+                        <i>{{ scope.row.status == 1 ? '上架' : '下架' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
@@ -245,8 +245,8 @@
             },
             // 下线  0为下线，1为上线
             offline (index, row) {
-                let txt = row.status == 1 ? '下线' : '上线'
-                let finalStatus = row.status == 0 ? 1 : 0
+                let txt = row.status == 2 ? '下线' : '上线'
+                let finalStatus = row.status == 1 ? 2 : 1
                 xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                     goodsService.statusline(row.id, finalStatus).then((ret) => {
                         row.status = finalStatus

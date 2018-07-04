@@ -119,6 +119,11 @@
                 width="170" 
                 prop="end_time" 
                 label="截止日期">
+                <span 
+                    slot-scope="{row}" 
+                    :style="{ color: new Date(row.end_time).getTime() < Date.now() ? 'red' : '' }">
+                    {{row.end_time}}
+                </span>
             </el-table-column>
             <el-table-column 
                 width="170" 

@@ -1,4 +1,4 @@
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
     .el-cascader-menu {
         height: auto !important;
     }
@@ -9,7 +9,6 @@
         :options='options' 
         :show-all-levels="false"
         @active-item-change="handleItemChange"
-        :clearable="true"
         :disabled="disabled"
         :props="props"
         @change="setCurrVal"

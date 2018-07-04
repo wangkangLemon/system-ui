@@ -43,7 +43,11 @@
 <template>
     <article id="course-manage-coursecategory">
         <section class="manage-container">
-            <el-button type="primary" @click="addRootCategory">新建分类</el-button>
+            <el-button 
+                type="primary" 
+                @click="addRootCategory">
+                新建分类
+            </el-button>
         </section>
 
         <section class="left-container">
@@ -56,21 +60,37 @@
         </section>
 
         <section class="right-container">
-            <div v-if="fetchParam.parent_id != 0">
-                <el-button :class="{'btn-selected': activeTab == 'edit'}" @click="activeTab = 'edit'">修改分类</el-button>
-                <el-button :class="{'btn-selected': activeTab == 'add'}" @click="activeTab = 'add'">添加子分类</el-button>
-
+            <div v-if="fetchParam.parent_id === 0 && activeTab === 'root'">
+                <el-button type="primary" @click>添加根节点</el-button>
+            </div>
+            <div v-else>
+                <el-button 
+                    :class="{'btn-selected': activeTab == 'edit'}" 
+                    @click="activeTab = 'edit'">
+                    修改分类
+                </el-button>
+                <el-button 
+                    :class="{'btn-selected': activeTab == 'add'}" 
+                    @click="activeTab = 'add'"
+                    :disabled="!!(nodeSelected && nodeSelected.item.parent_id)">
+                    添加子分类
+                </el-button>
                 <el-button @click="moveSubCategory">移动分类</el-button>
                 <el-button @click="moveSubCategoryContent">移动分类下内容</el-button>
                 <el-button type="danger" @click="deleteCategory">删除分类</el-button>
             </div>
-            <div v-if="fetchParam.parent_id === 0">
-                <el-button type="primary">添加根节点</el-button>
-            </div>
             <el-card class="edit-content">
-                <el-form label-position="right" label-width="90px" :rules="rules" :model="fetchParam" ref="form">
+                <el-form 
+                    label-position="right" 
+                    label-width="90px" 
+                    :rules="rules" 
+                    :model="fetchParam" 
+                    ref="form">
                     <el-form-item label="分类名称" prop="name">
-                        <el-input v-model="fetchParam.name" :disabled="fetchParam.parent_id == null"></el-input>
+                        <el-input 
+                            v-model="fetchParam.name" 
+                            :disabled="fetchParam.parent_id == null">
+                        </el-input>
                     </el-form-item>
                     <!-- <el-form-item label="图片" prop="image">
                         <UploadImg 
@@ -85,27 +105,41 @@
                         <el-checkbox 
                             v-model="fetchParam.show_in_app"
                             :true-label="1"
-                            :false-label="0">
+                            :false-label="0"
+                            :disabled="fetchParam.parent_id == null || !fetchParam.has_children">
                             前端展示
                         </el-checkbox>
                         <el-checkbox 
                             v-model="fetchParam.show_in_com"
                             :true-label="1"
-                            :false-label="0">
+                            :false-label="0"
+                            :disabled="!fetchParam.has_children || fetchParam.parent_id == null">
                             后端展示
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item label="分类排序" prop="sort">
-                        <el-input :disabled="fetchParam.parent_id == null" placeholder="最小的排在前面" v-model.number="fetchParam.sort"></el-input>
+                        <el-input 
+                            :disabled="fetchParam.parent_id == null"
+                            placeholder="最小的排在前面" 
+                            v-model.number="fetchParam.sort">
+                        </el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button :disabled="fetchParam.parent_id == null" type="primary" @click="submitForm">保存</el-button>
+                        <el-button 
+                            :disabled="fetchParam.parent_id == null" 
+                            type="primary" 
+                            @click="submitForm">
+                            保存
+                        </el-button>
                     </el-form-item>
                 </el-form>
             </el-card>
         </section>
 
-        <el-dialog title="操作提示" :visible.sync="dialogConfirm.isShow" width="30%">
+        <el-dialog 
+            title="操作提示" 
+            :visible.sync="dialogConfirm.isShow"
+             width="30%">
             <span v-html="dialogConfirm.msg"></span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogConfirm.isShow = false">取 消</el-button>
@@ -114,15 +148,18 @@
         </el-dialog>
 
         <!--移动子分类的弹出框-->
-        <div class="el-dialog__wrapper" v-show="dialogTree.isShow">
-            <article class="el-dialog el-dialog--tiny">
-                <section class="el-dialog__header">
+        <el-dialog 
+            v-if="dialogTree.isShow"
+            title="移动分类" 
+            :visible.sync="dialogTree.isShow">
+            <article>
+                <section>
                     移动分类【
                     <span style="color:red">
                         {{nodeSelected && nodeSelected.label}}
                     </span> <i>】到</i>
                 </section>
-                <section class="el-dialog__body">
+                <section>
                     <ArticleCategoryTree 
                         v-model="treeData" 
                         node-key="id"
@@ -130,15 +167,12 @@
                         :onNodeClick="treeNodeClick.bind(this,2)">
                     </ArticleCategoryTree>
                 </section>
-
-                <section class="el-dialog__footer">
-                    <span class="dialog-footer">
-                          <el-button @click="dialogTree.isShow = false">取 消</el-button>
-                        <el-button type="primary" @click="dialogTree.confirmClick">确 定</el-button>
-                    </span>
-                </section>
             </article>
-        </div>
+            <span slot="footer">
+                <el-button @click="dialogTree.isShow = false">取 消</el-button>
+                <el-button type="primary" @click="dialogTree.confirmClick">确 定</el-button>
+            </span>
+        </el-dialog>
     </article>
 </template>
 
@@ -175,8 +209,15 @@
         },
         watch: {
             'activeTab'(val) {
+                if (!this.nodeSelected) {
+                    xmview.showTip('warning', '请先选中一个分类')
+                    return
+                }
                 if (val === 'add') {
                     this.resetForm()
+                } else if (val === 'edit') {
+                    this.fetchParam = clone(this.nodeSelected.item)
+                    this.fetchParam.parent_id = this.nodeSelected.value
                 }
             },
         },
@@ -211,13 +252,24 @@
                     if (this.nodeSelected && this.nodeSelected.value === data.value) return
                     this.activeTab = 'edit'
                     this.nodeParentSelected = node.parent// 记录父节点
+                    if (!data.item.has_children && data.item.parent_id === this.nodeParentSelected.data.item.id) {
+                        var show_in_app = this.nodeParentSelected.data.item.show_in_app
+                        var show_in_com = this.nodeParentSelected.data.item.show_in_com
+                        var nodeParentSelectedId = this.nodeParentSelected.data.item.id
+                    }
                     this.nodeSelected = data // 记录当前节点
                     // this.$refs.uploadImg.clearFiles()
                     // this.$refs.form.resetFields()
                     this.fetchParam = clone(data.item)
                     this.fetchParam.parent_id = data.value // 重新指向当前的id
+                    if (!data.item.has_children && data.item.parent_id === nodeParentSelectedId) {
+                        this.fetchParam.show_in_app = show_in_app
+                        this.fetchParam.show_in_com = show_in_com
+                    }
                 } else if (type == 2) {
                     this.moveToNode = node
+                    console.log(this.moveToNode)
+
                 }
             },
             // 图片上传完毕
@@ -226,10 +278,12 @@
             },
             // 新建根节点
             addRootCategory () {
-                this.activeTab = 'add'
+                this.activeTab = 'root'
                 // 清空选中项
                 this.$refs.articleCategory.clearSelected()
+                this.resetForm()
                 this.fetchParam.parent_id = 0
+                this.fetchParam.has_children = true
             },
             // 提交表单
             submitForm () {
@@ -256,12 +310,15 @@
                                 value: this.fetchParam.id,
                                 item: this.fetchParam
                             }
-
                             // 如果是添加的根节点
-                            if (this.fetchParam.parent_id === 0) this.$refs.articleCategory.initData()
-                            else if (!this.nodeSelected.children) this.nodeSelected.children = [{label: '加载中...'}]
-                            else if (this.nodeSelected.children[0].value) this.nodeSelected.children.push(addedItem)
-                            this.fetchParam = getFetchParam()
+                            if (this.fetchParam.parent_id === 0) {
+                                this.$refs.articleCategory.initData()
+                            } else if (!this.nodeSelected.children) {
+                                this.nodeSelected.children = [{label: '加载中...'}]
+                            } else if (this.nodeSelected.children[0].value) {
+                                this.nodeSelected.children.push(addedItem) 
+                                this.fetchParam = getFetchParam()
+                            }
                         }
                     }).catch(err => {
                         console.log(err)
@@ -280,13 +337,21 @@
                     xmview.showTip('warning', '请先选中一个分类')
                     return
                 }
-
+                if (!this.nodeSelected.item.parent_id) {
+                    xmview.showTip('warning', '请选择当前类的子类进行移动')
+                    return
+                }
                 this.dialogTree.isShow = true
                 this.dialogTree.confirmClick = () => {
-                    let id = this.nodeSelected.value
-                    let to = this.moveToNode.data.value
+                    let id = this.nodeSelected.value     // 当前节点
+                    let to = this.moveToNode.data.value  // 移动区的节点
+                    let has_children = this.moveToNode.data.item.has_children
                     if (id === to) {
                         xmview.showTip('warning', '请选择不同的分类')
+                        return
+                    }
+                    if (!has_children) {
+                        xmview.showTip('warning', '不能移动到子分类下，请选择顶级分类')
                         return
                     }
                     goodsService.moveCategory({id, to}).then((ret) => {

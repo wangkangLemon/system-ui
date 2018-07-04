@@ -119,13 +119,14 @@
                 <el-input-number 
                     :disabled="disable"
                     v-model.number="fetchParam.sort"
+                    v-pnumberOnly
                     :controls="false">
                 </el-input-number>
             </el-form-item>
             <el-form-item label="素材类型" prop="object_type">
                 <el-radio-group 
                     v-model="fetchParam.object_type" 
-                    :disabled="disable" 
+                    :disabled="disable || disableObject" 
                     @change="typeChangHandler">
                     <el-radio label="template">模版</el-radio>
                     <el-radio label="custom">自定义</el-radio>
@@ -139,7 +140,7 @@
                     size="small" 
                     type="primary"
                     @click="chooseMaterial"
-                    :disabled="disable">
+                    :disabled="disable || disableObject">
                     添加
                 </el-button>
                 <template v-if="fetchParam.transferRight.length">
@@ -206,8 +207,9 @@
             </el-form-item>
             <el-form-item label="团购优惠">
                 <el-checkbox v-model="isGroupBuying" :disabled="disable">设置团购优惠</el-checkbox>
-                <div v-if="isGroupBuying">
+                <div v-show="isGroupBuying">
                     <PlusOrRemove 
+                        v-pnumberOnly
                         @res="groupDiscounts" 
                         textRight="人"
                         :money="moneyarr" 
@@ -303,6 +305,9 @@
             let checkMoney = (rule, value, callback) => {
                 formCheck.checkMoney(rule, value, this.fetchParam.price, '优惠价格不能高于商品定价', callback)
             }
+            let checkMoney2 = (rule, value, callback) => {
+                formCheck.checkMoney(rule, value, this.fetchParam.price_app, '优惠价格不能高于商品定价', callback)
+            }
             return {
                 currCategoryName: '',
                 isGroupBuying: false,
@@ -318,6 +323,7 @@
                 transferLeft: [],
                 fetchParam: clearFn(),
                 disable: false,
+                disableObject: false,
                 rules: {
                     name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
@@ -331,15 +337,26 @@
                     introduce: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    price: [
-                        {type: 'number', required: true, trigger: 'blur', message: '请输入商品定价'},
-                        {validator: checkPrice}
-                    ],
+                    category_id: { required: true, message: '请选择分类'},
+                    sort: { required: true, message: '请输入序号', trigger: 'blur' },
+                    object_type: { required: true, message: '请选择素材类型', trigger: 'blur' },
                     transferRight: [
                         {required: true, message: '请选择至少一个素材'}
                     ],
+                    price_app: [
+                        {type: 'number', required: true, trigger: 'blur', message: '请输入app定价'},
+                        {validator: checkPrice}
+                    ],
+                    favorable_price_app: [
+                        {type: 'number', required: true,trigger: 'blur', message: '请输入app优惠价格'},
+                        {validator: checkMoney2}
+                    ],
+                    price: [
+                        {type: 'number', required: true, trigger: 'blur', message: '请输入连锁定价'},
+                        {validator: checkPrice}
+                    ],
                     favorable_price: [
-                        {type: 'number', required: true,trigger: 'blur', message: '请输入优惠价格'},
+                        {type: 'number', required: true,trigger: 'blur', message: '请输入连锁优惠价格'},
                         {validator: checkMoney}
                     ]
                 },
@@ -355,6 +372,8 @@
                     this.fetchParam = ret
                     this.fetchParam.price = parseFloat(ret.price)
                     this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
+                    this.fetchParam.price_app = parseFloat(ret.price_app)
+                    this.fetchParam.favorable_price_app = parseFloat(ret.favorable_price_app)
                     let obj = this.getTaskSelected(ret.objects)
                     this.fetchParam.transferRight = obj.resRight
                     if (this.fetchParam.transferRight.length > 0) {
@@ -362,7 +381,7 @@
                     } else {
                         this.transferLeft = new TaskModel().initTabs()
                     }
-                    if (this.fetchParam.group_buying) {
+                    if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
                         this.isGroupBuying = true
                         ret.group_buying.forEach(item => {
                             this.moneyarr.push(item.reach)
@@ -374,6 +393,7 @@
                     this.currCategoryName = ret.category
                     this.editor && this.editor.setContent(ret.introduce)
                     this.$refs.cont.innerHTML = ret.introduce
+                    this.disableObject = !!ret.online_count
                 })
                 this.disable = this.$route.name === 'yshi-goods-preview' ? true : false
             } else {
