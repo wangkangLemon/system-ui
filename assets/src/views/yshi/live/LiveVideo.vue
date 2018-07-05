@@ -43,7 +43,18 @@
             p {
                 line-height: 40px;
                 font-size:14px;
-                color:#333;
+                color:#c00;
+                &.tip {
+                    font-size:12px;
+                    color:#686868;
+                }
+            }
+            span.caozuo {
+                cursor: pointer;
+            }
+            .refresh {
+                color: #1d90e6;
+                margin-left: 5px;
             }
         }
         
@@ -76,37 +87,40 @@
             <el-tab-pane label="录播" name="video">
                 <section class="video">
                     <p>绑定录播文件，不可再次开启直播，只可修改录播文件</p>
-                    <el-upload
-                        class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        accept=".mp4,.flv,.mov"
-                        :on-change="uploadChange"
-                        :before-upload="beforeUpload"
-                        :file-list="fileList">
-                        <el-button size="small">选择视频</el-button>
-                        <div slot="tip" class="el-upload__tip">只能上传.mp4 .flv .mov格式的视频文件</div>
-                    </el-upload>
+                    <el-button @click="fileClick">
+                        <i class="el-icon-upload"></i> 
+                        <i> 选择视频</i>
+                    </el-button>
+                    <p class="tip">只能上传.mp4 .flv .mov格式的视频文件</p>
+                    <input style="display: none" type="file" 
+                        ref="file" multiple="multiple" 
+                        @change="fileChange($event)" accept=".mp4,.flv,.mov">
                      <el-table
                         :data="tableData"
                         border
-                        style="width: 700px;margin-top:20px;">
+                        style="width: 750px;margin-top:20px;">
                         <el-table-column
                           prop="name"
                           label="已绑定文件"
                           width="400">
                         </el-table-column>
-                        <el-table-column
-                          prop="name"
-                          label="状态"
-                          width="200">
+                        <el-table-column prop="status" label="状态" width="200">
+                            <template slot-scope="scope">
+                                <el-tag v-if="scope.row.status == videoStatus.turnok" type="success">转码成功</el-tag>
+                                <el-tag v-if="scope.row.status == videoStatus.turning" type="info">转码中</el-tag>
+                                <el-tag v-if="scope.row.status == videoStatus.turnerr" type="danger">转码失败</el-tag>
+                                <span @click="videoRefresh(scope.$index, scope.row)" 
+                                    class="el-icon-refresh caozuo refresh">刷新
+                                </span>
+                            </template>
                         </el-table-column>
                         <el-table-column align="left" label="操作" fixed="right">
                             <template slot-scope="scope">
-                                <span @click="$router.push({name: 'yshi-live-edit', params: {live_id: scope.row.id}})" 
-                                    class="el-icon-caret-right" style="margin-right:10px;">
+                                <span @click="preview(scope.$index, scope.row)" 
+                                    class="el-icon-caret-right caozuo" style="margin-right:10px;">播放
                                 </span>
-                                <span @click="del(scope.$index, scope.row)" 
-                                    class="el-icon-close">
+                                <span @click="videoRefresh(scope.$index, scope.row)" 
+                                    class="el-icon-close caozuo">删除
                                 </span>
                             </template>
                         </el-table-column>
@@ -114,19 +128,25 @@
                 </section>
             </el-tab-pane>
         </el-tabs>
-        
+        <VideoPreviewOnly :url="videoUrl" ref="VideoPreviewOnly"></VideoPreviewOnly>
     </article>
 </template>
 <script>
     import screenImg from 'components/dialog/FullScreenImg.vue'
+    import VideoPreviewOnly from 'components/dialog/VideoPreviewOnly.vue'
     import companyService from 'services/companyService'
     import liveService from 'services/yshi/liveService'
     import * as timeUtils from 'utils/timeUtils'
     import * as globalConfig from 'utils/globalConfig'
+    import OssSdk from '@/vendor/ossSdk'
+    import courseService from '../../../services/courseService'
+
+    let ossSdk = new OssSdk()
     var video, liveInterval
     export default {
         components: {
-            screenImg
+            screenImg,
+            VideoPreviewOnly
         },
         data () {
             return {
@@ -139,8 +159,11 @@
                 fileList: [],
                 live_id: void 0,
                 liveStatus: globalConfig.liveStatus,
+                videoStatus: globalConfig.videoStatus,
                 liveInfo: {},
-                videoInfo: {}
+                videoInfo: {},
+                tapedVideo:{},
+                videoUrl: ''
             }
         },
         watch: {
@@ -159,25 +182,6 @@
             
         },
         methods: {
-            uploadChange(file, fileList) {
-                console.log(file)
-            },
-            beforeUpload (file) {
-                console.log(file)
-                let fd = new FormData()
-                fd.append('file', file)
-                fd.append('groupId', this.groupId)
-                console.log(fd)
-                // newVideo(fd).then(res => {
-                //     console.log(res)
-                // })
-                let obj = {
-                    name: file.name,
-                    url: ''
-                }
-                this.tableData.push(obj)
-                return true
-            },
             fetchData(){
                 liveService.getLiveVideoInfo({live_id:this.live_id}).then((ret) => {
                     if(ret) {
@@ -203,6 +207,7 @@
                     this.timeFormat()
                 })
             },
+            // 播放输入框的视频
             keyupEnter() {
                 this.src = this.liveInfo.live_url
             },
@@ -211,6 +216,7 @@
                     this.timel = timeUtils.timeFormat(video.currentTime)
                 }
             },
+            // 直播
             live() {
                 if( !video.pause) {
                     this.islive = !this.islive
@@ -230,7 +236,71 @@
                 }else {
                     xmview.showTip('warning', '直播地址无效，不可播放。')
                 }
-            }
+            },
+
+            // 录播相关
+            fileClick() {
+                this.$refs.file.click()
+            },
+            fileChange (e) {
+                let dom = e.target
+                let file = dom.files[0]
+                this.tapedVideo = {
+                    name: file.name,
+                    tags: [],
+                    file: file,
+                    process: 0
+                }
+                this.uploadVideo()
+            },
+            uploadVideo () {
+                let item = this.tapedVideo
+                courseService.getOssToken().then((ret) => {
+                    ossSdk = new OssSdk(ret, fn => {
+                        courseService.getOssToken().then(ret => {
+                            fn(ret)
+                        })
+                    })
+                    // 开始上传
+                    // 格式化名称
+                    var now = new Date()
+                    var name = [
+                        'videoLive', this.live_id,
+                        now.getFullYear(), now.getMonth() + 1, now.getDate(),
+                        [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
+                    ].join('/')
+                    // 上传
+                    ossSdk.uploadFile(name, item.file, function (progress) {
+                        item.process = progress
+                    }, ret => {
+                        this.videoUrl = ret.res.requestUrls[0].split('?')[0]
+                        // 创建视频
+                        courseService.addVideo({
+                            name: item.name,
+                            tags: item.tags.join(','),
+                            source_type: 'aliyun',
+                            source_url: ret.res.requestUrls[0].split('?')[0]
+                        }).then(() => {
+                            this.tableData = [{
+                                name: item.name,
+                                status: 2
+                            }]
+                        })
+                    }, err => {
+                        xmview.showTip('error', '上传出现错误' + JSON.stringify(err))
+                    })
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            videoRefresh(index, row) {
+
+            },
+             // 预览视频
+            preview (index, row) {
+                // 拿到播放地址
+                this.$refs.VideoPreviewOnly.show(this.tableData[0].name)
+            },
         }
     }
 </script>
