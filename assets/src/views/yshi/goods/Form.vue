@@ -392,7 +392,9 @@
                     }
                     this.currCategoryName = ret.category
                     this.editor && this.editor.setContent(ret.introduce)
-                    this.$refs.cont.innerHTML = ret.introduce
+                    if (this.$route.name === 'yshi-goods-preview') {
+                        this.$refs.cont.innerHTML = ret.introduce
+                    }
                     this.disableObject = !!ret.online_count
                 })
                 this.disable = this.$route.name === 'yshi-goods-preview' ? true : false

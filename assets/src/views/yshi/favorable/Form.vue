@@ -190,7 +190,7 @@
             </el-form-item>
             <el-form-item label="团购优惠">
                 <el-checkbox v-model="isGroupBuying" :disabled="disable">设置团购优惠</el-checkbox>
-                <div v-if="isGroupBuying">
+                <div v-show="isGroupBuying">
                     <PlusOrRemove 
                         v-pnumberOnly
                         @res="groupDiscounts2" 
@@ -349,7 +349,7 @@
                     this.$nextTick(() => {
                         this.initTable()
                     })
-                    if (this.fetchParam.group_buying) {
+                    if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
                         this.isGroupBuying = true
                         ret.group_buying.forEach(item => {
                             this.moneyarr2.push(item.reach)
