@@ -137,6 +137,17 @@ class GoodsService {
             xmview.showTip('success', ret.message || '操作成功')
         })
     }
+
+    // 优惠数详情列表
+    searchFavorableCount (id) {
+        let url = `${urlPre}/${id}/favorable`
+        return api.get(url).then(ret => ret.data)
+    }
+    // 素材树详情列表
+    searchObjectCount (id) {
+        let url = `${urlPre}/${id}/material`
+        return api.get(url).then(ret => ret.data)
+    }
     // 设置课时
     setLessons ({course_id, jsonstr}) {
         let url = `${urlPre}/${course_id}/lesson`
