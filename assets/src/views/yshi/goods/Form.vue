@@ -490,6 +490,8 @@
             submit () {
                 this.$refs['ruleForm'].validate((valid) => {
                     if (!valid) return
+                    // console.log(this.$store.state.component.yshiGroupSussess)
+                    if ( !this.$store.state.component.yshiGroupSussess) return
                     if (!this.editor.getContentTxt()) {
                         xmview.showTip('error', '请填写正文内容')
                         return
