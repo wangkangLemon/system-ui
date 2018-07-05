@@ -50,8 +50,10 @@
             <section>
                 <i>课程状态</i>
                 <el-select v-model="fetchParam.status" placeholder="全部" @change="fetchData" :clearable="true">
-                    <el-option label="已上线" value="2"></el-option>
-                    <el-option label="已下线" value="1"></el-option>
+                    <el-option label="未直播" :value="liveStatus.unlive"></el-option>
+                    <el-option label="直播中" :value="liveStatus.living"></el-option>
+                    <el-option label="已直播" :value="liveStatus.lived"></el-option>
+                    <el-option label="已录播" :value="liveStatus.taped"></el-option>
                 </el-select>
             </section>
             <DateRange title="创建时间" :start="fetchParam.start_time" :end="fetchParam.end_time" @changeStart="val=> {fetchParam.start_time=val}" @changeEnd="val=> {fetchParam.end_time=val}" :change="fetchData">
@@ -64,13 +66,15 @@
             </el-table-column>
             <el-table-column align="left" width="100" label="课程状态">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status == 2" type="success">已上线</el-tag>
-                    <el-tag v-else type="info">已下线</el-tag>
+                    <el-tag v-if="scope.row.status == liveStatus.unlive" type="info">未直播</el-tag>
+                    <el-tag v-if="scope.row.status == liveStatus.living" type="danger">直播中</el-tag>
+                    <el-tag v-if="scope.row.status == liveStatus.lived" type="success">已直播</el-tag>
+                    <el-tag v-if="scope.row.status == liveStatus.taped" type="warning">已录播</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column align="left" width="190" prop="order" label="预设直播时间">
+            <el-table-column align="left" width="190" prop="start_time" label="预设直播时间">
             </el-table-column>
-            <el-table-column align="left" width="190" prop="create_time" label="创建时间">
+            <el-table-column align="left" width="190" prop="create_at" label="创建时间">
             </el-table-column>
             <el-table-column align="left" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">
@@ -78,15 +82,13 @@
                     <el-button 
                         @click="$router.push({name: 'yshi-live-edit', params: {live_id: scope.row.id}})" 
                         type="text" 
-                        size="small" 
-                        :disabled="scope.row.status == 2">
+                        size="small">
                         编辑
                     </el-button>
                     <el-button 
                         @click="$router.push({name: 'yshi-live-video', params: {live_id: scope.row.id}})" 
                         type="text" 
-                        size="small" 
-                        :disabled="scope.row.status == 2">
+                        size="small" >
                         直播
                     </el-button>
                     <el-button 
@@ -116,10 +118,11 @@
 import goodsGroupService from 'services/yshi/goodsGroupService'
 import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
+import * as globalConfig from 'utils/globalConfig'
 function getFetchParam () {
     return {
         name: void '',
-        status: void 0, // 1 下线，2 上线
+        status: void 0,
         start_time: void 0,
         end_time: void 0,
         page: 1,
@@ -132,6 +135,7 @@ export default {
             data: [], // 表格数据
             total: 0,
             fetchParam: getFetchParam(),
+            liveStatus: globalConfig.liveStatus
         }
     },
     created () {
@@ -162,16 +166,6 @@ export default {
                 this.total = ret.total
                 this.loadingData = false
                 xmview.setContentLoading(false)
-            })
-        },
-        // 下线  0为下线，1为上线
-        offline (index, row) {
-            let txt = row.status == 2 ? '下线' : '上线'
-            let finalStatus = row.status == 1 ? 2 : 1
-            xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
-                goodsGroupService.statusline(row.id, finalStatus).then((ret) => {
-                    row.status = finalStatus
-                })
             })
         },
         // 单条删除

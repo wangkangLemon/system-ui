@@ -61,13 +61,13 @@
                         <el-input placeholder="请输入内容" v-model="videosrc" @keyup.native.enter="keyupEnter"></el-input>
                         <!-- <p>视频流获取正常，可正常推流</p> -->
                     </div>
-                    <div class="btn">
+                    <!-- <div class="btn">
                         <el-button plain @click="test"
                             :icon="istest?'el-icon-circle-close':'el-icon-caret-right'">
                             {{istest?'结束测试':'开始测试'}}
                         </el-button>
                         <p>{{timet}}</p>
-                    </div>
+                    </div> -->
                     <div class="btn">
                         <el-button type="danger" plain @click="live"
                             :icon="islive?'el-icon-circle-close':'el-icon-caret-right'">
@@ -77,7 +77,7 @@
                     </div>
                 </section>
                 <div class="play">
-                    <video :src="src" ref="video"></video>
+                    <video :src="src" ref="video" controls></video>
                 </div>
             </el-tab-pane>
             <el-tab-pane label="录播" name="video">
@@ -91,7 +91,7 @@
                         :before-upload="beforeUpload"
                         :file-list="fileList">
                         <el-button size="small">选择视频</el-button>
-                        <div slot="tip" class="el-upload__tip">请注意您只能上传.mp4 .flv .mov格式的视频文件</div>
+                        <div slot="tip" class="el-upload__tip">只能上传.mp4 .flv .mov格式的视频文件</div>
                     </el-upload>
                      <el-table
                         :data="tableData"

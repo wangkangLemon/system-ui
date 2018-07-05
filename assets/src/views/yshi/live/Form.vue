@@ -1,6 +1,6 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "../../../utils/mixins/common";
-     #group-content-add {
+     #live-content-add {
         @extend %content-container;
     .form {
         width: 80%;
@@ -53,7 +53,7 @@
      }
 </style>
 <template>
-    <article id="group-content-add">
+    <article id="live-content-add">
         <el-form :model="fetchParam" :rules="rules" class="form" label-width="180px" ref="ruleForm">
             <el-form-item label="课程名称" prop="name">
                 <el-input placeholder="请输入内容" v-model="fetchParam.name" :disabled="disable">
@@ -63,24 +63,24 @@
                 <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.cover" style="margin-bottom: 10px;" />
                 <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
-            <el-form-item label="主讲人" prop="user">
-                <el-input placeholder="请输入内容" v-model="fetchParam.user" :disabled="disable">
+            <el-form-item label="主讲人" prop="teacher_name">
+                <el-input placeholder="请输入内容" v-model="fetchParam.teacher_name" :disabled="disable">
                 </el-input>
             </el-form-item>
-            <el-form-item label="主讲人头像" prop="headimg">
-                <img :src="fetchParam.cover | fillImgPath" alt="" class="img" v-if="fetchParam.headimg" style="margin-bottom: 10px;" />
-                <ImagEcropperInput :confirmFn="cropperFn" :isRound="false" v-if="!disable"></ImagEcropperInput>
+            <el-form-item label="主讲人头像" prop="teacher_image">
+                <img :src="fetchParam.teacher_image | fillImgPath" alt="" class="img" v-if="fetchParam.teacher_image" style="margin-bottom: 10px; width:100px;height:100px;" />
+                <ImagEcropperInput :confirmFn="cropperFn2" :aspectRatio="1/1" :isRound="false" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
-            <el-form-item label="主讲人简介" prop="userinfo">
-                <el-input placeholder="请输入内容" v-model="fetchParam.userinfo" :disabled="disable">
+            <el-form-item label="主讲人简介" prop="teacher_description">
+                <el-input placeholder="请输入内容" v-model="fetchParam.teacher_description" :disabled="disable">
                 </el-input>
             </el-form-item>
-            <el-form-item label="课程介绍" prop="classinfo">
-                <vue-editor v-model="fetchParam.classinfo" @ready="ueReady" v-if="!disable"></vue-editor>
-                <div v-if="disable" ref="cont">{{fetchParam.classinfo}}</div>
+            <el-form-item label="课程介绍" prop="description">
+                <vue-editor v-model="fetchParam.description" @ready="ueReady" v-if="!disable"></vue-editor>
+                <div v-if="disable" ref="cont">{{fetchParam.description}}</div>
             </el-form-item>
-            <el-form-item label="直播时间" prop="time">
-                <el-date-picker v-model="fetchParam.time" type="datetime" placeholder="选择日期" :picker-options="pickerOptions"
+            <el-form-item label="直播时间" prop="start_time">
+                <el-date-picker v-model="fetchParam.start_time" type="datetime" placeholder="选择日期" :picker-options="pickerOptions"
                     format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" @change="datechange" :disabled="disable"> 
                 </el-date-picker>
             </el-form-item>
@@ -94,11 +94,8 @@
     import VueEditor from 'components/form/UEditor.vue'
     import ImagEcropperInput from 'components/upload/ImagEcropperInput.vue'
     import UploadFile from 'components/upload/UploadFiles.vue'
-    import dialogSelectData from 'components/dialog/SelectData5table.vue'
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
-    import goodsService from 'services/yshi/goodsService'
-    import goodsGroupService from 'services/yshi/goodsGroupService'
-    import PlusOrRemove from '../component/PlusOrRemove.vue'
+    import liveService from 'services/yshi/liveService'
     import formCheck from 'utils/formCheckUtils'
     import * as timeUtils from 'utils/timeUtils'
     function clearFn () {
@@ -106,11 +103,11 @@
             id: void 0,
             name: void '',
             cover: void '',
-            user: void '',
-            headimg: void '',
-            userinfo: void '',
-            classinfo: void '',
-            time: ''
+            teacher_image: void '',
+            teacher_name: void '',
+            teacher_description: void '',
+            description: void '',
+            start_time: ''
         }
     }
     export default {
@@ -135,36 +132,32 @@
                     cover: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    user: [
+                    teacher_name: [
                         {required: true, message: '必须填写', trigger: 'blur'}
                     ],
-                    classinfo: [
+                    description: [
                         {required: true, message: '必须填写'}
                     ],
-                    time: [
+                    start_time: [
                         {required: true, message: '必须填写'}
                     ]
                 }
             }
         },
         created() {
-            if (this.$route.params.group_id != undefined) {
-                if (this.$route.name === 'yshi-group-preview'){
+            if (this.$route.params.live_id != undefined) {
+                if (this.$route.name === 'yshi-live-preview'){
                     this.disable = true
                 } else {
                     this.disable = false
                 }
-                goodsGroupService.getGoodGroupInfo({
-                    id: this.$route.params.group_id
+                liveService.getLiveInfo({
+                    id: this.$route.params.live_id
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
                     this.$nextTick(() => {
                         this.initTable()
-                    })
-                    ret.favorable.forEach(item => {
-                        this.moneyarr.push(item.reach)
-                        this.discountarr.push(item.discount)
                     })
                     this.editor && this.editor.setContent(ret.introduce)
                     this.$refs.cont.innerHTML = ret.introduce
@@ -178,7 +171,7 @@
         },
         methods: {
             cropperFn (data, ext) {
-                goodsService.getUploadUrl({
+                liveService.getUploadUrl({
                     image: data,
                     alias: `${Date.now()}${ext}`
                 }).then((ret) => {
@@ -188,8 +181,16 @@
                     xmview.showTip('error', ret.message)
                 })
             },
-            filesHandleChange (res) {
-                console.log(res)
+            cropperFn2 (data, ext) {
+                liveService.getUploadUrl({
+                    image: data,
+                    alias: `${Date.now()}${ext}`
+                }).then((ret) => {
+                    xmview.showTip('success', '上传成功')
+                    this.fetchParam.teacher_image = ret.url // 显示图片
+                }).catch((ret) => {
+                    xmview.showTip('error', ret.message)
+                })
             },
             validate (formName) {
                 let pass = true
@@ -198,10 +199,6 @@
                 })
                 return pass
             },
-            fetchGood (params) {
-                return goodsService.searchGoods(Object.assign({}, this.dialogGoods, params))
-            },
-            
             ueReady (ue) {
                 this.editor = ue
             },
@@ -215,27 +212,18 @@
                         xmview.showTip('error', '请填写正文内容')
                         return
                     }
-                    this.fetchParam.introduce = this.editor.getContent()
-                    this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
-                        return item.id
-                    })
-                    if ( !this.$store.state.component.yshiGroupSussess) return
+                    this.fetchParam.description = this.editor.getContent()
                     // 去除favorable空值
-                    for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
-                        if (!this.fetchParam.favorable[i].reach || !this.fetchParam.favorable[i].discount){
-                            this.fetchParam.favorable.splice(i,1)
-                        }
-                    }
-                    let req = goodsGroupService.createGoodGroup
+                    let req = liveService.createGoodGroup
                     let msg = '添加成功'
                     if (this.fetchParam.id) {
-                        req = goodsGroupService.updateGoodGroup
+                        req = liveService.updateGoodGroup
                         msg = '修改成功'
                     }
                     req(this.fetchParam).then((ret) => {
                         xmview.showTip('success', msg)
                         this.fetchParam = clearFn()
-                        this.$router.push({name: 'yshi-group'})
+                        this.$router.push({name: 'yshi-live'})
                     }).catch((ret) => {
                         if (ret.data.data === 'exist'){
                             this.orderErr = true
@@ -250,10 +238,8 @@
         components: {
             ImagEcropperInput,
             UploadFile,
-            dialogSelectData,
             DialogVideo,
-            VueEditor,
-            PlusOrRemove
+            VueEditor
         }
     }
 </script>
