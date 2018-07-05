@@ -472,6 +472,9 @@
             submit () {
                 this.$refs['ruleForm'].validate((valid) => {
                     if (!valid) return
+                    if (this.isGroupBuying || this.fetchParam.favorable_type === 2) {
+                        if ( !this.$store.state.component.yshiGroupSussess) return
+                    }
                     if (!this.editor.getContentTxt()) {
                         xmview.showTip('error', '请填写正文内容')
                         return
@@ -486,7 +489,6 @@
                     }
                     // 去除favorable空值
                     if (this.fetchParam.favorable_type === 2) {
-                        if ( !this.$store.state.component.yshiGroupSussess) return
                         for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
                             if (!this.fetchParam.favorable[i].reach || !this.fetchParam.favorable[i].discount){
                                 this.fetchParam.favorable.splice(i,1)
