@@ -43,7 +43,7 @@ export const pnumberOnly = Vue.directive('pnumberOnly', {
             let input = el.querySelector('.el-input__inner')
             let value = input.value
             // debugger
-            input.value = parseInt(value)
+            input.value = isNaN(parseInt(value)) ? '' : parseInt(value)
             // input.value = newVal.replace(/[^.\d+]|(\d+\.)\.?$/, '$1')
         })
     },
@@ -51,7 +51,7 @@ export const pnumberOnly = Vue.directive('pnumberOnly', {
         el.removeEventListener('keyup', () => {
             let input = el.querySelector('.el-input__inner')
             let value = input.value
-            input.value = parseInt(value)
+            input.value = isNaN(parseInt(value)) ? '' : parseInt(value)
         })
     }
 })
