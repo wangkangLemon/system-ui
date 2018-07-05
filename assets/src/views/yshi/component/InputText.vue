@@ -90,6 +90,8 @@
                             this.$store.dispatch('setYshiGroupSuccess')
                             this.$emit('input', val)
                         }
+                    } else {
+                        this.$emit('input', val)
                     }
                 } else {
                     this.error = true
