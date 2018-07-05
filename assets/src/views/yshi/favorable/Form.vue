@@ -107,6 +107,8 @@
                 <el-input-number 
                     :disabled="disable"
                     v-model.number="fetchParam.sort"
+                    v-pnumberOnly
+                    :min="0"
                     :controls="false">
                 </el-input-number>
             </el-form-item>
@@ -181,7 +183,8 @@
                 <el-date-picker
                     :disabled="disable"
                     v-model="fetchParam.end_time"
-                    value-format="yyyy-MM-dd hh:mm:ss"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    :picker-options="pickerOptions"
                     type="datetime">
                 </el-date-picker>
             </el-form-item>
@@ -189,6 +192,7 @@
                 <el-checkbox v-model="isGroupBuying" :disabled="disable">设置团购优惠</el-checkbox>
                 <div v-if="isGroupBuying">
                     <PlusOrRemove 
+                        v-pnumberOnly
                         @res="groupDiscounts2" 
                         textRight="人"
                         :money="moneyarr2" 
@@ -269,6 +273,11 @@
     export default {
         data () {
             return {
+                pickerOptions: {
+                    disabledDate (time) {
+                        return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
+                    }
+                },
                 isGroupBuying: false,
                 typeimg: 1,
                 typevideo: 2,
@@ -472,6 +481,10 @@
                     this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
                         return item.id
                     })
+                    // 截止日期
+                    if (new Date(this.fetchParam.end_time).getTime() < Date.now()) {
+                        return xmview.showTip('warning', '截止日期要大于当前日期')
+                    }
                     // 去除favorable空值
                     if (this.fetchParam.favorable_type === 2) {
                         if ( !this.$store.state.component.yshiGroupSussess) return

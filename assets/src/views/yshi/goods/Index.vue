@@ -100,11 +100,25 @@
                 width="100" 
                 prop="favorable_count" 
                 label="参与优惠数">
+                <el-button 
+                    slot-scope="{row}"
+                    type='text'
+                    :disabled="!row.favorable_count"
+                    @click="openTable(1, row.id)">
+                    {{row.favorable_count}}
+                </el-button>
             </el-table-column>
             <el-table-column 
                 width="80" 
                 prop="object_count" 
                 label="素材数量">
+                <el-button 
+                    slot-scope="{row}"
+                    type='text' 
+                    :disabled="!row.object_count"
+                    @click="openTable(2, row.id)">
+                    {{row.object_count}}
+                </el-button>
             </el-table-column>
             <el-table-column 
                 width="100" 
@@ -149,7 +163,7 @@
                         @click="offline(scope.$index, scope.row)" 
                         type="text" 
                         size="small">
-                        <i>{{ scope.row.status == 0 ? '上架' : '下架' }}</i>
+                        <i>{{ scope.row.status == 1 ? '上架' : '下架' }}</i>
                     </el-button>
                     <el-button 
                         @click="del(scope.$index, scope.row)" 
@@ -172,6 +186,15 @@
             layout="sizes,total, prev, pager, next"
             :total="total">
         </el-pagination>
+        <el-dialog 
+            v-if="columnDetail.showDialog"
+            :title="columnDetail.title" 
+            :visible.sync="columnDetail.showDialog">
+            <component 
+                :is="columnDetail.component" 
+                :id="columnDetail.id">
+            </component>
+        </el-dialog>
     </main>
 </template>
 
@@ -180,6 +203,8 @@
     import DateRange from 'components/form/DateRangePicker.vue'
     import GoodsCategorySelect from 'components/select/GoodsCategory.vue'
     import ErrorDialog from 'components/dialog/ErrorDialog.vue'
+    import ObjectCountTable from './component/ObjectCountTable.vue'
+    import FavorableCountTable from './component/FavorableCountTable.vue'
     import * as _ from 'utils/common'
     function getFetchParam () {
         return {
@@ -195,7 +220,9 @@
         components: { 
             DateRange, 
             ErrorDialog,
-            GoodsCategorySelect
+            GoodsCategorySelect,
+            ObjectCountTable,
+            FavorableCountTable,
         },
         data () {
             return {
@@ -211,6 +238,12 @@
                     showDialog: false,
                     message: '',
                     data: []
+                },
+                columnDetail: {
+                    showDialog: false,
+                    component: '',
+                    title: '',
+                    id: ''
                 }
             }
         },
@@ -218,6 +251,22 @@
             this.fetchData()
         },
         methods: {
+            openTable (type, id) {
+                let map = {
+                    1: {
+                        title: '参与优惠数详情',
+                        component: FavorableCountTable
+                    },
+                    2: {
+                        title: '素材数量详情',
+                        component: ObjectCountTable
+                    }
+                }
+                this.columnDetail.component = map[type].component
+                this.columnDetail.id = id
+                this.columnDetail.title = map[type].title
+                this.columnDetail.showDialog = true
+            },
             handleType (type) {
                 if (type === 'course') this.$router.push({name: 'course-manage-addCourse'})
                 else this.$router.push({name: 'newcourse-course-add'})
@@ -245,8 +294,8 @@
             },
             // 下线  0为下线，1为上线
             offline (index, row) {
-                let txt = row.status == 1 ? '下线' : '上线'
-                let finalStatus = row.status == 0 ? 1 : 0
+                let txt = row.status == 2 ? '下线' : '上线'
+                let finalStatus = row.status == 1 ? 2 : 1
                 xmview.showDialog(`你将要${txt}课程 <span style="color:red">${row.name}</span> 确认吗?`, () => {
                     goodsService.statusline(row.id, finalStatus).then((ret) => {
                         row.status = finalStatus
