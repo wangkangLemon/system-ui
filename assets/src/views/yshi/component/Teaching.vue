@@ -117,6 +117,7 @@
                 fetchParam: {
                     title: '',
                     type: 'teaching',
+                    status: 1,
                     is_free: 1,
                     page: 1,
                     page_size: 15,
