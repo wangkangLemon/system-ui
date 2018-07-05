@@ -72,7 +72,7 @@
                 <el-button 
                     :class="{'btn-selected': activeTab == 'add'}" 
                     @click="activeTab = 'add'"
-                    :disabled="!!(nodeSelected && nodeSelected.item.parent_id)">
+                    :disabled="!fetchParam.has_children">
                     添加子分类
                 </el-button>
                 <el-button @click="moveSubCategory">移动分类</el-button>
@@ -209,15 +209,20 @@
         },
         watch: {
             'activeTab'(val) {
-                if (!this.nodeSelected) {
+                if (!this.nodeSelected && val !== 'root') {
                     xmview.showTip('warning', '请先选中一个分类')
                     return
                 }
                 if (val === 'add') {
+                    let show_in_app = this.fetchParam.show_in_app
+                    let show_in_com = this.fetchParam.show_in_com
                     this.resetForm()
+                    this.fetchParam.show_in_app = show_in_app
+                    this.fetchParam.show_in_com = show_in_com
                 } else if (val === 'edit') {
                     this.fetchParam = clone(this.nodeSelected.item)
-                    this.fetchParam.parent_id = this.nodeSelected.value
+                    this.fetchParam.has_children = !this.nodeSelected.item.parent_id
+                    // this.fetchParam.parent_id = this.nodeSelected.item.parent_id
                 }
             },
         },
@@ -252,7 +257,7 @@
                     if (this.nodeSelected && this.nodeSelected.value === data.value) return
                     this.activeTab = 'edit'
                     this.nodeParentSelected = node.parent// 记录父节点
-                    if (!data.item.has_children && data.item.parent_id === this.nodeParentSelected.data.item.id) {
+                    if (data.item.parent_id && data.item.parent_id === this.nodeParentSelected.data.item.id) {
                         var show_in_app = this.nodeParentSelected.data.item.show_in_app
                         var show_in_com = this.nodeParentSelected.data.item.show_in_com
                         var nodeParentSelectedId = this.nodeParentSelected.data.item.id
@@ -261,8 +266,10 @@
                     // this.$refs.uploadImg.clearFiles()
                     // this.$refs.form.resetFields()
                     this.fetchParam = clone(data.item)
-                    this.fetchParam.parent_id = data.value // 重新指向当前的id
-                    if (!data.item.has_children && data.item.parent_id === nodeParentSelectedId) {
+                    this.fetchParam.has_children = !data.item.parent_id
+                    // this.fetchParam.parent_id = data.value // 重新指向当前的id
+                    // console.log(this.fetchParam, this.nodeSelected)
+                    if (data.item.parent_id && data.item.parent_id === nodeParentSelectedId) {
                         this.fetchParam.show_in_app = show_in_app
                         this.fetchParam.show_in_com = show_in_com
                     }
@@ -291,11 +298,14 @@
                     if (!ret) return
 
                     let p
-                    if (this.activeTab === 'add')
+                    if (this.activeTab != 'edit') {
+                        if (this.activeTab === 'add') {
+                            this.fetchParam.parent_id = this.nodeSelected.value
+                        }
                         p = goodsService.createCategory(this.fetchParam)
-                    else
+                    } else {
                         p = goodsService.updateCategory(this.fetchParam)
-
+                    }
                     p.then((ret) => {
                         xmview.showTip('success', '操作成功!')
                         // debugger
@@ -311,7 +321,7 @@
                                 item: this.fetchParam
                             }
                             // 如果是添加的根节点
-                            if (this.fetchParam.parent_id === 0) {
+                            if (this.activeTab === 'root') {
                                 this.$refs.articleCategory.initData()
                             } else if (!this.nodeSelected.children) {
                                 this.nodeSelected.children = [{label: '加载中...'}]
@@ -337,8 +347,8 @@
                     xmview.showTip('warning', '请先选中一个分类')
                     return
                 }
-                if (!this.nodeSelected.item.parent_id) {
-                    xmview.showTip('warning', '请选择当前类的子类进行移动')
+                if (this.fetchParam.has_children) {
+                    xmview.showTip('warning', '不能移动根节点')
                     return
                 }
                 this.dialogTree.isShow = true
