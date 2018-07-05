@@ -56,7 +56,7 @@
                     <el-option label="已录播" :value="liveStatus.taped"></el-option>
                 </el-select>
             </section>
-            <DateRange title="创建时间" :start="fetchParam.start_time" :end="fetchParam.end_time" @changeStart="val=> {fetchParam.start_time=val}" @changeEnd="val=> {fetchParam.end_time=val}" :change="fetchData">
+            <DateRange title="创建时间" :start="fetchParam.start_date" :end="fetchParam.end_date" @changeStart="val=> {fetchParam.start_date=val}" @changeEnd="val=> {fetchParam.end_date=val}" :change="fetchData">
             </DateRange>
 
         </main>
@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import goodsGroupService from 'services/yshi/goodsGroupService'
+import liveService from 'services/yshi/liveService'
 import DateRange from 'components/form/DateRangePicker.vue'
 import * as _ from 'utils/common'
 import * as globalConfig from 'utils/globalConfig'
@@ -123,8 +123,8 @@ function getFetchParam () {
     return {
         name: void '',
         status: void 0,
-        start_time: void 0,
-        end_time: void 0,
+        start_date: void 0,
+        end_date: void 0,
         page: 1,
         page_size: 15,
     }
@@ -142,10 +142,6 @@ export default {
         this.fetchData()
     },
     methods: {
-        handleType (type) {
-            if (type === 'course') this.$router.push({name: 'course-manage-addCourse'})
-            else this.$router.push({name: 'newcourse-course-add'})
-        },
         initFetchParam () {
             this.fetchParam = getFetchParam()
         },
@@ -161,7 +157,7 @@ export default {
             this.loadingData = true
             let fetchParam = _.clone(this.fetchParam)
             fetchParam.status = (!fetchParam.status && fetchParam.status !== 1) ? 0 : fetchParam.status
-            return goodsGroupService.searchGoodsGroup(fetchParam).then((ret) => {
+            return liveService.searchLive(fetchParam).then((ret) => {
                 this.data = ret.list
                 this.total = ret.total
                 this.loadingData = false
@@ -171,7 +167,7 @@ export default {
         // 单条删除
         del (index, row) {
             xmview.showDialog(`你将要删除课程 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
-                goodsGroupService.delete(row.id).then(() => {
+                liveService.delete(row.id).then(() => {
                     xmview.showTip('success', '操作成功')
                     this.fetchData()
                 })

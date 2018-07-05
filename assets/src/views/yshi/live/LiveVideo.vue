@@ -58,22 +58,15 @@
                         <p>推流地址:</p>
                     </div>
                     <div class="src">
-                        <el-input placeholder="请输入内容" v-model="videosrc" @keyup.native.enter="keyupEnter"></el-input>
+                        <el-input placeholder="http://" v-model="liveInfo.live_url" @keyup.native.enter="keyupEnter"></el-input>
                         <!-- <p>视频流获取正常，可正常推流</p> -->
                     </div>
-                    <!-- <div class="btn">
-                        <el-button plain @click="test"
-                            :icon="istest?'el-icon-circle-close':'el-icon-caret-right'">
-                            {{istest?'结束测试':'开始测试'}}
-                        </el-button>
-                        <p>{{timet}}</p>
-                    </div> -->
                     <div class="btn">
                         <el-button type="danger" plain @click="live"
                             :icon="islive?'el-icon-circle-close':'el-icon-caret-right'">
                             {{islive?'结束直播':'开始直播'}}
                         </el-button>
-                        <p>{{timel}}</p>
+                        <p>{{liveTime}}</p>
                     </div>
                 </section>
                 <div class="play">
@@ -96,11 +89,16 @@
                      <el-table
                         :data="tableData"
                         border
-                        style="width: 500px;margin-top:20px;">
+                        style="width: 700px;margin-top:20px;">
                         <el-table-column
                           prop="name"
                           label="已绑定文件"
                           width="400">
+                        </el-table-column>
+                        <el-table-column
+                          prop="name"
+                          label="状态"
+                          width="200">
                         </el-table-column>
                         <el-table-column align="left" label="操作" fixed="right">
                             <template slot-scope="scope">
@@ -122,24 +120,27 @@
 <script>
     import screenImg from 'components/dialog/FullScreenImg.vue'
     import companyService from 'services/companyService'
-    import signingService from 'services/system/signingService'
+    import liveService from 'services/yshi/liveService'
     import * as timeUtils from 'utils/timeUtils'
-    var video
+    import * as globalConfig from 'utils/globalConfig'
+    var video, liveInterval
     export default {
         components: {
             screenImg
         },
         data () {
             return {
-                activeTab: 'live',
-                videosrc: '',
-                src: 'http://www.w3school.com.cn/i/movie.mp4',
-                istest: false,
+                activeTab: 'video',
+                // src: 'http://www.w3school.com.cn/i/movie.mp4',
+                src: 'http://',
                 islive: false,
-                timet: '00时00分00秒',
-                timel: '00时00分00秒',
+                liveTime: '00时00分00秒',
                 tableData: [],
-                fileList: []
+                fileList: [],
+                live_id: void 0,
+                liveStatus: globalConfig.liveStatus,
+                liveInfo: {},
+                videoInfo: {}
             }
         },
         watch: {
@@ -147,18 +148,15 @@
 
         },
         created () {
-            if(this.$route.params.id){
-                this.signingId = this.$route.params.id
-                signingService.getSigningInfo(this.signingId).then((ret) => {
-                    
-                }).then(() => {
-                    xmview.setContentLoading(false)
-                })
-            }
-            xmview.setContentLoading(false)
+
         },
         mounted(){
-            this.fetchData()
+            if(this.$route.params.live_id){
+                this.live_id = this.$route.params.live_id
+                this.fetchData()
+            }
+            xmview.setContentLoading(false)
+            
         },
         methods: {
             uploadChange(file, fileList) {
@@ -181,88 +179,58 @@
                 return true
             },
             fetchData(){
+                liveService.getLiveVideoInfo({live_id:this.live_id}).then((ret) => {
+                    if(ret) {
+                        if(ret.live_status === this.liveStatus.living){
+                            this.islive = true
+                            this.liveTime = timeUtils.timeFormat(ret.live_duration)
+                        }
+                        if(ret.live_url) {
+                            this.src = ret.live_url
+                        }else {
+                            this.src = 'http://'
+                        }
+                    }
+                }).then(() => {
+                    xmview.setContentLoading(false)
+                })
+
                 video = this.$refs.video
                 video.addEventListener("ended",() => {
-                    this.istest = false
                     this.islive = false
                 })
                 video.addEventListener("timeupdate",() => {
                     this.timeFormat()
                 })
-                // this.setInterval()
             },
             keyupEnter() {
-                alert(this.videosrc)
-            },
-            setInterval() {
-                // 定时器 测试时分秒
-                let numtime = 7138
-                let second = 0
-                let min = 0
-                let hour = 0
-                setInterval( ()=> {
-                    numtime++
-                    if(parseInt(numtime)/60 >= 1){
-                        min = parseInt(numtime/60)
-                        if(parseInt(min)/60 >= 1){
-                            hour = parseInt(min / 60)
-                            min = parseInt(min % 60)
-                        }else {
-                            min = parseInt(min % 60)
-                        }
-                        second = parseInt(numtime%60)
-                    }else {
-                        second = parseInt(numtime) % 60
-                    }
-                    if(second < 1){
-                        second = '00'
-                    }else if(second < 10){
-                        second = '0' + second
-                    }
-                    if(min < 1){
-                        min = '00'
-                    }else if(min < 10){
-                        min = '0' + min
-                    }
-                    if(hour < 1){
-                        hour = '00'
-                    }else if(hour < 10){
-                        hour = '0' + hour
-                    }
-                    this.timet = `${hour}时${min}分${second}秒`
-                },1000)
+                this.src = this.liveInfo.live_url
             },
             timeFormat() {
-                if(this.istest){
-                    this.timet = timeUtils.timeFormat(video.currentTime)
-                }else if(this.islive) {
+                if(this.islive) {
                     this.timel = timeUtils.timeFormat(video.currentTime)
                 }
             },
-            test() {
-                if(this.islive) this.islive = false
-                this.istest = !this.istest
-                if(this.istest) {
-                    video.currentTime = 0
-                    video.play()
-                    this.timel = '00时00分00秒'
-                }else {
-                    video.pause()
-                }
-            },
             live() {
-                if(this.istest) this.istest = false
-                this.islive = !this.islive
-                if(this.islive) {
-                    video.currentTime = 0
-                    video.play()
-                    this.timet = '00时00分00秒'
+                if( !video.pause) {
+                    this.islive = !this.islive
+                    if(!this.islive) {
+                        liveService.closeLive().then( () => {
+                            clearInterval(liveInterval)
+                        })
+                    }else {
+                        liveService.openLive({live_id:this.live_id}).then( ()=> {
+                            let dur = 3598
+                            liveInterval = setInterval( ()=> {
+                                dur = dur + 1
+                                this.liveTime = timeUtils.timeFormat(dur)
+                            },1000)
+                        })
+                    }
                 }else {
-                    video.pause()
+                    xmview.showTip('warning', '直播地址无效，不可播放。')
                 }
             }
-            
-           
         }
     }
 </script>

@@ -220,6 +220,8 @@ export function timeFormat(time) {
     }else {
         second = parseInt(numtime) % 60
     }
+    console.log(`${settime(hour)}时${settime(min)}分${settime(second)}秒`)
+
     return `${settime(hour)}时${settime(min)}分${settime(second)}秒`
 }
 
@@ -228,6 +230,8 @@ function settime(time) {
         return '00'
     }else if(time < 10){
         return '0' + time
+    }else {
+        return time
     }
 }
 

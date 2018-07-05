@@ -8,16 +8,16 @@ const urlPre = config.apiHost + '/live'
 
 class LiveService {
     // 搜索
-    searchLiveGroup ({
+    searchLive ({
         name,
         status,
-        start_time,
-        end_time,
+        start_date,
+        end_date,
         page,
         page_size
     }) {
         let url = `${urlPre}/search`
-        return api.get(url, { name, status, start_time, end_time, page, page_size }, false).then(ret => {
+        return api.get(url, { name, status, start_date, end_date, page, page_size }, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -63,12 +63,39 @@ class LiveService {
         })
     }
     // 获取添加编辑课程上传图片的url
-    getUploadUrl ({image, alias}) {
-        let url = `${urlPre}/upload`
+    getUploadUrl ({image, alias, upload_type = 'image'}) {
+        let url = `${config.apiHost}/sys/image/base64`
         return api.post(url, {image, alias}).then((ret) => {
             return ret.data
         })
     }
 
+    // 获取直播视频相关信息
+    getLiveVideoInfo ({live_id}) {
+        let url = `${urlPre}/${live_id}/video`
+        return api.get(url).then((ret) => {
+            return ret.data.video
+        })
+    }
+
+    // 开始直播
+    openLive ({ live_id, url}) {
+        let urls = `${urlPre}/${live_id}/open`
+        return api.put(urls, JSON.stringify({ url})).then(ret => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+
+    // 结束直播
+    closeLive ({ live_id}) {
+        let url = `${urlPre}/${live_id}/close`
+        return api.put(url).then(ret => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
 }
 export default new LiveService()

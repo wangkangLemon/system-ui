@@ -214,10 +214,10 @@
                     }
                     this.fetchParam.description = this.editor.getContent()
                     // 去除favorable空值
-                    let req = liveService.createGoodGroup
+                    let req = liveService.createLive
                     let msg = '添加成功'
                     if (this.fetchParam.id) {
-                        req = liveService.updateGoodGroup
+                        req = liveService.updateLive
                         msg = '修改成功'
                     }
                     req(this.fetchParam).then((ret) => {
