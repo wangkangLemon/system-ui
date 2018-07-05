@@ -79,7 +79,7 @@
                             this.$store.dispatch('setYshiGroupSuccess')
                             this.$emit('input', val)
                         }
-                    } else {
+                    } else if (this.textRight != '人') {
                         var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
                         if (!re.test(val)) {
                             this.error = true
