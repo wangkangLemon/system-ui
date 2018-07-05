@@ -209,7 +209,6 @@
                 <el-checkbox v-model="isGroupBuying" :disabled="disable">设置团购优惠</el-checkbox>
                 <div v-show="isGroupBuying">
                     <PlusOrRemove 
-                        v-pnumberOnly
                         @res="groupDiscounts" 
                         textRight="人"
                         :money="moneyarr" 

@@ -24,9 +24,22 @@
     <article id="component-from-input-text">
         <div style="display: inline-block;">
             <el-input 
+                v-if="textRight === '人'"
                 type="tel" 
                 size="small" 
-                v-numbera 
+                v-pnumberOnly 
+                style="width:180px;" 
+                ref="input" 
+                v-model="inputValue" 
+                :disabled="disable">
+                <template slot="prepend">{{textLeft}}</template>
+                <template slot="append">{{textRight}}</template>
+            </el-input>
+            <el-input 
+                v-else
+                type="tel" 
+                size="small" 
+                v-numberOnly 
                 style="width:180px;" 
                 ref="input" 
                 v-model="inputValue" 
@@ -107,27 +120,6 @@
         methods: {
         },
         components: {},
-        directives: {
-            numbera: {
-                bind: function (el) {
-                    el.addEventListener('keyup', () => {
-                        let input = el.querySelector('.el-input__inner')
-                        let value = input.value
-                        const newVal = value === '' ? undefined : Number(value)
-                        if (isNaN(newVal)) {
-                            value.replace(/([^.\d+])|(\d*\.?\d*)/, (match, p1, p2, p3) => {
-                                console.log(match + '-' + p1 + '-' + p2 + '-' + p3)
-                                if (p2 != undefined) {
-                                    input.value = p2
-                                } else {
-                                    input.value = ''
-                                }
-                            })
-                        }
-                        // input.value = newVal.replace(/[^.\d+]|(\d+\.)\.?$/, '$1')
-                    })
-                },
-            }
-        }
+        directives: {}
     }
 </script>
