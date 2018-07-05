@@ -95,6 +95,7 @@
                     <input style="display: none" type="file" 
                         ref="file" multiple="multiple" 
                         @change="fileChange($event)" accept=".mp4,.flv,.mov">
+                    <el-progress v-if="tapedVideo.progress" :percentage="tapedVideo.progress" :status="tapedVideo.progress>= 100 ? 'success' : ''"></el-progress>
                      <el-table
                         :data="tableData"
                         border
@@ -270,8 +271,9 @@
                         [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
                     ].join('/')
                     // 上传
-                    ossSdk.uploadFile(name, item.file, function (progress) {
+                    ossSdk.uploadFile(name, item.file,(progress) => {
                         item.process = progress
+                        this.tapedVideo.progress = progress
                     }, ret => {
                         this.videoUrl = ret.res.requestUrls[0].split('?')[0]
                         // 创建视频
