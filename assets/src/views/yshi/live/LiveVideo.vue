@@ -82,7 +82,14 @@
                     </div>
                 </section>
                 <div class="play">
-                    <video :src="liveInfo.live_url" ref="video" controls></video>
+                    <!-- <video :src="liveInfo.live_url" ref="video" controls></video> -->
+                    <video-player  class="video-player vjs-custom-skin"
+                        ref="videoPlayer"
+                        :playsinline="true"
+                        :options="playerOptions"
+                        @play="onPlayerPlay($event)"
+                        @pause="onPlayerPause($event)">
+                    </video-player>
                 </div>
             </el-tab-pane>
             <el-tab-pane label="录播" name="video">
@@ -142,13 +149,16 @@
     import * as globalConfig from 'utils/globalConfig'
     import OssSdk from '@/vendor/ossSdk'
     import courseService from '../../../services/courseService'
+    import 'video.js/dist/video-js.css'
+    import { videoPlayer } from 'vue-video-player'
 
     let ossSdk = new OssSdk()
     var video, liveInterval
     export default {
         components: {
             screenImg,
-            VideoPreviewOnly
+            VideoPreviewOnly,
+            videoPlayer
         },
         data () {
             return {
@@ -165,7 +175,35 @@
                 videoInfo: {},
                 tapedVideo:{},
                 uploading: false,
-                uploadingP: 0
+                uploadingP: 0,
+                playerOptions: {
+            //        playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+                    autoplay: false, //如果true,浏览器准备好时开始回放。
+                    muted: false, // 默认情况下将会消除任何音频。
+                    loop: false, // 导致视频一结束就重新开始。
+                    preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+                    language: 'zh-CN',
+                    aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+                    fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+                    sources: [{
+                      type: "application/x-mpegURL",
+                      src: "http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8" //你的m3u8地址（必填）
+                    }],
+                    poster: "poster.jpg", //你的封面地址
+                    width: document.documentElement.clientWidth,
+                    notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+            //        controlBar: {
+            //          timeDivider: true,
+            //          durationDisplay: true,
+            //          remainingTimeDisplay: false,
+            //          fullscreenToggle: true  //全屏按钮
+            //        }
+                  }
+            }
+        },
+        computed: {
+            player() {
+                return this.$refs.videoPlayer.player
             }
         },
         watch: {
@@ -193,11 +231,10 @@
                             this.liveTime = timeUtils.timeFormat(ret.live_duration)
                         }else if(ret.live_status === this.liveStatus.lived) { //已直播
 
-                        }else if(ret.live_status === this.liveStatus.taped) { //已录播
+                        }else if(ret.live_status === this.liveStatus.taped && ret.video_id != 0) { //已录播
                             this.activeTab = 'video'
                             if(ret.video_status === this.videoStatus.turnok) {
-                                // this.videoInfo.video_url = ret.video_url
-                                this.videoInfo.video_url = "http://vodcdn.yst.vodjk.com/201807061619/112ae5726ea00e6b8c74be2506fc3f51/company/1/2018/7/6/9201250q5m/sd/3452a5f14b54448d82d2f6b5302fc9f0.m3u8"
+                                this.videoInfo.video_url = ret.video_url
                             }
                             this.tableData = [{
                                 name: ret.video_name,
@@ -220,6 +257,8 @@
             // 播放输入框的视频
             keyupEnter() {
                 this.src = this.liveInfo.live_url
+                this.playerOptions.sources.src = this.liveInfo.live_url
+                this.playerOptions.autoplay = true
             },
             timeFormat() {
                 if(this.islive) {
@@ -326,10 +365,16 @@
                 xmview.showDialog(`你将要删除视频 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
                     liveService.bindVideo({live_id: this.live_id,video_id: 0}).then(() => {
                         xmview.showTip('success', '操作成功')
-                        this.fetchData()
+                        this.tableData = []
                     })
                 })
-            }
+            },
+            onPlayerPlay(player) {
+              alert("play");
+            },
+            onPlayerPause(player){
+              alert("pause");
+            },
         }
     }
 </script>
