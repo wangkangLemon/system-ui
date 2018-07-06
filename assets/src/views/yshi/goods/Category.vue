@@ -257,10 +257,11 @@
                     if (this.nodeSelected && this.nodeSelected.value === data.value) return
                     this.activeTab = 'edit'
                     this.nodeParentSelected = node.parent// 记录父节点
-                    if (data.item.parent_id && data.item.parent_id === this.nodeParentSelected.data.item.id) {
-                        var show_in_app = this.nodeParentSelected.data.item.show_in_app
-                        var show_in_com = this.nodeParentSelected.data.item.show_in_com
-                        var nodeParentSelectedId = this.nodeParentSelected.data.item.id
+                    // data.item.parent_id可能为String，全等的话，会出现问题
+                    if (data.item.parent_id && data.item.parent_id == node.parent.data.item.id) {
+                        var show_in_app = node.parent.data.item.show_in_app
+                        var show_in_com = node.parent.data.item.show_in_com
+                        var nodeParentSelectedId = node.parent.data.item.id
                     }
                     this.nodeSelected = data // 记录当前节点
                     // this.$refs.uploadImg.clearFiles()
@@ -269,7 +270,7 @@
                     this.fetchParam.has_children = !data.item.parent_id
                     // this.fetchParam.parent_id = data.value // 重新指向当前的id
                     // console.log(this.fetchParam, this.nodeSelected)
-                    if (data.item.parent_id && data.item.parent_id === nodeParentSelectedId) {
+                    if (data.item.parent_id && data.item.parent_id == nodeParentSelectedId) {
                         this.fetchParam.show_in_app = show_in_app
                         this.fetchParam.show_in_com = show_in_com
                     }
@@ -347,7 +348,7 @@
                     xmview.showTip('warning', '请先选中一个分类')
                     return
                 }
-                if (this.fetchParam.has_children) {
+                if (!this.fetchParam.parent_id) {
                     xmview.showTip('warning', '不能移动根节点')
                     return
                 }
