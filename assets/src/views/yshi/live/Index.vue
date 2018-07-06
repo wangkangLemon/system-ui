@@ -74,7 +74,7 @@
             </el-table-column>
             <el-table-column align="left" width="190" prop="start_time" label="预设直播时间">
             </el-table-column>
-            <el-table-column align="left" width="190" prop="create_at" label="创建时间">
+            <el-table-column align="left" width="190" prop="created_at" label="创建时间">
             </el-table-column>
             <el-table-column align="left" width="180" label="操作" fixed="right">
                 <template slot-scope="scope">

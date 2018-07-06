@@ -159,8 +159,8 @@
                     this.$nextTick(() => {
                         this.initTable()
                     })
-                    this.editor && this.editor.setContent(ret.introduce)
-                    this.$refs.cont.innerHTML = ret.introduce
+                    this.editor && this.editor.setContent(ret.description)
+                    this.$refs.cont.innerHTML = ret.description
                 })
             } else {
                 this.disable = false

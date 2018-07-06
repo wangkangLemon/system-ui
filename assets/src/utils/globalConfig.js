@@ -10,7 +10,7 @@ export const liveStatus =  {
 }
 // 视频状态
 export const videoStatus =  {
-    turnok: 1, // 转码成功
-    turning: 2, // 转码中
-    turnerr: 3, // 转码失败
+    turnok: 0, // 转码成功
+    turning: 1, // 转码中
+    turnerr: 2, // 转码失败
 }

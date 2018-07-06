@@ -63,6 +63,7 @@
 <template>
     <article class="company-audit-show">
         <el-tabs v-model="activeTab" type="card">
+            <!-- <el-tab-pane label="直播" name="live" :disabled="liveInfo.live_status === liveStatus.taped"> -->
             <el-tab-pane label="直播" name="live">
                 <section class="live">
                     <div class="title">
@@ -81,7 +82,7 @@
                     </div>
                 </section>
                 <div class="play">
-                    <video :src="src" ref="video" controls></video>
+                    <video :src="liveInfo.live_url" ref="video" controls></video>
                 </div>
             </el-tab-pane>
             <el-tab-pane label="录播" name="video">
@@ -95,7 +96,7 @@
                     <input style="display: none" type="file" 
                         ref="file" multiple="multiple" 
                         @change="fileChange($event)" accept=".mp4,.flv,.mov">
-                    <el-progress v-if="tapedVideo.progress" :percentage="tapedVideo.progress" :status="tapedVideo.progress>= 100 ? 'success' : ''"></el-progress>
+                    <el-progress v-if="uploading" :percentage="tapedVideo.progress" :status="tapedVideo.progress>= 100 ? 'success' : ''"></el-progress>
                      <el-table
                         :data="tableData"
                         border
@@ -117,10 +118,10 @@
                         </el-table-column>
                         <el-table-column align="left" label="操作" fixed="right">
                             <template slot-scope="scope">
-                                <span @click="preview(scope.$index, scope.row)" 
+                                <span @click="preview(scope.$index, scope.row)" v-if="scope.row.status == videoStatus.turnok"
                                     class="el-icon-caret-right caozuo" style="margin-right:10px;">播放
                                 </span>
-                                <span @click="videoRefresh(scope.$index, scope.row)" 
+                                <span @click="del(scope.row)" 
                                     class="el-icon-close caozuo">删除
                                 </span>
                             </template>
@@ -129,7 +130,7 @@
                 </section>
             </el-tab-pane>
         </el-tabs>
-        <VideoPreviewOnly :url="videoUrl" ref="VideoPreviewOnly"></VideoPreviewOnly>
+        <VideoPreviewOnly :url="videoInfo.video_url" ref="VideoPreviewOnly"></VideoPreviewOnly>
     </article>
 </template>
 <script>
@@ -151,24 +152,23 @@
         },
         data () {
             return {
-                activeTab: 'video',
+                activeTab: 'live',
                 // src: 'http://www.w3school.com.cn/i/movie.mp4',
                 src: 'http://',
                 islive: false,
                 liveTime: '00时00分00秒',
                 tableData: [],
-                fileList: [],
                 live_id: void 0,
                 liveStatus: globalConfig.liveStatus,
                 videoStatus: globalConfig.videoStatus,
                 liveInfo: {},
                 videoInfo: {},
                 tapedVideo:{},
-                videoUrl: ''
+                uploading: false,
+                uploadingP: 0
             }
         },
         watch: {
-           
 
         },
         created () {
@@ -179,34 +179,43 @@
                 this.live_id = this.$route.params.live_id
                 this.fetchData()
             }
-            xmview.setContentLoading(false)
-            
         },
         methods: {
             fetchData(){
                 liveService.getLiveVideoInfo({live_id:this.live_id}).then((ret) => {
+                    console.log(this.liveStatus)
                     if(ret) {
-                        if(ret.live_status === this.liveStatus.living){
+                        this.liveInfo.live_status = ret.live_status
+                        if(ret.live_status === this.liveStatus.unlive){ //未直播
+
+                        }else if(ret.live_status === this.liveStatus.living){ //直播中
                             this.islive = true
                             this.liveTime = timeUtils.timeFormat(ret.live_duration)
+                        }else if(ret.live_status === this.liveStatus.lived) { //已直播
+
+                        }else if(ret.live_status === this.liveStatus.taped) { //已录播
+                            this.activeTab = 'video'
+                            if(ret.video_status === this.videoStatus.turnok) {
+                                // this.videoInfo.video_url = ret.video_url
+                                this.videoInfo.video_url = "http://vodcdn.yst.vodjk.com/201807061619/112ae5726ea00e6b8c74be2506fc3f51/company/1/2018/7/6/9201250q5m/sd/3452a5f14b54448d82d2f6b5302fc9f0.m3u8"
+                            }
+                            this.tableData = [{
+                                name: ret.video_name,
+                                status: ret.video_status,
+                                id: ret.video_id
+                            }]
                         }
+
                         if(ret.live_url) {
-                            this.src = ret.live_url
+                            this.liveInfo.live_url = ret.live_url
                         }else {
-                            this.src = 'http://'
+                            this.liveInfo.live_url = 'http://'
                         }
                     }
                 }).then(() => {
                     xmview.setContentLoading(false)
                 })
-
-                video = this.$refs.video
-                video.addEventListener("ended",() => {
-                    this.islive = false
-                })
-                video.addEventListener("timeupdate",() => {
-                    this.timeFormat()
-                })
+                
             },
             // 播放输入框的视频
             keyupEnter() {
@@ -244,6 +253,7 @@
                 this.$refs.file.click()
             },
             fileChange (e) {
+                this.uploading = true
                 let dom = e.target
                 let file = dom.files[0]
                 this.tapedVideo = {
@@ -271,22 +281,25 @@
                         [now.getHours(), now.getMinutes(), now.getSeconds(), (Math.random() + 1).toString(36).substring(7)].join('')
                     ].join('/')
                     // 上传
-                    ossSdk.uploadFile(name, item.file,(progress) => {
+                    ossSdk.uploadFile(name, item.file,function (progress) {
+                        console.log(progress)
                         item.process = progress
-                        this.tapedVideo.progress = progress
                     }, ret => {
-                        this.videoUrl = ret.res.requestUrls[0].split('?')[0]
                         // 创建视频
-                        courseService.addVideo({
+                        liveService.addVideo({
                             name: item.name,
                             tags: item.tags.join(','),
                             source_type: 'aliyun',
                             source_url: ret.res.requestUrls[0].split('?')[0]
-                        }).then(() => {
+                        }).then((id) => {
+                            this.tapedVideo.progress = 100
                             this.tableData = [{
                                 name: item.name,
-                                status: 2
+                                status: 1,
+                                id: id
                             }]
+                            this.uploading = false
+                            liveService.bindVideo({live_id: this.live_id,video_id: id})
                         })
                     }, err => {
                         xmview.showTip('error', '上传出现错误' + JSON.stringify(err))
@@ -296,13 +309,27 @@
                 })
             },
             videoRefresh(index, row) {
-
+                liveService.videoRefresh({video_id:row.id}).then(ret => {
+                    this.tableData[0].status = ret
+                    if(ret === this.videoStatus.turnok) {
+                        this.fetchData()
+                    }
+                })
             },
              // 预览视频
             preview (index, row) {
                 // 拿到播放地址
                 this.$refs.VideoPreviewOnly.show(this.tableData[0].name)
             },
+            // 删除视频
+            del(row) {
+                xmview.showDialog(`你将要删除视频 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
+                    liveService.bindVideo({live_id: this.live_id,video_id: 0}).then(() => {
+                        xmview.showTip('success', '操作成功')
+                        this.fetchData()
+                    })
+                })
+            }
         }
     }
 </script>
