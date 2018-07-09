@@ -1,17 +1,24 @@
 <!--课程栏目-->
 
 <template>
-    <OperatableTree v-model="data" ref="tree" @onNodeClick="handleNodeClick" :getData="getData"></OperatableTree>
+    <OperatableTree 
+        v-model="data" 
+        ref="tree" 
+        @onNodeClick="handleNodeClick" 
+        :getData="getData">
+    </OperatableTree>
 </template>
 
 <script>
-    import articleService from '../../../services/articleService'
+    import articleService from 'services/articleService'
+    import goodsService from 'services/yshi/goodsService'
     import OperatableTree from './OperatableTree.vue'
 
     export default{
         props: {
             onNodeClick: Function,
             value: Array,
+            type: String,  // goods | article
         },
         data () {
             return {
@@ -42,7 +49,16 @@
             },
             // 给子元素获取数据的方法
             getData (params) {
-                return articleService.getCategoryTree(params)
+                let service
+                switch (this.type) {
+                    case 'article':
+                        service = articleService
+                        break
+                    case 'goods':
+                        service = goodsService
+                        break
+                }
+                return service.getCategoryTree(params)
             },
             // 初始化数据, 可以将数据重置
             initData () {

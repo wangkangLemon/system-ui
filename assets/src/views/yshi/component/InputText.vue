@@ -17,22 +17,43 @@
         input[type="number"]{
             -moz-appearance: textfield;
         }
-
     }
 </style>
 
 <template>
     <article id="component-from-input-text">
-        <el-input type="tel" size="small" v-numbera style="width:180px;" ref="input" v-model="inputValue" :disabled="disable">
-            <template slot="prepend">{{textLeft}}</template>
-            <template slot="append">{{textRight}}</template>
-        </el-input>
+        <div style="display: inline-block;">
+            <el-input 
+                v-if="textRight === '人'"
+                type="tel" 
+                size="small" 
+                v-pnumberOnly 
+                style="width:180px;" 
+                ref="input" 
+                v-model="inputValue" 
+                :disabled="disable">
+                <template slot="prepend">{{textLeft}}</template>
+                <template slot="append">{{textRight}}</template>
+            </el-input>
+            <el-input 
+                v-else
+                type="tel" 
+                size="small" 
+                v-numberOnly 
+                style="width:180px;" 
+                ref="input" 
+                v-model="inputValue" 
+                :disabled="disable">
+                <template slot="prepend">{{textLeft}}</template>
+                <template slot="append">{{textRight}}</template>
+            </el-input>
+        </div>
         <i v-if="error" class="err-red">{{msg}}</i>
     </article>
 </template>
 
 <script>
-    export default{
+    export default {
         props: {
             value: [String, Number],
             textLeft: String,
@@ -71,7 +92,7 @@
                             this.$store.dispatch('setYshiGroupSuccess')
                             this.$emit('input', val)
                         }
-                    } else {
+                    } else if (this.textRight != '人') {
                         var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
                         if (!re.test(val)) {
                             this.error = true
@@ -82,6 +103,8 @@
                             this.$store.dispatch('setYshiGroupSuccess')
                             this.$emit('input', val)
                         }
+                    } else {
+                        this.$emit('input', val)
                     }
                 } else {
                     this.error = true
@@ -97,27 +120,6 @@
         methods: {
         },
         components: {},
-        directives: {
-            numbera: {
-                bind: function (el) {
-                    el.addEventListener('keyup', () => {
-                        let input = el.querySelector('.el-input__inner')
-                        let value = input.value
-                        const newVal = value === '' ? undefined : Number(value)
-                        if (isNaN(newVal)) {
-                            value.replace(/([^.\d+])|(\d*\.?\d*)/, (match, p1, p2, p3) => {
-                                console.log(match + '-' + p1 + '-' + p2 + '-' + p3)
-                                if (p2 != undefined) {
-                                    input.value = p2
-                                } else {
-                                    input.value = ''
-                                }
-                            })
-                        }
-                        // input.value = newVal.replace(/[^.\d+]|(\d+\.)\.?$/, '$1')
-                    })
-                },
-            }
-        }
+        directives: {}
     }
 </script>

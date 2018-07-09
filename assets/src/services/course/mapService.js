@@ -9,12 +9,13 @@ class TeachingService {
        status,
        create_start_time,
        create_end_time,
+       is_free,
        type,  // learn_map/teaching
        page,
        page_size,
     }) {
         let finalUrl = `${urlPre}/search`
-        return api.get(finalUrl, { title, status, create_start_time, create_end_time, type, page, page_size }).then(ret => ret.data)
+        return api.get(finalUrl, { title, status, create_start_time, create_end_time, is_free, type, page, page_size }).then(ret => ret.data)
     }
     createMap ({
         type,

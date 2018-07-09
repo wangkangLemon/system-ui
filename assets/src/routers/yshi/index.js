@@ -6,7 +6,7 @@ import activity from './activity'
 import dialog from './dialog'
 import coupon from './coupon'
 import live from './live'
-
+import favorable from './favorable'
 
 export default {
     path: pathPre,
@@ -27,7 +27,8 @@ export default {
         // 优惠券设置
         ...coupon,
         // 直播
-        ...live
-
+        ...live,
+        // 优惠设置
+        ...favorable
     ]
 }

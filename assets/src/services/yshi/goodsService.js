@@ -12,11 +12,12 @@ class GoodsService {
         name,
         start_time,
         end_time,
+        category_id,
         page,
         page_size
     }) {
         let url = `${urlPre}/list`
-        return api.get(url, { name, start_time, end_time, page, page_size }, false).then(ret => {
+        return api.get(url, { name, start_time, end_time, category_id, page, page_size }, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -25,9 +26,25 @@ class GoodsService {
         })
     }
     // 创建
-    createGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, objects, price, favorable_price }) {
+    createGood ({ 
+        name,
+        cover,
+        show_type,
+        show_video_id,
+        show_video_name,
+        introduce,
+        object_type,
+        objects,
+        price,
+        favorable_price,
+        price_app,
+        favorable_price_app,
+        category_id,
+        sort,
+        group_buying
+    }) {
         let url = urlPre
-        return api.post(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, objects, price, favorable_price })).then(ret => {
+        return api.post(url, JSON.stringify({ name, cover, show_type, show_video_id, show_video_name, introduce, object_type, objects, price, favorable_price, price_app, favorable_price_app, category_id, sort, group_buying })).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -43,9 +60,26 @@ class GoodsService {
         })
     }
     // 更新
-    updateGood ({ id, name, cover, show_type, show_video_id, show_video_name, introduce, objects, price, favorable_price }) {
+    updateGood ({
+        id,
+        name,
+        cover,
+        show_type,
+        show_video_id,
+        show_video_name,
+        introduce,
+        object_type,
+        objects,
+        price,
+        favorable_price,
+        price_app,
+        favorable_price_app,
+        category_id,
+        sort,
+        group_buying
+    }) {
         let url = `${urlPre}`
-        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, objects, price, favorable_price })).then(ret => {
+        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object_type, objects, price, favorable_price, price_app, favorable_price_app, category_id, sort, group_buying })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -96,22 +130,84 @@ class GoodsService {
             }
         })
     }
-
-    // 上下线课程
-    offline (id) {
-        let url = `${urlPre}/${id}/offline`
-        return api.put(url, {})
+    // 上下线
+    statusline (id, status) {
+        let url = `${urlPre}/status`
+        return api.put(url, JSON.stringify({id, status})).then(ret => {
+            xmview.showTip('success', ret.message || '操作成功')
+        })
     }
 
-    // 上下线课程
-    online (id) {
-        let url = `${urlPre}/${id}/online`
-        return api.put(url, {})
+    // 优惠数详情列表
+    searchFavorableCount (id) {
+        let url = `${urlPre}/${id}/favorable`
+        return api.get(url).then(ret => ret.data)
+    }
+    // 素材树详情列表
+    searchObjectCount (id) {
+        let url = `${urlPre}/${id}/material`
+        return api.get(url).then(ret => ret.data)
     }
     // 设置课时
     setLessons ({course_id, jsonstr}) {
         let url = `${urlPre}/${course_id}/lesson`
         return api.put(url, jsonstr)
+    }
+    // 获取文章分类
+    getCategoryTree ({id = 'tree', filter = true}) {
+        let finalUrl = `${urlPre}/category/children`
+        return api.get(finalUrl, {id, filter}).catch((ret) => {
+            ret.tipCom && ret.tipCom.close()
+            return ret
+        })
+    }
+    // 创建分类
+    createCategory ({
+        parent_id,
+        name,
+        sort,
+        show_in_app,
+        show_in_com,
+    }) {
+        let finalUrl = `${urlPre}/category`
+        let reqParam = {parent_id, name, show_in_app, show_in_com, sort}
+        if (parent_id === 0) delete reqParam['parent_id']
+        return api.post(finalUrl, reqParam)
+    }
+    // 修改分类
+    updateCategory ({
+        id,
+        name,
+        sort,
+        show_in_app,
+        show_in_com,
+    }) {
+        let finalUrl = `${urlPre}/category/${id}`
+        return api.put(finalUrl, {name, sort, show_in_app, show_in_com})
+    }
+    // 删除分类
+    delCategory ({id}) {
+        let finalUrl = `${urlPre}/category/${id}`
+        return api.del(finalUrl).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
+    // 获取分类上传图片地址
+    // getCategoryImageUrl () {
+    //     let finalUrl = `${urlPre}/category/image`
+    //     return finalUrl
+    // }
+    // 移动分类
+    moveCategory ({id, to}) {
+        let finalUrl = `${urlPre}/category/${id}/move`
+        return api.put(finalUrl, {to})
+    }
+    // 移动分类内容
+    moveCategoryContent ({id, to}) {
+        let finalUrl = `${urlPre}/category/${id}/move/content`
+        return api.put(finalUrl, {to})
     }
 }
 export default new GoodsService()

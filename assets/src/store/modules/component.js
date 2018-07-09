@@ -8,7 +8,7 @@ import {
 
 const Auth = {
     state: {
-        yshiGroupSussess: false
+        yshiGroupSussess: true
     },
 
     mutations: {
