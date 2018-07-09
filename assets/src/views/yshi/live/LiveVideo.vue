@@ -251,16 +251,18 @@
                             this.islive = false
                             this.showTime = false
                             this.playerOptions.sources[0].src = this.liveInfo.live_url
-                        }else if(ret.live_status === this.liveStatus.taped && ret.video_id != 0) { //已录播
+                        }else if(ret.live_status === this.liveStatus.taped) { //已录播
                             this.activeTab = 'video'
-                            if(ret.video_status === this.videoStatus.turnok) {
-                                this.videoInfo.video_url = ret.video_url
+                            if(ret.video_id != 0) {
+                                if(ret.video_status === this.videoStatus.turnok) {
+                                    this.videoInfo.video_url = ret.video_url
+                                }
+                                this.tableData = [{
+                                    name: ret.video_name,
+                                    status: ret.video_status,
+                                    id: ret.video_id
+                                }]
                             }
-                            this.tableData = [{
-                                name: ret.video_name,
-                                status: ret.video_status,
-                                id: ret.video_id
-                            }]
                         }
                     }
                     xmview.setContentLoading(false)
