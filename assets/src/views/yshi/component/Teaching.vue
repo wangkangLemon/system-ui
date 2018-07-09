@@ -118,7 +118,7 @@
                     title: '',
                     type: 'teaching',
                     status: 1,
-                    is_free: 1,
+                    is_free: 2,
                     page: 1,
                     page_size: 15,
                 }
