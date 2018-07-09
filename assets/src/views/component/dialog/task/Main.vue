@@ -95,6 +95,7 @@
     import CourseTransfer from 'components/dialog/transfer/CourseTransfer.vue'
     import ExamTransfer from 'components/dialog/transfer/ExamTransfer.vue'
     import PracticeTransfer from 'components/dialog/transfer/PracticeTransfer.vue'
+    import LiveTransfer from 'components/dialog/transfer/LiveTransfer.vue'
 
     import SpeakingTransfer from 'components/dialog/transfer/SpeakingTransfer.vue'
     import MedicineTaken from 'components/form/MedicineTaken.vue'
@@ -110,6 +111,7 @@
             Transfer,
             CourseTransfer,
             ExamTransfer,
+            LiveTransfer,
             PracticeTransfer,
             SpeakingTransfer,
             MedicineTaken,
