@@ -95,9 +95,9 @@ class LiveService {
     }
 
     // 开始直播
-    openLive ({ live_id, url}) {
+    openLive ({ live_id, live_url}) {
         let urls = `${urlPre}/${live_id}/open`
-        return api.put(urls, JSON.stringify({ url})).then(ret => {
+        return api.put(urls, JSON.stringify({ live_url})).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {

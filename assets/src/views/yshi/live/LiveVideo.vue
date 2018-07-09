@@ -33,10 +33,7 @@
             }
         }
         .play{
-            video {
-                padding: 20px 240px 0 45px;
-                width: 100%;
-            }
+            margin-top: 20px;
         }
         .video {
             margin: 0 20px;
@@ -63,26 +60,28 @@
 <template>
     <article class="company-audit-show">
         <el-tabs v-model="activeTab" type="card">
-            <!-- <el-tab-pane label="直播" name="live" :disabled="liveInfo.live_status === liveStatus.taped"> -->
-            <el-tab-pane label="直播" name="live">
+            <el-tab-pane label="直播" name="live" :disabled="liveInfo.live_status === liveStatus.taped">
+            <!-- <el-tab-pane label="直播" name="live"> -->
                 <section class="live">
                     <div class="title">
                         <p>推流地址:</p>
                     </div>
                     <div class="src">
-                        <el-input placeholder="http://" v-model="liveInfo.live_url" @keyup.native.enter="keyupEnter"></el-input>
-                        <!-- <p>视频流获取正常，可正常推流</p> -->
+                        <el-input placeholder="http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8" 
+                            v-model="liveInfo.live_url" 
+                            @keyup.native.enter="keyupEnter">
+                        </el-input>
+                        <!-- <p>{{liveInfo.live_url}}</p> -->
                     </div>
                     <div class="btn">
                         <el-button type="danger" plain @click="live"
                             :icon="islive?'el-icon-circle-close':'el-icon-caret-right'">
                             {{islive?'结束直播':'开始直播'}}
                         </el-button>
-                        <p>{{liveTime}}</p>
+                        <p v-if="showTime">{{liveTime}}</p>
                     </div>
                 </section>
                 <div class="play">
-                    <!-- <video :src="liveInfo.live_url" ref="video" controls></video> -->
                     <video-player  class="video-player vjs-custom-skin"
                         ref="videoPlayer"
                         :playsinline="true"
@@ -163,10 +162,9 @@
         data () {
             return {
                 activeTab: 'live',
-                // src: 'http://www.w3school.com.cn/i/movie.mp4',
-                src: 'http://',
                 islive: false,
                 liveTime: '00时00分00秒',
+                showTime: true,
                 tableData: [],
                 live_id: void 0,
                 liveStatus: globalConfig.liveStatus,
@@ -176,6 +174,7 @@
                 tapedVideo:{},
                 uploading: false,
                 uploadingP: 0,
+                isplay: false,
                 playerOptions: {
             //        playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
                     autoplay: false, //如果true,浏览器准备好时开始回放。
@@ -187,11 +186,11 @@
                     fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
                     sources: [{
                       type: "application/x-mpegURL",
-                      src: "http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8" //你的m3u8地址（必填）
+                      src: "" //你的m3u8地址（必填）
                     }],
-                    poster: "poster.jpg", //你的封面地址
+                    // poster: "poster.jpg", //你的封面地址
                     width: document.documentElement.clientWidth,
-                    notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+                    notSupportedMessage: '此视频暂无法播放，请输入有效地址。', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
             //        controlBar: {
             //          timeDivider: true,
             //          durationDisplay: true,
@@ -207,30 +206,51 @@
             }
         },
         watch: {
-
+            isplay(val) {
+                if(!val) {
+                    liveService.closeLive({live_id:this.live_id}).then( () => {
+                        clearInterval(liveInterval)
+                        this.islive = false
+                    })
+                }
+            }
         },
         created () {
-
-        },
-        mounted(){
             if(this.$route.params.live_id){
                 this.live_id = this.$route.params.live_id
                 this.fetchData()
             }
         },
+        mounted(){
+            
+        },
+        destroyed() {
+            this.liveInfo.live_url = ""
+            clearInterval(liveInterval)
+        },
         methods: {
             fetchData(){
                 liveService.getLiveVideoInfo({live_id:this.live_id}).then((ret) => {
-                    console.log(this.liveStatus)
                     if(ret) {
                         this.liveInfo.live_status = ret.live_status
+                        if(ret.live_status !== this.liveStatus.taped) {
+                            if(ret.live_url) {
+                                this.liveInfo.live_url = ret.live_url
+                            }
+                            this.liveInfo.live_duration = ret.live_duration
+                            this.liveTime = timeUtils.timeFormat(ret.live_duration)
+                        }
                         if(ret.live_status === this.liveStatus.unlive){ //未直播
-
+                            this.islive = false
                         }else if(ret.live_status === this.liveStatus.living){ //直播中
                             this.islive = true
-                            this.liveTime = timeUtils.timeFormat(ret.live_duration)
+                            this.playerOptions.sources[0].src = this.liveInfo.live_url
+                            this.playerOptions.autoplay = true
+                            this.startInterval(this.liveInfo.live_duration)
                         }else if(ret.live_status === this.liveStatus.lived) { //已直播
-
+                            this.islive = false
+                            this.showTime = false
+                            this.playerOptions.sources[0].src = this.liveInfo.live_url
                         }else if(ret.live_status === this.liveStatus.taped && ret.video_id != 0) { //已录播
                             this.activeTab = 'video'
                             if(ret.video_status === this.videoStatus.turnok) {
@@ -242,49 +262,57 @@
                                 id: ret.video_id
                             }]
                         }
-
-                        if(ret.live_url) {
-                            this.liveInfo.live_url = ret.live_url
-                        }else {
-                            this.liveInfo.live_url = 'http://'
-                        }
                     }
-                }).then(() => {
                     xmview.setContentLoading(false)
+                }).then(() => {
+                    
                 })
                 
             },
             // 播放输入框的视频
             keyupEnter() {
-                this.src = this.liveInfo.live_url
-                this.playerOptions.sources.src = this.liveInfo.live_url
+                // alert(this.liveInfo.live_url)
+                this.playerOptions.sources[0].src = this.liveInfo.live_url
                 this.playerOptions.autoplay = true
-            },
-            timeFormat() {
-                if(this.islive) {
-                    this.timel = timeUtils.timeFormat(video.currentTime)
-                }
             },
             // 直播
             live() {
-                if( !video.pause) {
-                    this.islive = !this.islive
-                    if(!this.islive) {
-                        liveService.closeLive().then( () => {
-                            clearInterval(liveInterval)
+                if(this.islive) {
+                    liveService.closeLive({live_id:this.live_id}).then( () => {
+                        clearInterval(liveInterval)
+                        this.showTime = false
+                        this.islive = !this.islive
+                    })
+                }else {
+                    if( this.liveInfo.live_url && this.isplay) {
+                        // if(this.liveInfo.live_status === this.liveStatus.lived){
+                        //     xmview.showTip('warning', '直播已结束不能重复直播。')
+                        //     return
+                        // }
+                        liveService.openLive({live_id:this.live_id,live_url: this.liveInfo.live_url}).then( ()=> {
+                            this.showTime = true
+                            let dur = 0
+                            this.startInterval(dur)
+                            this.islive = !this.islive
                         })
                     }else {
-                        liveService.openLive({live_id:this.live_id}).then( ()=> {
-                            let dur = 3598
-                            liveInterval = setInterval( ()=> {
-                                dur = dur + 1
-                                this.liveTime = timeUtils.timeFormat(dur)
-                            },1000)
-                        })
+                        xmview.showTip('warning', '当前视频不属于播放状态，不可进行直播。')
+                        
                     }
-                }else {
-                    xmview.showTip('warning', '直播地址无效，不可播放。')
                 }
+                
+            },
+            startInterval(dur) {
+                liveInterval = setInterval( ()=> {
+                    dur = dur + 1
+                    this.liveTime = timeUtils.timeFormat(dur)
+                },1000)
+            },
+            onPlayerPlay(player) {
+                this.isplay = true
+            },
+            onPlayerPause(player){
+                this.isplay = false
             },
 
             // 录播相关
@@ -369,12 +397,7 @@
                     })
                 })
             },
-            onPlayerPlay(player) {
-              alert("play");
-            },
-            onPlayerPause(player){
-              alert("pause");
-            },
+            
         }
     }
 </script>
