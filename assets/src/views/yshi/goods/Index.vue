@@ -156,7 +156,7 @@
                         @click="$router.push({name: 'yshi-goods-edit', params: {good_id: scope.row.id}})" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 1">
+                        :disabled="scope.row.status == 2">
                         编辑
                     </el-button>
                     <el-button 
@@ -169,7 +169,7 @@
                         @click="del(scope.$index, scope.row)" 
                         type="text" 
                         size="small" 
-                        :disabled="scope.row.status == 1">
+                        :disabled="scope.row.status == 2">
                         删除
                     </el-button>
                 </template>
@@ -292,7 +292,6 @@
                     xmview.setContentLoading(false)
                 })
             },
-            // 下线  0为下线，1为上线
             offline (index, row) {
                 let txt = row.status == 2 ? '下线' : '上线'
                 let finalStatus = row.status == 1 ? 2 : 1

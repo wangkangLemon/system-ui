@@ -147,14 +147,15 @@
             <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button>
         </div>
 
-        <el-pagination class="pagin"
-                       @size-change="val => fetchParam.page_size = val "
-                       @current-change="val => fetchParam.page = val"
-                       :current-page="fetchParam.page"
-                       :page-size="fetchParam.page_size"
-                       :page-sizes="[15, 30, 60, 100]"
-                       layout="sizes,total, prev, pager, next"
-                       :total="total">
+        <el-pagination 
+            class="pagin"
+            @size-change="val => fetchParam.page_size = val "
+            @current-change="val => fetchParam.page = val"
+            :current-page="fetchParam.page"
+            :page-size="fetchParam.page_size"
+            :page-sizes="[15, 30, 60, 100]"
+            layout="sizes,total, prev, pager, next"
+            :total="total">
         </el-pagination>
 
         <el-dialog :title="dialogAdd.title" :visible.sync="dialogAdd.isShow">
@@ -163,9 +164,11 @@
                     <el-input v-model="videoModel.name"></el-input>
                 </el-form-item>
                 <el-form-item label="所属企业">
-                    <IndustryCompanySelect :placeholder="videoModel.company"
-                                           @change="val => videoModel.company_id = val"
-                                           v-if="dialogAdd.isShow"></IndustryCompanySelect>
+                    <IndustryCompanySelect 
+                        :placeholder="videoModel.company"
+                        @change="val => videoModel.company_id = val"
+                        v-if="dialogAdd.isShow">
+                    </IndustryCompanySelect>
                 </el-form-item>
                 <el-form-item label="视频封面">
                     <UploadImg :defaultImg="videoModel.cover" :url="uploadImgUrl"

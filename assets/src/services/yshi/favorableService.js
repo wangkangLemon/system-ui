@@ -68,9 +68,11 @@ class GoodsGroupService {
         status = 1,
         goods_ids,
         end_time,
+        show_in_app,
+        show_in_com,
     }) {
         let url = urlPre
-        return api.post(url, JSON.stringify({ name, cover, show_type, show_video_id, show_video_name, introduce, favorable_type, favorable, favorable_price, group_buying, sort, status, goods_ids, end_time })).then(ret => {
+        return api.post(url, JSON.stringify({ name, cover, show_type, show_video_id, show_video_name, introduce, favorable_type, favorable, favorable_price, group_buying, sort, status, goods_ids, end_time, show_in_app, show_in_com })).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -102,9 +104,11 @@ class GoodsGroupService {
         status = 1,
         goods_ids,
         end_time,
+        show_in_app,
+        show_in_com,
     }) {
         let url = `${urlPre}`
-        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, favorable_type, favorable, favorable_price, group_buying, sort, status, goods_ids, end_time })).then(ret => {
+        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, favorable_type, favorable, favorable_price, group_buying, sort, status, goods_ids, end_time, show_in_app, show_in_com })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }

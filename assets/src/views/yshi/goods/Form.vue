@@ -129,7 +129,7 @@
                     :disabled="disable || disableObject" 
                     @change="typeChangHandler">
                     <el-radio label="template">模版</el-radio>
-                    <el-radio label="custom">自定义</el-radio>
+                    <el-radio label="custom" disabled>自定义</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item 
@@ -274,7 +274,7 @@
             favorable_price_app: void 0,
             price: void 0,
             favorable_price: void 0,
-            object_type: '',
+            object_type: 'template',
             objects: [], // type = 0 公开课程 1内训课 2试卷 3练习 id = num,
             group_buying: [{}],
             transferRight: []

@@ -112,6 +112,22 @@
                     :controls="false">
                 </el-input-number>
             </el-form-item>
+            <el-form-item label="优惠展示属性" required>
+                <el-checkbox 
+                    v-model="fetchParam.show_in_app"
+                    :true-label="1"
+                    :false-label="0"
+                    :disabled="disable">
+                    前端展示
+                </el-checkbox>
+                <el-checkbox 
+                    v-model="fetchParam.show_in_com"
+                    :true-label="1"
+                    :false-label="0"
+                    :disabled="disable">
+                    后端展示
+                </el-checkbox>
+            </el-form-item>
             <el-form-item label="添加单品" prop="goods">
                 <el-button 
                     size="small" 
@@ -247,9 +263,9 @@
     import dialogSelectData from 'components/dialog/SelectData5table.vue'
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
     import Task from 'components/dialog/task/Main.vue'
+    import PlusOrRemove from '../component/PlusOrRemove.vue'
     import goodsService from 'services/yshi/goodsService'
     import favorableService from 'services/yshi/favorableService'
-    import PlusOrRemove from '../component/PlusOrRemove.vue'
     import formCheck from 'utils/formCheckUtils'
     function clearFn () {
         return {
@@ -266,7 +282,9 @@
             group_buying: [{}],
             sort: void 0,
             goods: [],
-            goods_ids: []
+            goods_ids: [],
+            show_in_app: 0,
+            show_in_com: 0
         }
     }
     export default {
