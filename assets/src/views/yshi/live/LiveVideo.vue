@@ -206,14 +206,14 @@
             }
         },
         watch: {
-            isplay(val) {
-                if(!val) {
-                    liveService.closeLive({live_id:this.live_id}).then( () => {
-                        clearInterval(liveInterval)
-                        this.islive = false
-                    })
-                }
-            }
+            // isplay(val) {
+            //     if(!val) {
+            //         liveService.closeLive({live_id:this.live_id}).then( () => {
+            //             clearInterval(liveInterval)
+            //             this.islive = false
+            //         })
+            //     }
+            // }
         },
         created () {
             if(this.$route.params.live_id){
