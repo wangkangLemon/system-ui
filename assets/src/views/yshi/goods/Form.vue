@@ -129,7 +129,7 @@
                     :disabled="disable || disableObject" 
                     @change="typeChangHandler">
                     <el-radio label="template">模版</el-radio>
-                    <el-radio label="custom" disabled>自定义</el-radio>
+                    <el-radio label="custom">自定义</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item 
