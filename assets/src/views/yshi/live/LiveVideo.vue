@@ -67,11 +67,10 @@
                         <p>推流地址:</p>
                     </div>
                     <div class="src">
-                        <el-input placeholder="http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8" 
+                        <el-input placeholder="请输入直播地址后按回车键播放。" 
                             v-model="liveInfo.live_url" 
                             @keyup.native.enter="keyupEnter">
                         </el-input>
-                        <!-- <p>{{liveInfo.live_url}}</p> -->
                     </div>
                     <div class="btn">
                         <el-button type="danger" plain @click="live"
@@ -81,15 +80,7 @@
                         <p v-if="showTime">{{liveTime}}</p>
                     </div>
                 </section>
-                <div class="play">
-                    <video-player  class="video-player vjs-custom-skin"
-                        ref="videoPlayer"
-                        :playsinline="true"
-                        :options="playerOptions"
-                        @play="onPlayerPlay($event)"
-                        @pause="onPlayerPause($event)">
-                    </video-player>
-                </div>
+                <div id="J_prismPlayers" class="prism-player play"></div>
             </el-tab-pane>
             <el-tab-pane label="录播" name="video">
                 <section class="video">
@@ -148,16 +139,13 @@
     import * as globalConfig from 'utils/globalConfig'
     import OssSdk from '@/vendor/ossSdk'
     import courseService from '../../../services/courseService'
-    import 'video.js/dist/video-js.css'
-    import { videoPlayer } from 'vue-video-player'
 
     let ossSdk = new OssSdk()
     var video, liveInterval
     export default {
         components: {
             screenImg,
-            VideoPreviewOnly,
-            videoPlayer
+            VideoPreviewOnly
         },
         data () {
             return {
@@ -175,35 +163,10 @@
                 uploading: false,
                 uploadingP: 0,
                 isplay: false,
-                playerOptions: {
-            //        playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
-                    autoplay: false, //如果true,浏览器准备好时开始回放。
-                    muted: false, // 默认情况下将会消除任何音频。
-                    loop: false, // 导致视频一结束就重新开始。
-                    preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
-                    language: 'zh-CN',
-                    aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-                    fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
-                    sources: [{
-                      type: "application/x-mpegURL",
-                      src: "" //你的m3u8地址（必填）
-                    }],
-                    // poster: "poster.jpg", //你的封面地址
-                    width: document.documentElement.clientWidth,
-                    notSupportedMessage: '此视频暂无法播放，请输入有效地址。', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
-            //        controlBar: {
-            //          timeDivider: true,
-            //          durationDisplay: true,
-            //          remainingTimeDisplay: false,
-            //          fullscreenToggle: true  //全屏按钮
-            //        }
-                  }
             }
         },
         computed: {
-            player() {
-                return this.$refs.videoPlayer.player
-            }
+            
         },
         watch: {
             // isplay(val) {
@@ -214,6 +177,27 @@
             //         })
             //     }
             // }
+        },
+        beforeCreate () {
+            if (window.prismplayer) return
+
+            let loadCount = 0
+            let script = document.createElement('script')
+            script.src = '//g.alicdn.com/de/prismplayer/1.5.7/prism-flash-min.js'
+            script.onload = () => {
+                loadCount++
+                loadCount >= 2 && this.initPlayer()
+            }
+
+            let link = document.createElement('link')
+            link.href = '//g.alicdn.com/de/prismplayer/1.5.7/skins/default/index.css'
+            link.rel = 'stylesheet'
+            link.onload = () => {
+                loadCount++
+                loadCount >= 2 && this.initPlayer()
+            }
+            document.head.appendChild(script)
+            document.head.appendChild(link)
         },
         created () {
             if(this.$route.params.live_id){
@@ -244,13 +228,10 @@
                             this.islive = false
                         }else if(ret.live_status === this.liveStatus.living){ //直播中
                             this.islive = true
-                            this.playerOptions.sources[0].src = this.liveInfo.live_url
-                            this.playerOptions.autoplay = true
                             this.startInterval(this.liveInfo.live_duration)
                         }else if(ret.live_status === this.liveStatus.lived) { //已直播
                             this.islive = false
                             this.showTime = false
-                            this.playerOptions.sources[0].src = this.liveInfo.live_url
                         }else if(ret.live_status === this.liveStatus.taped) { //已录播
                             this.activeTab = 'video'
                             if(ret.video_id != 0) {
@@ -265,17 +246,29 @@
                             }
                         }
                     }
+                    this.initPlayer()
                     xmview.setContentLoading(false)
                 }).then(() => {
                     
                 })
                 
             },
+            initPlayer () {
+                if (!window.prismplayer || !this.liveInfo.live_url) return
+                /* eslint-disable no-new,new-cap */
+                this.$nextTick(() => {
+                    new window.prismplayer({
+                        id: 'J_prismPlayers', // 容器id
+                        source: this.liveInfo.live_url, // 视频地址
+                        autoplay: true,    // 自动播放：否
+                        width: '100%',       // 播放器宽度
+                        height: '360px'      // 播放器高度
+                    })
+                })
+            },
             // 播放输入框的视频
             keyupEnter() {
-                // alert(this.liveInfo.live_url)
-                this.playerOptions.sources[0].src = this.liveInfo.live_url
-                this.playerOptions.autoplay = true
+                this.initPlayer()
             },
             // 直播
             live() {
@@ -286,7 +279,7 @@
                         this.islive = !this.islive
                     })
                 }else {
-                    if( this.liveInfo.live_url && this.isplay) {
+                    // if( this.liveInfo.live_url && this.isplay) {
                         // if(this.liveInfo.live_status === this.liveStatus.lived){
                         //     xmview.showTip('warning', '直播已结束不能重复直播。')
                         //     return
@@ -297,10 +290,10 @@
                             this.startInterval(dur)
                             this.islive = !this.islive
                         })
-                    }else {
-                        xmview.showTip('warning', '当前视频不属于播放状态，不可进行直播。')
+                    // }else {
+                    //     xmview.showTip('warning', '当前视频不属于播放状态，不可进行直播。')
                         
-                    }
+                    // }
                 }
                 
             },
