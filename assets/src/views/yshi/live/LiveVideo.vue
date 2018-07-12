@@ -108,7 +108,8 @@
                                 <el-tag v-if="scope.row.status == videoStatus.turnok" type="success">转码成功</el-tag>
                                 <el-tag v-if="scope.row.status == videoStatus.turning" type="info">转码中</el-tag>
                                 <el-tag v-if="scope.row.status == videoStatus.turnerr" type="danger">转码失败</el-tag>
-                                <span @click="videoRefresh(scope.$index, scope.row)" 
+                                <span v-if="!(scope.row.status == videoStatus.turnok)"   
+                                    @click="videoRefresh(scope.$index, scope.row)" 
                                     class="el-icon-refresh caozuo refresh">刷新
                                 </span>
                             </template>
