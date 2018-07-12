@@ -89,11 +89,11 @@
                         <i class="el-icon-upload"></i> 
                         <i> 选择视频</i>
                     </el-button>
-                    <p class="tip">只能上传.mp4 .flv .mov格式的视频文件</p>
+                    <p class="tip">选择上传视频文件</p>
                     <input style="display: none" type="file" 
                         ref="file" multiple="multiple" 
-                        @change="fileChange($event)" accept=".mp4,.flv,.mov">
-                    <el-progress v-if="uploading" :percentage="tapedVideo.progress" :status="tapedVideo.progress>= 100 ? 'success' : ''"></el-progress>
+                        @change="fileChange($event)" accept="">
+                    <el-progress v-if="uploading" :percentage="progress" :status="progress>= 100 ? 'success' : ''"></el-progress>
                      <el-table
                         :data="tableData"
                         border
@@ -163,6 +163,7 @@
                 uploading: false,
                 uploadingP: 0,
                 isplay: false,
+                progress: 0
             }
         },
         computed: {
@@ -262,7 +263,7 @@
                         source: this.liveInfo.live_url, // 视频地址
                         autoplay: true,    // 自动播放：否
                         width: '100%',       // 播放器宽度
-                        height: '360px'      // 播放器高度
+                        height: '500px'      // 播放器高度
                     })
                 })
             },
@@ -303,12 +304,6 @@
                     this.liveTime = timeUtils.timeFormat(dur)
                 },1000)
             },
-            onPlayerPlay(player) {
-                this.isplay = true
-            },
-            onPlayerPause(player){
-                this.isplay = false
-            },
 
             // 录播相关
             fileClick() {
@@ -321,13 +316,13 @@
                 this.tapedVideo = {
                     name: file.name,
                     tags: [],
-                    file: file,
-                    process: 0
+                    file: file
                 }
                 this.uploadVideo()
             },
             uploadVideo () {
                 let item = this.tapedVideo
+                let _this = this
                 courseService.getOssToken().then((ret) => {
                     ossSdk = new OssSdk(ret, fn => {
                         courseService.getOssToken().then(ret => {
@@ -345,7 +340,7 @@
                     // 上传
                     ossSdk.uploadFile(name, item.file,function (progress) {
                         console.log(progress)
-                        item.process = progress
+                        _this.progress = progress
                     }, ret => {
                         // 创建视频
                         liveService.addVideo({
@@ -354,13 +349,14 @@
                             source_type: 'aliyun',
                             source_url: ret.res.requestUrls[0].split('?')[0]
                         }).then((id) => {
-                            this.tapedVideo.progress = 100
                             this.tableData = [{
                                 name: item.name,
                                 status: 1,
                                 id: id
                             }]
-                            this.uploading = false
+                            setTimeout(() => {
+                                this.uploading = false
+                            },500)
                             liveService.bindVideo({live_id: this.live_id,video_id: id})
                         })
                     }, err => {
