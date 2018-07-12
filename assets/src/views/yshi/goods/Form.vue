@@ -161,29 +161,7 @@
                     <el-tag>总计：{{fetchParam.transferRight.length}}个素材</el-tag>
                 </template>
             </el-form-item>
-            <el-form-item label="app定价" prop="price_app">
-                <el-input 
-                    type="tel" 
-                    v-numberOnly 
-                    v-model.number="fetchParam.price_app" 
-                    style="width: 300px" 
-                    placeholder="请输入价格" 
-                    :disabled="disable">
-                    <template slot="append">元</template>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="app优惠价格" prop="favorable_price_app">
-                <el-input 
-                    type="tel" 
-                    v-numberOnly 
-                    v-model.number="fetchParam.favorable_price_app" 
-                    style="width:300px;" 
-                    placeholder="请输入价格" 
-                    :disabled="disable">
-                    <template slot="append">元</template>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="连锁定价" prop="price">
+            <el-form-item label="app定价" prop="price">
                 <el-input 
                     type="tel" 
                     v-numberOnly 
@@ -194,11 +172,33 @@
                     <template slot="append">元</template>
                 </el-input>
             </el-form-item>
-            <el-form-item label="连锁优惠价格" prop="favorable_price">
+            <el-form-item label="app优惠价格" prop="favorable_price">
                 <el-input 
                     type="tel" 
                     v-numberOnly 
                     v-model.number="fetchParam.favorable_price" 
+                    style="width:300px;" 
+                    placeholder="请输入价格" 
+                    :disabled="disable">
+                    <template slot="append">元</template>
+                </el-input>
+            </el-form-item>
+            <el-form-item label="连锁定价" prop="price_com">
+                <el-input 
+                    type="tel" 
+                    v-numberOnly 
+                    v-model.number="fetchParam.price_com" 
+                    style="width: 300px" 
+                    placeholder="请输入价格" 
+                    :disabled="disable">
+                    <template slot="append">元</template>
+                </el-input>
+            </el-form-item>
+            <el-form-item label="连锁优惠价格" prop="favorable_price_com">
+                <el-input 
+                    type="tel" 
+                    v-numberOnly 
+                    v-model.number="fetchParam.favorable_price_com" 
                     style="width:300px;" 
                     placeholder="请输入价格" 
                     :disabled="disable">
@@ -270,10 +270,10 @@
             show_video_id: void 0,
             show_video_name: void '',
             introduce: void '',
-            price_app: void 0,
-            favorable_price_app: void 0,
-            price: void 0,
-            favorable_price: void 0,
+            price: void 0,   // app价格
+            favorable_price: void 0, // app优惠价格
+            price_com: void 0,  // 连锁价格
+            favorable_price_com: void 0, // 连锁优惠价格
             object_type: 'template',
             objects: [], // type = 0 公开课程 1内训课 2试卷 3练习 id = num,
             group_buying: [{}],
@@ -302,10 +302,10 @@
                 formCheck.checkPrice(rule, value, callback)
             }
             let checkMoney = (rule, value, callback) => {
-                formCheck.checkMoney(rule, value, this.fetchParam.price, '优惠价格不能高于商品定价', callback)
+                formCheck.checkMoney(rule, value, this.fetchParam.price_com, '优惠价格不能高于商品定价', callback)
             }
             let checkMoney2 = (rule, value, callback) => {
-                formCheck.checkMoney(rule, value, this.fetchParam.price_app, '优惠价格不能高于商品定价', callback)
+                formCheck.checkMoney(rule, value, this.fetchParam.price, '优惠价格不能高于商品定价', callback)
             }
             return {
                 currCategoryName: '',
@@ -342,19 +342,19 @@
                     transferRight: [
                         {required: true, message: '请选择至少一个素材'}
                     ],
-                    price_app: [
+                    price: [
                         {type: 'number', required: true, trigger: 'blur', message: '请输入app定价'},
                         {validator: checkPrice}
                     ],
-                    favorable_price_app: [
+                    favorable_price: [
                         {type: 'number', required: true,trigger: 'blur', message: '请输入app优惠价格'},
                         {validator: checkMoney2}
                     ],
-                    price: [
+                    price_com: [
                         {type: 'number', required: true, trigger: 'blur', message: '请输入连锁定价'},
                         {validator: checkPrice}
                     ],
-                    favorable_price: [
+                    favorable_price_com: [
                         {type: 'number', required: true,trigger: 'blur', message: '请输入连锁优惠价格'},
                         {validator: checkMoney}
                     ]
@@ -369,10 +369,10 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
+                    this.fetchParam.price_com = parseFloat(ret.price_com)
+                    this.fetchParam.favorable_price_com = parseFloat(ret.favorable_price_com)
                     this.fetchParam.price = parseFloat(ret.price)
                     this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
-                    this.fetchParam.price_app = parseFloat(ret.price_app)
-                    this.fetchParam.favorable_price_app = parseFloat(ret.favorable_price_app)
                     let obj = this.getTaskSelected(ret.objects)
                     this.fetchParam.transferRight = obj.resRight
                     if (this.fetchParam.transferRight.length > 0) {

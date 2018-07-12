@@ -1,48 +1,49 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "~utils/mixins/common";
-     #favorable-content-add {
+    @import "~utils/mixins/topSearch";
+    #favorable-content-add {
         @extend %content-container;
-    .form {
-        width: 80%;
-        .btn {
-            float: right;
-        }
-        .img {
-            display: block;
-            width: 250px;
-            height: 160px;
-        }
-        .collection {
-            align-items: center;
-            min-height: 36px;
-            border-radius: 4px;
-            padding: 3px 10px;
-            border: 1px solid #bfcbd9;
-            .tag {
-               margin-right: 10px;
+        .form {
+            width: 80%;
+            .btn {
+                float: right;
+            }
+            .img {
+                display: block;
+                width: 250px;
+                height: 160px;
+            }
+            .collection {
+                align-items: center;
+                min-height: 36px;
+                border-radius: 4px;
+                padding: 3px 10px;
+                border: 1px solid #bfcbd9;
+                .tag {
+                   margin-right: 10px;
+                }
+            }
+            .col-tip{
+                color: #666;
+                display: block;
+                line-height: 30px;
+            }
+            .col-btn-block{
+                display: block;
+                margin-top: 10px;
+            }
+            .input-price {
+                display: inline-block;
+                width: 120px !important;
+            }
+            .o-error {
+                color:red;
+                font-size:10px;
+                line-height:10px;
+                height:10px;
             }
         }
-        .col-tip{
-            color: #666;
-            display: block;
-            line-height: 30px;
-        }
-        .col-btn-block{
-            display: block;
-            margin-top: 10px;
-        }
-        .input-price {
-            display: inline-block;
-            width: 120px !important;
-        }
-        .o-error {
-            color:red;
-            font-size:10px;
-            line-height:10px;
-            height:10px;
-        }
-    }
-    .dialog {
+        .dialog {
             section {
                 margin-bottom: 10px;
                 i {
@@ -50,7 +51,10 @@
                 }
             }
         }
-     }
+        .course-search {
+            @extend %top-search-container;
+        }
+    }
 </style>
 <template>
     <article id="favorable-content-add">
@@ -113,7 +117,11 @@
                 </el-input-number>
             </el-form-item>
             <el-form-item label="优惠展示属性" required>
-                <el-checkbox 
+                <el-radio-group v-model="fetchParam.show_in" @change="changeShowIn">
+                    <el-radio :label="1" :disabled="disable">前端展示</el-radio>
+                    <el-radio :label="2" :disabled="disable">后端展示</el-radio>
+                </el-radio-group>
+<!--                 <el-checkbox 
                     v-model="fetchParam.show_in_app"
                     :true-label="1"
                     :false-label="0"
@@ -126,12 +134,12 @@
                     :false-label="0"
                     :disabled="disable">
                     后端展示
-                </el-checkbox>
+                </el-checkbox> -->
             </el-form-item>
             <el-form-item label="添加单品" prop="goods">
                 <el-button 
                     size="small" 
-                    @click="dialogGoods.isShow=true" 
+                    @click="chooseGoods" 
                     :disabled="disable">
                     选择商品
                 </el-button>
@@ -225,6 +233,7 @@
                     保存
                 </el-button>
             </el-form-item>
+            <!-- show_in改变，dialogSelectData里面选中的数据清空，并重新请求 -->
             <dialogSelectData 
                 ref="dialogSelect" 
                 v-model="dialogGoods.isShow" 
@@ -233,12 +242,23 @@
                 :selectedList="fetchParam.goods" 
                 @changeSelected="val=>fetchParam.goods=val">
                 <div slot="search" class="course-search">
-                    <el-input 
-                        @keyup.enter.native="$refs.dialogSelect.fetchData(true)" 
-                        v-model="dialogGoods.name"
-                        icon="search"
-                        placeholder="请输入关键字搜索">
-                    </el-input>
+                    <section>
+                        <i>关键字</i>
+                        <el-input 
+                            @keyup.enter.native="$refs.dialogSelect.fetchData(true)" 
+                            v-model="dialogGoods.name"
+                            icon="search"
+                            placeholder="请输入关键字搜索">
+                        </el-input>
+                    </section>
+                    <section>
+                        <i>分类</i>
+                        <GoodsCategorySelect
+                            v-model="dialogGoods.category_id"
+                            :clearable="true"
+                            @change="$refs.dialogSelect.fetchData(true)">
+                        </GoodsCategorySelect>
+                    </section>
                 </div>
             </dialogSelectData>
             <!-- <Task
@@ -264,6 +284,7 @@
     import DialogVideo from '@/views/newcourse/component/DialogVideo.vue'
     import Task from 'components/dialog/task/Main.vue'
     import PlusOrRemove from '../component/PlusOrRemove.vue'
+    import GoodsCategorySelect from 'components/select/GoodsCategory.vue'
     import goodsService from 'services/yshi/goodsService'
     import favorableService from 'services/yshi/favorableService'
     import formCheck from 'utils/formCheckUtils'
@@ -283,11 +304,20 @@
             sort: void 0,
             goods: [],
             goods_ids: [],
-            show_in_app: 0,
-            show_in_com: 0
+            show_in: void 0,
         }
     }
     export default {
+        components: {
+            ImagEcropperInput,
+            UploadFile,
+            dialogSelectData,
+            DialogVideo,
+            VueEditor,
+            PlusOrRemove,
+            Task,
+            GoodsCategorySelect
+        },
         data () {
             return {
                 pickerOptions: {
@@ -300,12 +330,13 @@
                 typevideo: 2,
                 editor: null,
                 isShowVideoDialog: false,
+                fetchParam: clearFn(),
                 dialogGoods: {
                     loading: false,
                     isShow: false,
                     name: void 0,
+                    category_id: void 0,
                 },
-                fetchParam: clearFn(),
                 disable: false,
                 moneyarr: [],
                 discountarr: [],
@@ -423,7 +454,19 @@
                 return pass
             },
             fetchGood (params) {
+                this.dialogGoods.show_in = this.fetchParam.show_in
                 return goodsService.searchGoods(Object.assign({}, this.dialogGoods, params))
+            },
+            chooseGoods () {
+                if (!this.fetchParam.show_in) {
+                    return xmview.showTip('warning', '请选择优惠属性')
+                }
+                this.dialogGoods.isShow=true
+            },
+            changeShowIn () {
+                // debugger
+                this.fetchParam.goods = []
+                this.$refs.dialogSelect.fetchData(true)
             },
             getSummaries (param) {
                 const { columns, data } = param
@@ -502,7 +545,7 @@
                         return item.id
                     })
                     // 截止日期
-                    if (new Date(this.fetchParam.end_time).getTime() < Date.now()) {
+                    if (this.fetchParam.end_time && new Date(this.fetchParam.end_time).getTime() < Date.now()) {
                         return xmview.showTip('warning', '截止日期要大于当前日期')
                     }
                     // 去除favorable空值
@@ -539,15 +582,6 @@
                 })
                 
             }
-        },
-        components: {
-            ImagEcropperInput,
-            UploadFile,
-            dialogSelectData,
-            DialogVideo,
-            VueEditor,
-            PlusOrRemove,
-            Task
         }
     }
 </script>
