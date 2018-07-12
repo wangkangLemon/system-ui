@@ -35,8 +35,6 @@
             clearable: {
                 type: Boolean,
                 default: false
-<<<<<<< HEAD
-=======
             },
             showIn: {
                 type: String,
@@ -46,7 +44,6 @@
         watch: {
             showIn (val) {
                 this.fetchData()
->>>>>>> feature-yst5.2.2
             }
         },
         data () {
