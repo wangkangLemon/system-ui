@@ -1,11 +1,10 @@
 import * as api from '../api'
 import config from '../../utils/config'
-const urlPre = config.apiHost + '/newcourse/order'
+const urlPre = config.apiHost + '/order'
 
 class OrderService {
     // 搜索
     search({ user_id, trade_no, pay_method, status, order_type, object_type, in_company, start_date, end_date, page, page_size }) {
-        // let url = config.apiHost + '/order/search'
         let url = urlPre + '/search'
         return api.get(url, { user_id, trade_no, pay_method, status, order_type, object_type, in_company, start_date, end_date, page, page_size }, false).then(ret => {
             if (ret.code == 0) {
@@ -18,8 +17,8 @@ class OrderService {
 
     // 更新备注
     updateNote({id, note}) {
-        let url = `${urlPre}/${id}/note`
-        return api.put(url, {note}).then(ret => {
+        let url = `${urlPre}/${id}`
+        return api.put(url, JSON.stringify({note})).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
