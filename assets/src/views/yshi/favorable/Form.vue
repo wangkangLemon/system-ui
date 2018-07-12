@@ -159,14 +159,26 @@
                             label="所属类型" 
                             prop="category">
                         </el-table-column>
-                        <el-table-column 
-                            label="连锁/app定价">
-                            <span slot-scope="{row}">{{row.price}}/{{row.price_app}}</span>
-                        </el-table-column>
-                        <el-table-column 
-                            label="连锁/app实价">
-                            <span slot-scope="{row}">{{row.favorable_price}}/{{row.favorable_price_app}}</span>
-                        </el-table-column>
+                        <template v-if="fetchParam.show_in === 2">
+                            <el-table-column 
+                                label="连锁定价">
+                                <span slot-scope="{row}">{{row.price_com}}</span>
+                            </el-table-column>
+                            <el-table-column 
+                                label="连锁实价">
+                                <span slot-scope="{row}">{{row.favorable_price_com}}</span>
+                            </el-table-column>
+                        </template>
+                        <template v-else>
+                            <el-table-column 
+                                label="app定价">
+                                <span slot-scope="{row}">{{row.price}}</span>
+                            </el-table-column>
+                            <el-table-column 
+                                label="app实价">
+                                <span slot-scope="{row}">{{row.favorable_price}}</span>
+                            </el-table-column>
+                        </template>
                     </el-table>
                 </template>
             </el-form-item>
@@ -481,21 +493,21 @@
                     }
                     if (index === 2) {
                         let left = data.reduce((prev, curr) => {
-                            return parseFloat((prev + parseFloat(curr.price)).toFixed(2))
+                            return parseFloat((prev + parseFloat(curr.price_com)).toFixed(2))
                         }, 0)
                         let right = data.reduce((prev, curr) => {
-                            return parseFloat((prev + parseFloat(curr.price_app)).toFixed(2))
+                            return parseFloat((prev + parseFloat(curr.price)).toFixed(2))
                         }, 0)
-                        sums[index] = `${left}/${right}`
+                        sums[index] = this.fetchParam.show_in === 2 ? left : right
                     }
                     if (index === 3) {
                         let left = data.reduce((prev, curr) => {
-                            return parseFloat((prev + parseFloat(curr.favorable_price)).toFixed(2))
+                            return parseFloat((prev + parseFloat(curr.favorable_price_com)).toFixed(2))
                         }, 0)
                         let right = data.reduce((prev, curr) => {
-                            return parseFloat((prev + parseFloat(curr.favorable_price_app)).toFixed(2))
+                            return parseFloat((prev + parseFloat(curr.favorable_price)).toFixed(2))
                         }, 0)
-                        sums[index] = `${left}/${right}`
+                        sums[index] = this.fetchParam.show_in === 2 ? left : right
                     }
                 })
                 return sums
