@@ -13,11 +13,12 @@ class GoodsService {
         start_time,
         end_time,
         category_id,
+        show_in,
         page,
         page_size
     }) {
         let url = `${urlPre}/list`
-        return api.get(url, { name, start_time, end_time, category_id, page, page_size }, false).then(ret => {
+        return api.get(url, { name, start_time, end_time, category_id, show_in, page, page_size }, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -35,16 +36,16 @@ class GoodsService {
         introduce,
         object_type,
         objects,
+        price_com,
+        favorable_price_com,
         price,
         favorable_price,
-        price_app,
-        favorable_price_app,
         category_id,
         sort,
         group_buying
     }) {
         let url = urlPre
-        return api.post(url, JSON.stringify({ name, cover, show_type, show_video_id, show_video_name, introduce, object_type, objects, price, favorable_price, price_app, favorable_price_app, category_id, sort, group_buying })).then(ret => {
+        return api.post(url, JSON.stringify({ name, cover, show_type, show_video_id, show_video_name, introduce, object_type, objects, price_com, favorable_price_com, price, favorable_price, category_id, sort, group_buying })).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -70,16 +71,16 @@ class GoodsService {
         introduce,
         object_type,
         objects,
+        price_com,
+        favorable_price_com,
         price,
         favorable_price,
-        price_app,
-        favorable_price_app,
         category_id,
         sort,
         group_buying
     }) {
         let url = `${urlPre}`
-        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object_type, objects, price, favorable_price, price_app, favorable_price_app, category_id, sort, group_buying })).then(ret => {
+        return api.put(url, JSON.stringify({ id, name, cover, show_type, show_video_id, show_video_name, introduce, object_type, objects, price_com, favorable_price_com, price, favorable_price, category_id, sort, group_buying })).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
@@ -139,14 +140,22 @@ class GoodsService {
     }
 
     // 优惠数详情列表
-    searchFavorableCount (id) {
+    searchFavorableCount ({
+        id,
+        page,
+        page_size
+    }) {
         let url = `${urlPre}/${id}/favorable`
-        return api.get(url).then(ret => ret.data)
+        return api.get(url, { page, page_size }).then(ret => ret.data)
     }
     // 素材树详情列表
-    searchObjectCount (id) {
+    searchObjectCount ({
+        id,
+        page,
+        page_size
+    }) {
         let url = `${urlPre}/${id}/material`
-        return api.get(url).then(ret => ret.data)
+        return api.get(url, { page, page_size }).then(ret => ret.data)
     }
     // 设置课时
     setLessons ({course_id, jsonstr}) {

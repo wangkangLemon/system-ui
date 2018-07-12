@@ -51,7 +51,7 @@
                 @current-change="val=> {fetchParam.page=val; fetchData()}"
                 :current-page="fetchParam.page"
                 :page-size="fetchParam.page_size"
-                :page-sizes="[15, 30, 60, 100]"
+                :page-sizes="[10, 15, 30, 60, 100]"
                 layout="sizes, total, prev, pager, next" 
                 :total="total">
             </el-pagination>
@@ -82,15 +82,16 @@
                 data: [],
                 total: 0,
                 fetchParam: {
+                    id: this.id,
                     page: 1,
-                    page_size: 15,
+                    page_size: 10,
                 }
             }
         },
         methods: {
             fetchData () {
                 this.loading = true
-                return goodsService.searchFavorableCount(this.id).then(ret => {
+                return goodsService.searchFavorableCount(this.fetchParam).then(ret => {
                     this.data = ret.list || []
                     this.total = ret.total
                     this.loading = false

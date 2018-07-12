@@ -60,6 +60,7 @@
                 <i>分类</i>
                 <GoodsCategorySelect
                     v-model="fetchParam.category_id"
+                    :clearable="true"
                     :onchange="fetchData">
                 </GoodsCategorySelect>
             </section>
@@ -88,13 +89,13 @@
                 width="130" 
                 prop="price" 
                 label="连锁/app定价">
-                <span slot-scope="{row}">{{row.price}}/{{row.price_app}}</span>
+                <span slot-scope="{row}">{{row.price_com}}/{{row.price}}</span>
             </el-table-column>
             <el-table-column 
                 width="130" 
                 prop="price" 
                 label="连锁/app实价">
-                <span slot-scope="{row}">{{row.favorable_price}}/{{row.favorable_price_app}}</span>
+                <span slot-scope="{row}">{{row.favorable_price_com}}/{{row.favorable_price}}</span>
             </el-table-column>
             <el-table-column 
                 width="100" 

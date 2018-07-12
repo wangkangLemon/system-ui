@@ -11,6 +11,7 @@
         @active-item-change="handleItemChange"
         :disabled="disabled"
         :props="props"
+        :clearable="clearable"
         @change="setCurrVal"
         :placeholder="placeholder">
     </el-cascader>
@@ -31,6 +32,10 @@
                 type: String,
                 default: '请选择'
             },
+            clearable: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             return {
@@ -56,6 +61,7 @@
                 if (this.currVal == val || !val) return
                 this.currVal = val
                 this.$emit('input', val[val.length - 1])
+                this.$emit('change', val)
                 this.onchange && this.onchange(val)
             },
             handleItemChange (val) {
