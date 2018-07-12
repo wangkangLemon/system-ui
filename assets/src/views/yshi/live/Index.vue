@@ -164,6 +164,20 @@ export default {
                 xmview.setContentLoading(false)
             })
         },
+        // // 检查直播按钮是否可以点击
+        // checkStatus(row) {
+        //     let is = false
+        //     this.data.forEach(item => {
+        //         if(item.status === this.liveStatus.living){
+        //             if(row.id == item.id) {
+        //                 is = false
+        //             }else {
+        //                 is = true
+        //             }
+        //         }
+        //     })
+        //     return is
+        // },
         // 单条删除
         del (index, row) {
             xmview.showDialog(`你将要删除课程 <span style="color:red">${row.name}</span> 操作不可恢复确认吗?`, () => {
