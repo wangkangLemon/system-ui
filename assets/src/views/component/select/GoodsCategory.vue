@@ -35,6 +35,15 @@
             clearable: {
                 type: Boolean,
                 default: false
+            },
+            showIn: {
+                type: String,
+                default: '',
+            },
+        },
+        watch: {
+            showIn (val) {
+                this.fetchData()
             }
         },
         data () {
@@ -49,14 +58,17 @@
             }
         },
         created () {
-            goodsService.getCategoryTree({}).then((ret) => {
-                ret.map((item) => {
-                    item.children = item.has_children ? [{label: '加载中...'}] : null
-                })
-                this.options = ret
-            })
+            this.fetchData()
         },
         methods: {
+            fetchData () {
+                goodsService.getCategoryTree({show_in: this.showIn}).then((ret) => {
+                    ret.map((item) => {
+                        item.children = item.has_children ? [{label: '加载中...'}] : null
+                    })
+                    this.options = ret
+                })
+            },
             setCurrVal (val) {
                 if (this.currVal == val || !val) return
                 this.currVal = val
@@ -70,7 +82,8 @@
                 let currItem = treeUtils.findItem(this.options, val, 'id')
                 if (!currItem.children || (currItem.children.length > 0 && currItem.children[0].value)) return
                 goodsService.getCategoryTree({
-                    id: val[val.length - 1]
+                    id: val[val.length - 1],
+                    show_in: this.showIn,
                 }).then((ret) => {
                     // 重新组合数据
                     ret.map((item) => {

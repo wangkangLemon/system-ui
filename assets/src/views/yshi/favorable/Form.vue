@@ -268,6 +268,7 @@
                         <GoodsCategorySelect
                             v-model="dialogGoods.category_id"
                             :clearable="true"
+                            :show-in="fetchParam.show_in"
                             @change="$refs.dialogSelect.fetchData(true)">
                         </GoodsCategorySelect>
                     </section>

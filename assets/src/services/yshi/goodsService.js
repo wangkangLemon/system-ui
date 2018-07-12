@@ -162,10 +162,10 @@ class GoodsService {
         let url = `${urlPre}/${course_id}/lesson`
         return api.put(url, jsonstr)
     }
-    // 获取文章分类
-    getCategoryTree ({id = 'tree', filter = true}) {
+    // 获取单品分类
+    getCategoryTree ({id = 'tree', filter = true, show_in}) {
         let finalUrl = `${urlPre}/category/children`
-        return api.get(finalUrl, {id, filter}).catch((ret) => {
+        return api.get(finalUrl, {id, filter, show_in}).catch((ret) => {
             ret.tipCom && ret.tipCom.close()
             return ret
         })
