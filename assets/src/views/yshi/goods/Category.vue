@@ -214,8 +214,8 @@
                     return
                 }
                 if (val === 'add') {
-                    let show_in_app = this.fetchParam.show_in_app
-                    let show_in_com = this.fetchParam.show_in_com
+                    let show_in_app = this.nodeSelected.item.show_in_app
+                    let show_in_com = this.nodeSelected.item.show_in_com
                     this.resetForm()
                     this.fetchParam.show_in_app = show_in_app
                     this.fetchParam.show_in_com = show_in_com
