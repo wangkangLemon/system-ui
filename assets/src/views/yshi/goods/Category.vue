@@ -76,7 +76,7 @@
                     添加子分类
                 </el-button>
                 <el-button @click="moveSubCategory">移动分类</el-button>
-                <el-button @click="moveSubCategoryContent">移动分类下内容</el-button>
+                <!-- <el-button @click="moveSubCategoryContent">移动分类下内容</el-button> -->
                 <el-button type="danger" @click="deleteCategory">删除分类</el-button>
             </div>
             <el-card class="edit-content">
@@ -183,6 +183,7 @@
     import UploadImg from 'components/upload/UploadImg.vue'
     import clone from 'clone'
     export default{
+        components: {ArticleCategoryTree, UploadImg},
         data () {
             return {
                 activeTab: 'add',
@@ -348,7 +349,7 @@
                     xmview.showTip('warning', '请先选中一个分类')
                     return
                 }
-                if (!this.fetchParam.parent_id) {
+                if (!this.nodeSelected.item.parent_id) {
                     xmview.showTip('warning', '不能移动根节点')
                     return
                 }
@@ -404,7 +405,6 @@
                 }
             }
         },
-        components: {ArticleCategoryTree, UploadImg}
     }
     function getFetchParam () {
         return {
