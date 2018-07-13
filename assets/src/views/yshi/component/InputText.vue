@@ -104,6 +104,7 @@
                             this.$emit('input', val)
                         }
                     } else {
+                        this.$store.dispatch('setYshiGroupSuccess')
                         this.$emit('input', val)
                     }
                 } else {
