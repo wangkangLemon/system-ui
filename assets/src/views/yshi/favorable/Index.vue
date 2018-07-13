@@ -97,7 +97,7 @@
             <el-table-column 
                 width="150" 
                 label="连锁/app实价">
-                <span slot-scope="{row}">{{row.favorable_price}}/{{row.favorable_price_app}}</span>
+                <span slot-scope="{row}">{{row.favorable_price_com}}/{{row.favorable_price}}</span>
             </el-table-column>
             <el-table-column 
                 min-width="130" 
