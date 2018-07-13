@@ -194,7 +194,7 @@ export default {
     data() {
         return {
             payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'money': '余额', 'bank': '银联', 'offlinepay': '线下', 'coupon': '优惠券'},
-            payStatus: ['未支付', '已支付', '已关闭', '已删除'],
+            payStatus: ['未支付', '已支付', '已关闭', '', '已删除'],
             showDetail: false,
             detail: null,
             loading: false,
