@@ -8,18 +8,22 @@
     }
 </style>
 <template>
-    <el-cascader class="course-select-container" ref="container" v-loading="loading"
-                 :options='options' :show-all-levels="false"
-                 :placeholder="placeholder"
-                 @active-item-change="handleItemChange"
-                 :clearable="true"
-                 @change="setCurrVal"
-    ></el-cascader>
+    <el-cascader 
+        class="course-select-container" 
+        ref="container" 
+        v-loading="loading"
+        :options='options' 
+        :show-all-levels="false"
+        :placeholder="placeholder"
+        @active-item-change="handleItemChange"
+        :clearable="true"
+        @change="setCurrVal">
+    </el-cascader>
 </template>
 
 <script>
-    import treeUtils from '../../../utils/treeUtils'
-    import courseService from '../../../services/courseService'
+    import treeUtils from 'utils/treeUtils'
+    import courseService from 'services/courseService'
     export default{
         props: {
             value: [String, Number, Array],

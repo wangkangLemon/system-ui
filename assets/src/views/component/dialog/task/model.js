@@ -83,7 +83,14 @@ export default class Task {
                 selected: [],
                 component: 'MedicineTaken'
             },
+            {
+                label: '直播',
+                value: 9,
+                type: 'live',
+                selected: [],
+                component: 'LiveTransfer'
+            },
         ]
     }
 }
-Task.keys = ['course', 'exam', 'practice']
+Task.keys = ['course', 'exam', 'practice', 'live']

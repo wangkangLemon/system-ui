@@ -21,7 +21,7 @@
                :disabled="disabled"
                no-match-text="没有数据">
         <el-option :disabled="true" value="xmystinputval" style="height: 50px">
-            <el-input @change="filter" placeholder="搜索内容"></el-input>
+            <el-input @change="filter" :placeholder="inputPlaceholder"></el-input>
         </el-option>
         <el-option v-for="item in data"
                    :label="item.name"
@@ -51,6 +51,11 @@
             placeholder: {
                 type: String,
                 default: '请选择'
+            },
+            inputPlaceholder: {
+                type: String,
+                default: '搜索内容',
+                required: false,
             },
             disabled: {
                 type: Boolean,

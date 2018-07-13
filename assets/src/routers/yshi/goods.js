@@ -47,5 +47,17 @@ export default [
         meta: {
             title: '查看售卖单品'
         }
+    },
+    {
+        path: 'goods/category',
+        name: 'yshi-goods-category',
+        component: resolve => {
+            require.ensure([], () => {
+                resolve(require('@/views/yshi/goods/Category.vue'))
+            })
+        },
+        meta: {
+            title: '分类管理'
+        }
     }
 ]

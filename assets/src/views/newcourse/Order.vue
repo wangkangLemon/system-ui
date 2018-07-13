@@ -33,35 +33,36 @@
     <article id="course-order">
         <el-button class="top-btn" type="primary">导出</el-button>
         <section class="search">
-            <section>
+            <el-tabs v-model="activeName" @tab-click="tabClick">
+                <el-tab-pane label="执业药师" name="pharmacist"></el-tab-pane>
+                <el-tab-pane label="单品订单" name="single"></el-tab-pane>
+                <el-tab-pane label="组合打包订单" name="multiple"></el-tab-pane>
+                <el-tab-pane label="系统商品订单" name="system"></el-tab-pane>
+                <el-tab-pane label="课程会员订单" name="old"></el-tab-pane>
+            </el-tabs>
+            <!-- <section>
                 <i>课程</i>
                 <el-input v-model="fetchParam.course_id" @keyup.enter.native="getData"></el-input>
+            </section> -->
+            <section>
+                <i>订单编号</i>
+                <el-input v-model="fetchParam.trade_no" @keyup.enter.native="getData"></el-input>
             </section>
             <section>
                 <i>下单人</i>
-                <el-input v-model="fetchParam.user_id" @keyup.enter.native="getData"></el-input>
-            </section>
-            <section>
-                <i>手机号</i>
-                <el-input v-model="fetchParam.user_mobile" @keyup.enter.native="getData"></el-input>
+                <UserSelect v-model="fetchParam.user_id" :change="getData"></UserSelect>
+                <!-- <el-input v-model="fetchParam.user_id" @keyup.enter.native="getData"></el-input> -->
             </section>
             <section>
                 <i>支付方式</i>
                 <el-select clearable @change="getData" v-model="fetchParam.pay_method" placeholder="全部">
-                    <el-option label="微信" value="wechat"></el-option>
+                    <el-option label="微信支付" value="wechat"></el-option>
                     <el-option label="支付宝" value="alipay"></el-option>
-                    <el-option label="余额" value="money"></el-option>
+                    <el-option label="余额支付" value="money"></el-option>
+                    <el-option label="银联支付" value="bank"></el-option>
+                    <el-option label="线下支付" value="offlinepay"></el-option>
+                    <el-option label="优惠券支付" value="coupon"></el-option>
                 </el-select>
-            </section>
-            <section>
-                <i>有无归属</i>
-                <el-select clearable v-model="fetchParam.in_company" @change="getData" placeholder="全部">
-                    <el-option label="有归属" :value="1"></el-option>
-                    <el-option label="无归属" :value="0"></el-option>
-                    <el-option label="不限制" :value="-1"></el-option>
-                </el-select>
-            </section>
-            <DateRange title="下单时间" :start="fetchParam.time_start" :end="fetchParam.time_end" @changeStart="val=> fetchParam.time_start=val " @changeEnd="val=> fetchParam.time_end=val" :change="getData"></DateRange>
             <section>
                 <i>订单状态</i>
                 <el-select clearable @change="getData" v-model="fetchParam.status" placeholder="全部">
@@ -72,17 +73,35 @@
                     <el-option label="已删除" :value="4"></el-option>
                 </el-select>
             </section>
+            </section>
+            <DateRange title="下单时间" :start="fetchParam.start_date" :end="fetchParam.end_date" @changeStart="val=> fetchParam.start_date=val " @changeEnd="val=> fetchParam.end_date=val" :change="getData"></DateRange>
             <section>
-                <i>订单类型</i>
-                <el-select clearable @change="getData" v-model="fetchParam.object_type" placeholder="全部">
+                <i>有无归属</i>
+                <el-select clearable v-model="fetchParam.in_company" @change="getData" placeholder="全部">
+                    <el-option label="不限制" :value="0"></el-option>
+                    <el-option label="有归属" :value="1"></el-option>
+                    <el-option label="无归属" :value="2"></el-option>
+                </el-select>
+            </section>
+            <section v-if="!(fetchParam.order_type == 'single' || fetchParam.order_type == 'system')">
+                <i>商品类型</i>
+                <el-select v-if="fetchParam.order_type == 'pharmacist' || fetchParam.order_type == 'multiple'" 
+                    clearable @change="getData" v-model="fetchParam.object_type" 
+                    placeholder="全部">
+                    <el-option label="组合" value="group"></el-option>
+                    <el-option label="打包" value="activity"></el-option>
+                </el-select>
+                <el-select v-if="fetchParam.order_type == 'old'" 
+                    clearable @change="getData" v-model="fetchParam.object_type" 
+                    placeholder="全部">
                     <el-option label="课程" value="course"></el-option>
-                    <el-option label="商品" value="goods"></el-option>
+                    <el-option label="会员" value="vip"></el-option>
                 </el-select>
             </section>
         </section>
         <el-table v-loading="loading" :data="dataList" :fit="true" border>
             <el-table-column prop="trade_no" min-width="160" label="订单编号"></el-table-column>
-            <el-table-column prop="course_name" label="课程名称" width="180"></el-table-column>
+            <el-table-column prop="object_name" label="商品名称" width="180"></el-table-column>
             <el-table-column prop="price" label="价格" width="100"></el-table-column>
             <el-table-column prop="user_name" label="下单人" width="100"></el-table-column>
             <el-table-column prop="user_mobile" label="手机号" width="180"></el-table-column>
@@ -114,8 +133,8 @@
                     <span class="value">{{detail.trade_no}}</span>
                 </p>
                 <p>
-                    <i class="title">课程名称：</i>
-                    <span class="value">{{detail.course_name}}</span>
+                    <i class="title">商品名称：</i>
+                    <span class="value">{{detail.object_name}}</span>
                 </p>
                 <p>
                     <i class="title">价格：</i>
@@ -166,32 +185,36 @@
 <script>
 import DateRange from '../component/form/DateRangePicker.vue'
 import orderService from '../../services/newcourse/orderService'
+import UserSelect from 'components/select/UserOrder.vue'
 export default {
     components: {
-        DateRange
+        DateRange,
+        UserSelect
     },
     data() {
         return {
-            payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'money': '余额' },
-            payStatus: ['未支付', '已支付', '已关闭', '已删除'],
+            payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'money': '余额', 'bank': '银联', 'offlinepay': '线下', 'coupon': '优惠券'},
+            payStatus: ['未支付', '已支付', '已关闭', '', '已删除'],
             showDetail: false,
             detail: null,
             loading: false,
             fetchParam: {
                 page: 1,
                 page_size: 15,
-                course_id: '',
+                // course_id: '',
                 user_id: '',
-                user_mobile: '',
                 pay_method: '',
-                time_start: '',
-                time_end: '',
+                start_date: '',
+                end_date: '',
                 status: -1,
+                order_type: 'pharmacist',
                 object_type: '',
-                in_company: -1
+                in_company: 0,
+                trade_no: ''
             },
             dataList: [],
-            total: 0
+            total: 0,
+            activeName: 'pharmacist'
         }
     },
     created() {
@@ -199,10 +222,14 @@ export default {
         this.getData()
     },
     methods: {
+        tabClick(tab, event) {
+            this.fetchParam.order_type = tab.name
+            this.getData()
+        },
         getData() {
             this.loading = true
             return orderService.search(this.fetchParam).then((ret) => {
-                this.dataList = ret.data
+                this.dataList = ret.list
                 this.total = ret.total
                 this.loading = false
             })

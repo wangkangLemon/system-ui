@@ -5,7 +5,7 @@
       {
         "modules": false
       }
-    ]
+    ],
   ],
   "plugins": [
     [
@@ -17,6 +17,7 @@
         }
       ]
     ],
-    "transform-vue-jsx"
+    "transform-vue-jsx",
+    "transform-runtime",
   ]
 }

@@ -15,8 +15,11 @@
         <section class="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="category" label="分类" :label-width="formLabelWidth">
-                    <ArticleCategorySelect :placeholder="currCategoryName"
-                                           v-model="form.category"></ArticleCategorySelect>
+                    <ArticleCategorySelect 
+                        :placeholder="currCategoryName"
+                        type="article"
+                        v-model="form.category">
+                    </ArticleCategorySelect>
                 </el-form-item>
                 <el-form-item prop="title" label="标题" :label-width="formLabelWidth">
                     <el-input v-model="form.title" auto-complete="off"></el-input>

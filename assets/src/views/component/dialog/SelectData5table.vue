@@ -36,7 +36,10 @@
 </style>
 
 <template>
-    <el-dialog :title="title" :visible.sync="currVal" class="comp-dialog-select5table">
+    <el-dialog 
+        :title="title" 
+        :visible.sync="currVal" 
+        class="comp-dialog-select5table">
         <main>
             <slot name="search"></slot>
             <section>
