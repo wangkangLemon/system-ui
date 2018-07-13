@@ -357,12 +357,12 @@
                 this.dialogTree.confirmClick = () => {
                     let id = this.nodeSelected.value     // 当前节点
                     let to = this.moveToNode.data.value  // 移动区的节点
-                    let has_children = this.moveToNode.data.item.has_children
+                    let is_root = !this.moveToNode.data.item.parent_id
                     if (id === to) {
                         xmview.showTip('warning', '请选择不同的分类')
                         return
                     }
-                    if (!has_children) {
+                    if (!is_root) {
                         xmview.showTip('warning', '不能移动到子分类下，请选择顶级分类')
                         return
                     }
