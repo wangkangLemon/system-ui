@@ -10,12 +10,6 @@ import VueDND from 'awe-dnd'
 import SidePannel from './views/component/mixin/sidePannel'
 import VueClipboards from 'vue-clipboards'
 
-require('video.js/dist/video-js.css')
-require('vue-video-player/src/custom-theme.css')
-import VideoPlayer from 'vue-video-player'
-Vue.use(VideoPlayer)
-require('videojs-contrib-hls/dist/videojs-contrib-hls');
-
 // keep router and vuex store in sync
 sync(store, router)
 Vue.config.devtools = config.debug
