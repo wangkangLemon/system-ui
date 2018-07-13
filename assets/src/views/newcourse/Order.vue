@@ -61,6 +61,7 @@
                     <el-option label="余额支付" value="money"></el-option>
                     <el-option label="银联支付" value="bank"></el-option>
                     <el-option label="线下支付" value="offlinepay"></el-option>
+                    <el-option label="优惠券支付" value="coupon"></el-option>
                 </el-select>
             <section>
                 <i>订单状态</i>
@@ -192,7 +193,7 @@ export default {
     },
     data() {
         return {
-            payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'money': '余额', 'bank': '银联', 'offlinepay': '线下' },
+            payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'money': '余额', 'bank': '银联', 'offlinepay': '线下', 'coupon': '优惠券'},
             payStatus: ['未支付', '已支付', '已关闭', '已删除'],
             showDetail: false,
             detail: null,
