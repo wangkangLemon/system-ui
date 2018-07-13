@@ -68,8 +68,8 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="主讲人头像" prop="teacher_image">
-                <img :src="fetchParam.teacher_image | fillImgPath" alt="" class="img" v-if="fetchParam.teacher_image" style="margin-bottom: 10px; width:100px;height:100px;" />
-                <ImagEcropperInput :confirmFn="cropperFn2" :aspectRatio="1/1" :isRound="false" v-if="!disable"></ImagEcropperInput>
+                <img :src="fetchParam.teacher_image | fillImgPath" alt="" class="img" v-if="fetchParam.teacher_image" style="margin-bottom: 10px; width:100px;height:100px; border-radius:50%;" />
+                <ImagEcropperInput :confirmFn="cropperFn2" :aspectRatio="1/1" :isRound="true" v-if="!disable"></ImagEcropperInput>
             </el-form-item>
             <el-form-item label="主讲人简介" prop="teacher_description">
                 <el-input placeholder="请输入内容" v-model="fetchParam.teacher_description" :disabled="disable">
@@ -156,9 +156,6 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    this.$nextTick(() => {
-                        this.initTable()
-                    })
                     this.editor && this.editor.setContent(ret.description)
                     this.$refs.cont.innerHTML = ret.description
                 })
