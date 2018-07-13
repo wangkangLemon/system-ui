@@ -532,6 +532,7 @@
                     'practice': 3,
                     'public': 4,
                     'teaching': 5,
+                    'live': 6
                 }
                 return map[val]
             },
@@ -541,7 +542,8 @@
                     2: 'exam',
                     3: 'practice',
                     4: 'public',
-                    5: 'teaching'
+                    5: 'teaching',
+                    6: 'live'
                 }
                 return map[val]
             }

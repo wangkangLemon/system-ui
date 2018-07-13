@@ -200,3 +200,39 @@ export function formatDate (date, fmt) {
         if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
     return fmt
 }
+
+// 秒数转换成时分秒
+export function timeFormat(time) {
+    let second = 0
+    let min = 0
+    let hour = 0
+    let numtime = time
+    // let numtime = 0
+    if(parseInt(numtime)/60 >= 1){
+        min = parseInt(numtime/60)
+        if(parseInt(min)/60 >= 1){
+            hour = parseInt(min / 60)
+            min = parseInt(min % 60)
+        }else {
+            min = parseInt(min % 60)
+        }
+        second = parseInt(numtime%60)
+    }else {
+        second = parseInt(numtime) % 60
+    }
+    console.log(`${settime(hour)}时${settime(min)}分${settime(second)}秒`)
+
+    return `${settime(hour)}时${settime(min)}分${settime(second)}秒`
+}
+
+function settime(time) {
+    if(time < 1){
+        return '00'
+    }else if(time < 10){
+        return '0' + time
+    }else {
+        return time
+    }
+}
+
+
