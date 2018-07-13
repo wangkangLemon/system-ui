@@ -156,8 +156,11 @@
                 }).then((ret) => {
                     console.log(ret)
                     this.fetchParam = ret
-                    this.editor && this.editor.setContent(ret.description)
-                    this.$refs.cont.innerHTML = ret.description
+                    if(this.disable) {
+                        this.$refs.cont.innerHTML = ret.description
+                    }else {
+                        this.editor && this.editor.setContent(ret.description)
+                    }
                 })
             } else {
                 this.disable = false
