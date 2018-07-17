@@ -235,5 +235,54 @@ export default {
                 title: '查看学习地图模版',
             }
         },
+        {
+            path: 'manage/richtexts',
+            name: 'course-manage-richtexts',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/manage/richtexts/Main.vue'))
+                })
+            },
+            meta: {
+                title: '图文管理-培训',
+                noback: true
+            }
+        },
+        {
+            path: 'manage/richtexts/add',
+            name: 'course-manage-richtexts-add',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/manage/richtexts/Add.vue'))
+                })
+            },
+            meta: {
+                title: '图文管理-添加'
+            }
+        },
+        {
+            path: 'manage/richtexts/edit',
+            name: 'course-manage-richtexts-edit',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/manage/richtexts/Add.vue'))
+                })
+            },
+            meta: {
+                title: '图文管理-编辑'
+            }
+        },
+        {
+            path: 'manage/richtexts/view',
+            name: 'course-manage-richtexts-view',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/manage/richtexts/Show.vue'))
+                })
+            },
+            meta: {
+                title: '图文管理-查看'
+            }
+        }
     ]
 }
