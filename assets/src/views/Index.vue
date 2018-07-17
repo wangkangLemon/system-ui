@@ -201,9 +201,11 @@
                 </el-dropdown>
                 <el-dropdown trigger="click" @command="handleNickname">
                       <span class="el-dropdown-link nickname">
-                        <img v-if="userInfo.avatar"
-                             :src="{url:userInfo.avatar, sex: userInfo.sex} | defaultAvatar"> {{userInfo.name}} <i
-                              class="el-icon-caret-bottom el-icon--right"></i>
+                        <img 
+                            v-if="userInfo.avatar"
+                            :src="{url:userInfo.avatar, sex: userInfo.sex} | defaultAvatar"> 
+                            {{userInfo.name}} 
+                            <i class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
                     <el-dropdown-menu slot="dropdown" class="nickname-dropdown">
                         <el-dropdown-item command="profile">个人信息</el-dropdown-item>
