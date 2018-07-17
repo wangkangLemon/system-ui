@@ -92,13 +92,20 @@ class AdminService {
 
     // 更新指定用户的关联角色
     // role({id, ids}) {
-    //     let url = `${urlPre}/${id}/role/`
-    //     return api.post(url, {ids})
+    //     let url = `${urlPre}/${id}/role`
+    //     return api.put(url, {ids})
     // }
     getAllroles () {
         let url = `${config.apiHost}/sys/rbac/role/all`
         return api.get(url).then(ret => ret.data)
     }
+
+    // 更新指定用户管理的销售区域
+    setSaleProvince({id, ids}) {
+        let url = `${urlPre}/${id}/saleprovince`
+        return api.put(url, {ids})
+    }
+
     // ============================内测应用部分============================
     // 获取内测应用申请列表
     getAlphaApplyList ({ page, page_size, appid }) {
