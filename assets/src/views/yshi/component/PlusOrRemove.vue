@@ -80,9 +80,6 @@
         },
         data () {
             return {
-                dataArr: this.favorable,
-                moneyValue: this.money,
-                discountValue: this.discount,
                 isdis: true,
                 set_money: initPusher(this.select)
             }
