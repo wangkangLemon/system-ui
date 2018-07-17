@@ -94,7 +94,10 @@
                 <p v-if="orderErr" class="o-error">此序号已经存在</p>
             </el-form-item>
             <el-form-item label="设置组合售卖优惠" prop="favorable">
-                <PlusOrRemove @res="groupDiscounts" :money="moneyarr" :discount="discountarr" :favorable="fetchParam.favorable" :disable="disable"></PlusOrRemove>
+                <PlusOrRemove 
+                    @res="groupDiscounts" 
+                    :select="fetchParam.favorable" 
+                    :disable="disable"></PlusOrRemove>
             </el-form-item>
             <el-form-item>
                 <el-button @click="submit" type="primary" v-if="!disable">保存</el-button>
@@ -213,7 +216,9 @@
                         this.discountarr.push(item.discount)
                     })
                     this.editor && this.editor.setContent(ret.introduce)
-                    this.$refs.cont.innerHTML = ret.introduce
+                    if (this.$route.name === 'yshi-googroupds-preview') {
+                        this.$refs.cont.innerHTML = ret.introduce
+                    }
                 })
             } else {
                 this.disable = false
@@ -272,17 +277,27 @@
                 this.editor = ue
             },
             submit () {
+                let pass = true
                 this.$refs['ruleForm'].validate((valid) => {
-                    if (!valid) return
+                    if (!valid) pass = false
                     if (!this.editor.getContentTxt()) {
                         xmview.showTip('error', '请填写正文内容')
-                        return
+                        pass = false
                     }
                     this.fetchParam.introduce = this.editor.getContent()
                     this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
                         return item.id
                     })
-                    if ( !this.$store.state.component.yshiGroupSussess) return
+                    this.fetchParam.favorable.forEach((item) => {
+                        for (let [key, value] of Object.entries(item)) {
+                            if(value === 0 || value === true) {
+                                pass = false
+                                xmview.showTip('error', '请设置优惠阶级')
+                                break
+                            }
+                        }
+                        delete item.error
+                    })
                     // 去除favorable空值
                     for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
                         if (!this.fetchParam.favorable[i].reach || !this.fetchParam.favorable[i].discount){
@@ -295,17 +310,19 @@
                         req = goodsGroupService.updateGoodGroup
                         msg = '修改成功'
                     }
-                    req(this.fetchParam).then((ret) => {
-                        xmview.showTip('success', msg)
-                        this.fetchParam = clearFn()
-                        this.$router.push({name: 'yshi-group'})
-                    }).catch((ret) => {
-                        if (ret.data.data === 'exist'){
-                            this.orderErr = true
-                        } else {
-                            xmview.showTip('error', ret.message)
-                        }
-                    })
+                    if(pass) {
+                        req(this.fetchParam).then((ret) => {
+                            xmview.showTip('success', msg)
+                            this.fetchParam = clearFn()
+                            this.$router.push({name: 'yshi-group'})
+                        }).catch((ret) => {
+                            if (ret.data.data === 'exist'){
+                                this.orderErr = true
+                            } else {
+                                xmview.showTip('error', ret.message)
+                            }
+                        })
+                    }
                 })
                 
             }

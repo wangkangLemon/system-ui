@@ -10,8 +10,8 @@
             border-radius: 50%;
             height: 25px;
             width: 25px;
-            line-height: 9px;
-            padding-left: 0;
+            line-height: 6px;
+            padding-left: 2px;
             padding-right: 0;
             &.plus{
                 color: #6495ed;
@@ -30,33 +30,34 @@
 
 <template>
     <article id="component-form-group">
-        <div v-for="( item , index ) in dataArr">
+        <div v-for="( item , index ) in set_money">
             <InputText 
                 textLeft="满" 
                 :textRight="textRight" 
-                :value="moneyValue[index]" 
-                @input="inputFn(arguments[0], moneyValue, index)" 
+                :value="item.reach" 
+                @input="inputFn(arguments[0], 'reach', index)"
+                @err="showErr(arguments[0], index)"
                 :disable="disable">
             </InputText>
             <InputText 
                 textLeft="打" 
                 textRight="折" 
-                :value="discountValue[index]" 
-                @input="inputFn(arguments[0], discountValue, index)" 
+                :value="item.discount" 
+                @input="inputFn(arguments[0], 'discount', index)" 
+                @err="showErr(arguments[0], index)"
                 :disable="disable" 
                 :isdis="isdis">
             </InputText>
             <el-button 
-                v-if="dataArr.length > 1" 
+                v-if="index !== 0" 
                 class="el-icon-minus icon-btn minus" 
-                @click="removeitem(index)" 
+                @click="del(index)" 
                 :disabled="disable">
             </el-button>
             <el-button 
-                v-if="dataArr.length == 1 || dataArr.length == index+1" 
                 size="small" 
                 class="el-icon-plus icon-btn plus" 
-                @click="additem(moneyValue[index], discountValue[index])" 
+                @click="plus" 
                 :disabled="disable">
             </el-button>
         </div>
@@ -67,9 +68,6 @@
     import InputText from './InputText.vue'
     export default{
         props: {
-            money: Array,
-            discount: Array,
-            favorable: Array,
             textRight: {
                 type: String,
                 default: '元'
@@ -77,14 +75,13 @@
             disable: {
                 type: Boolean,
                 default: false
-            }
+            },
+            select: Array,
         },
         data () {
             return {
-                dataArr: this.favorable,
-                moneyValue: this.money,
-                discountValue: this.discount,
-                isdis: true
+                isdis: true,
+                set_money: initPusher(this.select)
             }
         },
         created () {
@@ -94,51 +91,39 @@
         computed: {
         },
         watch: {
-            moneyValue() {
-                this.$emit('res', this.getRes())
-            },
-            discountValue() {
-                this.$emit('res', this.getRes())
-            },
-            favorable(val) {
-                this.dataArr = val
-            },
-            dataArr(val) {
-                if(val.length < 1){
-                    this.dataArr = [{}]
-                }
+            select (val) {
+                this.set_money = initPusher(val)
             }
         },
         methods: {
-            additem(moneyValue, discountValue) {
-                this.dataArr.push({})
+            del (index) {
+                this.set_money.splice(index, 1)
             },
-            removeitem(index) {
-                if (this.dataArr.length > 1){
-                    this.dataArr.pop(index)
-                    this.moneyValue.splice(index, 1)
-                    this.discountValue.splice(index, 1)
-                }
-                console.log(this.dataArr)
+            plus () {
+                this.set_money.push(initSet())
             },
-            inputFn (val, array, index) {
-                this.$set(array, index, val)
+            inputFn (val, data, index) {
+                this.set_money[index][data] = Number(val)
+                this.set_money[index].error = false
             },
-            getRes () {
-                let _discountValue = this.discountValue.map(item => {
-                    return {discount: Number(item)}
-                })
-                let _moneyValue = this.moneyValue.map(item => {
-                    return {reach: Number(item)}
-                })
-                _moneyValue.forEach((item, index) => {
-                    item.discount = _discountValue[index] && _discountValue[index].discount
-                })
-                return _moneyValue
+            showErr(val, index) {
+                this.set_money[index].error = val
             }
         },
         components: {
             InputText
+        }
+    }
+    function initPusher (select) {
+        let res = select || []
+        !res.length && res.push(initSet())
+        return res
+    }
+    function initSet () {
+        return {
+            reach: void '',
+            discount: void '',
+            error: false
         }
     }
 </script>
