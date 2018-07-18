@@ -18,7 +18,66 @@
 }
 </style>
 <template>
-    <article class="admin-container">
+    <main class="admin-container">
+        <section class="header-button">
+            <el-button type="primary" icon="plus" @click="addAdmin" v-show="isPermission('sys_admin_create')">添加</el-button>
+        </section>
+
+        <section class="search">
+            <section>
+                <i>姓名</i>
+                <el-input @change="getData" class="name" v-model="fetchParam.name" placeholder="请输入姓名"></el-input>
+            </section>
+        </section>
+
+        <el-table border :data="adminData" v-loading="loading">
+            <el-table-column prop="name" label="姓名" width="150">
+            </el-table-column>
+            <el-table-column prop="role_name" label="角色" width="150">
+            </el-table-column>
+            <el-table-column prop="mobile" label="手机" width="130">
+            </el-table-column>
+            <el-table-column prop="email" label="邮箱" width="150">
+            </el-table-column>
+            <el-table-column prop="last_login_time_name" label="上次登录时间" width="170">
+            </el-table-column>
+            <el-table-column prop="last_login_ip" label="上次登录IP" width="120">>
+            </el-table-column>
+            <el-table-column prop="disabled" label="状态" width="80">
+                <template slot-scope="scope">
+                    <el-tag type="danger" v-if="scope.row.disabled">禁用</el-tag>
+                    <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="operate" label="操作" min-width="210" fixed="right" align="left">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
+                        详情
+                    </el-button>
+                    <el-button type="text" size="small" @click="editAdmin(scope.row)">
+                        修改
+                    </el-button>
+                    <el-button type="text" size="small" v-if="scope.row.disabled" @click="adminDisable(scope.row, 0)">
+                        启用
+                    </el-button>
+                    <el-button type="text" size="small" v-if="!scope.row.disabled" @click="adminDisable(scope.row, 1)">
+                        禁用
+                    </el-button>
+                    <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
+                        删除
+                    </el-button>
+                    <el-button type="text" size="small" @click="handleProvince(scope.$index, scope.row)" v-if="scope.row.roles.indexOf(3) >= 0">
+                        省区
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <section class="block">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[15, 30, 60, 100]" layout="total, sizes, ->, prev, pager, next, jumper" :total="total">
+            </el-pagination>
+        </section>
+
+
         <!--详情-->
         <el-dialog class="show-detail" title="查看管理员账号" :visible.sync="showDetail">
             <div class="avatar" v-if="clerkDetail != null">
@@ -55,8 +114,9 @@
                 </p>
             </div>
         </el-dialog>
+
         <!--添加/编辑表单-->
-        <el-dialog :visible.sync="addForm">
+        <el-dialog :title="addFormTitle" :visible.sync="addForm">
             <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="form.name" placeholder="管理员姓名" auto-complete="off"></el-input>
@@ -95,70 +155,35 @@
                 <el-button type="primary" @click="submit('form')">确 定</el-button>
             </div>
         </el-dialog>
-        <section class="header-button">
-            <el-button type="primary" icon="plus" @click="addAdmin" v-show="isPermission('sys_admin_create')">添加</el-button>
-        </section>
-        <section class="search">
-            <section>
-                <i>姓名</i>
-                <el-input @change="getData" class="name" v-model="fetchParam.name" placeholder="请输入姓名"></el-input>
-            </section>
-        </section>
-        <el-table border :data="adminData" v-loading="loading">
-            <el-table-column prop="name" label="姓名" width="150">
-            </el-table-column>
-            <el-table-column prop="role_name" label="角色" width="150">
-            </el-table-column>
-            <el-table-column prop="mobile" label="手机" width="130">
-            </el-table-column>
-            <el-table-column prop="email" label="邮箱" width="150">
-            </el-table-column>
-            <el-table-column prop="last_login_time_name" label="上次登录时间" width="170">
-            </el-table-column>
-            <el-table-column prop="last_login_ip" label="上次登录IP" width="120">
-            </el-table-column>
-            <el-table-column prop="create_time_name" label="创建时间" width="170">
-            </el-table-column>
-            <el-table-column prop="update_time_name" label="更新时间" width="170">
-            </el-table-column>
-            <el-table-column prop="disabled" label="状态" width="80">
-                <template slot-scope="scope">
-                    <el-tag type="danger" v-if="scope.row.disabled">禁用</el-tag>
-                    <el-tag type="success" v-if="!scope.row.disabled">正常</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column prop="operate" label="操作" min-width="180" fixed="right" align="center">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="checkClerkDetail(scope.$index, scope.row)">
-                        详情
-                    </el-button>
-                    <el-button type="text" size="small" @click="editAdmin(scope.row)">
-                        修改
-                    </el-button>
-                    <el-button type="text" size="small" v-if="scope.row.disabled" @click="adminDisable(scope.row, 0)">
-                        启用
-                    </el-button>
-                    <el-button type="text" size="small" v-if="!scope.row.disabled" @click="adminDisable(scope.row, 1)">
-                        禁用
-                    </el-button>
-                    <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">
-                        删除
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <section class="block">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[15, 30, 60, 100]" layout="total, sizes, ->, prev, pager, next, jumper" :total="total">
-            </el-pagination>
-        </section>
-    </article>
+
+        <!-- 设置省区 -->
+        <el-dialog class="show-sale-province" title="省区设置" :visible.sync="showSaleFrom">
+            <el-form :model="saleForm" :rules="saleRules" ref="saleForm">
+                <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
+                    <el-input v-model="saleForm.name" placeholder="管理员姓名" disabled></el-input>
+                </el-form-item>
+                <el-form-item prop="provinces" label="省区选择" :label-width="formLabelWidth">
+                    <ProvinceSelect v-model="saleForm.provinces" v-if="showSaleFrom"></ProvinceSelect>
+                </el-form-item>
+            </el-form> 
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="showSaleFrom = false">取 消</el-button>
+                <el-button type="primary" @click="submitSaleForm()">确 定</el-button>
+            </div>
+        </el-dialog>
+        
+    </main>
 </template>
 <script>
+import ProvinceSelect from '../component/form/ProvinceSelect.vue'
 import adminService from '../../services/adminService'
 import { defaultAvatar } from '../../utils/filterUtils'
 export default {
     filters: {
         defaultAvatar,
+    },
+    components: {
+        ProvinceSelect,
     },
     data() {
         let valMobile = (rule, value, callback) => {
@@ -198,6 +223,14 @@ export default {
             },
             formLabelWidth: '120px', // 表单label的宽度
             addForm: false, // 表单弹窗是否显示
+            addFormTitle: '添加管理员',
+            saleRules: {},
+            saleForm: {
+                id: 0,
+                name: '',
+                provinces: [],
+            },
+            showSaleFrom: false,
             currentPage: 1, // 分页当前显示的页数
             total: 0,
             pageSize: 15,
@@ -223,6 +256,7 @@ export default {
         },
         addAdmin() {
             this.addForm = true
+            this.addFormTitle = '添加管理员'
             this.toData = []
             this.getAllrolates()
             setTimeout(() => {
@@ -234,6 +268,7 @@ export default {
         editAdmin(row) {
             this.relate(row)
             this.addForm = true
+            this.addFormTitle = '编辑管理员'
             adminService.editAdmin(row.id).then((ret) => {
                 this.$refs['form'].resetFields()
                 this.validate = null
@@ -259,6 +294,11 @@ export default {
                 page_size: this.pageSize,
                 keyword: this.fetchParam.name
             }).then((ret) => {
+                ret.data.forEach(row => {
+                    if (!row.roles) {
+                        row.roles = []
+                    }
+                })
                 this.adminData = ret.data
                 this.total = ret.total
             }).then(() => {
@@ -326,6 +366,28 @@ export default {
                 } else {
                     return false
                 }
+            })
+        },
+        handleProvince(index, row) {
+            this.saleForm.id = row.id
+            this.saleForm.name = row.name
+            this.saleForm.provinces = row.sale_province_ids
+            this.showSaleFrom = true
+        },
+        submitSaleForm() {
+            if (!this.saleForm.id) {
+                xmview.showTip('error', '用户编号不能为空')
+                return false
+            }
+            adminService.setSaleProvince({
+                id: this.saleForm.id, 
+                ids: this.saleForm.provinces
+            }).then((ret) => {
+                this.showSaleFrom = false
+                this.getData()
+                xmview.showTip('success', '设置成功')
+            }).catch((ret) => {
+                xmview.showTip('error', ret.message)
             })
         },
         handleSizeChange(val) {
