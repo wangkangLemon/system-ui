@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import courseService from '../../../services/courseService'
+import courseService from 'services/courseService'
 
 export default {
     props: {
