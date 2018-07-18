@@ -10,7 +10,7 @@ export const defaultAvatar = Vue.filter('defaultAvatar', function (urlObj) {
     if (!urlObj) return ''
     if (urlObj.url && urlObj.url.indexOf('/user-default') == -1) {
         let apiUrl = config.apiHost.replace(/(^")|("$)/g, '')
-        return urlObj.url.search(/https?:\/\//) ? urlObj.url : apiUrl + urlObj.url
+        return urlObj.url.search(/https?:\/\//) > -1 ? urlObj.url : apiUrl + urlObj.url
     } else {
         if (urlObj.sex) {
             // 男默认头像
