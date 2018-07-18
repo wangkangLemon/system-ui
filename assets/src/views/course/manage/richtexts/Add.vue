@@ -23,7 +23,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="submit('form', 21)">确 定</el-button>
-                <el-button type="warning" @click="submit('form', 20)">存为草稿</el-button>
+                <el-button v-if="form.status != 21" type="warning" @click="submit('form', 20)">存为草稿</el-button>
             </div>
         </section>
     </article>
@@ -64,6 +64,7 @@
                 this.form.title = ret.data.title
                 this.form.content = ret.data.content
                 this.form.id = ret.data.id
+                this.form.status = ret.data.status
                 this.editor && this.editor.setContent(ret.data.content)
             })
         },
