@@ -90,7 +90,7 @@ export default {
             loadingData: false,
             total: 0,
             fetchParam: {
-                status: '',
+                status: 21,
                 title: '',
                 start_date: '',
                 end_date: '',
