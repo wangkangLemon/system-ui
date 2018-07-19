@@ -70,7 +70,7 @@
         data () {
             return {
                 inputValue: this.value,
-                error: false,
+                error: true,
                 msg: ''
             }
         },
