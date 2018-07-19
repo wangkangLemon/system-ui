@@ -490,14 +490,20 @@
                 this.$refs['ruleForm'].validate((valid) => {
                     if (!valid) pass = false
                     // console.log(this.$store.state.component.yshiGroupSussess)
+                    console.log(this.fetchParam.group_buying)
                     if(this.isGroupBuying) {
                         this.fetchParam.group_buying.forEach((item) => {
+                            if (!('reach' in item && 'discount' in item)) {
+                                xmview.showTip('error', '请检查优惠阶级')
+                                pass = false
+                                return
+                            }
                             for (let [key, value] of Object.entries(item)) {
-                                // debugger
                                 if(value === 0 || value === true) {
                                     pass = false
                                     xmview.showTip('error', '请检查优惠阶级')
-                                    // break
+                                    // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                    // 循环中的return并不能将函数直接返回，和break也有一些区别，注意使用
                                     return
                                 }
                             }
