@@ -17,15 +17,20 @@
         <el-form-item label="课件" prop="material_id">
             <!--点击上传视频-->
             <div v-if="lesson.material_type === 'video'">
-                <el-button @click="isShowVideoDialog=true" :disabled="!lesson.material_type">
+                <el-button 
+                    @click="isShowVideoDialog=true" 
+                    :disabled="!lesson.material_type">
                     <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
                     <i v-else>选择视频</i>
                 </el-button>
             </div>
             <div v-if="lesson.material_type !== 'video'">
-                <el-button @click="isShowDocumentDialog=true" :disabled="!lesson.material_type">
+                <el-button 
+                    @click="isShowDocumentDialog=true" 
+                    :disabled="!lesson.material_type">
                     <i v-if="lesson.material_name">{{ lesson.material_name }}</i>
-                    <i v-else>选择文档</i>
+                    <i v-else>{{lesson.material_type == 'richtext' ? '选择图文' : '选择文档'}}</i>
+                    <!-- <i v-else>选择文档</i> -->
                 </el-button>
             </div>
         </el-form-item>
@@ -40,15 +45,32 @@
         </el-form-item>
         <slot></slot>
         <DialogVideo :onSelect="handleVideoSelected" v-model="isShowVideoDialog" :companyID="company_id"></DialogVideo>
-        <DialogDocument :onSelect="handleDocumentSelected" v-model="isShowDocumentDialog" :companyID="company_id" :fileType="fileType" ref="dialogDocument"></DialogDocument>
+        <template v-if="lesson.material_type === 'richtext'">
+            <DialogRichText 
+                :onSelect="handleDocumentSelected" 
+                v-model="isShowDocumentDialog" 
+                ref="dialogDocument">
+            </DialogRichText>
+        </template>
+        <template v-else>
+            <DialogDocument 
+                :onSelect="handleDocumentSelected" 
+                v-model="isShowDocumentDialog" 
+                :companyID="company_id" 
+                :fileType="fileType" 
+                ref="dialogDocument">
+            </DialogDocument>
+        </template>
     </el-form>
     <!--选择视频的弹窗-->
 </template>
 <script>
-    import config from '../../utils/config'
+    import config from 'utils/config'
     import DialogVideo from './component/DialogVideo.vue'
-    import UploadFile from '../component/upload/UploadFiles.vue'
+    import UploadFile from 'components/upload/UploadFiles.vue'
     import DialogDocument from './component/DialogDocument.vue'
+    import DialogRichText from './component/DialogRichText.vue'
+
 
     export default {
         props: {
@@ -62,11 +84,17 @@
                         {value: 'doc', label: 'WORD'},
                         {value: 'ppt', label: 'PPT'},
                         {value: 'pdf', label: 'PDF'},
+                        {value: 'richtext', label: '图文'},
                     ]
                 },
             },
         },
-        components: {DialogVideo, UploadFile, DialogDocument},
+        components: {
+            DialogVideo, 
+            UploadFile, 
+            DialogDocument,
+            DialogRichText
+        },
         data() {
             return {
                 fileType: '',

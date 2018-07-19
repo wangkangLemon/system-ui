@@ -211,9 +211,7 @@
                     <PlusOrRemove 
                         @res="groupDiscounts" 
                         textRight="人"
-                        :money="moneyarr" 
-                        :discount="discountarr" 
-                        :favorable="fetchParam.group_buying" 
+                        :select="fetchParam.group_buying" 
                         :disable="disable">
                     </PlusOrRemove>
                 </div>
@@ -488,13 +486,27 @@
                 this.fetchParam.group_buying = val
             },
             submit () {
+                let pass = true
                 this.$refs['ruleForm'].validate((valid) => {
-                    if (!valid) return
+                    if (!valid) pass = false
                     // console.log(this.$store.state.component.yshiGroupSussess)
-                    if ( !this.$store.state.component.yshiGroupSussess) return
+                    if(this.isGroupBuying) {
+                        this.fetchParam.group_buying.forEach((item) => {
+                            for (let [key, value] of Object.entries(item)) {
+                                if(value === 0 || value === true) {
+                                    pass = false
+                                    xmview.showTip('error', '请设置优惠阶级')
+                                    break
+                                }
+                            }
+                            delete item.error
+                        })
+
+                    }
+
                     if (!this.editor.getContentTxt()) {
                         xmview.showTip('error', '请填写正文内容')
-                        return
+                        pass = false
                     }
                     // 介绍
                     this.fetchParam.introduce = this.editor.getContent()
@@ -516,13 +528,15 @@
                         req = goodsService.updateGood
                         msg = '修改成功'
                     }
-                    req(this.fetchParam).then((ret) => {
-                        xmview.showTip('success', msg)
-                        this.fetchParam = clearFn()
-                        this.$router.push({name: 'yshi-goods'})
-                    }).catch((ret) => {
-                        xmview.showTip('error', ret.message)
-                    })
+                    if(pass) {
+                        req(this.fetchParam).then((ret) => {
+                            xmview.showTip('success', msg)
+                            this.fetchParam = clearFn()
+                            this.$router.push({name: 'yshi-goods'})
+                        }).catch((ret) => {
+                            xmview.showTip('error', ret.message)
+                        })
+                    }
                 })
             },
             typeStrToNum (val) {

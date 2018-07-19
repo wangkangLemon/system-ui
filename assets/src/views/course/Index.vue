@@ -1,5 +1,5 @@
 <template>
-    <keep-alive exclude="course-manage-addcourse,course-manage-videoadd,learnmap-create,teachingmap-create">
+    <keep-alive exclude="course-manage-addcourse,course-manage-videoadd,learnmap-create,teachingmap-create,content-operate">
         <router-view></router-view>
     </keep-alive>
 </template>

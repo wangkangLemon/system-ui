@@ -24,7 +24,7 @@
     <article id="component-from-input-text">
         <div style="display: inline-block;">
             <el-input 
-                v-if="textRight === '人'"
+                v-if="textRight === '人' || textRight === '元'"
                 type="tel" 
                 size="small" 
                 v-pnumberOnly 
@@ -86,31 +86,28 @@
                         if (!re.test(val)) {
                             this.error = true
                             this.msg = '0-9最多1位小数'
-                            this.$store.dispatch('setYshiGroupError')
+                            this.$emit('err', true)
                         } else {
                             this.error = false
-                            this.$store.dispatch('setYshiGroupSuccess')
                             this.$emit('input', val)
                         }
-                    } else if (this.textRight != '人') {
+                    } else if (this.textRight === '人' || this.textRight === '元') {
+                        this.$emit('input', parseInt(val))
+                    } else {
                         var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
                         if (!re.test(val)) {
                             this.error = true
                             this.msg = '最多两位小数的数字'
-                            this.$store.dispatch('setYshiGroupError')
+                            this.$emit('err', true)
                         } else {
                             this.error = false
-                            this.$store.dispatch('setYshiGroupSuccess')
                             this.$emit('input', val)
                         }
-                    } else {
-                        this.$store.dispatch('setYshiGroupSuccess')
-                        this.$emit('input', val)
                     }
                 } else {
                     this.error = true
                     this.msg = '不能是空'
-                    this.$store.dispatch('setYshiGroupError')
+                    this.$emit('err', true)
                 }
                 
             },
