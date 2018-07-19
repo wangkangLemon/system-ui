@@ -149,8 +149,8 @@
                 total: 0,
                 fetchParam: {
                     title: '',
-                    start_date: '',
-                    end_date: '',
+                    start_date: void 0,
+                    end_date: void 0,
                     status: '',
                     page: 1,
                     page_size: 15,

@@ -7,7 +7,8 @@
     <section>
         <i>{{title}}</i>
         <el-date-picker 
-            @change="setCurrVal(0)" ref="start"
+            ref="start"
+            @change="setCurrVal(0)" 
             :editable="false"
             clearable
             v-model="timespan[0]"
@@ -31,7 +32,7 @@
 </template>
 
 <script>
-    import * as timeUtils from '../../../utils/timeUtils'
+    import * as timeUtils from 'utils/timeUtils'
     let _this
     export default{
         props: {
@@ -73,6 +74,10 @@
             }
         },
         beforeCreate () {
+            // 如果容器组件是keep-alive时，切换到其他页面再切换回来，_this将还是上一个this的地址，而此时的this地址已经换了
+            _this = this
+        },
+        activated () {
             _this = this
         },
         methods: {
