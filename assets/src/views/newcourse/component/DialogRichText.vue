@@ -24,7 +24,7 @@
             <article class="search">
                 <section>
                     <i>名称</i>
-                    <el-input v-model="fetchParam.keyword" @keyup.enter.native="fetchData"></el-input>
+                    <el-input v-model="fetchParam.title" @keyup.enter.native="fetchData"></el-input>
                 </section>
             </article>
 
@@ -141,7 +141,7 @@ export default {
             this.fetchParam.page = val
         },
         refreshFetchParam () {
-            this.fetchParam.keyword = ''
+            this.fetchParam.title = ''
             this.fetchParam.page = 1
         }
     },
