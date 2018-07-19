@@ -556,8 +556,12 @@
                 this.editor = ue
             },
             submit () {
+                let pass = true
                 this.$refs['ruleForm'].validate((valid) => {
-                    if (!valid) return
+                    if (!valid) {
+                        pass = false
+                        return
+                    }
                     // if (this.isGroupBuying || this.fetchParam.favorable_type === 2) {
                     //     if ( !this.$store.state.component.yshiGroupSussess) return
                     // }
@@ -577,7 +581,13 @@
                     if (this.fetchParam.favorable_type === 2) {
                         this.fetchParam.favorable.forEach((item) => {
                             for (let [key, value] of Object.entries(item)) {
-                                if(!value || value === true) {
+                                if (!('reach' in item && 'discount' in item)) {
+                                    xmview.showTip('error', '请检查优惠阶级')
+                                    pass = false
+                                    return
+                                }
+                                if(value === 0 || value === true) {
+                                    pass = false
                                     xmview.showTip('error', '请检查优惠阶级')
                                     return
                                 }
@@ -597,8 +607,14 @@
                         this.fetchParam.group_buying = [{}]
                     } else {
                         this.fetchParam.group_buying.forEach((item) => {
+                            if (!('reach' in item && 'discount' in item)) {
+                                xmview.showTip('error', '请检查优惠阶级')
+                                pass = false
+                                return
+                            }
                             for (let [key, value] of Object.entries(item)) {
-                                if(!value || value === true) {
+                                if(value === 0|| value === true) {
+                                    pass = false
                                     xmview.showTip('error', '请检查优惠阶级')
                                     return
                                 }
@@ -612,17 +628,19 @@
                         req = favorableService.updateGoodGroup
                         msg = '修改成功'
                     }
-                    req(this.fetchParam).then((ret) => {
-                        xmview.showTip('success', msg)
-                        this.fetchParam = clearFn()
-                        this.$router.push({name: 'yshi-favorable'})
-                    }).catch((ret) => {
-                        if (ret.data.data === 'exist'){
-                            this.orderErr = true
-                        } else {
-                            xmview.showTip('error', ret.message)
-                        }
-                    })
+                    if (pass) {
+                        req(this.fetchParam).then((ret) => {
+                            xmview.showTip('success', msg)
+                            this.fetchParam = clearFn()
+                            this.$router.push({name: 'yshi-favorable'})
+                        }).catch((ret) => {
+                            if (ret.data.data === 'exist'){
+                                this.orderErr = true
+                            } else {
+                                xmview.showTip('error', ret.message)
+                            }
+                        })
+                    }
                 })
                 
             }
