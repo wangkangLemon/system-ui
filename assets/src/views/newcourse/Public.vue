@@ -113,16 +113,30 @@
             <el-table-column fixed="right" width="190" label="操作" align="center">
                 <template slot-scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
-                    <el-button @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" type="text" size="small" :disabled="scope.row.status == 0">
+                    <el-button 
+                        @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" 
+                        type="text" 
+                        size="small" 
+                        :disabled="scope.row.status == 0">
                         编辑
                     </el-button>
-                    <el-button @click="publish(scope.$index, scope.row)" type="text" size="small">
+                    <el-button 
+                        @click="publish(scope.$index, scope.row)" 
+                        type="text" size="small">
                         <i>{{ scope.row.publish_status == 0 ? '撤回' : '发布' }}</i>
                     </el-button>
-                    <el-button @click="offline(scope.$index, scope.row)" type="text" size="small">
+                    <el-button 
+                        @click="offline(scope.$index, scope.row)" 
+                        type="text" 
+                        size="small">
                         <i>{{ scope.row.status == 1 ? '上线' : '下线' }}</i>
                     </el-button>
-                    <el-button @click="del(scope.$index, scope.row)" type="text" size="small" :disabled="!(scope.row.status == 0 && scope.row.publish_status == 0)">删除
+                    <el-button 
+                        @click="del(scope.$index, scope.row)" 
+                        type="text" 
+                        size="small" 
+                        :disabled="scope.row.status == 0 || scope.row.publish_status == 0">
+                        删除
                     </el-button>
                 </template>
             </el-table-column>
