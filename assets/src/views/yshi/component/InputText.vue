@@ -70,7 +70,7 @@
         data () {
             return {
                 inputValue: this.value,
-                error: false,
+                error: true,
                 msg: ''
             }
         },
@@ -92,6 +92,7 @@
                             this.$emit('input', val)
                         }
                     } else if (this.textRight === '人' || this.textRight === '元') {
+                        this.error = false
                         this.$emit('input', parseInt(val))
                     } else {
                         var re = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/

@@ -493,10 +493,12 @@
                     if(this.isGroupBuying) {
                         this.fetchParam.group_buying.forEach((item) => {
                             for (let [key, value] of Object.entries(item)) {
+                                // debugger
                                 if(value === 0 || value === true) {
                                     pass = false
-                                    xmview.showTip('error', '请设置优惠阶级')
-                                    break
+                                    xmview.showTip('error', '请检查优惠阶级')
+                                    // break
+                                    return
                                 }
                             }
                             delete item.error

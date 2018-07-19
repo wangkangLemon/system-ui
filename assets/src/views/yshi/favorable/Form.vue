@@ -195,12 +195,18 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="设置满折优惠" prop="favorable" v-if="fetchParam.favorable_type===2">
-                <PlusOrRemove 
+<!--                 <PlusOrRemove 
                     ref="favorablePlus"
                     @res="groupDiscounts" 
                     :money="moneyarr" 
                     :discount="discountarr" 
                     :favorable="fetchParam.favorable" 
+                    :disable="disable">
+                </PlusOrRemove> -->
+                <PlusOrRemove 
+                    ref="favorablePlus"
+                    @res="groupDiscounts" 
+                    :select="fetchParam.favorable" 
                     :disable="disable">
                 </PlusOrRemove>
             </el-form-item>
@@ -227,12 +233,18 @@
             <el-form-item label="团购优惠">
                 <el-checkbox v-model="isGroupBuying" :disabled="disable">设置团购优惠</el-checkbox>
                 <div v-show="isGroupBuying">
-                    <PlusOrRemove 
+<!--                     <PlusOrRemove 
                         @res="groupDiscounts2" 
                         textRight="人"
                         :money="moneyarr2" 
                         :discount="discountarr2" 
                         :favorable="fetchParam.group_buying" 
+                        :disable="disable">
+                    </PlusOrRemove> -->
+                    <PlusOrRemove 
+                        @res="groupDiscounts2" 
+                        textRight="人"
+                        :select="fetchParam.group_buying" 
                         :disable="disable">
                     </PlusOrRemove>
                 </div>
@@ -546,9 +558,9 @@
             submit () {
                 this.$refs['ruleForm'].validate((valid) => {
                     if (!valid) return
-                    if (this.isGroupBuying || this.fetchParam.favorable_type === 2) {
-                        if ( !this.$store.state.component.yshiGroupSussess) return
-                    }
+                    // if (this.isGroupBuying || this.fetchParam.favorable_type === 2) {
+                    //     if ( !this.$store.state.component.yshiGroupSussess) return
+                    // }
                     if (!this.editor.getContentTxt()) {
                         xmview.showTip('error', '请填写正文内容')
                         return
@@ -563,6 +575,15 @@
                     }
                     // 去除favorable空值
                     if (this.fetchParam.favorable_type === 2) {
+                        this.fetchParam.favorable.forEach((item) => {
+                            for (let [key, value] of Object.entries(item)) {
+                                if(!value || value === true) {
+                                    xmview.showTip('error', '请检查优惠阶级')
+                                    return
+                                }
+                            }
+                            delete item.error
+                        })
                         for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
                             if (!this.fetchParam.favorable[i].reach || !this.fetchParam.favorable[i].discount){
                                 this.fetchParam.favorable.splice(i,1)
@@ -574,6 +595,16 @@
                     // 团购优惠
                     if (!this.isGroupBuying) {
                         this.fetchParam.group_buying = [{}]
+                    } else {
+                        this.fetchParam.group_buying.forEach((item) => {
+                            for (let [key, value] of Object.entries(item)) {
+                                if(!value || value === true) {
+                                    xmview.showTip('error', '请检查优惠阶级')
+                                    return
+                                }
+                            }
+                            delete item.error
+                        })
                     }
                     let req = favorableService.createGoodGroup
                     let msg = '添加成功'
