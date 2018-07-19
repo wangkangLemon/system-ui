@@ -495,11 +495,11 @@
                             for (let [key, value] of Object.entries(item)) {
                                 if(value === 0 || value === true) {
                                     pass = false
-                                    xmview.showTip('error', '请设置优惠阶级')
+                                    xmview.showTip('error', '请检查优惠阶级')
                                     break
                                 }
                             }
-                            delete item.error
+                            // delete item.error
                         })
 
                     }
