@@ -659,6 +659,9 @@
                                 buyarr.push(buy)
                             }
                         })
+                        if(!buyarr.length){
+                            return
+                        }
                         this.fetchParam.group_buying = buyarr
                     }
 
