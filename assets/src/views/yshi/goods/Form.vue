@@ -510,6 +510,7 @@
                                     }
                                 }
                             }
+
                             if(error) {
                                 return
                             }else {
@@ -518,6 +519,9 @@
                                 buyarr.push(buy)
                             }
                         })
+                        if(!buyarr.length){
+                            return
+                        }
                         this.fetchParam.group_buying = buyarr
                     }
 
@@ -537,7 +541,7 @@
                     })
                     // 团购优惠
                     if (!this.isGroupBuying) {
-                        this.fetchParam.group_buying = [{}]
+                        this.fetchParam.group_buying = []
                     }
                     let req = goodsService.createGood
                     let msg = '添加成功'

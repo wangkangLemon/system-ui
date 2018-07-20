@@ -322,6 +322,9 @@
                             buyarr.push(buy)
                         }
                     })
+                    if(!buyarr.length){
+                        return
+                    }
                     this.fetchParam.favorable = buyarr
                     // 去除favorable空值
                     for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
