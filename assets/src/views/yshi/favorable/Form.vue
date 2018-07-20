@@ -242,9 +242,9 @@
                         :disable="disable">
                     </PlusOrRemove> -->
                     <PlusOrRemove 
-                        @res="groupDiscounts2" 
                         textRight="人"
-                        :select="fetchParam.group_buying" 
+                        :select="group_buying" 
+                        @res="val => fetchParam.group_buying = val"
                         :disable="disable">
                     </PlusOrRemove>
                 </div>
@@ -325,7 +325,7 @@
             show_video_id: void 0,
             introduce: void '',
             favorable: [{}],
-            group_buying: [{}],
+            group_buying: [],
             sort: void 0,
             goods: [],
             goods_ids: [],
@@ -356,6 +356,7 @@
                 editor: null,
                 isShowVideoDialog: false,
                 fetchParam: clearFn(),
+                group_buying: [],
                 dialogGoods: {
                     loading: false,
                     isShow: false,
@@ -424,12 +425,14 @@
                     })
                     if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
                         this.isGroupBuying = true
-                        ret.group_buying.forEach(item => {
-                            this.moneyarr2.push(item.reach)
-                            this.discountarr2.push(item.discount)
-                        })
+                        // ret.group_buying.forEach(item => {
+                        //     this.moneyarr2.push(item.reach)
+                        //     this.discountarr2.push(item.discount)
+                        // })
+                        this.group_buying = ret.group_buying
                     } else {
-                        this.fetchParam.group_buying = [{}]
+                        this.fetchParam.group_buying = []
+                        this.group_buying = []
                     }
                     ret.favorable.forEach(item => {
                         this.moneyarr.push(item.reach)
@@ -557,6 +560,7 @@
             },
             submit () {
                 let pass = true
+                let error = false
                 this.$refs['ruleForm'].validate((valid) => {
                     if (!valid) {
                         pass = false
@@ -578,50 +582,83 @@
                         return xmview.showTip('warning', '截止日期要大于当前日期')
                     }
                     // 去除favorable空值
-                    if (this.fetchParam.favorable_type === 2) {
-                        this.fetchParam.favorable.forEach((item) => {
-                            for (let [key, value] of Object.entries(item)) {
-                                if (!('reach' in item && 'discount' in item)) {
-                                    xmview.showTip('error', '请检查优惠阶级')
-                                    pass = false
-                                    return
-                                }
-                                if(value === 0 || value === true) {
-                                    pass = false
-                                    xmview.showTip('error', '请检查优惠阶级')
-                                    return
-                                }
-                            }
-                            delete item.error
-                        })
-                        for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
-                            if (!this.fetchParam.favorable[i].reach || !this.fetchParam.favorable[i].discount){
-                                this.fetchParam.favorable.splice(i,1)
-                            }
-                        }
-                    } else {
-                        this.fetchParam.favorable = [{}]
-                    }
+                    // if (this.fetchParam.favorable_type === 2) {
+                    //     this.fetchParam.favorable.forEach((item) => {
+                    //         for (let [key, value] of Object.entries(item)) {
+                    //             if (!('reach' in item && 'discount' in item)) {
+                    //                 xmview.showTip('error', '请检查优惠阶级')
+                    //                 pass = false
+                    //                 return
+                    //             }
+                    //             if(value === 0 || value === true) {
+                    //                 pass = false
+                    //                 xmview.showTip('error', '请检查优惠阶级')
+                    //                 return
+                    //             }
+                    //         }
+                    //         delete item.error
+                    //     })
+                    //     for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
+                    //         if (!this.fetchParam.favorable[i].reach || !this.fetchParam.favorable[i].discount){
+                    //             this.fetchParam.favorable.splice(i,1)
+                    //         }
+                    //     }
+                    // } else {
+                    //     this.fetchParam.favorable = [{}]
+                    // }
                     // 团购优惠
-                    if (!this.isGroupBuying) {
-                        this.fetchParam.group_buying = [{}]
-                    } else {
+                    // if (!this.isGroupBuying) {
+                    //     this.fetchParam.group_buying = [{}]
+                    // } else {
+                    //     this.fetchParam.group_buying.forEach((item) => {
+                    //         if (!('reach' in item && 'discount' in item)) {
+                    //             xmview.showTip('error', '请检查优惠阶级')
+                    //             pass = false
+                    //             return
+                    //         }
+                    //         for (let [key, value] of Object.entries(item)) {
+                    //             if(value === 0|| value === true) {
+                    //                 pass = false
+                    //                 xmview.showTip('error', '请检查优惠阶级')
+                    //                 return
+                    //             }
+                    //         }
+                    //         delete item.error
+                    //     })
+                    // }
+
+                    if(this.isGroupBuying) {
+                        let buyarr = []
                         this.fetchParam.group_buying.forEach((item) => {
+                            let buy = {}
                             if (!('reach' in item && 'discount' in item)) {
                                 xmview.showTip('error', '请检查优惠阶级')
                                 pass = false
                                 return
                             }
                             for (let [key, value] of Object.entries(item)) {
-                                if(value === 0|| value === true) {
-                                    pass = false
-                                    xmview.showTip('error', '请检查优惠阶级')
-                                    return
+                                for (let [key, value2] of Object.entries(value)) {
+                                    if(value2 === 0 || value2 === true) {
+                                        pass = false
+                                        error = true
+                                        xmview.showTip('error', '请检查优惠阶级')
+                                        // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                        // 循环中的return并不能将函数直接返回，和break是一样的
+                                        return
+                                    }
                                 }
                             }
-                            delete item.error
+                            if(error) {
+                                return
+                            }else {
+                                buy.reach = item.reach.value
+                                buy.discount = item.discount.value
+                                buyarr.push(buy)
+                            }
                         })
+                        this.fetchParam.group_buying = buyarr
                     }
+
                     let req = favorableService.createGoodGroup
                     let msg = '添加成功'
                     if (this.fetchParam.id) {

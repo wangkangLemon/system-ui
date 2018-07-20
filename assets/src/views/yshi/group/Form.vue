@@ -95,8 +95,8 @@
             </el-form-item>
             <el-form-item label="设置组合售卖优惠" prop="favorable">
                 <PlusOrRemove 
-                    @res="groupDiscounts" 
-                    :select="fetchParam.favorable" 
+                    @res="val => fetchParam.favorable = val" 
+                    :select="favorable" 
                     :disable="disable"></PlusOrRemove>
             </el-form-item>
             <el-form-item>
@@ -134,7 +134,7 @@
             show_video_name: void '',
             show_video_id: void 0,
             introduce: void '',
-            favorable: [{}],
+            favorable: [],
             order: void 0,
             goods: [],
             goods_ids: []
@@ -153,6 +153,7 @@
                     name: void 0,
                 },
                 fetchParam: clearFn(),
+                favorable: [],
                 disable: false,
                 moneyarr: [],
                 discountarr: [],
@@ -211,10 +212,11 @@
                     this.$nextTick(() => {
                         this.initTable()
                     })
-                    ret.favorable.forEach(item => {
-                        this.moneyarr.push(item.reach)
-                        this.discountarr.push(item.discount)
-                    })
+                    this.favorable = ret.favorable
+                    // ret.favorable.forEach(item => {
+                    //     this.moneyarr.push(item.reach)
+                    //     this.discountarr.push(item.discount)
+                    // })
                     this.editor && this.editor.setContent(ret.introduce)
                     if (this.$route.name === 'yshi-googroupds-preview') {
                         this.$refs.cont.innerHTML = ret.introduce
@@ -278,6 +280,7 @@
             },
             submit () {
                 let pass = true
+                let error = false
                 this.$refs['ruleForm'].validate((valid) => {
                     if (!valid) pass = false
                     if (!this.editor.getContentTxt()) {
@@ -288,16 +291,35 @@
                     this.fetchParam.goods_ids = this.fetchParam.goods.map(item => {
                         return item.id
                     })
+                    let buyarr = []
                     this.fetchParam.favorable.forEach((item) => {
+                        let buy = {}
+                        if (!('reach' in item && 'discount' in item)) {
+                            xmview.showTip('error', '请检查优惠阶级')
+                            pass = false
+                            return
+                        }
                         for (let [key, value] of Object.entries(item)) {
-                            if(value === 0 || value === true) {
-                                pass = false
-                                xmview.showTip('error', '请设置优惠阶级')
-                                break
+                            for (let [key, value2] of Object.entries(value)) {
+                                if(value2 === 0 || value2 === true) {
+                                    pass = false
+                                    error = true
+                                    xmview.showTip('error', '请检查优惠阶级')
+                                    // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                    // 循环中的return并不能将函数直接返回，和break是一样的
+                                    return
+                                }
                             }
                         }
-                        delete item.error
+                        if(error) {
+                            return
+                        }else {
+                            buy.reach = item.reach.value
+                            buy.discount = item.discount.value
+                            buyarr.push(buy)
+                        }
                     })
+                    this.fetchParam.favorable = buyarr
                     // 去除favorable空值
                     for (let i = this.fetchParam.favorable.length-1; i>=0 ; i--){
                         if (!this.fetchParam.favorable[i].reach || !this.fetchParam.favorable[i].discount){
