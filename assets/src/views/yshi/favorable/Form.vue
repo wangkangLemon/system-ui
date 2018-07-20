@@ -676,10 +676,9 @@
                         }).catch((ret) => {
                             if (ret.data.data === 'exist'){
                                 this.orderErr = true
-                                this.fetchData()
+                                // this.fetchData()
                             } else {
                                 xmview.showTip('error', ret.message)
-                                this.fetchData()
                             }
                         })
                     }
