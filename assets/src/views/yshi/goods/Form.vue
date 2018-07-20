@@ -503,11 +503,11 @@
                                     pass = false
                                     xmview.showTip('error', '请检查优惠阶级')
                                     // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
-                                    // 循环中的return并不能将函数直接返回，和break也有一些区别，注意使用
+                                    // 循环中的return并不能将函数直接返回，和break是一样的
                                     return
                                 }
                             }
-                            delete item.error
+                            // delete item.error
                         })
 
                     }
