@@ -6,6 +6,7 @@ import store from './store'
 import {sync} from 'vuex-router-sync'
 import config from './utils/config'
 import authUtils from './utils/authUtils'
+import mixinUtils from './utils/mixinUtils'
 import VueDND from 'awe-dnd'
 import SidePannel from './views/component/mixin/sidePannel'
 import VueClipboards from 'vue-clipboards'
@@ -26,9 +27,8 @@ let pluginPermission = {
         // 注入组件
         Vue.mixin({
             methods: {
-                isPermission (val) {
-                    return authUtils.isPermission(val)
-                }
+                isPermission: mixinUtils.isPermission,
+                encodeParam: mixinUtils.encodeParam,
             },
         })
         Vue.prototype.$sidepan = SidePannel
