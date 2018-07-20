@@ -631,7 +631,7 @@
                         let buyarr = []
                         this.fetchParam.group_buying.forEach((item) => {
                             let buy = {}
-                            if (!('reach' in item && 'discount' in item)) {
+                            if(!(item.reach.value && item.discount.value)) {
                                 xmview.showTip('error', '请检查优惠阶级')
                                 pass = false
                                 return
