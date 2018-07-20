@@ -34,17 +34,17 @@
             <InputText 
                 textLeft="满" 
                 :textRight="textRight" 
-                :value="item.reach" 
-                @input="inputFn(arguments[0], 'reach', index)"
-                @err="showErr(arguments[0], index)"
+                :value="item.reach.value" 
+                @input="inputFn(arguments[0], reach, index)"
+                @err="showErr(arguments[0], reach, index)"
                 :disable="disable">
             </InputText>
             <InputText 
                 textLeft="打" 
                 textRight="折" 
-                :value="item.discount" 
-                @input="inputFn(arguments[0], 'discount', index)" 
-                @err="showErr(arguments[0], index)"
+                :value="item.discount.value" 
+                @input="inputFn(arguments[0], discount, index)" 
+                @err="showErr(arguments[0], discount, index)"
                 :disable="disable" 
                 :isdis="isdis">
             </InputText>
@@ -65,6 +65,8 @@
 </template>
 
 <script>
+    const DISCOUNT = 'discount'
+    const REACH = 'reach'
     import InputText from './InputText.vue'
     export default{
         props: {
@@ -81,7 +83,9 @@
         data () {
             return {
                 isdis: true,
-                set_money: initPusher(this.select)
+                set_money: initPusher(this.select),
+                reach: REACH,
+                discount: DISCOUNT
             }
         },
         created () {
@@ -93,6 +97,9 @@
         watch: {
             select (val) {
                 this.set_money = initPusher(val)
+                // this.$emit('res', this.set_money)
+            },
+            set_money (val) {
             }
         },
         methods: {
@@ -103,11 +110,13 @@
                 this.set_money.push(initSet())
             },
             inputFn (val, data, index) {
-                this.set_money[index][data] = Number(val)
-                this.set_money[index].error = false
+                this.set_money[index][data].value = Number(val)
+                this.set_money[index][data].error = false
+                // debugger
+                this.$emit('res', this.set_money)
             },
-            showErr(val, index) {
-                this.set_money[index].error = val
+            showErr(val, data, index) {
+                this.set_money[index][data].error = val
             }
         },
         components: {
@@ -115,15 +124,52 @@
         }
     }
     function initPusher (select) {
+        // debugger
         let res = select || []
-        !res.length && res.push(initSet())
+        if (!res.length) {
+            res.push(initSet())
+        } else {
+            res = initSet2(res)
+        }
+        // checkEmptySelect(res) && res.push(initSet())
+        // !res.length && res.push(initSet())
         return res
     }
     function initSet () {
         return {
-            reach: void '',
-            discount: void '',
-            error: false
+            [REACH]: {
+                value: '',
+                error: false
+            },
+            [DISCOUNT]: {
+                value: '',
+                error: false
+            }
         }
     }
+    function initSet2(res) {
+        let objarr = []
+        res.forEach( item => {
+            let obj = initSet()
+            if (item[REACH].value !== '' || item[DISCOUNT].value !== '') {
+                obj[REACH].value = item[REACH]
+                obj[DISCOUNT].value = item[DISCOUNT]
+            }
+            objarr.push(obj)
+        })
+        return objarr
+    }
+    // function checkEmptySelect (res) {
+    //     let pass = false
+    //     // res = [{}]
+    //     // return !res.length // false
+    //     res.forEach(item => {
+    //         if (!(DISCOUNT in item && DISCOUNT in item)) {
+    //             pass = true
+    //             res.
+    //             return
+    //         }
+    //     })
+    //     return pass
+    // }
 </script>
