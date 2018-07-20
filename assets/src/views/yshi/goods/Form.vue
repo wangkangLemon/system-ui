@@ -361,65 +361,46 @@
             }
         },
         created () {
-            console.log(this.$route.name)
-            if (this.$route.params.good_id != undefined) {
-                goodsService.getGoodInfo({
-                    id: this.$route.params.good_id
-                }).then((ret) => {
-                    console.log(ret)
-                    this.fetchParam = ret
-                    this.fetchParam.price_com = parseFloat(ret.price_com)
-                    this.fetchParam.favorable_price_com = parseFloat(ret.favorable_price_com)
-                    this.fetchParam.price = parseFloat(ret.price)
-                    this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
-                    let obj = this.getTaskSelected(ret.objects)
-                    this.fetchParam.transferRight = obj.resRight
-                    if (this.fetchParam.transferRight.length > 0) {
-                        this.transferLeft = obj.resLeft
-                    } else {
-                        this.transferLeft = new TaskModel().initTabs()
-                    }
-                    if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
-                        this.isGroupBuying = true
-                        // let arr = []
-                        // ret.group_buying.forEach(item => {
-                        //     let buy = {
-                        //         reach: {
-                        //             value: void 0,
-                        //             error: false
-                        //         },
-                        //         discount: {
-                        //             value: void 0,
-                        //             error: false
-                        //         }
-                        //     }
-                        //     // let buy = {}
-                        //     buy.reach.value = item.reach
-                        //     buy.reach.error = false
-                        //     buy.discount.value = item.discount
-                        //     buy.discount.error = false
-                        //     arr.push(buy)
-                        // })
-                        // this.group_buying = arr
-                        this.group_buying = ret.group_buying
-                    } else {
-                        this.group_buying = []
-                        this.fetchParam.group_buying = []
-                    }
-                    this.currCategoryName = ret.category
-                    this.editor && this.editor.setContent(ret.introduce)
-                    if (this.$route.name === 'yshi-goods-preview') {
-                        this.$refs.cont.innerHTML = ret.introduce
-                    }
-                    this.disableObject = !!ret.online_count
-                })
-                this.disable = this.$route.name === 'yshi-goods-preview' ? true : false
-            } else {
-                this.transferLeft = new TaskModel().initTabs()
-            }
-            xmview.setContentLoading(false)
+            this.fetchData()
         },
         methods: {
+            fetchData() {
+                if (this.$route.params.good_id != undefined) {
+                    goodsService.getGoodInfo({
+                        id: this.$route.params.good_id
+                    }).then((ret) => {
+                        this.fetchParam = ret
+                        this.fetchParam.price_com = parseFloat(ret.price_com)
+                        this.fetchParam.favorable_price_com = parseFloat(ret.favorable_price_com)
+                        this.fetchParam.price = parseFloat(ret.price)
+                        this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
+                        let obj = this.getTaskSelected(ret.objects)
+                        this.fetchParam.transferRight = obj.resRight
+                        if (this.fetchParam.transferRight.length > 0) {
+                            this.transferLeft = obj.resLeft
+                        } else {
+                            this.transferLeft = new TaskModel().initTabs()
+                        }
+                        if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
+                            this.isGroupBuying = true
+                            this.group_buying = ret.group_buying
+                        } else {
+                            this.group_buying = []
+                            this.fetchParam.group_buying = []
+                        }
+                        this.currCategoryName = ret.category
+                        this.editor && this.editor.setContent(ret.introduce)
+                        if (this.$route.name === 'yshi-goods-preview') {
+                            this.$refs.cont.innerHTML = ret.introduce
+                        }
+                        this.disableObject = !!ret.online_count
+                    })
+                    this.disable = this.$route.name === 'yshi-goods-preview' ? true : false
+                } else {
+                    this.transferLeft = new TaskModel().initTabs()
+                }
+                xmview.setContentLoading(false)
+            },
             getTaskSelected (list) {
                 let resLeft = new TaskModel().getTabs()
                 let resRight = []
@@ -571,6 +552,7 @@
                             this.$router.push({name: 'yshi-goods'})
                         }).catch((ret) => {
                             xmview.showTip('error', ret.message)
+                            this.fetchData()
                         })
                     }
                 })

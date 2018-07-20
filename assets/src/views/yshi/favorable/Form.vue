@@ -409,42 +409,7 @@
             }
         },
         created() {
-            if (this.$route.params.group_id != undefined) {
-                if (this.$route.name === 'yshi-favorable-preview'){
-                    this.disable = true
-                } else {
-                    this.disable = false
-                }
-                favorableService.getGoodGroupInfo({
-                    id: this.$route.params.group_id
-                }).then((ret) => {
-                    console.log(ret)
-                    this.fetchParam = ret
-                    this.$nextTick(() => {
-                        this.initTable()
-                    })
-                    if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
-                        this.isGroupBuying = true
-                        // ret.group_buying.forEach(item => {
-                        //     this.moneyarr2.push(item.reach)
-                        //     this.discountarr2.push(item.discount)
-                        // })
-                        this.group_buying = ret.group_buying
-                    } else {
-                        this.fetchParam.group_buying = []
-                        this.group_buying = []
-                    }
-                    ret.favorable.forEach(item => {
-                        this.moneyarr.push(item.reach)
-                        this.discountarr.push(item.discount)
-                    })
-                    this.editor && this.editor.setContent(ret.introduce)
-                    this.$refs.cont.innerHTML = ret.introduce
-                })
-            } else {
-                this.disable = false
-            }
-            xmview.setContentLoading(false)
+            this.fetchData()
         },
         watch: {
             'fetchParam.goods'(val) {
@@ -457,6 +422,44 @@
             }
         },
         methods: {
+            fetchData() {
+                if (this.$route.params.group_id != undefined) {
+                    if (this.$route.name === 'yshi-favorable-preview'){
+                        this.disable = true
+                    } else {
+                        this.disable = false
+                    }
+                    favorableService.getGoodGroupInfo({
+                        id: this.$route.params.group_id
+                    }).then((ret) => {
+                        console.log(ret)
+                        this.fetchParam = ret
+                        this.$nextTick(() => {
+                            this.initTable()
+                        })
+                        if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
+                            this.isGroupBuying = true
+                            // ret.group_buying.forEach(item => {
+                            //     this.moneyarr2.push(item.reach)
+                            //     this.discountarr2.push(item.discount)
+                            // })
+                            this.group_buying = ret.group_buying
+                        } else {
+                            this.fetchParam.group_buying = []
+                            this.group_buying = []
+                        }
+                        ret.favorable.forEach(item => {
+                            this.moneyarr.push(item.reach)
+                            this.discountarr.push(item.discount)
+                        })
+                        this.editor && this.editor.setContent(ret.introduce)
+                        this.$refs.cont.innerHTML = ret.introduce
+                    })
+                } else {
+                    this.disable = false
+                }
+                xmview.setContentLoading(false)
+            },
             initTable () {
                 this.$refs.table.layout.gutterWidth = 0
             },
@@ -673,8 +676,10 @@
                         }).catch((ret) => {
                             if (ret.data.data === 'exist'){
                                 this.orderErr = true
+                                this.fetchData()
                             } else {
                                 xmview.showTip('error', ret.message)
+                                this.fetchData()
                             }
                         })
                     }

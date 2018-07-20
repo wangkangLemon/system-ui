@@ -198,34 +198,7 @@
             }
         },
         created() {
-            if (this.$route.params.group_id != undefined) {
-                if (this.$route.name === 'yshi-group-preview'){
-                    this.disable = true
-                } else {
-                    this.disable = false
-                }
-                goodsGroupService.getGoodGroupInfo({
-                    id: this.$route.params.group_id
-                }).then((ret) => {
-                    console.log(ret)
-                    this.fetchParam = ret
-                    this.$nextTick(() => {
-                        this.initTable()
-                    })
-                    this.favorable = ret.favorable
-                    // ret.favorable.forEach(item => {
-                    //     this.moneyarr.push(item.reach)
-                    //     this.discountarr.push(item.discount)
-                    // })
-                    this.editor && this.editor.setContent(ret.introduce)
-                    if (this.$route.name === 'yshi-googroupds-preview') {
-                        this.$refs.cont.innerHTML = ret.introduce
-                    }
-                })
-            } else {
-                this.disable = false
-            }
-            xmview.setContentLoading(false)
+            this.fetchData()
         },
         watch: {
             'fetchParam.goods'(val) {
@@ -238,6 +211,36 @@
             }
         },
         methods: {
+            fetchData() {
+                if (this.$route.params.group_id != undefined) {
+                    if (this.$route.name === 'yshi-group-preview'){
+                        this.disable = true
+                    } else {
+                        this.disable = false
+                    }
+                    goodsGroupService.getGoodGroupInfo({
+                        id: this.$route.params.group_id
+                    }).then((ret) => {
+                        console.log(ret)
+                        this.fetchParam = ret
+                        this.$nextTick(() => {
+                            this.initTable()
+                        })
+                        this.favorable = ret.favorable
+                        // ret.favorable.forEach(item => {
+                        //     this.moneyarr.push(item.reach)
+                        //     this.discountarr.push(item.discount)
+                        // })
+                        this.editor && this.editor.setContent(ret.introduce)
+                        if (this.$route.name === 'yshi-googroupds-preview') {
+                            this.$refs.cont.innerHTML = ret.introduce
+                        }
+                    })
+                } else {
+                    this.disable = false
+                }
+                xmview.setContentLoading(false)
+            },
             initTable () {
                 this.$refs.table.layout.gutterWidth = 0
             },
@@ -340,8 +343,10 @@
                         }).catch((ret) => {
                             if (ret.data.data === 'exist'){
                                 this.orderErr = true
+                                this.fetchData()
                             } else {
                                 xmview.showTip('error', ret.message)
+                                this.fetchData()
                             }
                         })
                     }
