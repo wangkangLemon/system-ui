@@ -2,10 +2,11 @@
  * Created by huanghuixin on 2017/3/20.
  */
 
-import message from '../utils/message'
-import authUtils from '../utils/authUtils'
-import config from '../utils/config'
-import * as typeUtils from '../utils/typeUtils'
+import message from 'utils/message'
+import authUtils from 'utils/authUtils'
+import mixinUtils from 'utils/mixinUtils'
+import config from 'utils/config'
+import * as typeUtils from 'utils/typeUtils'
 import ajax from '@fdaciuk/ajax'
 
 let requestId = 0
@@ -165,7 +166,14 @@ export function processParams (params) {
         return params
     let data = []
     for (let k in params) {
-        let val = params[k] == null ? '' : params[k]
+        let val
+        if ( params[k] == null) {
+            val = ''
+        } else if (['keyword', 'name', 'title'].indexOf(k) !== -1) {
+            val = mixinUtils.encodeParam(params[k])
+        } else {
+            val = params[k]
+        }
         data.push(k + '=' + val)
     }
 

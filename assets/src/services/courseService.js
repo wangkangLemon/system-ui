@@ -243,13 +243,13 @@ class CourseService {
     // 弹出框请求的视频列表
     getVideo4Dialog ({ companyid, status, keyword, page, page_size }) {
         let finalUrl = `${urlPre}/video/search`
-        return api.get(finalUrl, { keyword, status, page, page_size })
+        return api.get(finalUrl, { is_system: 1, keyword, status, page, page_size })
     }
 
     // 弹出框请求的文档列表
     getDoc4Dialog ({ companyid, status, keyword, file_type, page, page_size }) {
         let finalUrl = `${urlPre}/doc/search`
-        return api.get(finalUrl, { keyword, file_type, status, page, page_size })
+        return api.get(finalUrl, { is_system: 1, keyword, file_type, status, page, page_size })
     }
 
     // 获取文档上传url
