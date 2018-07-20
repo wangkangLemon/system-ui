@@ -138,11 +138,11 @@
     function initSet () {
         return {
             [REACH]: {
-                value: void '',
+                value: '',
                 error: false
             },
             [DISCOUNT]: {
-                value: void '',
+                value: '',
                 error: false
             }
         }
