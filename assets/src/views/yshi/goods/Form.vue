@@ -552,7 +552,7 @@
                             this.$router.push({name: 'yshi-goods'})
                         }).catch((ret) => {
                             xmview.showTip('error', ret.message)
-                            this.fetchData()
+                            // this.fetchData()
                         })
                     }
                 })
