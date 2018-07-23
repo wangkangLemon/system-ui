@@ -492,21 +492,44 @@
                         let buyarr = []
                         this.fetchParam.group_buying.forEach((item) => {
                             let buy = {}
-                            if(!(item.reach.value && item.discount.value)) {
-                                xmview.showTip('error', '请检查优惠阶级')
+                            if(!('reach' in item && 'discount' in item)) {
                                 pass = false
                                 error = true
+                                xmview.showTip('error', '请检查优惠阶级')
+                                // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                // 循环中的return并不能将函数直接返回，和break是一样的
                                 return
-                            }
-                            for (let [key, value] of Object.entries(item)) {
-                                for (let [key, value2] of Object.entries(value)) {
-                                    if(value2 === 0 || value2 === true) {
-                                        pass = false
-                                        error = true
-                                        xmview.showTip('error', '请检查优惠阶级')
-                                        // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
-                                        // 循环中的return并不能将函数直接返回，和break是一样的
-                                        return
+                            }else {
+                                for (let [key, value] of Object.entries(item)) {
+                                    if(value.value != undefined) {
+                                        for (let [key, value2] of Object.entries(value)) {
+                                            if(value2 === 0 || value2 === true || value2 === '') {
+                                                pass = false
+                                                error = true
+                                                xmview.showTip('error', '请检查优惠阶级')
+                                                // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                                // 循环中的return并不能将函数直接返回，和break是一样的
+                                                return
+                                            }
+                                        }
+                                    }else {
+                                        if(value === 0 || value === true || value === '') {
+                                            pass = false
+                                            error = true
+                                            xmview.showTip('error', '请检查优惠阶级')
+                                            // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                            // 循环中的return并不能将函数直接返回，和break是一样的
+                                            return
+                                        }else {
+                                            if(key == 'reach') {
+                                                buy.reach = value
+                                            } else if(key == 'discount') {
+                                                buy.discount = value
+                                            }
+                                            if('reach' in buy && 'discount' in buy) {
+                                                buyarr.push(buy)
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -514,9 +537,11 @@
                             if(error) {
                                 return
                             }else {
-                                buy.reach = item.reach.value
-                                buy.discount = item.discount.value
-                                buyarr.push(buy)
+                                if(item.reach.value) {
+                                    buy.reach = item.reach.value
+                                    buy.discount = item.discount.value
+                                    buyarr.push(buy)
+                                }
                             }
                         })
                         if(!buyarr.length){
