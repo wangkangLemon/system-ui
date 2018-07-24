@@ -91,6 +91,13 @@
                     <el-form-item label="课程售价" prop="price">
                         <el-input v-model.number="fetchParam.price" type="number"></el-input>
                     </el-form-item>
+                    <el-form-item label="更新时间" prop="update_time_name" v-if="fetchParam.update_time_name">
+                        <el-date-picker v-model="fetchParam.update_time_name" 
+                            type="datetime" 
+                            value-format="yyyy-MM-dd HH:mm:ss" 
+                            placeholder="更新时间">
+                        </el-date-picker>
+                    </el-form-item>
                     <h2>课时类型设置</h2>
                     <el-form-item label="选择类型" prop="lesson_type">
                         <el-radio-group v-model="fetchParam.lesson_type">
@@ -107,7 +114,7 @@
             <el-tab-pane :disabled="!fetchParam.id" label="课时管理" name="classhour">
                 <!--单节课-->
                 <el-form v-if="fetchParam.lesson_type == 'single'" label-width="120px" ref="classhourform" :rules="classhour.rules" :model="classhour.form">
-                    <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id"></LessonForm>
+                    <LessonForm :lesson="classhour.form" :company_id="fetchParam.company_id"></LessonForm>
 
                     <el-form-item v-if="!classhour.paperLesson">
                         <el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)"><i class="el-icon-plus" ></i> 添加考试</el-button>
@@ -132,7 +139,7 @@
 
                 <!--多节课-->
                 <section class="mulit-class" v-if="fetchParam.lesson_type == 'multi'">
-                    <div v-for="(item,index) in multi.data">
+                    <div v-for="(item,index) in multi.data" :key="item.id">
                         <div v-if="!item.deleted">
                             <div v-if="item.id === -1">
                                 <p><el-button type="gray" size="full" @click="addNewClasshour"><i class="el-icon-plus" ></i> 添加新课时</el-button></p>
@@ -162,7 +169,7 @@
 
                 <!--多章节-->
                 <section class="mulit-class" v-if="fetchParam.lesson_type == 'chapter'">
-                    <section v-for="(pitem,pindex) in resultData">
+                    <section v-for="(pitem,pindex) in resultData" :key="pitem.id">
                         <section v-if="pitem.deleted == false">
                             <p>
                                 <el-tag type="danger">章节{{pindex + 1}}</el-tag>
@@ -179,7 +186,7 @@
                                     </span>
                                 </i>
                             </p>
-                            <div v-for="(item,index) in pitem.lessons">
+                            <div v-for="(item,index) in pitem.lessons" :key="item.id">
                                 <div v-if="!item.deleted">
                                     <div v-if="item.id === -1">
                                         <p><el-button type="gray" size="full" @click="addNewClasshour(pindex)"><i class="el-icon-plus" ></i> 添加新课时</el-button></p>
@@ -222,7 +229,7 @@
             :title="classhour.title" 
             :visible.sync="classhour.showDialog"
             append-to-body>
-            <LessonForm :lesson="classhour.form" :company_id.number="fetchParam.company_id" ref="multiForm"></LessonForm>
+            <LessonForm :lesson="classhour.form" :company_id="fetchParam.company_id" ref="multiForm"></LessonForm>
             <el-form label-width="120px">
                 <el-form-item>
                     <el-button type="primary" @click="addMultiSubmit">保存</el-button>
@@ -404,6 +411,7 @@
                     this.fetchParam.tags = this.courseTags.toString()
                     let req = newcourseService.create
                     if (this.fetchParam.id) req = newcourseService.update
+                    this.fetchParam.update_time = this.fetchParam.update_time_name
                     req(this.fetchParam).then((ret) => {
                         // 重置当前数据
                         this.currentData = {
@@ -640,6 +648,7 @@
             price: '',
             lesson_type: 'single',
             tags: '',
+            update_time_name: '',
             id: 0
         }
     }
