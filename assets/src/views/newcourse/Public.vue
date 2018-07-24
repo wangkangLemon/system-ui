@@ -108,6 +108,8 @@
                     <el-tag v-else-if="scope.row.publish_status == 1">已撤回</el-tag>
                 </template>
             </el-table-column>
+            <el-table-column width="170" prop="update_time_name" label="更新时间" align="center">
+            </el-table-column>
             <el-table-column width="170" prop="create_time_name" label="创建时间" align="center">
             </el-table-column>
             <el-table-column fixed="right" width="190" label="操作" align="center">
