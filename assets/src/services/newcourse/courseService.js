@@ -30,10 +30,10 @@ class CourseService {
     }
 
     // 更新
-    update({ id, category_id, name, image, description, tags, company_id, price, lesson_type }) {
+    update({ id, category_id, name, image, description, tags, company_id, price, lesson_type, update_time }) {
         let url = `${urlPre}/${id}`
         company_id = company_id || authUtils.getUserInfo().company_id
-        return api.put(url, { category_id, name, image, description, tags, company_id, price, lesson_type }).then(ret => {
+        return api.put(url, { category_id, name, image, description, tags, company_id, price, lesson_type, update_time }).then(ret => {
             if (ret.code) {
                 return Promise.reject(ret)
             }
