@@ -84,6 +84,13 @@ export default class Task {
                 component: 'MedicineTaken'
             },
             {
+                label: '实操课',
+                value: 10,
+                type: 'practical_operation',
+                selected: [],
+                component: 'PracticalOperation'
+            },
+            {
                 label: '直播',
                 value: 9,
                 type: 'live',
