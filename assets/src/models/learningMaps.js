@@ -173,7 +173,7 @@ class Phase {
                     if (tab.childType && tab.childType.includes(phase_task.object_type)) {
                         tab.selected.push(task)
                     } else if (tab.type === phase_task.object_type) {
-                        if (tab.type === 'medicine_task') {
+                        if (tab.type === 'medicine_task' || tab.type === 'practical_operation') {
                             tab.selected.push(task.name)
                         } else {
                             tab.selected.push(task)
