@@ -99,6 +99,7 @@
 
     import SpeakingTransfer from 'components/dialog/transfer/SpeakingTransfer.vue'
     import MedicineTaken from 'components/form/MedicineTaken.vue'
+    import PracticalOperation from 'components/form/PracticalOperation.vue'
 
     import GoodsTransfer from 'components/dialog/transfer/GoodsTransfer.vue'
     import GroupTransfer from 'components/dialog/transfer/GroupTransfer.vue'
@@ -115,6 +116,7 @@
             PracticeTransfer,
             SpeakingTransfer,
             MedicineTaken,
+            PracticalOperation,
             GoodsTransfer,
             GroupTransfer,
             ActivityTransfer,
@@ -167,7 +169,7 @@
         methods: {
             deleteRow (index, row) {
                 let ref = this.getRefsByType(this.$refs.transfers, row)
-                if (row.type === 'medicine_task') {
+                if (row.type === 'medicine_task' || row.type === 'practical_operation') {
                     ref.handleClose(row.name, true)
                 } else {
                     ref.$refs.transfer.toggleRowSelectionById(row)
@@ -215,7 +217,7 @@
                     this.selected.push(row)
                 } else {
                     for (let i = 0; i < this.selected.length; i++) {
-                        if (this.selected[i].type === row.type) {
+                        if (this.selected[i].type === row.type && this.selected[i].name === row.name) {
                             this.selected.splice(i, 1)
                             return
                         }

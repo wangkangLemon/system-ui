@@ -85,6 +85,10 @@ export const taskType = Vue.filter('taskType', (val, type) => {
             label: '拿药练习',
             tag: 'warning'
         },
+        practical_operation: {
+            label: '实操课',
+            tag: 'info'
+        },
         teaching: {
             label: '带教',
             tag: 'warning'
