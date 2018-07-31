@@ -31,7 +31,7 @@
 </style>
 <template>
     <article id="course-order">
-        <el-button class="top-btn" type="primary">导出</el-button>
+        <el-button class="top-btn" type="primary" @click="exportData">导出</el-button>
         <section class="search">
             <el-tabs v-model="activeName" @tab-click="tabClick">
                 <el-tab-pane label="执业药师" name="pharmacist"></el-tab-pane>
@@ -243,6 +243,13 @@ export default {
                     xmview.showTip('error', ret.message)
                 })
             }
+        },
+        exportData () {
+            orderService.exportHistory(this.fetchParam).then(res => {
+                if(res.code === 0) {
+                    xmview.showTip('success', '任务创建成功，请到数据分析中查看.')
+                }
+            })
         }
     }
 }
