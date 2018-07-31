@@ -89,9 +89,13 @@ class IMService {
     }
 
     // 群发消息
-    mass (reqParam) {
+    mass ({type, receiver, media_id, text, receiver_mobile}) {
         let url = urlPre + '/mass/'
-        return api.post(url, reqParam)
+        return api.post(url, {type, receiver, media_id, text, receiver_mobile}).then(ret => {
+            if(ret.code === 0) {
+                return ret
+            }
+        })
     }
 
     // 发送预览
