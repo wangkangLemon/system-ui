@@ -49,6 +49,7 @@
                     <el-option value="" label="全部"></el-option>
                     <el-option value="manager" label="店长"></el-option>
                     <el-option value="employee" label="店员"></el-option>
+                    <el-option value="custom" label="自定义"></el-option>
                 </el-select>
             </section>
 
@@ -92,14 +93,22 @@
                     label="对象">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.receiver == 'all'" type="success">全部</el-tag>
-                    <el-tag v-else-if="scope.row.status == 'manager'" type="primary">店长</el-tag>
+                    <el-tag v-else-if="scope.row.receiver == 'manager'" type="primary">店长</el-tag>
+                    <el-tag v-else-if="scope.row.receiver == 'custom'" type="warning">自定义</el-tag>
                     <el-tag v-else>店员</el-tag>
                 </template>
             </el-table-column>
             <el-table-column
                     width="80"
-                    prop="success_count"
                     label="成功数">
+                    <template slot-scope="scope">
+                        <el-tooltip v-if="scope.row.receiver_mobile" class="item" 
+                            effect="dark" :content="scope.row.receiver_mobile" 
+                            placement="top-start">
+                                <i>{{scope.row.success_count}}</i>
+                        </el-tooltip>
+                        <i v-else>{{scope.row.success_count}}</i>
+                    </template>
             </el-table-column>
             <el-table-column
                     width="160"

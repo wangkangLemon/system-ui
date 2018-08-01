@@ -36,6 +36,18 @@ class OrderService {
             }
         })
     }
+
+    // 订单导出接口
+    exportHistory (reqObj) {
+        let finalUrl = `${urlPre}/export`
+        return api.get(finalUrl, reqObj, false).then(ret => {
+            if (ret.code == 0) {
+                return ret
+            } else {
+                return Promise.reject(ret)
+            }
+        })
+    }
 }
 
 export default new OrderService()

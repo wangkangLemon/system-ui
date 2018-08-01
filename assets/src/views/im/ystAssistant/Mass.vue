@@ -49,15 +49,51 @@
     <article id="im-ystassistant-mass">
         <el-tabs type="border-card" v-model="activedTab" @tab-click="handleClick">
             <el-tab-pane label="新建消息" name="new" class="create-msg">
-                <article class="search">
+                <!-- <article class="search">
                     <section><i>发送对象</i>
                         <el-select v-model="fetchParamSend.receiver">
                             <el-option value="" label="全部"></el-option>
                             <el-option value="manager" label="店长"></el-option>
                             <el-option value="employee" label="店员"></el-option>
+                            <el-option value="free" label="自定义"></el-option>
                         </el-select>
                     </section>
-                </article>
+
+                </article> -->
+                <el-form :model="fetchParamSend" ref="fetchParamSend" :rules="rules" label-width="100px">
+                    <el-form-item label="发送对象" prop="receiver">
+                        <el-select v-model="fetchParamSend.receiver">
+                            <el-option value="" label="全部"></el-option>
+                            <el-option value="manager" label="店长"></el-option>
+                            <el-option value="employee" label="店员"></el-option>
+                            <el-option value="custom" label="自定义"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="指定人员" prop="receiver_mobile" v-if="fetchParamSend.receiver === 'custom'">
+                        <el-input
+                            type="textarea"
+                            :rows="8"
+                            placeholder="输入手机号，多个手机号逗号分开"
+                            v-model="fetchParamSend.receiver_mobile">
+                        </el-input>
+                    </el-form-item>
+                    <!-- <el-form-item label="异常手机号" class="is-error" v-if="fetchParamSend.mobileFailure">
+                        <el-input
+                            type="textarea"
+                            :rows="2"
+                            readonly
+                            v-model="fetchParamSend.mobileFailure">
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="成功手机号" v-if="fetchParamSend.mobileSuccess">
+                        <el-input
+                            type="textarea"
+                            :rows="2"
+                            readonly
+                            v-model="fetchParamSend.mobileSuccess">
+                        </el-input>
+                    </el-form-item> -->
+                </el-form>
 
                 <!--// 图片消息-->
                 <!--<el-tabs v-model="fetchParamSend.type" type="border-card">-->
@@ -157,6 +193,13 @@
 
     export default{
         data () {
+            const validatePass = (rule, value, callback) => {
+                if (/^(1[345789]\d{9}(,|，)?)+$/.test(value)) {
+                    callback()
+                } else {
+                    callback(new Error('请输入正确的手机号并且用逗号分隔'))
+                }
+            }
             return {
                 activedTab: 'new',
                 fetchParamSend: getOrignFetchParamSend(),
@@ -175,7 +218,13 @@
                 currImg: void 0,
                 isSending: false, // 是否正在群发中
                 uploadImgUrl: void 0, // 图片上传的url
-                loadingUploadimg: false, // 上传图片中
+                loadingUploadimg: false, // 上传图片中,
+                rules: {
+                    receiver_mobile: [
+                        // {required: true, message: '', trigger: 'blur'},
+                        { required: true, validator: validatePass, trigger: 'change' }
+                    ],
+                }
             }
         },
         created () {
@@ -235,6 +284,16 @@
                 this.isSending = true
                 if (type === 0) {
                     imService.mass(this.fetchParamSend).then(() => {
+                        // if (ret.failure > 0) {
+                        //     this.ruleForm.mobileFailure = ret.mobileFailure
+                        //     this.ruleForm.mobileSuccess = ret.mobileSuccess
+                        //     this.ruleForm.receiver_mobile = ''
+                        //     xmview.showTip('warning', ret.message || '部分手机号不存在')
+                        // } else {
+                        //     this.fetchParamSend = getOrignFetchParamSend()
+                        //     this.isSending = false
+                        //     xmview.showTip('success', '发送成功!')
+                        // }
                         this.fetchParamSend = getOrignFetchParamSend()
                         this.isSending = false
                         xmview.showTip('success', '发送成功!')
@@ -269,7 +328,10 @@
             type: 'news',
             receiver: '',
             media_id: void 0,
-            text: ''
+            text: '',
+            receiver_mobile: '',
+            // mobileFailure: '',
+            // mobileSuccess: '',
         }
     }
 </script>
