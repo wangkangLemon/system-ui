@@ -187,31 +187,20 @@ import DateRange from '../component/form/DateRangePicker.vue'
 import orderService from '../../services/newcourse/orderService'
 import UserSelect from 'components/select/UserOrder.vue'
 export default {
+
     components: {
         DateRange,
         UserSelect
     },
     data() {
+
         return {
             payMethods: { 'wechat': '微信', 'alipay': '支付宝', 'money': '余额', 'bank': '银联', 'offlinepay': '线下', 'coupon': '优惠券'},
             payStatus: ['未支付', '已支付', '已关闭', '', '已删除'],
             showDetail: false,
             detail: null,
             loading: false,
-            fetchParam: {
-                page: 1,
-                page_size: 15,
-                // course_id: '',
-                user_id: '',
-                pay_method: '',
-                start_date: '',
-                end_date: '',
-                status: -1,
-                order_type: 'pharmacist',
-                object_type: '',
-                in_company: 0,
-                trade_no: ''
-            },
+            fetchParam: getFetchData(),
             dataList: [],
             total: 0,
             activeName: 'pharmacist'
@@ -223,6 +212,7 @@ export default {
     },
     methods: {
         tabClick(tab, event) {
+            this.fetchParam = getFetchData()
             this.fetchParam.order_type = tab.name
             this.getData()
         },
@@ -251,6 +241,22 @@ export default {
                 }
             })
         }
+    }
+}
+function getFetchData() {
+    return {
+        page: 1,
+        page_size: 15,
+        // course_id: '',
+        user_id: '',
+        pay_method: '',
+        start_date: '',
+        end_date: '',
+        status: -1,
+        order_type: 'pharmacist',
+        object_type: '',
+        in_company: 0,
+        trade_no: ''
     }
 }
 </script>
