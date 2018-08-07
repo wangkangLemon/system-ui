@@ -126,6 +126,22 @@
                     callback()
                 }
             }
+            var validateMoney = (rule, value, callback) => {
+                if (!value) {
+                    callback(new Error('请输入金额'));
+                }else if(value < 0){
+                    callback(new Error('金额必须大于零'));
+                }else {
+                    callback();
+                }
+            };
+            var validateMoney2 = (rule, value, callback) => {
+                if(value < 0){
+                    callback(new Error('金额必须大于零'));
+                }else {
+                    callback();
+                }
+            };
             return {
                 ruleForm: {
                     name: '',
@@ -140,7 +156,8 @@
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'}
                     ],
-                    money: { required: true, message: '请输入金额' },
+                    money: { required: true, validator: validateMoney},
+                    threshold: { validator: validateMoney2},
                     start_date: { validator: timeValidator },
                     // end_time: { validator: timeValidator },
                 },
