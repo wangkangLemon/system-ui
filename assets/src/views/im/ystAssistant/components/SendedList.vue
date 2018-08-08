@@ -30,6 +30,11 @@
                 }
             }
         }
+        
+    }
+    .poptext {
+        width: 275px;
+        word-wrap: break-word;
     }
 </style>
 
@@ -102,11 +107,19 @@
                     width="80"
                     label="成功数">
                     <template slot-scope="scope">
-                        <el-tooltip v-if="scope.row.receiver_mobile" class="item" 
+                        <el-popover
+                            v-if="scope.row.receiver_mobile"
+                            placement="top-start"
+                            width="300"
+                            trigger="hover">
+                            <p class="poptext">{{scope.row.receiver_mobile}}</p>
+                            <i slot="reference">{{scope.row.success_count}}</i>
+                        </el-popover>
+                        <!-- <el-tooltip v-if="scope.row.receiver_mobile" class="item" 
                             effect="dark" :content="scope.row.receiver_mobile" 
                             placement="top-start">
                                 <i>{{scope.row.success_count}}</i>
-                        </el-tooltip>
+                        </el-tooltip> -->
                         <i v-else>{{scope.row.success_count}}</i>
                     </template>
             </el-table-column>
