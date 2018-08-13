@@ -31,7 +31,7 @@
             </el-form-item>
             <el-form-item label="提醒">
                 <el-switch v-model="ruleForm.expire_hints === 1 ? true : false" disabled></el-switch>
-                <i class="warning-tx">客户端优惠券到账提示</i>
+                <i class="warning-tx">客户端优惠券到期提示</i>
             </el-form-item>
         </el-form>
     </main>
