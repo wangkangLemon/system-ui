@@ -9,6 +9,11 @@
         display: block;
         cursor: pointer;
     }
+    .warning-tx {
+        color: #666;
+        margin-left: 5px;
+        font-size: 12px;
+    }
 </style>
 <template>
     <el-dialog 
@@ -50,6 +55,10 @@
                         readonly
                         v-model="ruleForm.mobileSuccess">
                     </el-input>
+                </el-form-item>
+                <el-form-item label="提醒">
+                    <el-switch v-model="ruleForm.receive_hints"></el-switch>
+                    <i class="warning-tx">客户端优惠券到期提示</i>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('ruleForm')">立即发放</el-button>
@@ -129,7 +138,8 @@
                     if (valid) {
                         let coupon_id = this.ruleForm.couponIds.join(',')
                         let mobile = ~this.ruleForm.mobile.search(/(,|，)$/) ? this.ruleForm.mobile.slice(0, -1) : this.ruleForm.mobile
-                        couponService.putCoupon({coupon_id, mobile}).then(ret => {
+                        let receive_hints = this.ruleForm.receive_hints ? 1 : 2
+                        couponService.putCoupon({coupon_id, mobile, receive_hints}).then(ret => {
                             this.$emit('confirm')
                             if (ret.failure > 0) {
                                 this.ruleForm.mobileFailure = ret.mobileFailure
@@ -154,6 +164,7 @@
             mobile: '',
             mobileFailure: '',
             mobileSuccess: '',
+            receive_hints: true
         }
     }
 </script>

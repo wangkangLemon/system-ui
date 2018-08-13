@@ -10,6 +10,11 @@
             .input-append {
                 vertical-align: text-bottom;
             }
+            .warning-tx {
+                color: #666;
+                margin-left: 5px;
+                font-size: 12px;
+            }
         }
     }
 </style>
@@ -54,6 +59,10 @@
                 <template v-if="transferRight.length">
                     <GoodsList :data="transferRight" columnType="type" columnName="name"></GoodsList>
                 </template>
+            </el-form-item>
+            <el-form-item label="提醒">
+                <el-switch v-model="ruleForm.expire_hints"></el-switch>
+                <i class="warning-tx">客户端优惠券到账提示</i>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
@@ -117,6 +126,22 @@
                     callback()
                 }
             }
+            var validateMoney = (rule, value, callback) => {
+                if (!value) {
+                    callback(new Error('请输入金额'));
+                }else if(value < 0){
+                    callback(new Error('金额必须大于零'));
+                }else {
+                    callback();
+                }
+            };
+            var validateMoney2 = (rule, value, callback) => {
+                if(value < 0){
+                    callback(new Error('金额必须大于零'));
+                }else {
+                    callback();
+                }
+            };
             return {
                 ruleForm: {
                     name: '',
@@ -125,12 +150,14 @@
                     start_date: '',
                     end_date: '',
                     // goods_list: [],
+                    expire_hints: true
                 },
                 rules: {
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'}
                     ],
-                    money: { required: true, message: '请输入金额' },
+                    money: { required: true, validator: validateMoney},
+                    threshold: { validator: validateMoney2},
                     start_date: { validator: timeValidator },
                     // end_time: { validator: timeValidator },
                 },
@@ -148,6 +175,7 @@
             submitForm (formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        this.ruleForm.expire_hints = this.ruleForm.expire_hints ? 1 : 2
                         let param = this.handleParam(this.ruleForm)
                         couponService.addCoupon(param).then(() => {
                             this.$router.back()

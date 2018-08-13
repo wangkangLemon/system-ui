@@ -22,10 +22,11 @@ class CouponService {
     searchName ({
         name,
         page,
-        page_size
+        page_size,
+        status=1
     }) {
         let url = urlPre + '/search/name'
-        return api.get(url, { name, page, page_size }, false).then(ret => {
+        return api.get(url, { name, page, page_size, status }, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
@@ -36,10 +37,11 @@ class CouponService {
     // 发放优惠券
     putCoupon ({
         coupon_id,
-        mobile
+        mobile,
+        receive_hints
     }) {
         let url = urlPre + '/put'
-        return api.post(url, JSON.stringify({ coupon_id, mobile })).then(ret => {
+        return api.post(url, JSON.stringify({ coupon_id, mobile, receive_hints })).then(ret => {
             return ret.data
         })
     }
@@ -69,10 +71,11 @@ class CouponService {
         threshold,
         start_date,
         end_date,
-        goods_list
+        goods_list,
+        expire_hints
     }) {
         let url = urlPre + '/create'
-        return api.post(url, JSON.stringify({ name, money, threshold, start_date, end_date, goods_list })).then(ret => {
+        return api.post(url, JSON.stringify({ name, money, threshold, start_date, end_date, goods_list, expire_hints })).then(ret => {
             xmview.showTip('success', ret.message || '添加成功')
         })
     }

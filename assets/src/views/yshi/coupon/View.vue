@@ -29,6 +29,10 @@
                 </template>
                 <template v-else>所有商品</template>
             </el-form-item>
+            <el-form-item label="提醒">
+                <el-switch v-model="ruleForm.expire_hints === 1 ? true : false" disabled></el-switch>
+                <i class="warning-tx">客户端优惠券到账提示</i>
+            </el-form-item>
         </el-form>
     </main>
 </template>
@@ -60,6 +64,7 @@
                     start_date: '',
                     end_date: '',
                     goods_list: [],
+                    expire_hints: true
                 },
                 transferRight: [],  // 从组件功能上命名，即transfer右边选中的数据
             }
