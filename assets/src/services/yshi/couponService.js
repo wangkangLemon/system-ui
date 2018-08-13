@@ -22,10 +22,11 @@ class CouponService {
     searchName ({
         name,
         page,
-        page_size
+        page_size,
+        status=1
     }) {
         let url = urlPre + '/search/name'
-        return api.get(url, { name, page, page_size }, false).then(ret => {
+        return api.get(url, { name, page, page_size, status }, false).then(ret => {
             if (ret.code == 0) {
                 return ret.data
             } else {
