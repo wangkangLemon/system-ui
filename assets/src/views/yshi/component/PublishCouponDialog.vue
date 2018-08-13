@@ -58,7 +58,7 @@
                 </el-form-item>
                 <el-form-item label="提醒">
                     <el-switch v-model="ruleForm.receive_hints"></el-switch>
-                    <i class="warning-tx">客户端优惠券到期提示</i>
+                    <i class="warning-tx">客户端优惠券到账提示</i>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('ruleForm')">立即发放</el-button>
