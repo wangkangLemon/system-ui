@@ -4,7 +4,10 @@
         background: #fff;
         padding: 15px;
         border-radius: 5px;
-
+        .el-radio {
+            display: table-row;
+            line-height: 30px;
+        }
         /*上传图片部分*/
         @at-root {
             .uploadimg {
@@ -85,9 +88,10 @@
             </el-form-item>
             <el-form-item label="展示方式" prop="logo_app_priority">
                 <el-radio-group v-model="form.logo_app_priority">
-                    <el-radio v-model="form.logo_app_priority" :label="0">优先展示企业启动图</el-radio>
-                    <el-radio v-model="form.logo_app_priority" :label="1">优先展示广告</el-radio>
-                    <el-radio v-model="form.logo_app_priority" :label="2">关闭广告</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="0">优先展示百度开屏广告</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="1">优先展示企业启动图</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="2">优先展示广告</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="3">关闭广告</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item>
@@ -117,7 +121,7 @@
                 isShowImgSample: false, // 是否显示图片示例
                 form: {
                     logo_app_boot: '', // 跳转链接
-                    logo_app_priority: 1, // 展示方式优先级
+                    logo_app_priority: 0, // 展示方式优先级
                 },
                 rules: {
                     logo_app_priority: [
