@@ -121,7 +121,7 @@
                 isShowImgSample: false, // 是否显示图片示例
                 form: {
                     logo_app_boot: '', // 跳转链接
-                    logo_app_priority: 1, // 展示方式优先级
+                    logo_app_priority: 0, // 展示方式优先级
                 },
                 rules: {
                     logo_app_priority: [
