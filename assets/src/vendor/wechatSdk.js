@@ -11,7 +11,7 @@ window.WxLogin = function d(wxconfig) {
     d.scrolling = 'no'
     d.width = '300px'
     d.height = '400px'
-    d.setAttribute('allow-top-navigation', '')
+    // d.setAttribute('allow-top-navigation', '')
     var f = document.getElementById(wxconfig.id)
     f.innerHTML = ''
     f.appendChild(d)
