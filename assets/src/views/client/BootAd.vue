@@ -88,10 +88,11 @@
             </el-form-item>
             <el-form-item label="展示方式" prop="logo_app_priority">
                 <el-radio-group v-model="form.logo_app_priority">
-                    <el-radio v-model="form.logo_app_priority" :label="0">优先展示百度开屏广告</el-radio>
-                    <el-radio v-model="form.logo_app_priority" :label="1">优先展示企业启动图</el-radio>
-                    <el-radio v-model="form.logo_app_priority" :label="2">优先展示广告</el-radio>
-                    <el-radio v-model="form.logo_app_priority" :label="3">关闭广告</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="0">企业启动图>百度广告>首页</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="1">企业启动图>系统广告>首页</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="2">百度广告>企业启动图>首页</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="3">系统广告>企业启动图>首页</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="4">关闭广告：企业启动图>首页</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item>
