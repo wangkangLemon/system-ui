@@ -90,7 +90,7 @@
                 <el-radio-group v-model="form.logo_app_priority">
                     <el-radio v-model="form.logo_app_priority" :label="0">企业启动图>百度广告>首页</el-radio>
                     <el-radio v-model="form.logo_app_priority" :label="1">企业启动图>系统广告>首页</el-radio>
-                    <el-radio v-model="form.logo_app_priority" :label="2">百度广告>企业启动图>首页</el-radio>
+                    <el-radio v-model="form.logo_app_priority" :label="2">百度广告>首页</el-radio>
                     <el-radio v-model="form.logo_app_priority" :label="3">系统广告>企业启动图>首页</el-radio>
                     <el-radio v-model="form.logo_app_priority" :label="4">关闭广告：企业启动图>首页</el-radio>
                 </el-radio-group>
