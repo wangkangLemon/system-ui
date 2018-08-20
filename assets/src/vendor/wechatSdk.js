@@ -27,7 +27,9 @@ let wechatSdk = {
             })
 
             wechatConfig.redirect_uri = encodeURIComponent(wechatConfig.redirect_uri)
-            return new window.WxLogin(wechatConfig)
+            let d = new window.WxLogin(wechatConfig)
+            d.setAttribute('allow-top-navigation', '') // 设置允许跳转
+            return d
         }).catch(err => {
             console.info('微信二维码初始化失败', err)
         })
