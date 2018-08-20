@@ -41,12 +41,7 @@ let wechatSdk = {
             })
 
             wechatConfig.redirect_uri = encodeURIComponent(wechatConfig.redirect_uri)
-            let d = new window.WxLogin(wechatConfig)
-            window.setTimeout(() => {
-                let f = document.getElementById(wechatConfig.id).getElementsByTagName('iframe')
-                f[0].setAttribute('allow-top-navigation', '') // 设置允许跳转
-            }, 100)
-            return d
+            return new window.WxLogin(wechatConfig)
         }).catch(err => {
             console.info('微信二维码初始化失败', err)
         })
