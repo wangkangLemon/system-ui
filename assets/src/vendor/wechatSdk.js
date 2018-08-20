@@ -1,8 +1,3 @@
-/**
- * Created by huanghuixin on 2017/4/13.
- */
-
-import config from '../utils/config'
 let currMsgListener = void 0
 let wechatSdk = {
     // 初始化二维码
@@ -28,7 +23,10 @@ let wechatSdk = {
 
             wechatConfig.redirect_uri = encodeURIComponent(wechatConfig.redirect_uri)
             let d = new window.WxLogin(wechatConfig)
-            d.setAttribute('allow-top-navigation', '') // 设置允许跳转
+            window.setTimeout(() => {
+                let f = document.getElementById(wechatConfig.id).getElementsByTagName('iframe')
+                f[0].setAttribute('allow-top-navigation', '') // 设置允许跳转
+            }, 100)
             return d
         }).catch(err => {
             console.info('微信二维码初始化失败', err)
@@ -36,7 +34,6 @@ let wechatSdk = {
     },
 
     buildUrl ({appid, scope, redirect_uri, state}) {
-        // config.debug && (redirect_uri = 'http://sys.yst.vodjk.com/mine/two-step/wechat/callback?verify=1')
         return `https://open.weixin.qq.com/connect/qrconnect?state=${state}&appid=${appid}&scope=${scope}&redirect_uri=${encodeURIComponent(redirect_uri)}&login_type=jssdk&style=white`
     },
 
