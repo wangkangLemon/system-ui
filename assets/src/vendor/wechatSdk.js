@@ -1,20 +1,20 @@
-window.WxLogin = function d(wxconfig) {
+window.WxLogin = function (wxconfig) {
     var redirect = 'default'
     wxconfig.self_redirect === !0 ? redirect = 'true' : wxconfig.self_redirect === !1 && (redirect = 'false')
-    var d = document.createElement('iframe')
-    var e = 'https://open.weixin.qq.com/connect/qrconnect?appid=' + wxconfig.appid + '&scope=' + wxconfig.scope + '&redirect_uri=' + wxconfig.redirect_uri + '&state=' + wxconfig.state + '&login_type=jssdk&self_redirect=' + redirect
-    e += wxconfig.style ? '&style=' + wxconfig.style : ''
-    e += wxconfig.href ? '&href=' + wxconfig.href : ''
-    d.sandbox = 'allow-forms allow-popups allow-scripts allow-top-navigation'
-    d.frameBorder = '0'
-    d.allowTransparency = 'true'
-    d.scrolling = 'no'
-    d.width = '300px'
-    d.height = '400px'
-    d.src = e
-    var f = document.getElementById(wxconfig.id)
-    f.innerHTML = ''
-    f.appendChild(d)
+    var iframe = document.createElement('iframe')
+    var uri = 'https://open.weixin.qq.com/connect/qrconnect?appid=' + wxconfig.appid + '&scope=' + wxconfig.scope + '&redirect_uri=' + wxconfig.redirect_uri + '&state=' + wxconfig.state + '&login_type=jssdk&self_redirect=' + redirect
+    uri += wxconfig.style ? '&style=' + wxconfig.style : ''
+    uri += wxconfig.href ? '&href=' + wxconfig.href : ''
+    iframe.sandbox = 'allow-forms allow-popups allow-scripts allow-top-navigation'
+    iframe.frameBorder = '0'
+    iframe.allowTransparency = 'true'
+    iframe.scrolling = 'no'
+    iframe.width = '300px'
+    iframe.height = '400px'
+    iframe.src = uri
+    var dom = document.getElementById(wxconfig.id)
+    dom.innerHTML = ''
+    dom.appendChild(iframe)
 }
 
 let currMsgListener = void 0
