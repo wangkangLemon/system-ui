@@ -1,12 +1,17 @@
 <template>
-    <SelectScroll :changeCb="handleChange" :requestCb="fetchData" :placeholder="placeholder"
-                  v-model="currVal" :disabled="disabled">
+    <SelectScroll 
+        ref="selectScroll"
+        :changeCb="handleChange" 
+        :requestCb="fetchData" 
+        :placeholder="placeholder"
+        v-model="currVal" 
+        :disabled="disabled">
     </SelectScroll>
 </template>
 
 <script>
-    import courseService from '../../../services/newcourse/courseService'
-    import SelectScroll from '../../component/form/SelectScroll.vue'
+    import courseService from 'services/newcourse/courseService'
+    import SelectScroll from 'components/form/SelectScroll.vue'
     export default{
         props: {
             value: [String, Number],
@@ -33,10 +38,10 @@
             },
         },
         methods: {
-            handleChange(val) {
+            handleChange(val, name) {
                 this.currVal = val
                 this.$emit('input', val)
-                this.$emit('change', val)
+                this.$emit('change', val, name)
                 this.change && this.change()
             },
             fetchData (val, length) {
@@ -44,6 +49,10 @@
                 let page = parseInt(length / this.pageSize) + 1
                 let page_size = this.pageSize
                 return courseService.search({keyword, page, page_size})
+            },
+            // 手动清除选中状态
+            clear () {
+                this.$refs.selectScroll.clear()
             }
         }
     }

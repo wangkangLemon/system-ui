@@ -220,6 +220,7 @@ class PhaseTask {
         this.object_type = ''      // 任务具体类型public-公开课，private-内训课，speaking-药我说，exam-考试
         this.object_id = ''        // 任务id
         this.object_name = ''
+        this.po_course_id = 0
         this.sort = 1              // 排序
         for (let [item, value] of Object.entries(options)) {
             this[item] = value
@@ -233,6 +234,7 @@ class PhaseTask {
         obj.object_type = obj.data.type
         obj.object_id = obj.data.id
         obj.object_name = obj.data.name
+        obj.po_course_id = obj.data.po_course_id
     }
     /**
      * 首次加载的时候也需要将该数据传入对应的组件格式化弹窗中的数据
@@ -242,6 +244,7 @@ class PhaseTask {
         selected.type = phaseTask.object_type
         selected.id = phaseTask.object_id
         selected.name = phaseTask.object_name
+        selected.po_course_name = phaseTask.po_course_name
         return selected
     }
     _initTask (PhaseTask) {
