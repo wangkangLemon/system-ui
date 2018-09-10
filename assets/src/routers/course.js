@@ -283,6 +283,55 @@ export default {
             meta: {
                 title: '图文管理-查看'
             }
-        }
+        },
+        {
+            path: 'drug',
+            name: 'course-drug',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/drug/Index.vue'))
+                })
+            },
+            children: [
+                {
+                    path: '/',
+                    name: 'course-drug-main',
+                    component: resolve => {
+                        require.ensure([], () => {
+                            resolve(require('@/views/course/drug/Main.vue'))
+                        })
+                    },
+                    meta: {
+                        title: '药品库',
+                        noback: true
+                    }
+                },
+                {
+                    path: '/add',
+                    name: 'course-drug-add',
+                    component: resolve => {
+                        require.ensure([], () => {
+                            resolve(require('@/views/course/drug/add.vue'))
+                        })
+                    },
+                    meta: {
+                        title: '新增药品'
+                    }
+                },
+                {
+                    path: '/edit',
+                    name: 'course-drug-edit',
+                    component: resolve => {
+                        require.ensure([], () => {
+                            resolve(require('@/views/course/drug/add.vue'))
+                        })
+                    },
+                    meta: {
+                        title: '编辑药品'
+                    }
+                }
+            ]
+        },
+
     ]
 }
