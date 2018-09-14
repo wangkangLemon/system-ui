@@ -13,14 +13,6 @@
             @extend %right-top-btnContainer;
         }
     }
-
-    .u-loadmore {
-        color: #63bdea;
-        margin-left: 10px;
-        padding-top: 4px;
-        display: block;
-        cursor: pointer;
-    }
 </style>
 
 <template>
@@ -108,6 +100,7 @@
             <el-form-item label="服药天数" prop="day_count">
                 <el-input-number
                     v-model.number="ruleForm.day_count"
+                    v-pnumberOnly
                     :disabled="isView">
                 </el-input-number>
             </el-form-item>            
