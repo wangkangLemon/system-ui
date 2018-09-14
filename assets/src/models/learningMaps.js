@@ -246,6 +246,8 @@ class PhaseTask {
         selected.type = phaseTask.object_type
         selected.id = phaseTask.object_id
         selected.name = phaseTask.object_name
+        selected.medicine_list = phaseTask.medicine_list
+        selected.po_course_id = phaseTask.po_course_id
         selected.po_course_name = phaseTask.data.po_course_name
         if (phaseTask.object_type === 'medicine_task') {
             selected.po_course_name = (phaseTask.medicine_list || []).map(item => item.name).join(',')
