@@ -155,7 +155,7 @@
             ref="localImportDialog"
             title="导入药品"
             :uploadUrl="uploadUrl"
-            templateUrl="https://upload.yst.vodjk.com/assets/download/import/subject_group.xlsx">
+            templateUrl="https://upload.yst.vodjk.com/assets/download/file/%EF%BC%882018%EF%BC%89%E8%8D%AF%E5%BA%97%E5%95%86%E5%93%81%E5%BA%93%E7%9B%AE%E5%BD%95-0913.xlsx">
             <article slot="footer">
                 <hr style="margin-bottom: 15px;">
                 <h5>注意事项：</h5>
