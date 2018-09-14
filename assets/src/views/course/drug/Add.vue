@@ -198,8 +198,8 @@
         watch: {},
         data () {
             return {
-                isView: this.$route.query.isView,
-                isEdit: this.$route.query.isEdit,
+                isView: !!this.$route.query.isView,
+                isEdit: !!this.$route.query.isEdit,
                 ruleForm: {
                     id: this.$route.query.id,
                     common_name: '',
