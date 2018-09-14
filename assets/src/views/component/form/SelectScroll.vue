@@ -20,6 +20,7 @@
         :clearable="true"
         no-data-text="暂无数据"
         :disabled="disabled"
+        :multiple="multiple"
         no-match-text="没有数据">
         <el-option 
             :disabled="true" 
@@ -32,7 +33,7 @@
         </el-option>
         <el-option 
             v-for="item in data"
-            :label="item.name"
+            :label="item.name || item.common_name"
             :key="item.id"
             :value="item.id">
         </el-option>
@@ -67,7 +68,7 @@
             // 返回一个Pormise对象 结果 { data: [{ name:'xm', id:1 }], total: 20 }
             requestCb: Function,
             changeCb: Function, // 选项改变回调
-            value: [String, Number],
+            value: [String, Number, Array],
             placeholder: {
                 type: String,
                 default: '请选择'
@@ -82,6 +83,10 @@
                 default: false
             },
             list: Array, // 已有的数据集合
+            multiple: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             return {
@@ -153,12 +158,16 @@
                 })
             },
             handleChange (val) {
-                this.changeCb && this.changeCb(val, this.getOptionNameById(val))
+                if (this.multiple) {
+                    this.changeCb && this.changeCb(val, val.map(item => this.getOptionNameById(item, 'common_name')).join(','))
+                } else {
+                    this.changeCb && this.changeCb(val, this.getOptionNameById(val))
+                }
                 this.$emit('input', val)
             },
-            getOptionNameById (id) {
+            getOptionNameById (id, name = 'name') {
                 if (id) {
-                    return this.data.filter(item => item.id === id)[0].name
+                    return this.data.filter(item => item.id === id)[0][name]
                 }
             },
             onClear() {

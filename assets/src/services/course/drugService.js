@@ -5,19 +5,26 @@ const urlPre = config.apiHost + '/sys/drug'
 class DrugService {
     searchDrug ({
         common_name,
-        category_group,
-        category_drug,
+        category_group_id,
+        category_drug_id,
         page,
         page_size
     }) {
         let finalUrl = `${urlPre}/search`
-        return api.get(finalUrl, { common_name, category_group, category_drug, page, page_size }).then(ret => ret.data)
+        return api.get(finalUrl, { common_name, category_group_id, category_drug_id, page, page_size }).then(ret => ret.data)
     }
     del (id) {
         let finalUrl = `${urlPre}/${id}`
         return api.del(finalUrl).then(ret => {
             xmview.showTip('success', ret.message || '删除成功')
         })
+    }
+    /**
+     * type: system / group / drug (系统/柜组/药品)
+     */
+    getDrugCategory (type) {
+        let finalUrl = `${urlPre}/category/${type}`
+        return api.get(finalUrl).then(ret => ret.data)
     }
     getDrugDetail (id) {
         let finalUrl = `${urlPre}/${id}`
@@ -27,9 +34,9 @@ class DrugService {
         common_name,  // 通用名
         trade_name, // 商品名
         another_name, // 别名
-        category_system, // 系统分类
-        category_group, // 柜组分类
-        category_drug, // 药品分类
+        category_system_id, // 系统分类
+        category_group_id, // 柜组分类
+        category_drug_id, // 药品分类
         manufacturer, // 厂家
         category, // 品类
         treatment_course, // 疗程用药
@@ -42,7 +49,7 @@ class DrugService {
         selling_point // 卖点
     }) {
         let finalUrl = `${urlPre}`
-        return api.post(finalUrl, { common_name, trade_name, another_name, category_system, category_group, category_drug, manufacturer, category, treatment_course, day_count, instructions, specification, treatment, disease, drug_combination, selling_point }).then(ret => {
+        return api.post(finalUrl, JSON.stringify({ common_name, trade_name, another_name, category_system_id, category_group_id, category_drug_id, manufacturer, category, treatment_course, day_count, instructions, specification, treatment, disease, drug_combination, selling_point })).then(ret => {
             xmview.showTip('success', ret.message || '添加成功')
         })
     }
@@ -51,9 +58,9 @@ class DrugService {
         common_name,
         trade_name,
         another_name,
-        category_system,
-        category_group,
-        category_drug,
+        category_system_id,
+        category_group_id,
+        category_drug_id,
         manufacturer,
         category,
         treatment_course,
@@ -66,9 +73,12 @@ class DrugService {
         selling_point
     }) {
         let finalUrl = `${urlPre}/${id}`
-        return api.put(finalUrl, { common_name, trade_name, another_name, category_system, category_group, category_drug, manufacturer, category, treatment_course, day_count, instructions, specification, treatment, disease, drug_combination, selling_point }).then(ret => {
+        return api.put(finalUrl, JSON.stringify({ common_name, trade_name, another_name, category_system_id, category_group_id, category_drug_id, manufacturer, category, treatment_course, day_count, instructions, specification, treatment, disease, drug_combination, selling_point })).then(ret => {
             xmview.showTip('success', ret.message || '添加成功')
         })
+    }
+    fileImportUrl () {
+        return `${urlPre}/excel`
     }
 }
 

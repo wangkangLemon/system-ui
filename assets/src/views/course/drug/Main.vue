@@ -27,24 +27,58 @@
             <section>
                 <i>通用名</i>
                 <el-input
-                    v-model="fetchParam.keyword"
+                    v-model="fetchParam.common_name"
                     @keyup.enter.native="fetchData">
                 </el-input>
             </section>
-            <el-button 
-                class="top-btn" 
-                icon="el-icon-document" 
-                type='primary' 
-                @click="fileExport">
-                Excel导入
-            </el-button>
-            <el-button 
-                class="top-btn" 
-                icon="el-icon-plus" 
-                type='primary' 
-                @click="$router.push({ name: 'course-drug-add'})">
-                新增药品
-            </el-button>
+            <section>
+                <i>药品分类</i>
+                <el-select 
+                    v-model="fetchParam.category_drug_id" 
+                    filterable 
+                    clearable 
+                    placeholder="请选择" 
+                    @change="fetchData">
+                    <!-- <el-option label="全部" :value="0"></el-option> -->
+                    <el-option 
+                        v-for="item in category_drug" 
+                        :key="item.id"
+                        :label="item.category_name" 
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </section>
+            <section>
+                <i>柜组分类</i>
+                <el-select 
+                    v-model="fetchParam.category_group_id"
+                    filterable 
+                    clearable 
+                    placeholder="请选择" 
+                    @change="fetchData">
+                    <!-- <el-option label="全部" :value="0"></el-option> -->
+                    <el-option 
+                        v-for="item in category_group" 
+                        :key="item.id"
+                        :label="item.category_name" 
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </section>
+            <section class="top-btn" >
+                <el-button 
+                    icon="el-icon-document" 
+                    type='warning' 
+                    @click="$refs['localImportDialog'].open()">
+                    Excel导入
+                </el-button>
+                <el-button 
+                    icon="el-icon-plus" 
+                    type='primary' 
+                    @click="$router.push({ name: 'course-drug-add'})">
+                    新增药品
+                </el-button>
+            </section>
         </section>
         <section>
             <!-- 内容主体 -->
@@ -86,13 +120,13 @@
                         <el-button 
                             type="text" 
                             size="small" 
-                            @click="$router.push({ name: 'course-drug-add', query: { isView: 1, id: scope.row.id } })">
+                            @click="$router.push({ name: 'course-drug-view', query: { isView: 1, id: scope.row.id } })">
                             查看
                         </el-button>
                         <el-button 
                             type="text" 
                             size="small" 
-                            @click="$router.push({ name: 'course-drug-add', query: { isEdit: 1, id: scope.row.id } })">
+                            @click="$router.push({ name: 'course-drug-edit', query: { isEdit: 1, id: scope.row.id } })">
                             编辑
                         </el-button>
                         <el-button 
@@ -115,21 +149,45 @@
                 :total="total">
             </el-pagination>
         </section>
+
+        <LocalImportDialog
+            :onClose="fetchData"
+            ref="localImportDialog"
+            title="导入药品"
+            :uploadUrl="uploadUrl"
+            templateUrl="https://upload.yst.vodjk.com/assets/download/import/subject_group.xlsx">
+            <article slot="footer">
+                <hr style="margin-bottom: 15px;">
+                <h5>注意事项：</h5>
+                <h5>1.模板中字段请对照填写，不能为空</h5>
+                <h5>2.如果有某些内容为空，导入时将跳过</h5>
+            </article>
+        </LocalImportDialog>
     </main>
 </template>
 
 <script>
+    import LocalImportDialog from 'components/upload/LocalImportDialog.vue'
     import drugService from 'services/course/drugService'
 
     export default {
-        components: {},
+        components: {
+            LocalImportDialog
+        },
         props: {},
-        activated () {},
+        activated () {
+            // this.getCategory()
+            // this.fetchData().then(() => {
+            //     xmview.setContentLoading(false)
+            // })
+        },
         created () {
+            this.getCategory()
             this.fetchData().then(() => {
                 xmview.setContentLoading(false)
             })
         },
+
         mounted () {},
         computed: {},
         watch: {},
@@ -144,7 +202,10 @@
                     category_drug: '',
                     page: 1,
                     page_size: 15,
-                }
+                },
+                category_drug: [],
+                category_group: [],
+                uploadUrl: drugService.fileImportUrl()
             }
         },
         methods: {
@@ -156,15 +217,24 @@
                     this.loading = false
                 })
             },
+            getCategory () {
+                ['group', 'drug'].forEach(type => {
+                    drugService.getDrugCategory(type).then(ret => {
+                        this['category_' + type] = ret.list || []
+                    })
+                })
+            },
             del (row) {
                 this.$confirm(`确定删除【${row.common_name}】吗`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    drugService.del(id)
+                    drugService.del(row.id).then(() => {
+                        this.fetchData()
+                    })
                 })
-            }
+            },
         },
         filters: {},
         directives: {},

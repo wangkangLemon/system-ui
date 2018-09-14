@@ -5,6 +5,7 @@
         :requestCb="fetchData" 
         :placeholder="placeholder"
         v-model="currVal" 
+        multiple
         :disabled="disabled">
     </SelectScroll>
 </template>
@@ -52,8 +53,17 @@
             },
             // 手动清除选中状态
             clear () {
-                this.$refs.selectScroll.clear()
-            }
+                // 'el-select'
+                // 'el-select__tags'
+                // 'el-tag__close el-icon-close'
+                let arr = this.$el.querySelectorAll('i.el-icon-close')
+
+                for (let i = 0, len = arr.length; i < len; i++) {
+                    setTimeout(() => {
+                        arr[i].click()
+                    }, i * 100)
+                }
+            },
         }
     }
 </script>

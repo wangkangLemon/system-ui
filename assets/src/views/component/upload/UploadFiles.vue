@@ -2,23 +2,31 @@
 <!--使用形如-->
 <!--<UploadFile :defaultFile="file" url='asdjadasd' :on-success="handleChange" btnTitle='点击上传' :autoUpload=''></UploadFile>-->
 <template>
-    <el-upload ref="upload"
-               :before-upload="beforeUpload"
-               :headers="headers"
-               :action="url"
-               :file-list="fileList"
-               :accept="accept"
-               :on-error="handleError"
-               :auto-upload="autoUpload"
-               :on-success="handleUploadMedia" :multiple="false" :on-progress="onProgress">
-        <el-button size="small" :disabled="disabled" type="primary"><i><i class="el-icon-upload el-icon--left"></i></i>{{btnTitle}}
+    <el-upload 
+        ref="upload"
+        :before-upload="beforeUpload"
+        :headers="headers"
+        :action="url"
+        :file-list="fileList"
+        :accept="accept"
+        :on-error="handleError"
+        :auto-upload="autoUpload"
+        :on-success="handleUploadMedia" 
+        :multiple="false" 
+        :on-progress="onProgress">
+        <el-button 
+            size="small" 
+            :disabled="disabled" 
+            type="primary">
+            <i><i class="el-icon-upload el-icon--left"></i></i>
+            {{btnTitle}}
         <!--a-->
         </el-button>
     </el-upload>
 </template>
 
 <script>
-    import authUtils from '../../../utils/authUtils'
+    import authUtils from 'utils/authUtils'
     export default {
         props: {
             beforeUpload: Function,

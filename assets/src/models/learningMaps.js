@@ -221,6 +221,7 @@ class PhaseTask {
         this.object_id = ''        // 任务id
         this.object_name = ''
         this.po_course_id = 0
+        this.medicine_list = []
         this.sort = 1              // 排序
         for (let [item, value] of Object.entries(options)) {
             this[item] = value
@@ -235,6 +236,7 @@ class PhaseTask {
         obj.object_id = obj.data.id
         obj.object_name = obj.data.name
         obj.po_course_id = obj.data.po_course_id
+        obj.medicine_list = obj.data.medicine_list
     }
     /**
      * 首次加载的时候也需要将该数据传入对应的组件格式化弹窗中的数据
@@ -244,7 +246,10 @@ class PhaseTask {
         selected.type = phaseTask.object_type
         selected.id = phaseTask.object_id
         selected.name = phaseTask.object_name
-        selected.po_course_name = phaseTask.po_course_name
+        selected.po_course_name = phaseTask.data.po_course_name
+        if (phaseTask.object_type === 'medicine_task') {
+            selected.po_course_name = (phaseTask.medicine_list || []).map(item => item.name).join(',')
+        }
         return selected
     }
     _initTask (PhaseTask) {

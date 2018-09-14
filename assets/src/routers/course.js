@@ -294,7 +294,7 @@ export default {
             },
             children: [
                 {
-                    path: '/',
+                    path: '',
                     name: 'course-drug-main',
                     component: resolve => {
                         require.ensure([], () => {
@@ -307,7 +307,7 @@ export default {
                     }
                 },
                 {
-                    path: '/add',
+                    path: 'add',
                     name: 'course-drug-add',
                     component: resolve => {
                         require.ensure([], () => {
@@ -319,7 +319,19 @@ export default {
                     }
                 },
                 {
-                    path: '/edit',
+                    path: 'view',
+                    name: 'course-drug-view',
+                    component: resolve => {
+                        require.ensure([], () => {
+                            resolve(require('@/views/course/drug/add.vue'))
+                        })
+                    },
+                    meta: {
+                        title: '查看药品'
+                    }
+                },
+                {
+                    path: 'edit',
                     name: 'course-drug-edit',
                     component: resolve => {
                         require.ensure([], () => {
