@@ -63,7 +63,15 @@
                                 <el-tag :type="scope.row.type | taskType('tag')">
                                     {{scope.row.type | taskType('label')}}
                                 </el-tag>
-                                <span>{{scope.row.name}}</span>
+                                <el-tooltip 
+                                    v-if="scope.row.type === 'medicine_task' || scope.row.type ==='practical_operation'"
+                                    class="item" 
+                                    effect="dark" 
+                                    :content="scope.row.po_course_name" 
+                                    placement="top-start">
+                                    <span>{{scope.row.name}}</span>
+                                </el-tooltip>
+                                <span v-else>{{scope.row.name}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -169,14 +177,12 @@
         methods: {
             deleteRow (index, row) {
                 let ref = this.getRefsByType(this.$refs.transfers, row)
-                if (row.type === 'medicine_task' || row.type === 'practical_operation') {
-                    ref.handleClose(row.name, true)
-                } else {
+                if (!(row.type === 'medicine_task' || row.type === 'practical_operation')) {
                     ref.$refs.transfer.toggleRowSelectionById(row)
                     ref.$refs.transfer.selectData.forEach((item, index, array) => {
                         (row.id + row.type) === (item.id + item.type) && array.splice(index, 1)
                     })
-                }
+                } 
                 this.selected.splice(index, 1)
             },
             deleteAll () {
@@ -185,8 +191,6 @@
                     if (transfer.toggleRowSelection) {
                         transfer.deleteAll()
                         transfer.selectData = []
-                    } else {
-                        ref.deleteAll()
                     }
                 }
                 while (this.selected.length > 0) {
@@ -212,17 +216,17 @@
                     }
                 }
             },
-            getMedicine (row, isAdd) {
-                if (isAdd) {
-                    this.selected.push(row)
-                } else {
-                    for (let i = 0; i < this.selected.length; i++) {
-                        if (this.selected[i].type === row.type && this.selected[i].name === row.name) {
-                            this.selected.splice(i, 1)
-                            return
-                        }
-                    }
-                }
+            getMedicine (row) {
+                this.selected.push(row)
+                // if (isAdd) {
+                // } else {
+                //     for (let i = 0; i < this.selected.length; i++) {
+                //         if (this.selected[i].type === row.type && this.selected[i].name === row.name) {
+                //             this.selected.splice(i, 1)
+                //             return
+                //         }
+                //     }
+                // }
             },
             formatRow (row) {
                 if (row.type === 'speaking') row.name = row.title

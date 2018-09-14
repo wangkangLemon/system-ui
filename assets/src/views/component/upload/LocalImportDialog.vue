@@ -16,6 +16,17 @@ Slot:
             text-align: center;
             margin-bottom: 15px;
         }
+        .upload-file {
+            margin-bottom: 0px;
+        }
+        .el-checkbox {
+            margin: 0 auto;
+            display: block;
+            width: 360px;
+            text-align: center;
+            margin-bottom: 5px;
+            border-style: dashed;
+        }
         .upload-file-result{
             height: 185px;
             .el-progress{
@@ -25,7 +36,7 @@ Slot:
             }
             .yst-show-response{
                 height: 38px;
-                margin-top:75px;
+                margin-top:60px;
                 text-align: center;
             }
             .el-upload-dragger:hover{
@@ -38,6 +49,9 @@ Slot:
         }
         .color-success {
             color: #13CE66;
+        }
+        .color-update {
+            color: #409EFF;
         }
         .color-error {
             color: #FF4949;
@@ -54,56 +68,40 @@ Slot:
     }
 </style>
 <template>
-    <el-dialog 
-        id="dialog-local-import" 
-        :title="title" 
-        :visible.sync="isOpen" 
-        @click.native.stop
-        append-to-body>
+    <el-dialog append-to-body id="dialog-local-import" :title="title" :visible.sync="isOpen" @click.native.stop @close="onClose">
         <el-upload
-            class="upload-file"
-            drag
-            :action="uploadUrl"
-            :multiple="false"
-            :headers="headers"
-            :show-file-list="false"
-            v-show="showUploading"
-            :on-progress="progress"
-            :on-error="error"
-            :before-upload="beforeUpload"
-            :on-success="success">
+                class="upload-file"
+                drag
+                :action="uploadUrl"
+                :multiple="false"
+                :headers="headers"
+                :show-file-list="false"
+                v-show="showUploading"
+                :on-progress="progress"
+                :on-error="error"
+                :before-upload="beforeUpload"
+                :on-success="success"
+                :data="{'update': update}">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
+        <el-checkbox v-show="showUploading && showOption" v-model="update" label="更新员工信息" border true-label=true false-label=false></el-checkbox>
         <div class="upload-file-result" v-show="!showUploading">
             <div class="el-upload el-upload--text">
                 <div class="el-upload-dragger">
-                    <el-progress 
-                        v-show="uploadStatus == 0" 
-                        :text-inside="true" 
-                        :stroke-width="18" 
-                        :percentage="percent">
-                    </el-progress>
+                    <el-progress v-show="uploadStatus == 0" :text-inside="true" :stroke-width="18" :percentage="percent"></el-progress>
                     <div class="yst-show-response" v-show="uploadStatus == 1">
-                        <p v-show="response.success > 0">
-                            <i class="el-icon-circle-check color-success"></i>
-                            &nbsp;成功: {{ response.success }} 条
-                        </p>
-                        <p v-show="response.error > 0">
-                            <i class="el-icon-circle-cross color-error"></i>
-                            &nbsp;失败: {{ response.error }}  条
-                        </p>
+                        <p v-show="response.create >= 0"><i class="el-icon-circle-check color-success"></i>&nbsp;新增: {{ response.create }} 条</p>
+                        <p v-show="response.update >= 0"><i class="el-icon-circle-check color-update"></i>&nbsp;更新: {{ response.update }} 条</p>
+                        <p v-show="response.error >= 0"><i class="el-icon-circle-close color-error"></i>&nbsp;失败: {{ response.error }}  条</p>
                     </div>
                     <div class="yst-show-response" v-show="uploadStatus == 2">
-                        <p style="line-height: 38px">
-                            <i class="el-icon-circle-cross color-error"></i>
-                            上传失败
-                        </p>
+                        <p style="line-height: 38px"><i class="el-icon-circle-cross color-error"></i>上传失败</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="download-template"><a v-bind:href="templateUrl" target="_blank">下载参考模板</a></div>
+        <div class="download-template" v-if="templateUrl"><a v-bind:href="templateUrl" target="_blank">下载参考模板</a></div>
         <article class="error-reason" v-show="response.reasons.length > 0">
             <h5>错误原因：</h5>
             <h5 v-for="reason in response.reasons">{{ reason.message }}</h5>
@@ -113,16 +111,23 @@ Slot:
 </template>
 <script>
     import authUtils from 'utils/authUtils'
+    // import NestedDialog from 'components/dialog/NestedDialog.vue'
 
     export default {
+        components: {},
         props: {
             templateUrl: {
                 type: String,
-                required: true
+                required: false
             },
             onSuccess: {
                 type: Function,
-                required: true
+                required: false
+            },
+            onClose: {
+                type: Function,
+                required: false,
+                default: () => {}
             },
             title: {
                 type: String,
@@ -131,10 +136,13 @@ Slot:
             uploadUrl: {
                 type: String,
                 required: true
+            },
+            showOption: {
+                type: Boolean,
+                required: false
             }
         },
-        components: {},
-        data() {
+        data () {
             return {
                 isOpen: false,
                 headers: {
@@ -146,69 +154,82 @@ Slot:
                 percent: 0,
                 uploadStatus: 0,
                 response: {
-                    success: 0,
+                    update: 0,
                     error: 0,
+                    create: 0,
                     reasons: [],
-                }
+                },
+                update: false
             }
         },
         methods: {
-            open() {
+            open () {
+                this.update = false
                 this.uploadStatus = 0
                 this.showUploading = true
                 this.isOpen = true
-                this.response.success = 0
+                this.response.create = 0
+                this.response.update = 0
                 this.response.error = 0
                 this.response.reasons = []
             },
-            close() {
+            close () {
                 this.isOpen = false
+                this.update = false
             },
-            success(response, file, fileList) {
+            success (response, file, fileList) {
+                this.$emit('success')
                 this.isSuccess = true
                 this.uploadStatus = 1
 
-                if (response.code != 0) {
-                    this.response.success = 0
+                if (response.code !== 0) {
+                    this.response.create = 0
+                    this.response.update = 0
                     this.response.error = 1
                     this.response.reasons = [{message: response.message}]
                     return
                 }
 
+                this.response.create = response.data.create
+                this.response.update = response.data.update
                 if (response.data.errs) {
-                    this.response.success = response.data.success
-                    this.response.error = 1
+                    this.response.error = response.data.failure || 1
                     response.data.errs.forEach((message) => {
                         this.response.reasons.push({
                             message: message
                         })
                     })
-                    return
                 }
 
                 if (this.onSuccess) {
-                    this.onSuccess(response.data, file, fileList).then(({success}) => {
-                        this.response.success = success
-                        this.response.error = 0
-                        this.response.reasons = []
+                    this.onSuccess(response.data, file, fileList).then(({create, update, error, reasons}) => {
+                        this.response.create = create || 0
+                        this.response.update = update || 0
+                        this.response.error = error || 0
+                        this.response.reasons = reasons || []
                     }, ({error, reasons}) => {
-                        this.response.success = 0
+                        this.response.create = 0
+                        this.response.update = 0
                         this.response.error = error
-                        this.response.reasons = reasons
+                        this.response.reasons = reasons || this.response.reasons
 
                         this.uploadStatus = 0
                         this.showUploading = true
                     })
                 }
             },
-            progress(event) {
+            progress (event) {
                 this.percent = parseInt(event.percent)
             },
-            error() {
+            error (err) {
+                if (err.status === 403) {
+                    xmview.showTip('error', '您没有权限执行该操作')
+                }
+
                 this.uploadStatus = 2
                 this.isSuccess = false
             },
-            beforeUpload() {
+            beforeUpload () {
                 this.uploadStatus = 0
                 this.showUploading = false
             },
