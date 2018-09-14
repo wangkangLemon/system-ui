@@ -311,7 +311,7 @@ export default {
                     name: 'course-drug-add',
                     component: resolve => {
                         require.ensure([], () => {
-                            resolve(require('@/views/course/drug/add.vue'))
+                            resolve(require('@/views/course/drug/Add.vue'))
                         })
                     },
                     meta: {
@@ -323,7 +323,7 @@ export default {
                     name: 'course-drug-view',
                     component: resolve => {
                         require.ensure([], () => {
-                            resolve(require('@/views/course/drug/add.vue'))
+                            resolve(require('@/views/course/drug/Add.vue'))
                         })
                     },
                     meta: {
@@ -335,7 +335,7 @@ export default {
                     name: 'course-drug-edit',
                     component: resolve => {
                         require.ensure([], () => {
-                            resolve(require('@/views/course/drug/add.vue'))
+                            resolve(require('@/views/course/drug/Add.vue'))
                         })
                     },
                     meta: {
