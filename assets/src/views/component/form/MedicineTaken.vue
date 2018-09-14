@@ -115,11 +115,11 @@
             return {
                 ruleForm: {
                     name: '',
-                    course_id: '',
+                    course_id: [],
                     course_name: '',
                 },
                 rules: {
-                    name: { required: true, message: '请输入实操课名称', trigger: 'blur'},
+                    name: { required: true, message: '请输入拿药练习名称', trigger: 'blur'},
                     // course_id: { required: true,  message: '请选择关联课程', trigger: 'change' }
                 }
                 // dynamicTags: this.value,
