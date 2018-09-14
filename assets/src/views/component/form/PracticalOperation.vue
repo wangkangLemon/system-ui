@@ -44,6 +44,7 @@
             </el-form-item>
             <el-form-item label="关联课程说明" prop="course_id">
                 <CourseSelect 
+                    :status="0"
                     type="public"
                     ref="courseSelect"
                     @change="(val, name)=>{ ruleForm.course_id = val; ruleForm.course_name = name}">
