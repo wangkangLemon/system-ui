@@ -106,6 +106,7 @@
             </el-form-item>            
             <el-form-item label="关联说明书" prop="instructions">
                 <CourseSelect 
+                    :po_course=1
                     v-model="ruleForm.instructions" 
                     :disabled="isView"
                     :placeholder="ruleForm.instructions_name">

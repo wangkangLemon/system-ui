@@ -14,6 +14,7 @@
     import SelectScroll from 'components/form/SelectScroll.vue'
     export default{
         props: {
+            po_course: Number,
             value: [String, Number],
             change: Function,
             placeholder: String,
@@ -48,7 +49,7 @@
                 let keyword = val
                 let page = parseInt(length / this.pageSize) + 1
                 let page_size = this.pageSize
-                return courseService.search({keyword, page, page_size})
+                return courseService.search({keyword, po_course: this.po_course, page, page_size})
             },
             // 手动清除选中状态
             clear () {
