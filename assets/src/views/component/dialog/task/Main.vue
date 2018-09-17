@@ -64,7 +64,7 @@
                                     {{scope.row.type | taskType('label')}}
                                 </el-tag>
                                 <el-tooltip 
-                                    v-if="scope.row.type === 'medicine_task' || scope.row.type ==='practical_operation'"
+                                    v-if="(scope.row.type === 'medicine_task' || scope.row.type ==='practical_operation') && scope.row.po_course_name"
                                     class="item" 
                                     effect="dark" 
                                     :content="scope.row.po_course_name" 
