@@ -14,7 +14,10 @@
     import SelectScroll from 'components/form/SelectScroll.vue'
     export default{
         props: {
-            status: Number,
+            status: {
+                type: Number,
+                default: -1
+            },
             type: String,
             po_course: Number,
             value: [String, Number],
