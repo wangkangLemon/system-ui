@@ -10,31 +10,52 @@
 </style>
 
 <template>
-    <el-select v-model="selectVal"
-               :placeholder="currPlaceholder"
-               ref="container"
-               @visible-change="handleVisibleChange"
-               @change="handleChange"
-               @clear="onClear"
-               :clearable="true"
-               no-data-text="暂无数据"
-               :disabled="disabled"
-               no-match-text="没有数据">
-        <el-option :disabled="true" value="xmystinputval" style="height: 50px">
-            <el-input @change="filter" :placeholder="inputPlaceholder"></el-input>
+    <el-select 
+        v-model="selectVal"
+        :placeholder="currPlaceholder"
+        ref="container"
+        @visible-change="handleVisibleChange"
+        @change="handleChange"
+        @clear="onClear"
+        :clearable="true"
+        no-data-text="暂无数据"
+        :disabled="disabled"
+        :multiple="multiple"
+        no-match-text="没有数据">
+        <el-option 
+            :disabled="true" 
+            value="xmystinputval" 
+            style="height: 50px">
+            <el-input 
+                @change="filter" 
+                :placeholder="inputPlaceholder">
+            </el-input>
         </el-option>
-        <el-option v-for="item in data"
-                   :label="item.name"
-                   :key="item.id"
-                   :value="item.id">
+        <el-option 
+            v-for="item in data"
+            :label="item.name || item.common_name"
+            :key="item.id"
+            :value="item.id">
         </el-option>
 
-        <el-option v-loading="loading" value="xmyst2" :disabled="true" v-show="!this.data || this.data.length < 1">
+        <el-option 
+            v-loading="loading" 
+            value="xmyst2" 
+            :disabled="true" 
+            v-show="!this.data || this.data.length < 1">
             <span>暂无数据</span>
         </el-option>
-        <el-option value="xmyst1" :disabled="true" v-show="isShowGetMore && this.data && this.data.length > 0"
-                   v-loading="loading">
-            <span ref="domLoading" class="component-form-selectscroll-more" v-show="!loading">点击加载更多</span>
+        <el-option 
+            value="xmyst1" 
+            :disabled="true" 
+            v-show="isShowGetMore && this.data && this.data.length > 0"
+            v-loading="loading">
+            <span 
+                ref="domLoading" 
+                class="component-form-selectscroll-more" 
+                v-show="!loading">
+                点击加载更多
+            </span>
             <span v-show="loading">加载中...</span>
         </el-option>
     </el-select>
@@ -47,7 +68,7 @@
             // 返回一个Pormise对象 结果 { data: [{ name:'xm', id:1 }], total: 20 }
             requestCb: Function,
             changeCb: Function, // 选项改变回调
-            value: [String, Number],
+            value: [String, Number, Array],
             placeholder: {
                 type: String,
                 default: '请选择'
@@ -62,6 +83,10 @@
                 default: false
             },
             list: Array, // 已有的数据集合
+            multiple: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             return {
@@ -133,11 +158,24 @@
                 })
             },
             handleChange (val) {
-                this.changeCb && this.changeCb(val)
+                if (this.multiple) {
+                    this.changeCb && this.changeCb(val, val.map(item => this.getOptionNameById(item, 'common_name')).join(','))
+                } else {
+                    this.changeCb && this.changeCb(val, this.getOptionNameById(val))
+                }
                 this.$emit('input', val)
+            },
+            getOptionNameById (id, name = 'name') {
+                if (id) {
+                    return this.data.filter(item => item.id === id)[0][name]
+                }
             },
             onClear() {
                 this.currPlaceholder = '请选择'
+            },
+            // 手动清除选中状态
+            clear () {
+                this.$refs.container.selectedLabel = ''
             },
             // 处理select显示的操作
             handleVisibleChange (state) {

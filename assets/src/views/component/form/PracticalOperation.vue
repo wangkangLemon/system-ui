@@ -1,47 +1,64 @@
 <style lang="scss">
-    @import "~utils/mixins/common";
-    @import "~utils/mixins/topSearch";
-    #medicinetaken-container {
+    // @import "~utils/mixins/common";
+    // @import "~utils/mixins/topSearch";
+    #practicaloperation-container {
         padding: 15px;
         height: 600px;
         border: 1px solid #ededed;
         border-radius: 5px;
         background: #fff;
-        .medicine {
+        .el-form-item {
+            margin-bottom: 20px;
+        }
+        .form {
             margin-top: 57px;
             width: 53%;
         }
-        .el-tag + .el-tag {
-            margin-left: 10px;
-            margin-bottom: 10px;
-        }
-        .button-new-tag {
-            margin-left: 10px;
-            height: 32px;
-            line-height: 30px;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-        .input-new-tag {
-            width: 90px;
-            margin-left: 10px;
-        }
+        // .el-tag + .el-tag {
+        //     margin-left: 10px;
+        //     margin-bottom: 10px;
+        // }
+        // .button-new-tag {
+        //     margin-left: 10px;
+        //     height: 32px;
+        //     line-height: 30px;
+        //     padding-top: 0;
+        //     padding-bottom: 0;
+        // }
+        // .input-new-tag {
+        //     width: 90px;
+        //     margin-left: 10px;
+        // }
     }
 </style>
 
 <template>
-    <main id="medicinetaken-container">
-<!--         <el-form ref="ruleForm" label-width="120px">
-            <el-form-item label="拿药练习名称" prop="keyword">
+    <main id="practicaloperation-container">
+        <el-form ref="ruleForm" :model="ruleForm" label-width="120px" class="form" :rules="rules">
+            <el-form-item label="实操课" prop="name">
                 <el-input
-                    v-model.lazy="keyword"
-                    type="textarea"
-                    :rows="20"
-                    placeholder="请输入拿药练习名称，多个逗号分隔">
+                    class="input"
+                    v-model="ruleForm.name"
+                    placeholder="请输入实操课名称">
                 </el-input>
             </el-form-item>
-        </el-form> -->
-        <div class="medicine">
+            <el-form-item label="关联课程说明" prop="course_id">
+                <CourseSelect 
+                    :status="0"
+                    type="public"
+                    ref="courseSelect"
+                    @change="(val, name)=>{ ruleForm.course_id = val; ruleForm.course_name = name}">
+                </CourseSelect>
+            </el-form-item>
+            <el-form-item>
+                <el-button 
+                    type='primary' 
+                    @click="add">
+                    添加
+                </el-button>
+            </el-form-item>
+        </el-form>
+        <!-- <div class="medicine">
             <el-tag
                 :key="tag + index"
                 v-for="(tag, index) in dynamicTags"
@@ -66,13 +83,17 @@
                 @click="showInput">
                 +实操课
             </el-button>
-        </div>
+        </div> -->
     </main>
 </template>
 
 <script>
+    import CourseSelect from 'components/select/Course.vue'
+
     export default {
-        components: {},
+        components: {
+            CourseSelect
+        },
         props: {
             value: {
                 type: Array,
@@ -91,57 +112,73 @@
         },
         mounted () {},
         computed: {},
-        watch: {
-            keyword (val) {
-                this.$emit('input', val)
-                this.$emit('medicineTaken', { 
-                    taskType: this.taskType,
-                    type: this.type,
-                    name: val
-                })
-            }
-        },
+        watch: {},
         data () {
             return {
-                dynamicTags: this.value,
-                inputVisible: false,
-                inputValue: ''
+                ruleForm: {
+                    name: '',
+                    course_id: '',
+                    course_name: '',
+                },
+                rules: {
+                    name: { required: true, message: '请输入实操课名称', trigger: 'blur'},
+                    course_id: { required: true,  message: '请选择关联课程', trigger: 'change' }
+                }
+                // dynamicTags: this.value,
+                // inputVisible: false,
+                // inputValue: ''
             }
         },
         methods: {
-            handleClose(tag, noemit) {
-                this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
-                if (!noemit) {
-                    this.$emit('medicineTaken', {
-                        taskType: this.taskType,
-                        type: this.type,
-                        name: tag
-                    }, false)
-                }
-            },
-            showInput() {
-                this.inputVisible = true
-                this.$nextTick(_ => {
-                  this.$refs.saveTagInput.$refs.input.focus()
+            // handleClose(tag, noemit) {
+            //     this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
+            //     if (!noemit) {
+            //         this.$emit('medicineTaken', {
+            //             taskType: this.taskType,
+            //             type: this.type,
+            //             name: tag
+            //         }, false)
+            //     }
+            // },
+            // showInput() {
+            //     this.inputVisible = true
+            //     this.$nextTick(_ => {
+            //       this.$refs.saveTagInput.$refs.input.focus()
+            //     })
+            // },
+            // handleInputConfirm() {
+            //     let inputValue = this.inputValue
+            //     if (inputValue) {
+            //         this.dynamicTags.push(inputValue)
+            //         this.$emit('medicineTaken', { 
+            //             taskType: this.taskType,
+            //             type: this.type,
+            //             name: inputValue
+            //         }, true)
+            //     }
+            //     this.inputVisible = false
+            //     this.inputValue = ''
+            // },
+            // deleteAll () {
+            //     while (this.dynamicTags.length > 0) {
+            //         this.dynamicTags.splice(0, 1)
+            //     }
+            // },
+            add () {
+                this.$refs.ruleForm.validate(valid => {
+                    if (valid) {
+                        this.$emit('medicineTaken', { 
+                            taskType: this.taskType,
+                            type: this.type,
+                            po_course_id: this.ruleForm.course_id,
+                            po_course_name: this.ruleForm.course_name,
+                            name: this.ruleForm.name
+                        })
+                        this.ruleForm.name = ''
+                        this.$refs.courseSelect.clear()
+                        this.$refs.ruleForm.clearValidate()
+                    }
                 })
-            },
-            handleInputConfirm() {
-                let inputValue = this.inputValue
-                if (inputValue) {
-                    this.dynamicTags.push(inputValue)
-                    this.$emit('medicineTaken', { 
-                        taskType: this.taskType,
-                        type: this.type,
-                        name: inputValue
-                    }, true)
-                }
-                this.inputVisible = false
-                this.inputValue = ''
-            },
-            deleteAll () {
-                while (this.dynamicTags.length > 0) {
-                    this.dynamicTags.splice(0, 1)
-                }
             }
         },
         filters: {},

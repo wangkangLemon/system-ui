@@ -289,7 +289,7 @@
             <article slot="footer">
                 <hr style="margin-bottom: 15px;">
                 <h5>注意事项：</h5>
-                <h5>1.模板中字段轻对照填写，不能为空</h5>
+                <h5>1.模板中字段请对照填写，不能为空</h5>
                 <h5>2.如果有某些内容为空，导入时将跳过</h5>
             </article>
         </LocalImportDialog>

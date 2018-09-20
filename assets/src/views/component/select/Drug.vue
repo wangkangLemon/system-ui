@@ -5,21 +5,16 @@
         :requestCb="fetchData" 
         :placeholder="placeholder"
         v-model="currVal" 
+        multiple
         :disabled="disabled">
     </SelectScroll>
 </template>
 
 <script>
-    import courseService from 'services/newcourse/courseService'
+    import drugService from 'services/course/drugService'
     import SelectScroll from 'components/form/SelectScroll.vue'
     export default{
         props: {
-            status: {
-                type: Number,
-                default: -1
-            },
-            type: String,
-            po_course: Number,
             value: [String, Number],
             change: Function,
             placeholder: String,
@@ -51,15 +46,24 @@
                 this.change && this.change()
             },
             fetchData (val, length) {
-                let keyword = val
+                let common_name = val
                 let page = parseInt(length / this.pageSize) + 1
                 let page_size = this.pageSize
-                return courseService.search({keyword, po_course: this.po_course, course_type: this.type, status: this.status, page, page_size})
+                return drugService.searchDrug({common_name, page, page_size})
             },
             // 手动清除选中状态
             clear () {
-                this.$refs.selectScroll.clear()
-            }
+                // 'el-select'
+                // 'el-select__tags'
+                // 'el-tag__close el-icon-close'
+                let arr = this.$el.querySelectorAll('i.el-icon-close')
+
+                for (let i = 0, len = arr.length; i < len; i++) {
+                    setTimeout(() => {
+                        arr[i].click()
+                    }, i * 100)
+                }
+            },
         }
     }
 </script>
