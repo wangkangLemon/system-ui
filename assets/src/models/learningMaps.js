@@ -256,6 +256,9 @@ class PhaseTask {
     }
     _initTask (PhaseTask) {
         objectMerge(PhaseTask, PhaseTask.data)
+        if (PhaseTask.object_type === 'medicine_task') {
+            PhaseTask.data.po_course_name = (PhaseTask.medicine_list || []).map(item => item.name).join(',')
+        }
     }
     _deleteExtraParam () {
         ['data'].forEach(item => {
