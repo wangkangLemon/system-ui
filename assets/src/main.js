@@ -1,5 +1,7 @@
-import ElementUI from 'element-ui'
 import Vue from 'vue'
+import VueCookies from 'vue-cookies'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -16,6 +18,7 @@ sync(store, router)
 Vue.config.devtools = config.debug
 
 document.documentElement.style.fontSize = window.innerWidth / 21.6 + 'px'
+Vue.use(VueCookies)
 Vue.use(ElementUI)
 Vue.use(VueDND)
 Vue.use(VueClipboards)
