@@ -209,9 +209,9 @@
                 <el-checkbox v-model="isGroupBuying" :disabled="disable">设置团购优惠</el-checkbox>
                 <div v-show="isGroupBuying">
                     <PlusOrRemove 
-                        @res="groupDiscounts" 
                         textRight="人"
-                        :select="fetchParam.group_buying" 
+                        :select="group_buying" 
+                        @res="val => fetchParam.group_buying = val"
                         :disable="disable">
                     </PlusOrRemove>
                 </div>
@@ -274,7 +274,7 @@
             favorable_price_com: void 0, // 连锁优惠价格
             object_type: 'template',
             objects: [], // type = 0 公开课程 1内训课 2试卷 3练习 id = num,
-            group_buying: [{}],
+            group_buying: [],
             transferRight: []
         }
     }
@@ -308,6 +308,7 @@
             return {
                 currCategoryName: '',
                 isGroupBuying: false,
+                group_buying: [],
                 moneyarr: [],
                 discountarr: [],
                 editor: null,
@@ -360,47 +361,46 @@
             }
         },
         created () {
-            console.log(this.$route.name)
-            if (this.$route.params.good_id != undefined) {
-                goodsService.getGoodInfo({
-                    id: this.$route.params.good_id
-                }).then((ret) => {
-                    console.log(ret)
-                    this.fetchParam = ret
-                    this.fetchParam.price_com = parseFloat(ret.price_com)
-                    this.fetchParam.favorable_price_com = parseFloat(ret.favorable_price_com)
-                    this.fetchParam.price = parseFloat(ret.price)
-                    this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
-                    let obj = this.getTaskSelected(ret.objects)
-                    this.fetchParam.transferRight = obj.resRight
-                    if (this.fetchParam.transferRight.length > 0) {
-                        this.transferLeft = obj.resLeft
-                    } else {
-                        this.transferLeft = new TaskModel().initTabs()
-                    }
-                    if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
-                        this.isGroupBuying = true
-                        ret.group_buying.forEach(item => {
-                            this.moneyarr.push(item.reach)
-                            this.discountarr.push(item.discount)
-                        })
-                    } else {
-                        this.fetchParam.group_buying = [{}]
-                    }
-                    this.currCategoryName = ret.category
-                    this.editor && this.editor.setContent(ret.introduce)
-                    if (this.$route.name === 'yshi-goods-preview') {
-                        this.$refs.cont.innerHTML = ret.introduce
-                    }
-                    this.disableObject = !!ret.online_count
-                })
-                this.disable = this.$route.name === 'yshi-goods-preview' ? true : false
-            } else {
-                this.transferLeft = new TaskModel().initTabs()
-            }
-            xmview.setContentLoading(false)
+            this.fetchData()
         },
         methods: {
+            fetchData() {
+                if (this.$route.params.good_id != undefined) {
+                    goodsService.getGoodInfo({
+                        id: this.$route.params.good_id
+                    }).then((ret) => {
+                        this.fetchParam = ret
+                        this.fetchParam.price_com = parseFloat(ret.price_com)
+                        this.fetchParam.favorable_price_com = parseFloat(ret.favorable_price_com)
+                        this.fetchParam.price = parseFloat(ret.price)
+                        this.fetchParam.favorable_price = parseFloat(ret.favorable_price)
+                        let obj = this.getTaskSelected(ret.objects)
+                        this.fetchParam.transferRight = obj.resRight
+                        if (this.fetchParam.transferRight.length > 0) {
+                            this.transferLeft = obj.resLeft
+                        } else {
+                            this.transferLeft = new TaskModel().initTabs()
+                        }
+                        if (this.fetchParam.group_buying && this.fetchParam.group_buying.length) {
+                            this.isGroupBuying = true
+                            this.group_buying = ret.group_buying
+                        } else {
+                            this.group_buying = []
+                            this.fetchParam.group_buying = []
+                        }
+                        this.currCategoryName = ret.category
+                        this.editor && this.editor.setContent(ret.introduce)
+                        if (this.$route.name === 'yshi-goods-preview') {
+                            this.$refs.cont.innerHTML = ret.introduce
+                        }
+                        this.disableObject = !!ret.online_count
+                    })
+                    this.disable = this.$route.name === 'yshi-goods-preview' ? true : false
+                } else {
+                    this.transferLeft = new TaskModel().initTabs()
+                }
+                xmview.setContentLoading(false)
+            },
             getTaskSelected (list) {
                 let resLeft = new TaskModel().getTabs()
                 let resRight = []
@@ -481,35 +481,73 @@
             typeChangHandler () {
                 this.fetchParam.transferRight = []
             },
-            groupDiscounts(val) {
-                console.log(val)
-                this.fetchParam.group_buying = val
-            },
             submit () {
                 let pass = true
+                let error = false
                 this.$refs['ruleForm'].validate((valid) => {
                     if (!valid) pass = false
                     // console.log(this.$store.state.component.yshiGroupSussess)
-                    console.log(this.fetchParam.group_buying)
+                    console.log(this.group_buying)
                     if(this.isGroupBuying) {
+                        let buyarr = []
                         this.fetchParam.group_buying.forEach((item) => {
-                            if (!('reach' in item && 'discount' in item)) {
-                                xmview.showTip('error', '请检查优惠阶级')
+                            let buy = {}
+                            if(!('reach' in item && 'discount' in item)) {
                                 pass = false
+                                error = true
+                                xmview.showTip('error', '请检查优惠阶级')
+                                // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                // 循环中的return并不能将函数直接返回，和break是一样的
                                 return
-                            }
-                            for (let [key, value] of Object.entries(item)) {
-                                if(value === 0 || value === true) {
-                                    pass = false
-                                    xmview.showTip('error', '请检查优惠阶级')
-                                    // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
-                                    // 循环中的return并不能将函数直接返回，和break也有一些区别，注意使用
-                                    return
+                            }else {
+                                for (let [key, value] of Object.entries(item)) {
+                                    if(value.value != undefined) {
+                                        for (let [key, value2] of Object.entries(value)) {
+                                            if(value2 === 0 || value2 === true || value2 === '') {
+                                                pass = false
+                                                error = true
+                                                xmview.showTip('error', '请检查优惠阶级')
+                                                // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                                // 循环中的return并不能将函数直接返回，和break是一样的
+                                                return
+                                            }
+                                        }
+                                    }else {
+                                        if(value === 0 || value === true || value === '') {
+                                            pass = false
+                                            error = true
+                                            xmview.showTip('error', '请检查优惠阶级')
+                                            // 使用break提交失败一次item.error就被删掉了，而return没有被真正删掉
+                                            // 循环中的return并不能将函数直接返回，和break是一样的
+                                            return
+                                        }else {
+                                            if(key == 'reach') {
+                                                buy.reach = value
+                                            } else if(key == 'discount') {
+                                                buy.discount = value
+                                            }
+                                            if('reach' in buy && 'discount' in buy) {
+                                                buyarr.push(buy)
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                            delete item.error
-                        })
 
+                            if(error) {
+                                return
+                            }else {
+                                if(item.reach.value) {
+                                    buy.reach = item.reach.value
+                                    buy.discount = item.discount.value
+                                    buyarr.push(buy)
+                                }
+                            }
+                        })
+                        if(!buyarr.length){
+                            return
+                        }
+                        this.fetchParam.group_buying = buyarr
                     }
 
                     if (!this.editor.getContentTxt()) {
@@ -528,7 +566,7 @@
                     })
                     // 团购优惠
                     if (!this.isGroupBuying) {
-                        this.fetchParam.group_buying = [{}]
+                        this.fetchParam.group_buying = []
                     }
                     let req = goodsService.createGood
                     let msg = '添加成功'
@@ -543,6 +581,7 @@
                             this.$router.push({name: 'yshi-goods'})
                         }).catch((ret) => {
                             xmview.showTip('error', ret.message)
+                            // this.fetchData()
                         })
                     }
                 })
