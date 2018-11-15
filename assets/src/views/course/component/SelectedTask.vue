@@ -30,7 +30,15 @@
                 title="可拖动">
                 <i class="el-icon-sort"></i>
                 <el-tag :type="task.object_type | taskType('tag')">{{task.object_type | taskType('label')}}</el-tag>
-                <span>{{task.object_name}}</span>
+                <el-tooltip 
+                    v-if="(task.object_type === 'medicine_task' || task.object_type ==='practical_operation') && task.data.po_course_name"
+                    class="item" 
+                    effect="dark" 
+                    :content="task.data.po_course_name" 
+                    placement="top-start">
+                    <span>{{task.object_name}}</span>
+                </el-tooltip>
+                <span v-else>{{task.object_name}}</span>
             </div>
         </draggable>
         <ul v-else>
@@ -40,7 +48,15 @@
                 v-if="task.type === taskType" 
                 :key="task.object_id + task.object_name">
                 <el-tag :type="task.object_type | taskType('tag')">{{task.object_type | taskType('label')}}</el-tag>
-                <span>{{task.object_name}}</span>
+                <el-tooltip 
+                    v-if="(task.object_type === 'medicine_task' || task.object_type ==='practical_operation') && task.data.po_course_name"
+                    class="item" 
+                    effect="dark" 
+                    :content="task.data.po_course_name" 
+                    placement="top-start">
+                    <span>{{task.object_name}}</span>
+                </el-tooltip>
+                <span v-else>{{task.object_name}}</span>
                 <i 
                     v-if="taskType === 3 && !disabled" 
                     class="el-icon-delete delete" 

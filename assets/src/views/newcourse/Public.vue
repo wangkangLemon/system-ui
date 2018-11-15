@@ -79,7 +79,8 @@
         </main>
 
         <el-table class="data-table" v-loading="loadingData" :data="data" :fit="true" @select="selectRow" @select-all="selectRow" border>
-            <el-table-column type="selection" :selectable="selectable"></el-table-column>
+            <!-- <el-table-column type="selection" :selectable="selectable"></el-table-column> -->
+            <el-table-column type="selection"></el-table-column>
             <el-table-column min-width="200" prop="name" label="名称">
             </el-table-column>
             <el-table-column min-width="200" prop="category_name" label="所属栏目">
@@ -156,7 +157,8 @@
         <!--底部的批量删除和移动两个按钮-->
         <div class="bottom-manage">
             <el-button :disabled='selectedIds.length < 1' @click="dialogTree.isShow = true">移动到</el-button>
-            <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button>
+            <!-- <el-button :disabled='selectedIds.length < 1' @click="delMulti" type="danger">批量删除</el-button> -->
+            <el-button :disabled='deldisable' @click="delMulti" type="danger">批量删除</el-button>
         </div>
 
         <!--移动子栏目的弹出框-->
@@ -207,11 +209,23 @@ export default {
             total: 0,
             dialogVisible: false,
             selectedIds: [], // 被选中的数据id集合
+            selectedobj: [], // 被选中的数据
             fetchParam: getFetchParam(),
             dialogTree: {
                 isShow: false,
                 selectedId: void 0,
             }
+        }
+    },
+    computed: {
+        deldisable() {
+            if(this.selectedobj.length < 1) return true
+            for(let item of this.selectedobj) {
+                if (item.status === 0) {
+                    return true
+                }
+            }
+            return false
         }
     },
     created() {
@@ -248,16 +262,20 @@ export default {
                 this.total = ret.total
                 this.loadingData = false
                 this.selectedIds = []
+                this.selectedobj = []
                 xmview.setContentLoading(false)
             })
         },
         // 单行被选中
         selectRow(selection) {
             let ret = []
+            let retobj = []
             selection.forEach((item) => {
                 ret.push(item.id)
+                retobj.push(item)
             })
             this.selectedIds = ret
+            this.selectedobj = retobj
         },
         publish (index, row) {
             let txt = row.publish_status == 0 ? '撤回' : '发布'
