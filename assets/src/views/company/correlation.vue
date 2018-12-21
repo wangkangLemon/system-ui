@@ -81,6 +81,7 @@
 				this.form.company_id = this.companyID
 				companyService.corporate(this.form).then(() => {
 					xmview.showTip('success', '关联成功')
+					this.message=false
 				}).then(() => {
 					this.$router.push({
 						name: 'company-index'
