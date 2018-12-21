@@ -23,7 +23,19 @@ class DepartmentService {
             return ret.data
         })
     }
-
+    //获取门店列表2
+     getDepartmentTwo ({
+        page = '',
+        page_size = '',
+        company_id = '',
+        department_id='',
+        keyword = ''
+     }) {
+        let finalUrl = config.apiHost+'/com/'+company_id+'/department/'+department_id+'/tree'
+        return api.get(finalUrl, {page, page_size, company_id, keyword}, false).then((ret) => {
+            return ret.data
+        })
+    }
     // 获取详情接口
     getDepInfo (val) {
         let finalUrl = `${urlPre}/${val}`

@@ -39,6 +39,19 @@ export default {
             }
         },
         {
+            path: 'operate/correlation',
+            name: 'company-correlation',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/correlation.vue'))
+                })
+            },
+            meta: {
+                title: '企业-关联',
+                noback: false
+            }
+        },
+        {
             path: 'edit/:id',
             name: 'company-edit',
             component: resolve => {

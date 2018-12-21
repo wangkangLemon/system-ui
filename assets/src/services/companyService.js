@@ -60,6 +60,7 @@ class CompanyService {
                     url,
                     description,
                     department_number,
+                    department_count,
                     user_number,
                     signatory,
                     sign_time,
@@ -81,6 +82,7 @@ class CompanyService {
             url,
             description,
             department_number,
+             department_count,
             user_number,
             signatory,
             sign_time,
@@ -97,11 +99,23 @@ class CompanyService {
         let finalUrl = `${urlPre}/${val}/edit`
         return api.get(finalUrl).then((ret) => {
             return ret.data
+        }).catch((err)=>{
+        	return  reject({err, xhr})
         })
     }
-
+    //企业关联
+    corporate({company_id,ids}) {
+        let finalUrl = config.apiHost+'/com/'+company_id+'/department/link'
+        return api.post(finalUrl, {
+           ids
+        }).then((ret) => {
+            if (ret.code) {
+                return Promise.reject(ret)
+            }
+        })
+    }
     // 更新企业信息
-    updateCompany ({category, name, contact, mobile, email, tel, fax, province, city, area, address, zip, url, description, department_number, user_number, signatory, sign_time, expire_time, company_id}) {
+    updateCompany ({category, name, contact, mobile, email, tel, fax, province, city, area, address, zip, url, description, department_number, department_count, user_number, signatory, sign_time, expire_time, company_id}) {
         let finalUrl = `${urlPre}/${company_id}`
         return api.put(finalUrl, {
             category,
@@ -119,6 +133,7 @@ class CompanyService {
             url,
             description,
             department_number,
+             department_count,
             user_number,
             signatory,
             sign_time,

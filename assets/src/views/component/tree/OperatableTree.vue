@@ -13,7 +13,6 @@
 
 <script>
     import treeUtils from 'utils/treeUtils'
-
     export default{
         props: {
             value: Array,

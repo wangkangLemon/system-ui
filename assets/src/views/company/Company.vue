@@ -126,7 +126,7 @@
             <el-table-column
                     prop="operate"
                     label="操作"
-                    width="150"
+                    width="200"
                     fixed="right"
                     align="center">
                 <template slot-scope="scope">
@@ -138,6 +138,9 @@
                     </el-button>
                     <el-button type="text" size="small" @click="editCompany(scope.$index, scope.row)">
                         修改
+                    </el-button>
+                    <el-button type="text" size="small" @click="correlation(scope.$index, scope.row)" v-if='scope.row.category==4'>
+                        关联
                     </el-button>
                 </template>
             </el-table-column>
@@ -175,8 +178,12 @@
         },
         data () {
             return {
-                companyType: ['', '工业', '连锁', '提供商'],
+                companyType: ['', '投放工业', '连锁', '提供商','采购工业'],
                 types: [ // 类型
+                    {
+                        name: '采购工业',
+                        id: 4
+                    },
                     {
                         name: '提供商',
                         id: 3
@@ -186,7 +193,7 @@
                         id: 2
                     },
                     {
-                        name: '工业',
+                        name: '投放工业',
                         id: 1
                     }
                 ],
@@ -215,13 +222,20 @@
             })
         },
         methods: {
+        	correlation(index,row){
+        		console.log(row)
+        		this.$router.push({
+        			path:'operate/correlation',
+        			query:{id:row.id}
+        		})
+        	},
             initFetchParam () {
                 this.currentPage = 1
                 this.fetchParam = clearFn()
             },
             // 修改企业信息
             editCompany (index, row) {
-                this.$router.push({name: 'company-edit', params: {id: row.id}})
+                this.$router.push({name: 'company-edit', query: {id: row.id}})
             },
             // 显示详情
             showFn (index, row) {
