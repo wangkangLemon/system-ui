@@ -132,9 +132,6 @@ export default {
     _this.getData().then(() => {
       xmview.setContentLoading(false);
     });
-    setTimeout(function() {
-      _this.setSelected();
-    }, 100);
   },
   methods: {
     //删除全部
@@ -159,9 +156,6 @@ export default {
       //搜索
       var _this = this;
       this.getData();
-      setTimeout(function() {
-        _this.setSelected();
-      }, 100);
     },
     handleSelectionChange(selection, row) {
       if (selection.indexOf(row) > -1) {
@@ -226,9 +220,6 @@ export default {
       var _this = this;
       this.page = val;
       this.getData();
-      setTimeout(function() {
-        _this.setSelected();
-      }, 100);
     },
     //插入
     insert() {
@@ -265,6 +256,7 @@ export default {
         .then(ret => {
           this.total = ret.total;
           this.companyData = ret.data;
+           this.setSelected();
         })
         .then(() => {
           this.loading = false;
