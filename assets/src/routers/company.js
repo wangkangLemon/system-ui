@@ -52,6 +52,45 @@ export default {
             }
         },
         {
+            path: 'operate/learningGold/log',
+            name: 'company-learningGold-log',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/learningGold/log.vue'))
+                })
+            },
+            meta: {
+                title: '学习金',
+                noback: true
+            }
+        },
+        {
+            path: 'operate/learningGold/companyRoster',
+            name: 'company-learningGold-companyRoster',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/learningGold/companyRoster.vue'))
+                })
+            },
+            meta: {
+                title: '设置白名单企业',
+                noback: false
+            }
+        },
+        {
+            path: 'operate/learningGold/logDetails',
+            name: 'company-learningGold-logDetails',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('../views/company/learningGold/logDetails.vue'))
+                })
+            },
+            meta: {
+                title: '学习金',
+                noback: false
+            }
+        },
+        {
             path: 'edit/:id',
             name: 'company-edit',
             component: resolve => {

@@ -258,6 +258,7 @@
             handleCurrentChange(val) {
                 this.currentPage = val
                 this.getData()
+                console.log(this.companyData)
             },
             getData () {
                 this.loading = true

@@ -33,6 +33,11 @@
                         prop="create_time_name"
                         label="触发时间">
                 </el-table-column>
+                 <el-table-column label="请求参数">
+                    <template slot-scope="props">
+                     <span>{{request_params}}</span>
+                    </template>
+                </el-table-column>
             </el-table>
         </el-card>
     </el-dialog>
@@ -50,6 +55,7 @@
                 record_id: 0,
                 before: '',
                 after: '',
+                request_params:''
             }
         },
         created () {
@@ -67,6 +73,8 @@
                 this.loading = true
                 return logService.getBehaviorInfo({record_id: this.record_id}).then((ret) => {
                     this.data = ret.data.steps
+                     this.request_params=ret.data.request_params
+                     console.log(this.request_params)
                 }).then(() => {
                     this.loading = false
                 })
