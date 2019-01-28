@@ -193,7 +193,7 @@
                 <el-dropdown trigger="click" @command="handleFeedback">
                     <span class="el-dropdown-link feedback">
                         <i class="iconfont icon-service"></i> <em>问题反馈</em> <i class="el-icon-caret-bottom el-icon--right"></i>
-                      </span>
+                    </span>
                     <el-dropdown-menu slot="dropdown" class="feedback-dropdown">
                         <el-dropdown-item command="index">我的反馈</el-dropdown-item>
                         <el-dropdown-item command="add">提交问题</el-dropdown-item>

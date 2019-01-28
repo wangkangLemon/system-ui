@@ -18,7 +18,7 @@ const Auth = {
     },
 
     mutations: {
-        [INDEX_SETWEBPATH] (state, {main, sub}) {
+        [INDEX_SETWEBPATH] (state, {main, sub}) { 
             state.webpathMain = main
             state.webpathSub = sub
         },

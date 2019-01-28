@@ -155,7 +155,7 @@
 <template>
     <article class="index-nav-container" v-loading="containerLoading">
         <!--添加编辑/弹窗-->
-        <el-dialog class="form" :title="dialogTitle" v-model="changeIcon" @open="dialogOpen">
+        <el-dialog class="form" :title="dialogTitle" :visible.sync="changeIcon" @open="dialogOpen">
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item label="推荐类别">
                     <el-select clearable v-model="form.type" @change="typeChange">
