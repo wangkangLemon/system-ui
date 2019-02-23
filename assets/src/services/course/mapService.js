@@ -24,10 +24,11 @@ class TeachingService {
         phase_type,
         phase_list,
         finish_exam_id,
-        is_free
+        is_free,
+        category_id
     }) {
         let finalUrl = `${urlPre}`
-        return api.post(finalUrl, JSON.stringify({ type, title, image, phase_type, phase_list, finish_exam_id, is_free })).then(ret => {
+        return api.post(finalUrl, JSON.stringify({ type, title, image, phase_type, phase_list, finish_exam_id, is_free,category_id })).then(ret => {
             xmview.showTip('success', ret.message || '创建成功')
         })
     }
@@ -39,10 +40,11 @@ class TeachingService {
         phase_type,
         phase_list,
         finish_exam_id,
-        is_free
+        is_free,
+        category_id
     }) {
         let finalUrl = `${urlPre}/${id}`
-        return api.put(finalUrl, JSON.stringify({ id, type, title, image, phase_type, phase_list, finish_exam_id, is_free })).then(ret => {
+        return api.put(finalUrl, JSON.stringify({ id, type, title, image, phase_type, phase_list, finish_exam_id, is_free,category_id })).then(ret => {
             xmview.showTip('success', ret.message || '更新成功')
         })
     }

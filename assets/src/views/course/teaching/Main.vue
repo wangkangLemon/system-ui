@@ -30,6 +30,17 @@
                     <el-option label="下线" :value="2"></el-option>
                 </el-select>
             </section>
+            <!-- <section>
+                <i>分类</i>
+                <el-select v-model="fetchParam.category_id" placeholder="请选择" filterable clearable @change="getClassify">
+                   <el-option
+                      v-for="item in options"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    ></el-option>
+                </el-select>
+            </section> -->
             <section>
                 <DateRange 
                     title="创建时间" 
@@ -157,7 +168,7 @@
 <script>
     import DateRange from 'components/form/DateRangePicker.vue'
     import mapService from 'services/course/mapService.js'
-
+    import mapTypeService from "services/course/mapTypeService.js";
     export default {
         components: {
             DateRange,
@@ -167,14 +178,17 @@
             this.fetchData().then(() => {
                 xmview.setContentLoading(false)
             })
+            this.getClassify()
         },
         created () {
+             this.getClassify()
         },
         mounted () {},
         computed: {},
         watch: {},
         data () {
             return {
+                options:[],
                 loading: false,
                 data: [],
                 total: 0,
@@ -186,6 +200,7 @@
                     type: 'teaching',  // learn_map/teaching
                     page: 1,
                     page_size: 15,
+                    category_id:''
                 }
             }
         },
@@ -198,6 +213,11 @@
                     this.data = ret.list || []
                     this.total = ret.total
                     this.loading = false
+                })
+            },
+            getClassify(){
+                return mapTypeService.getMapTypeList({page:'',page_size:'99999999',name:'', category_id:this.fetchParam.category_id}).then(ret => {
+                this.options=ret.data
                 })
             },
             initPage () {

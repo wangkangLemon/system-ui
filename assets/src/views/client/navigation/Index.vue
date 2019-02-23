@@ -244,7 +244,7 @@
                             <p>{{item.name}}</p>
                             <div class="operate-layer">
                                 <i class="iconfont icon-edit" @click="editModule(item, list.id, pindex, index)"></i>
-                                <i class="el-icon-circle-cross" @click="delModule(list.id, item.id, pindex, index)"></i>
+                                <i class="el-icon-delete el-icon-circle-cross" @click="delModule(list.id, item.id, pindex, index)"></i>
                             </div>
                         </div>
                     </div>
@@ -286,7 +286,7 @@
         <div class="block">
             <el-pagination
                     :page-size="page_size"
-                    :current-page="currentPage"
+                    :current-page="currentPage" 
                     @current-change="handleCurrentChange"
                     layout="total, prev, pager, next"
                     :total="total">
@@ -539,6 +539,8 @@
                             req = mobileService.updateModule
                             delete this.form.sort
                         } else {
+                            console.log(this.resultData)
+                            console.log( this.resultData[this.currentData.pindex])
                             this.form.sort = this.resultData[this.currentData.pindex]['modules'].length + 1
                             msg = '添加成功'
                             req = mobileService.addModule

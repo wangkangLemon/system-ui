@@ -42,7 +42,7 @@
     <main id="newcourse-course-public-container">
 
         <section class="manage-container">
-            <el-button type="primary" icon="menu" @click="$router.push({name: 'newcourse-course-add'})">
+            <el-button type="primary" icon="menu" @click="$router.push({name: 'newcourse-course-add',query:{course_type:'public'}})">
                 <i>添加课程</i>
             </el-button>
             <el-button type="warning" icon="menu" @click="$router.push({name:'course-manage-course-category-manage'})">
@@ -117,7 +117,7 @@
                 <template slot-scope="scope">
                     <!--<el-button @click="preview(scope.$index, scope.row)" type="text" size="small">预览</el-button>-->
                     <el-button 
-                        @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id}})" 
+                        @click="$router.push({name: 'newcourse-course-edit', params: {course_id: scope.row.id},query:{course_type:'public'}})" 
                         type="text" 
                         size="small" 
                         :disabled="scope.row.status == 0">

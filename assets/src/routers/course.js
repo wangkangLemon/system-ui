@@ -200,6 +200,19 @@ export default {
             }
         },
         {
+            path: 'learnmaptype',
+            name: 'course-learnmaptype',
+            component: resolve => {
+                require.ensure([], () => {
+                    resolve(require('@/views/course/learnmap/learnmaptype.vue'))
+                })
+            },
+            meta: {
+                title: '带教分类',
+                noback: true
+            }
+        },
+        {
             path: 'learnmap/add',
             name: 'course-learnmap-add',
             component: resolve => {
