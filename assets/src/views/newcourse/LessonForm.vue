@@ -40,7 +40,7 @@
         <el-form-item label="课时名称" prop="name">
             <el-input v-model="lesson.name"></el-input>
         </el-form-item>
-        <el-form-item label="免费试看">
+        <el-form-item label="免费试看" v-if="this.course_type">
             <el-checkbox v-model.number="lesson.try_enable" :trueLabel="1" :falseLabel="0">本课时免费试看</el-checkbox>
         </el-form-item>
         <slot></slot>
@@ -76,6 +76,7 @@
         props: {
             lesson: {type: Object, required: true},
             company_id: Number,
+            course_type:Boolean,
             material_types: {
                 type: Array,
                 default: function () {

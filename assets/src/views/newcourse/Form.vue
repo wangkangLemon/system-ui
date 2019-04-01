@@ -97,6 +97,9 @@
           <el-form-item label="课程标签">
             <vTags v-model="courseTags"></vTags>
           </el-form-item>
+           <el-form-item label="排序" prop="sort" v-if="this.$route.query.course_type=='public'">
+						<el-input v-model="fetchParam.sort" type="number" placeholder="请输入序列号" min='0'></el-input>
+					</el-form-item>
           <el-form-item label="课程归属" prop="company_id">
             <CompanySelect
               type="3"
@@ -138,7 +141,7 @@
           :rules="classhour.rules"
           :model="classhour.form"
         >
-          <LessonForm :lesson="classhour.form" :company_id="fetchParam.company_id"></LessonForm>
+          <LessonForm :lesson="classhour.form" :company_id="fetchParam.company_id" :course_type="this.$route.query.course_type=='public'"></LessonForm>
           <el-form-item v-if="!classhour.paperLesson">
             <el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)" v-if="this.$route.query.course_type=='public'">
               <i class="el-icon-plus"></i> 添加考试
@@ -787,7 +790,8 @@ function getOriginData() {
     tags: "",
     update_time_name: "",
     id: 0,
-    course_type: ""
+    course_type: "",
+    sort:""
   };
 }
 </script>

@@ -79,7 +79,7 @@
       </div>
     </section>
     <section class="right_block">
-      <div class="table_title">已选择（被选择企业的所属员工，将不被征收个人学习金）</div>
+      <div class="table_title">已选择（被选择企业的所属员工，将被征收个人学习金）</div>
       <section>
         <el-table
           v-loading="loading"
@@ -256,7 +256,7 @@ export default {
         .then(ret => {
           this.total = ret.total;
           this.companyData = ret.data;
-           this.setSelected();
+          this.setSelected();
         })
         .then(() => {
           this.loading = false;

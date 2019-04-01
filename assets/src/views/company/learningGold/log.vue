@@ -63,8 +63,8 @@
       <el-table-column prop="name" label="连锁名称" min-width="150"></el-table-column>
       <el-table-column label="属性" width="180">
         <template scope="scope">
-          <span v-if="scope.row.exemption==1">不征收</span>
-          <span v-else-if="scope.row.exemption==0">征收</span>
+          <span v-if="scope.row.exemption==1">征收</span>
+          <span v-else-if="scope.row.exemption==0">不征收</span>
         </template>
       </el-table-column>
       <el-table-column width="100" prop="user_cnt" label="员工数"></el-table-column>
@@ -95,7 +95,7 @@
             type="text"
             size="small"
             @click="showFn(scope.$index, scope.row)"
-            :disabled="scope.row.exemption==1?true:false"
+            :disabled="scope.row.exemption==0?true:false"
           >发送后台通知</el-button>
         </template>
       </el-table-column>

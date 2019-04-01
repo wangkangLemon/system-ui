@@ -77,6 +77,15 @@
                             <el-radio v-model="fetchParam.type" label="newcourse">系列课程</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <el-form-item label="课程排序规则" prop="course_sort">
+						<el-select v-model="fetchParam.course_sort" placeholder="默认排序">
+							<el-option label="默认排序" :value="0"></el-option>
+							<el-option label="按课程添加时间升序" :value="1"></el-option>
+							<el-option label="按课程添加时间倒序" :value="2"></el-option>
+							<el-option label="按课程排序字段升序" :value="3"></el-option>
+							<el-option label="按课程排序字段倒序" :value="4"></el-option>
+						</el-select>
+					</el-form-item>
                     <el-form-item label="栏目排序" prop="sort">
                         <el-input placeholder="最小的排在前面" :disabled="fetchParam.parent_id == null"
                                   v-model.number="fetchParam.sort"></el-input>
@@ -325,7 +334,8 @@
             image: void 0,
             sort: void 0,
             disabled: 0,
-            id: 0
+            id: 0,
+            course_sort:''
         }
     }
 </script>

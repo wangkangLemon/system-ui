@@ -304,9 +304,9 @@ class CourseService {
     }
 
     // 添加栏目
-    addCategory ({ companyid, parent_id, type, name, image, sort, disabled }) {
+    addCategory ({ companyid, parent_id, type, name, image, sort, disabled,course_sort }) {
         companyid = companyid || authUtils.getUserInfo().company_id
-        let reqParam = { parent_id, type, name, image, sort, disabled }
+        let reqParam = { parent_id, type, name, image, sort, disabled,course_sort }
         if (parent_id === 0) delete reqParam['parent_id']
 
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category`
@@ -314,10 +314,10 @@ class CourseService {
     }
 
     // 修改栏目
-    updateCategory ({ companyid, type, name, image, sort, disabled, id }) {
+    updateCategory ({ companyid, type, name, image, sort, disabled, id,course_sort }) {
         companyid = companyid || authUtils.getUserInfo().company_id
         let finalUrl = `${config.apiHost}/com/${companyid}/course/category/${id}`
-        return api.put(finalUrl, { type, name, image, sort, disabled })
+        return api.put(finalUrl, { type, name, image, sort, disabled,course_sort })
     }
 
     // 删除栏目
