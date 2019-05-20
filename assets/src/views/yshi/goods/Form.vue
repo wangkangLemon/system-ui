@@ -140,7 +140,7 @@
                     size="small" 
                     type="primary"
                     @click="chooseMaterial"
-                    :disabled="disable || disableObject">
+                   >
                     添加
                 </el-button>
                 <template v-if="fetchParam.transferRight.length">
