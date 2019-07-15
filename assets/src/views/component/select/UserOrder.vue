@@ -5,7 +5,7 @@
 <template>
     <SelectScroll 
         :inputPlaceholder="inputPlaceholder"
-        :changeCb="handleChange" :requestCb="fetchData" ></SelectScroll>
+        :changeCb="handleChange" :requestCb="fetchData" v-model="currVal"></SelectScroll>
 </template>
 
 <script>

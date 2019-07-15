@@ -16,7 +16,7 @@
     import companyService from '../../../services/companyService'
     export default{
         props: {
-            value: [String, Number],
+            value: [String, Number, Array],
             change: Function,
             placeholder: String,
             list: Array,

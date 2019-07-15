@@ -65,7 +65,11 @@
     <el-tabs type="card" v-model="activeTab" class="tab">
       <el-tab-pane label="课程信息" name="couse">
         <el-form label-width="120px" ref="form" :rules="rules" :model="fetchParam">
-          <el-form-item label="所属栏目" prop="category_id" v-if="this.$route.query.course_type == 'public'">
+          <el-form-item
+            label="所属栏目"
+            prop="category_id"
+            v-if="this.$route.query.course_type == 'public'"
+          >
             <CourseCategorySelect
               type="newcourse"
               :placeholder="fetchParam.category_name"
@@ -83,7 +87,7 @@
               width="200"
               height="112"
               v-show="fetchParam.image"
-            >
+            />
             <CropperImg ref="imgcropper" :confirmFn="cropperImgSucc" :aspectRatio="16/9"></CropperImg>
           </el-form-item>
           <el-form-item label="课程介绍" prop="description">
@@ -94,19 +98,25 @@
               placeholder="请输入内容"
             ></el-input>
           </el-form-item>
-          <el-form-item label="课程标签">
+          <el-form-item label="课程标签" v-if="this.$route.query.course_type=='public'">
             <vTags v-model="courseTags"></vTags>
           </el-form-item>
-           <el-form-item label="排序" prop="sort" v-if="this.$route.query.course_type=='public'">
-						<el-input v-model="fetchParam.sort" type="number" placeholder="请输入序列号" min='0'></el-input>
-					</el-form-item>
-          <el-form-item label="课程归属" prop="company_id">
-            <CompanySelect
-              type="3"
-              v-model="fetchParam.company_id"
-              :placeholder="fetchParam.company_name"
-              v-on:change="val=>fetchParam.company_id=val"
-            ></CompanySelect>
+          <el-form-item label="排序" prop="sort" v-if="this.$route.query.course_type=='public'">
+            <el-input v-model="fetchParam.sort" type="number" placeholder="请输入序列号" min="0"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="课程归属"
+            prop="company_id"
+            v-if="this.$route.query.course_type=='public'"
+          >
+            <el-select v-model="fetchParam.company_id" filterable placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="课程售价" prop="price" v-if="this.$route.query.course_type=='public'">
             <el-input v-model.number="fetchParam.price" type="number"></el-input>
@@ -141,9 +151,18 @@
           :rules="classhour.rules"
           :model="classhour.form"
         >
-          <LessonForm :lesson="classhour.form" :company_id="fetchParam.company_id" :course_type="this.$route.query.course_type=='public'"></LessonForm>
+          <LessonForm
+            :lesson="classhour.form"
+            :company_id="fetchParam.company_id"
+            :course_type="this.$route.query.course_type=='public'"
+          ></LessonForm>
           <el-form-item v-if="!classhour.paperLesson">
-            <el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)" v-if="this.$route.query.course_type=='public'">
+            <el-button
+              type="gray"
+              size="full"
+              @click="openExamForm(-1, -1, $event)"
+              v-if="this.$route.query.course_type=='public'"
+            >
               <i class="el-icon-plus"></i> 添加考试
             </el-button>
           </el-form-item>
@@ -179,7 +198,12 @@
                   </el-button>
                 </p>
                 <p>
-                  <el-button type="gray" size="full" @click="openExamForm(-1, -1, $event)" v-if="cancel">
+                  <el-button
+                    type="gray"
+                    size="full"
+                    @click="openExamForm(-1, -1, $event)"
+                    v-if="cancel"
+                  >
                     <i class="el-icon-plus"></i> 添加考试
                   </el-button>
                 </p>
@@ -236,7 +260,12 @@
                       </el-button>
                     </p>
                     <p>
-                      <el-button type="gray" size="full" @click="openExamForm(pindex, -1, $event)" v-if="cancel">
+                      <el-button
+                        type="gray"
+                        size="full"
+                        @click="openExamForm(pindex, -1, $event)"
+                        v-if="cancel"
+                      >
                         <i class="el-icon-plus"></i> 添加考试
                       </el-button>
                     </p>
@@ -304,6 +333,7 @@
   </article>
 </template>
 <script>
+import companyService from '../../services/companyService'
 import courseService from "../../services/courseService";
 import newcourseService from "../../services/newcourse/courseService";
 import CourseCategorySelect from "../component/select/CourseCategory.vue";
@@ -341,7 +371,8 @@ export default {
   },
   data() {
     return {
-      cancel:true,//判断是否显示添加考试按钮
+      options:[],
+      cancel: true, //判断是否显示添加考试按钮
       videoUrl: "",
       docurl: "",
       docshow: false,
@@ -411,14 +442,15 @@ export default {
       editPaper: new Paper()
     };
   },
-  watch:{
-    activeTab:function(val){
-      if(val=='classhour'){
-        this.cancel=false
+  watch: {
+    activeTab: function(val) {
+      if (val == "classhour") {
+        this.cancel = false;
       }
     }
   },
   created() {
+    this.fetchData()
     if (this.$route.params.course_id != undefined) {
       newcourseService
         .getCourseInfo({
@@ -474,6 +506,11 @@ export default {
     xmview.setContentLoading(false);
   },
   methods: {
+     fetchData () {
+                return companyService.getIndrustrySelectList({category:3}).then((ret) => {
+                  this.options=ret.data
+                })
+            },
     // 添加多课时
     addMultiSubmit() {
       this.$refs["multiForm"].validate(valid => {
@@ -512,15 +549,15 @@ export default {
         this.fetchParam.course_type = "public";
       } else if (this.$route.query.course_type == "teaching") {
         this.fetchParam.course_type = "teaching";
-        this.fetchParam.category_id='0'
+        this.fetchParam.category_id = "0";
         console.log(this.fetchParam.course_type);
       }
       this.$refs["form"].validate(valid => {
         if (!valid) return;
         this.fetchParam.tags = this.courseTags.toString();
         let req = newcourseService.create;
-        if (this.fetchParam.id){
-        req = newcourseService.update;
+        if (this.fetchParam.id) {
+          req = newcourseService.update;
         }
         this.fetchParam.update_time = this.fetchParam.update_time_name;
         req(this.fetchParam).then(ret => {
@@ -531,8 +568,8 @@ export default {
             index: -1
           };
           this.activeTab = "classhour";
-          if(this.$route.query.course_type=='teaching'){
-            this.cancel=false
+          if (this.$route.query.course_type == "teaching") {
+            this.cancel = false;
           }
           if (!this.fetchParam.id) this.fetchParam.id = ret.id;
         });
@@ -688,18 +725,17 @@ export default {
         })
         .then(() => {
           xmview.showTip("success", "操作成功");
-          if(this.$route.query.course_type=='public'){
+          if (this.$route.query.course_type == "public") {
             this.$router.push({
-            name: "newcourse-course-public",
-            query: { tab: "newcourse" }
-          });
-          }else if(this.$route.query.course_type=='teaching'){
-             this.$router.push({
-            name: "newcourse-course-sem",
-            query: { tab: "newcourse" }
-          });
+              name: "newcourse-course-public",
+              query: { tab: "newcourse" }
+            });
+          } else if (this.$route.query.course_type == "teaching") {
+            this.$router.push({
+              name: "newcourse-course-sem",
+              query: { tab: "newcourse" }
+            });
           }
-          
         });
     },
     previewFn(row) {
@@ -710,9 +746,7 @@ export default {
           this.$refs.videoPreview.show(row.name);
         });
       } else {
-        this.docurl = `${config.apiHost}/sys/course/doc/${
-          row.material_id
-        }/view`;
+        this.docurl = `${config.apiHost}/sys/course/doc/${row.material_id}/view`;
         this.docshow = true;
       }
     },
@@ -778,7 +812,7 @@ export default {
 };
 function getOriginData() {
   return {
-    company_id: void 0,
+    company_id: 1622,
     company_name: "",
     category_id: "",
     category_name: "",
@@ -791,7 +825,7 @@ function getOriginData() {
     update_time_name: "",
     id: 0,
     course_type: "",
-    sort:""
+    sort: ""
   };
 }
 </script>

@@ -11,7 +11,7 @@
 
 <template>
     <el-select 
-        v-model="selectVal"
+        :value="selectVal"
         :placeholder="currPlaceholder"
         ref="container"
         @visible-change="handleVisibleChange"
@@ -117,6 +117,7 @@
             }
         },
         created () {
+            let _this=this
             this.initGetMore()
             if (this.value && this.currPlaceholder && this.data.length < 1) {      
                 this.data.push({id: this.value, name: this.placeholder})
