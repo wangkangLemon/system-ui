@@ -101,7 +101,7 @@
           <el-form-item label="课程标签" v-if="this.$route.query.course_type=='public'">
             <vTags v-model="courseTags"></vTags>
           </el-form-item>
-          <el-form-item label="是否允许分享" prop="share">
+          <el-form-item label="是否允许分享" prop="share" v-if="this.$route.query.course_type=='public'">
             <el-radio-group v-model="fetchParam.share">
               <el-radio label="1">是</el-radio>
               <el-radio label="0">否</el-radio>
