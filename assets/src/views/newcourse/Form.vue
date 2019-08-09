@@ -101,6 +101,12 @@
           <el-form-item label="课程标签" v-if="this.$route.query.course_type=='public'">
             <vTags v-model="courseTags"></vTags>
           </el-form-item>
+          <el-form-item label="是否允许分享" prop="share">
+            <el-radio-group v-model="fetchParam.share">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="0">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="排序" prop="sort" v-if="this.$route.query.course_type=='public'">
             <el-input v-model="fetchParam.sort" type="number" placeholder="请输入序列号" min="0"></el-input>
           </el-form-item>
@@ -459,6 +465,7 @@ export default {
         .then(ret => {
           this.editLessonData = ret.lessons;
           this.fetchParam = ret.course;
+          this.fetchParam.share=ret.course.share.toString()
           this.fetchParam.company_id = ret.course.company_id || void 0;
           if (!this.fetchParam.company_id) {
             this.fetchParam.company_name = "请选择";
@@ -825,7 +832,8 @@ function getOriginData() {
     update_time_name: "",
     id: 0,
     course_type: "",
-    sort: ""
+    sort: "",
+    share:"0"
   };
 }
 </script>
