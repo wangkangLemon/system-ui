@@ -152,10 +152,8 @@
                         if(v.id==row.id){
                             index = i
                         }
-                        
-                        
                     })
-                     this.currSelectedList.splice(index, 1) // 2019-11-20 解决id不对应，删除混乱
+                    this.currSelectedList.splice(index, 1) // 2019-11-20 解决id不对应，删除混乱
                      
                 //  this.currSelectedList.splice(this.currSelectedList.indexOf(row), 1)
                 }

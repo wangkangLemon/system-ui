@@ -142,13 +142,21 @@
                     }
                     // 处理课程id
                     this.form.course_id = []
+                    // this.form.course.forEach((c) => {
+                    //     this.form.course_id.push(c.id)
+                    // })
                     this.form.course.forEach((c) => {
-                        this.form.course_id.push(c.id)
+                        if(this.form.course_id.indexOf(c.id)==-1){
+                            this.form.course_id.push(c.id)
+                        }
+                        if(this.form.course_id.length==this.form.course.length){
+                            console.log("111")
+                        }else{
+                            alert("222");
+                            return;
+                        }
                     })
-                    console.log(this.form.course_id)
                     // let  courseArr=[]
-                    // console.log("aaaa")
-                    // console.log(this.form.course_id)
                     // for(let i=0; i<this.form.course_id.length; i++){
                     //     if(courseArr.indexOf(this.form.course_id[i])==-1){
                     //         courseArr.push(this.form.course_id[i])
@@ -159,8 +167,8 @@
                     // }else{
                     //         alert("有重复数据");
                     //         return;
-                    //     }
-                    this.form.course_id = this.form.course_id.join(',')
+                    //     }   
+                    // this.form.course_id = this.form.course_id.join(',')
                     if (s > 0) {
                         this.form.status = s
                     }
