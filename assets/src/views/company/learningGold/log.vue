@@ -62,14 +62,14 @@
     <el-table v-loading="loading" border :data="companyData" stripe style="width: 100%">
       <el-table-column prop="name" label="连锁名称" min-width="150"></el-table-column>
       <el-table-column label="属性" width="180">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span v-if="scope.row.exemption==1">征收</span>
           <span v-else-if="scope.row.exemption==0">不征收</span>
         </template>
       </el-table-column>
       <el-table-column width="100" prop="user_cnt" label="员工数"></el-table-column>
       <el-table-column width="150" label="缴纳人数">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button
             type="text"
             size="small"
@@ -78,7 +78,7 @@
         </template>
       </el-table-column>
       <el-table-column width="180" label="未缴纳人数">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button
             type="text"
             size="small"
@@ -87,7 +87,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="operate" label="操作" width="200" fixed="right" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <!-- <el-button type="text" size="small" @click="adminPage(scope.$index, scope.row)">
                         发送系统消息
           </el-button>-->

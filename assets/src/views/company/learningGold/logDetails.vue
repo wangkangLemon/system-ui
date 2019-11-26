@@ -69,7 +69,7 @@
             <el-table-column
                     width="180"
                     label="缴纳状态">
-                     <template scope="scope">
+                     <template slot-scope="scope">
                         <span v-if="scope.row.buy==0">未缴纳</span>
                         <span v-else-if="scope.row.buy==1">已缴纳</span>
                      </template>

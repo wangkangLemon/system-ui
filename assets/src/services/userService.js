@@ -11,11 +11,13 @@ export function login (username, password) {
     let url = urlPre + '/login'
     return api.post(url, {username, password}, true).then(ret => {
         if (ret.code == 0) {
+            console.log(ret)
             return ret.data
         } else {
             return Promise.reject(ret)
         }
     })
+    
 }
 
 // 刷新token

@@ -91,7 +91,7 @@
           style="width: 100%"
         >
           <el-table-column>
-            <template scope="scope">
+            <template slot-scope="scope">
               <el-tag>连锁</el-tag>
               <span style="margin-left:10px;">{{scope.row.name}}</span>
               <i class="el-icon-delete icon_delete" @click="Delete(scope.$index,scope.row)"></i>

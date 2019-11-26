@@ -84,7 +84,7 @@
                             <el-button 
                                 style="float: right;margin-right: 10px" 
                                 type="text" 
-                                size="tiny" 
+                                size="small" 
                                 icon="el-icon-delete"
                                 @click="delItem(scope.row)">
                                 删除
@@ -117,7 +117,7 @@
         data () {
             return {
                 currVal: this.value,
-                currSelectedList: this.selectedList,
+                currSelectedList: this.selectedList, //在父组件中调用子组件时传值form.course
                 fetchParam: {
                     page: 1,
                     page_size: 15,
@@ -129,13 +129,11 @@
         },
         watch: {
             currVal (val) {
-                this.$emit('input', val)
+                this.$emit('input', val)    
             },
             value (val) {
                 val !== this.currVal && (this.currVal = val)
-
-                if (val && this.data.length < 1) this.fetchData()
-
+                // if (val && this.data.length < 1) this.fetchData()
                 val && this.setSelected()
             },
             selectedList (val) {
@@ -145,7 +143,7 @@
         },
         created () {
         },
-        activated () {
+        activated () { 
         },
         methods: {
             fetchData (isFirst) {
@@ -158,10 +156,10 @@
                     if (this.fetchParam.page === 1) {
                         this.fetchParam.page = 1
                         this.data = []
-                        if (ret.list.length < 1) return
+                        if (ret.data.length < 1) return
                     }
                     this.data.splice(-1, 1)
-                    this.data.push(...[...ret.list, {id: -1}])
+                    this.data.push(...[...ret.data, {id: -1}])
 
                     // 设置选中
                     this.setSelected()
@@ -179,7 +177,7 @@
                 else {
                     // this.currSelectedList.splice(this.currSelectedList.indexOf(row), 1)
                     let index = this.currSelectedList.findIndex(value => {
-                        return value.id === row.id
+                        return value.id == row.id
                     })
                     this.currSelectedList.splice(index, 1)
                 }
@@ -187,7 +185,7 @@
             },
             delItem (row) {
                 this.currSelectedList.splice(this.currSelectedList.findIndex(item => {
-                    return item.id === row.id
+                    return item.id == row.id
                 }), 1)
                 // 重新设置选中
                 this.setSelected()

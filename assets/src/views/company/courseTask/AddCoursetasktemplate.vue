@@ -48,7 +48,7 @@
                 <!--c-->
                 </el-tag>
 
-                <el-button type="primary" @click="dialogCourse.isShow=true" size="small">添加课程</el-button>
+                <el-button type="primary" @click="addCourse" size="small">添加课程</el-button>
             </el-form-item>
             <el-form-item prop="sort" label="排序">
                 <el-input-number v-model="form.sort" auto-complete="off"></el-input-number>
@@ -125,6 +125,11 @@
                     xmview.showTip('error', ret.message)
                 })
             },
+            addCourse(){
+                this.dialogCourse.isShow = true;
+                this.dialogCourse.keyword = "";
+                this.$refs.dialogSelect.fetchData(true);
+            },
             fetchCourse (params) {
                 params.course_type = 'public'
                 params.status = 0
@@ -140,6 +145,21 @@
                     this.form.course.forEach((c) => {
                         this.form.course_id.push(c.id)
                     })
+                    console.log(this.form.course_id)
+                    // let  courseArr=[]
+                    // console.log("aaaa")
+                    // console.log(this.form.course_id)
+                    // for(let i=0; i<this.form.course_id.length; i++){
+                    //     if(courseArr.indexOf(this.form.course_id[i])==-1){
+                    //         courseArr.push(this.form.course_id[i])
+                    //     }
+                    // }
+                    // if(courseArr.length == this.form.course_id.length){
+                    //     console.log(courseArr+"1111")
+                    // }else{
+                    //         alert("有重复数据");
+                    //         return;
+                    //     }
                     this.form.course_id = this.form.course_id.join(',')
                     if (s > 0) {
                         this.form.status = s

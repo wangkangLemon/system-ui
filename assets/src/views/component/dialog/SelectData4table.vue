@@ -63,7 +63,6 @@
                 </el-table>
             </section>
         </main>
-
         <span slot="footer">
                 <el-button type="primary" @click="currVal=false">确定</el-button>
             </span>
@@ -141,19 +140,35 @@
                     this.loading = false
                 })
             },
-            rowSelected (selection, row) {
-                // 排除已选课程
-                if (selection.indexOf(row) > -1)
+            rowSelected (selection, row) { //selection左侧选中 
+                console.log(row.id)
+                if (selection.indexOf(row) != -1){
                     this.currSelectedList.push(row)
-                else
-                    this.currSelectedList.splice(this.currSelectedList.indexOf(row), 1)
-
-                this.$emit('changeSelected', this.currSelectedList)
+                }
+                else{
+                    var index;
+                    this.currSelectedList.forEach((v,i)=>{
+                        console.log(v.id)
+                        if(v.id==row.id){
+                            index = i
+                        }
+                        
+                        
+                    })
+                     this.currSelectedList.splice(index, 1) // 2019-11-20 解决id不对应，删除混乱
+                     
+                //  this.currSelectedList.splice(this.currSelectedList.indexOf(row), 1)
+                }
+                    this.$emit('changeSelected', this.currSelectedList)
             },
             delItem (row) {
-                this.currSelectedList.splice(this.currSelectedList.findIndex(item => {
-                    return item.id === row.id
-                }), 1)
+                var index;
+                this.currSelectedList.forEach((v,i)=>{
+                    if(v.id==row.id){
+                        index = i
+                    }
+                })
+                this.currSelectedList.splice(index, 1)
                 // 重新设置选中
                 this.setSelected()
                 this.$emit('changeSelected', this.currSelectedList)
@@ -169,6 +184,7 @@
                         this.$refs.courseTable.toggleRowSelection(currRow, true)
                     })
                 })
+                
             }
         },
         components: {}

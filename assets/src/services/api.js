@@ -92,6 +92,7 @@ function sendRequest (method, url, params, needLoding = false) {
         let headers = {}
         if (authUtils.getAuthToken()) headers['Authorization'] = 'Bearer ' + authUtils.getAuthToken() // 登录凭证
         if (authUtils.getTwiceToken()) headers['TwoStep'] = `Bearer ` + authUtils.getTwiceToken() // 二次验证的token
+        
         ajax({
             method: method,
             url: url,
