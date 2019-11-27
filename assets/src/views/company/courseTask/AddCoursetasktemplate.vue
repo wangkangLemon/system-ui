@@ -54,8 +54,8 @@
                 <el-input-number v-model="form.sort" auto-complete="off"></el-input-number>
             </el-form-item>
             <el-form-item prop="sort">
-                <el-button type="primary" @click="submit(0)">提交</el-button>
-                <el-button type="warning" @click="submit(1)">存草稿</el-button>
+                <el-button type="primary" @click="submit(0)" :plain="true">提交</el-button>
+                <el-button type="warning" @click="submit(1)" :plain="true">存草稿</el-button>
             </el-form-item>
         </el-form>
 
@@ -75,7 +75,7 @@
     import CourseTaskTemplateCategorySelect from '../../component/select/CourseTaskTemplateCategory.vue'
     import companyService from '../../../services/companyService'
     import courseService from '../../../services/newcourse/courseService'
-    import dialogSelectData from '../../component/dialog/SelectData4table.vue'
+    import dialogSelectData from '../../component/dialog/SelectData5table.vue'
 
     export default{
         name: 'coursetask-template-add',
@@ -142,33 +142,26 @@
                     }
                     // 处理课程id
                     this.form.course_id = []
-                    // this.form.course.forEach((c) => {
-                    //     this.form.course_id.push(c.id)
-                    // })
                     this.form.course.forEach((c) => {
-                        if(this.form.course_id.indexOf(c.id)==-1){
-                            this.form.course_id.push(c.id)
-                        }
-                        if(this.form.course_id.length==this.form.course.length){
-                            console.log("111")
-                        }else{
-                            alert("222");
-                            return;
-                        }
+                        this.form.course_id.push(c.id.toString())
                     })
-                    // let  courseArr=[]
-                    // for(let i=0; i<this.form.course_id.length; i++){
-                    //     if(courseArr.indexOf(this.form.course_id[i])==-1){
-                    //         courseArr.push(this.form.course_id[i])
-                    //     }
-                    // }
-                    // if(courseArr.length == this.form.course_id.length){
-                    //     console.log(courseArr+"1111")
-                    // }else{
-                    //         alert("有重复数据");
-                    //         return;
-                    //     }   
-                    // this.form.course_id = this.form.course_id.join(',')
+                    // 提交时课程id唯一判断
+                    let  courseArr=[]        
+                    for(let i=0; i<this.form.course_id.length; i++){
+                        if(courseArr.indexOf(this.form.course_id[i])==-1){
+                            courseArr.push(this.form.course_id[i])
+                        }
+                    }
+                    if(courseArr.length == this.form.course_id.length){
+                        console.log(courseArr)
+                    }else{
+                        this.$message({
+                            message: '有重复课程',
+                            type: 'warning'
+                        });
+                        return;
+                    }   
+                    this.form.course_id = this.form.course_id.join(',')
                     if (s > 0) {
                         this.form.status = s
                     }

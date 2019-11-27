@@ -176,7 +176,7 @@
                     this.currSelectedList.push(row)
                 else {
                     // this.currSelectedList.splice(this.currSelectedList.indexOf(row), 1)
-                    let index = this.currSelectedList.findIndex(value => {
+                    let index = this.currSelectedList.findIndex(value => {    // 2019-11-20 解决id不对应，删除混乱
                         return value.id == row.id
                     })
                     this.currSelectedList.splice(index, 1)

@@ -102,7 +102,7 @@
             value (val) {
                 val !== this.currVal && (this.currVal = val)
 
-                if (val && this.data.length < 1) this.fetchData()
+                // if (val && this.data.length < 1) this.fetchData()
 
                 val && this.setSelected()
             },
@@ -141,14 +141,12 @@
                 })
             },
             rowSelected (selection, row) { //selection左侧选中 
-                console.log(row.id)
                 if (selection.indexOf(row) != -1){
                     this.currSelectedList.push(row)
                 }
                 else{
                     var index;
                     this.currSelectedList.forEach((v,i)=>{
-                        console.log(v.id)
                         if(v.id==row.id){
                             index = i
                         }
