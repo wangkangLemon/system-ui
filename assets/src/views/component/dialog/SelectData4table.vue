@@ -158,13 +158,9 @@
                     this.$emit('changeSelected', this.currSelectedList)
             },
             delItem (row) {
-                var index;
-                this.currSelectedList.forEach((v,i)=>{
-                    if(v.id==row.id){
-                        index = i
-                    }
-                })
-                this.currSelectedList.splice(index, 1)
+                this.currSelectedList.splice(this.currSelectedList.findIndex(item => {
+                    return item.id == row.id
+                }), 1)
                 // 重新设置选中
                 this.setSelected()
                 this.$emit('changeSelected', this.currSelectedList)

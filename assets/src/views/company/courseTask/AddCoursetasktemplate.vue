@@ -75,7 +75,7 @@
     import CourseTaskTemplateCategorySelect from '../../component/select/CourseTaskTemplateCategory.vue'
     import companyService from '../../../services/companyService'
     import courseService from '../../../services/newcourse/courseService'
-    import dialogSelectData from '../../component/dialog/SelectData5table.vue'
+    import dialogSelectData from '../../component/dialog/SelectData4table.vue'
 
     export default{
         name: 'coursetask-template-add',
